@@ -1,0 +1,1115 @@
+00:02:52 <madaidan[m]> <anupritaisno1[m] "the signature is checked"> Only upon installation. Apps can still be persistently compromised.
+00:03:13 <anupritaisno1[m]> madaidan.: not really
+00:03:31 <madaidan[m]> <anupritaisno1[m] "madaidan.: not really "> How so?
+00:03:45 <anupritaisno1[m]> if you believe otherwise you're welcome to replace apps with adb root and see if they even launch
+00:04:04 <anupritaisno1[m]> anyway if you're adb root there's other ways to do that anyway
+00:04:36 <anupritaisno1[m]> i could just copy the application data, uninstall and install a malicious version and restore the data
+00:04:40 <anupritaisno1[m]> mostly works
+00:05:14 <anupritaisno1[m]> but then again madaidan.  how does verity solve this?
+00:05:30 <anupritaisno1[m]> there is no root of trust for apps anyway
+00:05:35 <anupritaisno1[m]> unlike the os
+00:05:49 <anupritaisno1[m]> also v4 is strictly installation time rn
+00:06:13 <anupritaisno1[m]> a v3 or lower signature is still required
+00:10:01 <madaidan[m]> <anupritaisno1[m] "if you believe otherwise you're "> That doesn't answer the question. When exactly are signatures being verified then?
+00:10:17 <anupritaisno1[m]> <madaidan[m] "That doesn't answer the question"> installation time only for v4
+00:10:54 <madaidan[m]> <anupritaisno1[m] "installation time only for v4"> You just said, "not really" after I said they're only verified upon installation.
+00:11:06 <madaidan[m]> sar
+00:11:40 <anupritaisno1[m]> <madaidan[m] "You just said, "not really" afte"> out of context tbh
+00:12:43 <madaidan[m]> <anupritaisno1[m] "out of context tbh "> I'm confused. What exactly prevents an app from being persistently compromised by an attacker?
+00:13:30 <strcat[m]> madaidan.: signatures are verified at install time and also for certain other operations to do with the apk
+00:13:44 <strcat[m]> madaidan.: what v4 provides is that it can do continuous verification when reading the blocks of the apk
+00:13:49 <strcat[m]> madaidan.: based on first party source
+00:14:36 <strcat[m]> madaidan.: see https://developer.android.com/reference/android/security/FileIntegrityManager
+00:15:14 <madaidan[m]> strcat So apps can be persistently compromised unless they're a first party app using v4 signatures?
+00:15:26 <strcat[m]> madaidan.: an app can't write to the app's own apk
+00:15:28 <strcat[m]> so no
+00:15:41 <strcat[m]> madaidan.: the app doesn't get to write to their apk / libraries
+00:15:45 <anupritaisno1[m]> madaidan.: no
+00:15:51 <strcat[m]> madaidan.: this is about verified boot, i.e. if the OS is compromised
+00:15:55 <anupritaisno1[m]> v4 is just to install an app incrementally
+00:16:06 <strcat[m]> anupritaisno1: no it's not just for that
+00:16:31 <strcat[m]> madaidan.: there's already fs-verity used for an out-of-band priv-app update, etc.
+00:16:39 <strcat[m]> madaidan.: this makes it more generally available
+00:16:43 <madaidan[m]> <strcat[m] "madaidan.: an app can't write to"> Ah, that makes sense. Thanks.
+00:16:45 <anupritaisno1[m]> so the platform keeps the signature file?
+00:16:47 <anupritaisno1[m]> ah
+00:16:59 <strcat[m]> madaidan.: if you compromise an app, you can't write to the apk / libraries
+00:17:07 <anupritaisno1[m]> so they are using fs-verity
+00:17:15 <strcat[m]> yes this already existed
+00:17:22 <strcat[m]> for a subset of system apps (for out of band updates)
+00:17:29 <strcat[m]> this is a standard API for external apps to benefit
+00:17:32 <anupritaisno1[m]> strcat: aware tbh
+00:17:40 <anupritaisno1[m]> i have an implementation on op7
+00:17:43 <strcat[m]> if the v4 signature is just from the app devs then it does little good in this regard
+00:17:59 <strcat[m]> the point is that say, for our first party repo
+00:18:06 <strcat[m]> we are making the v4 signatures
+00:18:19 <strcat[m]> and we include our certificate for that as a 1st party source of v4 signatures
+00:18:20 <strcat[m]> in the OS
+00:18:59 <strcat[m]> and then for example, a user could toggle on only running code from trusted sources, enforced this way
+00:19:09 <strcat[m]> and it's better enforcement than just install time, it's continuous verification
+00:19:11 <strcat[m]> when reading blocks
+00:19:27 <strcat[m]> similar to the existing verified boot for the OS, but for all code/data in apks of user installed apps from the 1st party source
+00:19:33 <strcat[m]> it can also be used for apps signed by others
+00:19:44 <strcat[m]> and it's useful for those too
+00:20:01 <strcat[m]> it's basically verified boot for components not part of the base OS
+00:20:14 <strcat[m]> fs-verity was already used to do verified boot for priv-app updates, etc.
+00:20:23 <strcat[m]> and APEX has verified boot for out-of-band OS component updates
+00:20:36 <strcat[m]> this is for things not part of the OS in any way with a stable, standard API
+00:20:52 <strcat[m]> it gives you what you need to provide better security than iOS code signing if you desire
+00:20:57 <strcat[m]> because it covers the whole apk
+00:21:38 <strcat[m]> if you wanted you could only support apps with 1st party v4 signatures and then you'd have a superior take on this than iOS but ofc we can't do that for our general usage version of the OS
+00:21:49 <strcat[m]> anyway the OS infrastructure for that is present now
+00:22:23 <strcat[m]> we need to get our own app install/update system implemented (would help if people realized not just how flawed F-Droid is but how much more can be done via being able to leverage all this stuff)
+00:23:06 <anupritaisno1[m]> strcat i dunno if the infrastructure is present yet btw
+00:23:22 <anupritaisno1[m]> fs-verity is enabled 4a and newer afaik
+00:23:33 <strcat[m]> it is
+00:23:35 <anupritaisno1[m]> f2fs cannot be updated to support verity either
+00:23:48 <strcat[m]> the infrastructure is there
+00:23:48 <anupritaisno1[m]> you have to format it with the verity option
+00:23:51 <strcat[m]> it doesn't matter if the older devices don't have it
+00:24:12 <strcat[m]> and this is beyond the existing fs-verity usage from before Android 11
+00:24:32 <strcat[m]> it opens it up to being leverage for stuff not bundled with the OS, not just out-of-band updates for OS apps
+00:24:36 <strcat[m]>  * it opens it up to being leveraged for stuff not bundled with the OS, not just out-of-band updates for OS apps
+00:24:59 <strcat[m]> also not sure this is fs-verity based
+00:25:00 <strcat[m]> APEX isn't
+00:25:04 <strcat[m]> you're assuming that
+00:28:31 <anupritaisno1[m]> apex is dm-verity
+00:34:16 <strcat[m]> yeah since it has a nested filesystem
+00:34:34 <strcat[m]> haven't looked closely into the v4 signature implementation
+02:15:27 <pinkylittlecat[m> <strcat[m] "pinkylittlecat: no"> huge delay
+02:15:34 <pinkylittlecat[m> but i got the idea, ty
+02:15:57 <pinkylittlecat[m> <strcat[m] "pinkylittlecat: for WhatsApp, it"> i didnt know there was a non-playstore version of whatsapp
+02:16:16 <pinkylittlecat[m> unless you meant telegram
+02:25:23 <Anon20938[m]> Are there any GrapheneOS pixel phones being sold?
+02:25:40 <strcat[m]> yes
+02:25:43 <strcat[m]> not by the project
+02:25:44 <case_[m]> Hi, not about grapheneos but I was wondering, is it possible to uninstall all gapps on a pixel? Just stay with android stock without gapps and if I needed install microg?
+02:25:59 <Anon20938[m]> But where though?
+02:26:22 <strcat[m]> case_: microG requires OS integration and provides an implementation of Google services as part of implementing a subset of the OS APIs
+02:26:28 <strcat[m]> so you definitely can't use that there
+02:26:41 <strcat[m]> case_: it's off-topic for this channel overall
+02:27:10 <strcat[m]> Anon20938: there are multiple companies selling phones with GrapheneOS, and individuals selling them
+02:27:10 <case_[m]> Thanks for the reply
+02:27:16 <Anon20938[m]> Do you know where it's being sold?
+02:27:41 <strcat[m]> I know of a dozen vendors selling them, sure, have you looked?
+02:27:44 <dannyknoll3[m]> <Anon20938[m] "Do you know where it's being sol"> #grapheneos-offtopic:matrix.org
+02:28:12 <strcat[m]> the project doesn't sell them, we offer https://grapheneos.org/install/web as an easy way to install the OS
+02:29:52 <k5L37> Can confirm. It really is very easy.
+02:41:27 <chi00[m]> couldn't be any easier
+02:49:09 <oooohshini[m]> Does grapheneOS use ntp for time sync? Can it be disabled even for gps?
+02:52:03 <redbeard72> Howdy. Is it possible to import a Contacts CSV file into the default phone app? (I can't find a way)
+02:52:20 <ulmirdin[m]> Yes, do it through the contacts app
+02:52:27 <k5L37> https://time.grapheneos.org/ for ntp
+02:53:14 <k5L37> That's default but can be disabled in settings
+02:53:26 <madaidan[m]> <oooohshini[m] "Does grapheneOS use ntp for time"> No, GrapheneOS securely connects to grapheneos.org and extracts the time out of the HTTP header. It does not use NTP due to security and privacy concerns.
+02:54:06 <madaidan[m]> <k5L37 "https://time.grapheneos.org/ for"> NTP isn't used at all.
+02:54:48 <madaidan[m]> https://grapheneos.org/faq#default-connections
+02:55:04 <k5L37> I stand corrected
+02:55:53 <dnull> redbeard72: Looks like you can import vcf
+02:55:53 <redbeard72> ulmirdin[m]: google contacts only lets me export a CSV file and looks like the contacts app only accepts a VCF file. Any advice?
+02:56:48 <dnull> redbeard72: https://www.textcompare.org/csv/csv-to-vcard
+02:56:52 <dnull> Maybe?
+02:58:48 <ulmirdin[m]> <redbeard72 "Howdy. Is it possible to import "> My bad. I meant importing VCF files. It's late, getting the letters all messed up🙃
+03:05:03 <oooohshini[m]> <madaidan[m] "https://grapheneos.org/faq#defau"> Caveats being “We plan to offer a toggle to use the standard functionality instead of HTTPS-based time updates in order to blend in with other devices.” And obtaining time zone from carrier.
+03:06:47 <redbeard72> is there somewhere where I can learn more about the contacts app? (Like the project website or github?)
+03:13:18 <redbeard72> dnull: I tried https://www.textcompare.org/csv/csv-to-vcard, when I tried import the file it produced the contacts app told me "couldn't import vCard. The format isn't supported." Any other tips?
+03:16:20 <dnull> redbeard72: This should move to -offtopic
+03:21:17 <strcat[m]> oooohshini: obtaining time zone from carrier isn't NTP (neither is the unused functionality of using the carrier provided time in AOSP)
+03:21:44 <strcat[m]> time zone doesn't actually change the stored time either just determines the offset for display, etc.
+03:22:47 <dnull> Everything should just be UTC
+03:25:20 <strcat[m]> it is UTC at a low-level
+04:08:16 <fred56> Hello. I have some questions about using multiple users with Graphene. Anyone care to chat?
+04:08:55 <rny> just ask your questions
+04:10:11 <fred56> OK, I'm new, just three weeks with the phone. What is the strategy behind using multiple users? Why do people choose to do it. What do they get out of it?
+04:10:44 <bauershades[m]> Does GrapheneOS (and strcat ) what to have more exposure and blog post about GOS or is it better to keep it kind of low profile?
+04:10:50 <strcat[m]> fred56: they're isolated workspaces with separate instances of apps, with separate app and profile data
+04:11:39 <strcat[m]> bauershades: that's fine but would be nice if people actually understood and communication the purpose of the project rather than getting it all wrong and thinking it's about removing Google apps/services from an OS (AOSP) that doesn't have those in the first place
+04:11:47 <strcat[m]>  * bauershades: that's fine but would be nice if people actually understood and communication the purpose of the project rather than getting it all wrong and thinking it's about removing Google proprietary apps/services from an OS (AOSP) that doesn't have those in the first place
+04:11:56 <strcat[m]>  * bauershades: that's fine but would be nice if people actually understood and communicated the purpose of the project rather than getting it all wrong and thinking it's about removing Google proprietary apps/services from an OS (AOSP) that doesn't have those in the first place
+04:12:29 <fred56> Ok, Why would I choose to use the to activate the work profile rather than just use regular users?
+04:13:08 <strcat[m]> our recommendation is using user profiles as isolated workspaces
+04:13:21 <strcat[m]> fred56: also read https://grapheneos.org/faq#encryption
+04:13:33 <strcat[m]> each user profile has separate encryption keys protected by their lock method
+04:14:39 <fred56> What would be a typical strategy for different users. What apps would you want to isolate?
+04:15:19 <strcat[m]> fred56: apps are already sandboxed either way
+04:15:33 <strcat[m]> the purpose is being able to have separate workspaces with separate instances of apps and profile data
+04:15:58 <fred56> And why would you want that?
+04:16:04 <strcat[m]> many reasons
+04:16:09 <strcat[m]> start by reading https://grapheneos.org/faq#encryption
+04:17:02 <fred56> Ok, thanks I will. I'm new to Linux, Graphene, and this is my first irc chat! I appreciate your time.
+04:17:36 <sjsndnjdejd> <fred56 "And why would you want that?"> some apps won't launch and force you to give access for things
+04:42:42 <mishmasher[m]> And if I would delete an user profile encrypted with a strong password, would that data be retrieve-able with forensic tools?
+04:43:53 <mishmasher[m]> Law enforcements for example would they be able to retrieve the data from the encrypted profile
+04:44:34 <strcat[m]> read https://grapheneos.org/faq#encrypted please
+04:44:38 <strcat[m]> mishmasher: no
+04:44:46 <strcat[m]>  * read https://grapheneos.org/faq#encryption please
+04:45:22 <strcat[m]> mishmasher: if you delete a user profile with a weak 4 digit PIN it won't be recoverable
+04:45:35 <strcat[m]> mishmasher: it's covered there, don't really understand what you're confused about
+04:46:18 <strcat[m]> the encryption keys are randomly generated and encrypted by key encryption keys that are never stored
+04:46:27 <strcat[m]> key encryption keys use lock method as one input
+04:46:39 <strcat[m]> I don't really know how to cover it better than what we have there
+04:50:02 <mishmasher[m]> strcat: worst part of this is I have read all of that. I assumed it would be amazingly hard to retrieve that data but, some words I just don't understand haha
+04:50:28 <strcat[m]> it isn't retrievable, a high entropy token needed to derive the key is wiped
+04:50:58 <mishmasher[m]> Thank you!
+04:51:01 <strcat[m]> if you use a strong passphrase then even if you don't wipe anything it's not obtainable without that no matter what exploits they have, that's the point of using a strong passphrase
+04:51:30 <strcat[m]> if you use something like a random 6 digit PIN then it's secure but depends on the secure element's security so if they can compromise that they can bypass it
+04:51:39 <strcat[m]> think we cover it all well there
+05:01:29 <mishmasher[m]> Thanks strcat this is much clearer language for someone like me haha. I'm going to re-read the site and research the "techy" words I don't understand this time haha
+05:01:57 <strcat[m]> because the site has to cover more
+05:02:02 <strcat[m]> not just a very specific question
+05:07:19 <mishmasher[m]> True. Either way bless you for taking the time to always explain.
+06:01:00 <IRCX6[m]> Ahhhh thanks strcat
+06:01:07 <IRCX6[m]> I'm going to start using a pass phrase
+06:08:40 <strcat[m]> GrapheneOS 2021.03.06.00 release: https://grapheneos.org/releases#2021.03.06.00
+06:08:48 <strcat[m]> https://twitter.com/GrapheneOS/status/1368443047625822208
+06:08:53 <strcat[m]> https://www.reddit.com/r/GrapheneOS/comments/lzkm1g/grapheneos_2021030600_release/
+06:29:43 <snikita[m]> Hey I got a general question about alternative mobile distros. is it possible to put non-android mobile distros on a phone like the Pixel? Ive been looking around and I havent seen many people talking about putting something like manjaro arm on their phones so I was wondering if this is even possible
+06:30:05 <strcat[m]> sure but only GrapheneOS is on-topic for this room
+06:30:50 <snikita[m]> can you point me to a good resource about using alternative mobile distros? i cant seem to find much
+06:31:01 <strcat[m]> this is one
+06:31:28 <snikita[m]> > only GrapheneOS is on-topic for this room
+06:31:49 <strcat[m]> yes and GrapheneOS is an alternative mobile Linux distribution
+06:32:14 <snikita[m]> i meant alternative to android. i was wondering if anyone puts other linux distros on their phones besides android based ones
+06:32:22 <strcat[m]> other OSes could support the same flashing method, take advantage of verified boot and other hardware security features, etc.
+06:32:27 <strcat[m]> they don't have to be Linux-based at all
+06:32:34 <strcat[m]> there's no inherent reason they have to be
+06:32:41 <snikita[m]> i know theres been a lot of development on manjaro ARM, and some other ones because of the pinephone, so im wondering if those distros can be used on a pixel
+06:33:03 <strcat[m]> not a good place for it
+06:33:07 <strcat[m]> this is the GrapheneOS room
+06:33:26 <snikita[m]> i understand, which is why im asking if you know of a good resource with more info on this
+06:33:29 <strcat[m]> no
+06:39:26 <strcat[m]> new release available in the Beta channel now
+06:45:57 <Alpha1526849> hi
+06:54:04 <Alpha1526849> hi
+07:02:06 <strcat[m]> hi
+07:34:00 <pizzaeater69[m]> Hello
+07:51:53 <neverfinished[m]> Hi! Could be a good idea consider enabling #strict-origin-isolation by default on Vanadium?
+07:52:39 <strcat[m]> neverfinished: it is
+07:54:04 <neverfinished[m]> Thank for the clarification!
+07:54:19 <neverfinished[m]> It's the same for #omnibox-default-typed-navigations-to-https?
+08:13:26 <strcat[m]> neverfinished: no not enabling that by default yet, it's very new
+08:13:39 <strcat[m]> they'll probably do it themselves when it's ready
+08:20:12 <neverfinished[m]> <strcat[m] "neverfinished: no not enabling t"> OK, thank you!
+08:46:39 <gamrix[m]> About the discussion of api and signatures version of fdroid apps. It's possible to check it before installation ?
+09:00:59 <pizzaeater69[m]> Features page says "Stronger app sandbox" but how is it stronger?
+09:01:05 <pizzaeater69[m]> Dumb question i know
+10:18:57 <iOSconvert4help> hi folks. first time here. iOS convert using teh webusb-interface (via chrome -- updated last night) to install grapheneOS for the first time on my first android device -- Pixel 4. lots of change at once.... I need some guidance here, if someone can help...i've successfully enabled developer mode and oem unlocking. and i've booted into the
+10:18:58 <iOSconvert4help> bootloader interface. but when i connect the device to my computer (win10 pro - updated last night) and click "unlock bootloader," the webusb interface does not see the pixel 4. The error message is: "No compatible devices found." that's as far as i can get. thinking that it could be a driver issue, i did as the instructions suggested, and
+10:18:58 <iOSconvert4help> installed all Optional Updates in windows update, too. Same result. Please advise. Thanks.
+10:28:23 <catfish[m]> Can you try a different usb port or cable? That is the most common issue.
+10:33:21 <iOSconvert4help> catfish[m] - connecting Pixel 4 directly to USB-C port via USB-C to USB-C 3.1 Gen2 cable. Trying a different usb-c port now.
+10:50:46 <donkykong[m]> <iOSconvert4help "catfish - connecting Pixel 4 dir"> Prob best to ask in the day I imangine most of the people that could help are sleeping
+10:51:42 <donkykong[m]> <iOSconvert4help "hi folks. first time here. iOS c"> > <@freenode_iOSconvert4help:matrix.org> catfish - connecting Pixel 4 directly to USB-C port via USB-C to USB-C 3.1 Gen2 cable. Trying a different usb-c port now.
+10:51:52 <iOSconvert4help> catfish[m] - tried both usb-c ports with two different usb-c to usb-c 3.1 gen2 cables (in addition to the first one), as well as the usb-a 3.0 port with a usb-c to usb-as 3.0 cable same result.
+10:52:51 <iOSconvert4help> donkykong[m] - regrettably, this is my day.... but i take your point.
+10:54:19 <catfish[m]> There is this part some people miss in the guide. Connect the phone to the computer. On Windows, you may need to install a driver for fastboot now: In Windows Update, click Check for updates. After that there might be a link "View optional updates." Download and install any driver updates.
+10:55:10 <iOSconvert4help> catfish[m] -did that after it failed the first time.
+11:00:27 <catfish[m]> Another common problem is using the browser in incognito mode but don't think that is your problem. I'd recommend rebooting everything and starting again following the instructions exactly.
+11:19:14 <iOSconvert4help> catfish[m] - not in incognito mode; will try restarting devices and taking the instructions from the top. thanks.
+11:38:27 <mynacol[m]> iOSconvert4help: Connect the phone after you went into the bootloader interface, then manually search for Windows updates. Maybe then the right driver pops up.
+11:39:33 <mynacol[m]> iOSconvert4help: And the original USB cable should be fine. Maybe switch USB ports on the computer or try on an entirely other one (if the driver stuff didn't work)
+13:25:38 <suchyfortniqwer[> Give an app access to flash drive on OTG. How?
+13:26:39 <DHFuchsiaOSwhen> Through calling the system file manager, if the app supports it
+13:44:20 <suchyfortniqwer[> <DHFuchsiaOSwhen "Through calling the system file "> it doesn't
+13:44:34 <suchyfortniqwer[> has own file management system in app
+13:45:07 <suchyfortniqwer[> cli solutions via adb anyone due to android being shite anyone?
+13:45:22 <suchyfortniqwer[>  * cli solutions via adb due to android being shite anyone?
+13:45:59 <suchyfortniqwer[> I can't find any real solution
+13:46:20 <suchyfortniqwer[> such a basic feature of allowing programs to manage storage and you can't even do that in android
+13:51:05 <madaidan[m]> <suchyfortniqwer[ "such a basic feature of allowing"> Do you not see the issue of apps being able to arbitrarily read/write sensitive files?
+13:53:04 <lackinyourfortni> <madaidan[m] "Do you not see the issue of apps"> do you not see that I want to let it do it?
+13:53:08 <lackinyourfortni> do you not see no real permission handling?
+13:54:16 <lackinyourfortni> The app I want to give access to it is free
+13:55:44 <lackinyourfortni> try to see in their perspective. I've had the same issue.
+13:57:04 <suchyfortniqwer[> lol fortnite gang
+13:57:09 <suchyfortniqwer[> my program is gpl3 too
+13:57:56 <lackinyourfortni> based
+14:31:21 <pizzaeater69[m]> The release page shows new version of Grapheneos but I havent gotten the update? Tips?
+14:32:01 <nscnt[m]> pizzaeater69: It's only in the beta channel. Are you in the beta channel?
+14:33:12 <pizzaeater69[m]> Ohh right sorry, im not
+15:04:40 <dazinism> <suchyfortniqwer[ "such a basic feature of allowing"> You can, just apps often don't follow the supported way to do so.
+15:05:03 <suchyfortniqwer[> <dazinism "You can, just apps often don't f"> Well what should I do?
+15:05:40 <dazinism> Get the app developer to implement it in a supported way.
+15:05:49 <dazinism> Or use a different app
+15:06:00 <suchyfortniqwer[> I think that android should just have the option in permission management in settings to do this.
+15:06:18 <suchyfortniqwer[> that would be a proper solution
+15:06:29 <suchyfortniqwer[> program in question is libretorrent
+15:06:52 <suchyfortniqwer[> I use a old version of it because pasting trackers in new version isn't very efficient
+15:06:57 <suchyfortniqwer[> *an
+15:07:04 <dazinism> Storage Access Framework is the security concious solution, been about since KitKat
+15:07:18 <dazinism> Just many apps dont use it
+15:07:49 <dazinism> Apps are slowly being forced to, due to the scoped storage stuff
+15:07:51 <suchyfortniqwer[> <dazinism "Storage Access Framework is the "> well it isn't a good solution. Just simply add an option to manage is settings. So basic.
+15:08:04 <suchyfortniqwer[> *in
+15:08:11 <dazinism> I think its a good solution
+15:08:37 <dazinism> I don't like apps getting access to all my storage
+15:08:45 <suchyfortniqwer[> The only other OS I have ever dealt with that is aids like android with managing usb devices is guix
+15:08:59 <dazinism> Its nice to specify what filed or directories they can access
+15:09:12 <suchyfortniqwer[> <dazinism "I don't like apps getting access"> FINE but just let me allow some then. Gosh.
+15:09:13 <dazinism> *files
+15:09:35 <dazinism> If the app uses SAF / scopes storage you can
+15:09:42 <dazinism> *scoped
+15:10:14 <dazinism> Problem is app developers not following the supported ways of doing stuff
+15:10:24 <dazinism> Thats an app problem
+15:10:35 <suchyfortniqwer[> <dazinism "Problem is app developers not fo"> well add a better way
+15:10:36 <dazinism> Not an OS problem
+15:10:41 <suchyfortniqwer[> <suchyfortniqwer[ "well add a better way"> that's an android problem
+15:10:58 <suchyfortniqwer[> There is no "open in files" option
+15:11:50 <suchyfortniqwer[> you can add a permission management system but just have that permission in settings, NOT files. That is not a lot to ask for.
+15:12:17 <dazinism> I'm not following you 'open in files'
+15:12:45 <dazinism> Apps can request for a use to pick a file or directory that they will have access to
+15:12:47 <suchyfortniqwer[> <dazinism "I'm not following you 'open in f"> I'm not following you not following.
+15:12:51 <dazinism> https://hub.libranet.de/wiki/and-priv-sec/wiki/storage
+15:13:00 <suchyfortniqwer[> <dazinism "Apps can request for a use to pi"> what? No option.
+15:13:24 <dazinism> Do you understand scoped storage and Storage Access Framework SAF
+15:13:49 <suchyfortniqwer[> It just goes to my root area and I can select device above but only one option.
+15:13:52 <suchyfortniqwer[> <dazinism "Do you understand scoped storage"> not very
+15:14:06 <suchyfortniqwer[> I understand some have access to more things
+15:14:19 <suchyfortniqwer[> you must give permission to program to access a larger scope
+15:14:26 <dazinism> Read the stuff linked from the wiki I just posted
+15:14:38 <suchyfortniqwer[> Why the fu** is that permission not in settings?
+15:14:48 <suchyfortniqwer[> <dazinism "Read the stuff linked from the w"> alright give me asec
+15:14:58 <dazinism> It explains how it works
+15:15:48 <dazinism> Most apps haven't didn't follow the supported way of handling files until recently, when more have done so.
+15:17:04 <dazinism> Apps can do that. Your problem is the app your using doesn't follow good practice for file handling
+15:17:16 <dazinism> *you are using
+15:18:39 <suchyfortniqwer[> Read the relevant parts in that page. Completely unhelpful. I am built with a reliance on the system file manager in android to give permission to access another storage medium when so many programs do not open in the default file manager. That is simply poor design. Would it be magically less secure to manage this permissions in a single program, settings, where all other permissions ever on your phone are
+15:18:39 <suchyfortniqwer[> managed?
+15:21:09 <suchyfortniqwer[> <dazinism "Apps can do that. Your problem i"> many do not and there isn't much wrong with that. Just improve android. I am shocked and amazed after so many years of development of this OS that you literally can't even do all permission management in one centralised location where the app itself won't need to be concerned about app development because of android working in such a fragmented way.
+15:21:10 <GrapheneOS-Teleg> Richard has joined the Telegram Group!
+15:21:10 <GrapheneOS-Teleg> imb13 has joined the Telegram Group!
+15:21:10 <GrapheneOS-Teleg> MUHAMMAD has joined the Telegram Group!
+15:21:10 <GrapheneOS-Teleg> <OG> How is graphene os on the pixel 3xl (with the pink tinted screen)? All reviews i see are on the 3a
+15:21:10 <GrapheneOS-Teleg> Xin (@l​xy063327) has joined the Telegram Group!
+15:21:10 <GrapheneOS-Teleg> <d​hfuchsiaoswhen> It's the oldest device supported by GrapheneOS and it's guaranteed support ends this year
+15:21:10 <GrapheneOS-Teleg> <OG> I dont mind using graphene android 12 for a few years until i get a newer pixel
+15:21:11 <GrapheneOS-Teleg> <d​hfuchsiaoswhen> It matters for device security, and after it's guaranteed device support, it will be dropped from officially supported devices, like 2(XL)
+15:21:11 <GrapheneOS-Teleg> <d​hfuchsiaoswhen> But your choice
+15:22:04 <dazinism> Guess directory access could be done that way? Although in many cases safer to pick a file when you need it rather than give directory access.
+15:23:10 <suchyfortniqwer[> <dazinism "Guess directory access could be "> I want to give directory access. The program simply uploads and downloads files. It is freed program. I trust it. It is not in the power of the OS to limit me in this situation.
+15:24:12 <suchyfortniqwer[> If I can't give app access to download to my flash drive, then I am forced to torrent on another computer and then plug into my phone when I want to do downloading on the go.
+15:24:25 <dazinism> I guess, unfortunately for the way you want/are used to doing things, it is
+15:24:44 <suchyfortniqwer[> <suchyfortniqwer[ "If I can't give app access to do"> *when I really want to do downloading on the go instead.
+15:25:03 <suchyfortniqwer[> <dazinism "I guess, unfortunately for the w"> well that's mad cringe
+15:25:06 <suchyfortniqwer[> change it
+15:25:55 <pizzaeater69[m]> I feel bad for dazinism for having to deal with this person
+15:26:07 <dazinism> As keep saying the app could so things in the supported way. Then you should be able to save the files to any storage provider.
+15:26:15 <suchyfortniqwer[> <pizzaeater69[m] "I feel bad for dazinism for havi"> very nice
+15:26:24 <dazinism> pizzaeater69: lol it's OK
+15:26:37 <nscnt[m]> You can give access to a directory. It's up to the application to handle it in the right way
+15:26:56 <dazinism> pizzaeater69: ask the app developers to support your use case. It will be much better for them.
+15:27:07 <dazinism> And for you
+15:27:07 <nscnt[m]> Every directory except /
+15:27:12 <dazinism> ...and maybe for me?
+15:27:44 <dazinism> Sorry not pizzaeater69but suchyfortniqwer
+15:27:52 <suchyfortniqwer[> <dazinism "As keep saying the app could so "> well I guess we've reached an impasse. I want to do something in a proper way as I would expect something to be managed while android devs think otherwise. There is no solution.
+15:27:55 <nscnt[m]>  * Every directory except the home directory itself
+15:28:56 <dazinism> There is, the app could implement storage handling in the supported way
+15:29:04 <suchyfortniqwer[> <dazinism "pizzaeater69: ask the app develo"> I will but what about the next time where an app dev ignores or where they have stopped development of the project? Android should accommodate.
+15:30:00 <nscnt[m]> Developers and their apps should accommodate
+15:30:01 <dazinism> Use a different app
+15:30:09 <suchyfortniqwer[> <dazinism "There is, the app could implemen"> I understand but what if that isn't possible? The OS should deal with it in a simple way where all other permissions are.
+15:30:20 <skwisgaar[m]> Either a troll or just a terrible person, can’t really tell
+15:30:22 <dazinism> One where they implement things properly.
+15:30:32 <suchyfortniqwer[> <nscnt[m] "Developers and their apps should"> devs may not be around, care to implement.
+15:30:42 <nscnt[m]> suchyfortniqwer: Open an issue for AOSP, please
+15:30:47 <nscnt[m]> We can't change it
+15:31:05 <suchyfortniqwer[> <dazinism "Use a different app"> name one other GPL3 torrenting program on android that has this feature implemented.
+15:31:23 <suchyfortniqwer[> <nscnt[m] "suchyfortniqwer: Open an issue f"> Alright I will
+15:31:53 <dazinism> Using unsupported apps, or apps which don't implement things properly for the OS they target is likely often not a great idea
+15:32:44 <suchyfortniqwer[> <dazinism "Using unsupported apps, or apps "> Not sure what you meant in the second half of that sentence. Can you clarify for me please?
+15:33:49 <dazinism> If you are developing an app for an operating system it is good to look at how the developers of that operating system recommend you do things
+15:34:27 <dazinism> Doing otherwise is somewhat likely to lead to pain
+15:34:31 <suchyfortniqwer[> <dazinism "If you are developing an app for"> It isn't a recommendation; it is the only way.
+15:34:39 <suchyfortniqwer[> Make the OS more flexible
+15:34:54 <skwisgaar[m]> suchyfortniqwer use a different OS
+15:34:55 <nscnt[m]> wat
+15:35:23 <skwisgaar[m]> Find one that lets you do whatever you want, that doesn’t care about security
+15:35:35 <skwisgaar[m]> If you want control, graphene is not for you
+15:35:42 <suchyfortniqwer[> <skwisgaar[m] "suchyfortniqwer use a different "> I honestly would but what linux distro is stable with good security?
+15:36:09 <skwisgaar[m]> None of them compared to graphene, or even regular android
+15:36:10 <suchyfortniqwer[> <skwisgaar[m] "If you want control, graphene is"> this isn't even much in control perspective but rather a basic feature that it only supports in a single way.
+15:36:18 <dazinism> There isn't really and part of the bad security is apps access to files
+15:36:30 <suchyfortniqwer[> <skwisgaar[m] "Find one that lets you do whatev"> Well I do not want that
+15:36:37 <skwisgaar[m]> Again, fault of the app, not graphene
+15:36:54 <skwisgaar[m]> Complain to AOSP, graphene does not develop the entire OS
+15:37:12 <skwisgaar[m]> Nor does it have the resources to do so
+15:37:40 <suchyfortniqwer[> <skwisgaar[m] "Again, fault of the app, not gra"> I think otherwise. Mainly fault of android dev, not app dev though some fault still should go to app dev.
+15:37:50 <pizzaeater69[m]> Yeah sounds like Android's and the apps fault and I dont see how does this have to do with Graphene
+15:37:56 <skwisgaar[m]> Graphene doesn’t develop that part of the OS
+15:38:15 <skwisgaar[m]> You aren’t going to accomplish anything by complaining here
+15:38:44 <sjsndnjdejd> Just torrent and setup a file server on a remote machine
+15:38:49 <sjsndnjdejd> <skwisgaar[m] "You aren’t going to accomplish a"> +
+15:38:54 <suchyfortniqwer[> <skwisgaar[m] "You aren’t going to accomplish a"> Yes I've realised that about 20 messages ago when mentioning an impasse
+15:39:01 <skwisgaar[m]> Then stop?
+15:39:12 <nscnt[m]> These measures were implemented with good reason. If the apps don't follow the good practice of it and don't handle it well, that's on them.
+15:40:00 <suchyfortniqwer[> <sjsndnjdejd "Just torrent and setup a file se"> I don't want to do that. I have a nextcloud instance on local but if I leave the house, I can't access. I just want to plug, download and play.
+15:41:46 * sjsndnjdejd sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/UpEPbVWmGhhwwRBSmOBgCZVu/message.txt >
+15:43:11 <nscnt[m]> That's not needed. Just use an app that isn't bad
+15:43:17 <suchyfortniqwer[> <sjsndnjdejd "> <@suchyfortniqwer:matrix.org> "> no thank you. Some things are meant to stay local. Also, I do shutdown my computer sometimes like other people when leaving the house and would rather not waste electricity.
+15:43:55 <qieko[m]> <skwisgaar[m] "None of them compared to graphen"> is qubes that bad compared to graphene?
+15:44:11 <dazinism> Guess you could download to internal storage then transfer to USB
+15:44:18 <suchyfortniqwer[> <nscnt[m] "That's not needed. Just use an a"> yeah? As I asked previously to another person, name another gpl3 program that has this feature implemented that can manage torrenting.
+15:44:32 <dazinism> Bit annoying tho
+15:45:10 <suchyfortniqwer[> <dazinism "Guess you could download to inte"> Yes I know but the point is to not write to the main storage in the first place. Too botched of a solution.
+15:45:19 <suchyfortniqwer[> <dazinism "Bit annoying tho"> yep
+15:45:44 <skwisgaar[m]> qieko: qubes is far from perfect. Look up Daniel’s past messages for an explanation on that. Would be better than me trying to explain it.
+15:45:57 <nscnt[m]> You're complaining about an app here. We don't have control over that. Go elsewhere. It's neither an issue of AOSP nor GrapheneOS.
+15:46:04 <qieko[m]> tyvm skwisgaar
+15:46:13 <suchyfortniqwer[> <skwisgaar[m] "qieko: qubes is far from perfect"> qubes too heavy
+15:46:29 <nscnt[m]> All you do is ranting over things we don't control. You're wrong here
+15:46:41 <suchyfortniqwer[> <nscnt[m] "You're complaining about an app "> But it IS of aosp and the app dev
+15:47:54 <skwisgaar[m]> Starting to think this is a trolling attempt. You’ve been told 100 times that we can’t help you and you continue to waste everyone’s time.
+15:48:06 <skwisgaar[m]> If the app wanted to implement the feature you want, they could
+15:48:09 <skwisgaar[m]> But they dont
+15:48:10 <nscnt[m]> If the app developer doesn't develop a functioning Android app, why is that an issue of Android?
+15:48:14 <skwisgaar[m]> Because the devs dont care
+15:48:17 <suchyfortniqwer[> <nscnt[m] "All you do is ranting over thing"> I've been wrong a lot but I don't feel as so in this circumstance. As I said, it is of both parties fault but I still believe it is of android's as they only gave a single road which has itself reliant on a file manager program for a single permission setting when that should be in settings.
+15:48:34 <suchyfortniqwer[> *android's mainly
+15:48:51 <skwisgaar[m]> We cannot control whether the app developer gives a shit about what you want
+15:48:59 <suchyfortniqwer[> <skwisgaar[m] "Starting to think this is a trol"> not trolling and you know that.
+15:49:16 <qieko[m]> you could submit a patch to aosp???
+15:49:25 <skwisgaar[m]> No I definitely do not know that
+15:50:20 <nscnt[m]> An app can still request all files access. It could work. It doesn't as you say. So it's not an issue of the OS.
+15:50:50 * sjsndnjdejd sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/cpPUcoODvYFeXRUpZgzqBoXB/message.txt >
+15:51:23 <suchyfortniqwer[> <sjsndnjdejd "> <@suchyfortniqwer:matrix.org> "> lol thanks boys
+15:51:23 <nscnt[m]> There's no "single road"
+15:52:28 <suchyfortniqwer[> <nscnt[m] "There's no "single road""> oh so I'm not forced to manage this single permission through the default file manager rather than through settings where every other app permission is? Oh ok makes sense.
+15:53:50 <suchyfortniqwer[> anyways currently downloading an IRC program to message aosp
+15:53:59 <suchyfortniqwer[> so enjoy your peace
+15:57:58 <pizzaeater69[m]> Got it
+16:08:39 <dannyknoll3[m]> <suchyfortniqwer[ "I will but what about the next t"> This is not the type of project to be demanding they compromise security and privacy to meet your specific needs.
+16:09:26 <dannyknoll3[m]> <suchyfortniqwer[ "anyways currently downloading an"> I recommend being less demanding of people when you want things from them (information and/or code) and you aren't paying them.........
+16:09:40 <suchyfortniqwer[> <dannyknoll3[m] "This is not the type of project "> I'm just so done. How is moving permission management to one centralised place a security risk?
+16:10:06 <pizzaeater69[m]> Ask that from Aosp
+16:10:38 <suchyfortniqwer[> <dannyknoll3[m] "I recommend being less demanding"> shouldn't I be? Uff I just cba to keep responding to crap I completely disagree with because completely draining and leads nowhere.
+16:10:39 <dannyknoll3[m]> They'd be compromising security by not working on it, and wasting that time doing workarounds for your outdated app (no offense, that's what it is if it's not using updated storage permissions API)
+16:10:40 <suchyfortniqwer[> bye.
+16:10:51 <skwisgaar[m]> Good riddance
+16:11:19 <skwisgaar[m]> What an entitled POS
+16:12:26 <dannyknoll3[m]> Patience is a virtue, reader. The Internet will bend over backwards for you — if you follow rule 0 - don't be a dick.
+16:13:22 <nscnt[m]> ¯\_(ツ)_/¯ I think it was a fundamental misunderstanding on his part of how apps can interact with external storage
+16:14:19 <skwisgaar[m]> Yeah definitely, I don’t know why he was even talking about permissions
+16:14:44 <skwisgaar[m]> But I didn’t bother to read all of the past messages bc he was so obnoxious lol
+16:14:50 <skwisgaar[m]> Anyway time for peace
+16:14:52 <lackinyourfortni> bruh been off a while. Any solution found with adb to do?
+16:15:28 <lackinyourfortni> <skwisgaar[m] "Anyway time for peace "> lol brah
+16:17:04 <lackinyourfortni> chile anyways this OS kinda long at doing anything. Constantly writing to swap on my 3a. Solution?
+16:17:43 <lackinyourfortni> running nothing but my matrix client and it sometimes freezes up for a few seconds and power button and stuff doesn't work
+16:20:12 <nscnt[m]> I'm pretty sure you are the same person since you (accidentally?) posted with that username on the same objective. Stop trolling, please
+16:20:39 <nscnt[m]> ... same objective as suchyfortniqwer
+16:21:03 <lackinyourfortni> <nscnt[m] "I'm pretty sure you are the same"> huh 100%
+16:21:09 <lackinyourfortni> fortnite foreva
+16:21:32 <lackinyourfortni> <nscnt[m] "... same objective as suchyfortn"> I have the same problem. And?
+16:21:49 <lackinyourfortni> I simply asked any solution found from the waffle?
+16:23:21 <lackinyourfortni> lol
+16:34:28 <pizzaeater69[m]> I wish I could ban people
+17:00:47 <Barbelo[m]> is there anything i can do to make the camera connect yet?
+17:03:51 <gnome_giga_vegan> i am running grapheneos on a pixel3  it does not seem to be fast charging.  i have tried plugging in and using wireless charger.  is a limitation of the os?
+17:05:56 <TheJollyRoger> gnome_giga_vegan: No. Fast charging is fully supported on GrapheneOS and it works fine for me on Blueline.
+17:06:06 <TheJollyRoger> Check to ensure your charger and cable combination fully support Qualcomm Fast Charging.
+17:06:40 <TheJollyRoger> gnome_giga_vegan: many problems relating to USB in GrapheneOS happen as a result of substandard USB cables which don't adequately or fully support charge negotiation or chargers that don't either.
+17:07:45 <gnome_giga_vegan> everything worked on my previous phone a samsung s9plus using regular android
+17:08:07 <gnome_giga_vegan> i bought this pixel3 second hand is there a possibility there is something wrong with it?
+17:09:05 <TheJollyRoger> gnome_giga_vegan: quite possibly, yes. Toward the end of a phone's life,
+17:09:25 <TheJollyRoger> what generally happens is that the resellers flood the market with handsets in an effort to cut their losses and prevent the stock from going stale.
+17:09:26 <gnome_giga_vegan> if i replace battery could that help?
+17:09:47 <TheJollyRoger> This not only includes carrier/bootloader locked devices, but also refurbs, which many shady sellers won't tell you are refurbished.
+17:10:05 <TheJollyRoger> gnome_giga_vegan: You might also need to replace the USB slot in case the prongs are broken or the USB chip has malfunctioned.
+17:10:07 <gnome_giga_vegan> mine was a used phone from a individual so i knew it was used
+17:10:18 <TheJollyRoger> Doing so is about the the cost of a Pixel 4a.
+17:10:32 <TheJollyRoger> Roughly $300 Canadian for the replacement of the USB slot, and more for the battery.
+17:10:48 <gnome_giga_vegan> how can i verify it is charging fast or regular?  maybe i am misreading the phone is there a section where it would say "fast charging"
+17:11:09 <demonmachina[m]> dang 4a.... just a littttttttle bigger in the hand and it's annoying. This up and down game with phone sizes is irritating. 3a size was perfect.
+17:11:18 <demonmachina[m]> really the 3 for that matter
+17:11:20 <TheJollyRoger> That's a rough deal, because this October, that phone will be EOL and stop getting firmware updates from Qualcomm, stop getting security updates from upstream, and we will be forced to discontinue support for it.
+17:11:51 <TheJollyRoger> gnome_giga_vegan: it will say "charging rapidly." Note that it will only charge rapidly if the phone detects it is safe to do so, and automatically select the speed that's best for the health of your battery.
+17:12:22 <TheJollyRoger> It will also automatically select what capacity of the battery (ie: when to go into idle maintenance/trickle) to prolong your battery health far better than you ever could.
+17:13:41 <TheJollyRoger> So, speaking hypothetically, if the previous owner did stuff like what we did to gadgets in the 2000's or early 2010's such as only charging to a certain threshold and then unplugging the phone or not leaving the phone plugged in, that can actually damage the battery.
+17:13:42 <gnome_giga_vegan> it just says "charging wirelessly" at the bottom of the screen when locked...
+17:14:02 <TheJollyRoger> gnome_giga_vegan: Plug it in to something that supports qualcomm fast charging.
+17:16:17 <gnome_giga_vegan> says "charging" when plugged into usb c cable
+17:17:07 <TheJollyRoger> gnome_giga_vegan: If your phone's battery is low, and you're charging it like this, it's phone's detecting your charging setup's unsafe to use full speed charging.
+17:17:19 <TheJollyRoger> *your phone's detecting that your charging setup's unsafe to
+17:17:39 <gnome_giga_vegan> okay i will fully charge and then let it go down a little and then retry,  at that point it should fast charge is available?
+17:18:02 <TheJollyRoger> gnome_giga_vegan: Let it go to 50% and then try with the official Google branded charging cable and charger.
+17:19:25 <TheJollyRoger> gnome_giga_vegan: note that in order to fast charge wirelessly, you MUST use an official Google wireless charger
+17:30:36 <alex-resist> 542 users left...
+17:57:42 <TheJollyRoger> Hang on tight, everybody!
+18:56:35 <harrisonford[m]> TheJollyRoger: hey--thanks for you and another lad (who i forgot) suggesting i needed to try using a different cable and the Edge browser for the web-install of Graphene on my 4a5G pixel i nearly bricked 2 weeks ago... just wanted to say thanks! i got it loaded and its functional now. appreciate the help!!
+18:57:29 <GrapheneOS-Teleg> <c​lannad> Test group
+18:57:53 <anupritaisno1[m]> OK good
+18:57:56 <anupritaisno1[m]> That bot bug is now fixed
+19:02:03 <harrisonford[m]> im a newbie. not sure if this is the right group here, but maybe someone can point me in the right direction-- if i download an app from google play store into Graphene (i want the BETA of AnySoftKeyboard since it has Swipe, but they push it thru Google store) does that compromise my now degoogled phone and let google in?
+19:09:38 <pizzaeater69[m]> I think you can get Anysoftkeyboard from f-droid. If not then from Aurora store that you can get from f-droid.
+19:09:39 <pizzaeater69[m]> It should not compromise your device
+19:11:53 <noustfurkuphater> Any linux distro I can run on a pixel that is in similar security level to graphene?
+19:12:52 <pizzaeater69[m]> Not really
+19:13:18 <noustfurkuphater> darn
+19:13:25 <harrisonford[m]> > <@pizzaeater69:matrix.org> I think you can get Anysoftkeyboard from f-droid. If not then from Aurora store that you can get from f-droid.
+19:13:25 <harrisonford[m]> > It should not compromise your device
+19:13:25 <harrisonford[m]> yes, i can get the alpha version in Fdroid but it doesnt have swipe, which i use all the time. if i want the Beat which has swipe they send me to Googel PLaystore. now that im finally getting free from Google i want to make sure the BETA wouldn't be reporting back to the google mothership :)
+19:14:48 <r0tt0r[m]> <noustfurkuphater "Any linux distro I can run on a "> i didnt try on gos but anlinux app from fdroid allows running linux on android
+19:14:56 <mr_hebi_san[m]> You can't really know unless you examine the source code.  Its open source, so you could.  It looks like you could even just build it yourself and not have to use what's on Play or on Fdroid
+19:18:37 <dannyknoll3[m]> Good riddance, jesus
+19:22:05 <ulmirdin[m]> Is it just me or calendar app disappeared after the beta update?
+19:23:10 <dannyknoll3[m]> ulmirdin: There is no usable calendar app, it was a placeholder, probably shortcut removed.
+19:24:12 <bill_in_mtl[m]> it's in the beta changelog - shortcut removed
+19:24:24 <ulmirdin[m]> I know. I was just used to it being on my app list lol.
+19:28:53 <strcat[m]> it's still present for users who don't install another calendar app so that when apps try to open calendar events there is something to handle it
+19:29:05 <strcat[m]> so it works for the intended purpose without confusing people now
+19:29:25 <strcat[m]> i.e. if you install a calendar backend other apps can show you events, create events, etc. via this app
+19:29:36 <strcat[m]> but we aren't going to lead people to using it anymore
+19:29:39 <strcat[m]> because it's nearly useless
+19:29:52 <strcat[m]> so people don't have to be concerned with the fact that it's present
+19:30:10 <strcat[m]> if you install another app it'll give you a choice between them when an app wants to view a calendar event and people can choose the one they installed instead
+19:30:12 <strcat[m]> it's a simple change
+19:39:19 <ulmirdin[m]> I remember when I first install grapheme and tried to make a calendar event in the app. I was like how the hell do you use this thing😅
+19:39:31 <ulmirdin[m]> * I remember when I first install graphene and tried to make a calendar event in the app. I was like *how the hell do you use this thing*😅
+19:39:57 <strcat[m]> basically: we are not inclined to bundle any third party apps in the OS
+19:40:02 <strcat[m]> for reasons I've explained before
+19:40:08 <ulmirdin[m]> Removing it was a good decision.
+19:40:20 <strcat[m]> only launcher icon is removed
+19:40:25 <ulmirdin[m]> * Removing it from the app list was a good decision.
+19:40:42 <strcat[m]> we are going to have our own app install/update system and we can make first party packages of apps in there and take advantage of the new verified boot feature extending it to a first party repository
+19:41:06 <strcat[m]> and then we can add a SetupWizard page with a list of those apps and you can check a box next to them to install them as part of the initial setup
+19:41:19 <strcat[m]> and that way if we decide to remove an app all we have to do is remove the suggestion
+19:41:43 <strcat[m]> vs. being stuck bundling it in the OS forever since removing a bundled app would make users lose their data since suddenly the app is gone
+19:42:06 <ulmirdin[m]> I believe Calyx does something like this. It's definitely a great thing to have.
+19:42:07 <strcat[m]> same approach as how the stock OS now encourages you to install certain apps as part of their setup wizard
+19:42:43 <strcat[m]> ulmirdin: they bundle a bundle of third party apps including ones with major privacy/security issues
+19:42:47 <strcat[m]> and I prefer not talking about that here
+19:42:56 <strcat[m]> also F-Droid is totally unacceptable for inclusion or as a way to do this
+19:43:27 <strcat[m]> at most it can be packaged in our repo
+19:43:29 <ulmirdin[m]> <strcat[m] "and I prefer not talking about t"> Copy that
+19:43:29 <bizanon[m]> That sounds amazing
+19:43:29 <strcat[m]> but... it can't because it doesn't meet the minimum standards that will be enforced for that
+19:48:20 <anupritaisno1[m]> <strcat[m] "at most it can be packaged in ou"> Never tbh
+19:50:59 <anupritaisno1[m]> We need high quality apps to be there
+20:03:44 <Duxy[m]> I just use pen and paper as my calendar :)
+20:05:00 <pizzaeater69[m]> Good, I use papermap and compass as maps :D okey I live in Finland so here this is normal
+20:06:45 <Duxy[m]> I have OsmAnd installed but barely use it
+20:12:56 <mr_hebi_san[m]> Great I'll put in a feature request for GOS to deliver a paper calendar and pencil for the next update :)
+20:17:27 <GrapheneOS-Teleg> Steve (@s​bain) has joined the Telegram Group!
+20:21:01 <skagreek[m]> strcat: Hope you're well. Can't remember this, but I recall being forced to use the recovery code on my first backup last month. I installed a new OS and did a fresh backup (as if I was new), and it didn't ask to create a recovery code. I still forced it to use, but curious if something changed, or if I forgot.
+20:21:28 <skagreek[m]>  * strcat: Hope you're well. Can't remember this, but I recall being forced to use the recovery code on my first backup last month. I installed a new OS and did a fresh backup (as if I was new), and it didn't ask to create a recovery code. I still forced it to use it, but curious if something changed, or if I forgot.
+20:22:08 <Duxy[m]> Thanks! Can we get a record player as well? 😉
+20:22:28 <skagreek[m]>  * strcat: Hope you're well. Can't remember this, but I recall being forced to use the recovery code on my first backup last month. I recently installed a new OS and did a fresh backup (as if I was new), and it didn't ask to create a recovery code. I still forced it to use it, but curious if something changed, or if I forgot.
+20:25:35 <GrapheneOS-Teleg> R. (@s​tatesmanpatriot) has joined the Telegram Group!
+20:40:23 <gnome_giga_vegan> i guess pixels dont work with qualcomm quick charge
+20:40:29 <gnome_giga_vegan> that is why mine isnt quick charging my pixel 3
+20:42:30 <strcat[m]> gnome_giga_vegan: they use USB-PD fast charging
+20:42:53 <strcat[m]> any normal standard USB charger works fine with fast charging
+20:43:07 <strcat[m]>  * any standard USB charger works fine for fast charging them
+21:09:29 <skagreek[m]>  * strcat: Hope you're well. Can't remember this, but I recall being forced to create a recovery code on my first backup last month. I recently installed a new OS and did a fresh backup (as if I was new), and it didn't ask to create a recovery code. I still forced it to use it, but curious if something changed, or if I forgot.
+21:09:48 <skagreek[m]>  * strcat: Hope you're well. Can't remember this, but I recall being forced to use/create a recovery code on my first backup last month. I recently installed a new OS and did a fresh backup (as if I was new), and it didn't ask to create a recovery code. I still forced it to use it, but curious if something changed, or if I forgot.
+21:10:31 <skagreek[m]>  * strcat: Hope you're well. Can't remember this, but I recall being forced to use/create a recovery code on my first backup last month. I recently installed a new OS and did a fresh backup (as if I was new), and it didn't ask to use a recovery code/phrase. I still forced it to use it, but curious if something changed, or if I forgot.
+21:18:49 <maxikskwefsgsg> vanadium sends information due safe browsing to google! what is that for a policy????
+21:19:39 <strcat[m]> no it doesn't
+21:19:51 <strcat[m]> please stop making stuff up, thanks
+21:20:03 <strcat[m]> it has safe browsing disabled by default and anyway... it isn't implemented right now
+21:20:12 <strcat[m]> the toggle for it doesn't do anything on GrapheneOS
+21:21:04 <maxikskwefsgsg> well it shows "no protection" (not recommended)
+21:21:19 <strcat[m]> as I said
+21:21:24 <strcat[m]> safe browsing is disabled by default in Vanadium
+21:21:44 <strcat[m]> and the toggle doesn't do anything atm because we don't have Play services and that's how it's implemented
+21:22:00 <maxikskwefsgsg> and standard protection says: vanadium MAY send URL (...) to Safe Browsing...
+21:22:16 <strcat[m]> can you please read what I've written?
+21:22:58 <maxikskwefsgsg> i do not understand, why you give the option even if it is not implemented
+21:23:26 <strcat[m]> so you're upset because we haven't removed the configuration option, which is disabled by default?
+21:23:37 <strcat[m]> we want to provide an implementation of it which doesn't depend on Play services
+21:23:53 <strcat[m]> I'm not sure why you're so upset about having the ability to turn something on
+21:24:00 <strcat[m]> sorry for wanting to leave you with a choice
+21:24:07 <maxikskwefsgsg> just confused me an lead me to a false accusation. sorry for that
+21:24:26 <strcat[m]> we disable it by default because for the time being we haven't overhauled/changed it
+21:24:38 <maxikskwefsgsg> alright, thx for the explanation
+21:24:38 <strcat[m]> but it depends on Play services on Android anyway so it does nothing atm
+21:24:51 <SRC> Did an update just go out a bit ago?
+21:25:02 <strcat[m]> SRC: https://grapheneos.org/releases#changelog
+21:26:35 <maxikskwefsgsg> love your work, by the way. ciao
+21:26:43 <SRC> That is dated 3/6 yesterday. Any idea why I wouldn't get until just now? I'm in the US
+21:26:59 <strcat[m]> SRC: read https://grapheneos.org/releases#about-the-releases
+21:27:19 <strcat[m]> SRC: are you aware that releases go through a testing channel, then the Beta channel, before getting to the Stable channel?
+21:27:30 <strcat[m]> they're announced right before being pushed out via Beta
+21:27:36 <strcat[m]> it's all covered there
+21:28:27 <skagreek[m]> Does seedvault force encryption and the use of a phrase by default?
+21:28:50 <strcat[m]> it only does encrypted backups
+21:29:07 <strcat[m]> it doesn't use a passphrase, it uses a seed phrase to generate a high entropy key
+21:29:12 <strcat[m]> don't really understand what you're asking
+21:29:46 <skagreek[m]> Yeah, it was weird, my last backup (with no records of prior backups, new usb), didn't give me the phrase like my last time. All new install and usb, etc.
+21:30:09 <strcat[m]> you seem confused
+21:30:09 <skagreek[m]> i could be :)
+21:30:10 <strcat[m]> what exactly are you asking?
+21:30:12 <strcat[m]> it never does unencrypted backups...
+21:30:19 <skagreek[m]> right.
+21:30:33 <strcat[m]> skagreek: you restored a backup, why would you need a new seed phrase?
+21:30:39 <skagreek[m]> my first time using seedvault, it gave me the 12 words and forced me to save it and type it.
+21:30:47 <skagreek[m]> no, this is all fresh.
+21:30:48 <strcat[m]> because you restored the backup
+21:31:02 <skagreek[m]> didn't this time, i deleted my entire backup history
+21:31:19 <strcat[m]> I don't really understand what you're confused about
+21:31:50 <skagreek[m]> lets say i'm a first time user, new install. doesn't it present you the 12 words?
+21:32:00 <strcat[m]> if you set it up
+21:32:46 <skagreek[m]> i remember the first backup i did, it showed me the 12 words and i saved it. this time, with a completely new install and no backups, it didn't present me the phrase.
+21:32:59 <skagreek[m]> i know it's frustrating to hear from us users.
+21:33:01 <strcat[m]> skagreek: I really don't know what you're confused about
+21:33:06 <strcat[m]> it's not frustrating to hear from users
+21:33:33 <strcat[m]> skagreek: it is NOT supposed to show you seed words during the initial setup
+21:33:40 <strcat[m]> it's not enabled by default
+21:33:49 <skagreek[m]> ok.
+21:33:49 <strcat[m]> it is opt-in
+21:34:11 <skagreek[m]> i'll take this one as early Alzheimer's. Totally forgot my first setup.
+21:34:13 <strcat[m]> Seedvault backups are only enabled if you manually set it up
+21:34:28 <strcat[m]> it doesn't prompt you to set it up during the initial setup wizard
+21:34:57 <skagreek[m]> Ok that makes sense now. Sorry to trouble you for that one. I'm really forgetting things.
+21:35:15 <skagreek[m]> I'm not that dumb btw. lol
+21:35:22 <skagreek[m]> (maybe slightly)
+21:37:52 <skagreek[m]> one more question. How many devices do you usually mess with, for fresh installs and testing?
+21:38:08 <SRC> I am unable to add any events or reminders to the calendar although I have both events and reminders enabled in calendar settings?
+21:38:24 <strcat[m]> which calendar?
+21:39:04 <strcat[m]> there's no bundled calendar provider
+21:40:12 <GrapheneOS-Teleg> <I​ickhitterextraordinaire> Ooo what's in the new update
+21:40:17 <GrapheneOS-Teleg> <g​ochoingles> I am happy that Vanadium exists. I wonder if it is better than Bromite ─ does it have always-on incognito by default?
+21:40:20 <mr_hebi_san[m]> SRC: If you haven't updated yet, the old AOSP calendar is gone.  It was more or less read-only anyway and it never allowed you do actually add anything to it
+21:40:28 <strcat[m]> it's not gone
+21:40:44 <mr_hebi_san[m]> Fair, it does exist, but the icon is gone
+21:42:37 <gapheneuser001> Hi there, has the most recent update broken the system UI for anyone else? Userdata seems fine and the phone is mostly functional but the UI reverted to a white theme, I can't access quick settings, other user profiles, ringtone was reset etc. I initially thought it was a bad update, because when I clicked reboot the screen went black but never
+21:42:37 <gapheneuser001> rebooted. UI was still responsive based on sound and haptic feedback but there was no display. I hard rebooted after a few more minutes but the boot was very quick, didn't seem like an update was installed and the UI was having problems. I tried flashing the OTA manually through ADB but nothing changed.
+21:42:49 <strcat[m]> no, it hasn't
+21:43:31 <strcat[m]> gapheneuser001: are you sure you have a proper install of GrapheneOS?
+21:43:38 <strcat[m]> gapheneuser001: bootloader is locked, and it passes verification?
+21:44:15 <gapheneuser001> Yep, it has been stable since the initial release of graphene.
+21:44:28 <strcat[m]> gapheneuser001: that's not really an answer to the question
+21:45:06 <gapheneuser001> Oh sorry, yes the bootloader is locked and it was passing attestation fine so I assume that means it passed verification...
+21:48:03 <strcat[m]> gapheneuser001: I don't think whatever is wrong for you is connected to anything with the update
+21:48:12 <strcat[m]> gapheneuser001: and it's not possible to have a 'bad update' where it doesn't get properly installed
+21:48:49 <strcat[m]> gapheneuser001: recommend reading about how the update system works
+21:49:14 * zrtjhzjarh8694[m sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/qKoceTjFKDSfXBXDZCMPrpRg/message.txt >
+21:49:27 <strcat[m]> gapheneuser001: the update is installed in the background by the update app, and then it tells you when installation is completed
+21:49:33 <strcat[m]> it's already installed at that point
+21:49:41 <strcat[m]> zrtjhzjarh8694: it doesn't
+21:50:17 <strcat[m]> zrtjhzjarh8694: the Network permission disallows direct and indirect network access, it doesn't change the state of unrelated controls like those
+21:50:49 <strcat[m]> they aren't relevant when an app doesn't have network access
+21:51:29 <strcat[m]> gapheneuser001: sounds like the result of doing something with adb, a device manager, etc.
+21:51:34 <jalb> I lost the fingerprint in the last update to 3a, but no problem. Only that
+21:51:47 <jalb> I did it again and solved
+21:51:59 <strcat[m]> jalb: don't think that was connected to an OS update
+21:52:19 <jalb> strcat[m]: it was only after the last update, I don't know
+21:52:25 <strcat[m]> people frequently associate things with an OS update which are really not tied to it because it's the reason they rebooted
+21:52:25 <jalb> Never happened bedore
+21:52:29 <jalb> *before
+21:52:31 <zrtjhzjarh8694[m> <strcat[m] "they aren't relevant when an app"> OK, thanks for the clarification.
+21:52:41 <strcat[m]> jalb: no real reason to think it's connected to the update
+21:52:43 <strcat[m]> zrtjhzjarh8694: as I said
+21:52:49 <strcat[m]> zrtjhzjarh8694: not relevant when the app doesn't have network access
+21:52:56 <jalb> ok, maybe another reason, idk
+21:53:10 <strcat[m]> zrtjhzjarh8694: I don't really understand what you're asking
+21:53:18 <strcat[m]> zrtjhzjarh8694: the switch wouldn't be there if it didn't work
+21:54:07 <strcat[m]> jalb: when was the last time you rebooted before the last update? probably the previous update
+21:54:11 <gapheneuser001> Yeah I assumed the internal update did a verification much like the side loading verification. It's just that the problem only began after I tapped reboot from the updater. I only accessed the device though ADB after the problem occurred and only using the adb devices and sideload command. Would a backup with seedvault be able to restore my
+21:54:12 <gapheneuser001> userdata if I reflash the OS?
+21:54:22 <jalb> strcat[m]: only after the previous update
+21:54:39 <strcat[m]> jalb: yeah, so any problem that you would only notice after a reboot you are only going to notice after an update
+21:54:43 <jalb> but in these days we received some udpated, not too long
+21:54:44 <strcat[m]> does not mean that it's tied to updates
+21:54:52 <jalb> that's true
+21:55:10 <strcat[m]> gapheneuser001: it doesn't just do verification
+21:55:15 <jalb> is it normal to lose the fingerprint after rebooting?
+21:55:24 <strcat[m]> gapheneuser001: recommend reading https://grapheneos.org/releases#about-the-releases and https://grapheneos.org/usage#updates
+21:55:41 <strcat[m]> jalb: if there is something wrong with it then it is possible it got deleted during verification of data on boot
+21:55:48 <jalb> ok thanks
+21:55:59 <strcat[m]> jalb: I don't know how that could happen in practice
+21:56:11 <jalb> anyway it's not important
+21:57:47 <jalb> I also saw that in my 2 profiles, in 1 of them the 3 button changed but not in the other profile
+21:57:54 <jalb> I changed it and no problem
+21:58:12 <strcat[m]> jalb: that's a known issue with user profiles
+21:58:18 <strcat[m]> jalb: not related to updates in any way
+21:58:22 <strcat[m]> user profiles can lose certain settings right now
+21:58:24 <jalb> ah interesting :)
+21:58:32 <jalb> didn't know, thanks
+21:58:37 <strcat[m]> there's an open issue and it's an AOSP issue
+21:58:51 <strcat[m]> an issue is filed upstream about the main form of the issue
+21:58:57 <zrtjhzjarh8694[m> <strcat[m] "zrtjhzjarh8694: the switch would"> If I understood correctly the discussion here above, the "safe browsing" option does not work even if enabled because it requires Google Services (which are not available in GOS).
+21:58:58 <jalb> strcat[m]: does the calls and messages work ok in profiles?
+21:59:04 <jalb> I never tested
+21:59:29 <gapheneuser001> I just read through them and I understand that they use signature verification so it shouldn't be related, and yet I'm still having these UI issues. Any ideas for how I might go about fixing these issues? Would a backup with seedvalt, reflashing and restoring potentially work?
+21:59:42 <strcat[m]> zrtjhzjarh8694: now you're turning the discussion into something completely different and it doesn't make any sense
+21:59:53 <strcat[m]> zrtjhzjarh8694: that is not what you were talking about and isn't what we were talking about
+22:00:05 <strcat[m]> why are you talking about Vanadium and that previous discussion now?
+22:01:04 <zrtjhzjarh8694[m> I was merely wondering if that switch was another one that had no impact if on or off.
+22:01:05 <zrtjhzjarh8694[m> You answered. Thanks!!
+22:01:38 <strcat[m]> zrtjhzjarh8694: it wouldn't be there if it had no impact, as I said
+22:01:53 <strcat[m]> zrtjhzjarh8694: I don't understand what this has to do with the previous discussion
+22:02:13 <strcat[m]> Vanadium has that toggle because it does have support for using it but on GrapheneOS the support isn't available
+22:02:30 <strcat[m]> you can't compare the situation of that app with some completely unrelated thing in the base OS itself
+22:02:57 <strcat[m]> jalb: yes it works as designed
+22:03:09 <SRC> So what is a recommended secure calendar to replace the aosp calendar and where should it be downloaded from?
+22:03:11 <jalb> thanks!
+22:03:38 <jalb> never said enough: thanks for your great work strcat[m]
+22:03:51 <anupritaisno1[m]> <SRC "So what is a recommended secure "> Use the one that comes with the OS
+22:04:06 <jalb> and all the team, of course
+22:04:29 <ruach> Is voice input disabled in GOS? I searched the board and didn't find much. When I hit the mic on my keyboard I get "Voice input is not installed on your device".
+22:04:51 <anupritaisno1[m]> gapheneuser001: did you ever do anything with adb?
+22:05:13 <strcat[m]> gapheneuser001: I don't really understand what issue you're having but it's definitely not connected to the update and you were already having the issue before booting up the new OS as you explained: it did not reboot (when running the old version)
+22:05:15 <zrtjhzjarh8694[m> <strcat[m] "Vanadium has that toggle because"> For a new user (like me), it is difficult to distinguish if/when GOS provide support for functionalities. You answered my question. Thanks for your time & answer!
+22:05:48 <gapheneuser001> No, only when I installed the OS and just an hour ago when I followed googles OTA update guide to flash the 3/6 GOS OTA.
+22:06:01 <strcat[m]> zrtjhzjarh8694: considering how you acted when you first came in the room with the false claims about that toggle
+22:06:13 <strcat[m]> zrtjhzjarh8694: and now the fact that you are trying to find ways to keep talking about it and complaining about it
+22:06:16 <strcat[m]> zrtjhzjarh8694: looks like concern trolling to me
+22:06:39 <strcat[m]> zrtjhzjarh8694: it is not confusing to new users, rather, you are still trying to create an issue out of us having that toggle offered in Vanadium
+22:06:51 <strcat[m]> zrtjhzjarh8694: and at this point, it has crossed the line over what I'm willing to tolerate
+22:07:22 <strcat[m]> also the switch of username made it unclear that this was the same person
+22:08:16 <anupritaisno1[m]> gapheneuser001: OK
+22:08:33 <anupritaisno1[m]> Can you try booting to safe mode?
+22:08:41 <strcat[m]> gapheneuser001: as you said above, you were running a previous version of the OS (you hadn't booted up the new version) and it didn't shut down / reboot properly
+22:08:48 <strcat[m]> gapheneuser001: so, that's a clear indication the issue was not the OS update
+22:08:48 <anupritaisno1[m]> Could be one of your apps breaking something
+22:08:54 <strcat[m]> gapheneuser001: you already had some issue previously
+22:08:58 <strcat[m]> anupritaisno1: don't think so
+22:09:09 <GrapheneOS-Teleg> <amnesiadroid> I'm not a grapheneos user yet but I wonder if IPv6 privacy extensions are enabled by default?
+22:09:31 <strcat[m]> please see https://grapheneos.org/usage#wifi-privacy
+22:09:39 <anupritaisno1[m]> <strcat[m] "anupritaisno1: don't think so"> There's terrible apps that do nonstandard stuff and cause system ui crashes
+22:09:45 <gapheneuser001> Thanks, good to know there's no issues with the update! Something is still definitely broken for me though, I'd be happy to try and explain it in more detail but I'm not sure how much good that'll do. I'll attempt a full backup and reinstall and report back if it doesn't work. Oh I didn't try safe mode, I'll try that and report back before the
+22:09:46 <gapheneuser001> reinstall. Thanks for all the help!!
+22:09:48 <strcat[m]> IPv6 privacy extensions are enabled by default but the Linux kernel implementation of them doesn't work well
+22:09:52 <strcat[m]> recommend reading https://grapheneos.org/usage#wifi-privacy
+22:09:56 <SRC> I was just told the calendar in the OS is gone or no longer included. I still have it in my phone but it's useless if you can't add events/reminders to it
+22:10:04 <anupritaisno1[m]> Example reporting a null state to system ui
+22:10:14 <strcat[m]> SRC: you're misunderstanding
+22:10:23 <GrapheneOS-Teleg> <amnesiadroid> Alright, i'll have a read. Thanks
+22:10:38 <strcat[m]> SRC: GrapheneOS does not include a calendar provider, and that isn't a recent change
+22:11:04 <strcat[m]> SRC: it includes the infrastructure for calendar providers and a very basic UI for other apps to use to view events, etc.
+22:11:12 <Lotus[m]> you can use etesync for syncing calendar
+22:11:40 <strcat[m]> SRC: there was previously a launcher icon for the basic viewer, etc. but that was remove because users were confused by having it as an app they could launch
+22:11:40 <SRC> So what should I use for a calendar? I don't want to install something that is insecure
+22:11:56 <anupritaisno1[m]> Just hang a physical calender in your room
+22:12:09 <anupritaisno1[m]> Very secure
+22:12:11 <strcat[m]> because people wrongly thought that the AOSP Calendar app actually provides a calendar rather than providing a way to view calendars provided by other apps
+22:12:13 <SRC> Lol
+22:12:19 <strcat[m]> so we addressed that by removing the launcher icon
+22:12:19 <zrtjhzjarh8694[m> <strcat[m] "also the switch of username made"> Didn't change my username. Just reading here to try to learn more about GOS.
+22:12:21 <strcat[m]> to avoid the confusion
+22:12:52 <mr_hebi_san[m]> Recommendation for apps should probably be in #grapheneos-offtopic:matrix.org anyway
+22:13:01 <strcat[m]> zrtjhzjarh8694: the concern trolling is inappropriate for the channel
+22:13:17 <pinguin74> hi there, is there issues with weather apps on gos? using "your local weather", granted location permission, the app can often not detect location....
+22:13:20 <strcat[m]> zrtjhzjarh8694: if you didn't change your username then what you're doing makes even less sense
+22:13:33 <strcat[m]> pinguin74: no, there isn't
+22:13:45 <strcat[m]> pinguin74: GNSS-based location takes some time to get a lock
+22:14:10 <strcat[m]> we don't send nearby Wi-Fi networks, cell towers, Bluetooth devices to a server which returns back a guess of your location like Play services
+22:14:11 <skagreek[m]> Try WEAWOW weather app, pretty coool
+22:14:11 <strcat[m]> and we won't
+22:14:21 <jalb> wow receiving new update now :D
+22:14:25 <strcat[m]> so you'll just have to accept that it takes some time to get a location fix
+22:14:31 <pinguin74> ok, gnss differs from gps ?
+22:14:35 <strcat[m]> and some apps wrongly assume that they can get a rough estimate really quickly
+22:14:36 <strcat[m]> pinguin74: no
+22:14:39 <strcat[m]> pinguin74: GNSS includes GPS
+22:14:56 <strcat[m]> pinguin74: GPS and the other GNSS implementations take some time to get a location fix
+22:15:00 <strcat[m]> it isn't instant
+22:15:06 <pinguin74> ok, thought gnss stands for glonass ;-)
+22:15:10 <FBI[m]> <pinguin74 "hi there, is there issues with w"> You can try Geometric Weather from F-Droid it dosent need any permissions except network
+22:15:21 <strcat[m]> pinguin74: no GNSS includes GPS, GLONASS and other implementations
+22:15:36 <strcat[m]> pinguin74: the devices can use more than GPS
+22:16:12 <strcat[m]> if you aren't connected to the internet or cellular network at all, then it would be completely normal for GNSS (GPS, etc.) to take 10 minutes to get a location fix
+22:16:25 <strcat[m]> being connected to the internet allows fetching GPS almanacs which speed it up
+22:16:32 <pinguin74> "your local weather" uses "local mls" and "nominatim"
+22:16:36 <strcat[m]> being connected to a cellular network with working SUPL further speeds it up
+22:17:08 <strcat[m]> so it can end up taking < 1 minute to get a location fix but it does take a bit of time
+22:17:24 <strcat[m]> it won't just nearly instantly return a guess based on nearby Wi-Fi networks, etc. since we aren't sending that data to a service
+22:17:35 <ruach> When I hit the mic on my keyboard I get "Voice input is not installed on your device".  I get the option to download from the store but that goes nowhere.
+22:17:43 <strcat[m]> some apps are broken and don't support waiting long enough to get a location fix
+22:17:55 <pinguin74> thnx for explaining !
+22:17:59 <strcat[m]> ruach: an implementation of voice input isn't included in the OS
+22:18:10 <strcat[m]> you would have to install one
+22:18:59 <jalb> is it ok to stop some apps that communicate to internet (messaging apps, email...) when switching to another profile to avoid some "leaks" or it's nonsense?
+22:19:03 <ruach> Thank you.
+22:19:27 <strcat[m]> jalb: you can end session for a secondary user profile as a whole
+22:19:34 <strcat[m]> jalb: it's not clear why you think it would help to do that
+22:19:43 <strcat[m]>  * jalb: it's not clear why you think it would help to do that in the context you mention
+22:19:59 <jalb> strcat[m]: I do, but when using the other profile, if they share wifi, I was worried about connecting in the background
+22:20:03 <jalb> Maybe a nonsense
+22:20:06 <strcat[m]> jalb: disabling internet access for an app and then allowing it later would accomplish what?
+22:20:20 <jalb> I don't know...
+22:20:31 <strcat[m]> jalb: why would it matter if it connected?
+22:20:39 <strcat[m]> jalb: if you're just going to allow it to connect again later?
+22:20:47 <jalb> are the apps in the main profile continue sending information to the internet?
+22:20:56 <strcat[m]> you can end session on a user profile or force stop apps but I do not think what you're talking about makes sense
+22:21:05 <jalb> strcat[m]: I use another server in the vpn of the other profile
+22:21:08 <strcat[m]> there is a reason to end session on a profile
+22:21:16 <mynacol[m]> Also wanna throw another weather provider in the ring: https://v2.wttr.in/New%20York
+22:21:25 <strcat[m]> jalb: the owner profile always runs
+22:21:36 <jalb> strcat[m]: that's what I mean,
+22:21:45 <jalb> so, stopping some apps don't help?
+22:21:46 <strcat[m]> jalb: you can end session on secondary profiles
+22:21:54 <strcat[m]> jalb: you don't have to do stuff in the owner profile
+22:22:07 <strcat[m]> beyond the initial unlock and managing other profiles or global device settings
+22:22:18 <strcat[m]> jalb: no, that's not what I'm saying
+22:22:26 <strcat[m]> jalb: it's not a good way to approach what you want
+22:22:28 <jalb> strcat[m]: I mean if I do something in another profile but I'm afraid the main profile sendind information of who I am
+22:22:46 <strcat[m]> jalb: you've got a misunderstanding on how you should be approaching things
+22:22:48 <jalb> Email, etc
+22:22:54 <jalb> Yes, that's why I ask
+22:23:00 <jalb> maybe it's nonsense
+22:23:05 <strcat[m]> jalb: yes but you're asking the wrong kind of questions
+22:23:13 <strcat[m]> you're asking about how you think it should be done in a very specific way
+22:23:15 <jalb> what could I do, then?
+22:23:19 <strcat[m]> instead of about what you're trying to accomplish
+22:23:26 <strcat[m]> that makes it hard for people to answer and leads to bad answers
+22:23:28 <jalb> yes
+22:23:33 <jalb> ah ok
+22:23:40 <strcat[m]> ask about what you want to achieve not about how you think it should be done
+22:23:44 <strcat[m]> I've figured out now what you want to do
+22:23:46 <strcat[m]> so I can give an answer
+22:23:59 <jalb> I want to change to another profile and not being identified by what's sending the main profile
+22:24:09 <strcat[m]> jalb: make a secondary profile to use as your main personal profile
+22:24:09 <jalb> is it possible?
+22:24:23 <strcat[m]> jalb: your issue is using the owner profile as your main personal one
+22:24:29 <jalb> oh
+22:24:32 <strcat[m]> instead of a secondary profile with end session available
+22:24:38 <jalb> great idea!
+22:24:47 <jalb> a lot of work to move things but interesting
+22:24:55 <GrapheneOS-Teleg> <g​ochoingles> Sounds to me that GrapheneOS can do a lot of things without root. Man, I wish I had a Google Pixel.
+22:25:02 <strcat[m]> jalb: you could also force stop all relevant apps
+22:25:07 <strcat[m]> jalb: but...
+22:25:10 <strcat[m]> that's pretty error prone
+22:25:19 <strcat[m]> jalb: that seems way too hard
+22:25:28 <jalb> yes, true
+22:26:09 <jalb> I must think to use another profile as my main profile, thanks
+22:26:28 <strcat[m]> the owner profile always has to run because it's where system stuff runs
+22:26:44 <strcat[m]> the low-level term for the owner profile is system profile
+22:26:48 <vdge[m]> <strcat[m] "instead of a secondary profile w"> Btw, do you still recommend to use secondary profile as the main profile in AOSP which doesn't have the logout function. Are there any practical benefits doing that in AOSP ?
+22:26:53 <jalb> and avoid apps connecting to internet in the unusued main profile
+22:26:57 <vdge[m]> > <@strcat:matrix.org> instead of a secondary profile with end session available
+22:26:57 <vdge[m]>  * Btw, do you still recommend to use secondary profile as the main profile in AOSP which doesn't have the logout function. Are there any practical benefits in doing that in AOSP ?
+22:27:15 <jalb> strcat[m]: thanks
+22:27:19 <strcat[m]> vdge: https://grapheneos.org/faq#encryption still gives another reason that you might want to do that
+22:27:36 <strcat[m]> jalb: you don't really have to avoid apps connecting to the internet just ones doing it in a way that would be problematic for what you want
+22:27:47 <strcat[m]> jalb: it doesn't matter that stuff like Updater runs in the owner profile and will still be connecting
+22:27:51 <jalb> yes, that's true
+22:28:07 <jalb> avoiding messaging apps, email, etc
+22:28:14 <strcat[m]> vdge: if you reboot the device, you have to unlock owner
+22:28:36 <strcat[m]> vdge: so, pretend you boot up the device somewhere you don't want to have your personal data not at rest
+22:28:49 <strcat[m]> vdge: or don't want to enter the passphrase to unlock it
+22:29:00 <strcat[m]> vdge: that's a reason to use a secondary profile as your main personal profile
+22:29:16 <strcat[m]> same reason as wanting to take advantage of end session
+22:29:29 <strcat[m]> the reason: the owner profile has to be active for the device to be usable
+22:29:51 <jalb> interesting
+22:30:00 <strcat[m]> secondary users depend on the owner profile being active since it handles certain system wide things
+22:31:00 <strcat[m]> for example, most stats, etc. are stored encrypted in the owner profile
+22:31:17 <strcat[m]> there's a lot of system wide stuff that needs somewhere to store sensitive data
+22:31:22 <strcat[m]> that place to store sensitive data is the owner profile
+22:31:33 <strcat[m]> the device isn't fully active until you've done the initial unlock of the owner profile
+22:31:40 <strcat[m]> that's why you can't login to a secondary user until you've done that
+22:32:23 <vdge[m]> <strcat[m] "vdge: so, pretend you boot up th"> Hmmm that makes sense. Kinda like soft plausible deniability. Wish AOSP adopts the 'end session' feature.
+22:32:41 <strcat[m]> vdge: AOSP has the feature but it's only for enterprise device deployments
+22:32:54 <strcat[m]> we're just making a fancy enterprise feature available to end users
+22:33:02 <strcat[m]> we didn't really implement it
+22:33:04 <strcat[m]> it's already there
+22:33:11 <vdge[m]> Yep, read your previous message about that saying only device managers are allowed to do it. right ?
+22:33:41 <strcat[m]> vdge: a device policy manager can do it (I should start being clearer about that terminology) and can enable the button
+22:33:51 <strcat[m]>  * vdge: a device policy manager can do it via an API (I should start being clearer about that terminology) and can enable the button
+22:33:56 <strcat[m]>  * vdge: a device policy manager can do it via an API (I should start being clearer about that terminology) and can also enable the button
+22:34:01 <strcat[m]> all we do is enable the button by default
+22:34:43 <Thatcher[m]> This is awesome stuff to learn about. Time for me to switch to secondary user as my main.
+22:35:06 <strcat[m]> just 1 thing to keep in mind: Seedvault only supports the owner profile atm, sadly
+22:36:41 <vdge[m]> and also developer options I suppose if anyone needs that
+22:38:07 <TheJollyRoger> @ anupritaisno1[m] @clannad, can you register the nicknames for GrapheneOS-Teleg and such?
+22:38:17 <TheJollyRoger> I can set the channel flags for them.
+22:38:27 <strcat[m]> vdge: those are generally global options though, you can still use the Owner profile to configure stuff
+22:38:32 <strcat[m]> vdge: not really comparable
+22:38:40 <strcat[m]> you always have to use the Owner profile to configure global stuff
+22:38:47 <mr_hebi_san[m]> It's very nice that we have this option to separate apps we may like to use, but do not trust to have access to eg: Contacts or files, to put them in a separate profile
+22:38:57 <strcat[m]> other than specific things where the active profile is allowed to configure it (generally network stuff)
+22:39:05 <mr_hebi_san[m]> Or even if we do trust them but just don't think it's their business
+22:39:36 <GrapheneOS-Teleg> <c​lannad> They should already be registered
+22:39:56 <TheJollyRoger> Ok, hang on a sec.
+22:40:02 <anupritaisno1[m]> TheJollyRoger
+22:41:15 <jalb> strcat[m]: what I'm afraid if that secondary profiles will experiment some failures from time to time and using one of them as the main profile
+22:41:42 <jalb> *if secondary profiles
+22:42:05 <strcat[m]> jalb: the issue I was mentioning isn't really specific to secondary profiles
+22:42:14 <strcat[m]> it occurs when switching between profiles including the owner one
+22:42:24 <TheJollyRoger> @clannad, looks like the Freenode staff are coming to help! Whew.
+22:42:32 <jalb> oh ok strcat[m]
+22:43:06 <jalb> I don't use seedvault, so it's great to do this
+22:43:19 <jalb> I'll do it asap
+22:43:37 <jess> hello
+22:43:47 <jess> did someone say: freenode staff
+22:43:48 <TheJollyRoger> Ahoy!
+22:44:18 <jess> oh nicole is on it
+22:44:19 <jess> lovely
+22:44:22 <TheJollyRoger> Hi jess, yeah, I'm just talking to nicole so that we can set the GrapheneOS-Teleg bot so that Sigyn doesn't kline it when there's
+22:44:26 <TheJollyRoger> a lot of activity on the other side.
+22:44:26 <jess> aint she nice
+22:44:27 <TheJollyRoger> Yeah.
+22:44:36 <TheJollyRoger> Yeah!
+22:45:08 <TheJollyRoger> Yeah, I think what happened was that I put it in +v mode but then the connection went out so it lost the +v, so I'll set it for a flag and then hopefully this should fix it.
+22:45:15 <TheJollyRoger> *hopefully this fix from Nicole should fix it.
+22:45:44 <TheJollyRoger> anupritaisno1[m]: / @clannad will the bots always connect from the same IP address?
+22:45:46 <jalb> great talk, thank you, bye
+22:46:37 <vdge[m]> <strcat[m] "vdge: those are generally global"> Ahhh, tried to configure a remote phone using USB debugging(scrcpy) but it didn't work across profiles.
+22:47:47 <strcat[m]> we're likely to disable network-based adb in production (`user`) builds anyway
+22:50:46 <TheJollyRoger> Must have left his desk.
+22:54:23 <mr_hebi_san[m]> Oof.  Could make life harder on the developer who wants to target and debug for the 2 users on the planet who play their unity game on GrapheneOS. :)
+22:55:50 <strcat[m]> I don't see how it's relevant
+22:56:00 <strcat[m]> think you're misunderstanding how that feature is meant to be used and the serious downsides of it
+22:56:09 <strcat[m]> which is part of the problem and why it needs to be disabled in production builds
+22:56:11 <strcat[m]> it's dangerous
+22:58:21 <GrapheneOS-Teleg> <c​lannad> Yes
+22:58:31 <GrapheneOS-Teleg> <c​lannad> Same ipv6 address
+22:58:45 <anupritaisno1[m]> TheJollyRoger
+22:58:54 <TheJollyRoger> anupritaisno1[m]: ok!
+22:59:42 <GrapheneOS-Teleg> <c​lannad> 2a03:a140:10:7c2::1
+23:00:05 <TheJollyRoger> anupritaisno1[m]: nicole added those IP addresses to a "Sigyn exempt list"
+23:00:08 <TheJollyRoger> Whew.
+23:00:21 <TheJollyRoger> Should be fixed!
+23:12:20 <noustfurkuphater> with no permission other than network while running in a work profile, does graphene contain a program I want to install but cannot trust?
+23:12:36 <noustfurkuphater> as in well enough
+23:14:52 <TheJollyRoger> noustfurkuphater: don't use work profiles. Use separate user profiles.
+23:15:25 <TheJollyRoger> Data in a work profile is owned by the service managing the work profile. If you use shelter, that means a third-party app gets to control that data.
+23:15:58 <noustfurkuphater> running an entire different user profile seems unproductive
+23:16:04 <TheJollyRoger> noustfurkuphater: https://gist.githubusercontent.com/Peter-Easton/3af0af2d1c4c2eca24a9e324e0a22145/raw/80ce39ed46897fa328e3fcb983e133b1ed3d922f/NSA%2520Social%2520&%2520AndroMail Maybe this may help explain things.
+23:16:06 <noustfurkuphater> I need to sign out of current then don't I?
+23:16:17 <TheJollyRoger> noustfurkuphater: just switch between them.
+23:16:32 <noustfurkuphater> <TheJollyRoger "noustfurkuphater: just switch be"> yes but how fluid is it?
+23:16:57 <TheJollyRoger> noustfurkuphater: as fluid as entering your password, and/or using your biometrics identification for biometrics unlock.
+23:17:09 <noustfurkuphater> I want to eg message a friend on molly and then check on the other program and back under eg 10 sec
+23:17:24 <noustfurkuphater> <TheJollyRoger "noustfurkuphater: as fluid as en"> that seems okay
+23:18:00 <TheJollyRoger> noustfurkuphater: we discourage the use of Work Profiles as managed by third party apps like Shelter or Island. The work profile functionality in Android is intended to be owned and managed by the organization administrating the work profile.
+23:18:03 <TheJollyRoger> Meaning
+23:18:04 <TheJollyRoger> IT
+23:18:06 <TheJollyRoger> IS
+23:18:08 <TheJollyRoger> NOT
+23:18:10 <TheJollyRoger> YOURS.
+23:18:24 <TheJollyRoger> So it's much better to simply use a secondary profile, it's a little bit of extra load,
+23:18:38 <TheJollyRoger> extra load, to be switching back and forth using your finger to tap on the different name,
+23:18:50 <noustfurkuphater> extra load?
+23:18:58 <noustfurkuphater> Can my phone really take that?
+23:18:59 <TheJollyRoger> extra mental load.
+23:19:13 <TheJollyRoger> Your phone can take it no problem, the question is, are you willing to tap on "switch users"?
+23:19:36 <TheJollyRoger> If you are, then that's a much, much, much safer way to manage different contextual identities and isolate apps you don't feel are entirely trustworthy.
+23:19:42 <noustfurkuphater> I already get incredibly poor performance from my OS with freezing and if I look at htop on termux, I am nearly always maxed on memory when I've opened literally no program
+23:20:05 <noustfurkuphater> <TheJollyRoger "Your phone can take it no proble"> doesn't sound bad
+23:20:18 <noustfurkuphater> how heavy will this be on memory usage though
+23:20:20 <TheJollyRoger> That's because htop on termux is not doing what you think it's doing. Your phone is cutting termux's performance to save battery.
+23:20:29 <noustfurkuphater> <noustfurkuphater "how heavy will this be on memory"> that is critical to my decision
+23:20:39 <noustfurkuphater> <TheJollyRoger "That's because htop on termux is"> oh
+23:20:51 <TheJollyRoger> noustfurkuphater: not very. If you want, you can simply hit "end session" from the lockscreen and that causes the secondary profile to be frozen.
+23:20:59 <strcat[m]> noustfurkuphater: the OS is supposed to fully use all memory on the phone
+23:21:04 <strcat[m]> noustfurkuphater: that's the normal state of things
+23:21:10 <noustfurkuphater> why is that?
+23:21:12 <TheJollyRoger> It will eject the cryptographic keys from memory, and close all processes that user opened.
+23:21:24 <strcat[m]> noustfurkuphater: it's supposed to use all memory, that's just how it works, dunno what you're confused about
+23:21:42 <strcat[m]> why have the memory to just not use it?
+23:21:44 <TheJollyRoger> noustfurkuphater: precaching. Remember, a phone operating system isn't a desktop. It doesn't work the same way as a desktop.
+23:21:54 <TheJollyRoger> Memory that's not in use, is memory that's being /wasted./
+23:22:05 <noustfurkuphater> <strcat[m] "noustfurkuphater: it's supposed "> because it just seems like android is far too heavy as I get constant freezes and lag (not just in opening of apps)
+23:22:10 <strcat[m]> a desktop doesn't really work that much differently but doesn't try to cache applications
+23:22:16 <strcat[m]> noustfurkuphater: it's not
+23:22:20 <strcat[m]> and you're not running GrapheneOS
+23:22:26 <noustfurkuphater> <strcat[m] "why have the memory to just not "> use to when you need. Why use all cosntantly?
+23:22:30 <strcat[m]> and you just seem like another concern troll or the same person from earlier
+23:22:45 <strcat[m]> noustfurkuphater: because it's there and meant to be used
+23:22:47 <noustfurkuphater> <TheJollyRoger "Memory that's not in use, is mem"> why is that?
+23:23:02 <strcat[m]> if you're not running GrapheneOS you're in the wrong channel
+23:23:08 <strcat[m]> this channel is for GrapheneOS
+23:23:13 <noustfurkuphater> <strcat[m] "and you're not running GrapheneO"> what? I am.
+23:23:22 <strcat[m]> you implied you weren't
+23:23:49 <noustfurkuphater> <strcat[m] "if you're not running GrapheneOS"> I said I am
+23:23:51 <strcat[m]> so, first of all, the design of AOSP is that it caches apps in the background
+23:23:56 <noustfurkuphater> <strcat[m] "you implied you weren't"> where?
+23:24:01 <strcat[m]> and the design of the Linux kernel is that it uses all available memory
+23:24:08 <strcat[m]> although not proactively
+23:24:22 <noustfurkuphater> <strcat[m] "so, first of all, the design of "> I mean fresh from a reboot?
+23:24:26 <strcat[m]> yes
+23:24:38 <strcat[m]> you can't judge anything based on the used memory you have to look at how it's used
+23:24:44 <strcat[m]> it's supposed to use it
+23:24:46 <noustfurkuphater> <strcat[m] "and the design of the Linux kern"> I don't see that on arch
+23:24:52 <strcat[m]> yeah you do
+23:24:56 <strcat[m]> as I said just not proactively
+23:25:01 <noustfurkuphater> <strcat[m] "you can't judge anything based o"> how can I look at that?
+23:25:04 <strcat[m]> without running some thing to do readahead
+23:25:12 <noustfurkuphater> How can I monitor what is causing poor performance?
+23:25:32 <noustfurkuphater> <strcat[m] "as I said just not proactively"> hmm uhhh I don't understand
+23:25:48 <strcat[m]> yes, clearly you don't
+23:26:01 <noustfurkuphater> may you explain?
+23:26:08 <strcat[m]> I did above
+23:26:46 <strcat[m]> it's also intended that GrapheneOS will use ~120M more per app
+23:26:49 <noustfurkuphater> <strcat[m] "and the design of the Linux kern"> why
+23:26:51 <strcat[m]> for hardened_malloc quarantine
+23:27:00 <strcat[m]> noustfurkuphater: because the memory is supposed to be used
+23:27:02 <noustfurkuphater> <strcat[m] "it's also intended that Graphene"> wow!
+23:27:04 <strcat[m]> it is there, why wouldn't it be used?
+23:27:32 <strcat[m]> the kernel caches pages
+23:27:38 <strcat[m]> it will purposely use all available memory
+23:27:42 <strcat[m]> once it has read enough stuff to cache
+23:27:49 <noustfurkuphater> <strcat[m] "it is there, why wouldn't it be "> well what is it being used by? Fresh reboot and I still get poor performance. Phone I am using is second hand but still.
+23:27:51 <exquisitehalo> http://kod6ulul5meacjnnnjvlcrqalkeprqy6mybha3vcwsxj7p7ia6w66uid.onion/
+23:28:08 <noustfurkuphater> ooh a onion
+23:28:11 <strcat[m]> noustfurkuphater: I don't know why you're making the assumption that whatever issues you're having are caused by memory usage
+23:28:41 <noustfurkuphater> <strcat[m] "noustfurkuphater: I don't know w"> I saw htop in termux but I guess that isn't accurate
+23:28:49 <noustfurkuphater> then where can I find out?
+23:29:22 <strcat> noustfurkuphater: the memory is supposed to be used
+23:29:27 <strcat> it's not an indication of anything wrong
+23:29:31 <strcat> so, move on from that
+23:29:47 <noustfurkuphater> yes okay but what system monitor can I look at then?
+23:30:00 <noustfurkuphater> I want to understand what is causing poor performance.
+23:30:04 <strcat> and I suggest reading https://grapheneos.org/features and https://github.com/GrapheneOS/hardened_malloc if you want to understand why GrapheneOS uses ~120M per app extra
+23:30:07 <strcat> which is on purpose
+23:30:17 <strcat> it intentionally has a quarantine for memory allocations
+23:30:27 <strcat> noustfurkuphater: you'll need to clarify what about performance is poor and what exactly is going wrong
+23:30:45 <strcat> noustfurkuphater: it sounds like you might have an issue like failing storage where the OS repeatedly fails to write to it due to I/O errors
+23:30:46 <strcat> and stalls
+23:31:03 <strcat> noustfurkuphater: I recommend taking a bug report capture
+23:31:06 <strcat> after it starts happening
+23:31:09 <strcat> and investigating it through that
+23:31:15 <strcat> use the bug report capture tool in developer options
+23:31:29 <strcat> there are other tools there you can use but that's the best way
+23:31:51 <noustfurkuphater> <strcat "noustfurkuphater: you'll need to"> So fresh reboot and I open say fluffy chat. It will obviously start and I will message various people and then my touch input stops and my android system freezes up forcing me to do a hard reboot or will recover and do all my touch inputs very quickly after
+23:31:58 <noustfurkuphater> not just that app
+23:32:09 <strcat> that's very abnormal and I don't know why you're blaming Android
+23:32:19 <noustfurkuphater> happens in newpipe, molly, anything
+23:32:21 <strcat> or claiming it's overly heavy, etc.
+23:32:39 <strcat> first of all you're running GrapheneOS
+23:32:41 <strcat> not Android
+23:32:51 <strcat> and that's not a normal behavior on GrapheneOS or something we hear about people having often
+23:33:09 <strcat> so there's a pretty good chance you have a more serious problem than you realize like storage hardware failure
+23:33:19 <noustfurkuphater> <strcat "that's very abnormal and I don't"> I am? I didn't mean that. Either poor hardware or android being heavy. I just want to understand the bottleneck or what magical background process.
+23:33:23 <strcat> you should capture a bug report with that tool and look through the massive amount of data it provides
+23:33:39 <strcat> noustfurkuphater: you're just doing it again
+23:33:48 <strcat> noustfurkuphater: that's obviously not how the device/OS normally behaves
+23:33:51 <noustfurkuphater> <strcat "not Android"> I mean... come on. AOSP. It has android in the name and graphene is based on it.
+23:33:52 <strcat> other people aren't experiencing that
+23:33:54 <strcat> you get that, right?
+23:34:04 <noustfurkuphater> <strcat "and that's not a normal behavior"> oh well it's happening for me
+23:34:12 <strcat> yeah, it's happening for you, and not others
+23:34:18 <strcat> so what about your setup / device is different than others?
+23:34:22 <strcat> that is what you have to figure out
+23:34:31 <strcat> so I'm recommending you use the bug report capture tool in dev options
+23:34:36 <strcat> it also has other tools you might find useful
+23:34:44 <strcat> but a bug report gives you a *massive* amount of data already
+23:34:48 <strcat> far more than you actually want
+23:35:18 <strcat> there's also a tool there showing average and max memory usage by apps
+23:35:30 <strcat> and bear in mind GrapheneOS massively increases that for hardened_malloc intentionally
+23:35:40 <strcat> it's possible to use hardened_malloc without a memory usage increase
+23:35:48 <strcat> in fact it's actually very lightweight if configured that way
+23:36:07 <strcat> but we use it in a very hardened configuration where there are quite large quarantines to help mitigate vulnerabilities
+23:36:14 <GrapheneOS-Teleg> <g​ochoingles> Does not matter since you need to hook up the computer to the phone first to get it working.
+23:36:27 <noustfurkuphater> is the bug report creator published to a web server or stay to my phone? If it does upload, to what level of information?
+23:36:36 <strcat> noustfurkuphater: doesn't upload anything
+23:36:48 <strcat> noustfurkuphater: it captures a bug report and then has you send it somewhere via an email app or other app
+23:36:52 <noustfurkuphater> <strcat "noustfurkuphater: doesn't upload"> oh ok that sounds good
+23:37:16 <noustfurkuphater> <strcat "noustfurkuphater: it captures a "> oh. Can't I just save it as a file on my phone to read with a text editor?
+23:38:04 <strcat> noustfurkuphater: it's a lot more data than you're going to want to dig through on a phone screen
+23:39:06 <noustfurkuphater> <strcat "noustfurkuphater: it's a lot mor"> oh olay
+23:39:12 <noustfurkuphater> well I think I just took one
+23:39:17 <noustfurkuphater> where is it exactly?
+23:39:41 <strcat[m]> noustfurkuphater: it shows a notification
+23:39:46 <noustfurkuphater> did in developer options with full
+23:39:46 <strcat[m]> when it's done it gives a prompt to give it to an app
+23:39:53 <strcat[m]> look at the notification
+23:39:55 <noustfurkuphater> <strcat[m] "noustfurkuphater: it shows a not"> I don't see a notification
+23:39:56 <strcat[m]> if it's done it will say so
+23:40:02 <strcat[m]> then you didn't do it
+23:40:12 <noustfurkuphater> huh wait lemme try again
+23:40:24 <strcat[m]> you need to have an app that's willing to accept the file
+23:40:29 <strcat[m]> an email client will work
+23:40:37 <strcat[m]> it makes you choose an app
+23:40:38 <strcat[m]> to give it to
+23:40:52 <strcat[m]> when it's done and you click on it
+23:41:09 <noustfurkuphater> I've done it!
+23:41:21 <noustfurkuphater> I'll read through tomorrow morning
+23:41:30 <strcat[m]> also you can see there's a way to view app memory usage there
+23:41:48 <noustfurkuphater> it's a little bit... large
+23:41:52 <noustfurkuphater> almost 9MB
+23:42:00 <noustfurkuphater> a lot more than I expected
+23:42:04 <strcat[m]> yes it's a huge amount of data
+23:42:13 <strcat[m]> it gives you a huge amount of hardware diagnostics
+23:42:22 <strcat[m]> and it gives you summaries of all recent crash dumps
+23:42:35 <strcat[m]> so any recent apps, processes, etc. that crashed you have summaries of the crash dumps
+23:42:49 <strcat[m]> and it gives you a bunch of logs from current boot
+23:43:05 <strcat[m]> it's basically anything that could possibly be obtained to help with debugging arbitrary stuff
+23:43:12 <noustfurkuphater> Well I did have a freeze up again while typing a few minutes before taking the report so it should show something useful
+23:43:29 <noustfurkuphater> yay epic
+23:43:34 <strcat[m]> which device is it?
+23:43:44 <noustfurkuphater> 4
+23:43:54 <strcat[m]> it really sounds like a hardware problem
+23:44:02 <noustfurkuphater> darn
+23:44:05 <strcat[m]> the Pixel 4 has way more memory, etc. than really needed / used in practice
+23:44:15 <strcat[m]> even with hardened_malloc
+23:44:15 <noustfurkuphater> well that's the cost I pay of grtting it second hand
+23:44:32 <strcat[m]> noustfurkuphater: it's possible a factory reset could fix it but check out the logs first
+23:44:34 <strcat[m]> unclear what is wrong
+23:44:37 <strcat[m]> it sounds like I/O errors to me
+23:44:45 <strcat[m]> noustfurkuphater: like it is trying to read a block off storage
+23:44:46 <strcat[m]> failing
+23:44:55 <strcat[m]> and repeatedly trying to read over and over getting I/O errors
+23:44:55 <noustfurkuphater> I will read
+23:44:59 <strcat[m]> that's one possibility
+23:45:20 <strcat[m]> really hard to know what is wrong without looking through that tho
+23:45:26 <noustfurkuphater> anyways I can generally live with the crashes and freezes but sometimes it is just very much a problem like a phone call drop
+23:45:36 <noustfurkuphater> phone completely froze up that time so I hard reboot
+23:45:42 <strcat[m]> there was 1 other person who reported something similar
+23:45:43 <strcat[m]> in recent past
+23:45:47 <strcat[m]> but it's just 1 other persobn
+23:45:50 <strcat[m]>  * but it's just 1 other person
+23:45:53 <strcat[m]> not a normal thing
+23:46:00 <strcat[m]> it's hard to know what the cause could be
+23:46:40 <strcat[m]> we do certainly increase memory usage substantially per app but I don't think it has anything to do with memory usage, and there's no 'swap' as you seemed to think
+23:46:55 <strcat[m]> when it starts to run out of memory it starts killing cached apps
+23:47:07 <strcat[m]> it caches apps in case you're going to use them soon
+23:47:10 <strcat[m]> just what AOSP does
+23:47:22 <strcat[m]> caching them as in they are spawned but asleep
+23:47:34 <strcat[m]> it has a ton of easily available memory from killing them
+23:47:51 <strcat[m]> it doesn't use all memory for that since it allows the kernel to have a bunch for caching other stuff
+23:48:12 <noustfurkuphater> okay well goodbye and thank you for the aid
+23:48:15 <strcat[m]> we do increase memory usage per-app but we also have way fewer apps than stock OS
+23:48:19 <noustfurkuphater> :-)
+23:49:37 <Lestat[m]> my workstation is quad core i5-4960k, ssid, 8gb ram
+23:49:47 <Lestat[m]> How long would u say gos would take to compile
+23:49:51 <Lestat[m]> roughly ofc
+23:50:26 <goblinslayer[m]> <Lotus[m] "you can use etesync for syncing "> protoncalander is also in beta access atm
+23:53:49 <strcat[m]> Lestat: 8GB ram not really enough and not nearly enough to compile the Linux kernel with LTO
+23:54:04 <strcat[m]> Lestat: so maybe you could build the OS using the prebuilts but you couldn't build the kernel
+23:54:08 <Lestat[m]> im waiting for my 16gb
+23:54:11 <strcat[m]> also it'd take ages, that's a really bad CPU for doing it
+23:54:16 <strcat[m]> would not be practical
+23:54:19 <Lestat[m]> Ah damn
+23:54:26 <Lestat[m]> Well thats that
+23:54:27 <strcat[m]> you could build it
+23:54:33 <strcat[m]> it would take probably 6 hours
+23:54:35 <Lestat[m]> Im gonna go cry now cuz i cant contribute
+23:54:44 <Lestat[m]> <strcat[m] "it would take probably 6 hours"> Oh thats fine
+23:54:45 <strcat[m]> you don't need to be able to build the OS efficiently to contribute
+23:54:52 <Lestat[m]> I thought we were talking longer
+23:54:59 <strcat[m]> Lestat: well it'll take probably 6 hours for initial build then maybe 3 minutes for small incremental builds
+23:55:04 <strcat[m]> Lestat: on a CPU that bad
+23:55:28 <strcat[m]> Lestat: so you'd have a really bad experience doing anything that required doing clean builds, or doing incremental builds requiring rebuilding a lot of code
+23:55:29 <Lestat[m]> i bought it a while ago for gaming and it was plenty lol dont cpu shame me
+23:55:37 <Lestat[m]> Anyways 6 hours is fine
+23:55:51 <strcat[m]> Lestat: so basically you could sync stable release, work with that
+23:56:01 <strcat[m]> and then each new stable release should probably clear out/ and make a clean build to start from again
+23:56:08 <strcat[m]> so 6 hours waste each stable release
+23:56:14 <strcat[m]>  * so 6 hours wasted each stable release
+23:56:15 <madaidan[m]> It takes me 8 hours to compile the Linux kernel alone
+23:56:19 <strcat[m]> Lestat: it's just not very practical
+23:56:27 <madaidan[m]> Unless I'm using a really stripped down config
+23:56:31 <Lestat[m]> Danny told me to try to contribute to gos....
+23:56:34 <Lestat[m]> Thats why i asked
+23:56:42 <strcat[m]> Lestat: well you can build it
+23:56:47 <strcat[m]> just explaining it's going to be a rough experience
+23:57:00 <strcat[m]> Lestat: you can contribute in areas that don't require building the whole OS
+23:57:10 <strcat[m]> you could contribute to OS dev itself if you really wanted
+23:57:16 <strcat[m]> and can tolerate how awful it's going to be on that hardware
+23:57:44 <strcat[m]> I'm about to make a new workstation because this trash one from 2016 is no good anymore
+23:57:47 <Lestat[m]> <strcat[m] "you could contribute to OS dev i"> This maybe in the future :D im not a decent C dev rn...im still studying C.
+23:57:54 <Lestat[m]> <strcat[m] "and can tolerate how awful it's "> This i can do tho
+23:57:59 <strcat[m]> 10 core / 20 thread CPU @ 5GHz, 64GB DDR4, 2TB NVMe SSD
+23:58:00 <strcat[m]> no good
+23:58:06 <HowardR> Is this what my development (11) build for Pixel5/redfin should look like?  https://imgur.com/1FuiSXI.jpg
+23:58:31 <Lestat[m]> I have multiple machines so 1 machine going for 6 hours aint a worry for me
+23:58:40 <Lestat[m]> It aint gonna stop my productivity
+23:58:46 <strcat[m]> HowardR: if you're going to be testing in the emulator you should just use x86_64 generic builds
+23:58:57 <strcat[m]> HowardR: not sure what exactly  you're asking
+23:59:21 <strcat[m]> Lestat: yeah I just mean it's a lot nice when a clean build takes 20 mins and an incremental build takes 30 seconds
+23:59:34 <strcat[m]> Lestat: as opposed to 6 hours and say, 3-4 minutes for incremental
+23:59:43 <strcat[m]>  * Lestat: yeah I just mean it's a lot nicer when a clean build takes 20 mins and an incremental build takes 30 seconds

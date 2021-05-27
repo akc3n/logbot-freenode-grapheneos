@@ -1,0 +1,975 @@
+01:26:05 <b1101> has this issue been fix in the releases? https://github.com/GrapheneOS/os_issue_tracker/issues/356
+01:30:21 <Guest50180> I'm new here. I'm wanting to install graphene os on my pixel 4a. But wanted to know if snapchat would still work? Even without google play services
+01:31:38 <TheJollyRoger> Ahoy Guest50180, let me see if there's any entries for it on the libranet wiki.
+01:32:28 <Guest50180> Okay thank you so much! So glad to see a quick and hasty response. I didn't know there was a wiki for this kind of stuff (:
+01:33:08 <TheJollyRoger> One of our guys has a hubzilla over at libranet, at https://hub.libranet.de/wiki/and-priv-sec/wiki/apps . I'm going to see if there's anything here on it.
+01:34:29 <TheJollyRoger> Ah, hang on a sec.
+01:34:29 <TheJollyRoger> Wrong one.
+01:35:02 <TheJollyRoger> Yeah, it doesn't say here.
+01:35:08 <dazinism> Think Snapchat works
+01:35:24 <TheJollyRoger> dazinism to the rescue!
+01:35:46 <Guest50180> Ah okay. It's alright thanks for looking into for me. I'm really hoping it does work(: I'll let you guys know by tmrw if it does or does not
+01:35:50 <dazinism> b1101: yeah, looks like that visual voicemail fix is now included
+01:36:01 <TheJollyRoger> Guest50180: good luck!
+01:36:28 <b1101> hmm. I still have the issue :(
+01:38:23 <b1101> unless I need to do something to make it work. reset apn or something like that....or wait should it work over wifi
+01:41:38 <dazinism> b1101: imagine may not work on some carriers. Maybe only some USA carriers wont work
+01:42:44 <dazinism> Some US carriers require extra software on the phone which has high privileges, so isn't included in Graphene
+01:43:45 <dazinism> For some of their features, like Visual Voicemail,  Wifi Calling etc.
+01:45:00 <b1101> nvm. disabled and reenabled it. works :)
+01:45:41 <dazinism> Apparently Snapchat did require functioning SafetyNet, but they dropped that requirement a few months back
+01:46:05 <dazinism> b1101: nice :)
+02:15:57 <didikon[m]> After the installation of GrapheneOS I tried to set up an account (in the multi-user settings) for regular usage as mentioned in the FAQ (https://grapheneos.org/faq#encryption). However, I am not able to receive any text messages in my daily usage account using Signal as my default SMS app.
+02:15:57 <didikon[m]> They're not "handed over" and appear in the default (owner) profiles pre-installed text message app.
+02:15:57 <didikon[m]> Any idea how to solve that?
+02:23:08 <sphinxcat[m]> didikon: it's a Signal bug: https://github.com/signalapp/Signal-Android/issues/5151
+02:23:36 <sphinxcat[m]> Don't use Signal as your default SMS app.
+02:29:20 <silicon_jim[m]> Why not
+02:31:18 <didikon[m]> sphinxcat: thank you.
+02:35:31 * didikon[m] also: will the backup mechanism in the default account also take backups of the other user accounts?
+02:35:31 * didikon[m] further: why are there no "System Profiles" in GrapheneOS?
+02:35:31 * didikon[m] I found them quite useful, for example to automatically switch wifi off if I lose connection to a given access point without relying on location services.
+02:39:16 <dazinism> didikon: think currently backups only work in the main user
+02:47:50 <dazinism> didikon: think there is a way to enable backup for secondary users.
+02:48:45 <dazinism> The system backup service is called seedvault. Theres details here
+02:48:49 <dazinism> https://hub.libranet.de/wiki/graphene-os/wiki/Backups#adb_backup
+02:49:04 <dazinism> https://hub.libranet.de/wiki/graphene-os/wiki/Backups
+02:50:15 <dazinism> If you follow the relevant link to the github issue can see that restoring may have issues.
+02:50:26 <dazinism> Looks like if the same app is installed in multiple users
+02:50:54 <dazinism> I've not tried doing this
+02:57:31 <dazinism> For auto WiFi off theres https://github.com/j4velin/WiFi-Automatic
+02:58:57 <dazinism> Or for controlling more stuff theres https://me.ryey.icu/Easer/en/
+03:00:45 <dazinism> I'd feel uncomfortable granting an app all those permissions, but guess you could limit what you grant it.
+03:05:09 <dazinism> Worth considering that need to use adb to enable backups of secondary users
+03:06:45 <dazinism> Enabling adb isn't ideal as the computer you use for adb is likely significantly less secure than GrapheneOS
+03:07:04 <dazinism> And with adb has a lot of power over the device.
+03:11:33 <dazinism> This app allows adb from another android device
+03:11:37 <dazinism> https://github.com/KhunHtetzNaing/ADB-OTG
+03:13:33 <dazinism> So could use another GrapheneOS (or other trusted) phone to do adb
+04:22:20 <henko> hello. I'm doind a install on a google pixel 4a. I followed the instructions to a tee... installing on Debian Buster
+04:22:54 <henko> When executing ./flash-all.sh stdout stays empty...
+04:23:17 <henko> I just get a LF
+04:24:29 <henko> in htop I can see that it indeed started 'flashboot flash bootloader bootloader[...].img'
+04:24:39 <TheJollyRoger> henko: I think I have an idea of what it might be, but I'm going to have to ask a few questions first:
+04:24:58 <TheJollyRoger> First up, you're using version >=30.0.5, correct?
+04:25:39 <TheJollyRoger> Secondly, can you confirm you got it unlocked, and see fastboot enumerating the device with `fastboot devices`?
+04:25:44 <henko> yes, fastboot version 30.0.5-6877874
+04:26:10 <TheJollyRoger> If these two things are true, and Fastboot is hanging, this usually indicates one of usually two things:
+04:26:11 <henko> yes, listting works
+04:26:17 <henko> listing*
+04:27:51 <TheJollyRoger> One culprit when you have these symptoms is that the USB Cable is not fully traced or is missing a wire since many vendors don't fully implement everything with USB, just the bare minimum that most users will use day to day. If you're using the cable that the phone came with, the other one is that the USB port on your motherboard is defective, or your firmware vendor or your OEM, or their
+04:27:53 <TheJollyRoger> vendor didn't adequately and fully implement the specification.
+04:28:43 <henko> im using a type c to type a cable. plugged in my thinkpad x220 usb 2.0 port
+04:28:50 <TheJollyRoger> Usually when this happens, try switching cables (use the Google brand of cables if possible), and then try switching ports. If your computer's USB ports aren't properly made to do all the features that --
+04:28:53 <TheJollyRoger> Ok use a different computer.
+04:29:30 <henko> do i need to use a computer with usb-c ?
+04:29:47 <henko> or will type a suffice?
+04:30:01 <TheJollyRoger> It can be either A or C, but it has to properly and fully implement USB 3 or later and all of its features.
+04:30:21 <TheJollyRoger> You can use auditor to verify the integrity of the installation post-install.
+04:30:40 <henko> okay the x220 has one usb 3.0 port
+04:30:44 <henko> I will try it with that
+04:31:44 <TheJollyRoger> The installing computer doesn't have to be ultra-ultra-ultra secure, because the attestation server can still challenge the phone's hardware backed keystore for its verified boot hash and AVB keys.
+04:31:51 <henko> doesn't see to work :/
+04:31:56 <henko> seem*
+04:32:15 <henko> yeah I get the security part
+04:32:18 <TheJollyRoger> Yup, likely the USB support on that computer is broken or incomplete and doesn't fully implement USB.
+04:32:24 <henko> welp - i will try another pc
+04:33:02 <somenerd[m]> wow, fastboot singlehandedly shows the problems with USB and cheap cables
+04:33:18 <TheJollyRoger> Yeah. The cables and ports need to be fully traced. Not all are fully traced and fully wired (not even the Google brand cables are actually fully wired), and sometimes the firmware support for USB on those motherboards is...
+04:33:28 <TheJollyRoger> ...not gonna lie... sloppy.
+04:33:35 <TheJollyRoger> somenerd[m]: haha, oh yeah X(
+04:33:58 <TheJollyRoger> The Google brand cables are sufficient for installing, but they're not fully wired. I found this out by accident.
+04:34:41 <somenerd[m]> must've been surprising
+04:35:27 <TheJollyRoger> It was! I was sitting there with the UART cable plugged into the board, fuming for a solid hour thinking I'd wired all the PCBs wrong.
+04:35:35 <TheJollyRoger> *plugged into the phone
+04:36:39 <TheJollyRoger> Drove me nuts until I had the bright idea to try out the other cables and they worked like a charm, and then I decided I'd test one by plugging two breakout boards to it and testing it with my multimeter, I found out they had a missing wire halfway through. I stopped there and didn't test for the others.
+04:37:41 <somenerd[m]> > You can use auditor to verify the integrity of the installation post-install.
+04:37:41 <somenerd[m]> speaking of auditor, there's also a lot of features you can use with it
+04:37:50 <somenerd[m]> which is quite cool
+04:38:27 <TheJollyRoger> henko: you can use the Web Install if you like, so you won't have to download and install more software. It may save you some time.
+04:38:36 <TheJollyRoger> *download and unpack, sorry, not install. :P.
+04:39:07 <somenerd[m]> yeah
+04:39:20 <somenerd[m]> it's better that way unless you want to verify the PGP
+04:40:03 <TheJollyRoger> I'll be back in a bit!
+04:43:32 <strcat[m]> somenerd: signify not PGP
+04:43:46 <somenerd[m]> oh wait let me edit my message
+04:43:52 <somenerd[m]>  * it's better that way unless you want to verify the signature
+04:43:55 <strcat[m]> and I'm going to be phasing out PGP signed Git commits too
+04:43:55 <mr_hebi_san[m]> <TheJollyRoger "One culprit when you have these "> I always wondered why it was the case that I always had to use the specific cable for many phones in order to install and debug apps.  I'm saving this explanation
+04:44:00 <strcat[m]>  * and I'm going to be phasing out PGP signed Git tags too
+04:44:08 <somenerd[m]> you can check logbot
+04:44:24 <somenerd[m]> https://freenode.logbot.info/grapheneos/20210206
+04:47:59 <mr_hebi_san[m]> * I always wondered why it was the case that I always had to use the specific cable that ships with many phones in order to install and debug apps.  I'm saving this explanation
+05:13:43 <henko> okay got it working with on M$ windows
+05:18:01 <henko> yeah i'm greated with a sleek 'GrapheneOS'
+05:18:17 <henko> thanks for your help :)
+05:19:44 <TheJollyRoger> henko: glad to hear it worked out!
+05:20:55 <TheJollyRoger> After installation, you can turn OEM unlocking back off, and optionally if you want, you can pair with Attestation Server at https://attestation.app/ for both checking to ensure that your Windows machine didn't play any tricks on you, and for self-monitoring the integrity of your installation.
+05:23:58 <TheJollyRoger> It's pretty neat.
+05:28:55 <henko> ok I
+05:29:22 <henko> Ok I've disabled OEM unlocking
+05:29:43 <henko> will do the attestation now
+05:30:33 <henko> but let me ask you about eSIM. I've setup an eSIM prior installing grapheneOS and it worked. I've read online that you have to to it prior installing grapheneOS.
+05:30:46 <henko> It seems that it doesn't get recognized anymore
+05:30:55 <TheJollyRoger> Yeah. So - there's a bit of a story about that...
+05:32:13 <TheJollyRoger> The thing is that GrapheneOS actually *does* support eSIM, but the thing is that it has no user-facing app to *configure* or manage it. In the past, since eSIMs are saved in the phone's secure element, they could survive the installation process, but it was known that this was a temporary work around, and we knew it would stop working at any moment.
+05:32:23 <TheJollyRoger> It looks like that moment may have come.
+05:32:43 <henko> dang it haha
+05:32:50 <TheJollyRoger> Yeah :(
+05:32:53 <henko> is there some way to do it?
+05:33:33 <henko> Or will I have to wait until somebody documents the way?
+05:34:07 <TheJollyRoger> It would require someone to write us a user-facing app that would allow configuration. The issue's open on the issue tracker, we're hoping for a code contribution.
+05:34:41 <henko> okay no problem. I have multiSIM so I will use one of my other SIM cards
+05:34:47 <TheJollyRoger> The project in theory might be able to place a bounty on it like we did with the webinstall.
+05:35:16 <TheJollyRoger> Donations do help us in that way, since that allows us to put rewards on code submissions.
+05:35:39 <TheJollyRoger> Yeah, for now using a physical SIM card is probably your best option.
+05:36:39 <TheJollyRoger> Donations, PRs... that sorta stuff. GrapheneOS doesn't operate as a business but rather as a collaborative open source project.
+05:37:13 <henko> i think you guys deserve a donation :)
+05:37:54 <TheJollyRoger> henko:  Thanks! On behalf of the project, we really appreciate it!
+06:32:11 <henko> i got it working
+06:32:46 <henko> had to enable ds2s in *#*#info#*#* and reboot
+06:34:47 <TheJollyRoger> Oh hot damn!
+06:34:58 <TheJollyRoger> Awesome to hear!
+07:30:01 <hansen> Hello everyone I'm a rookie, I encountered a problem when installing: after clicking flash-all.bat just blinked the window, then no response, this I was very troubled, using Google search related problems, tossed an afternoon but did not solve. I'm using windows and I made sure that the previous steps were correct (I reworked them many times), does
+07:30:01 <hansen> anyone know how to fix this? Thank you all very much!
+07:37:27 <b1101> did you install fastboot drivers?
+07:38:13 <b1101> you shouldn't double click, but open powershell in the same directory as the flash-all.bat, and all the other files in the zip. and run it
+07:41:17 <hansen> I have fastboot drivers installed bro
+07:41:44 <hansen> How do I run all the other files in the zip package?
+07:42:16 <b1101> extract the entire zip into a folder
+07:42:48 <b1101> open powershell in that folder(not as administrator, but a regular user) run flash-all.bat in powershell
+07:43:03 <b1101> if you run that. it will do everything in one shot
+07:43:33 <b1101> guessing you oem unlocked your device already?
+07:43:46 <b1101> and have fastboot
+07:43:58 <b1101> read the instructions here https://grapheneos.org/install/cli
+07:44:59 <hansen> I have unzipped the whole package into a folder and yes, the device is unlocked and have fastboot
+07:45:19 <hansen> I'm going to try the powershell you mentioned
+07:45:30 <b1101> you have to use powershell if you're doing this from cli
+07:47:03 <hansen> So that’s how it is!
+07:47:15 <hansen> I'm going to try it now.
+08:00:00 <TheJollyRoger> Ahoy hansen, you'll need to follow the directions exactly, it contains important prerequisite information that's very specific to installing GrapheneOS. Another option for you is to use the web installer at https://grapheneos.org/install/web which should take a lot of the guesswork out of things.
+08:04:46 <strcat> b1101: hansen: that's not how to do it
+08:05:30 <strcat> hansen: stop using unofficial guides / advice
+08:05:51 <strcat> hansen: use https://grapheneos.org/install/web or https://grapheneos.org/install/cli
+08:05:54 <b1101> I linked him the cli page..
+08:06:04 <strcat> hansen: I recommend using the web installer
+08:06:27 <TheJollyRoger> Ahoy hansen, the easiest way to flash GrapheneOS is to use the web installer, which is here: https://grapheneos.org/install/web . It will be easier, faster, and it will take the guesswork out of things.
+08:06:53 <TheJollyRoger> No commandline experience needed for the web install, just plug in, and follow the directions on the page.
+08:07:25 <somenerd[m]> yeah this is the preferred way
+08:07:43 <somenerd[m]> especially if you have no cli experience/command line packages
+08:09:07 <b1101> gnite....I tried. I guess from now on I'll recommend new users to use web installer
+08:09:26 <hansen> TheJollyRoger Thanks for the reminder, I'll try the command line installation first
+08:09:33 <TheJollyRoger> b1101: it's alright, you're good man. We'll just recommend the web version from now on. Sleep well, shipmate.
+08:10:50 <TheJollyRoger> hansen: Unless you're doing an "assembly line" of flashing lots of phones all at once, there's not much of an advantage in the commandline installer. The web installer is also significantly safer.
+08:11:44 <TheJollyRoger> *safer, if you're not used to the CLI, and haven't done this before.
+08:12:11 <hansen> yes bro
+08:14:50 <r0tt0r[m]> hi, just recognized following behaviour: set vanadium to limited background use for battery, open vanadium, go to a site playing a gif. close phone after 5 mins open phone, vanadium still running playing the gif eating battery, is that expected?
+08:18:50 <hansen> b1101: Hey bro ，why am I using powershell and typing . \flash-all.bat (is it supposed to do that?) , the system says '.' is not an internal or external command, nor is it a runnable program.
+08:18:50 <hansen> Or a batch file
+08:19:44 <r0tt0r[m]> <r0tt0r[m] "hi, just recognized following be"> in stats it shows vanadium run.2 mins in background
+08:20:02 <TheJollyRoger> r0tt0r[m]: huh, I don't know.
+08:20:13 <TheJollyRoger> hansen: You've mistyped the command.
+08:20:36 <TheJollyRoger> hansen: I'm gonna stop you right there and suggest you try the web install before you do something like brick the device.
+08:23:24 <hansen> TheJollyRoger: Ok, thanks a lot for the advice bro, turns out you're right, I'm going to try the network install now, just a bit reluctantly as the command line install got stuck at the last step.
+08:25:05 <TheJollyRoger> hansen: If the commandline install gets stuck at flashing, but your computer is able to unlock the device and enumerate, this usually means one of two things: either the cable is not fully traced (most USB cables aren't), or the USB slot on the computer is not fully traced, or the firmware on your motherboard's USB controller doesn't fully implement the USB standard.
+08:27:13 <TheJollyRoger> Since Fastboot uses a lot of USB functions that are not normally used day to day by most users and most computers, we've found that cable vendors, as well as motherboard and laptop OEMs can be extremely careless or cut a lot of corners on implementing what's actually an extremely complicated and convoluted standard, and some PC vendors are happy to simply implement the "bare minimum" of
+08:27:15 <TheJollyRoger> features that most PC users will use and not bother testing to see if the rest work properly.
+08:28:31 <TheJollyRoger> So if the flashing process hangs with no progress, but your computer is still able to talk to the phone and `fastboot devices` in the commandline turns up the phone's serial number when it's attached with fastboot running, then that indicates USB support on your computer is likely incomplete; there's often little you can do in that case except to try switching cables (the Google brand cables
+08:28:33 <TheJollyRoger> are confirmed to work well), try switching ports, and if both fail, try switching motherboards.
+08:31:23 <hansen> I see, brother, you are so nice to explain to me in such detail, thank you very much for your answer!
+08:31:34 <TheJollyRoger> Anytime, shipmate!
+08:32:34 <TheJollyRoger> It's unfortunate, but the world of hardware is very competitive, so some motherboard vendors and laptop OEMs only do the absolute bare minumum: they just test that Human Interface Devices and mass storage work, and have the attitude of "eh, who cares, nobody but the fifteen Lye-nucks nerds in the world will ever notice" to all the other things that USB does.
+08:35:36 <TheJollyRoger> I have to get going for the night, so best of luck, if you run into any trouble usually people are here on IRC hours, although this channel tends to slow down a little when the sun is passing over the Pacific.
+08:36:08 <somenerd[m]> yeah I've noticed that
+08:36:20 <somenerd[m]> it slows down for a few hours (afaict)
+08:37:52 <hansen> TheJollyRoger: Ok Bro Thank you very much
+08:43:11 <davismountain777> wchich extesions should i remove i another extenstion do the same work like for example umatrix and ublockorigin?
+08:43:11 <davismountain777> i have: ublock origin, noscript, https evrywhere, clearurl, decentralyses, privacy badger, canvas blocker, user agent switcher
+08:44:19 <somenerd[m]> this is offtopic
+08:44:36 <somenerd[m]> #grapheneos-offtopic:matrix.org
+09:01:57 <staticspark[m]> how does one restores back stock after flashing grapheneos?
+09:02:42 <somenerd[m]> https://grapheneos.org/install/cli#replacing-grapheneos-with-the-stock-os
+09:02:48 <somenerd[m]> this section of the site can help
+09:37:31 <Adam257863378844> Hi
+09:38:06 <Adam257863378844> In LTEonly mode, does a GSM compatability layer exist/avaiable to be used?
+09:39:13 <Adam257863378844> https://hackaday.com/2017/05/30/lte-imsi-catcher/
+09:50:23 <Adam257863378844> https://www.smartphone-attack-vector.de/lte-catcher-stingrays-2-0/
+09:51:07 <lodtank> .oO( lte only mode in germany? pretty the same as airplane mode;)
+09:54:21 <Adam257863378844> Lte only works in usa for my carrier
+09:58:13 <nscnt[m]> lodtank: Was that a question whether LTE-only works in Germany?
+10:02:20 <nscnt[m]> Oh I guess you were being sarcastic because the coverage is bad
+10:02:50 <rny> re: https://github.com/GrapheneOS/os_issue_tracker/issues/437
+10:03:03 <rny> even on the pixel 3, the way camera is being enumerated is weird
+10:03:27 <rny> strcat: ^
+10:04:20 <rny> to be more precise, camera flip is not implemented as flipping between the rear/front camera, it is implemented as enumerating between camera ids
+10:07:58 <lodtank> nscnt[m]: yeah, i was just sarcastic
+10:33:36 <technerd[m]> <Joeri[m] "i since switched to gboard on wh"> Sorry for pulling up such an old thread. I still haven't had a great time using the keyboard and am considering gboard.  How do you disable network permissions and other fine grained controls (didn't have the option in settings).
+10:34:16 <somenerd[m]> it should be there in settings though
+10:41:20 <technerd[m]> I installed on another phone first to test, but don't see the option to disable
+10:41:56 <technerd[m]> Feeling really noob right about now
+10:56:29 <TheLoneWanderer[> <technerd[m] "I installed on another phone fir"> The Network permission is exclusive to GrapheneOS
+10:56:49 <somenerd[m]> I think that they meant GrapheneOS on another phone
+10:56:51 <somenerd[m]> right?
+10:57:34 <TheLoneWanderer[> *shrugs*
+10:57:45 <technerd[m]> Ha. No. Don't have enough $$ to have multiple pixels.
+10:58:33 <technerd[m]> Thanks.  Me problem. Will figure it out.
+10:58:57 <somenerd[m]> oh then what they said is correct
+10:59:06 <somenerd[m]> the Network perm is exclusive to GrapheneOS
+11:00:35 <technerd[m]> Cool. Was a bit paranoid on using the google keyboard. Guess this will be a good/better option.
+11:00:56 <somenerd[m]> I mean, it could still exfiltrate data
+11:01:15 <somenerd[m]> if you don't trust the keyboard, nothing can really improve it
+11:04:45 <technerd[m]> Ugh.  Yeah.  Gotta put my paranoia levels in check sometimes
+11:06:14 <technerd[m]> The simple ease of using gesture typing. Didn't realize how much it would annoy me not having it
+12:19:16 <pnrxa[m]1> <technerd[m] "The simple ease of using gesture"> There are a couple FOSS keyboards with gesture typing
+12:22:57 <mintsauce[m]> is gesture typing the swiping thing?
+12:23:56 <strcat[m]> GrapheneOS 2021.02.06.05 release: https://grapheneos.org/releases#2021.02.06.05
+12:24:02 <strcat[m]> https://grapheneos.org/releases#2021.02.06.05
+12:29:10 <noobna[m]> Hey all just loaded graphene and loving it
+12:29:10 <noobna[m]> But am wondering why every time I turn the phone on the google pic appears then to graphene is google still some how running in the background?
+12:30:10 <simpletech> nope, there are some phones where you can flash another bootscreen but for security reasons you can't do this on Google Pixel's
+12:30:23 * r0tt0r[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/yZsQiyctFxltEWDzALfAIgUx/message.txt >
+12:36:16 <strcat[m]> r0tt0r: it will never be possible to change it on any supported device
+12:36:20 <strcat[m]> that's the point
+12:36:48 <strcat[m]> if we support an HTC device it will be an HTC logo for the firmware
+12:37:20 <strcat[m]> it's the brand of the hardware
+12:38:44 <take_a_deep_brea> @strcat:matrix.org:  any link to what was up with chromium ?
+12:38:55 <strcat[m]> dunno what you mean
+12:39:20 <take_a_deep_brea> you had told earlier about a chromium release
+12:39:34 <burgles[m]> So does graphene not support pixel 4a 5g yet? I'm new to this server btw thank you! 😎
+12:39:42 <strcat[m]> take_a_deep_breath: https://grapheneos.org/releases#2021.02.06.05 yeah we updated Vanadium yesterday and there's a new OS version today
+12:39:59 <strcat[m]> burgles: it's not officially supported yet
+12:40:07 <strcat[m]> burgles: there is work left to do before it can be officially supported
+12:40:30 <simpletech> just a minor update: https://chromium.googlesource.com/chromium/src.git/+/refs/tags/88.0.4324.152%5E%21/#F0
+12:40:43 <strcat[m]> take_a_deep_breath: it's an important update
+12:40:49 <strcat[m]> take_a_deep_breath: it's a security update
+12:40:52 <take_a_deep_brea> i see.
+12:40:54 <burgles[m]> <strcat[m] "burgles: it's not officially sup"> Ok no worries, is there a rom you might recommend instead for now? Another I saw is ProtonAOSP. 🤔
+12:40:57 <strcat[m]> usually security updates are every ~6 weeks
+12:41:16 <strcat[m]> burgles: there isn't something else like GrapheneOS and I don't have a recommendation
+12:41:28 <strcat[m]> I recommend waiting a week
+12:41:49 <strcat[m]> there will be experimental releases for the 4a 5G and 5 at some point soon
+12:41:56 <strcat[m]> don't have a timeline on stable / complete support
+12:42:12 <burgles[m]> <strcat[m] "burgles: there isn't something e"> Understood and thank you! Hoping pixel 4a 5g is supported one day. I'd donate if I had the money. 😔
+12:42:27 <simpletech> who's developing for these devices? Are they "officially" supported?
+12:42:50 <take_a_deep_brea> simpletech:  thanks for that link.
+12:43:15 <strcat[m]> simpletech: they aren't officially supported yet, they will be supported at some point
+12:52:41 <technerd[m]> <pnrxa[m]1 "There are a couple FOSS keyboard"> Yeah.  Tried them.  Some are experimental and others just don't work well for gesture/swype
+12:53:54 <simpletech> Isn't the Graphene-keyboard FOSS?
+12:55:34 <strcat> ofc
+12:55:47 <strcat> but the AOSP keyboard is not actively developed beyond bug fixes
+12:55:59 <strcat> and we aren't going to make major changes to it
+13:34:38 <hobo8818[m]> On the website you say "Vanadium will be following the school of thought where hiding the IP adress trough Tor or a trusted VPN is the essential baseline"
+13:34:38 <hobo8818[m]> So my question is that what VPN should I use? What do you all trust the most? Or do I run Orbot?
+16:07:06 <Guest74491> I'm having some trouble installing graphene...can anyone help a guy out?
+16:08:22 <rahoon_goaway[m]> what happened?
+16:09:20 <Guest74491> tried to run the final command "./flash-all.bat" and I was greeted with red error text saying that "flash-all.bat" is not the name of a cmdlet, etc.
+16:22:38 <Guest74491> Got it - had to delete the @Echo OFF cmds within the flash file
+16:31:28 <rahoon_goaway[m]> oh ok, cool
+16:32:20 <TheLoneWanderer[> huh what
+16:42:55 * giffgaff1234[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/TrNwRoJCBqkZUEzCGBNKIJRP/message.txt >
+16:49:08 <TheLoneWanderer[> Try again?
+16:49:14 <TheLoneWanderer[> Check files
+16:55:35 <giffgaff1234[m]> How do you check files on secondary user profile?
+16:58:30 * giffgaff1234[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/bLQgSMvLLgdAsNMVziwtZKdd/message.txt >
+16:59:18 * giffgaff1234[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/IKYjUoboPQqTKulIhHcfGkwx/message.txt >
+17:01:43 * giffgaff1234[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/CqfDBxNfAlSmiOaPKxriPeAz/message.txt >
+17:18:39 <Guest3451> Hi, i am trying to put graphene os onto my Pixel 4a, but i get error when running the Web USB install. Can anyone help with what went wrong and if my device is bricked?
+17:21:06 <take_a_deep_brea> Guest3451: using the web install cannot hard brick your device.
+17:21:25 <louipc> is there an error message?
+17:23:18 <take_a_deep_brea> giffgaff1234: installing same app in different profiles does not install separate apks.
+17:23:35 <Guest3451> that's a relief! The error on the web page is "Error: undefined" which is not helpful! It appears to unpack at the "flash factory images", it restarts, updates radio, restarts, then stops at error
+17:24:47 <take_a_deep_brea> giffgaff1234  the OS prevents any previous version of an app being installed if a newer version has been installed
+17:25:38 <Guest3451> Its in the bootloader and product revision is sunfish MP1.0(ROW), but the OS never went onto it...
+17:26:00 <Guest3451> So it did work?
+17:26:12 <Guest3451> Do i just restart it?
+17:39:50 <Guest3451> So is the web installer broken?
+17:52:04 <Guest3451> I think it has bricked it. It is not responding...
+17:53:50 <Guest3451> i am trying to connect to it via adb and the device is not listed.
+17:54:54 <giffgaff1234[m]> <TheLoneWanderer[ "Try again?"> How do I check the files? The issue is when creating a multiple account user. My admin account works fine with F-droid.
+17:58:23 <take_a_deep_brea> Guest3451:  the web installer works just  fine
+17:59:00 <take_a_deep_brea> Guest3451  the problem is that there is no proper OS image tobboot
+17:59:07 <Guest3451> So why did it fail on a brand new phone?
+17:59:27 <take_a_deep_brea> there may be various factors
+17:59:38 <take_a_deep_brea> like the usb cable
+18:00:00 <take_a_deep_brea> Guest3451: unfortunately this is a bit of a bad time for me
+18:00:30 <take_a_deep_brea> so cant really assist you with troubleshooting . sorry .
+18:00:37 <Guest3451> OK, do i just throw this in a draw till another time?
+18:00:57 <take_a_deep_brea> but if you wait someone will come around who will be able to help you out
+18:01:27 <take_a_deep_brea> Guest3451:  the phone is definitely only soft bricked
+18:01:35 <take_a_deep_brea> that is it does not have a bootable os
+18:01:41 <Guest3451> Do i have to keep repeating, or do they normally read?
+18:02:18 <take_a_deep_brea> thats upto you
+18:02:21 <take_a_deep_brea> some read back
+18:02:39 <Guest3451> OK, thanks for the heads up.
+18:02:45 <take_a_deep_brea> it is safer if you come some time later and repeated your problem
+18:03:29 <Guest3451> Thanks. I know i'm a noob, just anted a secure phone...
+18:04:02 <take_a_deep_brea> Guest3451:  sure. you are in the right place !
+18:04:59 <take_a_deep_brea> also try asking in this room too #grapheneos-offtopic:matrix.org
+18:05:05 <take_a_deep_brea> #grapheneos-offtopic
+18:05:05 <SkyFox[kdeorg][m> <Guest3451 "i am trying to connect to it via"> If you are in fastboot adb won't work
+18:05:57 <Guest3451> Yeah, i've come to that conclusion; just not sure where to go from here...
+18:10:11 <take_a_deep_brea> giffgaff1234: as i said earlier you cannot install older versions of an app in a profile
+18:11:09 <giffgaff1234[m]> <take_a_deep_brea "giffgaff1234  the OS prevents an"> Thank you for your reply. How do I install F-droid in a new user profile?
+18:12:37 <take_a_deep_brea> giffgaff1234  try here https://f-droid.org/F-Droid.apk
+18:12:59 <take_a_deep_brea> not the one on https://f-droid.org
+18:23:36 <Guest3451> Hi, can anyone give some help with a Web install?
+18:32:27 <giffgaff1234[m]> <take_a_deep_brea "giffgaff1234  try here https://f"> Tried  https://f-droid.org/F-Droid.apk but the issue persists.
+18:32:51 * giffgaff1234[m] uploaded an image: signal-2021-02-06-180137 (1).jpg (155KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/fDnfqSyAvXnXQQcDHOKSwzbC/signal-2021-02-06-180137 (1).jpg >
+18:32:56 * giffgaff1234[m] uploaded an image: signal-2021-02-06-180137.jpg (158KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/giQMzyIMzqpQbvvCusdkDivH/signal-2021-02-06-180137.jpg >
+18:35:42 <TheJollyRoger> Guest3451: please refrain from cross-posting between our two channels, give it some time after you've asked a question.
+18:35:44 <TheJollyRoger> What issue are you having?
+18:37:21 <Guest3451> TheJollyRoger Sorry was told to ask on another channel and ask if i should repeat request to incoming users...
+18:37:55 <TheJollyRoger> What issue are you having?
+18:38:14 <Guest3451> TheJollyRoger: The web installer has soft bricked the phone -> need options
+18:38:17 <mrbrownbadger[m]> giffgaff1234: do you have it installed on another profile?
+18:39:04 <TheJollyRoger> Guest3451: There are a few reasons that immediately come to mind when we encounter this problem:
+18:39:15 <TheJollyRoger> The first was, the phone was interrupted before it finished.
+18:40:25 <TheJollyRoger> The second is that your cable is flawed, defective, or intermittent and started cutting out partway through.
+18:40:36 <TheJollyRoger> The third, ditto for USB support on the motherboard.
+18:40:50 <TheJollyRoger> Generally, it's the first one.
+18:41:04 <TheJollyRoger> If your phone bootloops like this.
+18:41:36 <Guest3451> TheJollyRoger: Cable is very short and device was not touched during install...i have tried another cable and another USB port. Using Windows and Edge browser, all worked really well until the install.
+18:42:32 <Guest3451> TheJollyRoger: OK so what are my options or is my brand new phone junk?
+18:42:52 * sphinxcat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/RYuUFQKYWHzuMmcTKcuFCine/message.txt >
+18:43:37 <giffgaff1234[m]> <mrbrownbadger[m] "giffgaff1234: do you have it ins"> Yes, it's installed on my admin account
+18:44:00 <TheJollyRoger> Guest3451: It may surprise you, but most USB cables and ports on consumer boards are actually not fully traced - generally that causes a lot of problems with installing GrapheneOS because most vendors don't adequately implement the entire standard, only the barest minimum of features that the majority of "average users" will use.
+18:44:07 <TheJollyRoger> So you have a couple options:
+18:45:11 <sphinxcat[m]> giffgaff1234: https://freenode.logbot.info/grapheneos/20210126#c6665186
+18:45:22 <TheJollyRoger> You can attempt the web install on another computer, and make sure to avoid disturbing fastbootd; during this time, while the phone may *appear* to be doing nothing, it's actually recieving information from the host it's connected to.
+18:46:12 <TheJollyRoger> Your second option is to use the android flash tool from Google to revert your phone back to "factory fresh" condition, and then attempt the installation again.
+18:46:37 <TheJollyRoger> In the backscroll, it looks like your phone is still booting to fastboot, am I correct on this?
+18:47:20 <TheJollyRoger> Your third option, if both of those two options fail, is to attempt a commandline installation, with me talking you through the process.
+18:47:31 <TheJollyRoger> (If you're not comfortable with doing it alone, I will talk you through it)
+18:48:20 <Guest3451> TheJollyRoger: Yes; the furthest i ever get (after all the cable swaps,etc.) is to a grapheneos fastboot page and the website declaresa failure
+18:49:00 <TheJollyRoger> If your phone still displays "fastboot" when you switch it on, the phone's bootloader is still intact, which means it can have new/different operating systems installed to it.
+18:49:36 <TheJollyRoger> It's only hardbricked, with hardbricked meaning "pack it into the box and send it back, you can't fix it" if it shows no further signs of life.
+18:50:25 <Guest3451> TheJollyRoger: command line it is please. Do i need to switch computers? I wanted to use Ubuntu to install, but now the phone is not recognised and my linux skills are poor.
+18:51:55 <TheJollyRoger> Guest3451: which operating system you choose to install GrapheneOS has absolutely zero bearing on what your phone will end up as. All instances of GrapheneOS across a given device, provided the installation was completed and bootloader locked, are signed, verified, bitwise identical, and can be attested to remotely via remote attestation from the phone's hardware backed keys.
+18:53:35 <TheJollyRoger> So even if the installing computer tries to play tricks on you and changes the keys during the installation, Auditor can still catch it red-handed even after the operating system's been installed.
+18:53:38 <Guest3451> TheJollyRoger: i was going to use just adb in windows (done several times) but i was not clear about the verification of install process, so chose to use the web installer; which if it had worked would have been great!
+18:53:54 <TheJollyRoger> Would you like to do it on Windows?
+18:54:25 <TheJollyRoger> Doing it on Windows is probably the easiest, to be honest.
+18:54:29 <Guest3451> TheJollyRoger: Oh, i love the idea of this OS and going Google free; yes windows please!
+18:54:52 <TheJollyRoger> Okay. Alright: I will talk you through it, with a few conditions:
+18:54:55 <Guest3451> @thejolly
+18:55:12 <mintsauce[m]> <Guest3451 "TheJollyRoger: Oh, i love the id"> Then you're gonna even more love it when it arrives on your phone! :)
+18:55:26 <TheJollyRoger> The first one is, follow the instructions, and don't "take liberties" or attempt to save me work. The reason being is that I'm /flying blind/.
+18:55:47 <TheJollyRoger> Remember that I'm not sitting over your shoulder, watching your monitor and phone.
+18:56:04 <Guest3451> TheJollyRoger: Windows 10 and chromium edge cause any issues?
+18:56:19 <TheJollyRoger> So if you say, close a window too early, or go outside of the official instructions, then I will not know what you've done and /everything that I say afterward/ will be wrong.
+18:56:39 <TheJollyRoger> Windows 10 is supported. We won't be doing Edge.
+18:56:47 <TheJollyRoger> So, do you understand that condition?
+18:56:57 <Guest3451> TheJollyRoger: not a problem; i understand your point.
+18:58:07 <TheJollyRoger> Great! Okay, time to haul, me hearty! Open up Powershell (you do not need to, and should NOT run it as admin,) just hit start and type in "Powershell" and press return.
+18:58:09 <Guest3451> TheJollyRoger: but don't be surprised is i ask for verification before proceeding as i don't want to damage a new phone!
+18:58:22 <TheJollyRoger> Of course, I understand!
+18:58:55 <Guest3451> TheJollyRoger: done
+18:59:04 <TheJollyRoger> Now... this should pop up powershell - you'll want to confirm that it says "Windows Powershell" in the window name, and you can see a "PS C:\Users\" your name "\>"
+18:59:28 <TheJollyRoger> You might see some other stuff like "Windows Powershell, Copyright Microsoft Corporation"
+18:59:51 <TheJollyRoger> Great. We're going to attempt a few sanity checks before we do this: I'm just going to make sure that you don't have a second or unofficial, or a third-party fastboot version on your computer.
+18:59:59 <nux> Anyone else on here use the ProtonMail app and notice that the latest version crashes when attempting to compose an email?
+18:59:59 <Guest3451> TheJollyRoger: yes this is powershell opened as requested; it is not cmd; blue background...
+19:00:29 <TheJollyRoger> Great, you're looking good! If this works, you're going to get a red error saying that the command is not recognized. I want you to type in the following command and press return
+19:00:38 <TheJollyRoger> fastboot --version
+19:00:45 <TheJollyRoger> Just that, exactly as typed.
+19:01:01 <TheJollyRoger> We're just going to check that you haven't got an unofficial third-party or obsolete version installed.
+19:01:32 <Guest3451> TheJollyRoger: Yes large red error!
+19:02:15 <Guest3451> TheJollyRoger: fastboot not a recognised name...
+19:02:22 <TheJollyRoger> Alright. So the first step, we're going to set the aliasing in your shell.
+19:02:48 <Guest3451> TheJollyRoger: Roger that!
+19:02:59 <TheJollyRoger> This command produces no output, but we'll know if it worked next step.
+19:03:09 <TheJollyRoger> Enter the following command, exactly as typed, into Powershell:
+19:03:21 <TheJollyRoger> Remove-Item Alias:Curl
+19:03:38 <TheJollyRoger> It should simply return nothing at all and you will be presented with another prompt.
+19:04:02 <TheJollyRoger> Let me know when it's ready.
+19:04:12 <giffgaff1234[m]> <sphinxcat[m] "giffgaff1234: https://freenode.l"> I tried your like
+19:04:21 * giffgaff1234[m] uploaded an image: signal-2021-02-06-185958 (1).jpg (204KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/RCeUrTYqMBRFdGdrGuRNgiwk/signal-2021-02-06-185958 (1).jpg >
+19:04:25 * giffgaff1234[m] uploaded an image: signal-2021-02-06-185958.jpg (213KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/EdetIAeBROCbfvdFYFFQeOZF/signal-2021-02-06-185958.jpg >
+19:04:57 <Guest3451> TheJollyRoger: As instructed (case sensitive); no message
+19:05:06 <giffgaff1234[m]> What should I do now?
+19:05:15 <TheJollyRoger> Okay. Step Three, we're going to test it.
+19:05:21 <TheJollyRoger> giffgaff1234[m]: hang on a bit and I will be with you shortly.
+19:05:32 <Guest3451> TheJollyRoger: Rogger that.
+19:05:54 <TheJollyRoger> Guest3451: now we're just going to check that it worked. Type the following into PowerShell
+19:06:16 <TheJollyRoger> curl --version
+19:06:30 <TheJollyRoger> Hit return. You should see something like "Curl 7.55.1 windows"
+19:06:44 <TheJollyRoger> If it produces a redtext error the previous command may have been mistyped.
+19:07:01 <Guest3451> TheJollyRoger: Yeap, that is what i see!
+19:07:10 <TheJollyRoger> Great! Okay, now we're going to get Platform-Tools.
+19:07:28 <TheJollyRoger> Enter the following command into PowerShell, and hit return. It will download the correct Platform tools.
+19:07:32 <TheJollyRoger> curl -O https://dl.google.com/android/repository/platform-tools_r30.0.5-windows.zip
+19:08:11 <TheJollyRoger> Although that url may show up as a link, enter the full command into powershell and hit return, it will download it to the location I need it to.
+19:08:23 <Guest3451> TheJollyRoger: can i copy and paste this to reduce likelihood of error?
+19:08:50 <TheJollyRoger> Yes, of course. CTRL-V will not work in PowerShell, you will need to right-click in the powershell window to paste.
+19:10:08 <Guest3451> TheJollyRoger: It threw up an error:  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+19:10:09 <Guest3451>                                  Dload  Upload   Total   Spent    Left  Speed
+19:10:09 <Guest3451>   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+19:10:10 <Guest3451> curl: (35) schannel: next InitializeSecurityContext failed: Unknown error (0x80092012) - The revocation function was unable to check revocation for the certificate.
+19:11:02 <TheJollyRoger> Guest3451: Something is up with your network.
+19:12:26 <Guest3451> TheJollyRoger: If i put this link into a web browser it has successfully downloaded onto machine
+19:12:52 <TheJollyRoger> Curl's complaining that there's a problem with the certificate though.
+19:12:58 <TheJollyRoger> So I'm reluctant to go on.
+19:13:12 <TheJollyRoger> But alright, if you can obtain it that way,
+19:13:37 <TheJollyRoger> I want you to move the platform-tools.zip into your home directory.
+19:13:47 <TheJollyRoger> Into "C:\Users\[yourname]\"
+19:14:35 <TheJollyRoger> We can still check its integrity via get-filehash which we'll use next.
+19:15:10 <Guest3451> TheJollyRoger: Done. zip in user dir.
+19:15:34 <TheJollyRoger> Alright. The next step you're going to need to copy-paste. Return to the Powershell Window you had open before.
+19:15:35 <mrbrownbadger[m]> giffgaff1234: the issue is that you can't install a different version on the same app on a different profile
+19:15:52 <TheJollyRoger> Enter the following command - this is a long one.
+19:15:58 <TheJollyRoger> (Get-FileHash platform-tools_r30.0.5-windows.zip).hash -eq "549ba2bdc31f335eb8a504f005f77606a479cc216d6b64a3e8b64c780003661f"
+19:16:50 <TheJollyRoger> You'll need to copy everything in that command, including what's in quotes. It's going to take a digest of that file and compare it to that long alphanumetric code there, and if it matches, it will say "True."
+19:17:38 <Guest3451> TheJollyRoger: Say: True
+19:17:44 <TheJollyRoger> Great. It's legit then.
+19:17:56 <TheJollyRoger> Step Six, we're going to unpack it to that location.
+19:18:17 <mrbrownbadger[m]> giffgaff1234:  fdroid has an older version on their website and after you install it it updates itself. so uninstall fdroid from all profiles then donwload the versions from the site and install them on all profiles. only after that check for updates
+19:18:20 <TheJollyRoger> Enter the following command and hit return. It will spew out a lot of filenames, but we already know that the archive is the one we want:
+19:18:30 <TheJollyRoger> tar xvf platform-tools_r30.0.5-windows.zip
+19:19:02 <Guest3451> TheJollyRoger: Complete, no errors
+19:19:24 <TheJollyRoger> Great!
+19:19:39 <mrbrownbadger[m]> giffgaff1234: happens to other apps as well. the versions you instalk have to be the same with the version already installed on other profiles. such is the bug
+19:19:43 <TheJollyRoger> Okay, the next step, we're going to set your command path temporarily. This is going to add platform-tools to your command path for *this powershell session only.*
+19:20:01 <TheJollyRoger> So it's imperative that we don't close the PowerShell Window past this point or we will need to do Step Seven again.
+19:20:06 <Guest3451> TheJollyRoger: Roger that!
+19:20:33 <giffgaff1234[m]> <mrbrownbadger[m] "giffgaff1234: the issue is that "> Sorry I'm a bit confused. So it's not possible to have F-Droid installed on my admin account and user account at the same time?
+19:20:40 <TheJollyRoger> I want you to enter the following command. Like the one where we set the alias, the computer will produce no response and simply offer you another line to enter commands on, but we will check that it worked the next Step.
+19:20:52 <TheJollyRoger> $env:Path = "$pwd\platform-tools;$env:Path"
+19:21:13 <mrbrownbadger[m]> giffgaff1234: yes you can but it has to be the same version
+19:21:21 <Guest3451> TheJollyRoger: Done.
+19:21:32 <sphinxcat[m]> mrbrownbadger: or a newer version
+19:21:55 <giffgaff1234[m]> <giffgaff1234[m] "Sorry I'm a bit confused. So it'"> Apologies I never see the other replies. I understand now. Thank you all for your help
+19:22:00 <mrbrownbadger[m]> giffgaff1234: once you run update it installs a newer one
+19:22:47 <TheJollyRoger> Guest3451: Ok, great. Step Eight, we're going to check that it worked. I want you to enter the following command and this time it should produce something that will look like "fastboot version 30.0.5-" and then some numbers, and "Installed as C:\users\[your name]\platform-tools\fastboot"
+19:22:52 <TheJollyRoger> fastboot --version
+19:23:47 <Guest3451> TheJollyRoger: Returned: fastboot version 30.0.5-6877874
+19:23:57 <TheJollyRoger> Guest3451: great!
+19:24:11 <giffgaff1234[m]> <mrbrownbadger[m] "giffgaff1234: once you run updat"> Many thanks
+19:25:06 <TheJollyRoger> Guest3451: alright, so... at this point, if we were using a Linux host, we would go through the song and dance with Signify, but since no Signify port for Windows exists that's pre-authenticated by the operating system, we're going to skip it. After installation is done, you're going to want to use the Attestation Server instead.
+19:25:31 <TheJollyRoger> So we're going to skip a few steps and go straight to obtaining your factory image. You are using a Pixel 4a?
+19:25:40 <TheJollyRoger> It's very important that this is a 4a, *NOT* a 4a5G!
+19:26:06 <TheJollyRoger> If it is a 4a5G, attempting to flash the 4a image onto a 4a5G will cause permanent and irreversible bricking.
+19:26:44 <TheJollyRoger> As in "pack it into a box and send it back for a refund and hope they accept it" type bricking.
+19:27:01 <TheJollyRoger> So just make sure it's a vanilla 4a.
+19:27:30 <TheJollyRoger> The reason why is that the 4a5G, even though it *looks* like a 4a, and *feels* like a 4a, is actually an entirely different phone underneath.
+19:29:15 <Guest3451> TheJollyRoger: So i ordered a 4a; i just walked down and checked the box and it says 4a (no 5G) and checking an image online it looks like a 4a; measuring screen its too small to be a 4a 5G...so yes it is a 4a.
+19:29:30 <TheJollyRoger> Whew! Great.
+19:30:15 <mrbrownbadger[m]> not naming it 5a sure has made google deal with a lot refunds for bricked devices lol
+19:30:24 <TheJollyRoger> Hahahahaha maybe XD
+19:30:51 <TheJollyRoger> Guest3451: Ok, Step nine, we're going to going to grab the GrapheneOS image archive for your phone.
+19:31:24 <Guest3451> TheJollyRoger: i assume i will have the powershell issue; should i download in browser?
+19:31:28 <TheJollyRoger> I want you to enter the following command into Powershell. If it gives you the "Certificate Revocation" error, we can still verify it, but I'll have to check on my end as well.
+19:31:37 <TheJollyRoger> We'll test it out first.
+19:31:44 <TheJollyRoger> curl -O https://releases.grapheneos.org/sunfish-factory-2021.02.02.09.zip
+19:31:59 <TheJollyRoger> Try that.
+19:32:51 <Guest3451> TheJollyRoger: % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+19:32:51 <Guest3451>                                  Dload  Upload   Total   Spent    Left  Speed
+19:32:52 <Guest3451>   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+19:32:52 <Guest3451> curl: (35) schannel: next InitializeSecurityContext failed: Unknown error (0x80092012) - The revocation function was unable to check revocation for the certificate.
+19:33:11 <Guest3451> TheJollyRoger: web browser?
+19:33:11 <TheJollyRoger> Ok, got it. Looks like either Curl or its CA store is broken.
+19:33:27 <TheJollyRoger> Yeah, download it in a web browser and save it to the folder: "C:\users\[your name]\"
+19:34:10 <Guest3451> TheJollyRoger: Done, is now in downloads.
+19:34:39 <Guest3451> TheJollyRoger: zip moved as requested.
+19:34:50 <TheJollyRoger> Great!
+19:35:07 <TheJollyRoger> Ok, we're going to do the exact same thing we did before to verify platform tools, but we're going to use a different file hash:
+19:35:15 <TheJollyRoger> Just a sec.
+19:35:56 <TheJollyRoger> (Get-FileHash sunfish-factory-2021.02.02.09.zip).hash -eq "ec6a1eb721435c01bd4a01fcabb3ea9449cb039dcc4045a012c49dc77027bb55"
+19:36:06 <TheJollyRoger> Try that command. Let me know if it produces a "True" or "False".
+19:36:18 <TheJollyRoger> *whether it produces a true or false
+19:36:26 <mrbrownbadger[m]> actualy the 4a5g screen is actualy smaller than 3a xl. the status bar is 4 times thicker. literally 1cm band of space wasted
+19:36:35 <Guest3451> TheJollyRoger: True.
+19:36:36 <mrbrownbadger[m]> * the 4a5g screen is actualy smaller than 3a xl. the status bar is 4 times thicker. literally 1cm band of space wasted
+19:36:47 <TheJollyRoger> mrbrownbadger[m]: oh that's weird, huh. I didn't know that.
+19:37:20 <TheJollyRoger> Guest3451: Great! Alright, so we know the archive matches, now we're going to unpack it:
+19:37:28 <TheJollyRoger> tar xvf sunfish-factory-2021.02.02.09.zip
+19:37:56 <Guest3451> TheJollyRoger: Done
+19:38:32 <TheJollyRoger> Alright. We're going to move into the directory, but immediately after, stop and hold there, there's still more we need to do before we flash it.
+19:38:48 <TheJollyRoger> Enter the following command, it will produce no output but it will change where your prompt is indicating we are.
+19:38:48 <TheJollyRoger> cd sunfish-factory-2021.02.02.09
+19:38:55 <TheJollyRoger> Once you do, go pick up your phone.
+19:39:56 * mrbrownbadger[m] uploaded an image: IMG_20210206_213822_1.jpg (140KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/CeGUDBtiZjCXWYOJFgGLvGKq/IMG_20210206_213822_1.jpg >
+19:39:57 <mrbrownbadger[m]> thanks google designers. really cool
+19:40:21 <Guest3451> TheJollyRoger: Done; phone is plugged in via USB in front of me.
+19:40:58 <Guest3451> TheJollyRoger: fastboot mode on screen...
+19:41:10 <TheJollyRoger> Guest3451: ok, great. Switch it onto fastboot, and let me know what the bootloader lock state is, it should be either "locked" or "unlocked" in green or red lettering, respectively.
+19:41:37 <TheJollyRoger> While you're at it, can you open up Notepad? You're going to need it, just in case.
+19:41:39 <Guest3451> TheJollyRoger:unlocked (it never made it past this point)
+19:42:10 <TheJollyRoger> Ok, great!
+19:42:10 <TheJollyRoger> Now... we're going to attempt one more pre-flight check before launch...
+19:42:15 <TheJollyRoger> The next check is to make sure that fastboot can see the device.
+19:42:37 <TheJollyRoger> The command is just this:
+19:42:45 <Guest3451> TheJollyRoger: notepad is up.
+19:42:49 <TheJollyRoger> fastboot devices
+19:43:12 <TheJollyRoger> It will print the serial number of your device, so just tell me if it returns you something. What it returns is private and for you to know, so don't tell it to me, just tell me if you see something.
+19:43:20 <TheJollyRoger> *and for only you to know
+19:43:57 <Guest3451> TheJollyRoger: it returns nothing...
+19:44:04 <TheJollyRoger> If it doesn't see your phone, it will simply return nothing and give you another prompt.
+19:44:46 <TheJollyRoger> Ok. I think your Windows computer is missing a driver. Open up device manager for me? (hit the windows key and type in "Device Manager".)
+19:45:18 <TheJollyRoger> Open up Windows Update as well and make sure Optional Updates are enabled.
+19:46:21 <TheJollyRoger> Microsoft actually includes all device drivers for Google Bootloaders, but it only enables them if optional updates are switched on.
+19:46:44 <TheJollyRoger> So you won't have to (and indeed, should not) go searching for the driver on the internet.
+19:48:03 <TheJollyRoger> Just a sec, I will be back in one moment.
+19:48:23 <Guest3451> TheJollyRoger: where can i find optional updates? I am looking at the windows update page and there is nothing under advanced...
+19:50:53 <TheJollyRoger> Guest3451: under the "Windows Update Settings" do you see any text labelled "View all optional updates" ?
+19:51:13 <Guest3451> TheJollyRoger: No.
+19:51:29 <TheJollyRoger> If you don't, and it says "Windows is up to date" the next step is to check Device Manager.
+19:51:40 <Guest3451> OK
+19:51:54 <TheJollyRoger> And see if you see something that says "Android Device" in any of the entries, one should say "Android Bootloader Interface"
+19:52:27 <TheJollyRoger> You may have to expand a few to see it.
+19:52:40 <TheJollyRoger> Once you do, right-click on it, and select "properties."
+19:53:02 <TheJollyRoger> Then there's a tab for "Driver". Tell me what it says.
+19:53:19 <Guest3451> TheJollyRoger: OK see it and in properties.
+19:54:28 <TheJollyRoger> There should be a button to update the driver.
+19:55:48 <Guest3451> TheJollyRoger: Driver provider: LeMobile; Driver date: 28/8/2016; Driver version 11.0.0.0; Driver Signer: Microsoft Windows hardware Compatibility Publisher: Yes there is a button.
+19:56:23 <hobo8818[m]> It would save alot of moderators time if the install guide would be more simple and aimed for "noobs" ... Just saying
+19:56:24 <TheJollyRoger> Ok. I think either the cable or the USB slot is busted.
+19:57:14 <TheJollyRoger> hobo8818[m]: Normally, we encourage the use of the Web Install. This was done by request.
+19:57:25 <TheJollyRoger> It's about as "for noobs" as we can make it.
+19:57:26 <Guest3451> TheJollyRoger: how can i check this?
+19:57:50 <hobo8818[m]> <TheJollyRoger "hobo8818: Normally, we encourage"> Oh okey, havent even looked into the webinstall
+19:58:21 <TheJollyRoger> Guest3451: do you have a Google branded cable?
+19:58:27 <Guest3451> this was a web install...but something went wrong.
+19:59:22 <Guest3451> I'm using an LG (from my v20)  as the once that came with the phone was usb-c to usb-c
+20:00:37 <TheJollyRoger> Guest3451: do you have a different cable? Once again, try switching ports or cables... we've found that a lot of cables aren't properly traced, especially cheap ones that end up being shipped with devices.
+20:00:46 <TheJollyRoger> In fact, not even the Google branded ones are fully traced.
+20:01:00 <TheJollyRoger> They work for installing GrapheneOS and using your phone but they're actually missing wires.
+20:01:21 <Guest3451> TheJollyRoger: It is not plugged into ports at the back but the ones in the front of a desktop machine. I could see the phone clearly before the process was started. I will switch cables and use a back port. I have no usb 3 cables, just 2.1.
+20:01:55 <TheJollyRoger> Guest3451: Yeah, I think you will need USB 3.
+20:02:38 <TheJollyRoger> Fastboot uses a lot of features specific to USB that a lot of vendors - both motherboard and cable vendors - don't bother to adequately implement.
+20:02:57 <TheJollyRoger> If either one of them isn't properly done, fastboot will fail.
+20:04:02 <Guest3451> TheJollyRoger: OK i have swapped the cable and port. How do i check?
+20:05:00 <TheJollyRoger> Guest3451: try "fastboot devices" and if that works, then try "./flash-all.bat" - and don't disturb the phone until Powershell tells you "finished" or "Failed" and "press any key to continue."
+20:09:20 <Guest3451> TheJollyRoger: nope, tried both cables i have on multiple ports and nothing from fastboot. The computer makes a noise then the cable is connected as though it is recognising something. The only option is to switch to my ubuntu laptop and use the usb-c port on that with the google supplied cable...
+20:10:19 <TheJollyRoger> Guest3451: Yeah, use the webinstall on your Ubuntu laptop then. You'll need to install the "android-sdk-platform-tools-common" package.
+20:10:24 <TheJollyRoger> To get the udev rules.
+20:10:35 <TheJollyRoger> Then reboot once that package is installed and attempt the web install using the Google cable.
+20:10:42 <Guest3451> TheJollyRoger: what is strange is that your website still can interact with the phone!
+20:11:27 <TheJollyRoger> Guest3451: Heh, well, modern browsers do implement WebUSB!
+20:12:07 <Guest3451> TheJollyRoger: so should that not be using fastboot or adb?
+20:12:41 <TheJollyRoger> Guest3451: the webinstall uses neither. https://grapheneos.org/install/web
+20:12:55 <TheJollyRoger> You'll need to use Chromium, likely.
+20:14:21 <Guest3451> Ubuntu uses firefox; i assume i will have to download a chromium browser. Any recommendations?
+20:14:36 <TheJollyRoger> Ubuntu should include Chromium.
+20:14:45 <TheJollyRoger> You'll need to either install it via apt, or the Ubuntu application store.
+20:15:51 <TheJollyRoger> Remember, once you install the package android-sdk-platform-tools-common it adds permissions for the browser to talk to the phone's fastboot, but you must reboot for those permissions to take effect.
+20:16:10 <TheJollyRoger> (There's a way to do it while the host is still online, but it's probably just faster to reboot)
+20:16:59 <Guest3451> TheJollyRoger: ok downloading chromium now; reboot browser, phone or computer?
+20:17:20 <TheJollyRoger> Ubuntu should include chromium, the command to install it is "sudo apt update && sudo apt install chromium-browser" if I recall correctly.
+20:18:03 <TheJollyRoger> Reboot the computer after you've installed android-sdk-platform-tools-common. The command is "sudo apt install android-sdk-platform-tools-common"
+20:18:20 <TheJollyRoger> Guest3451: do *not* use the commandline fastboot included in Ubuntu. It will cause a softbrick.
+20:20:05 <Guest3451> TheJollyRoger: OK installed sdk.
+20:20:23 <TheJollyRoger> Guest3451: the entire sdk, or just that one package?
+20:20:55 <SkyFox[kdeorg][m> <TheJollyRoger "Ubuntu should include chromium, "> Didn't they move it to Snap?
+20:21:23 <TheJollyRoger> SkyFox[kdeorg][m: Oh, huh. Didn't realize that.
+20:22:40 <Guest3451> TheJollyRoger: how do it tell?
+20:24:42 <TheJollyRoger> Guest3451: did you enter just "android-sdk-platform-tools-common" or did you enter something like "android-sdk-platform-tools"?
+20:25:30 <Guest3451> TheJollyRoger: tools-common; looking at file sizes it was too quick and too small...
+20:25:37 <TheJollyRoger> if `fastboot --version` returns anything but "fastboot: command not found" then it's dragged in a third-party fastboot which will likely softbrick your device if you use it.
+20:25:40 <TheJollyRoger> Great.
+20:25:52 <TheJollyRoger> Ok, once you've rebooted the computer, then visit the web installer.
+20:26:29 <TheJollyRoger> There's a nonzero chance that even the USB-C on this computer *could* be broken too... which really sucks, but at least one of the people who signed on here looking for help had that misfortune of having *multiple* computers with broken USB.
+20:27:52 <Guest3451> TheJollyRoger: so fastboot --version returned 'fastboot' not found
+20:28:09 <TheJollyRoger> Guest3451: Whew, good, that's what we want.
+20:28:16 <TheJollyRoger> Ok, go ahead and try the web installer.
+20:29:00 <Guest3451> TheJollyRoger: OK witch step?
+20:29:49 <Guest3451> TheJollyRoger: interestingly the buttons were greyed out in firefox...
+20:30:21 <TheJollyRoger> Guest3451: Yeah, since Firefox isn't supported.
+20:31:03 <TheJollyRoger> Guest3451: if your bootloader is already unlocked, start with "Obtaining Factory Images" and hit Download Release.
+20:31:17 <Guest3451> TheJollyRoger: oops that should say 'which' step...
+20:31:29 <TheJollyRoger> This part, you should be able to do on your own.
+20:32:22 <TheJollyRoger> Just remember once you reach the "Flashing factory images" step, you're going to want to place the phone flat down on your desk where it won't fall or be disturbed, and wait for it to return to fastboot. While it's showing a menu with "fastbootd" on it, it's still working.
+20:32:37 <TheJollyRoger> And disconnecting or disturbing it will cause the flashing to fail.
+20:32:50 <Guest3451> TheJollyRoger: OK i know i'm being a pain, before i press anything i just looked for a platform-tools folder and found one with two files in
+20:33:34 <Guest3451> TheJollyRoger: this has packages.xml and source.properties
+20:33:55 <Guest3451> TheJollyRoger: both less than 1kb
+20:34:40 <TheJollyRoger> Guest3451: Don't disturb them.
+20:34:56 <Guest3451> TheJollyRoger: OK thanks.
+20:35:53 <Guest3451> TheJollyRoger: wish me luck! ....once more unto the breach...
+20:35:58 <TheJollyRoger> Here we go!
+20:37:25 <Guest3451> TheJollyRoger. The webpage says "error: failed to fetch"; that said it did see a pixel 4a so at least that is progress...
+20:37:59 <TheJollyRoger> I actually haven't used the Web flasher yet. I want to, but my last remaining device is my personal one.
+20:38:19 <TheJollyRoger> But I do know that the thing was extensively tested, a lot.
+20:40:00 <Guest3451> TheJollyRoger: i'm not going to ask you to risk your own device; but i don't know whether to laugh or cry right now.
+20:40:38 <TheJollyRoger> Guest3451: what happened?
+20:43:28 <Guest3451> TheJollyRoger "error failed to fetch" for the download release button; it asked me for which device: it saw a pixel 4a, then failed to fetch...
+20:44:47 <TheJollyRoger> Ok, Guest3451, sit tight, looks like this is a bug we're going to need to squash, in the meantime, attempt the commandline install - on Linux it's not that different from the Windows version.
+20:44:56 <TheJollyRoger> If you need me to walk you through it again, I can.
+20:45:40 <TheJollyRoger> We'll get you onboard this ship!
+20:46:23 <Guest3451> TheJollyRoger: yes please; i was tired before i started and i am in danger of making a mistake now. I will move the chat over to the ubuntu laptop. Please bear with me.
+20:46:30 <TheJollyRoger> Sure.
+20:49:43 <TheJollyRoger> Welcome back!
+20:50:05 <Guest3451> TheJollyRoger: cheers
+20:50:52 <TheJollyRoger> Settle in and ready up. The instructions are largely similar on the commandline on Linux, there are just a few things to note:
+20:51:19 <TheJollyRoger> Linux is always case sensitive, wheras Windows tends to only be case-sensitive when using Linux utilities ported to it.
+20:51:38 <Guest3451> TheJollyRoger: i have opened up a new shell; very much appreciate you doing this sir.
+20:51:44 <TheJollyRoger> Anytime!
+20:52:24 <Guest3451> TheJollyRoger: yes, please remember that i am a Linux noob; or at least i have not used it since Unix on SGI!
+20:52:55 <TheJollyRoger> The second thing to note is, as long as we're using the correct version of fastboot, and not trying to flash things like weird bootloader images on the Pixel,
+20:53:12 <TheJollyRoger> Or flash the wrong image onto the wrong phone, the Pixels are surprisingly hard to break.
+20:53:33 <Guest3451> TheJollyRoger: that is reasuring!
+20:53:36 <TheJollyRoger> As long as fastboot still functions, the phone has enough to recover the OS.
+20:53:52 <homeshopsmooth[m> Thanks for all your work on this! Any estimate for how long it will take Pixel 5 builds to go from experimental to stable?
+20:54:09 <homeshopsmooth[m> Estimate doesn't need to be precise, but I'm wondering is it weeks, months, ?
+20:54:14 <TheJollyRoger> Yeah. Google was very savvy: they realized that these phones would likely be used for development.
+20:54:25 <Guest3451> TheJollyRoger: the volume buttons are generating a response in the fastboot system.
+20:54:27 <TheJollyRoger> homeshopsmooth[m: I'm sorry but I can't really offer a firm date on that.
+20:54:48 <homeshopsmooth[m> TheJollyRoger: I appreciate the response
+20:55:24 <TheJollyRoger> Guest3451: yep! That's what they are designed to do, to toggle between different options, enter recovery, start the operating system (if it is present), or switch the device, show the bar codes (make sure you don't show those barcodes to other people, they are for you, and you alone)
+20:56:21 <TheJollyRoger> homeshopsmooth[m: yeah, sorry I can't offer more than that to you.
+20:56:26 <Guest3451> TheJollyRoger: Roger that! i have downloaded the image in the background just in case. it is in my downloads now.
+20:58:06 <TheJollyRoger> Guest3451: ok, got it. It's easiest to move them to your home folder, since that's what the commands assume.
+20:58:42 <TheJollyRoger> So, the first thing we're going to do is install a prerequisite, and then we're going to get the official Android tools.
+20:59:03 <TheJollyRoger> Guest3451: Step one, we're going to get a library used by archive tools. Chances are you may already have it, but if not:
+20:59:10 <TheJollyRoger> sudo apt install libarchive-tools
+21:00:24 <Guest3451> TheJollyRoger: does it matter what directory i am in  when i run these commands? Should it be my user dir?
+21:00:25 <TheJollyRoger> Open the terminal window, enter that, and wait for it to complete. It may or may not simply exit and tell you "0 installed, 0 updated" in which case it means you already had it, so we'll move onto the next.
+21:00:50 <TheJollyRoger> I'm glad you asked! It will in a bit, so enter the command
+21:01:05 <TheJollyRoger> cd $HOME
+21:01:29 <TheJollyRoger> Linux is going to be case-sensitive, so caps make a difference.
+21:01:55 <Guest3451> TheJollyRoger: the directory is the same; so i guess i was in home.
+21:02:08 <TheJollyRoger> Great.
+21:02:58 <TheJollyRoger> Okay, the Step Two, we're going to get platform tools.
+21:03:08 <TheJollyRoger> Let's give curl a try on this machine, it makes it easier for me.
+21:03:15 <TheJollyRoger> curl -O https://dl.google.com/android/repository/platform-tools_r30.0.5-linux.zip
+21:04:03 <Guest3451> TheJollyRoger: Oh this one is doing something!=$
+21:04:38 <Guest3451> TheJollyRoger: done 12.7MB
+21:05:04 <TheJollyRoger> Yeah. It's likely what happened was that Curl on Windows was having a problem obtaining the certificate revocation list, or validating what it was doing, so it was telling you "I can't do this safely, so I'm not going to do it at all."
+21:05:35 <TheJollyRoger> Great! Ok, let's validate it... Step Three...
+21:05:50 <TheJollyRoger> now before we do this, a heads-up, shasum on Linux is VERY finicky.
+21:06:12 <Guest3451> TheJollyRoger: could that be due to me maxing out my privicy settings on windows?
+21:06:33 <TheJollyRoger> Sometimes it'll parse the spaces incorrectly, and it might give you malformed answers, so we'll try to do this the automatic way first, if it doesn't, we'll do it the hard way.
+21:06:51 <TheJollyRoger> Guest3451: I'm not sure. Certainly if you mess with certificates or your CA store, that definitely can happen.
+21:07:08 <Guest3451> TheJollyRoger: OK
+21:07:13 <TheJollyRoger> But I don't know what you've done, so we'll have to leave that for the time being.
+21:07:18 <TheJollyRoger> The automatic way is:
+21:07:27 <TheJollyRoger> echo 'd6d72d006c03bd55d49b6cef9f00295db02f0a31da10e121427e1f4cb43e7cb9  platform-tools_r30.0.5-linux.zip' | sha256sum -c
+21:07:38 <TheJollyRoger> This *might* work, or might not, depending on how sha256sum is feeling today.
+21:07:55 <TheJollyRoger> If it doesn't, we'll try it the hard way before immediately declaring the download suspect.
+21:08:19 <Guest3451> TheJollyRoger: it just checked the zip and said OK.
+21:08:31 <TheJollyRoger> Whew. Looks like the automatic method worked!
+21:08:37 <TheJollyRoger> Alright, let's un pack it now... Step Four:
+21:08:44 <TheJollyRoger> bsdtar xvf platform-tools_r30.0.5-linux.zip
+21:08:48 <TheJollyRoger> That should unpack the archive.
+21:09:41 <Guest3451> TheJollyRoger: Done; copy past in the terminal did not exist in Unix!
+21:10:08 <Guest3451> :]
+21:10:12 <TheJollyRoger> Aaargh!
+21:10:46 <TheJollyRoger> Well, now we set the command path.
+21:11:00 <TheJollyRoger> Once again, this is going to work for *this terminal window only* so don't close it past this point or we'll lose the command path.
+21:11:10 <TheJollyRoger> Step Five:
+21:11:19 <TheJollyRoger> export PATH="$PWD/platform-tools:$PATH"
+21:11:35 <TheJollyRoger> This command produces no output, but we can check it with Step Six:
+21:11:42 <TheJollyRoger> fastboot --version
+21:11:54 <TheJollyRoger> Let me know if that produces version 30.0.5, then some numbers.
+21:12:18 <Guest3451> TheJollyRoger: fastboot version 30.0.5-6877874
+21:12:40 <TheJollyRoger> Woohoo, looking great.
+21:12:57 <TheJollyRoger> Alright. We're going to skip Signify because we'll do the same process - verification post install.
+21:13:17 <Guest3451> Roger that
+21:13:26 <TheJollyRoger> Go and get your phone and plug it in.
+21:13:55 <Guest3451> TheJollyRoger: is it bad that it has been plugged in the whole time?
+21:14:09 <TheJollyRoger> Once it's plugged in we'll start the first preflight check. Step Six:
+21:14:09 <TheJollyRoger> Guest3451: nope, not at all!
+21:14:18 <TheJollyRoger> fastboot devices
+21:14:26 <TheJollyRoger> See if it returns your device's serial number.
+21:15:07 <Guest3451> TheJollyRoger: yes it has!! :)
+21:15:16 <TheJollyRoger> We're looking good!
+21:15:21 <Emvista[m]> I might as well flash Graphene with you guys :)
+21:15:33 <TheJollyRoger> Yarr Emvista[m]! Welcome aboard!
+21:16:06 <TheJollyRoger> Emvista[m]: we're doing it the old fashioned way, due to a bug. This is just an interim measure, if you find the web installer works for you, that's usually the faster and more convenient way.
+21:16:13 <Guest3451> Fells like i am getting my sea legs!
+21:16:53 <TheJollyRoger> I'll let s`trcat know we've had an issue with Sunfish, hopefully we can sort that out later
+21:16:57 <TheJollyRoger> Guest3451: yarr-harr!
+21:17:34 <TheJollyRoger> Guest3451: Go and retrieve that factory image from where you stored it, and place it in $HOME/
+21:18:05 <TheJollyRoger> Normally we'd curl it, but if you already have it, move it there and we'll going to unpack it next step.
+21:18:13 <Emvista[m]> <TheJollyRoger "I'll let s`trcat know we've had "> I'm also on sunfish, should I be aware of the bug or is it unique?
+21:18:14 <Guest3451> (i am reminded of a blackadder sketch where they sail to the new world)...
+21:19:16 <Guest3451> TheJollyRoger: Done
+21:19:20 <TheJollyRoger> Emvista[m]: we're not sure just yet, but if you get an "error: failed to fetch" when you attempt to hit "Download Release" for Sunfish, then you're seeing the same bug we did.
+21:19:53 <TheJollyRoger> Guest3451: okay, great! We're going to unpack the archive... Step Seven:
+21:20:09 <TheJollyRoger> bsdtar xvf sunfish-factory-2021.02.02.09.zip
+21:20:15 <TheJollyRoger> This should unpack your archive.
+21:21:07 <Guest3451> TheJollyRoger: done and much faster than on windows; just checking the size...
+21:22:15 <TheJollyRoger> If you'd like to do signify verification, we can actually do it here on linux if you like.
+21:22:34 <TheJollyRoger> Just to be on the safe side.
+21:22:35 <Guest3451> TheJollyRoger: 998MB is the actually image; looks consistant. OK
+21:22:55 <Guest3451> TheJollyRoger: Yes please!
+21:23:16 <TheJollyRoger> Sure. Ok, I need you to do the command:
+21:23:28 <TheJollyRoger> sudo apt install signify-openbsd
+21:23:45 <TheJollyRoger> This should download the signify-openbsd program to your computer and install it from Ubuntu's OS program repositories.
+21:24:20 <Guest3451> TheJollyRoger: Done
+21:24:34 <Emvista[m]> Does firefox work for web installation?
+21:24:43 <Guest3451> No!
+21:25:05 <Guest3451> Been there, got the t-shirt!
+21:25:34 <Guest3451> buttons are greyed out...
+21:25:48 <TheJollyRoger> Emvista[m]: Firefox is not supported for web installation, you will need to use Chromium or Edge.
+21:26:04 <TheJollyRoger> Ok, the next step is we're going to alias signify-openbsd to signify
+21:26:09 <TheJollyRoger> The command is:
+21:26:16 <TheJollyRoger> alias signify=signify-openbsd
+21:26:23 <TheJollyRoger> It will produce no output.
+21:26:41 <Guest3451> TheJollyRoger: Done
+21:26:51 <GNUDimarik> hi
+21:26:53 <TheJollyRoger> Next, I'm we'll retrieve Daniel Micay's signify public keys and the detached signature file.
+21:26:57 <TheJollyRoger> This takes two commands:
+21:27:15 <TheJollyRoger> curl -O https://releases.grapheneos.org/factory.pub
+21:27:18 <GNUDimarik> I hope everyone are well
+21:27:27 <TheJollyRoger> curl -O https://releases.grapheneos.org/sunfish-factory-2021.02.02.09.zip.sig
+21:27:27 <TheJollyRoger> GNUDimarik: Ahoy!
+21:27:30 <GNUDimarik> not sire this topic is relevant but I have the question:
+21:27:47 <TheJollyRoger> Yarr, what can I do for ye?
+21:28:21 <GNUDimarik> I've build graphene os for pixel 4 I alwaus have "no valid slot to boot" error when I flash it
+21:28:50 <Guest3451> TheJollyRoger: very small file?
+21:28:55 <GNUDimarik> I did the standard steps:
+21:28:56 <GNUDimarik> . build/envsetup.sh
+21:28:56 <GNUDimarik> lunch aosp_flame_userdebug
+21:28:57 <GNUDimarik> make -j32
+21:29:24 <GNUDimarik> can anyone help me?
+21:29:48 <TheJollyRoger> GNUDimarik: Ooh, building is a tricky part, I haven't done much of that yet. I'm just walking someone through a CLI install right now, hopefully someone more well-versed in building will be able to answer your question.
+21:30:10 <TheJollyRoger> Guest3451: yeah. They're both very small files. You should be able to open them in a text editor.
+21:30:41 <TheJollyRoger> Guest3451: the next step is going to be a tad bit tricky, and you'll be on your own for this. Open up factory.pub in a text editor, and take a good look at it.
+21:30:48 <TheJollyRoger> You should see something like "untrusted comment: Grapheneos factory images public key"
+21:30:53 <TheJollyRoger> And then a line of what looks like seemingly random or pseudorandom letters and numbers.
+21:31:13 <GNUDimarik> TheJollyRogerthanks for the answer. Prebuit images are working
+21:31:25 <TheJollyRoger> make sure it matches what you see at The GrapheneOS official Twitter account https://twitter.com/GrapheneOS/status/1145259815851253762
+21:32:02 <TheJollyRoger> You can cross-verify it at the official GrapheneOS reddit account https://www.reddit.com/r/GrapheneOS/comments/c7gb3f/grapheneos_factory_images_are_now_signed_with/esewpm9
+21:32:31 <TheJollyRoger> The idea is that key has been placed in as many social media locations as GrapheneOS has hoped and trusted, with the hope that even if one acts in bad faith, it's harder to take down them all.
+21:33:21 <GNUDimarik> thanks
+21:33:27 <TheJollyRoger> Let me know what you see.
+21:33:48 <TheJollyRoger> GNUDimarik: Yarr, best of luck to ye! Hopefully someone more well-versed with building can help you, I haven't done much building.
+21:34:08 <TheJollyRoger> Guest3451: Don't edit the file, just compare those codes. What those random numbers and letters in factory.pub are is a twisted Edwards key.
+21:35:20 <TheJollyRoger> If it seems to be legit, then we can continue.
+21:35:54 <Guest3451> TheJollyRoger: OK checked and they all match (i will have to look up an Edwards key later)
+21:36:08 <TheJollyRoger> Guest3451: Great!
+21:36:53 <TheJollyRoger> Alright, are all three files: the factory.pub, the sunfish-factory .zip and the sunfish-factory .zip.sig file located in the same directory? If they are (they should be, hopefully), run the following command:
+21:37:08 <TheJollyRoger> signify -Cqp factory.pub -x sunfish-factory-2021.02.02.09.zip.sig && echo verified
+21:38:02 <Guest3451> TheJollyRoger: it has returned 'verified'
+21:38:22 <TheJollyRoger> Guest3451: Great! The archive is legit then.
+21:38:40 <TheJollyRoger> So, we've already unpacked it, so now we're going to move into the sunfish directory.
+21:38:44 <TheJollyRoger> The command is:
+21:38:48 <TheJollyRoger> cd sunfish-factory-2021.02.02.09
+21:39:25 <TheJollyRoger> This should produce no output but depending on what options you have set for your prompt it may display we've moved.
+21:39:41 <Guest3451> TheJollyRoger: Done
+21:40:10 <TheJollyRoger> Alright, last pre-flight check - check the cables of your phone and computer are plugged in very snugly and the phone is flat on the desk, where it won't fall.
+21:40:32 <Emvista[m]> Do I need to install a driver for fastboot with web install? (I updated usb driver a week ago when flashing Calyx)
+21:40:34 <Guest3451> Roger that! Ready for contact.
+21:40:36 <TheJollyRoger> At this point, you've done everything right. If it fails at this point, we know that the computer's USB slot may be broken.
+21:40:55 <TheJollyRoger> Emvista[m]: if it worked when you installed Calyx it should work for GrapheneOS as it is!
+21:41:05 <TheJollyRoger> Emvista[m]: so you should be good! :)
+21:41:11 <TheJollyRoger> Guest3451: Yarr, take a deep breath and enter:
+21:41:25 <TheJollyRoger> ./flash-all.sh
+21:41:33 <Guest3451> Arrrh me-laddie
+21:42:37 <TheJollyRoger> Now it's normal for fastboot to find that it's not finding some packages that aren't needed. It may complain, but the important part is that it will print at the end "finished" or "failed" and return you to the prompt.
+21:42:57 <TheJollyRoger> The phone may start displaying weird things at this point, going to strange menus like "fastbootd" and such. Let it tick.
+21:43:32 <TheJollyRoger> Fastboot will print some diagnostic information at this point in time.
+21:43:35 <Emvista[m]> So just to be clear, I don't need to install the factory image/flasher with the web install.(?)
+21:43:57 <TheJollyRoger> If it hasn't started printing some stuff, likely what's happened is that the USB slot is broken and fastboot has halted.
+21:44:24 <TheJollyRoger> Emvista[m]: yep, the web install requires no other software to be downloaded, with the exception of udev rules on Linux distributions that use udev.
+21:45:11 <Emvista[m]> Ok, going into the bootloader. Will check in after!
+21:45:25 <TheJollyRoger> Emvista[m]: Arr!
+21:46:09 <Emvista[m]> Oh, almost forgot. Do I need usb debugging turned on?
+21:46:27 <Emvista[m]> The guide doesn't mention it.
+21:46:36 <Guest3451> TheJollyRoger: I have ended up back in the bootloader...
+21:46:47 <TheJollyRoger> Emvista[m]: you don't need to use USB debugging, but you will need to switch OEM unlocking to on.
+21:46:58 <TheJollyRoger> Guest3451: Great! Ok, so... don't unplug the phone just yet...
+21:47:08 <Emvista[m]> Thanks.
+21:47:34 <Guest3451> TheJollyRoger: ok, it did say finsihed at the end. very quick for 1Gb of data
+21:47:34 <TheJollyRoger> We can do a test boot of the image while the bootloader is unlocked to make sure it made it.
+21:47:35 <TheJollyRoger> Then what we're going to do is reboot back to your bootloader one last time, lock the bootloader, and then reboot again.
+21:47:41 <TheJollyRoger> The last step we need to take is to switch OEM unlocking off.
+21:48:36 <TheJollyRoger> Guest3451: Excellent, it's looking good so far then.
+21:48:36 <TheJollyRoger> Alright, don't unplug your device just yet, but use the volume keys until you see "Start" at the top of your bootloader.
+21:48:36 <TheJollyRoger> Now... it's going to print a nasty warning about "Software integrity not guaranteed! Don't use this device!" We're not done yet, this is *only* to check to see if it worked.
+21:48:39 <Guest3451> TheJollyRoger: OK; i'm still holding my breath...turning slightly blue
+21:49:03 <TheJollyRoger> It'll flash the "Google" logo, but that's just a part of the boot loader.
+21:49:38 <TheJollyRoger> This is just to check the install and to see if it boots, right now, the verified boot and bootloader security features have been switched off, so we will switch them back on once we know the phone boots.
+21:50:06 <TheJollyRoger> Breathe :). You'll be fine.
+21:50:12 <Guest3451> TheJollyRoger: Roger that!
+21:50:39 <TheJollyRoger> The warning will display for ten seconds, but you can skip it by pressing and releasing the power key rapidly twice in succession and immediately letting go of the power key.
+21:50:44 <TheJollyRoger> Just tap-and-release, tap-and-release.
+21:51:46 <Guest3451> OK, got it.
+21:51:55 <TheJollyRoger> Once GrapheneOS has booted for the first time it should show you a welcome screen. Let me know what you are seeing.
+21:52:15 <TheJollyRoger> You'll need to select start with the power key, of course!
+21:52:28 <TheJollyRoger> Just tap and release - a long hold on the power key will switch the phone right off.
+21:53:08 <Guest3451> TheJollyRoger: i see a graphene os logo!
+21:53:31 <TheJollyRoger> She works! :)
+21:53:48 <TheJollyRoger> Okay! We're on the home stretch now, the last step is to switch the bootloader security features back on.
+21:54:15 <TheJollyRoger> I want you to switch the phone back off. Press and hold the Power key and let go once you see the power buttons come back.
+21:54:15 <TheJollyRoger> Tap "Power Off."
+21:55:03 <Guest3451> TheJollyRoger: it looks like it is fully booted. 'emergency call' in the corner and 'next>' in the other...
+21:55:13 <TheJollyRoger> Once your phone is off, use the combo key to reenter fastboot one last time. Press and hold Volume Down, and then press and hold down Power until the familiar Fastboot comes up and let go of them both simultaneously.
+21:55:52 <TheJollyRoger> Great! Yeah, if it makes it this far, GrapheneOS has been put on the partition, but it's installed just yet - it won't be installed until we've switched your bootloader security features back on.
+21:56:29 <TheJollyRoger> The fastboot key combination does require a bit of a trick to get, so if the phone boots back up just try it again.
+21:56:57 <Guest3451> in fastboot now
+21:57:06 <TheJollyRoger> Great. Alright, the command is:
+21:57:09 <TheJollyRoger> fastboot flashing lock
+21:57:29 <TheJollyRoger> Once you enter that look back at your phone again and use your volume keys to select lock. It's thesame workflow for unlocking, just we are doing it in reverse.
+21:57:51 <Guest3451> TheJollyRoger: can this be done from the directlry i am in (still in the image directory)?
+21:57:55 <TheJollyRoger> Yep!
+21:58:11 <TheJollyRoger> So long as you haven't closed your Terminal window, it should still work.
+21:58:13 <Guest3451> done!
+21:58:50 <TheJollyRoger> Great! Your phone may go dormant for a second or two, then it should bring you back to fastboot. Select Start and this time the orange screen will be replaced with one with yellow lettering
+21:58:52 <Guest3451> I need to press the buttons on the device to confirm. is this ok?
+21:58:58 <TheJollyRoger> Yep! Go ahead and press the buttons.
+21:59:29 <Guest3451> Seeing it! yellow is good...
+22:00:09 <TheJollyRoger> Yep! If you see the yellow screen and "Your device is loading a different operating system" that means the bootloader is locked and verified boot is enforced, it's just to something that's not Google's operating system.
+22:00:10 <TheJollyRoger> this is a good sign.
+22:00:18 <TheJollyRoger> It's only if it turns orange that you need to worry.
+22:00:32 <TheJollyRoger> We're going to make sure that won't happen next step.
+22:00:59 <TheJollyRoger> From here, GrapheneOS will take you through the launcher. It will ask you to set the time, whether you want to provision a back up if you have one,
+22:01:01 <Guest3451> OK i am seeing the graphene logo again.
+22:01:05 <TheJollyRoger> and if you want to connect to wifi.
+22:01:19 <TheJollyRoger> You'll need to go through this yourself.
+22:01:27 <Guest3451> do i just go 'next>' as usual now?
+22:01:44 <TheJollyRoger> Yeah. We can set up WiFi for you later.
+22:02:01 <TheJollyRoger> At this point, if you had a backup,
+22:02:12 <TheJollyRoger> say, like if you had a Seedvault file on a USB drive, you would restore at this point.
+22:02:18 <TheJollyRoger> During this welcome screen.
+22:02:39 <TheJollyRoger> Since you aren't migrating from an existing device, this can safely be skipped.
+22:03:39 <pnrxa[m]1> <TheJollyRoger "At this point, if you had a back"> Can you restore a backup after the initial setup?
+22:03:39 <Guest3451> TheJollyRoger: I cannot thank you enough for the support; i must donate to this project now; i will see if i can find my bitcoin. Do you have a recommendation for a compliant USB-c cable?
+22:04:23 <TheJollyRoger> pnrxa[m]1: You can, but it can overwrite some of your system settings!
+22:04:41 <TheJollyRoger> Guest3451: We appreciate donations greatly! Thank you in advance!
+22:05:01 <TheJollyRoger> I do: the best cable to use for the Pixels unless you are debugging them are the Google branded ones. However, we've had good luck with Anker and Aukey branded cables.
+22:05:17 <TheJollyRoger> They are a little pricey, but they will have full traces and they won't short your device or burn your house down.
+22:05:36 <TheJollyRoger> Guest3451: we have one last step to do, we're almost there.
+22:05:59 <Guest3451> TheJollyRoger: please continue...
+22:06:04 <TheJollyRoger> We're going to turn OEM unlocking back off.
+22:06:12 <TheJollyRoger> This will prevent someone from coming along and plugging your device back in and "$ fastboot flashing unlock"'ing your device.
+22:06:44 <TheJollyRoger> I want you to open up Settings and enable developer mode the same way you did before: navigate to About Phone and tap Build Number ten times until it tells you "You are now a developer."
+22:07:11 <TheJollyRoger> After you get that prompt, go to "Settings -> System -> Advanced -> Developer Options."
+22:07:35 <TheJollyRoger> Scroll down to "OEM Unlocking" - it will be, by default, "on"
+22:07:37 <TheJollyRoger> Slide it back to "off."
+22:07:51 <TheJollyRoger> Once that's done, Slide developer options to "off" and exit your settings.
+22:08:39 <TheJollyRoger> At this point, once Developer options are switched off, GrapheneOS is installed and ready to use in production! There's an optional step if you want to do self-monitoring of your device integrity.
+22:09:04 <Guest3451> yes please
+22:09:18 <TheJollyRoger> That's to go to https://attestation.app/tutorial and pair with the project's AttestationServer, which can periodically challenge your phone for its verified boot public keying and verified boot hash.
+22:09:55 <TheJollyRoger> If the phone fails to check in after a certain amount of time, Attestation Server can send a "Hold it, something's not right, your phone is failing audits!" after around a day and a half.
+22:10:16 <Guest3451> Oh i like the sound of that!
+22:10:25 <TheJollyRoger> Even if the phone's operating system gets modified by something like some very sophisticated malware, or a rootkit, and tries to lie to attestation server,
+22:10:35 <TheJollyRoger> it can't lie to the hardware backed keys in the security chip.
+22:11:00 <Guest3451> This is what i was after all along!
+22:11:03 <TheJollyRoger> Yeah. You'll need an E-mail address (one that you won't be using on the phone) and another computer, usually your laptop or a desktop, to view the audit results.
+22:11:06 <TheJollyRoger> Woohoo :)
+22:11:49 <TheJollyRoger> The security chip in your phone is tiny, it's only about the width of three pennies stacked together. It's small and very difficult to attack, but it can't display the audit on its own.
+22:11:55 <Guest3451> I was going to use my Tutanota email on the device; is it best to use another provider or just another address?
+22:12:15 <TheJollyRoger> If you have Tutanota that is good, they use DANE.
+22:12:36 <TheJollyRoger> Just make sure that the E-mail you are using for self-monitoring is not the E-mail address you are going to be accessing from the phone itself.
+22:13:18 <TheJollyRoger> The reason we say this, is because if somehow, let's say your phone did get compromised and something actually was able to break out of its SElinux sandbox, it could simply delete the "Something's not right!" E-mail and hide the notification dot.
+22:14:29 <Guest3451> TheJollyRoger: OK will do; is there some other than Tutanota that you would recommend?
+22:14:49 <justanothernpe[m> So I just tried to install Graphene. It flashed fine, no errors, went back to bootloader. Re-locked the bootloader as instructed. Rebooted and now it says "no valid slot to boot". Guessing the phone is bricked now since I locked before checking to see if it would boot?
+22:14:59 <TheJollyRoger> I don't have any suggestions at the moment for a mail provider, unfortunately. It's been a while since I looked into E-mail.
+22:15:07 <TheJollyRoger> In interim you could use it for now, but I would recommend changing it later.
+22:15:46 <Guest3451> TheJollyRoger@ just want to thank you again! That has been amazing support! and just for good measure: https://www.youtube.com/watch?v=_EfW9znJYjw
+22:16:00 <TheJollyRoger> justanothernpe[m: you should be able to unlock it again, since you weren't able to boot up to the OS to turn off OEM unlocking. However, I'd recommend trying the "start" option to check it's bootlooping first.
+22:16:36 <TheJollyRoger> Guest3451: you're welcome! Welcome aboard the ship!
+22:16:51 <justanothernpe[m> How do I go about this? Just reconnect and issue command to unlock?
+22:17:11 <TheJollyRoger> Guest3451: feel free to stick around as well, usually the channel discusses fun stuff from time to time. We really appreciate any donations, they go to keeping this ship sailing!
+22:17:25 <TheJollyRoger> justanothernpe[m: yep, just reconnect and issue command to unlock. But try starting it first to see if it autodetects.
+22:17:31 <justanothernpe[m> Yes the start option does not work
+22:17:48 <justanothernpe[m> just goes right back to fastboot
+22:18:00 <justanothernpe[m> OK have to reboot to windows will brb
+22:18:08 <TheJollyRoger> justanothernpe[m: got it, then connect it to your PC and unlock. Generally what causes this result is using third-party or outdated versions of fastboot and bypassing the safety check to check for fastboot.
+22:18:29 <Guest3451> TheJollyRoger: well after that nautical effort, how can i refuse. I guess i will have to pick a proper name...is blackbeard taken? ;)
+22:18:34 <justanothernpe[m> OK the phone was just purchased from ebay, it had stock software
+22:19:12 <TheJollyRoger> Guest3451: hehehehe, I'm not sure!
+22:19:37 <TheJollyRoger> Aw, crap, looks like that video is blocked for me :( D'oh, I will try another time.
+22:19:48 <TheJollyRoger> justanothernpe[m: Got it, check your fastboot version, did you install using a third-party video guide or something?
+22:22:40 <mike-of-earth> Sooooo... I see the pixel 5 listed on the latest build (todays). Does that mean I am good to go on installing it?
+22:23:10 <TheJollyRoger> I think it may be for internal testing only at this moment.
+22:23:23 <TheJollyRoger> But I'm not sure yet.
+22:24:11 <justanothernpe[m> <TheJollyRoger "justanothernpe: Got it, check yo"> No using instructions on the website. Bootloader version b1c1-0.3-6863019. What should I do next?
+22:24:33 <TheJollyRoger> justanothernpe[m: possibly try the Web Install?
+22:24:47 <Guest3451> TheJollyRoger: sorry it must be a UK thing :(
+22:24:58 <TheJollyRoger> Guest3451: aw, darn! :(
+22:25:44 <TheJollyRoger> justanothernpe[m: can I see your "fastboot --version"?
+22:25:45 <justanothernpe[m> <TheJollyRoger "justanothernpe: possibly try the"> OK I'll look into that thanks
+22:25:55 <TheJollyRoger> Just outta curiosity.
+22:28:08 <justanothernpe[m> <TheJollyRoger "justanothernpe: can I see your ""> How do I get the version?
+22:28:34 <TheJollyRoger> If you've set your environment variables, type into powershell "fastboot --version"
+22:28:35 <Guest3451> TheJollyRoger: these are the words; you should be able to access this...
+22:28:48 <Guest3451> TheJollyRoger: https://blackadderquotes.com/talk-like-a-pirate
+22:28:57 <TheJollyRoger> justanothernpe[m: Did you use the web install, or the cli install?
+22:29:33 <justanothernpe[m> <TheJollyRoger "justanothernpe: Did you use the "> CLI its  29.0.1-5644136
+22:29:52 <TheJollyRoger> Guest3451: Ahahaha excellent :)
+22:30:07 <TheJollyRoger> justanothernpe[m: Hmm, it's an older version, we're now on 30.0.5.
+22:30:16 <TheJollyRoger> justanothernpe[m: you might want to just try using the web install.
+22:30:32 <TheJollyRoger> Your device should still unlock.
+22:30:41 <justanothernpe[m> OK, also I did not flash the lastest stock android first should i sideload that first?
+22:30:51 <justanothernpe[m> it is unlocked now
+22:31:22 <TheJollyRoger> No, don't do that. Just try the web install first.
+22:31:41 <justanothernpe[m> OK
+22:31:58 <TheJollyRoger> I actually have to get off the computer for a bit, but the web install should get you where you need to be.
+22:32:25 <TheJollyRoger> It includes everything.
+22:32:27 <justanothernpe[m> is there a certain browser i need for the web install? Buttons are greyed out
+22:32:43 <TheJollyRoger> Yeah, you'll need either Chromium or Edge.
+22:32:48 <justanothernpe[m> OK
+22:32:52 <TheJollyRoger> If you are on Windows, use Edge.
+22:32:57 <justanothernpe[m> ok i am
+22:33:00 <justanothernpe[m> will do
+22:33:13 <TheJollyRoger> Great.
+22:33:23 <TheJollyRoger> I have to get going, unfortunately, but I will return tonight, if you're still having trouble, ping me.
+22:33:39 <TheJollyRoger> Generally the majority of problems we've experienced with the web flasher tend to be:
+22:33:46 <justanothernpe[m> OK thanks!
+22:33:57 <TheJollyRoger> If the web flasher or fastboot can unlock and lock your device, but when you try to *flash* the device, it hangs,
+22:34:26 <TheJollyRoger> that indicates that the cable is missing a wire, or that USB firmware support on your computer is broken.
+22:34:31 <TheJollyRoger> or incomplete.
+22:34:34 <justanothernpe[m> <TheJollyRoger "that indicates that the cable is"> OK
+22:35:08 <justanothernpe[m> It didn;t hang looked like everything went ok
+22:35:15 <TheJollyRoger> If you get an "Error: failed to fetch" when you hit Download Release, let me know ASAP, in case that's a bug I have to escalate.
+22:36:07 <justanothernpe[m> OK
+22:36:12 <TheJollyRoger> Yeah. Generally most problems most people have now that we have the web UI tend to be caused by improperly traced cables or their motherboard firmware/hardware not properly implementing all the features of USB.
+22:36:29 <TheJollyRoger> I have to get off the computer, but I will return soon. Good luck, shipmate.
+22:59:51 <Emvista[m]> Successfully flashed GrepheneOS!
+23:00:34 <louipc> congrats
+23:16:43 <justanothernpe[m> <TheJollyRoger "Yeah. Generally most problems mo"> TheJollyRoger: It worked, thanks for the help!
+23:21:38 <noobna[m]> <nux "Anyone else on here use the Prot"> Works perfect for me I'm on a 4a
+23:23:58 <caffiene[m]> Does anyone know of an app like orbot that runs on grapheneos?
+23:25:32 <TheJollyRoger> justanothernpe[m: Emvista[m] Yarr, splice the mainbrace! Welcome aboard the ship, shipmates!
+23:26:25 <Emvista[m]> Do I need to run orbot with graphene, or is it a waste of time?
+23:26:54 <rny> Emvista[m]: depends on your usecase
+23:27:53 <TheJollyRoger> Emvista[m]: orbot is a tool for a specific job, much like how you would have a screwdriver, a wrench, or a multimeter, in your tool box.
+23:28:24 <TheJollyRoger> Even if your multimeter can't be used to remove a nut or a bolt, that doesn't mean it's necessarily useless, it's just used for a different job.
+23:29:09 <Emvista[m]> <TheJollyRoger "Emvista: orbot is a tool for a s"> Let me rephrase. What benefit does it give me when using orbot (without vpn)?
+23:29:55 <noobna[m]> <TheJollyRoger "hobo8818: Normally, we encourage"> Web install worked great for me and I had no idea😄
+23:30:10 <TheJollyRoger> If you have an app that supports Orbot use, it can do a much more thorough job of hiding your IP address from the server it's connected to, more so than a VPN.
+23:30:13 <Emvista[m]> I'm just a regular joe, I'm not a whistleblower, journalist, etc.
+23:32:53 <TheJollyRoger> So, again, it's a different tool for a different job. GrapheneOS implements exploit mitigations and privacy improvements that the regular operating system doesn't but does nothing to anonymize your internet traffic. Orbot when used with an app properly configured to use it tries to hide your IP address from places the app is dialing out to, but does nothing to mitigate exploits, improve
+23:32:53 <TheJollyRoger> application sandboxing, or memory safety.
+23:32:53 <TheJollyRoger> So they are two different tools, for two very different jobs.
+23:33:40 <TheJollyRoger> Much like how I won't use a screwdriver to test a battery or test a wired connection, and I won't use a multimeter to remove a turn a screw.
+23:33:53 <TheJollyRoger> *a multimeter to turn a screw.
+23:35:40 <caffiene[m]> TheJollyRoger: so how to get orbot on graphene?
+23:36:01 <mr_hebi_san[m]> <noobna[m] "Web install worked great for me "> Me too, it was the easiest install of all between Lineage and Calyx
+23:36:56 <Emvista[m]> So for example, if I use vanadium with orbot, will it make the browsing more private?
+23:37:07 <TheJollyRoger> caffiene[m]: There are several ways. Probably the easiest way is through the Aurora Store.
+23:38:34 <TheJollyRoger> Emvista[m]: It will hide your IP address from the sites you visit, but if the sites you visit are determined to track you, you'll also be one of likely four or five people worldwide with a that renders web pages with the speed and timing of a Pixel running Chromium, that's using Tor, and all of them are probably in this room right now.
+23:38:55 <Emvista[m]> <caffiene[m] "TheJollyRoger: so how to get orb"> Enable it in F-Droid
+23:39:00 * Emvista[m] uploaded an image: Screenshot_20210206-183826.png (71KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/OdYlMxaqKduKazWPvkpnzAiv/Screenshot_20210206-183826.png >
+23:39:22 <Emvista[m]> Guardian Project Releases
+23:39:46 <justanotherlurke> <TheJollyRoger "Much like how I won't use a scre"> Testing a car's battery with a screwdriver can be fun ... but usually works once only. So not recommended... 😇
+23:39:58 <TheJollyRoger> justanotherlurke: Ahahahahaa yes XD
+23:40:15 <TheJollyRoger> justanotherlurke: BZZZZTTT! hahahaha
+23:40:36 <Emvista[m]> <TheJollyRoger "Emvista: It will hide your IP ad"> Thanks for explaining
+23:40:43 <justanotherlurke> TheJollyRoger: It's a very flashy type of test.
+23:41:01 <TheJollyRoger> Hee hee hee, I bet :D
+23:42:04 <caffiene[m]> I can't seem to find it on the aurora store, am I missing something?
+23:42:46 <Emvista[m]> One last thing. It is best to use vanadium as it is, or with tweaked settings?
+23:43:01 <TheJollyRoger> Emvista[m]: generally, we encourage people use Vanadium, since it's significantly safer, being internally sandboxed. This, as opposed to Gecko based browsers, which do not internally sandbox processes and make no effort to do so and take an "all your eggs in one basket" approach to site isolation.
+23:43:59 <TheJollyRoger> Emvista[m]: the defaults on Vanadium are set for maximum privacy and security as they are. Changing them will likely erode your privacy and security.
+23:44:44 <mr_hebi_san[m]> <TheJollyRoger "Emvista: generally, we encourage"> What is the functional security difference between Vanadium and Bromite?  I really really like the anti finger printing Bromite offers
+23:46:04 <TheJollyRoger> mr_hebi_san[m]: Bromite has made more inroads on resisting fingerprinting and adblocking than Vanadium does. Vanadium aims to mimic the fingerprint of a regular Pixel. However, Vanadium offers a lot of things that Bromite doesn't, namely that it works with the increased memory safety and sandboxing of GrapheneOS.
+23:46:23 <TheJollyRoger> This is to help provide stronger sandboxing, and mitigate and prevent exploits before they become vulnerabilities.
+23:46:56 <TheJollyRoger> Especially since Vanadium on GrapheneOS also provides the backend for the PDF Viewer and WebView, both of which must handle large amounts of untrustworthy code.
+23:47:04 <noobna[m]> Is the duckduckgo browser app OK to use on graphene os?
+23:47:29 <TheJollyRoger> The catch is that Vanadium depends on some security improvements in GrapheneOS, it will not work as it has been originally designed to on other operating systems.
+23:47:33 <TheJollyRoger> noobna[m]: Just use Vanadium.
+23:47:54 <TheJollyRoger> Vanadium and Bromite are the only browsers that are actually recommended by GrapheneOS, in that respective order.
+23:48:42 <TheJollyRoger> If you are nonetheless determined to use Tor, then use the official Tor Browser and don't "tune" it.
+23:51:35 <TheJollyRoger> But bear in mind that it's significantly less secure than Vanadium and lacks internal sandboxing.
+23:53:18 <mr_hebi_san[m]> <TheJollyRoger "Especially since Vanadium on Gra"> That's a very good point.  I know it is possible to try to set the Bromite WebView as the system web view but I was reluctant to do this on my new Graphene install without a full understanding of what that entails.
+23:53:56 <TheJollyRoger> Yeah. Use the Vanadium Webview, it's your best option as far as security is concerned.
+23:55:17 <Emvista[m]> The thing that I like about bromite is you can enable opening links in incognito mode. I couldn't find it on vanadium.
+23:57:02 <mr_hebi_san[m]> Actually the funniest little thing I liked about Bromite was that it has a View Source option.  Did I just miss where this was hidden in vanadium?
+23:58:18 <TheJollyRoger> Emvista[m]: tap-and-hold the link, it should give you "Open In Incognito Tab" when the menu pops up.
+23:58:51 <LinusSexTips[m]> <mr_hebi_san[m] "Actually the funniest little thi"> This is a very useful feature
+23:58:55 <LinusSexTips[m]> for RSS
+23:59:15 <TheJollyRoger> mr_hebi_san[m]: huh, come to think of it I never looked for that...
+23:59:32 <justanotherlurke> <TheJollyRoger "If you are nonetheless determine"> Why not use bromide + orbot instead, to use the anonymity of tor in addition to bromite's privacy?

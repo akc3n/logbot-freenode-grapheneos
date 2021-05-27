@@ -1,0 +1,769 @@
+00:03:27 <sklv1> hmm, it's nice but in what case is it useful? you can choose not to trust an update consisting of a signed binary blob that you can't audit anyway
+00:04:10 <strcat[m]> I think you're missing the point
+00:04:44 <sklv1> probably - which is why i'm asking
+00:05:21 <strcat[m]> if the NSA gets your phone (assume it's powered off / main profile isn't active), they cannot bypass the throttling by coercing the company that makes the secure element firmware or infiltrating them to get access to their signing HSM, etc.
+00:05:33 <strcat[m]> they can't demand it, it can't be given to them
+00:06:25 <strcat[m]> they actually have to exploit the secure element somehow which is a substantial task to do
+00:06:49 <strcat[m]> and has a good chance of failing+ destroying the data if it involves a physical attack
+00:06:54 <strcat[m]>  * and has a good chance of failing + destroying the data if it involves a physical attack
+00:07:36 <strcat[m]>  * if the NSA gets your phone (assume main profile isn't active), they cannot bypass the throttling by coercing the company that makes the secure element firmware or infiltrating them to get access to their signing HSM, etc.
+00:07:59 <strcat[m]> sklv1: it's a protection against the FBI vs. Apple situation
+00:08:14 <strcat[m]> that's one of the reasons it's better, not the only one
+00:08:35 <sklv1> but on iPhone to update the firmware, it has to be on, and unlocked. I guess the difference is exploiting the OS vs exploiting the secure element.
+00:09:11 <strcat[m]> sklv1: exploiting the OS is not hard for a sophisticated attacker with physical access
+00:09:27 <strcat[m]> they can just not update the phone for a month
+00:09:30 <strcat[m]> they don't need any 0 days
+00:09:42 <sklv1> ok different question - how much longer will my phone be supported if I get pixel 5 instead of a pixel 4A
+00:09:44 <strcat[m]> they can happily use old, public vulnerabilities
+00:10:03 <strcat[m]> they could use some PoC a researcher published on their blog from 2 months ago, just wait long enough
+00:10:13 <strcat[m]> sklv1: Pixel 5 and 4a (5G) are supported for the same time period
+00:10:31 <strcat[m]> sklv1: Pixel 4a *guaranteed* support is a few months lower
+00:10:40 <strcat[m]> but in practice it may be more of a difference than that
+00:11:01 <strcat[m]> because if they ended up being able to extent support for 6+ months for Pixel 5 / 4a (5G) past guarantee that doesn't apply to 4a
+00:11:19 <strcat[m]> 4a already got released really late compared to when it was supposed to be
+00:11:27 <strcat[m]> it's unlikely to get a single month of extra support, I think
+00:11:51 <deadlydata[m]> can someone help me with a build issue, i'm running "script/release.sh blueline" and everything seems to be fine but in the end i get a weird error, heres a link to the output. help would be appreciated. https://pastebin.com/stRTKfip
+00:12:26 <strcat[m]> out/target/product/blueline/obj/PACKAGING/target_files_intermediates/aosp_blueline-target_files-2021.04.27.14.zip
+00:12:28 <strcat[m]> that file is missing
+00:12:38 <strcat[m]> did you run `m target-files-package` when you did your build?
+00:12:53 <strcat[m]> you can look for yourself at the directory and see what's in there
+00:12:57 <deadlydata[m]> ah no
+00:13:02 <deadlydata[m]> can i run it now after the build?
+00:13:06 <strcat[m]> yes
+00:13:07 <deadlydata[m]> or do i have to run and rebuild.
+00:13:11 <strcat[m]> no just run it now
+00:13:14 <deadlydata[m]> ah ok thanks
+00:13:24 <strcat[m]> it'll figure it out it has no work to do for the rest of the build (since nothing changed) and just make the target-files-package
+00:13:38 <deadlydata[m]> love the swift response 🙂
+00:13:56 <strcat[m]> for dev builds you generally just use `m` and flash the non-release-signed images
+00:14:09 <strcat[m]> for release builds you use `m target-files-package` to get the stuff packaged up into a target-files-package zip
+00:14:33 <strcat[m]> because the signing scripts work by converting target files package -> signed target files package, then generating factory images and signed OTA from that
+00:14:35 <deadlydata[m]> ah ok so i don't have to sign for dev builds
+00:14:42 <deadlydata[m]> that makes it easier
+00:15:01 <deadlydata[m]> Also GrapheneOS disables updatable APEX components for the officially supported devices and targets inheriting from the mainline target, so APEX signing keys are not needed and this section can be ignored for unmodified builds.
+00:15:03 <strcat[m]> yes for dev builds just do `m` and flash the images and leave it unlocked (you could technically lock, it's signed with the publicly available AOSP test keys, but it's useless)
+00:15:28 <deadlydata[m]> this was a bit confusing
+00:15:31 <strcat[m]> also `m` doesn't generate a target files package, OTA package, etc. which is a huge waste of time
+00:15:34 <strcat[m]> for dev
+00:15:54 <strcat[m]> because if you change one tiny thing and rebuild, `m` is pretty fast (incremental build) if your change doesn't require rebuilding much
+00:16:08 <strcat[m]> but if you add the work of generating all those zips/packages, signing, generating more, it's a lot of time
+00:16:30 <strcat[m]> so for example if you rebuilt the kernel, and did `m`, it's going to figure out it only has to regenerate boot.img
+00:17:06 <strcat[m]> if you tested with signed builds... you have to do the whole target-files-package generation (takes a while), sign everything (huge waste of time) and generate OTA and/or factory images from that to use it
+00:17:14 <deadlydata[m]> ok yes that is much more efficient
+00:17:34 <deadlydata[m]> with the dev builds do i have to sign Apex components
+00:17:39 <deadlydata[m]> or can i leave that the way it is
+00:17:46 <strcat[m]> deadlydata: we use flattened APEX, they don't need to be signed ever
+00:18:06 <strcat[m]> deadlydata: even if we didn't, for a dev build, they'd just be signed with AOSP test keys
+00:18:17 <strcat[m]> you don't need to sign anything unless you're making a secure a release build
+00:18:28 <deadlydata[m]> ok so i'm good to start modifying and building it would seem
+00:18:37 <strcat[m]> `m` makes a build that is signed with AOSP test keys, it's usable as is
+00:19:00 <strcat[m]> target files is just the way that the build is packaged up to be used in other ways, it just bundles everything up into a huge zip
+00:19:28 <strcat[m]> release signing is implemented in a way that you can do it on a different machine, etc. using the target files package and ota tools package made by those commands
+00:20:13 <strcat[m]> release signing is a post-build step
+00:20:16 <strcat[m]> it's not part of the build
+00:20:27 <strcat[m]> and you can use the build as-is, without release signing, always
+00:21:15 <strcat[m]> you can make a `release` and `user` build and use the result directly and then decide to sign it with release keys too
+00:21:22 <strcat[m]> separate tasks
+00:21:33 <deadlydata[m]> strcat: Can you reccomend me a good Emulator setup to effeciently test the rom builds fast
+00:21:50 <strcat[m]> deadlydata: just build for the x86_64 generic / sdk target
+00:21:58 <strcat[m]> the source tree comes with an emulator that understands how to run a build
+00:22:10 <strcat[m]> you can use an arm one too but x86_64 one is nice since then it's fully hardware accelerated
+00:22:30 <strcat[m]> source script/envsetup.sh
+00:22:31 <strcat[m]> choosecombo release sdk_phone_x86_64 userdebug
+00:22:33 <strcat[m]> m
+00:22:39 <strcat[m]> emulator
+00:23:07 <strcat[m]> deadlydata: I would recommend clearing `out` between switching targets although it's not strictly required (it doesn't share much between totally different targets anyway)
+00:23:31 <strcat[m]> deadlydata: and then leave that shell open, and just `m` and run `emulator` again to test
+00:23:54 <strcat[m]> deadlydata: if you close the shell, open one up again, source script/envsetup.sh, choosecombo release sdk_phone_x86_64 userdebug and it has picked up the stuff for the previous build
+00:24:00 <strcat[m]> and you can run `emulator` again or `m` to rebuild
+00:24:51 <strcat[m]> there is a way to package up images for use in the Android SDK emulator but it's not worth it, just use the one in the source tree, it knows how to use the build output directly instead of packaging it up
+00:26:08 <strcat[m]> deadlydata: we only provide Vanadium prebuilts for arm64 and x86_64 so x86_64 is the way to go for emulator, if you did x86 you'd have to build Vanadium 1st (or omit it)
+00:26:09 <deadlydata[m]> thanks for the info dude, this helped so much , :)
+00:27:25 <strcat[m]> deadlydata: in many cases you can just make changes + rebuild (incremental build)
+00:27:44 <strcat[m]> in some cases your changes will require a massive rebuild anyway (changing some compiler thing, core build infra, something like libc headers, etc.)
+00:28:28 <strcat[m]> in some cases you do need a clean build because the incremental build stuff isn't perfect (removing a package, changing build definition stuff, etc.)
+00:28:37 <strcat[m]> you should always do a totally clean build for an actual release
+00:28:45 <strcat[m]> i.e. remove out
+00:28:47 <strcat[m]> first
+00:31:14 <deadlydata[m]> ah ok so i can mess about with the debug builds and i don't have to worry about the out folder when switching targets etc, but when building for release it's important to start with a fresh out folder.
+00:31:26 <deadlydata[m]> i've understood this correctly right
+00:31:55 <deadlydata[m]>  * i've understood this correctly right?
+00:32:02 <strcat[m]> deadlydata: you may want to clear it if you're switching targets because it can hardly reuse anything so it's wasting a ton of space + there could potentially be issues from it
+00:32:33 <strcat[m]> deadlydata: there are *likely* issues from it, depends on the exact details
+00:32:45 <deadlydata[m]> i had the target on blueline
+00:32:48 <strcat[m]> by switching targets I mean a different choosecombo target beyond just switch user <-> userdebug, etc.
+00:32:57 <deadlydata[m]> but i switched it to sdk_phone_x86_64
+00:33:16 <strcat[m]> deadlydata: yeah so if you're going to be doing x86_64 sdk build I'd definitely clear out/ first just because it can hardly reuse anything anyway + it avoids any potential issues
+00:33:27 <strcat[m]> there will be hardly anything in the 'common' build output
+00:34:14 <strcat[m]> deadlydata: nearly all build output for you atm will be in out/target/product/blueline
+00:34:20 <strcat[m]> it can only reuse stuff in out/target/common
+00:34:41 <deadlydata[m]> i should delete everything in out folder right?
+00:34:50 <deadlydata[m]>  /out/
+00:34:55 <strcat[m]> deadlydata: so, it's fine to just build x86_64 target with that already there, but unless you're going to build blueline again incrementally just remove out/
+00:35:21 <strcat[m]> if you ARE going to build blueline again incrementally (i.e. another dev build) you might as well keep it
+00:35:39 <strcat[m]> just be aware in theory it could have something non-portable with the stuff in common
+00:35:49 <deadlydata[m]> yeah my goal was to edit blueline, because that's the device i hold
+00:36:05 <deadlydata[m]> in the end i want to flash a modified image on to my pixel 3
+00:36:25 <deadlydata[m]> but that's after developing allot of stuff first. ofcourse haha
+00:37:43 <deadlydata[m]> could i run choosecombo release aosp_blueline userdebug
+00:37:49 <deadlydata[m]> choosecombo release aosp_blueline userdebug
+00:38:07 <deadlydata[m]> m
+00:38:09 <deadlydata[m]> emulator
+00:38:16 <deadlydata[m]> this would work also right?
+00:41:28 <strcat[m]> you can't run a build for the device like that in the emulator
+00:41:32 <strcat[m]> you need either generic or sdk targets
+00:42:03 <strcat[m]> you can run an arm64 build in the emulator but it won't be hardware accelerated
+00:42:06 <strcat[m]> but you can't use a blueline one
+01:26:38 <ATTNSA> Any reccomendations on Pixel 4a Vs 5
+01:27:06 <GhostSplinterSix> I use a 4a and have enjoyed it.
+01:27:18 <ATTNSA> Nice
+01:27:24 <ATTNSA> Get a Otterbox case and Glass Screen protector
+01:27:26 <ATTNSA> for maximum protection
+01:28:55 <ATTNSA> And camera blocker stickers
+01:29:01 <ATTNSA> And cover the fingerprint scanner
+01:29:04 <ATTNSA> LTE Only mode
+01:29:07 <ATTNSA> And VPN
+01:29:12 <ATTNSA> Signal for encrypted calls and texts
+01:29:14 <ATTNSA> = Secure
+01:30:32 <pentoo_user[m]> Why no finger print?
+01:31:07 <ATTNSA>  Finger Print identifies my body
+01:31:09 <ATTNSA> my fingers
+01:31:24 <ATTNSA> So the fingerprint scanner could be hacked to scan and send my fingerprint to NSA
+01:31:29 <ATTNSA> to identify the phone user
+01:39:42 <b1101> also police can have you use your fingerprint to unlock your phone, but can't force you to enter a code
+01:40:02 <ATTNSA> ^^^
+01:40:54 <pentoo_user[m]> Hmmm
+01:40:57 <pentoo_user[m]> I see
+01:46:29 <Thatcher[m]> <ATTNSA "my fingers"> I unlock my phone with my toe
+01:46:43 <ATTNSA> still personally identifyable
+01:46:52 <ATTNSA> id reccomend a 12 didgit pin or password
+01:55:45 <Thatcher[m]> Seems very inconvenient to ditch fingerprint due to fear of the NSA. That level of tinfoil hattery would just get me off smartphones completely.
+01:58:20 <ATTNSA> exactly
+01:58:27 <ATTNSA> its easy to just use a pin
+02:08:56 <ATTNSA> Graphene OS should let us VPN the hotspot wifi
+02:09:04 <ATTNSA> so we have VPN enabled on GOS
+02:09:07 <ATTNSA> then setup hotspot
+02:09:13 <ATTNSA> connecting devices route through our GOS VPN
+02:29:59 <Thatcher[m]> All this fingerprint awareness makes me wonder: Does the OS store physical fingerprints as visual images in the OS as references for the fingerprint sensor, and/or are they converted to cryptographic salted-hashes that hide the true fingerprint hashes from the rest of the system?
+02:30:29 <ATTNSA> hopefully the second way
+02:30:52 <strcat[m]> Thatcher: the OS does not have access to fingerprints
+02:31:08 <Thatcher[m]> Even better
+02:31:22 <strcat[m]> fingerprint fuzzy hashes are stored via TEE or secure element
+02:32:34 <Thatcher[m]> Shit, I keep forgetting about the secure element. Doh
+02:36:16 <ATTNSA> https://www.usmobile.com
+02:36:30 <ATTNSA> Truely unlimited LTE data > 50 Gigs LTe per month for $45
+02:36:51 <ATTNSA> USA Verizon or Tmobile
+02:37:59 <graphics-card[m]> You can set up a passcode and fingerprint as 2FA for unlocking the phone right?
+02:41:33 <timetravelingman> No
+02:41:45 <timetravelingman> Not in the way you're thinking
+02:46:23 <ATTNSA> Its either PIN, password, pattern, or FINGERPRINT
+02:46:35 <ATTNSA> Yes Goyim, use a fingerprint password so the police can unlock your phone
+02:50:10 <Thatcher[m]> Much more than police actually. You could be asleep or passed out drunk and someone could snag your print while you are in lala land.
+02:50:44 <ATTNSA> yes
+02:51:13 <ATTNSA> I've had my phone stingrayed 10 times per minute the past few days
+02:51:35 <ATTNSA> Ever since I uploaded images of children in the biden smuggling fema camps
+02:51:35 <Thatcher[m]> Let's move to off topic channel
+02:51:40 <ATTNSA> My phone has been getting hacked
+02:51:43 <ATTNSA> ok
+02:54:59 <Thatcher[m]> #grapheneos-offtopic:matrix.org
+04:25:52 <Ed[m]> <ATTNSA "Ever since I uploaded images of "> The don trump uses graphene
+04:45:25 <Cliff[m]> <Ed[m] "The don trump uses graphene"> Source?
+04:46:05 <Cliff[m]> Dont know if real or trolling XD
+04:49:55 <tkennedy365[m]> Hey guys
+04:50:23 <tkennedy365[m]> I read in a reddit post that there was a system app for recording calls? Is it still available? And how does one access it?
+04:59:43 <tkennedy365[m]> If not, any way I can record calls? Tried an app, the recording is there but its silent
+05:04:01 <Thatcher[m]> Off topic
+05:04:28 <akc3n[m]> tkennedy365: I do not see an option for recording calls using the phone app, even after adding a sip account in settings -> calls -> calling accounts.
+05:04:28 <akc3n[m]> Also #grapheneos-offtopic:matrix.org  is better suited for this.
+05:09:13 <tkennedy365[m]> Okay sorry. FYI you can try using the screen recorder app but unfortunately calls still seem to be silent
+05:22:23 <LinusSexTips[m]> there's a screen record quick tile
+05:23:04 <LinusSexTips[m]> you shouldn't need a third party app
+05:27:35 <akc3n[m]> tkennedy365:  I did come across this https://support.google.com/phoneapp/answer/9803950?hl=en
+05:27:36 <akc3n[m]>   
+05:27:36 <akc3n[m]> However, as far I know, it was disabled due to privacy laws if I'm not mistaken.
+07:59:56 * nonie689[m] uploaded an image: (107KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/aFrlDtQvIHYsYqHGrKJtAZah/Screenshot_20210428-095943.png >
+08:00:27 <nonie689[m]> Since this update I cant install any new update
+08:01:07 <nonie689[m]> It downloads and them it restart in the update boot process
+08:16:36 <nscnt[m]> nonie689: Which device? Which release are you on currently?
+08:22:31 <nonie689[m]> 4 flame
+08:22:41 <nonie689[m]> Look at the Screenshot
+08:22:51 <GrapheneOS-Teleg> Box In A Box™ (@B​ox_Boi) has joined the Telegram Group!
+08:23:03 <GrapheneOS-Teleg> <B​ox_Boi> 🏃
+08:23:12 <nscnt[m]> nonie689: What should I see at the screenshot? It doesn't include what I asked for
+08:24:08 <nonie689[m]> I have sideloadet the latest Version
+08:24:20 <nonie689[m]> Same error
+08:24:54 <nonie689[m]> Its reboot on the installing process
+08:25:06 <nonie689[m]> and then i can login
+08:29:39 <nonie689[m]> after the sideload it doesnt retry the Download and install maybe it is fixes
+08:29:42 <nonie689[m]> D
+08:30:09 <nonie689[m]> Is it normal that the device reboots?
+08:31:28 <nscnt[m]> nonie689: Rebooting while it's rebooting? No. Sounds like it's rolling back
+08:33:06 <nscnt[m]>  * nonie689: Rebooting while it's booting? No. Sounds like it's rolling back
+08:33:12 <catfish[m]> akc3n: tkennedy365 https://play.google.com/store/apps/details?id=com.google.android.dialer recording 1Available only on some devices that have Phone pre-installed. Screen recorder works but you have to put speaker phone on and turn volume right up. Not ideal 🤣
+10:06:36 <GrapheneOS-Teleg> Ashwaq (@A​shwaqHussain) has joined the Telegram Group!
+11:34:13 <came2complain[m]> can someone tell me where in the source code I can find the boot animation?
+11:45:36 <came2complain[m]>  * Could someone please tell me where in the source code I can find the original graphene OS boot animation?
+11:52:59 <GrapheneOS-Teleg> <L​73689> Whats the secure element?
+11:56:23 <GrapheneOS-Teleg> <L​73689> So I don't use a pin, I use a long password, this still uses the secure element doesn't it?
+11:58:32 <duck[m]> rate limiting is enforced by titan m yes
+11:59:52 <GrapheneOS-Teleg> <L​73689> Rate limiting ? Is this the " wait 6 hours to retry" thing
+12:02:41 <GrapheneOS-Teleg> <L​73689> Not gonna lie I absolutely love graphene os on the pixel 5
+12:03:13 <duck[m]> yes
+12:26:57 <nonie689[m]> <nscnt[m] "nonie689: Rebooting while it's b"> How can i fix it
+13:08:39 <helloworldkk87[m> <nonie689[m] "How can i fix it"> You should not sideload updates, I think its rolling back because the update failed. Correct me if im from nscnt
+13:09:24 <helloworldkk87[m> * You should not sideload updates, I think its rolling back because the update failed. Correct me if im wrong nscnt
+13:36:05 <nscnt[m]> Well, it rolls back _for a reason_. I don't know what's wrong for nonie689, though. Updates are tested to be able to update to another future release
+13:38:40 <nscnt[m]> and because sideloading didn't work as well, there's nothing wrong with the Updater
+13:42:09 <nscnt[m]> An update has certainly not caused this
+13:48:55 <marcus_> o/
+15:36:54 <nonie689[m]> nscnt: hm... what can i do?
+15:44:41 <strcat[m]> nonie689: sounds like your device may be broken and has failed storage or something like that
+15:44:47 <strcat[m]> you're not providing enough information
+15:44:54 <strcat[m]> what version are you on right now?
+15:44:57 <strcat[m]> for starters
+17:40:39 <concerntroll[m]> hi
+17:51:43 <khalefa> Hello, Need help getting sellinux permissive to work on "eng" build type, I modified this file: device/google/redbull/BoardConfig-common.mk, added: BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive, the problem the generated factory image will not boot due to this error: fastboot: error: Failed to boot into userspace fastboot; one or more
+17:51:43 <khalefa> components might be unbootable. .. appreciate any help in getting selinux to permssive mode in "eng" build type
+17:56:20 <strcat[m]> SELinux permissive isn't supported
+17:58:14 <khalefa> even in "eng" build type?
+17:59:07 <strcat[m]> you would have to build a kernel with support for it
+17:59:28 <strcat[m]> it's not useful since that's the basis of most of the security model, what's the point? it's like turning off uid/gid support in the Linux kernel
+18:00:09 <strcat[m]> user and userdebug builds are also really the only build types we test/support
+18:00:14 <strcat[m]> userdebug for development
+18:00:25 <strcat[m]> what does eng do that you want which isn't provided by userdebug for development?
+18:02:06 <khalefa> I just want to figure out an issue I'm facing, it would be much easier in permissive mode to know the root cause of the issue, I have a service running with its own domain as permssive. its working fine in executing any command, excepts for command using the binary "/system/bin/cmd". Anything related to this will not work. howevern, if I run my
+18:02:06 <khalefa> service by just calling it from shell: /system/bin/myservice, it works find even while executing commands like "am" "pm"\
+18:03:58 <khalefa> the service written in golang. any command executing by the service using: os.exec works fine, except if I'm invking commands related to: /system/bin/cmd
+18:04:56 <strcat[m]> if there are SELinux errors you can see those in the kernel log, etc.
+18:05:01 <strcat[m]>  * if there are SELinux denials you can see those in the kernel log, etc.
+18:05:24 <strcat[m]> if you want permissive you'll need to build a kernel with support for it
+18:05:56 <strcat[m]> SELinux is part of the core permission model and you have to build things with it in mind, it's not simply an extra layer of security
+18:07:20 <panoramics[m]> Hey everyone. I would like to ask: if I give permission to an app to access media on my device, what exactly does that mean. Which folder or elements will that app be allowed to access?
+18:08:44 <panoramics[m]> Its probably not even a grapheme specific question, is it? I could just look it up on android help page?
+18:08:56 <panoramics[m]> *graphene
+18:09:09 <strcat[m]> not GrapheneOS specific in any way
+18:09:40 <strcat[m]> as a general rule, don't give apps blanket access to photos and other media / files
+18:09:41 <panoramics[m]> But the real question would be: its an all or nothing access right?
+18:09:46 <strcat[m]> they can request case-by-case access
+18:09:49 <panoramics[m]> Couldn't be granular?
+18:10:00 <strcat[m]> panoramics: no, they can certainly request case by case access
+18:10:30 <strcat[m]> panoramics: open a file with the PDF Viewer app
+18:10:33 <strcat[m]> doesn't ask for a permission, uses the file manager to open files
+18:10:43 <strcat[m]> apps can also open directories and save files that way
+18:10:47 <strcat[m]> they do not need to ask for coarse access
+18:10:59 <panoramics[m]> OK, interesting
+18:11:03 <panoramics[m]> My goal would be to give let's say an app like WhatsApp only access to certain photos but not to others.
+18:11:17 <strcat[m]> apps don't need permissions to save / open files and directories, they can ask you to choose what to allow instead
+18:11:24 <strcat[m]> and they can ask for persistent access, it's not just temporary
+18:11:35 <panoramics[m]> So its like an always ask permission?
+18:11:39 <strcat[m]> panoramics: so don't give it access, and if they don't support case-by-case access, so be it,  give a 1 star review
+18:11:46 <strcat[m]> panoramics: I don't know what you mean
+18:11:55 <strcat[m]> as I said, apps can request case-by-case access to open / save files/directories
+18:12:09 <strcat[m]> they do not need to request bulk access to your profile's photos/media/files
+18:12:24 <strcat[m]> if you don't want to grant the app what it requests, don't grant it
+18:12:36 <strcat[m]> if the app doesn't provide a way to give case-by-case access, complain to them
+18:12:59 <strcat[m]> you can see how case-by-case access works with apps that respect privacy and user consent like our PDF Viewer and many others
+18:13:19 <strcat[m]> apps do not need to request coarse access to all photos, etc.
+18:13:22 <strcat[m]> they can, but absolutely do not need to
+18:13:36 <strcat[m]> they can request access to a specific photo or a directory of them, they should be giving you the choice
+18:13:47 <strcat[m]> please take it up with app devs, leave reviews on the stores about it
+18:14:02 <strcat[m]> not respecting privacy / user consent is worthy of a 1 star review
+18:14:03 <panoramics[m]> OK. So of course a shitty app would ask for the broadest access possible and then I could only say yes to all or no to all
+18:14:06 <strcat[m]> panoramics: yes
+18:14:22 <strcat[m]> panoramics: although the OS is phasing out being able to request access to ALL your profile directory's files
+18:14:38 <strcat[m]> panoramics: it is gone for API 30+ (which is becoming mandatory for both new and updated Play Store apps soon)
+18:14:51 <strcat[m]> for API 29+ it's gone by default but apps can opt-in to legacy shared storage access
+18:15:11 <strcat[m]> panoramics: so, similarly, an app can request that you pick a contact for them to use, they do not need to request access to ALL contacts
+18:15:42 <strcat[m]> panoramics: and, as another example, an app can request that you take a photo, it just opens up your chosen camera app and you can take a photo with it, they do not need to request camera permission access other than to provide their own camera UI and do real-time filters, etc.
+18:16:10 <panoramics[m]> <strcat[m] "panoramics: so, similarly, an ap"> I was hoping that there would be a way to enforce that but I understand that isn't possible. Got it
+18:16:14 <strcat[m]> although if they do ask for camera permission access, you can just grant one-time access
+18:16:22 <strcat[m]> same with microphone
+18:16:32 <strcat[m]> panoramics: I mean, you can enforce it
+18:16:36 <strcat[m]> panoramics: just don't say yes, you're enforcing it
+18:16:45 <panoramics[m]> 😄
+18:16:59 <strcat[m]> panoramics: of course, that doesn't force the app developers to implement another way of doing it that's more privacy respecting
+18:17:28 <panoramics[m]> Yeah, unfortunately it would have to be a case by case, sometimes I would need it, sometimes not. But the way I understand it, that won't really work. So I'll have to adjust. That's fine
+18:17:39 <strcat[m]> the OS can't force app developers to implement something, it can just take away options from them
+18:17:50 <grapher> hi - is it possible to prevent the Google logo displaying when you boot up Grapheneos? Is it coming from the kernel or from some device firmware?
+18:17:56 <strcat[m]> such as how the option to request full shared storage access is being removed
+18:18:05 <strcat[m]> grapher: it's the UEFI boot splash for Pixels
+18:18:06 <panoramics[m]> <strcat[m] "the OS can't force app developer"> Got it. The a lot
+18:18:11 <strcat[m]> grapher: it's not tied to GrapheneOS
+18:18:13 <panoramics[m]> Thanks
+18:18:22 <strcat[m]> grapher: there's no Google boot splash on non-Google branded hardware
+18:18:33 <strcat[m]> there's instead an HTC boot splash, or Samsung boot splash, etc.
+18:18:44 <strcat[m]> and no, you can't remove it
+18:18:57 <grapher> Ah I see thank you
+18:19:07 <strcat[m]> it would be a vulnerability if you could since an attacker could display arbitrary data there if it wasn't verified
+18:19:28 <strcat[m]> and it's displayed before it has loaded the OS verified boot key
+18:19:47 <strcat[m]>  * it would be a vulnerability if you could since an attacker could display arbitrary data there if it wasn't verified (in the verified boot threat model)
+18:20:23 <strcat[m]> once the OS has booted up it displays the OS boot splash
+18:20:49 <grapheneosisamaz> You can verify the OS, but can you verify the UEFI? Checkmate
+18:20:52 <grapheneosisamaz> just kidding
+18:21:12 <strcat[m]> the whole boot chain is verified, that's the point
+18:21:21 <grapheneosisamaz> right
+18:21:41 <grapheneosisamaz> I'm guessing the first step would be the Titan M?
+18:21:56 <strcat[m]> no
+18:22:23 <strcat[m]> there's a tiny boot ROM hard-wired into the SoC
+18:22:24 <annochris> Hi, can I have some advise? I have this app from f-droid called libreAV it scans for malware etc, I selected the 'scan system apps' option and the grapheneos, downloader, and aload of other system apps have shown up as malware? Since I installed grap evrytime I turn on my phone it first shows up as ' booting from a different os ' then the google
+18:22:25 <annochris> logo appears and the grap logo? Is this normal? And do I have malware? Thanks, noob by the way
+18:22:32 <grapheneosisamaz> <strcat[m] "there's a tiny boot ROM hard-wir"> ah
+18:22:35 <grapheneosisamaz> didn't know, thanks
+18:22:47 <grapheneosisamaz> And that can't be changed?
+18:22:49 <strcat[m]> annochris: don't use broken apps
+18:22:58 <strcat[m]> that app is security theater and doesn't work, don't use it
+18:23:19 <strcat[m]> grapheneosisamazing: ROM means cannot be changed
+18:23:30 <entry1> <annochris "logo appears and the grap logo? "> No need for AV in Android/GrapheneOS. Probably don't need anything other than the built in AV for Windows either.
+18:23:34 <strcat[m]> (GrapheneOS is not a ROM)
+18:23:47 <grapheneosisamaz> Oh yeah that's right, read-only memory
+18:23:54 <strcat[m]> (obviously.. I think, and it's misuse of the term when people say that)
+18:24:04 <strcat[m]>  * (obviously... and it's misuse of the term when people say that)
+18:24:14 <grapheneosisamaz> Why do people call custom Androids a ROM anyway...writing to the read-only memory is a misnomer lol
+18:24:25 <grapher> Okay so even Google couldn't update that logo through a UEFI update?
+18:24:27 <strcat[m]> grapheneosisamazing: because they don't know what it means
+18:24:28 <annochris> Yeah, first the google shows then the grap logo, is that normal?
+18:24:32 <strcat[m]> grapher: no
+18:24:38 <strcat[m]> grapher: never said that
+18:24:54 <grapheneosisamaz> <annochris "Yeah, first the google shows the"> is normal, convo above
+18:25:11 <strcat[m]> annochris: the brand of the device is displayed as a boot splash by the UEFI implementation
+18:25:19 <strcat[m]> if you have a Samsung device, no, that isn't normal, it will say Samsung
+18:25:36 <strcat[m]> not part of GrapheneOS beyond GrapheneOS shipping updates for all the firmware
+18:25:40 <annochris> OK but I should delete that app yes
+18:25:48 <strcat[m]> annochris: yes remove the broken security theater app
+18:26:39 <strcat[m]> https://github.com/projectmatris/antimalwareapp/issues/4
+18:26:41 <grapher> Okay I dont understand is it the keys required for UEFI update that are in the ROM?
+18:26:44 <strcat[m]> just a totally broken security theater app
+18:26:48 <strcat[m]> it cannot identify if software is malicious
+18:26:54 <strcat[m]> it just guesses based on dumb heuristics which are often wrong
+18:27:13 <strcat[m]> grapher: not quite, but I didn't get to finish explaining
+18:27:28 <strcat[m]> annochris: https://github.com/projectmatris/antimalwareapp/issues/4 linked that after you left
+18:27:31 <strcat[m]> just a totally broken security theater app
+18:27:31 <strcat[m]> it cannot identify if software is malicious
+18:27:31 <strcat[m]> it just guesses based on dumb heuristics which are often wrong
+18:27:40 <strcat[m]> just don't use AV, it doesn't work
+18:28:07 <strcat[m]> shrug
+18:28:23 <strcat[m]> grapher: there is a verified boot chain from the SoC to the OS
+18:28:28 <strcat[m]> all firmware and the entire OS are verified
+18:29:01 <strcat[m]> grapher: for everything prior to the OS, that's verified from the immutable hardware root of trust
+18:29:13 <strcat[m]> the UEFI implementation displays a boot splash and that's built into it
+18:29:40 <strcat[m]> it would be a security vulnerability if it wasn't verified
+18:30:05 <strcat[m]> the UEFI implementation has the stock OS signing key built into it too
+18:30:23 <strcat[m]> for an alternate OS, it loads the key from a secure element (Titan M on Pixels)
+18:31:04 <strcat[m]> the Titan M is only involved for the OS stuff: lock state, user chosen OS signing key, etc.
+18:31:13 <strcat[m]> has no involvement in the earlier stuff, since that's just immutable
+18:31:33 <strcat[m]> if it was a Samsung branded phone, it would have a Samsung boot splash
+18:31:39 <strcat[m]> if it was an HTC phone, it would have an HTC boot splash
+18:31:41 <strcat[m]> it's not part of the OS
+18:31:45 <strcat[m]> it's not for the OS to decide
+18:32:00 <strcat[m]> the OS displays a boot splash once it loads
+18:32:19 <strcat[m]> the only way there's going to be a GrapheneOS firmware boot splash is if we have our own hardware, that's how things work
+18:32:33 <strcat[m]> same as your laptop saying "Dell" or whatever when it boots up
+18:33:28 <grapher> Okay thanks I understand. If someone hypothetically wanted to write a custom self signed UEFI firmware update that changed the boot logo would it be possible to flash it onto the Pixel and verified boot to work? Or would the firmware update have to be signed by Google?
+18:33:46 <strcat[m]> I already said no
+18:34:10 <strcat[m]> > the only way there's going to be a GrapheneOS firmware boot splash is if we have our own hardware, that's how things work
+18:34:17 <strcat[m]> and my previous replies explaining why and more details about it
+18:35:01 <strcat[m]> the only way you'll have a custom boot splash for the firmware is if you have custom hardware
+18:35:21 <strcat[m]> or if there's a security vulnerability
+18:35:31 <ypm[m]> speaking of custom hw
+18:35:57 <ypm[m]> graphene project plans to eventually have their own custom hw right?
+18:36:18 <grapher> Right it wasnt clear to me if you meant 'no it's not possible for google to update the logo' or not?
+18:36:22 <ypm[m]> like way further down the line
+18:37:01 <strcat[m]> grapher: I explained it above
+18:37:44 <strcat[m]> there's only a tiny boot ROM, the rest can be updated, all explained above
+18:38:08 <grapher> and the boot splash is contained in the boot rom?
+18:38:13 <strcat[m]> no
+18:38:19 <strcat[m]> please, read what I said above
+18:38:32 <panoramics[m]> <strcat[m] "panoramics: so, similarly, an ap"> One follow up question: if I installed sth like an encryption supported file manager, I guess I could encrypt everything sensitive and just leave those media files unencrypted that I am OK sharing with. Couldn't that work? I do understand that as a tradeoff, I would have to give another app storage permission, which I guess is just shifting trust. But generally
+18:38:32 <panoramics[m]> speaking, could that work?
+18:39:22 <strcat[m]> panoramics: doesn't stop it from adding files or removing them, and most apps aren't going to store data with their own layer of encryption
+18:39:25 <strcat[m]> panoramics: doesn't really make sense
+18:39:25 <ypm[m]> sounds like profiles with extra steps
+18:39:33 <strcat[m]> panoramics: if you don't want to give apps access to data, DO NOT GIVE ACCESS
+18:39:56 <strcat[m]> panoramics: you're coming up with a really insecure, incomplete way to work around giving an app access to data you don't want to give it access to
+18:40:00 <strcat[m]> don't give it access to the data
+18:40:09 <strcat[m]> if it refuses to run without it, run it in a separate profile
+18:40:16 <grapher> Well I did I just don't understand what signatures are checked for UEFI firmware updates.
+18:40:21 <panoramics[m]> Yeah I get it, that's the clean way
+18:40:39 <strcat[m]> grapher: it's not simply for updates, it's for every boot
+18:40:41 <panoramics[m]> Cool. Thx
+18:40:42 <strcat[m]> I explained verified boot above
+18:40:50 <strcat[m]> I explained that it chains from an immutable hardware root of trust
+18:40:57 <strcat[m]> I explained that there's only a tiny boot ROM and the rest can be updated
+18:41:33 <strcat[m]> I explained that the UEFI implementation supports a custom verified boot key, which is the GrapheneOS boot key for that device with GrapheneOS, and that's in the secure element
+18:41:43 <strcat[m]> I do not understand what else you want to know or why this is such a big deal to you
+18:41:47 <strcat[m]> Samsung device -> Samsung boot splash
+18:41:52 <strcat[m]> HTC device -> HTC boot splash
+18:41:59 <strcat[m]> Google device -> Google boot splash
+18:42:27 <strcat[m]> grapher: I gave you all that info above
+18:43:34 <strcat[m]> for there to be a GrapheneOS firmware boot splash, it has to be GrapheneOS hardware
+18:43:54 <strcat[m]> i.e. we have to be the OEM
+18:44:04 <grapher> Thanks I am just trying to understand how it all works together but from what you are saying I understand it is hypothetically possible to flash new firmware with a different boot logo
+18:44:21 <grapher> but grapheneos would not do this
+18:44:24 <strcat[m]> no
+18:44:28 <strcat[m]> that isn't what I said, at all
+18:45:09 <strcat[m]> > for there to be a GrapheneOS firmware boot splash, it has to be GrapheneOS hardware
+18:45:18 <strcat[m]> I didn't say we won't do it, I said we can't without our own hardware
+18:45:21 <strcat[m]> we want our own hardware
+18:45:27 <strcat[m]> I could quote all of my previous messages too
+18:45:30 <strcat[m]> I don't see the point
+18:45:55 <strcat[m]> I think the discussion has touched on everything that can be said about it and can end
+18:45:58 <grapher> okay the thing im confused about is who can update the uefi firmware?
+18:46:11 <strcat[m]> all explained above
+18:46:26 <strcat[m]> GrapheneOS ships the updates for all the firmware, we don't make those updates, we ship them
+18:46:39 <strcat[m]> there is an immutable root of trust chained from hardware
+18:47:06 <strcat[m]> it's not our hardware, clearly it's not our key, and it depends on the SoC vendor and OEM of the device
+18:47:18 <strcat[m]> we don't have our own hardware atm
+18:47:31 <strcat[m]> if we had our own hardware, sure, we would be choosing the boot splash
+18:47:32 <strcat[m]> as I said above
+18:47:44 <strcat[m]> grapher: I really don't understand the need to continue this further
+18:47:50 <strcat[m]> I really think everything useful has been said
+18:47:57 <Railgun_Lover[m]> Will be fun when you do have your own hardware
+18:47:58 <strcat[m]> it seems you don't like the answer so you aren't listening
+18:47:59 <grapher> okay so firmware updates have to be signed by the device manufacturer key which is included in the phone's immutable root of trust, do I understand correct?
+18:48:19 <strcat[m]> grapher: yes, essentially
+18:48:37 <grapher> okay thank you that is what was not clear to me
+18:48:40 <strcat[m]> there is a key burned into fuses irreversibly
+18:49:06 <strcat[m]> the UEFI implementation supports a user defined key in the secure element
+18:49:09 <strcat[m]> that's how GrapheneOS is supported
+18:49:18 <grapher> I see
+18:49:22 <strcat[m]> if we had our own device, the key burned into fuses would be ours
+18:49:29 <strcat[m]> on any other device, it is not
+18:49:30 <grapher> understood
+18:49:49 <strcat[m]> so on any other device, if they choose to display a firmware boot splash, which they probably do, we can't change that unless there's a security vulnerability
+18:49:57 <grapher> I see
+18:49:59 <strcat[m]> and we wouldn't support a device with a broken secure boot chain
+18:50:27 <strcat[m]> and also we ship all the firmware updates so vulnerabilities get fixed
+18:50:40 <strcat[m]> only a vulnerability in the hardware or the tiny boot ROM couldn't get fixed
+18:51:01 <strcat[m]> and that's part of why new hardware is important, not everything can be fixed via microcode/firmware updates
+18:51:17 <strcat[m]> most stuff can be fixed or at least worked around, in practice
+18:52:04 <grapher> makes sense
+18:52:31 <Ed[m]> Just installed the new graphene update, whats changed?
+18:52:33 <grapher> thank you for taking your time to explain!
+18:52:43 <strcat[m]> Ed: https://grapheneos.org/releases#changelog
+18:54:27 <Ed[m]> did you guys fix the camera crashing thing on the 4a
+18:54:42 <Ed[m]> I think its in the logs
+18:54:56 <strcat[m]> don't have a problem like that
+18:55:19 <strcat[m]> getting an error about being unable to connect to the camera is a symptom of hardware failure
+18:55:33 <Ed[m]> <strcat[m] "getting an error about being una"> Well ive been having occasional errors about that
+18:55:39 <strcat[m]> likely hardware failure
+18:55:53 <strcat[m]> it's one of the most common things that breaks from fall damage or water damage
+18:56:02 <Ed[m]> Anyway for me to get the logs and ask for help
+18:56:04 <strcat[m]> you can often confirm by switching to the other camera
+18:56:21 <strcat[m]> it usually gets increasingly worse than doesn't work anymore
+18:56:22 <Ed[m]> <strcat[m] "it's one of the most common thin"> I just got this phone, unlikely
+18:56:30 <strcat[m]> doesn't mean it's not broken
+18:56:37 <Ed[m]> <strcat[m] "you can often confirm by switchi"> 4a model, only one camera
+18:56:45 <strcat[m]> it has a front camera
+18:56:55 <Ed[m]> <strcat[m] "it usually gets increasingly wor"> Oddly enough, opendcam worked fine
+18:57:13 <strcat[m]> we don't have any known issues with camera crashes on current gen devices
+18:57:19 <strcat[m]> other people aren't experiencing it
+18:57:48 <strcat[m]> there are serious issues with the 3 and 3 XL (and perhaps 3a and 3a XL to a lesser extent) but we just worked around them and it isn't really more of an issue for us than the stock OS
+18:57:52 <strcat[m]> newer devices don't have the issues
+18:58:23 <strcat[m]> we're certainly aware that the Sony camera sensors in the supported devices are relatively fragile and are the one of the first components to break from fall damage / water damage
+18:58:31 <strcat[m]> look up the error message about camera not connecting
+18:58:36 <strcat[m]> it happens with the stock OS, and with other devices
+18:59:02 <annochris> Hello I have a question about something I have seen on port22, is there anyone that can tell me why i see ssh-2.0 dropbare on port 22? Has some one remotely connected to me via this port? Or is it normal to see that, I'm using a gl-mt1300 openwrt router
+19:00:04 <strcat[m]> because you're running ssh
+19:00:23 <strcat[m]> not really clear why you're asking about a router here or why you're concerned that it's running ssh
+19:00:37 <strcat[m]> probably because it's managed via ssh?
+19:01:09 <Ed[m]> Routers can be managed via ssh?
+19:01:36 <Ed[m]> they probably run linux or bsd right
+19:01:45 <strcat[m]> they said it has openwrt
+19:01:51 <annochris> In don't fully understand this stuff to be honest, but I know ssh is used to deliver packets, all I know is I see ssh on port 22 so that means some one is using ssh to connect to me right
+19:01:57 <annochris> I never set us ssh no
+19:02:00 <strcat[m]> no
+19:02:04 <strcat[m]> are you talking about your router
+19:02:23 <annochris> Yeah when I scan it with a port scanner I see port 22 ssh
+19:02:29 <annochris> Why?
+19:02:29 <strcat[m]> you said your router is running openwrt so I don't know why you'd be confused about it running ssh
+19:02:38 <strcat[m]> because it is managed via ssh
+19:02:42 <strcat[m]> that's how you log into it via CLI
+19:02:49 <Ed[m]> <annochris "Yeah when I scan it with a port "> The port being open doesn't necessarily mean someone is connected
+19:02:56 <strcat[m]> annochris: doesn't seem related to GrapheneOS
+19:03:02 <strcat[m]> there's #grapheneos-offtopic
+19:03:08 <strcat[m]> if it's not about GrapheneOS you should talk about it there
+19:03:11 <annochris> OK sorry its not related
+19:03:18 <strcat[m]> that's why it's confusing
+19:03:24 <strcat[m]> because it's implied you're talking about GrapheneOS here
+19:03:44 <Ed[m]> Also any news regarding the drama
+19:03:44 <annochris> Sorry I didn't think of any where else to ask live
+19:04:00 <Ed[m]> Are they still like harassing
+19:04:02 <strcat[m]> I thought you meant you had a service listening on your port on your phone implying having an app installed providing ssh
+19:04:28 <strcat[m]> Ed: there are still regular raids on the channel, lots of harassment, and people spreading lots of misinformation and false allegations against the project
+19:04:40 <strcat[m]> Ed: Copperhead is not doing it at the moment
+19:04:51 <strcat[m]> other people are doing it, more than Copperhead was doing it before
+19:04:56 <strcat[m]> don't really want to get into it right now
+19:05:59 <strcat[m]> if you're referring to the conflict with Copperhead, that conflict is currently on pause and may come to an end in the near future, has been the case for a bit over a month or so
+19:07:01 <strcat[m]> after that stopped, unfortunately, other people decided to start and drastically escalate their own harassment / bullying of people involved in the project and spreading misinformation about it
+19:07:03 <strcat[m]> it's not Copperhead doing it atm
+19:07:05 <Ed[m]> What about calyx?
+19:07:23 <Ed[m]> <strcat[m] "it's not Copperhead doing it atm"> Well thats good
+19:07:33 <strcat[m]> they're the main perpetrators of it right now, not Copperhead
+19:07:37 <strcat[m]> Copperhead stopped
+19:07:53 <strcat[m]> they had stopped before fairly recent major escalations of attacks on GrapheneOS
+19:08:19 <strcat[m]> and those aren't related, it's not them doing  it secretly or something like that, the people doing it / leading it aren't making any secret of it
+19:09:11 <strcat[m]> so, it's possible Copperhead will start their attacks on the project again, but for now, they have stopped, and appear to want to end the conflict
+19:09:22 <strcat[m]> it is not ended, just paused
+19:10:02 <strcat[m]> they aren't attacking us, so while we still have to deal with cleaning up the massive mess they created, including people who got brainwashed / tricked by them and attack us now, it's not them doing it themselves
+19:10:29 <Ed[m]> <strcat[m] "it is not ended, just paused"> Thats good for now i suppose, the thing that matters at the end of the day is the software
+19:10:45 <strcat[m]> the recent escalations were not by them, but did primarily use their false claims / false narratives and drama they created previously to create new attacks on us
+19:11:01 <strcat[m]> but, wasn't them propagating / engaging in it
+19:11:06 <strcat[m]> was largely their fault for what they did previously
+19:11:10 <strcat[m]> was / is
+19:11:16 <strcat[m]>  * is largely their fault for what they did previously
+19:17:14 <strcat[m]> Ed: the well-being of the people who work on the project and the ability of them to spend their time working on development and not being bullied/harassed/slandered is quite important too
+19:22:27 <ypm[m]> no software without devs bro. treat devs nicely esp if it's literally free/libre software
+19:22:50 <ypm[m]> my philosophy on it anyways
+19:23:41 <akc3n[m]> The concern trolling becomes emotionally exhausting after a while just to watch, as community member, I can only imagine how draining it maybe for the project team.
+19:23:41 <akc3n[m]> Thanks for all your guys hard work and that you guys keep pushing through it to make the best security mobile os possible.
+19:24:31 <annochris> Hello, I have heard about ways to make grap more secure, can some one tell me if this is true, also is it safe to download apps from the fdroid store
+19:24:38 <annochris> Thanks in advanced
+19:25:43 <annochris> No
+19:27:29 <ypm[m]> fdroid is safer than random apks and if you want you can always read the source yourself and personally verify
+19:27:57 <ypm[m]> and idk what you mean by making grapheneos more secure
+19:28:06 <annochris> I dont know how to do that
+19:28:37 <annochris> Some youtuber said there are ways to harden the is
+19:28:44 <annochris> The os *
+19:28:46 <ypm[m]> What do you want to "secure" because more secure is pretty vague
+19:29:31 <annochris> Basicly is had spyware put on my old phone so abit paronoid now
+19:29:45 <ypm[m]> just dont run things you dont trust idk what else to tell you
+19:30:21 <annochris> OK cool, f droid is OK yeah, and Aurora store is OK as long as you check there are no trackers right
+19:30:50 <annochris> I don't know touch about it tbh but thanks anyway
+19:40:54 <cryptokid777> Hi, i see there is a new option with graphene: enable native code debugging? What does this mean and do?
+19:41:30 <cryptokid777> It s enabled by default but dont know what it means and if i should keep it on or turn it off, hope someone can explain
+19:42:45 <strcat[m]> cryptokid777: disabling it will disable native code debugging features, reducing attack surface for the OS from apps
+19:43:22 <strcat[m]> will break debugging code as part of app development, will break apps capturing that kind of data to make bug reports and may reduce app compatibility if apps do that kind of thing in regular use
+19:43:34 <cryptokid777> Okey, but why is it on by default of disabling will reduce attack surface?
+19:43:34 <strcat[m]> it's enabled by default due to potential app compatibility issues from disallowing it
+19:43:51 <strcat[m]> because before we added the feature it's simply always enabled
+19:43:59 <strcat[m]>  * because before we added the feature it's simply always available
+19:44:11 <strcat[m]> disabling it will break some apps if they can't work around it not being available
+19:44:13 <cryptokid777> Oww okey i understand thanxs for the quick respond
+19:44:25 <strcat[m]> some apps have crash reporting stuff, etc. which may actually be used in regular use
+19:44:31 <cryptokid777> I will try to disable it and see what apps still work
+19:44:41 <strcat[m]> sometimes to anticipate the fact that they are going to crash and be ready to figure out why it happened
+19:44:54 <strcat[m]> and they may not handle it not being allowed
+19:45:23 <strcat[m]> it's a toggle for whether the ptrace system call is available
+19:45:28 <strcat[m]> if you disable it, it's globally disabled across the whole OS
+19:45:47 <strcat[m]> apps can only ever ptrace themselves (their own processes) but it's still kernel attack surface
+19:45:52 <strcat[m]> it's a non-trivial API
+19:46:08 <strcat[m]> https://en.wikipedia.org/wiki/Ptrace
+19:46:30 <strcat[m]> I guess we could write "native debugging (ptrace)" instead of just native debugging to help clarify
+19:46:41 <strcat[m]> I don't know how to write it up better as a tiny description in Settings
+19:46:45 <strcat[m]> you only get ~70 characters or so
+19:47:08 <strcat[m]> if disabling it doesn't break stuff you can use it
+19:47:15 <cryptokid777> Well i was searching in releases changelog , but there was no explaination
+19:47:15 <strcat[m]> if an app crashes and you have it disabled, you won't get proper crash logs
+19:47:34 <strcat[m]> it prevents debugging crashes, etc. if it's disabled
+19:47:35 <cryptokid777> Maybe you could do it in changelog, sometimes explain the changes for the noobs
+19:47:43 <cryptokid777> I always check the changelog
+19:47:49 <strcat[m]> it is listed there further back
+19:48:03 <strcat[m]> https://grapheneos.org/releases#2021.04.16.04
+19:49:41 <cryptokid777> Yes it is listed, but i mean if there was a small explaination what it does if you enable or disable it, it would be cool. There are many people like me who use grapheneos but are not super tech
+19:50:01 <cryptokid777> But now i understand i hace disabled it and will see if my apps still work
+19:50:10 <cryptokid777> Thanks very much for the explaination
+19:51:11 <strcat[m]> just keep in mind if you have it disabled you don't get useful crash logs, etc.
+19:51:26 <strcat[m]> so if you're running into crashes and are asked to get logs, etc. or capture a bug report with that tool you should disable this 1st
+19:52:02 <cryptokid777> Okeey i understand
+19:52:20 <cryptokid777> One more question, i always used outlook app for my hotmail account
+19:52:40 <cryptokid777> Now it just s crashing
+19:53:07 <cryptokid777> I tried several email apps for my hotmail but they all struggle to get my mail,
+19:53:27 <cryptokid777> Is there an alternative app for outlook thats works with graphene?
+19:53:54 <strcat[m]> lots of mail apps that work well
+19:54:08 <strcat[m]> Outlook should work fine but maybe they accidentally have a dependency on Play services, etc.
+19:54:20 <strcat[m]> there's an example where you should file a bug report with the developer and ideally provide a useful crash log
+19:54:30 <cryptokid777> I tried aquamail also, it logs in but doesnt refresh, canary mail also
+19:55:10 <cryptokid777> Outlook always worked, till last month i updated to new graphebeos version amd since then it crashes,
+19:55:57 <cryptokid777> I had this also with my bank app, and after 3 montha of grapheneos updates it staryed working again, but outlook still nothing
+19:56:02 <strcat[m]> probably from an app update not an OS update
+19:56:10 <strcat[m]> very unlikely it had to do with an OS update
+19:56:22 <strcat[m]> you really need to report app issues to app developers and ideally provide logs
+19:56:30 <strcat[m]> if you don't report issues they won't get fixed
+19:56:36 <cryptokid777> Where can i report this
+19:56:37 <cryptokid777> ?
+19:57:58 <cryptokid777> And how can i see crash logs for outlook mail? So i can send that also
+19:59:37 <strcat[m]> trigger the bug, then use the capture bug report tool in developer option, then send it to yourself via email client, Element, etc. and ideally copy paste the relevant portion with a fair bit of context from the log inside it to give to the app developers
+19:59:44 <strcat[m]> that's the ideal way to report a bug
+19:59:54 <strcat[m]> the problem is likely obvious
+20:00:04 <strcat[m]> probably something like it breaking without Play services
+20:00:17 <strcat[m]> have you tried a version of the app not from the Play Store? they may have multiple versions
+20:00:57 <cryptokid777> No i only tried outlook from auroraos
+20:01:25 <cryptokid777> AuroraOS is play store right?
+20:01:35 <cryptokid777> Maybe f droid has other version let me see
+20:06:15 <cryptokid777> Cant find outlook on f droid, dont now where to download it without play services
+20:06:28 <cryptokid777> I only know auroraos and f droid for apps
+20:13:18 <jpds> cryptokid777: f-droid only hosts open source apps
+20:15:23 <cryptokid777> Okey, so where can i find outlook withoit play services?
+20:15:42 <cryptokid777> Struggling to use my hotmail on graphene
+20:18:10 <freefolk[m]> cryptokid777: should be possible to use K-9 to connect to hotmail via imap/smtp
+20:20:06 <freefolk[m]> K-9 is available on F-Droid
+20:20:56 <cryptokid777> Ok thanx, will try that
+20:34:35 <Ed[m]> <jpds "cryptokid777: f-droid only hosts"> untrue, partially open source apps too
+20:35:51 <Croat> Hi All, I am trying to reflash Google Firmware on my Pixel 4a but I cannot find the web installer website for the life of me. Anyone have a link?
+20:37:32 <sphinx[m]> Croat: stock OS? https://flash.android.com/welcome
+20:38:19 <Railgun_Lover[m]> Croat: https://grapheneos.org/install/web#replacing-grapheneos-with-the-stock-os
+20:38:33 <Croat> THANK YOUJ SPHIX!!!!!!! MAn, been searching like an hour
+20:38:59 <Croat> RAilgun, they shoudl have Sphinx's link there. That page was no help
+20:39:17 <Railgun_Lover[m]> <Croat "RAilgun, they shoudl have Sphinx"> Ah
+20:40:07 <jpds> Ed[m]: https://f-droid.org/en/docs/Inclusion_Policy/
+20:50:08 <Croat> Sorry, that was some developer version. I am looking for STOCK google firmware
+20:54:18 <Railgun_Lover[m]> Croat: developers.google.com/android/images
+20:54:46 <Railgun_Lover[m]> It's developer stuff yes, but probably the only good place to get it
+20:55:05 <Railgun_Lover[m]> It has the factory images
+20:55:06 <Croat> I have reflashed it back to stock before. It was not like this
+20:55:32 <Railgun_Lover[m]> Croat Then idk where it is
+20:55:37 <Railgun_Lover[m]> Or how to do it
+20:56:00 <Railgun_Lover[m]> * Or how to do it the way you did
+20:56:27 <Railgun_Lover[m]> This will probably work anyway, so...
+20:56:30 <Croat> I do not want ASOP, I want the google branded versone for an unlocked pixel 4a
+20:56:33 <Croat> version
+20:56:50 <Railgun_Lover[m]> Croat These are factory images
+20:56:55 <Railgun_Lover[m]> Croat: FACTORY
+20:57:17 <Railgun_Lover[m]> Croat: this is what was on your phone when it came from the factory
+20:57:21 <Croat> I installed it and it does not look like factory
+20:57:26 <Croat> it is ASOP
+20:57:57 <Railgun_Lover[m]> Croat On the webpage it says factory images
+20:58:41 <Croat> The only buildtype I get is ASOP-SUNFISH_USERDEBUG
+20:59:37 <Railgun_Lover[m]> Huh
+20:59:43 <Railgun_Lover[m]> Not sure then
+21:00:09 <Croat> crap....
+21:00:30 <Railgun_Lover[m]> Well now you're stuck with GrapheneOS then
+21:00:56 <Railgun_Lover[m]> Well, it's a good OD
+21:01:02 <GhostSplinterSix> Welcome to the dark side.😎
+21:01:02 <Croat> No, I have asop-master-with-phone
+21:01:08 <Railgun_Lover[m]> * Well, it's a good OS
+21:01:13 <Railgun_Lover[m]> Vendor lock-in
+21:01:20 <Railgun_Lover[m]> :P
+21:01:21 <Croat> Trying to sell it so no, not good
+21:01:42 <Railgun_Lover[m]> Well maybe GrapheneOS could get you a higher price
+21:01:44 <Croat> No vedor lock it. I have flashed back and forth before
+21:02:03 <Railgun_Lover[m]> <Croat "No vedor lock it. I have flashed"> I know I was joking
+21:02:20 <Croat> If you cannot help railgun I would apprecaite you not saying anything since this is sucking
+21:02:32 <sphinx[m]> Croat: go to the sunfish section in the developers link Railgun sent earlier and click Flash next to the latest version
+21:14:46 <GrapheneOS-Teleg> !hermanito has joined the Telegram Group!
+21:55:05 <Lexington12> Hi
+21:55:12 <Lexington12> Pixel 4A or Pixel 5?
+21:56:36 <GrapheneOS-Teleg> <P​henix0> 5 will be supported longer than 4a
+21:56:52 <GrapheneOS-Teleg> <P​henix0> But 4a is cheaper and has a headphone jack
+21:57:05 <Lexington12> 5 only supported like 2 months longer than 4a
+21:57:19 <theogrelord[m]> <Lexington12 "Pixel 4A or Pixel 5?"> The Pixel 4a is the cost-effective solution imo
+21:57:34 <Lexington12> yes i agree
+21:57:40 <Lexington12> if pixel 5 has better battery
+21:57:47 <Lexington12> and is water resistant
+21:59:20 <Lexington12> pixel 5 has better gorilla glass
+22:00:43 <Lexington12> pixel 5 has about 1/4th 1/5th larger battery
+22:03:20 <Lexington12> pixel 5 has, 1/4th 1/5th larger battery, stronger gorilla glass, and metal chasis
+22:03:37 <jpds> Lexington12: Then just get it
+22:03:48 <Lexington12> is there any downside to pixel 5
+22:03:52 <Lexington12> does the 5 drain battery faster?
+22:10:55 <Thatcher[m]> Only in 90hz screen mode
+22:11:05 <Lexington12> nice
+22:11:21 <Lexington12> so is the 5 better in every way just more expensive
+22:11:26 <Lexington12> ?
+22:13:17 <Thatcher[m]> Twice the price of a 4a but has waterproofing, better processor, larger battery, 0.2" larger screen with stronger glass
+22:13:57 <Lexington12> and metal chasis
+22:14:04 <Lexington12> can i disable 5g and use lte only
+22:14:10 <Lexington12> how does lte only work on the pixel 5
+22:14:15 <Lexington12> i want to use just 4g lte
+22:14:31 <strcat[m]> 4a (5G) and 5 are the same generation
+22:14:33 <strcat[m]> 4a is an earlier generation
+22:15:10 <strcat[m]> 4a (5G) and 5 have a newer generation SoC than the 4a, not just faster
+22:15:59 <strcat[m]> 5 vs. 4a (5G) is about the fancier screen (90 Hz, better overall), water/dust proofing, wireless charging, etc.
+22:16:20 <strcat[m]> Lexington12: means LTE (4G) only
+22:16:24 <onyxrubber> you can specify in setting, which network u prefer. U can set LTE to prefer network connetion
+22:16:35 <strcat[m]> https://grapheneos.org/usage#lte-only-mode
+22:16:46 <strcat[m]> LTE and LTE only are different modes
+22:16:55 <strcat[m]> LTE only is a GrapheneOS added feature
+22:17:06 <Lexington12> So LTE only blocks 2g 3g 4g and 5g and has just 4g LTE right?
+22:17:12 <strcat[m]> setting it to LTE means "LTE and below"
+22:17:17 <strcat[m]> LTE only means LTE only
+22:17:22 <Lexington12> nice
+22:17:34 <Lexington12> do u think the pixel 5 is superior in every way?
+22:17:51 <Lexington12> Metal Chasis, Better Gorilla Glass Screen, water resistant
+22:17:56 <Lexington12> Larger battery
+22:18:01 <strcat[m]> Pixel 5 is superior in every way to a 4a (5G) and especially 4a aside from price
+22:18:05 <onyxrubber> it is not metal in the way u think
+22:18:13 <Lexington12> aluminum chasis right
+22:18:17 <Lexington12> great
+22:18:27 <Lexington12> I'll get the pixel 5 mostly for its waterproofing and larger battery
+22:18:32 <Lexington12> waterresistance
+22:18:39 <Lexington12> Donate to Graphene os!
+22:19:16 <onyxrubber> hey, did you gus know how can i build app from source? Any advices?
+22:19:16 <onyxrubber> https://github.com/lukaspieper/Gcam-Services-Provider
+22:19:40 <strcat[m]> ./gradlew assembleRelease and sign it
+22:20:38 <onyxrubber> hope it will work on ubuntu
+22:44:09 <Lexington13> Hi
+22:44:22 <Lexington13> Im trying to use my phone without being wiretapped
+22:44:30 <Lexington13> Is Signal.apk the best strategy
+22:44:35 <Lexington13> for encrypted calls and texts
+22:44:51 <Lexington13> I also want to hide Who I'm calling
+22:45:02 <Lexington13> From the Mobile carrier surveillience
+22:52:11 <nscnt[m]> ^ the same troll as always, not sure whether it was already Lexington12 or whether they wanted to impersonate a generous user
+22:52:31 <sphinx[m]> poor adam
+22:53:46 <nscnt[m]> yea, I think it was already them
+23:01:46 <Cliff[m]> I don't have a lte only mode it says 4g only is that different?
+23:06:22 <Railgun_Lover[m]> I always loved the "$Moderator kicked $User. Reason: $User"
+23:06:35 <Railgun_Lover[m]> It's like
+23:06:50 <Railgun_Lover[m]> We kicked you because you're you
+23:07:11 <GrapheneOS-Teleg> <!hermanito> Ist hier jemand der deutsch kann und mir Schritt für Schritt die Installation von Grapheneos auf Pixel 3
+23:07:30 <Railgun_Lover[m]> I know the format is probably automatic but it's still funny
+23:07:40 <Railgun_Lover[m]> <GrapheneOS-Teleg "<!hermanito> Ist hier jemand der"> One sec need to translate
+23:07:55 <jpds> Well, one of the Germans I know on here just left
+23:08:13 <GrapheneOS-Teleg> <!hermanito> Okay thank you
+23:08:26 <Railgun_Lover[m]> Wait, I know some german
+23:08:34 <Railgun_Lover[m]> This will be painful but I'll do it manually
+23:08:44 <jpds> hermanito: https://grapheneos.org/install/web
+23:09:33 <jpds> Probably the easiest is to copy and paste paragraphs into deepl.com
+23:09:43 <Railgun_Lover[m]> Is there someone here who can speak German and guide me step by step through GrapheneOS installation on Pixel 3
+23:09:58 <jpds> Ja, ich weiss
+23:10:14 <jpds> Hence the link, and copying the paragraphs into a translator
+23:10:25 <Railgun_Lover[m]> <jpds "Ja, ich weiss"> Ja! Ich habe gute Deutsch gelernt!
+23:10:35 <Railgun_Lover[m]> <jpds "Hence the link, and copying the "> I know but more fun to manually do it
+23:10:44 <Railgun_Lover[m]> Plus now I know some more German
+23:11:10 <onyxrubber> can i access developer options on second profile?
+23:11:17 <Railgun_Lover[m]> <jpds "Probably the easiest is to copy "> Or Google translate
+23:11:28 <Railgun_Lover[m]> <onyxrubber "can i access developer options o"> Only do it if you're a developer
+23:11:36 <Railgun_Lover[m]> They make it less secure
+23:12:17 <onyxrubber> i know, but i can't access it on second profile :C
+23:12:50 <onyxrubber> i want to install some "less secure" apps, and testing. I don't want do this on main profile
+23:12:56 <Railgun_Lover[m]> Ah
+23:13:22 <Railgun_Lover[m]> Oh wait I'm dumb, what you do in secondary profiles doesn't affect other profiles
+23:13:30 <Railgun_Lover[m]> Pardon me
+23:13:51 <jpds> Should probably get the web installer translated actually
+23:14:17 <onyxrubber> it is all right. I am so confused, I can't access dev options on other profiles
+23:14:28 <Railgun_Lover[m]> onyxrubber: probably the same way as stock
+23:14:33 <Railgun_Lover[m]> Spam the build number
+23:14:41 <onyxrubber> dosen't work
+23:15:02 <Railgun_Lover[m]> Oh
+23:15:04 <Railgun_Lover[m]> Then idj
+23:15:13 <Railgun_Lover[m]> * Then idk
+23:15:22 <onyxrubber> could anyone check it for me?
+23:15:43 <nscnt[m]> onyxrubber: Only the owner user can access them
+23:16:28 <Railgun_Lover[m]> nscnt: oh so it's impossible to enable developer options in specific profiles?
+23:17:24 <nscnt[m]> Only the owner user can access them, but the settings are applied (maybe not all?) to secondary users as well
+23:18:48 <nscnt[m]> For example, you can also debug in a second user if you enabled it as the owner user
+23:21:38 <onyxrubber> "USB debugging is not allowed"
+23:21:39 <onyxrubber> "The user currently signed in to this device can't turn on USB debugging. To use this feature, switch to the primary user"
+23:28:09 <onyxrubber> so there is no way to debug on other profiles
+23:28:57 <nscnt> Matrix is lagging...
+23:29:03 <nscnt> it works
+23:29:04 <nscnt[m]> onyxrubber: Are you in the guest user?
+23:29:26 <onyxrubber> i created new profile, not guest
+23:30:30 <nscnt[m]> onyxrubber: Allow the connection before switching
+23:31:00 <onyxrubber> conntection to?
+23:31:23 <nscnt[m]> onyxrubber: your pc
+23:31:49 <onyxrubber> I allowed debug on main profile, and then swich to test profile. Is that ok?
+23:32:07 <onyxrubber> wire was connected before allowing debug
+23:33:19 <nscnt[m]> Not just enabling USB debugging, but also allowing it. Did you do that?
+23:33:21 <nscnt[m]> You need to allow every connection
+23:34:49 <onyxrubber> yes, phone asks me to allow debug for this session, and I allowed it. Then I swiched to test profile
+23:40:48 <nscnt[m]> That's how I can debug in a secondary user. You trusted a very insecure device (your PC) anyway. Therefore I see no point in doing it in a secondary user because the _app_ is "less secure"
+23:43:00 <onyxrubber> I was trying to install google camera and it's open source service providers...
+23:44:03 <onyxrubber> the version on stock os didn't work, so I don't want to install and uninstall plenty of apk's, to check which one will work on my device
+23:44:29 <onyxrubber> finally 7.5 version works ok
+23:44:56 <onyxrubber> stock os on pixel 4a 5g working with 7.6 google camera version
+23:52:38 <Thatcher[m]> I've finally taken the plunge into enhanced anti-fingerprinting by ditching NextDNS with custom blocklists for a well-known vpn and using their included adblocking feature. I've completely cleared the storage for Vanadium, resetting all Vanadium settings to default and I intend on keeping it that way. Before this, I've had custom site settings to block everything that is 'Ask first' by default. Now everything is at
+23:52:39 <Thatcher[m]> default, as recommended. I figure that since I will be using Vanadium's default settings from now on, when I need to clear my history, cache, and cookies, I will just clear the app storage entirely, ensuring all data is erased and all settings default.
+23:54:11 <Thatcher[m]> I just wanted to share that.
+23:58:54 <Thatcher[m]> The vpn uses this blocklist exclusively: https://github.com/StevenBlack/hosts
+23:59:06 <Thatcher[m]> A popular blocklist

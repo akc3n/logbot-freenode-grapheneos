@@ -1,0 +1,308 @@
+00:11:12 <AlBu> the flash-all.bat file appears not to be working. When the flash-all.bat file is opened, a cmd window opens for about 2 seconds and then closes. Nothing further happens. Any advice on what is causing this?
+00:12:30 <GrapheneOS-Teleg> <!Hulk> AlBu: hello, and welcome
+00:12:47 <GrapheneOS-Teleg> <!Hulk> You're definitely not following the official installation guide
+00:13:20 <GrapheneOS-Teleg> <!Hulk> Please use the web-installer instead, and read the article fully
+00:13:46 <GrapheneOS-Teleg> <!Hulk> https://grapheneos.org/install/web
+00:14:51 <GrapheneOS-Teleg> <!Hulk> Please do not follow any YouTube videos
+00:15:28 <AlBu> okay thank you. i was following YouTube videos.
+00:16:28 <AlBu> thank you for the help, much appreciated.
+00:17:09 <GrapheneOS-Teleg> <!Hulk> You're welcome!
+02:18:38 <joltman[m]> <strcat[m] "no"> Thanks! That's what I needed to know.
+03:30:03 <vinve> Is it possible and or recommended to run outlook . I have my own exchange server running and like outlook
+03:46:40 <ploni> Hello all. I am not very technologically proficient, but after becoming more concerned with privacy I am slowly dipping my foot into this world. I am currently attempting to download GrapheneOS on my new Pixel, but am encountering some issues. I am unsure if this is the place, but I was wondering if I could get some assistance.
+03:49:43 <TheJollyRoger> Ahoy ploni, are you trying the commandline installer, or the web installer? We recommend using the webinstaller;
+03:50:38 <ploni> Heya! I am using the Web-USB installer route. I am able to get through all the steps until I get to the step to Flash All but for some reason nothing happens.
+03:50:39 <TheJollyRoger> it's a frontend to what the commandline installer does, so you're best off using the web installer, it's the safest and best way to install GrapheneOS. You'll have to tell us what issues you're having.
+03:50:52 <TheJollyRoger> Right, okay, so, couple things to check first:
+03:51:18 <ploni> After nothing happens, I lock the boot loader and try again.
+03:51:30 <TheJollyRoger> - the web installer detects your device is plugged in, and on the bootloader interface?
+03:51:42 <TheJollyRoger> - Is it able to unlock/unlock your device-- OK, got it,
+03:51:50 <TheJollyRoger> Big thing here:
+03:51:52 <ploni> Yes. I checked with "adb devices"
+03:52:02 <TheJollyRoger> - Are you using the original cable that the Pixel shipped with?
+03:52:39 <TheJollyRoger> Ok, if you're running ADB on the same computer, shut down the ADB server and reboot, or it will report the interface is in use to fastboot.js
+03:52:40 <ploni> Yes. But I purchased refurbished. So unsure if official cable.
+03:53:12 <TheJollyRoger> Alright - so here's the scoop...
+03:53:43 <TheJollyRoger> If you've made it this far and the web installer can detect, unlock and lock the device at will, but hangs when you attempt to flash-all, then what this usually indicates is one of two things:
+03:54:32 <TheJollyRoger> A) the USB cable you're using is improperly traced; it may have the correct wiring to connect to the device, charge it, connect to Android and do media transfer (transfer files, photos, etc), but not the wires to talk to low-level device debugging interfaces such as the bootloader interface.
+03:54:34 <TheJollyRoger> most USB cables don't.
+03:55:36 <TheJollyRoger> B) Likewise of the USB port that you're connecting to. It may not have adequate firmware support, or the vendor may have just been sloppy and just done the bare minimum, and gone "Eh, nobody's going to be talking to low-level device debugging interfaces anyways, who cares about implementing that."
+03:56:15 <ploni> By the way, just to make sure I am doing this correctly in the first place. To Flash- all I am clicking on the Flash-All file (windows batch file) on my computer, correct? There is no command I am stupidly missing?
+03:56:23 <TheJollyRoger> (This can also happen if you're using a USB Hub, a USB adapter, or USB to VM passthrough is poorly implemented on your combination of software and hardware, but that shouldn't happen if you're plugged directly in)
+03:56:43 <TheJollyRoger> ploni: You're doing it wrong. I recommend staying away from the commandline installation.
+03:57:37 <TheJollyRoger> ploni: the commandline installation is no longer recommended. It's simply there for historical preservation purposes only. The web installation is the way to go.
+03:57:49 <TheJollyRoger> If the web installation won't do it on your platform, the commandline installation won't either.
+03:58:53 <TheJollyRoger> ploni: If you do want to attempt the commandline installation, it's imperative you read the entire thing before you begin, become accustomed to the process, never skip steps, and not take liberties or use unsupported platforms.
+03:59:03 <ploni> Regarding improperly traced USB cables, which cables would you recommend I purchase which is certainly build for this?
+03:59:04 <TheJollyRoger> I do NOT recommend it otherwise.
+03:59:36 <TheJollyRoger> ploni: Anker, Google, or Aukey USB 3.1 Gen 1 or later USB C to C cables have been found to work with installing GrapheneOS.
+03:59:42 <ploni> Wait, I am not doing the command line installation.
+04:00:06 <ploni> I am following the Web installation.
+04:00:25 <TheJollyRoger> ploni: I also strongly recommend you shut down ADB or reboot. If you've installed a sketchy "minimal ADB" or third party fastboot, then uninstall those and revert any changes they've made. Otherwise, you may end up with a brick.
+04:01:24 <TheJollyRoger> Alright, since you mentioned adb, I wondered. Some people try the web installation, run into trouble, and then decide they're going to try the commandline install.
+04:02:37 <TheJollyRoger> So, I'll reassure you on this: if you can get as far as the web installer being able to unlock and lock your phone, but then at the last step of flashing everything, the installer hangs with nothing, you've done everything right, but your hardware -- either your USB cable or your computer's USB slot -- is at fault.
+04:02:59 <TheJollyRoger> This is not your fault, it's the issue of vendors being sloppy and cutting corners.
+04:03:23 <TheJollyRoger> It can be one, or the other, and in some circumstances, both.
+04:03:52 <TheJollyRoger> Usually at least one USB slot on the motherboard will work, even if the rest are feature-crippled, so try each one of the slots you have.
+04:04:31 <ploni> So I originally had a problem that when the phone would be in bootloader, minimal ADB  would stop recognizing it. I then downloaded Android ADB interface, ADB Bootloader Interface,  and Android Composite ADB vendors into my Windows and then my phone was recognized. BUT now it dosent do Flash All. What I do see in Device Manager is a yellow
+04:04:31 <ploni> warning triangle next to these three downlaods.
+04:04:38 <TheJollyRoger> ploni: stop.
+04:04:57 <TheJollyRoger> ploni: If you've used a "minimal adb" uninstall it. You are about to head for a brick.
+04:05:06 <TheJollyRoger> Also, I thought you said you were doing the web install?
+04:05:11 <ploni> I am.
+04:05:23 <TheJollyRoger> Ok.
+04:05:31 <TheJollyRoger> So - with respect to the ADB program and the Fastboot program,
+04:05:45 <TheJollyRoger> adb talks to *android* - meaning it talks to the device *after* the operating system has booted.
+04:06:02 <TheJollyRoger> fastboot the program talks to the fastboot bootloader interface, meaning it talks to the device *before* the operating system has booted.
+04:06:35 <TheJollyRoger> adb is for android. fastboot, is for fastboot.
+04:07:23 <TheJollyRoger> Anyways. The behaviour you're seeing is typical of faulty hardware.
+04:08:17 <TheJollyRoger> Again, either a cheap USB cable, or inadequate support for USB in the motherboard's firmware or a broken USB slot.
+04:08:52 <TheJollyRoger> *broken USB slot on the installing computer
+04:08:59 <ploni> I am sorry @TheJollyRoger  I dont really understand your point with the system communication before and after the booting, but I will purchase a cable and test then.
+04:09:09 <TheJollyRoger> Good luck, ploni.
+04:09:26 <ploni> I dont think it is a slot issue. My computer has a few and I tried with all.
+04:10:01 <TheJollyRoger> When you look in Device Manager, is the yellow warning triangle next to "LeMobile Android Bootloader Interface?"
+04:11:01 <ploni> Not "LeMobile" just "Android Bootloader Interface'
+04:11:16 <ploni> I dont have on that says LeMobile
+04:11:23 <TheJollyRoger> Ok. Have you got your phone plugged in and on the black Bootloader screen?
+04:11:49 <ploni> Oh no, should I try?
+04:11:53 <TheJollyRoger> Yes.
+04:12:14 <ploni> Okay, thank you man, give me a minute.
+04:12:23 <TheJollyRoger> So, the thing is...
+04:12:32 <TheJollyRoger> Microsoft actually package the correct drivers in Windows Update.
+04:13:09 <TheJollyRoger> If you've downloaded them and installed them via a third party, this can install old or outdated or even BAD or possibly MALICIOUS versions onto your system.
+04:14:44 <TheJollyRoger> Once it's connected, go and look for optional updates in Windows Update.
+04:15:07 <TheJollyRoger> However, again, based on what problems you're describing to me it's currently still looking like a hardware issue.
+04:15:39 <TheJollyRoger> I have to get going. If you're still having problems with the new cable, feel free to ask around here, and also feel free to stick around and idle in the channel.
+04:16:21 <ploni> Okay will do! TheJollyRoger thank you so much for your helpo !
+04:16:27 <ploni> I really appreciate your time.
+04:16:34 <TheJollyRoger> Good luck ploni. Welcome aboard the ship.
+04:16:42 <ploni> :)
+04:22:52 <ploni> This may be a stupid question, but if I use an android device without signing into Google and download all apps through APK and F-Droid etc. what information does Google collect on me?
+04:23:57 <ploni> And how does that compare with using a phone with GrapheneOS?
+04:24:19 <TheJollyRoger> Just hopped back for a moment: Google discusses what your phone shares in the privacy policy.
+04:24:35 <TheJollyRoger> With respect to GrapheneOS, I will spell this out very clearly:
+04:25:16 <TheJollyRoger> There is no telemetry nor analytics in GrapheneOS. GrapheneOS makes some default connections for captive portal detection and time which are outlined in our FAQ.
+04:25:49 <ploni> Gotcha.
+04:27:42 <TheJollyRoger> GrapheneOS will also periodically check the GrapheneOS update server roughly every four hours, to make sure your OS isn't up to date. The only thing that the update server can see, is enough information to determine which release you need. Targeted updates cannot be shipped on GrapheneOS.
+04:29:24 <TheJollyRoger> As for Play Services on the Google operating system, a considerable amount of Play Services is considered to be invasive. This includes things such as functionality for location services since Play often provides location services to certain apps, and Play Services is deeply integrated into the operating system.
+04:29:39 <TheJollyRoger> **correction: roughly every four hours, to make sure your OS is up to date.
+04:30:11 <TheJollyRoger> GrapheneOS will not and never will include Play Services.
+04:30:21 <TheJollyRoger> Last Line: As for Play Services on the Google operating system, a considerable amount of Play Services is considered to be invasive. This includes things such as functionality for location services since Play often provides location services to certain apps, and Play Services is deeply integrated into the operating system.
+04:30:22 <TheJollyRoger> GrapheneOS will not and never will include Play Services.
+04:30:42 <TheJollyRoger> ** GrapheneOS will also periodically check the GrapheneOS update server roughly every four hours, to make sure your OS is up to date. The only thing that the update server can see, is enough information to determine which release you need. Targeted updates cannot be shipped on GrapheneOS.
+04:31:52 <ploni> Gothcha. Sorry, i mistakenly logged out and back in.
+04:32:16 <TheJollyRoger> No prob! Sometimes it happens to me too :P
+04:33:12 <TheJollyRoger> GrapheneOS is funded entirely by donations. It's not funded via data collection, partnerships, kickbacks, or advertising.
+04:33:52 <TheJollyRoger> So GrapheneOS doesn't collect information not needed to let you run the operating system.
+04:35:57 <ploni> Nice.
+04:35:58 <ploni> https://www.amazon.com/Google-Charging-Rapidly-Charger-devices/dp/B07DX7L2FJ - Do you think this cable should do it?
+04:36:03 <TheJollyRoger> Let me take a look...
+04:36:47 <TheJollyRoger> ploni: That looks like the correct one.
+04:37:01 <ploni> Awesome, gettiing it.
+04:37:02 <TheJollyRoger> Oh excellent, it's got the original charger block too.
+04:39:09 <TheJollyRoger> Alright. I gotta run. Good luck, ploni.
+04:39:25 <ploni> Got it.
+04:39:26 <ploni> Another unrelated question. What would be the difference between using a privacy sensitive cloud service, like NextCloud, versus simply using Google Drive and just encrypting all my files.
+04:39:49 <TheJollyRoger> Heh, ah darn I must not stay here all night but...
+04:40:05 <ploni> Haha TheJollyRoger, your the best!
+04:40:08 <TheJollyRoger> So, in the future we have an offtopic channel at #grapheneos-offtopic , but just this once, I'll answer here since I must go...
+04:41:14 <TheJollyRoger> So, one big thing I'd like to address first is that NextCloud is in and of itself is not inherently secure or private - that depends on who's hosting the service.
+04:43:25 <TheJollyRoger> For instance, if your service is being run by a shady in his basement in Panama, being run out of a post office box? I wouldn't consider it very secure or private. Although NextCloud does tout a number of "end to end" encrypted features, the homerolled encryption is done via js in the browser or in Electron, which is a lousy place for handling cryptographic operations and robust random number
+04:43:26 <TheJollyRoger> generation.
+04:43:31 <TheJollyRoger> With that in mind,
+04:45:18 <TheJollyRoger> Let's go with the thought exercise that you use a perfect system for clientside encryption and do everything correctly (so for instance, you don't fall into the trap of doing something like putting a veracrypt or LUKS-encrypted container on the cloud and then modifying it without completely re-encrypting all the data to a different key, which opens you up to traffic analysis attack).
+04:47:04 <TheJollyRoger> Your service provider will still have access to your metadata. This includes the time you logged in, the time you logged out as well as your IP address (or your VPN exit), as well as the relative size of the files you're uploading and downloading. That history will be tied to your account name and with that, everything else you've done under that account.
+04:47:06 <TheJollyRoger> And he's gone again.
+04:49:09 <TheJollyRoger> https://freenode.logbot.info/grapheneos/20210510#c7945626
+04:49:32 <TheJollyRoger> Someone pass him that if/when he returns. I'm off for the night.
+07:37:15 <hypokeimenon[m]> That's why the "just encrypt client-side and then use Google Drive / OneDrive / Dropbox" advice annoys me.
+08:25:57 <freefolk[m]> what is this traffic analysis attack on encrypted containers?
+11:02:08 <somenerd[m]> > That's why the "just encrypt client-side and then use Google Drive / OneDrive / Dropbox" advice annoys me.
+11:02:08 <somenerd[m]> well, there isn't really an alternative
+11:04:39 <Otthorn[m]> Nextcloud / Owncloud is a very good alternative
+11:04:55 <DemiMarie> <TheJollyRoger "Your service provider will still"> It *should* be possible to make that information useless by padding it to the worst-case values: upload and download information at a constant rate, even when there is no need whatsoever to do so.  My understanding is that this has been proven to be optimal.
+11:04:56 <somenerd[m]> well, it still has the same problems
+11:05:26 <somenerd[m]> since e2ee doesn't fix the trust problem completely
+11:05:28 <Otthorn[m]> <somenerd[m] "well, it still has the same prob"> Not really, you can self host it
+11:05:37 <somenerd[m]> yeah, that could work
+11:05:43 <DemiMarie> <somenerd[m] "well, it still has the same prob"> The idea is that the metadata does not reveal anything about what the user is doing.
+11:05:59 <DemiMarie> Because the user is always uploading (say) 100KiB/s.
+11:06:06 <DemiMarie> And downloading at the same rate.
+11:06:08 <somenerd[m]> I meant the solution before
+11:06:16 <somenerd[m]> (nextcloud/owncloud)
+11:06:51 <DemiMarie> Anyway this probably belongs on #grapheneos-offtopic:matrix.org
+11:06:51 <somenerd[m]> anyway, it's offtopic
+11:06:55 <somenerd[m]> yeah
+13:13:45 <GrapheneOS-Teleg> achi (@i​dynbek) has joined the Telegram Group!
+13:22:39 <jackflash89[m]> somenerd: proton drive
+15:26:55 <GrapheneOS-Teleg> !Ryan has joined the Telegram Group!
+16:28:46 <Stew77> Hello, I installed GrapheneOS on two Pixel 3's (identical) - one of them I can't get the ringtone or notifications to work.  All settings are equal, and I did check to make sure the speaker worked (it does).  It is not in DND, and the volume is all the way up.  Any ideas would be helpful.
+16:54:02 <MrSenshi[m]> <Stew77 "Hello, I installed GrapheneOS on"> Create another user account, check if it works from there.
+16:54:19 <MrSenshi[m]> Just in case you may have accidentally changed something very subtle
+16:55:18 <Stew77> OK, thanks.  I can always wipe the phone as well (if needed).  I migrated to Graphene to de-Google, and I am now getting my wife's phone up and running.  Thanks very much - I suspect that is the case.
+17:06:51 <bro> Hello guys. Want to install GrapheneOS on my new Motorola G100. Is it even possible?
+17:07:56 <hypokeimenon[m]> It is not, unfortunately. Have a read of https://grapheneos.org/faq#device-support to see why.
+17:08:24 <isu> hello guys why i cant unlock OEM
+17:08:28 <isu> i have wifi ON
+17:08:36 <isu> i need connect google account to my phone?
+17:09:36 <bro> hypokeimenon[m] thanks!
+17:10:00 <TheJollyRoger> isu: You may have been ripped off and bought a carrier-locked variant. If you want to know for certain, turn on USB debugging, obtain platform tools via the instructions on the CLI installation page, and run `adb shell getprop ro.boot.cid`
+17:11:01 <TheJollyRoger> If it returns anything except a zero value, then put that phone up for sale, return the phone to the seller, or issue a chargeback with your credit card company; there is nothing you can do.
+17:11:27 <isu>  adb shell getprop ro.boot.cid
+17:11:27 <isu> * daemon not running; starting now at tcp:5037
+17:11:28 <isu> * daemon started successfully
+17:11:28 <isu> adb: device unauthorized.
+17:11:29 <isu> This adb server's $ADB_VENDOR_KEYS is not set
+17:11:29 <isu> Try 'adb kill-server' if that seems wrong.
+17:11:30 <isu> Otherwise check for a confirmation dialog on your device
+17:11:48 <TheJollyRoger> isu: you need to turn on USB debugging and accept that computers public keys on your phone.
+17:11:57 <TheJollyRoger> Set the phone to accept USB debugging and then turn USB options to "File Transfer."
+17:12:04 <TheJollyRoger> A popup should appear with a key fingerprint.
+17:12:23 <TheJollyRoger> You'll also need to generate vendor keys for it, this should happen on first run.
+17:13:04 <isu> hey
+17:13:12 <isu> i got ban my ip lol
+17:13:28 <TheJollyRoger> Hang on a sec.
+17:13:35 <isu> where is guy told me to launch `adb shell getprop ro.boot.cid`
+17:14:00 <TheJollyRoger> Sorry about that - your last message tripped our spam detection because it had too many lines.
+17:14:03 <TheJollyRoger> I've unklined it.
+17:14:11 <TheJollyRoger> You should be able to join again.
+17:14:20 <isu> i sended you result on dm
+17:14:39 <isu> do i need connect gmail account to my phone for unlock OEM ?
+17:14:41 <isu> or put my sim on?
+17:14:50 <isu> i have only wifi activted and i did update
+17:14:54 <TheJollyRoger> Yep, I see your message in the channel, one sec.
+17:15:33 <TheJollyRoger> ok, so, kill adb server via the command `adb kill-server` and then start it again with `adb devices`
+17:16:04 <isu> ok check dm
+17:16:15 <TheJollyRoger> If that doesn't fix the error, what I want you to do is find the file adbkey and adbkey.pub and delete those, then restart adb
+17:16:46 <TheJollyRoger> Ok. If those files don't exist, you'll need to create them - restarting adb that way should do it.
+17:16:48 <isu> i authorsized from my phone
+17:16:51 <TheJollyRoger> Ok.
+17:16:59 <TheJollyRoger> Now run `adb shell getprop ro.boot.cid`
+17:17:06 <isu> z@z:~$ adb devices
+17:17:07 <isu> List of devices attached
+17:17:07 <isu> 92PAX0201C	device
+17:17:24 <isu> z@z:~$ adb shell getprop ro.boot.cid
+17:17:24 <isu> 00000001
+17:17:25 <TheJollyRoger> Great. Run the command and see if it returns you some numbers.
+17:17:47 <TheJollyRoger> Alright, so... bad news. I'm sorry, but there is nothing I can do for you: the seller cheated you.
+17:18:03 <isu> what is cheated?
+17:18:12 <TheJollyRoger> Your seller sold you a carrier locked phone.
+17:18:20 <isu> what is locked?
+17:18:28 <isu> i buy this from ebay hongkong seller phone is new
+17:18:38 <TheJollyRoger> Your seller sold you a device that cannot run GrapheneOS.
+17:18:40 <isu> i buy 2 from him and one was ok working with grapheneos
+17:19:09 <isu> what the advantage and disvantage with phone locked like this?
+17:19:12 <hypokeimenon[m]> Did the seller's description say "unlocked"?
+17:19:39 <TheJollyRoger> isu: Locked devices are not unlockable.
+17:19:49 <TheJollyRoger> You cannot change that switch. Send the phone back. Return it.
+17:20:04 <isu> yes say unlocked
+17:20:11 <isu> https://www.ebay.fr/itm/402534659875?ssPageName=STRK%3AMEBIDX%3AIT&_trksid=p2060353.m2749.l2649
+17:20:13 <TheJollyRoger> isu: He sold you the wrong phone.
+17:20:18 <TheJollyRoger> Return it.
+17:20:53 <TheJollyRoger> Nothing you can do except return it.
+17:21:26 <isu> this phone can be still used with google store and even if pixel stop update ?
+17:21:31 <isu> i can give this phone to my mom
+17:21:36 <isu> she use google android
+17:21:44 <TheJollyRoger> Yes. It can be used with Google's operating system, but you cannot install GrapheneOS.
+17:23:25 <isu> i bought same phone to this seller actually my mom is using it and i check right now i can unlock OEM
+17:23:31 <isu> but no in the new i recieved today
+17:23:38 <isu> should i just switch with my mom phone or resend?
+17:23:42 <TheJollyRoger> Some carriers sign deals with handset manufacturers to prevent unlocking.
+17:24:00 <TheJollyRoger> Only problem is,
+17:24:20 <isu> what is problem with locked OEM phone ? cant change rom ?
+17:24:21 <TheJollyRoger> as time goes on, the vendors want to get rid of these phones, and then sell them to resellers, who then flood the market with them.
+17:24:26 <TheJollyRoger> isu: yes. Cannot change the OS.
+17:24:38 <TheJollyRoger> The resellers often do not know the difference.
+17:24:55 <TheJollyRoger> They usually just throw them all in the same bin and don't know there's a difference.
+17:25:02 <isu> hmm ok what you suggest now ? its really important to change OS of pixel 3A XL in fews years you think ?
+17:25:54 <TheJollyRoger> isu: It depends. Talk to the seller and see if you can get a refund. If they won't take it back, and you know someone who needs it and won't mind it, then by all means give it to your mother.
+17:26:34 <TheJollyRoger> I'm sorry. But there is nothing you can do to unlock that phone.
+17:26:41 <isu> ok thanks you a lot
+17:26:58 <TheJollyRoger> You're welcome. Good luck man, sorry it didn't work out this time, I hope you have better luck in the future!
+17:27:10 <isu> just last question please
+17:27:13 <TheJollyRoger> Yes?
+17:27:44 <isu> if i keep this phone and i give to my mom since pixel 3A XL will not get update in 1y maybe in 3y i will need to change OS for security no ?
+17:27:55 <isu> its better to send back i think do you agree,
+17:28:26 <TheJollyRoger> isu: Once the phone is end of life, the handset itself is insecure and there is NOTHING you can do about it, even if you could unlock the bootloader.
+17:28:33 <TheJollyRoger> Because the hardware is now insecure.
+17:28:57 <TheJollyRoger> Ideally, send it back, and buy a 5, or 4a, or 4a5G.
+17:29:04 <isu> really ?
+17:29:30 <isu> 3y life for 600$ ripp
+17:29:35 <TheJollyRoger> Yes. Once the phones are end of life, firmware updates will not be shipped, so no matter if the operating system is secure, the handset will still be insecure.
+17:30:25 <isu> i didnt know this thanks you but what i can risk with this issue
+17:30:43 <isu> like if we are in 2024 and i still using my pixel 3A XL what i can risk ?
+17:30:50 <TheJollyRoger> Yeah. It really sucks, but that's how things tend to be. Even if you backport the security patches from upstream, and compile everything yourself, once the handset is out of date, the phones will still be insecure, because the hardware and firmware is insecure, and you cannot change that without paying Qualcomm $$$.
+17:31:12 <TheJollyRoger> isu: If it's in 2024 and you are using your 3aXL, it will be vulnerable to years of exploits and vulnerabilities to the hardware.
+17:31:26 <TheJollyRoger> These cannot be patched nor mitigated in software.
+17:31:59 <TheJollyRoger> No matter what.
+17:32:16 <isu> hmm ok
+17:32:29 <isu> but price between 4a and 3a xl are not same..
+17:32:38 <TheJollyRoger> Yes. It's really unfortunate.
+17:33:00 <isu> https://endoflife.date/pixel
+17:33:08 <isu> which you suggest me price/quality
+17:33:50 <TheJollyRoger> I have to go for now, I hope you find one that works out. I can't advise you with this though, this choice is for you
+17:34:03 <TheJollyRoger> All I can wish you is good luck
+17:34:05 <isu> thanks for you time
+17:34:13 <isu> have nice days thanks dude
+17:34:18 <TheJollyRoger> You're welcome. Feel free to stay in the channel, welcome aboard.
+17:34:22 <isu> btc is king
+17:45:49 <GrapheneOS-Teleg> UltraPrime (@U​ltraPrimeZ) has joined the Telegram Group!
+17:57:02 <GrapheneOS-Teleg> <!Hulk> isu: hello, you can have a look https://grapheneos.org/faq#recommended-devices
+17:58:33 <hypokeimenon[m]> They left a while ago, Hulk.
+18:02:05 <GrapheneOS-Teleg> <U​ltraPrimeZ> Is there any rom maintainer yet for Xiaomi Mi A3.
+18:02:14 <GrapheneOS-Teleg> <!Hulk> No, there's not
+18:02:49 <GrapheneOS-Teleg> <!Hulk> Welcome, please read the rules @UltraPrimeZ
+18:03:14 <GrapheneOS-Teleg> <U​ltraPrimeZ> Sure.
+18:24:06 <hmw2013[m]> Not sure where isu is from, but there are no carrier locked pixel phones in Hong Kong nor France, as far as I know.
+18:31:07 <TheJollyRoger> hmw2013[m]: Because Pixels are not sold in many countries but are among the best in class Android devices, my guess is that the demand for them has created a cottage industry of resellers. Unfortunately, it sounds like a lot of these are fly-by-night operations.
+18:36:44 <hmw2013[m]> May well be. Thanks, Jolly.
+18:37:51 <TheJollyRoger> Anytime!
+18:42:43 <hmw2013[m]> Since no traffic now: I have been a happy user for a few months now, and recently lurking here but never intervened so far. A question: I have set up a second and third user profile. The second to use it as my main profile, with all my daily apps, and the third one for a couple of bank apps that come with a couple of google trackers. Does that make any sense? Or should I rather keep my main apps in the main profile
+18:42:43 <hmw2013[m]> instead?
+18:43:53 <TheJollyRoger> Hey hmw2013[m], sounds good to me. Each person will have their own rationale for doing what they do with threat models.
+18:44:00 <TheJollyRoger> Er, with threat models, and profiles.
+18:44:13 <TheJollyRoger> Although, there is something I should bring up...
+18:45:25 <TheJollyRoger> The privacy community has a bit of an obsession with enumerating badness after the fact, because it's an easily (mis)understood proxy signal and allows for making sacrifices to the machine spirits. Although some libraries are listed as having "trackers" in Aurora Store, these libraries are extra portions of code that are simply bundled to allow app developers to not need to reinvent the wheel.
+18:45:36 <TheJollyRoger> It's up to the app developers to use them, as they want.
+18:46:54 <TheJollyRoger> So as a result, although a lot of people like to say TRACKERS! BAD! EVIL! SPYING! it's important to note that simply because an application includes those libraries, their inclusion does not necessarily indicate that an app is privacy-invasive, nor does not including them mean an app is privacy-respecting.
+18:47:03 <TheJollyRoger> It's simply functionality that's given to the app authors to use as they see fit.
+18:47:53 <hmw2013[m]> Thanks. Dunno much about these trackers but prefer to keep the related apps separate. It is not a big deal as I only have two of them, and don't use them all the time. So either way, no harm.
+18:48:12 <TheJollyRoger> Yep, that's perfectly fine to keep them in their own profile.
+18:50:01 <TheJollyRoger> Everyone will do profiles their own way, depending on their own threat model and/or preferences, which need to be counterbalanced against usability and convenience. There's no one-size fits all approach, the trick is often finding out what works for you.
+18:50:37 <hmw2013[m]> By the way, I saw you keep track (!)  of apps that do or don't work on graphene. I confirm you can add revolut among those that are silver, ie all except notifications works just fine. Revolut is a quite common fintech bank app in Europe, perhaps less known in Canada or US
+18:50:46 <TheJollyRoger> Sure. Let me add those.
+18:52:10 <TheJollyRoger> There we go, added "Revolut" to "Silver" list. Thank you!
+18:52:35 <TheJollyRoger> I added it with "Working, but will not display notifications."
+18:52:49 <hmw2013[m]> Thanks
+18:53:00 <TheJollyRoger> You're welcome! Thanks to you for letting me know!
+18:58:10 <hmw2013[m]> Also by the way, I speak a couple of local languages here, in case you need help with translation (I saw some French speakers trying to get help here a couple of days ago)
+18:59:20 <TheJollyRoger> That'll definitely come in handy! I'll message you if there's any movement from within to get GrapheneOS translated!
+18:59:43 <hmw2013[m]> Pleasure!
+19:14:32 <pkgbuild[m]> I have no system audio with the screen recording app on secondary profile.
+19:14:32 <pkgbuild[m]> Restarted the phone also on main account, screen recording works, after being stuck, but the system audio still not work.
+19:14:32 <pkgbuild[m]> espandi
+19:14:41 <pkgbuild[m]>  * I have no system audio with the screen recording app on secondary profile.
+19:14:41 <pkgbuild[m]> Restarted the phone also on main account, screen recording works, after being stuck, but the system audio still not work.
+19:32:19 <pkgbuild[m]>  * I had no system audio with the screen recording app on secondary profile.
+19:32:20 <pkgbuild[m]> Restarted the phone also on main account, screen recording works, after being stuck, but the system audio still not work.
+19:35:54 <pkgbuild[m]> reading log chat this feature is know to not work
+20:23:56 <withinfire[m]> > There we go, added "Revolut" to "Silver" list. Thank you!
+20:23:56 <withinfire[m]> Apologies, but where is this list - sounds very interesting! Searching the logs doesn't reveal it to me immediately?
+21:44:18 <vinve> hello all , very new to graphene os. does anyone have a comment on what app to use to connect to an exchange server? i am running my own server and would like to continue using it.
+22:01:56 <flawedworld[m]> <vinve "hello all , very new to graphene"> Please ask in #grapheneos-offtopic
+22:58:42 <james87623> Hello again, I am wondering if there's any known issues with installing GrapheneOS with the web tool from a 4 XL? I have a factory C to C cable and I'm using Vanadium. When plugging into my 4 XL it says "error, no device selected" after clicking "unlock bootloader". When I unplug that same cord and plug it into my 4a 5G the window pops up and shows
+22:58:42 <james87623> the Pixel i'm trying to flash.
+22:58:43 <james87623> In other words, I can flash GrapheneOS from my Pixel 4a 5G to another 4a 5G, but my 4XL cannot identify my 4a 5G when using the same cord. My USB security settings are set to allow USB devices when unlocked.
+23:23:22 <GrapheneOS-Teleg> <!Hulk> Just to clarify, you have 3 pixel phones, and two of them are running GrapheneOS
+23:24:16 <GrapheneOS-Teleg> <!Hulk> Is this correct?
+23:25:30 <james87623> yeah, trying to load my 3rd one. couldn't use the web installer from my 4xl, had to use my 4a 5g with the same cord
+23:28:10 <GrapheneOS-Teleg> <!Hulk> Are you sure that your ports weren't damaged?
+23:28:35 <GrapheneOS-Teleg> <!Hulk> Did water drops ever get there?
+23:30:57 <james87623> i can't confirm that water never got in the port, but i can plug it into my laptop and navigate around the phone's file system from my computer so i think it's working fine
+23:31:18 <james87623> the pop up window to select the connected device never comes up with my 4xl.
+23:31:43 <james87623> it's not like it can't find the device, it's like it never even tries
+23:32:23 <GrapheneOS-Teleg> <!Hulk> Are Vanadium settings all-default?
+23:32:53 <james87623> on my 4a 5g if i select "unlock bootloader", even with no usb cord plugged in at all the pop up windows still shows up. on my 4xl the window does not show up at all
+23:34:52 <james87623> Oh! clearing vanadium's cash and app data fixed the issue. Thanks!!
+23:35:21 <james87623> I don't recall changing many of the settings, but who knows. Thanks again!

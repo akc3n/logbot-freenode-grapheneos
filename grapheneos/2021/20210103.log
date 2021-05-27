@@ -1,0 +1,787 @@
+00:29:52 <strcat[m]> aeonius: Auditor is *NOT* just for verifying after installation, please read https://attestation.app/about
+00:30:03 <strcat[m]> it is primarily for verifying after the initial pairing
+00:30:52 <strcat[m]> using the remote attestation service provides  automatic scheduled verifications and supports setting an alert email to receive alerts if it stops receiving valid attestations
+00:30:57 <strcat[m]> and you can investigate further with a local verification if it's failing
+00:31:24 <strcat[m]> I don't know why the person who was asking about that was so opposed to reading about it
+00:32:21 <strcat[m]> also if F-Droid was updating to targerSdkVersion 28 (Android 9), it wouldn't have that warning when installing it
+00:32:24 <thematrix5000[m]> Hey strcat what got you into linux
+00:32:27 <strcat[m]>  * also if F-Droid was updated to targerSdkVersion 28 (Android 9), it wouldn't have that warning when installing it
+00:33:08 <strcat[m]>  * also if F-Droid was updated to targetSdkVersion 28 or higher (Android 9), it wouldn't have that warning when installing it
+00:33:23 <strcat[m]> current API level is 30 so an app updated for Android 11 targets 30
+01:10:27 <TheJollyRoger> narcoli[m]: Yep, it's a camera app.
+01:10:44 <TheJollyRoger> It can use the Pixel Visual Core GPU and has some options you don't normally see on the standard AOSP camera app.
+01:11:57 <narcoli[m]> oh nice! Not into taking pics but cool to have 👍️
+01:12:41 <TheJollyRoger> It is!
+01:13:48 <aeonius> I'm almost starting to worry that, since install a few hours ago, the battery is still at 100% while being idle... is battery life that good?
+01:14:03 <TheJollyRoger> You might also find Jitsi Meet useful in COVID times as a replacement/alternative to Zoom, as well as KeePassDroid.
+01:14:32 <TheJollyRoger> And Music Player Go, although some people have found that Music Player Go is a bit rough around the edges, I just used it because it was the first music playing app that popped up.
+01:15:18 <TheJollyRoger> aeonius: it depends on how you use your phone. Largely, the improvements in phone battery life have owed themselves to improvements in software, with the operating system being able to "sleep" processes in the background, then rely on push notifications to wake them up.
+01:15:53 <TheJollyRoger> So while your phone is sleeping and not running anything in the foreground, it's really not doing much more than just keeping the kernel in memory.
+01:16:29 <aeonius> After install I "made it my own" by installing "my apps" and setting my settings, but since then I just left it alone. On the default OS it would have drained at least some
+01:17:04 <aeonius> Impressive is all I can say
+01:17:08 <TheJollyRoger> Yep!
+01:18:29 <dazinism> I only recently worked out you can use markor without granting it storage permission (or they changed it since I last checked )
+01:18:50 <dazinism> Its a powerful app for taking notes and stuff
+01:18:57 <dazinism> Does markdown well
+01:19:20 <dazinism> Can also create a homescreen shortcut to any note
+01:19:57 <dazinism> So could have a load of links in a note
+01:20:43 <dazinism> Also think its got the best search function I've found in a note app
+01:21:47 <TheJollyRoger> Brilliant. I think I'll go and get it then, thanks dazinism!
+01:23:57 <dazinism> Its got its own built in file browser. Can move files or folders in or out of the apps private or 'public' (Android/data/net.gsantor.markor) folders
+01:24:24 <TheJollyRoger> That's handy!
+01:24:34 <aeonius> As for interesting apps, I found olauncher to be a welcome change to the "normal" launchers. It's all text, it's lightweight, open source and packs more options than you'd think at first glance. Do get it from their github, as the fdroid one is a few releases behind
+01:24:35 <TheJollyRoger> Hey look at this, it even has syntax highlighting.
+01:24:48 <dazinism> Can set it to automatically do a table of contents at the top of any markdown page
+01:25:03 <dazinism> So you can quickly jump to the part you need
+01:25:42 <dazinism> (Have to swap between view or edit mode with the eye or pencil icons)
+01:35:07 <mTee> Hi. I have a quick question. I believe I already have my answers but would like to double check.
+01:35:21 <TheJollyRoger> Hello mTee, what could I help you with?
+01:35:42 <mTee> My phone was running graphene os. A main account holding my secure data and a secondary account for daily exploits.
+01:35:48 <strcat[m]> think we fixed the adbd issue
+01:35:48 <strcat[m]> need to test it
+01:35:53 <strcat[m]> https://github.com/GrapheneOS/platform_frameworks_native/commit/e16062752ef196bf3a18b39a62e789d7a4ab250f
+01:36:24 <TheJollyRoger> strcat[m]: I'm currently running another set of CTS stuff. Would you like me to ask anupritaisno1[m] if I should cancel his test and run this one?
+01:36:33 <mTee> The password to the main account has beem forgotten so I cannot access the secondary account which contains some photos I wouldn't like to lose
+01:36:38 <strcat[m]> TheJollyRoger: no
+01:36:47 <anupritaisno1[m]> TheJollyRoger: no, continue as previously told
+01:37:00 <mTee> I remember the password to the secondary account but imagine it is unobtainable. Wanted to check just to be sure.
+01:37:13 <TheJollyRoger> anupritaisno1[m]: OK!
+01:37:15 <mTee> I haven't formatted the phone in the off chance the password comes to me in a dream.
+01:37:29 <anupritaisno1[m]> I gave you a worked around build to enroll the adb key. The build you have right now is 1:1 with master with whatever build date is on it
+01:37:47 <anupritaisno1[m]> There are no hacks or workarounds in that build
+01:38:04 <TheJollyRoger> Aw shit. I didn't lock the BL.
+01:38:08 <anupritaisno1[m]> * I gave you a worked around build to enroll the adb key and then had you flash a second build. The build you have right now is 1:1 with master with whatever build date is on it
+01:38:11 <strcat[m]> mTee: it's unobtainable with the way the OS works, it can't unlock a secondary user profile before the owner profile - it's not really *inherently* impossible but the owner profile has data needed to make the device able to function and unlock *any* profile
+01:38:25 <anupritaisno1[m]> <TheJollyRoger "Aw shit. I didn't lock the BL."> Does it matter? Idk strcat would know
+01:38:30 <strcat[m]> mTee: the encryption for the secondary profile is totally separate for the encryption for the owner profile, but the owner profile stores data used by devices, etc.
+01:38:34 <strcat[m]> anupritaisno1: it does matter for some tests
+01:38:37 <strcat[m]> not most
+01:38:45 <TheJollyRoger> Ok. I'll just write that down.
+01:38:48 <strcat[m]> it matters for the security and attestation tests
+01:38:49 <anupritaisno1[m]> <strcat[m] "anupritaisno1: it does matter fo"> Well, okay
+01:39:02 <anupritaisno1[m]> <TheJollyRoger "Ok. I'll just write that down."> Use the glassrom avb key. You should already have it
+01:39:04 <strcat[m]> so does it being a production signed release
+01:39:14 <strcat[m]> a userdebug build will fail some tests, and a test key signed build will fail some tests
+01:39:18 <TheJollyRoger> I do. I'll wait until this test completes, flash the avb key and relock.
+01:39:21 <strcat[m]> and having bootloader unlocked will fail others
+01:39:30 <anupritaisno1[m]> <strcat[m] "a userdebug build will fail some"> User build and properly signed
+01:39:44 <mTee> Ah yes, I figured as much. Its honestly just photos from holidays with my partner. I may hold onto the phone as a keepsake anyways haha
+01:39:44 <strcat[m]> TheJollyRoger: you'd only need to run tests that failed due to that again
+01:39:49 <anupritaisno1[m]> It's exactly how releases are done
+01:39:51 <mTee> Thanks for the quick response
+01:39:52 <strcat[m]> TheJollyRoger: need to run some tests again anyway because they're flaky
+01:40:13 <strcat[m]> mTee: well unfortunately if you forgot the owner profile password, you can't actually unlock any profile
+01:40:19 <TheJollyRoger> strcat[m]: Got it.
+01:40:47 <mTee> That's the situation I figured I was in. This occured some months ago but thought to ask whole doing some housekeeping
+01:40:48 <anupritaisno1[m]> <TheJollyRoger "strcat: Got it."> Do you have glassrom's avb key?
+01:41:18 <strcat[m]> anupritaisno1: it can be extracted from the vbmeta image
+01:41:29 <anupritaisno1[m]> It's not publicly released as locking the bootloader is still experimental and we have a recovery backdoor that's publicly documented for testing
+01:43:03 <TheJollyRoger> anupritaisno1[m]: Hold on a sec.
+01:43:06 <TheJollyRoger> Let me check.
+01:43:38 <TheJollyRoger> I have the avb_pkmd.bin file you sent me!
+01:44:05 <anupritaisno1[m]> Nice
+01:44:49 * anupritaisno1[m] posted a file: avb_pkmd.bin (1KiB) < https://matrix.org/_matrix/media/r0/download/m.apex.to/oOvLpDPpqYVRfZpfRXTwGJuC/avb_pkmd.bin >
+01:44:54 <anupritaisno1[m]> Just have it again
+01:45:28 <TheJollyRoger> Ok!
+01:57:36 <strcat[m]> confirmed the adbd fix works
+01:57:38 <strcat[m]> https://android-review.googlesource.com/c/platform/frameworks/native/+/1539159
+01:58:18 <strcat[m]> nice to have adb working properly again where it actually remembers keys
+01:58:26 <TheJollyRoger> Thank goodness.
+02:01:02 <anupritaisno1[m]> I'm like fucking hell
+02:01:16 <anupritaisno1[m]> How the hell did I kind of find it
+02:01:26 <anupritaisno1[m]> And then obviously missed it
+02:01:40 <anupritaisno1[m]> Btw thanks strcat
+02:01:54 <anupritaisno1[m]> Your explanation, 💯
+02:02:37 <anupritaisno1[m]> * Your explanation, just great
+02:02:49 <anupritaisno1[m]> Why the fuck does gboard suggest emoji now
+02:02:56 <anupritaisno1[m]> Fucking hell I hate emoji
+03:02:32 <goose1> i was wondering if
+03:02:50 <goose1> anyone had expierence with esim on graphene os?
+03:17:43 <YuwuY> https://www.youtube.com/watch?v=pApzl6W4h-w
+03:56:54 <strcat[m]> YuwuY: not relevant to the channel, please don't spam stuff here
+04:23:49 <lovestory[m]> Hi all, so I've completed auditor pairing and confirmed my device is running GrapheneOS.
+04:24:15 <lovestory[m]> Are the apps dated 2009, correct? Eg. Messaging
+04:37:17 <ayaen_t[m]> theOne:  didnt understand what you mean
+04:39:36 <lovestory[m]> I look at app versions and dates. So I'm just curious what version the messaging app is
+04:41:22 <ayaen_t[m]>  theOne:  the messaging app calendar app are part of aosp kept primarily for compatibility reasond
+04:41:30 <ayaen_t[m]> not recommended to use them
+04:42:12 <ayaen_t[m]> you can disable them if you dont want to use them
+04:42:34 <ayaen_t[m]> examle i disable calendar and camera
+04:43:22 <lovestory[m]> Ok
+04:43:23 <ayaen_t[m]> but mind you only disable apps which provide the UI to do so. do not use adb.
+04:44:10 <lovestory[m]> My messaging does not have the option to disable  the app
+04:44:26 <ayaen_t[m]> oh yes that cannot be disabled
+04:44:35 <ayaen_t[m]> sry should have mentoned
+04:44:44 <ayaen_t[m]> its for sms so.
+04:45:06 <ayaen_t[m]> but it asks for unnecesary permissions whivlch yoi can deny
+04:45:10 <strcat[m]> theOne: you're wasting at time looking at metadata, etc. for stuff that's all verified as part of the OS images
+04:45:21 <strcat[m]> dates are set to reproducible values by the AOSP build system
+04:45:41 <lovestory[m]> Thanks
+04:45:58 <mark-028387[m]> The sms app can be disabled if you choose another default sms app, e.g. signal
+04:46:12 <lovestory[m]> I use signal for something else
+04:47:16 <lovestory[m]> Great, then I'm happy. Thanks for responding and have a great day.
+09:24:06 <lopt[m]> My device is not in the official support list of GraphoneOS. Can I apply this system?
+09:30:34 <TheJollyRoger> lopt[m]: your question is answered in the FAQ: https://grapheneos.org/faq#future-devices
+09:30:58 <TheJollyRoger> > Devices need to be meeting the standards of the project in order to be considered as potential targets. In addition to support for installing other operating systems, standard hardware-based security features like the hardware-backed keystores, verified boot, attestation and various hardware-based exploit mitigations need to be available.
+09:31:13 <TheJollyRoger> > In order to support a device, the appropriate resources also need to be available and dedicated towards it.
+09:43:40 <TheJollyRoger> lopt[m]: I suggest you purchase a Pixel 4a. That's probably going to be the best value for the money at this point in time.
+09:58:41 <TheJollyRoger> lopt[m] and if anyone else is curious: there's what I call the "Rule Of One Device, One Developer"; a good rule of thumb is to imagine, for every new device that is to be supported by GrapheneOS, another developer needs to be on that task of supporting that device full time, in order for the pace of development to be sustainable.
+10:00:40 <TheJollyRoger> So for instance, if we wanted to support five devices, we'd need five developers to be attending to those five devices at all times. If we wanted to support six devices, we'd need six developers to be attending to those six devices.
+10:19:21 <ayaen_t[m]> TheJollyRoger: i would love to be a part of this effort in making grapheneOS
+10:19:31 <ayaen_t[m]> but its a vast undertaking
+10:19:44 <ayaen_t[m]> iam willing to put in the time to learn
+10:19:55 <ayaen_t[m]> but not sure where to start
+10:20:06 <ayaen_t[m]> any ideas ?
+10:20:49 <ayaen_t[m]> as to where one can start ?
+10:26:07 <TheJollyRoger> Hello ayaen_t[m], I think the best place to start is to first learn to build the operating system, and learn to merge and rebase patches in git. That's where I am right now.
+10:26:38 <ayaen_t[m]> i see.
+10:26:58 <TheJollyRoger> I have a tad bit of information on my github about building the operating system and what you'll need, but it's a bit dated since I've been out of things for the past little bit.
+10:27:24 <TheJollyRoger> I have to run for the night, but I should be on later.
+10:27:31 <ayaen_t[m]> ive gone through that and its quiet good
+10:27:31 <TheJollyRoger> We'll talk more then!
+10:27:40 <ayaen_t[m]> kay !
+10:46:34 <dazinism> take_a_deep_breath: also theres some info here https://hub.libranet.de/wiki/graphene-os/wiki/Helping-graphene-os
+10:47:08 <dazinism> Also a bit old, but I think most is still relavan
+10:47:16 <dazinism> Relevant
+10:48:39 <ayaen_t[m]> dazinism:  thank you.
+11:16:03 <ayaen_t[m]> what are the maximum number of user profiles anyone has used
+11:16:34 <ayaen_t[m]> and how much of a lag does it create ?
+11:22:23 <noandno[m]> What phones can have Graphene as it's OS ?
+11:22:26 <noandno[m]> I also read somewhere that all Google phones won't be able to support Graphene OS in the next 3 years. So what phone are the best to use for this OS ?
+11:22:26 <noandno[m]> ( This is a Phone recommendation question )
+11:25:20 <elchupacabra420[> Pixel4
+11:25:24 <ayaen_t[m]> noandno if you just want suppoet for the longest period go for a pixel 4a
+11:25:24 <ayaen_t[m]> if you want something more powerful and dont mind losing support somewhat earlier like witjin 2 years go for pixel 4 / xl
+11:25:42 <ayaen_t[m]> *within
+11:26:09 <noandno[m]> how long will the 4a can support this OS ?
+11:26:54 <noandno[m]> i am just looking for a phone that i can use with Graphene and dont have to change it in a year
+11:27:20 <ayaen_t[m]> https://grapheneos.org/faq#supported-devices
+11:27:30 <noandno[m]> also can you download social media in Graphene ?
+11:27:32 <ayaen_t[m]> pixel 4a then it is
+11:28:16 <ayaen_t[m]> noandno:  you can use most of the apps which do not depens on google pllay services
+11:30:50 <noandno[m]> so instagram facebook youtube can be installed ?
+11:31:01 <dazinism> noandno: you can often use the website for social media. Or there are alternative apps for using them. (eg. Twidere works pretty good for Twitter and Mastodon - Frost for Facebook)
+11:31:10 <dazinism> Newpipe for Youtube
+11:31:39 <noandno[m]> instagram ?
+11:32:01 <ayaen_t[m]> invidious too dor youtube
+11:32:07 <ayaen_t[m]> *for
+11:32:25 <noandno[m]> how about instagram
+11:33:00 <ayaen_t[m]> you could use the web xlient
+11:33:10 <ayaen_t[m]> i am not sure about yhe app
+11:33:55 <dazinism> You want to post or just read?
+11:34:13 <noandno[m]> read and post
+11:36:24 <dazinism> noandno: for Instagram there is https://barinsta.austinhuang.me
+11:36:37 <dazinism> Its available from fdroid
+11:36:42 <dazinism> Updated regularly
+11:38:33 <noandno[m]> nice
+11:42:45 <noandno[m]> what about having Graphene on a BlackBerry ?
+11:44:20 <jftn[m]> <ayaen_t[m] "invidious too dor youtube"> There is also Cloudtube, which tends to be a little more usable on mobile devices: https://tube.cadence.moe/
+11:45:31 <jftn[m]> <noandno[m] "what about having Graphene on a "> GrapheneOS can't be run on a BlackBerry. It isn't a supported device and unlikely to become supported due to missing required hardware feats.
+11:55:01 <dazinism> Despite having a bit of a reputation for good security, and marketing around this.  Blackberry actually does not do a great job of security on their devices.
+11:56:26 <noandno[m]> what phone has a great security, support Graphene and is affordable ?
+11:57:44 <jftn[m]> <noandno[m] "what phone has a great security,"> Ironically, the Google Pixels. They have superiour hardware security and support.
+11:59:15 <jftn[m]> > <@noandno:matrix.org> what phone has a great security, support Graphene and is affordable ?
+11:59:15 <jftn[m]>  * Ironically, the Google Pixels. They have superiour hardware security (full verified boot, strong hardware-backed encryption, Titan M and much more). Also, regular and fast firmware patches.
+11:59:15 <jftn[m]> The ironical part - in my eyes - is that this makes Google devices the best option to DeGoogle (using GrapheneOS).
+11:59:35 <jftn[m]>  * Ironically, the Google Pixels. They have superiour hardware security (full verified boot, strong hardware-backed encryption, Titan M and much more). Also, regular and fast firmware patches.
+11:59:35 <jftn[m]> _The ironical part - in my eyes - is that this makes Google devices the best option to DeGoogle (using GrapheneOS)._
+12:00:23 <jftn[m]> Please see the FAQ on GrapheneOS on supported devices: https://grapheneos.org/faq#supported-devices
+12:01:02 <noandno[m]> and why pixel 3 and 3a will not be able to support Graphene in a couple of years?
+12:02:39 <jftn[m]> GrapheneOS runs perfectly fine on the Pixel 3 and 3a - running myself on the latter device. However, GrapheneOS doesn't support devices after the EOL (end of life) because that is inherently insecure. The EOL status means that they won't get firmware updates anymore, leaving your device prone to massive vulnerabilities in the firmware/drivers.
+12:04:04 <noandno[m]> so how much time will you give 3 and 3a ?
+12:04:32 <jftn[m]> https://support.google.com/pixelphone/answer/4457705?hl=en
+12:05:12 <jftn[m]> The Pixel 3 and 3 XL are supported until October 2021, the 3a and 3a XL until May 2022.
+12:06:14 <noandno[m]> got it, so there might even be an end of Graphene OS to
+12:06:16 <noandno[m]> ?
+12:10:01 <jftn[m]> When it comes to device support, yes. GrapheneOS doesn't support these devices after they have been EOL'ed. It is likely that the Pixel 5 will be supported in due time, but the GrapheneOS project currently doesn't have the maintainers or funds. Please donate financially to the project if you are able to and/or offer help by maintaining a device, etc.
+12:14:09 <noandno[m]> what if you don't allow the update to happen ?
+12:14:37 <jftn[m]> <noandno[m] "what if you don't allow the upda"> Don't allow _which_ update to happen?
+12:14:39 <ayaen_t[m]> noandno: i dont understand
+12:15:00 <ayaen_t[m]> you mean disable auto update
+12:15:04 <ayaen_t[m]> ?
+12:15:06 <noandno[m]> yea
+12:15:48 <jftn[m]> It isn't that an update "disables" these devices. Using the devices beyond the supported lifespan - an older update - makes your device prone to vulnerabilities. In other words: it is insecure.
+12:16:16 <noandno[m]> got it
+12:17:32 <ayaen_t[m]> you can always disable auto update
+12:17:57 <ayaen_t[m]> then you will have to watch for releases and sideload an ota zip file
+12:18:36 <ayaen_t[m]> that is if you do not want to expoae your device to bugs that can be exploited
+12:18:42 <jftn[m]> I personally wouldn't recommend disabling the auto update.
+12:18:47 <ayaen_t[m]> not thay they will be ezploited
+12:19:14 <ayaen_t[m]> some use cases where minimal intwtnet connectoon is desired
+12:19:31 <ayaen_t[m]> internet
+12:20:02 <jftn[m]> Yeah, okay. But other than that, there is no reason to disable the auto update functionality. If stability is what you are after, just remain on the stable channel and don't set it to beta yourself.
+12:20:34 <ayaen_t[m]> yes
+12:21:29 <jftn[m]> And the GrapheneOS updater allows setting the Permitted Networks - eg, only auto updating over WiFi, not over a mobile connection.
+12:22:07 <jftn[m]> But there are likely still a small number of edge cases where even WiFi is limited or costly.
+12:22:18 <ayaen_t[m]> true
+12:22:44 <ayaen_t[m]> but otas are size optimized anyways
+12:22:57 <ayaen_t[m]> ota updates imean
+12:22:59 <jftn[m]> I believe the auto updates are even smaller
+12:24:07 <jftn[m]> Only containing the changes between the current and updated release
+12:26:17 <jftn[m]>  * Yes, the OTAs are size optimized :) They only contain the changes between releases, rather than downloading the full thing all over again.
+12:26:33 <ayaen_t[m]> yes
+12:27:30 <strcat> noandno[m]: if you're going to use a device for a long time just buy an iPhone
+12:27:53 <strcat> I don't understand your interest in GrapheneOS if you would consider using a device without proper security updates
+12:28:05 <strcat> which will inherently be the case for an EOL device regardless of which OS you choose to run on it
+12:29:16 <hypokeimenon[m]> Extending the life of phones that have no more software updates is more Lineage OSes niche.
+12:29:29 <ayaen_t[m]> whats tje number of profiles that can be used ?
+12:29:44 <strcat> 16 user profiles, each with their own work profile, atm
+12:30:18 <ayaen_t[m]> and doultiple profiles introduce substantial lag?
+12:30:19 <jftn[m]> strcat: Is it still true that iOS is superiour to stock Android / AOSP in terms of security? Eg, GrapheneOS the best choice, iOS secondary?
+12:30:26 <ayaen_t[m]> *multiple
+12:31:24 <hypokeimenon[m]> <jftn[m] "strcat: Is it still true that iO"> This has already been talked about on reddit.
+12:31:56 <jftn[m]> hypokeimenon🖤‍❤️🏳️‍🌈: Thank you! I will look it up. Apologies for missing that and being ignorant.
+12:31:58 <strcat[m]> we could probably increase the max user profiles to 32 (64 total) safely
+12:32:07 <strcat[m]>  * we could probably increase the max user profiles to 32 (64 total profiles) safely
+12:32:46 <hypokeimenon[m]> https://libredd.it/r/GrapheneOS/comments/bddq5u/comment/ekxifpa
+12:33:02 <ayaen_t[m]> strcat: do profiles introduce ovwthead beyond normal apps running in parallel?
+12:33:11 <ayaen_t[m]> overhead
+12:33:26 <ayaen_t[m]> memory wise i mean
+12:33:47 <strcat[m]> they have the overhead of running another profile, don't know what you're asking
+12:34:06 <hypokeimenon[m]> <jftn[m] "hypokeimenon🖤‍❤️🏳️‍🌈: Thank y"> No need to apologise. The information is scattered everywhere, so it helps to have people/community around who have seen stuff.
+12:34:11 <jftn[m]> hypokeimenon🖤‍❤️🏳️‍🌈: Sweet - thank you! I wasn't at all familiar with libreddit, nice to have an alternative over their own "unfortunate interface".
+12:34:39 <strcat[m]> we've moved away from using reddit, the redone site is completely horrible and they're pushing heavily towards using that
+12:34:47 <hypokeimenon[m]> I think it also has an onion link if you use Tor
+12:34:55 <strcat[m]> and the overall community on the site is quite bad
+12:35:01 <strcat[m]> and we aren't isolated from that
+12:35:18 <strcat[m]> there was little useful discussion on the subreddit and not enough people there to actually give any decent answers
+12:35:27 <strcat[m]> seems we'd have to actually pay someone to deal with it
+12:35:36 <strcat[m]> makes more sense to direct people to come here and get proper answers to their questions
+12:36:06 <jftn[m]> strcat: Yeah, I totally agree upon that. Reddit has become a rather toxic place over the past years. Both Reddit themselves and the majority of the subReddits and/or discussions taking place on it.
+12:36:08 <ayaen_t[m]> <strcat[m] "seems we'd have to actually pay "> didnt know such a thing was possible
+12:36:20 <strcat[m]> ??
+12:36:33 <ayaen_t[m]> nvm
+12:36:38 <strcat[m]> we're certainly not going to do that, just seems like the only way to deal with it being a cesspool of a site
+12:37:22 <ayaen_t[m]> ok
+12:37:40 <hypokeimenon[m]> jftn: strcat also started logging the room so ctrl+F on any topics here https://freenode.logbot.info/grapheneos/20210103 would be a good start
+12:37:51 <strcat[m]> it's logged on Matrix too
+12:38:05 <strcat[m]> and I didn't start logging it
+12:38:19 <hypokeimenon[m]> Don't actually ctrl+F just use the search lol
+12:38:47 <hypokeimenon[m]> <strcat[m] "and I didn't start logging it"> Ah okay, this is my mistake
+12:40:00 <jftn[m]> hypokeimenon🖤‍❤️🏳️‍🌈 & strcat: Thanks! Will "RTFM" and see if I can answer eventual subsequent questions myself, either through the Freenode logbot or on Matrix :)
+12:41:18 <anupritaisno1[m]> <strcat[m] "we've moved away from using redd"> Huh
+12:41:26 <anupritaisno1[m]> Why so?
+12:41:34 <anupritaisno1[m]> I liked the new site a lot
+12:42:05 <strcat[m]> very slow and lots of failed server requests
+12:42:13 <strcat[m]> just badly designed
+12:42:50 <strcat[m]> I'm not going to elaborate on this, it's off-topic
+12:44:47 <strcat[m]> we're not going to be trying to make much of Reddit as a platform for the GrapheneOS community
+12:45:11 <strcat[m]> it didn't work out, the subreddit is perpetually inundated with low quality posts and brigades from other subreddits
+12:45:30 <strcat[m]> and there aren't people there actively moderating or providing good answers to questions
+12:45:34 <strcat[m]> so people should just be directed here
+12:45:43 <hypokeimenon[m]> Do you plan to expand to a forum somewhere in the future?
+12:45:45 <strcat[m]> which is what's done by the bot
+12:46:03 <strcat[m]> hypokeimenon🖤‍❤️🏳️‍🌈: it doesn't make sense if the core community isn't going to be active there
+12:46:18 <strcat[m]> why have one?
+12:46:23 <hypokeimenon[m]> Makes sense
+12:47:05 <strcat[m]> it just gives people a bad experience if we have an official platform where they get low quality information and end up just talking to a bunch of other people uninvolved and uninformed about the project
+12:47:33 <strcat[m]> we provide a lot of official documentation on the site and that can continue to be expanded
+12:47:43 <strcat[m]> most questions are answered by reading the relevant section on the site
+12:47:58 <strcat[m]> having a forum would just make it harder to find those high quality answers with effort put into them
+12:48:31 <strcat[m]> it's good for quick answers from random people to be treated as more temporary and avoid having those come up at the top of searches
+12:48:43 <strcat[m]>  * it's good for quick answers from random people to be treated as more temporary and avoiding having those come up at the top of searches
+12:49:04 <strcat[m]> it has already become a serious problem for us that people have created low quality installation videos, etc. that they aren't updating or supporting
+12:49:19 <strcat[m]> results in people soft bricking their devices and increases the support load here
+12:49:47 <strcat[m]> best for everything to be here where there's a very active community, including developers, and things can be managed
+12:50:47 <ayaen_t[m]> true
+12:51:53 <ayaen_t[m]> dont know wether the difference kn activity between here and reddit is incidental or because of something being different
+12:52:47 <strcat[m]> the problem with Reddit was nearly non-existent activity from developers, knowledgeable people in the community, the core community that's active and familiar with the project, etc.
+12:52:57 <strcat[m]> while being inundated with low quality posts and comments
+12:53:04 <strcat[m]> and regularly raided from elsewhere
+12:53:07 <strcat[m]> it is not a useful platform
+12:53:20 <strcat[m]> beyond official announcements and dealing with moderating those, essentially
+12:53:33 <strcat[m]> who is going to volunteer to spend 3 hours moderating Reddit daily
+12:53:38 <strcat[m]> approve posts that are actually sensible
+12:53:44 <strcat[m]> then watch them and deal with problems
+12:53:54 <jftn[m]> take_a_deep_breath: As strcat has already indicated, there are a lot of arguments against Reddit. Right now, there is a bot active on the GrapheneOS subreddit that points users towards Matrix / IRC.
+12:54:19 <ctrl> hello, after installing grapheneos on my pixel 3, the battery started to drain fast and the phone seems hot itself. tried to restore factory settings but no luck. any ideas what to do?
+12:54:32 <ctrl> or its phones problem not related to os
+12:54:38 <strcat[m]> doubt that's related to GrapheneOS or the phone hardware
+12:54:48 <strcat[m]> probably an app you've installed
+12:55:02 <strcat[m]> and are using or it's running a foreground service / you gave it a battery optimization exception
+12:55:10 <strcat[m]> or something wrong with your carrier
+12:55:11 <ctrl> i did factory reset
+12:55:16 <strcat[m]> a hardware or OS problem is quite unlikely
+12:55:22 <ctrl> no sim inserted
+12:55:26 <strcat[m]> ctrl: and did you install the same apps, etc. again?
+12:55:37 <ctrl> havent installed anything yet
+12:56:10 <jftn[m]> ctrl: So just a vanilla GrapheneOS install without any further third party apps installed? Did you follow the installation guide on the official website?
+12:59:41 <ctrl> update: i did factory reset and it seems my phone got ok. will try to fully charge. thanks anyway
+13:02:31 <ctrl> one nore thing. to compile from source, how long it may take to compile on i7, 32gb ram pc roughly?
+13:03:15 <strcat[m]> ctrl:  https://grapheneos.org/build covers building
+13:03:32 <strcat[m]> can't give an estimate on how long it will take to build based on information that vague
+13:04:44 <ctrl> someone did a successfull build? how long does it was?
+13:06:15 <jftn[m]> ctrl: What strcat means is that an i7 and 32GB is too vague to even remotely make a rough estimation. There are eleven generations i7 available (AFAIK) and tons of memory configs.
+13:07:07 <strcat[m]> ctrl: lots of people are successfully building it, they can't answer how long it will take to build on unknown specs
+13:07:21 <strcat[m]> recommend reading the build guide
+13:11:14 <ctrl> i ment to say from build stories roughly? say back in 2004 i was compiling freebsd from source 3 days lol
+13:12:40 <strcat> it's not clear what you're asking
+13:12:47 <strcat> the build time depends on the hardware
+13:13:17 <strcat> so, a number for you without any context: 30 minutes
+13:13:24 <strcat> another: 1 hour
+13:13:26 <strcat> another: 4 hours
+13:13:28 <strcat> another: 8 hours
+13:13:55 <strcat> you aren't saying what generation of CPU it is, how many cores it has, etc.
+13:13:59 <noandno[m]> <strcat "noandno: if you're going to use "> so iPhone is a good choice for security if i am looking for something long term?
+13:14:12 <strcat> all of those numbers are possible on an i7 (which is a very vague description of a CPU)
+13:14:18 <strcat> noandno[m]: yes, just get a current generation iPhone
+13:14:22 <strcat> and you can use that for years
+13:14:28 <strcat> don't get one of these devices and use it past EOL
+13:14:30 <strcat> that's a really bad idea
+13:14:45 <strcat> your ONLY secure option is an iPhone if you're going to use it beyond 3-4 years
+13:14:53 <ctrl> got it
+13:15:03 <strcat> you don't have the option to be picky about it beyond which iPhone variant you want
+13:16:13 <noandno[m]> what will be the cheapest i could get of the currnet generation ?
+13:16:33 <noandno[m]> EOL stand for End-of-life product right ?
+13:16:45 <strcat> https://grapheneos.org/faq#recommended-devices for GrapheneOS - if you're talking about iPhones it's offtopic for this channel
+13:17:21 <strcat> if you want a device that's secure and supported with full security updates for more than 3-4 years, your only option is an iPhone for the foreseeable future
+13:17:37 <strcat> and we don't provide information / answers about iOS / iPhones here
+13:17:49 <noandno[m]> okey
+13:17:51 <noandno[m]> thanks
+13:42:23 <anupritaisno1[m]> <jftn[m] "ctrl: What strcat means is that "> Assuming an 11th gen i7
+13:42:30 <anupritaisno1[m]> About 1 hour
+13:42:44 <anupritaisno1[m]> Assuming CPU bottleneck
+13:42:49 <strcat> anupritaisno1[m]: nah because # of cores, etc. varies
+13:42:56 <strcat> so no
+13:43:00 <strcat> varies substantially
+13:53:46 <aeonius> Just have to say battery life is insane, for real on GrapheneOS! Off the charger 17 hours ago, about 30 minutes of screen on time, 95% left :O
+13:53:56 <aeonius> I am very very impressed!
+14:15:16 <User78> So with auditor is the pairing between the devices an ongoing thing or is it just an initial setup?
+14:17:56 <User78> And any recommendations for a QR reader app for windows?
+14:18:18 <uhzykydori[m]> offtopic
+14:18:50 <User78> It's for pairing auditor on Graphene lol
+14:20:25 <strcat> User78: don't know what you would do with a QR code reader on Windows for Auditor
+14:20:44 <strcat> User78: recommend reading https://attestation.app/tutorial and https://attestation.app/about
+14:20:49 <User78> Can you not pair auditor to a PC?
+14:20:55 <strcat> the initial verification is the pairing, and then it performs stronger verification after that
+14:21:03 <User78> I have read all of that and am unclear
+14:21:03 <strcat> User78: there isn't a Windows version of the Auditor app
+14:21:25 <strcat> you can either use Auditor on any Android compatible device (Android 7+ atm, 8+ soon)
+14:21:34 <strcat> and/or the remote attestation service
+14:21:42 <strcat> there is no use for a QR code reader
+14:21:51 <User78> Yes i am trying to use the remote attestation
+14:22:26 <User78> Logged in on windows, scanned the code, now it says scan the code on the phone
+14:25:22 <strcat> don't know what you mean
+14:25:28 <strcat> follow the tutorial: https://attestation.app/tutorial
+14:25:35 <strcat> there is no reason to scan anything on Windows
+14:25:50 <User78> Think I just missed the enable step and got it this time, but it doesn't seem to provide any notification it's enabled
+14:25:55 <strcat> follow the 'Scheduled remote verification' section
+14:26:16 <strcat> User78: if it didn't work it would have reported an error
+14:26:24 <strcat> and you can refresh the page on the site
+14:26:45 <User78> Ahh okay yes I have a readout now for the verified device
+14:26:57 <strcat> it provides a notification on the device every time it verifies too
+14:27:02 <strcat> after the initial pairing
+14:27:17 <User78> Great!
+14:27:32 <strcat> set an alert email on the site and it emails you if it fails to report in
+14:27:37 <strcat> with a valid attestation
+14:28:36 <strcat> User78: it should have made a low priority notification already
+14:28:39 <strcat> check notification tray
+14:28:46 <strcat> it just makes it super low priority to avoid bothering you
+14:28:50 <strcat> won't show up as a notification icon
+14:29:00 <User78> Yeah it's there under silent
+14:29:22 <strcat> yeah so that lets you know if it's failing to report in or not
+14:29:33 <strcat> but the point of it is to only trust the Auditor site (the site in this case) about the results
+14:29:47 <User78> Right!
+14:29:49 <User78> So if it failed to verify what would you do, backup and re-flash?
+14:29:53 <strcat> setting up an alert email lets you just ignore it until something goes wrong
+14:30:00 <strcat> User78: well you could use a local Auditor verification
+14:30:06 <strcat> to get information on why it's failing
+14:30:26 <strcat>  ideally you figure out why it's failing
+14:30:31 <User78> Okay
+14:30:40 <strcat> usually it'd just be something like a network issue stopping it from reporting in
+14:30:56 <strcat> we stopped enforcing that time on the device is synced for now
+14:30:58 <strcat> we may in the future
+14:31:36 <User78> Makes sense. I can't seem to find that email notification you mention on the site
+14:34:37 <User78> Oop got it. Still groggy this morning hah
+14:34:40 <strcat> there's a configuration section underneath the subscribe qr code
+14:34:53 <User78> Thank you :)
+14:35:27 <strcat> the web UI needs work
+14:35:32 <strcat> need developers to help with that
+14:35:36 <strcat> among many other things
+14:46:52 <bubber> Is there still metadata when taking pics with grapheneos camera?
+14:54:26 <strcat[m]> you can look at the EXIF metadata
+14:57:56 <ctrl> is this a verified official grapheneos phone reseller? https://shop.ncryptcellular.com.au/products/graphene-os-smartphone?variant=13
+15:00:42 <strcat> GrapheneOS project itself doesn't sell phones atm
+15:01:05 <strcat> Ncryptsecurity is a company that has supported GrapheneOS for a long time
+15:01:52 <strcat> https://grapheneos.org/faq#company
+15:03:29 <ctrl> but their phones still shows os warning on startup and google logo?
+15:03:56 <elchupacabra420[> And how do they justify that amount?
+15:04:20 <elchupacabra420[> Should i go and sell some flashed pixels on ebay too?
+15:07:23 <strcat[m]> ctrl: no difference about that
+15:08:28 <hasnoname[m]> Can we have a confirmation dialog when you press user account end session?
+15:09:20 <hasnoname[m]> Or that it need to be unlocked before removing the user account.?
+15:10:56 <strcat[m]> we use the standard AOSP UI for it
+15:11:15 <strcat[m]> I don't really want to add a confirmation dialog
+15:11:26 <strcat[m]> hasnoname:  definitely don't want to require unlocking
+15:11:34 <strcat[m]> the whole point is it can be done quickly/easily like that
+15:11:43 <anupritaisno1[m]> <elchupacabra420[ "Should i go and sell some flashe"> Yeah go ahead
+15:11:47 <strcat[m]> read https://grapheneos.org/faq#encryption
+15:12:10 <anupritaisno1[m]> Helps us a lot
+15:12:11 <anupritaisno1[m]> See if you can send us back some shekel tho
+15:13:50 <Kieran> Hello, I tried to install GrapheneOS on my Pixel 4a but was unsuccessful. I was following a tutorial downloaded all the correct files and unlocked the bootloader.etc but when i clicked the "flash all" file it opened the cmd prompt, stayed black for a couple seconds, red text flashes up it shuts down. How do I get past this issue? I've probably made
+15:13:50 <Kieran> a mistake, for now i've locked the bootloader in the mean time while I try to figure this out. I'm not very tech savvy so i'd appreciate any help, Thanks.
+15:15:23 <anupritaisno1[m]> Kieran: pm me
+15:15:50 <strcat[m]> Kieran: the guide never says to click any flash-all script - sounds like you are following an unofficial guide
+15:16:04 <strcat[m]> Kieran: you should only be following https://grapheneos.org/install and *please* ignore unofficial guides
+15:16:26 <anupritaisno1[m]> strcat: I'll take a look dw
+15:16:39 <strcat[m]> it never says to up any directory and click any executable script
+15:16:44 <ctrl> Kieran, you have to install adb tools. https://developer.android.com/studio/releases/platform-tools . then move the whole os directory to platform-tools directory, edit flash_all.bat file and replace fastboot with fastboot.exe
+15:16:44 <anupritaisno1[m]> Ran make clean rn and waiting on a build to finish anyway rn so not much to do
+15:16:46 <strcat[m]>  * it never says to open up any directory and click any executable script
+15:16:50 <anupritaisno1[m]> * Ran make clean rn and waiting on a build to finish anyway so not much to do
+15:16:53 <strcat[m]> ctrl: no
+15:17:03 <strcat[m]> the official guide is at https://grapheneos.org/install
+15:17:10 <strcat[m]> please don't give misguided unofficial instructions
+15:17:23 <strcat[m]> there is a reason for it doing it the way that it does
+15:17:43 <anupritaisno1[m]> Kieran: just pm me I only have ~30 min anyway
+15:17:44 <strcat[m]> it's not permitted to post unofficial guides or give unofficial ways of doing it here
+15:17:55 <ctrl> got it
+15:17:56 <strcat[m]> we help people go through the official approach
+15:18:13 <Kieran> okay thanks, i dont have an account so i cant pm
+15:18:33 <anupritaisno1[m]> Oh hell
+15:18:45 <ctrl> but for people with less it skills is going to be hard by reading that official guide
+15:18:46 <anupritaisno1[m]> So okay first of all what have you downloaded?
+15:18:53 <strcat[m]> Kieran: start at the top of the official guide at https://grapheneos.org/install and go through it from top to bottom and ask for help where you need help or are confused
+15:19:10 <strcat[m]> ctrl: you're making it harder by giving unsupported, broken instructions
+15:19:18 <strcat[m]> we do not want people bricking their device
+15:19:55 <Kieran> k, i'll try again thanks, how long are you guys available?
+15:20:07 <strcat[m]> following unofficial guides / videos is how you end up screwing up your OS installation and soft bricking (or worse) a device
+15:20:33 <Kieran> what is soft bricking?
+15:20:55 <strcat[m]> https://grapheneos.org/install covers everything you need to know
+15:21:02 <anupritaisno1[m]> Kieran open a powershell window
+15:21:07 <anupritaisno1[m]> Just do it
+15:21:17 <anupritaisno1[m]> And cd to some working directory
+15:21:23 <Kieran> okay
+15:21:29 <strcat[m]> it starts in one
+15:21:31 <strcat[m]> no reason to run cd
+15:21:41 <strcat[m]> the official guide has every necessary command
+15:21:46 <strcat[m]> no changes needed
+15:21:57 <hasnoname[m]> <strcat[m] "I don't really want to add a con"> I get it. Just trying get the session not deleted by my kids when it's locked. Trying to find a best solution to get around that
+15:21:57 <strcat[m]> it sounds like you already unlocked using it and then deviated from it
+15:22:10 <strcat[m]> hasnoname: what if they reboot the phone instead?
+15:22:20 <strcat[m]> hasnoname: or throw it out a window
+15:22:21 <ctrl> i remember in a school by opening a command window and putting command 'tree' made us feel like a real hacker lol
+15:22:27 <strcat[m]> teach them not to mess with your phone
+15:22:55 <strcat[m]>  * teach them to not mess with your phone
+15:23:19 <anupritaisno1[m]> Maybe don't have kids just saying
+15:23:34 <hasnoname[m]> <strcat[m] "teach them not to mess with your"> Well that's difficult with 1/2 year olds
+15:23:35 <strcat[m]> rebooting ends all your login sessions
+15:23:50 <hasnoname[m]> <anupritaisno1[m] "Maybe don't have kids just sayin"> Too late can't take it back
+15:24:08 <strcat[m]> I think a 2 year old can figure out how to reboot
+15:24:37 <strcat[m]> we're not going to change the UI because your kids have figured out a way of annoying you
+15:24:45 <anupritaisno1[m]> <hasnoname[m] "Too late can't take it back "> Just build a particle accelerator
+15:24:48 <anupritaisno1[m]> It's not hard dw
+15:25:02 <strcat[m]> someone able to end the session can also reboot
+15:25:04 <strcat[m]> or break the phone
+15:25:05 <strcat[m]> or hide it
+15:25:21 <anupritaisno1[m]> Sorry didn't notice this is the main chat
+15:25:25 <strcat[m]> don't see a reason to prevent ending the session on the lockscreen and it would reduce security to not have that option
+15:26:05 <anupritaisno1[m]> <strcat[m] "I think a 2 year old can figure "> Nah too late
+15:26:20 <anupritaisno1[m]> Think when I was 1 I could kind of use a mouse
+15:26:49 <strcat[m]> anyway the solution is teaching them they shouldn't be screwing up your phone
+15:27:03 <strcat[m]> be glad they are ending session instead of dropping it in a toilet
+15:27:23 <anupritaisno1[m]> I think it might survive the toilet
+15:27:39 <strcat[m]> depends which phone model
+15:28:19 <anupritaisno1[m]> Thought all our devices are water resistant to an extent
+15:28:30 <strcat[m]> sure but 3a/4a are not very
+15:28:39 <strcat[m]> they aren't fully water proofed
+15:28:44 <anupritaisno1[m]> How so
+15:29:02 <strcat[m]> they skip some aspects and then skip trying to get an IP rating
+15:29:08 <strcat[m]> look at the teardowns
+15:29:25 <strcat[m]> not something that really makes sense to discuss in depth here
+15:30:02 <anupritaisno1[m]> strcat: btw you've been getting these weird wifi drops on December release?
+15:30:07 <strcat[m]> no
+15:30:31 <anupritaisno1[m]> Might need to check my router then
+15:38:43 <shardiame[m]> Are there substantial risks to enabling multiple accounts on a GrapheneOS device?
+15:38:43 <shardiame[m]> For example, if the Guest account is enabled, does that provide an avenue to attack unencrypted Owner data if the phone is lost or seized?
+15:38:44 <shardiame[m]> How strong is the isolation between users?
+15:39:47 <strcat[m]> the guest account isn't very useful
+15:39:54 <strcat[m]> don't recommend using it
+15:40:15 <strcat[m]> shardiame: there aren't risks to reasonable usage of user profiles as isolated workspaces
+15:40:21 <strcat[m]> it's not clear what you're asking
+15:40:53 <strcat[m]> shardiame: recommend reading https://grapheneos.org/faq#encryption as a starting point to understand how encryption works particularly in relation to user profiles
+15:41:22 <strcat[m]> also, after booting the device, logging into the owner account is needed to make the device usable beyond a bare minimum like emergency calls
+15:41:33 <strcat[m]> you can't login to other profiles before that
+15:41:42 <strcat[m]> all covered there
+16:19:03 <Kieran> strcat[m] anupritaisno1[m]  Thanks guys I managed to sort it out
+17:11:16 <rheaalleen[m]> Notifications from various messengers are wonky, not background restricted but still wont show when messages are received, only when they are opened. Any ideas?
+17:11:55 <ayaen_t[m]> rheaalleen:  which messengers are these ?
+17:13:06 <rheaalleen[m]> Threema is the offender, signal and telegram are switching between working and not
+17:14:06 <ayaen_t[m]> and you installed these from?
+17:14:10 <strcat[m]> rheaalleen: turn off battery saver mode
+17:14:36 <rheaalleen[m]> Threema from apk
+17:15:09 <strcat[m]> you can't have battery saver on
+17:15:11 <rheaalleen[m]> <strcat[m] "rheaalleen: turn off battery sav"> They have permission to runbin background with no battery saving enabled
+17:15:26 <strcat[m]> I'm not talking about the per-app battery optimization
+17:15:46 <ayaen_t[m]> he meant the one available on the quick tiles
+17:16:13 <ayaen_t[m]> in case you have enabled battery saving not battery optimization
+17:18:47 <ayaen_t[m]> anyway if you installed threeema apk then it is maybe meant to work with the play services .... just speculating
+17:19:52 <rheaalleen[m]> Also disabled, thing is it was working
+17:20:48 <ayaen_t[m]> and then it just went wonky ?
+17:22:43 <ayaen_t[m]> something should have changed somewhere . in case you think the app notification behaviour changed after sometime .
+17:23:17 <ayaen_t[m]> otherwise notifications were never working in the first place . is that the case ?
+17:26:31 <jandroid[m]> Is there a QR code reader in the default installation or do I need to install an app for that?
+17:26:51 <jftn[m]> It is a bit offtopic, but if Google Services aren't available, Threema polls regularly. They have done it in a manner that is battery heavy.
+17:27:07 <jftn[m]> jandroid: You need an app for that. Check F-Droid.
+17:27:28 <rheaalleen[m]> <ayaen_t[m] "otherwise notifications were nev"> Thats what i meant, they were working and i didnt change settings
+17:29:17 <strcat[m]> sounds like either network is broken or settings were changed though
+17:29:20 <strcat[m]> such as battery saver being on
+17:42:41 <ayaen_t[m]> rheaalleen you could reset app preferences
+17:43:00 <ayaen_t[m]> maybe and check once how they behave
+17:43:31 <ayaen_t[m]> ofcourse then you will have to restore your app specific settings manually
+17:43:35 <rheaalleen[m]> Hmm, maybe something broke when i tried to add the accounts to Account menu
+17:43:47 <ayaen_t[m]> possible
+17:43:48 <rheaalleen[m]> <ayaen_t[m] "rheaalleen you could reset app p"> Where?
+17:44:15 <ayaen_t[m]> just search reset in settings app
+17:44:51 <ayaen_t[m]> Reset options
+17:45:27 <strcat[m]> rheaalleen: what do you mean adding them there
+17:45:35 <strcat[m]> I suggest just reinstalling the apps if you did something weird the apps didn't like
+17:45:43 <strcat[m]> uninstall and reinstall
+17:47:06 <heyyyaa> Hi,Its been over 2 years since i installed this on my Pixel 3a but cant seem to get it to work with my Pixel4a.Ive followed the install page to the best as i can and so far have stand alone tools unzipped with the OS image unzipped in this folder.Ive plugged my device in, powered on with vol button down, in the fastboot mode (says locked), PC is
+17:47:07 <heyyyaa> picking up my device but if cmd or powershell is opened in the stand alone folder my device cannot be found.Can anyone help?Thanks
+17:48:06 <rheaalleen[m]> <strcat[m] "rheaalleen: what do you mean add"> in the accounts tab under settings, if i click threema a window just blinks up for a sec and nothing happens, only telegram worked
+17:48:12 <strcat[m]> heyyyaa: that's not what the guide says to do
+17:48:17 <strcat[m]> heyyyaa: delete that directory
+17:48:26 <strcat[m]> start over, following https://grapheneos.org/install instead of an unofficial guide
+17:48:42 <strcat[m]> it's clear you're following an unofficial guide
+17:48:48 <strcat[m]> which is the problem
+17:49:17 <heyyyaa> i followed the offical guide and got stuck
+17:49:19 <strcat[m]> heyyyaa: start at the top of the page there - it says to open a single PowerShell instance (don't open it in a directory, open it via the start menu and use the default)
+17:49:28 <strcat[m]> heyyyaa: you don't download or extract anything yourself, you use the commands there
+17:49:35 <strcat[m]> heyyyaa:  only official guide is supported here
+17:49:46 <strcat[m]> delete  the directory you're talking about and start over
+17:50:04 <strcat[m]> if you get stuck or have a question about it, ask here
+17:50:07 <strcat[m]> but follow the official guide only
+17:50:14 <strcat[m]> don't run any command or do anything it doesn't say to do
+17:50:24 <strcat[m]> don't open another PowerShell window or use cmd.exe
+17:50:29 <heyyyaa> ok ill restart. the path side of things, just follow the guide and everything will fall into place?
+17:50:40 <strcat[m]> follow the guide from top to bottom
+17:50:45 <strcat[m]> run every command it says to run on Windows
+17:50:52 <strcat[m]> don't skip any, only change the device name (nothing else)
+17:51:05 <heyyyaa> i tried the fastboot --version command in powershell as per offical guide and the --version part was greyed out
+17:51:20 <strcat[m]> did it give the expected result?
+17:51:22 <strcat[m]> that's what matters
+17:51:31 <heyyyaa> nothing
+17:51:43 <strcat[m]> ok so you did something wrong
+17:51:50 <strcat[m]> open up PowerShell (via start menu) and start following it
+17:51:53 <strcat[m]> start with obtaining fastboot
+17:52:10 <heyyyaa> the software?
+17:52:10 <strcat[m]> don't download or extract anything your own way
+17:52:14 <strcat[m]> only use the commands it says
+17:52:18 <strcat[m]> heyyyaa: follow the install guide
+17:52:32 <strcat[m]> https://grapheneos.org/install#prerequisites
+17:52:36 <strcat[m]> just start at the top again
+17:52:42 <strcat[m]> if you get stuck ask questions here
+17:52:57 <strcat[m]> > These instructions use command-line tools. On Windows, use PowerShell rather than the legacy Command Prompt. Open up a single terminal and use it for the whole installation process.
+17:52:58 <strcat[m]> that's where to start
+17:52:59 <strcat[m]> top to bottom
+17:53:28 <strcat[m]> so 1st step is running 3 commands to obtain platform-tools, another command to set up path and then `fastboot --version`
+17:53:37 <heyyyaa> curl.exe -O https://dl.google.com/android/repository/platform-tools_r30.0.5-windows.zip(Get-FileHash platform-tools_r30.0.5-windows.zip).hash -eq "549ba2bdc31f335eb8a504f005f77606a479cc216d6b64a3e8b64c780003661f"tar xvf platform-tools_r30.0.5-windows.zip
+17:53:45 <heyyyaa> just done that
+17:53:58 <heyyyaa> Next, add the tools to your PATH in the current shell so they can be used without referencing them by file path, enabling usage by the flashing script.On Linux and macOS:export PATH="$PWD/platform-tools:$PATH"On Windows:$env:Path = "$pwd\platform-tools;$env:Path"This only changes PATH for the current shell and will need to be done again if you open
+17:53:59 <heyyyaa> a new terminal.
+17:54:10 <heyyyaa> will that fall into place itself?
+17:54:19 <heyyyaa> or do i need to modify the path?
+17:54:23 <strcat[m]> just run the command it says
+17:54:37 <strcat[m]> `$env:Path = "$pwd\platform-tools;$env:Path"`
+17:54:46 <strcat[m]> then run `fastboot --version`
+17:54:57 <heyyyaa> its still greyed out
+17:55:05 <heyyyaa> followed guide to the word
+17:55:05 <strcat[m]> don't know what you mean by that
+17:55:09 <strcat[m]> run the path command it says
+17:55:13 <strcat[m]> then run `fastboot --version`
+17:55:17 <strcat[m]> it doesn't matter what color it is
+17:55:30 <heyyyaa> 'fastboot' is in yellow '--version' is greyed out on powershell
+17:55:37 <heyyyaa> brings no reults
+17:56:18 <strcat[m]> what results did you get from the commands you ran earlier?
+17:57:01 <strcat[m]> heyyyaa: think you have to start over again
+17:57:06 <heyyyaa> it downloaded the package,  then i ran the 2nd path command and it just went to the next command line with nothing happening
+17:57:23 <strcat[m]> clear it, close the terminal and just start over
+17:57:34 <strcat[m]> https://grapheneos.org/install#standalone-platform-tools
+17:57:41 <strcat[m]> it has you run 3 commands to download, verify and extract it
+17:57:55 <strcat[m]> make sure to run each of those and pay attention to the output / any errors you get
+17:58:24 <heyyyaa> it only downloads the package. the other 2 commands do nothing
+17:58:34 <heyyyaa> whats the setting up fastboot in path?
+17:58:34 <strcat[m]> enter them
+17:58:44 <strcat[m]> `tar xvf platform-tools_r30.0.5-windows.zip`
+17:58:49 <strcat[m]> did you run that command?
+17:59:34 <heyyyaa> yes then
+17:59:35 <heyyyaa> PS C:\WINDOWS\system32> $env:Path = "$pwd\platform-tools;$env:Path"PS C:\WINDOWS\system32> fastboot --versionPS C:\WINDOWS\system32>
+18:00:06 <strcat[m]> it doesn't look like you spawned a regular PowerShell, for 1 thing
+18:00:13 <heyyyaa> nothing happens
+18:00:14 <strcat[m]> you should really clear out the directory you created in there
+18:00:35 <strcat[m]> clear out the directory you made in system32, you weren't supposed to spawn an administrator powershell
+18:00:40 <strcat[m]> start over
+18:00:47 <heyyyaa> i opened a single powershell (admin) from right clicking the win logo
+18:00:52 <strcat[m]> no
+18:00:58 <strcat[m]> clear out the directory you made there
+18:01:03 <heyyyaa> how?
+18:01:04 <strcat[m]> start over with a regular PowerShell
+18:01:37 <strcat[m]> heyyyaa: exit the window you opened
+18:01:53 <strcat[m]> press the windows key, open PowerShell (not the special admin one)
+18:02:07 <heyyyaa> yes done that. same results as before
+18:02:13 <strcat[m]> no
+18:02:14 <strcat[m]> start over then
+18:02:22 <strcat[m]> run `curl.exe -O https://dl.google.com/android/repository/platform-tools_r30.0.5-windows.zip`
+18:02:36 <strcat[m]> then run the next command (the verify one)
+18:02:43 <strcat[m]> then run the next one (`tar xvf`)
+18:02:52 <strcat[m]> it's 3 steps
+18:03:11 <strcat[m]> you should get output from the `tar xvf` command showing that it's extracting
+18:03:18 <jftn[m]> heyyyaa: strcat meant that you are likely running PowerShell as an administrator. Don't. Just as your regular user.
+18:03:20 <strcat[m]> if you don't, don't continue
+18:03:30 <heyyyaa> im doing that mate. im following the install guide from top to bottom. copy and pasting the commands it says for windows
+18:03:45 <strcat[m]> you're not
+18:03:59 <strcat[m]> start over and don't do anything I don't say to do
+18:04:03 <jftn[m]> heyyyaa: The `PS C:\WINDOWS\system32` means that you are running it as admin. That isn't what the guide says.
+18:04:07 <strcat[m]> open PowerShell - regular, not admin
+18:04:17 <strcat[m]> run `curl.exe -O https://dl.google.com/android/repository/platform-tools_r30.0.5-windows.zip`
+18:04:28 <strcat[m]> next
+18:04:31 <strcat[m]> run `(Get-FileHash platform-tools_r30.0.5-windows.zip).hash -eq "549ba2bdc31f335eb8a504f005f77606a479cc216d6b64a3e8b64c780003661f"`
+18:04:34 <strcat[m]> next
+18:04:46 <strcat[m]> run `tar xvf platform-tools_r30.0.5-windows.zip`
+18:04:52 <strcat[m]> this will give output showing all the extracted files
+18:05:00 <strcat[m]> if it doesn't, something went wrong already, don't continue past there
+18:05:18 <strcat[m]> then you run `$env:Path = "$pwd\platform-tools;$env:Path"` which doesn't give output if you did it right
+18:05:30 <strcat[m]> then `fastboot --version` will work
+18:05:46 <heyyyaa> 1st command in powershell curl.exe -O https://dl.google.com/android/repository/platform-tools_r30.0.5-windows.zip(Get-FileHash platform-tools_r30.0.5-windows.zip).hash -eq "549ba2bdc31f335eb8a504f005f77606a479cc216d6b64a3e8b64c780003661f"tar xvf platform-tools_r30.0.5-windows.zip2nd command$env:Path = "$pwd\platform-tools;$env:Path"This is what the
+18:05:47 <heyyyaa> install guide says.i will try your commands now
+18:06:00 <strcat[m]> yes, and that's what I said here
+18:06:15 <strcat[m]> I think you're misinterpreting those 3 commands as 1 command you need to enter
+18:06:21 <strcat[m]> could make that clearer in the guide in the future
+18:06:34 <strcat[m]> each line is a new command
+18:06:56 <strcat[m]> think you'll have no issues now
+18:07:23 <strcat[m]> g2g for now other people can help if you have any other issues
+18:07:52 <heyyyaa> thanks
+18:07:55 <heyyyaa> appreciate it
+18:08:54 <heyyyaa> 2nd command doesnt work still :/
+18:09:09 <ayaen_t[m]> which one?
+18:09:59 <ayaen_t[m]> ok i for sure cant help you as i am neither using windows nor have any experience with it so nevermind
+18:10:24 <strcat[m]> heyyyaa: read what I said above again
+18:10:47 <heyyyaa> sorted thanks
+18:10:49 <strcat[m]> heyyyaa: you're misinterpreting 3 separate commands you're meant to run as 1
+18:11:16 <strcat[m]> ideally we could just tell people to install some visual studio package or something with these things
+18:11:17 <strcat[m]> maybe there is one
+18:11:43 <heyyyaa> its ok, sorted now.
+18:11:53 <heyyyaa> thanks very much
+18:12:12 <strcat[m]> np
+18:13:42 <strcat[m]> we may split the guide into 3 separate ones (per OS) to make it easier to follow, and maybe we could just have people install Android Studio on Windows if it actually sets up Path for them (unsure if it actually does)
+18:14:10 <strcat[m]> Microsoft might have their own builds of that stuff for Visual Studio's Android support
+18:14:22 <strcat[m]> would be better if we used that if possible
+18:14:53 <ayaen_t[m]> android studio might be an overkill
+18:15:04 <ayaen_t[m]> its big
+18:15:08 <strcat[m]> sure
+18:15:17 <strcat[m]> but it would be easier if it sets up path for people
+18:15:28 <strcat[m]> the main obstacle people have is getting fastboot
+18:15:40 <ayaen_t[m]> dunno maybe a acript ?
+18:15:49 <strcat[m]> without sketchy / broken third party guides
+18:15:52 <ayaen_t[m]> script
+18:16:03 <strcat[m]> take_a_deep_breath: don't want to have people run a script or command that permanently alters their system
+18:16:13 <strcat[m]> such as changing global path with a hard-wired directory for platform-tools
+18:16:16 <strcat[m]> really not something we should do
+18:16:26 <ayaen_t[m]> kay.
+18:16:30 <strcat[m]> also if we're going to make an actual installer... it should be WebUSB
+18:16:41 <ayaen_t[m]> true
+18:16:44 <strcat[m]> if people are just trusting our guide or commands on the site
+18:16:53 <strcat[m]> it makes more sense for them to just use a WebUSB installer
+18:17:07 <strcat[m]> not going to have a crappy CLI installer made that doesn't really make things easier
+18:17:19 <strcat[m]> especially since it makes it harder to debug the problems people hit like USB issues
+18:17:40 <strcat[m]> cya later
+18:18:26 * nscnt waves
+18:19:58 <heyyyaa> sorry but as per my original post, my device still isnt being found. just says <waiting for device> its an unlocked pixel 4a
+18:20:49 <nscnt> heyyyaa: In Windows update, there might be "View optional updates" now
+18:21:05 <nscnt> heyyyaa: Download and install the Driver updates
+18:33:02 <uhzykydori[m]> doing a installation guide with pictures might help some people 🤷 some are more visual than textual
+18:34:34 <duck33> i always asked if some program like Ububtu touch installer is possible ( i wish i can code and do it alone )
+18:36:11 <ayaen_t[m]> duck33: there are plans on having an installer using WebUSB.
+18:36:22 <ayaen_t[m]> just plans though
+18:36:36 <ayaen_t[m]> will take time to materialize
+18:36:56 <duck33> i will go google webusb
+18:37:32 <ayaen_t[m]> sure
+18:38:10 <ayaen_t[m]> uhzykydori: true. for many it might be their first time using command line
+18:41:07 <nscnt> strcat made an amazing video to show how to flash it
+18:41:45 <nscnt> I laughed my ass off, because it was just him pasting in the commands. That's it, because... that's it
+18:42:14 <ayaen_t[m]> where is it?
+18:42:45 <nscnt> I would need to search for it, but I'm not sure if he would want it
+18:43:20 <ayaen_t[m]> yea . i figured so.
+18:43:55 <ayaen_t[m]> i mean otherwise hed be handing the url for it half the time.instead of typing ....
+18:44:45 <nscnt> It was more of a joke
+18:44:52 <nscnt> I guess
+18:46:31 <jftn[m]> Just a random brainfart, would there be disadvantages on using the `/e/ Easy Installer`? It would need some customization - ofcourse - with relocking the bootloader, but it is something I would feel comfortable taking a poke at.
+18:49:09 <Liakdeuser[m]> Yes, risking softbricking your phone but using unofficial, install script, executable blindly
+18:50:27 <nscnt> I think he meant if it's being forked for GrapheneOS
+18:50:42 <jftn[m]> That is certainly a valid argument. However, not exactly what I meant. I meant, I could give a try to fork it for GrapheneOS.
+18:50:55 <Liakdeuser[m]> Still the same response
+18:50:57 <nscnt> jftn[m]: If you're willing to put in such work, better do it for a WebUSB based installer
+18:51:52 <jftn[m]> nscnt: Not familiar with that tech yet - but I certainly will take a peek at it.
+18:54:43 <jftn[m]> Lets move this to the offtopic channel for a bit
+19:19:03 <DefenderOfGraphe> Hi
+19:19:48 <DefenderOfGraphe> Can Daniel just sue Cooperhead website for unathorized use of its code
+19:20:14 <DefenderOfGraphe> "Hey our code is open source but that doesnt mean You(cooperhead) can use it"
+19:23:15 <anupritaisno1[m]> That's not what is going on
+19:25:28 <nscnt> It's the other way around. Copperhead sued GrapheneOS and claims copyright
+19:27:41 <DefenderOfGraphe> Yeah I know
+19:27:56 <DefenderOfGraphe> Im saying Daniel should/could/can claim CopperHead Website is using its code unathorized
+19:28:00 <DefenderOfGraphe> unauthorized
+19:28:19 <DefenderOfGraphe> Since daniel coded the site
+19:28:23 <DefenderOfGraphe> and coded graphene os
+19:28:31 <DefenderOfGraphe> He should have exclusive rights over it
+19:28:47 <DefenderOfGraphe> and therefore while the code is open source, other people cant claim it as their own, as copperhead website is doing
+19:28:53 <DefenderOfGraphe> Just trying to give daniel an edge here =)
+19:30:58 <nscnt> Oh, you're the troll again
+19:31:03 <nscnt> Just stop it
+19:31:57 <DefenderOfGraphe> Im not trolling at all
+19:32:10 <DefenderOfGraphe> Im trying to give Daniel a clam he can make because he coded Graphene
+19:32:27 <DefenderOfGraphe> To basically disallow Copperhead Website from selling its liscenced version of graphene
+19:32:34 <DefenderOfGraphe> claim*
+19:32:35 <Baobab> ?
+19:32:40 <DefenderOfGraphe> Alright nevermind
+19:32:45 <DefenderOfGraphe> I'll let people figure it out
+19:33:00 <nscnt> ._.
+19:33:54 <ayaen_t[m]> there is lot many other ways anyone can help give 'Daniel his edge'
+19:35:27 <nscnt> It's unnecessary to respond to trolling
+19:35:47 <ayaen_t[m]> yes
+19:36:03 <ayaen_t[m]> i was jus saying
+19:36:28 <ayaen_t[m]> i mean come on like it was that simple
+19:38:10 <ayaen_t[m]> nscnt: but im starting to think if the best theyre able to do is buy domains with grapheneos name then its not working out well for them witj their lawsuit
+19:42:21 <jftn[m]> take_a_deep_breath: https://nitter.net/DanielMicay/status/1345239243875102722#m
+19:43:07 <ayaen_t[m]> ofcourse it does hurt financially. but then again i dont see how as a legit company they could justify buying a domain with the name of grapheneos wiyj whifh they have legal history
+19:44:08 <jftn[m]> No, the company which shall not be called by its name will burn. They have literally nothing, no valid arguments that could have them win the court case.
+19:44:15 <Baobab> >https://nitter.net/DanielMicay/status/1345239243875102722
+19:44:29 <Baobab> He should join codeberg :)
+19:45:23 <nscnt> Baobab: That would not solve the issue that's stated there
+19:46:05 <Baobab> Was one of the issues being gitlab letting someone use grapheneos?
+19:46:19 <Baobab> or did I misread the link?
+19:47:32 <Baobab> >letting someone use grapheneos?
+19:47:37 <nscnt> Someone impersonating GrapheneOS on another platform
+19:47:42 <Baobab> The branding I mean.
+19:47:57 <Baobab> Ah, ok.
+20:55:45 <User78> Is there a simple method for removing text labels from icons on the home screen?
+20:56:20 <joehandcockandja> Install a different launcher
+21:01:22 <User78> joehandcockandja cool!
+21:08:15 <justanotherlurke> <dazinism "I only recently worked out you c"> How did you manage that? The version I just installed from github demands it... 🙄
+21:15:10 <dazinism> justanotherlurker: yeah just realised today it only worked because it had storage permission when I started using it, then revoked it (and it carried on working, but only able to see and write within its own private and public directories)
+21:16:03 <dazinism> But on starting it today after a reboot it  would not let me create a file without granting storage permission.
+21:19:19 <justanotherlurke> <dazinism "But on starting it today after a"> Ah, too bad...got my hopes up, as it looks like a useful tool.
+21:19:56 <dazinism> Actually looks like I was mistaken, looks like can't create files at all, if storage revoked.
+21:20:37 <dazinism> But think you can move them about in markors directory...
+21:20:47 <dazinism> Sorry for the misleading info
+21:22:25 <justanotherlurke> No problem - I can either give the permissions, uninstall or play around with its own dies to see what happens. So thanks for pointing it out anyway.
+21:26:07 <dazinism> justanotherlurker: if you are looking for a note app which requires no permissions check https://github.com/OmGodse/Notally
+21:26:36 <dazinism> Its not as powerful as markor but OK for basic note taking.
+21:27:26 <dazinism> Its available from the izzyondroid fdroid repo if you use that
+21:28:26 <justanotherlurke> <dazinism "justanotherlurker: if you are lo"> Thanks, will do that. 👍
+21:56:53 <justanotherlurke> <dazinism "justanotherlurker: if you are lo"> Just thinking ... if I understand the A11/GOS/sandboxing permissions correctly, each app has access to its own directory only, if I do not give it the storage permission?
+22:03:24 <dazinism> justanotherlurker: yeah you are correct. If apps are built with SDK30 (for android 11) then you should be able to give them access to just a folder (and its sunflowers) or file rather than everything in shared storage
+22:03:51 <dazinism> Thats storage/emulated/0 for the main user
+22:05:26 <dazinism> Theres a bit more info here https://hub.libranet.de/wiki/and-priv-sec/wiki/storage
+22:07:56 <dazinism> Theres still lots of apps that dont target SDK 30 and/or don't use scoped storage functionality.  That will change as this year goes on
+22:08:15 <dazinism> I think from November any app updates on Play Store have to target sdk30
+22:09:53 <hypokeimenon[m]> <dazinism "I think from November any app up"> From November, 2021?
+22:11:09 <dazinism> Yeah think thats when its enforced
+22:15:17 <dazinism> Lol sunflowers = subfolders
+22:16:06 <dazinism> 🌻=🗂️
+22:24:05 <justanotherlurke> <dazinism "Theres a bit more info here http"> Thanks for your explanation and the link - looking forward to reading it.
+22:29:45 <dazinism> justanotherlurker: that wiki page has some strategies for isolating files, and things have been improving as more and more apps start using scoped storage/Storage Access Framework.
+22:41:49 <justanotherlurke> <dazinism "justanotherlurker: that wiki pag"> Sounds promising. Let's see how much of it i can understand. 😉
+23:40:50 <user2021> Hello, does grapheneos make use of the pixel 4's radar sensor? It can be used for gesture control and motion detection.
+23:48:45 <ex0dus[m]> Any idea when we can expect 4a with 5g support?

@@ -1,0 +1,918 @@
+00:00:12 <strcat[m]> zrtjjtaher: what you're saying simply isn't how it behaves
+00:00:27 <strcat[m]> and closing app activities is not required for permission changes to take effect
+00:00:29 <strcat[m]> that's not accurate
+00:00:49 <strcat[m]> they take effect immediately and if a permission is actually designed in a way that it requires an app restart the OS does that itself
+00:00:54 <rny> zrtjjtaher[m]: you should reinstall
+00:01:00 <strcat[m]> Network doesn't require that
+00:01:07 <zrtjjtaher[m]> <strcat[m] "did you remove permissions from "> I think I do not have enough knowledge of Android/GOS to be able to do that!! :-))
+00:01:12 <strcat[m]> Network also isn't really something we created, we just made a toggle for it
+00:01:27 <strcat[m]> along with proper handling for it being toggled dynamically
+00:01:39 <strcat[m]> rather than just being a low-level non-user-facing install time permission
+00:02:19 <strcat[m]> disabling Network disallows low-level socket access and indirect use of network via INTERNET perm
+00:02:32 <zrtjjtaher[m]> <strcat[m] "and closing app activities is no"> A user suggested to try to close the app and start it again. I had nothing to lose and tried. As you said, the test was irrelevant.
+00:02:34 <strcat[m]> no app restart required (for any toggles)
+00:02:59 <strcat[m]> I suggest by starting by using Auditor and making sure you do not have device managers or accessibility services
+00:03:16 <strcat[m]> if you have a device policy manager or device manager then that's probably your issue
+00:03:20 <strcat[m]> don't use those
+00:04:30 <zrtjjtaher[m]> <strcat[m] "I suggest by starting by using A"> what are "device managers" or "accessibility services"?
+00:04:59 <strcat[m]> start by using Auditor to verify the device is running GrapheneOS without either of those kinds of things enabled
+00:05:09 <nux> I just cracked open the box of a brand new Pixel 5 and am getting ready to, "GrapheneOS-ize" it! :P
+00:05:30 <strcat[m]> device managers can break how the lockscreen works and permissions if you granted them those abilities
+00:05:59 <zrtjjtaher[m]> <zrtjjtaher[m] "what are "device managers" or "a"> I don't think I installed special things: A 2FA app, VLC, Linphone, Signal, etc... Quite classic, I guess!
+00:06:04 <sjsndnjdejd> <nux "I just cracked open the box of a"> noice
+00:07:42 <zrtjjtaher[m]> <strcat[m] "start by using Auditor to verify"> Can I use Auditor if I have not used it so far? Since I got GOS from the official site and verified it before install, I did not think I needed to use Auditor (but I am perhaps mistaken!!)
+00:08:10 <nux> sjsndnjdejd: Yeah, pretty excited about it! I probably didn't need to upgrade from the 4a but the scarcity of ICs and general supply chain issues forced my hand! Who knows if/when it will be too difficult or expensive to upgrade in the near future?!!!
+00:08:17 <rny> strcat[m]: the internet perm is named network in the permission toggle
+00:08:18 <strcat[m]> zrtjjtaher: you can use it at any time
+00:08:34 <strcat[m]> rny: aware, and it applies to network, not internet
+00:08:42 <strcat[m]> including localhost
+00:09:10 <rny> should we make a internet-specific one?
+00:09:17 <rny> do android apps even open sockets for localhost connections?
+00:09:19 <rny> @_@
+00:09:19 <rosie> @nux  Have fun!  I just installed GOS on a couple of 4as today.  Pretty easy if you use the Web installer.
+00:09:50 <rny> i dont think i've used one that requires localhost sockets, should apps even do IPC via localhost sockets?
+00:09:52 <rosie> The 5 is out of my price range, though.
+00:10:20 <zrtjjtaher[m]> <strcat[m] "zrtjjtaher: you can use it at an"> OK, if you tell me that Auditor may help solve my problem, I will look at it and come back if I still have the problem.
+00:10:39 <zrtjjtaher[m]> Thank you very much for your support, Daniel!!
+00:10:50 <strcat[m]> no it won't help your problem
+00:10:51 <nux> rosie: I've done a few 4a devices via CLI but never the Web installer. I'm more comfortable with the CLI anyway. I like to see stuff at the CLI as it progresses.
+00:11:06 <strcat[m]> but it will help you determine if you are actually running GrapheneOS and whether you have enabled an accessibility service or device manager
+00:12:33 <rosie> @nux  I don't know whether things have changed since you last installed GOS, but the Web installer is very much the recommended method now.
+00:13:10 <zrtjjtaher[m]> <strcat[m] "but it will help you determine i"> Not sure how I could not run GOS or how a device manager or accessibility service (not sure what both of these are by the way) could have arrived in my phone but I am happy to try and learn more about the Auditor!
+00:13:13 <nux> rosie: As long as the cli method is complete and functional, I'll go that route.
+00:13:31 <strcat[m]> zrtjjtaher: if you installed + enabled it in Settings
+00:14:24 <nux> rosie: I have the evironment already set up on my Arch box so unless things changed drastically, it should be fine.
+00:14:35 <zrtjjtaher[m]> <strcat[m] "zrtjjtaher: if you installed + e"> Not sure what you  mean
+00:15:22 <strcat[m]> zrtjjtaher: have you disabled usage stats special access in Settings?
+00:15:30 <strcat[m]> have you enabled a device manager or accessibility service?
+00:15:36 <strcat[m]> you'll need to provide answers to those questions
+00:15:41 <strcat[m]> as I recommended earlier, start with Auditor
+00:17:17 <zrtjjtaher[m]> <strcat[m] "have you enabled a device manage"> I don't remember having seen those terms so I guess the answer is simply "no".
+00:20:00 <strcat[m]> did you use the Settings app to disable system apps and disable permissions for them?
+00:20:19 <strcat[m]> it's entirely possible at the moment to break important stuff by toggling off usage stats perm for system apps, etc.
+00:20:40 <strcat[m]> we have added a few things as disallowed that are inherently broken to do but it would be too much for us to go through and disallow doing anything broken
+00:20:52 <zrtjjtaher[m]> <strcat[m] "did you use the Settings app to "> That's easy! Answer is clearly NO!
+00:21:29 <zrtjjtaher[m]> <zrtjjtaher[m] "That's easy! Answer is clearly N"> easy to answer, i mean
+00:21:34 <rosie> @nux I fought with Arch for two days before I gave up and went with Debian.  And then I ended up using my Samsung 8 to actually install GOS because I don'
+00:21:51 <rosie> I don't have a computer with a USB-C port.
+00:22:08 <strcat[m]> installing from macOS and Windows works fine too
+00:22:53 <strcat[m]> Arch is the easiest traditional Linux distribution to use (ChromeOS and Android via web install are easier) since it has proper packages available
+00:23:15 <rosie> I don't have macOS, and my only access to Win10 is from a VM inside of Linux (which is not recommended for GOS install).  And I would still have the issue with the USB-C.
+00:25:05 <rny> i wish arch had an option to not use gnu binutils
+00:25:21 <rosie> In the end, using the Samsung 8 was fine (except the Samsung shut down twice because it was overheating).  After I got GOS on the first Pixel, I used that to install GOS on the 2nd one.
+00:26:07 <rosie> I just couldn't make Arch work for me.
+00:26:56 <rosie> It's very configurable, but it's NOT user-friendly.  And I couldn't find enough documentation that I could make sense of.
+00:26:57 <zrtjjtaher[m]> <rny "zrtjjtaher: your claim about sig"> And by the way, @rny, thank you for your welcoming words! Much appreciated!!
+00:28:19 <rny> are you trolling?
+00:29:53 <strcat[m]> I get a strange impression from the replies and the initial story, waiting for more information such as Auditor results
+00:30:45 <strcat[m]> best way to start resolving it is doing a local verification with Auditor
+00:31:55 <entry1> @rny you're right 100% if network permission is denied, the app won't even open. I had no idea that would occur
+00:32:47 <strcat[m]> entry1: it disallows apps from creating network sockets rather than simply making connections fail, some apps don't do proper error handling
+00:32:56 <strcat[m]> it has to do work this way because it prevents leaks
+00:33:04 <strcat[m]> it prevents app listening for connections even via localhost
+00:33:09 <strcat[m]> and prevents them using indirect networking too
+00:33:15 <strcat[m]> the typical approach doesn't work and I don't do things that way
+00:33:42 <strcat[m]> you can get `adb logcat` output and report it to app developers
+00:33:48 <strcat[m]> they can change their code to catch the exceptions
+00:33:55 <strcat[m]> they should be doing that if they write robust code
+00:34:24 <entry1> strcat very cool, my comment wasn't a complaint by any stretch. Thanks for the explanation!
+00:34:30 <strcat[m]> zrtjjtaher: are you checking with Auditor?
+00:37:24 <akc3n[m]> <entry1 "@rny you're right 100% if networ"> Yup, never had an issue with that, whenever I'd disable network for signal, it wouldn't not work.
+00:41:16 <strcat[m]> well, I found that discussion odd
+00:42:30 <strcat[m]> so, to go into why it's so odd: they just joined the room a while before they started on this
+00:42:40 <strcat[m]> so, they're a new user to the room
+00:43:43 <strcat[m]> they report having a strange problem that seemingly no one else has ever encountered, which is always odd when we know people have the same small set of hardware and high assurance they have unaltered firmware + entire OS, same as everyone else
+00:44:33 <strcat[m]> the use of exclamation points and the fact they knew who I was based on username is a bit strange
+00:45:12 <strcat[m]> so, new user, just joined the channel, but knows who this is and calls me by my first name, which is just weird for someone who doesn't know me to do in a context where I'm not using my real name
+00:45:46 <strcat[m]> now, unfortunately, this channel is being consistently raided by people aiming to concern troll by pretending to be GrapheneOS users, often with the goal of pretending something is wrong or causing drama/conflict
+00:45:55 <strcat[m]> sometimes it is really hard to tell
+00:46:00 <strcat[m]> but this gives me pretty bad vibes
+00:46:21 <strcat[m]> someone pinged me in PM about it because it gave them bad vibes and that was before certain things like calling me by my irl first name
+00:46:40 <strcat[m]> as a new user to the channel who as far as I know hasn't ever interacted with me and has little reason to call me that
+00:46:54 <entry1> <strcat[m] "the use of exclamation points an"> Yeah exactly, I was in this room like a dipshit for 2 months not knowing who you were. Very low chance of a true new user. I'm glad you give everyone the benefit of the doubt initially.
+00:47:24 <snooopy> I needed two/three weeks to find out who strcat[m] is. :')
+00:47:34 <strcat[m]> and I wanted them to use Auditor because it would check if they are really using GrapheneOS + if there is a device manager / accessibility service
+00:47:44 <strcat[m]> didn't seem to go anywhere? no questions about how to use it etc.
+00:47:48 <strcat[m]> it was step 1 to do
+00:48:05 <rosie> Is your IRL  identity supposed to be a secret?  I figured it out pretty quickly the first time I logged in here.  Maybe I'm just more intuitive than most?  I dunno.
+00:48:11 <strcat[m]> and replies to my attempts to figure out what might be wrong were just strange and then they disappeared
+00:48:23 <rny> could have read the logs
+00:48:29 <strcat[m]> rosie: no, but someone who just joins the channel and is calling me by my irl first name is strange
+00:48:49 <strcat[m]> calling someone by their real name which you have gotten somewhere else when you don't know them is just weird, no?
+00:49:01 <strcat[m]> and I don't get pinged from someone saying that
+00:49:28 <strcat[m]> unless someone knows me why would they me calling me that? you don't find that weird? cause I do
+00:49:34 <strcat[m]> and it's just one of multiple weird, off things about it
+00:49:35 <rosie> Fair point.  Even though I knew your identity right away, I've never addressed you that way, just because I was "brought up" that that's bad 'netiquette.
+00:49:57 <strcat[m]> yeah I mean it is weird to call someone by their real name when you don't know them and they are using a username
+00:50:01 <rny> strcat[m]: i'll start calling you by your first name after we meet for a coffee :P
+00:50:08 <strcat[m]> I am certainly not meant to be at all anonymous
+00:50:14 <rny> ☕
+00:51:20 <rny> strcat is a great name, there's only so many unsafe C functions from the C standard library.
+00:51:21 <rosie> I also tend to be a reader/researcher, so I've read a fair amount of the GOS history, as well.  But that also was what set my mind more at ease that I was making the right choice to go with GOS.
+00:51:35 <strcat[m]> in my experience meeting people I've known online for a long time irl we still think of each other via online nicks and only awkwardly use real name to avoid confusing other people
+00:52:01 <strcat[m]> not really at all weird, it's just the nickname you know them by
+00:52:19 <entry1> Its odd no doubt, I'm in the same boat. It would be different if they approached the situation in a different manner too. It isn't like they called you by the first name in a normal way to how they were exposed to the project/room prior, and they didn't sound like they wanted to do your suggestion with any urgency.
+00:52:20 <rosie> I generally try to avoid meeting people IRL that I met online.  Creeps me out a bit.
+00:52:28 <grapheneos_user_> <strcat[m] "in my experience meeting people "> All good until someone else joins the conversation and gets confused
+00:52:38 <strcat[m]> entry1: yeah I mean look back at it
+00:52:42 <strcat[m]> entry1: from the start, it is weird
+00:52:48 <strcat[m]> entry1: maybe it is really someone with a real problem
+00:52:58 <strcat[m]> they were at least making it seem that way but they do not seem to want to get it resolved
+00:53:15 <strcat[m]> look at the response to asking about accessibility service / device manager
+00:53:34 <strcat[m]> totally possible it is a real issue
+00:53:37 <strcat[m]> not leaning that way
+00:54:05 <strcat[m]> feel like it's an attempt to claim something is wrong and then get reactions to use to attack the project as has happened repeatedly these past months
+00:54:47 <strcat[m]> unfortunate that it happens multiple times a day so if someone does actually have something wrong they are viewed with suspicion
+00:55:13 <strcat[m]> I also get contacted a lot by email by people supposedly compromised that is largely / entirely trolling or people with delusions
+00:55:27 <strcat[m]> waste time looking into it, pretty much always clear they are making stuff up
+00:55:49 <strcat[m]> they'll claim something in the UI is odd and that it means they are compromised and vans are following them around hacking their phone or whatever
+00:55:57 <strcat[m]> it's a daily thing
+00:56:01 <grapheneos_user_> <strcat[m] "they'll claim something in the U"> Dayum
+00:56:04 <strcat[m]> waste so much time
+00:56:15 <grapheneos_user_> Do they not have lives
+00:56:27 <strcat[m]> a lot is trolling
+00:56:41 <entry1> Yep, but you/we are giving them the benefit of the doubt still. You have a good approach and attitude because there can be anomalies and it is a mature mindset. It is a shame because you being very helpful and giving detailed explanations to people can cause a headache when there are trolls.
+00:56:44 <nux> strcat[m]: Their goal is to waste your time. Unfortunate reality...
+00:56:49 <strcat[m]> sometimes it is people who genuinely believe they are being hacked and have some really weird ideas
+00:57:25 <strcat[m]> if someone had something truly interesting to support they'd have to deal with the fact that all these people have wasted my time and made me uninterested in looking at those kinds of emails seriously
+00:57:58 <strcat[m]> btw our servers are under DDoS attacks again today
+00:58:06 <strcat[m]> it doesn't really impact anything
+00:58:23 <grapheneos_user_> Imagine trying to DDoS a datacenter
+00:58:26 <strcat[m]> it doesn't even slow things down significantly
+00:58:40 <grapheneos_user_> How stupid are these people
+00:58:44 <strcat[m]> well OVH just diverts / mitigates most of it
+00:59:08 <strcat[m]> and our web services are hardened against it, although need to adjust them into a DDoS fighting mode if necessary
+00:59:18 <rny> strcat[m]: put them behind cloudflare
+00:59:19 <rny> :P
+00:59:23 <strcat[m]> the values aren't super strict by default to avoid causing problems for people on very slow connections or CGNAT
+00:59:33 <entry1> Plus this project can get a lot of attention because it comes up as the most secure phone and people with schizophrenia can flock to it. Schizophrenia is a really big thing and I feel so bad for people who have it because they aren't trolling and they have no one to turn to. Good stuff being able to deter the DDoSing assholes
+00:59:36 <strcat[m]> rny: don't need it and won't help if they know the IPs anyway
+00:59:58 <strcat[m]> I might have to put nginx in front of the mail server since they're attacking the mail server now
+01:00:20 <rny> well another upside is that our users benefit from cloudflare's edge to origin routing
+01:00:33 <akc3n[m]> <strcat[m] "calling someone by their real na"> Yes, very weird.
+01:00:36 <rny> better latencies and potentially throughput on better internet paths
+01:00:46 <rny> ovh peers are not great
+01:00:51 <strcat[m]> rny: I'd rather set up multiple VPS for grapheneos.org around world and use geodns ourselves
+01:00:51 <private99[m]> Hi
+01:00:53 <strcat[m]> and still control it
+01:01:13 <private99[m]> Hi guys. I have a problem
+01:01:16 <snoopy> rny: Not sure cloudflare is a good idea for a project which tries to improve privacy
+01:01:47 <strcat[m]> rny: we use round-robin DNS for releases.grapheneos.org now, can add more servers as needed
+01:01:50 <rny> just using their network and nothing private is being communicated
+01:01:58 <private99[m]> In my second profile I can't install apps I they downloading fdroid but when I go to install it says "app not installed"
+01:02:09 <strcat[m]> private99: because you can't install an older version there
+01:02:25 <strcat[m]> private99: it's an issue with F-Droid's site: they link an out-of-date version of the app as the main download, recommend reporting the issue to them
+01:02:35 <private99[m]> Ahh OK
+01:02:53 <strcat[m]> private99: go to the F-Droid page on their site and ignore the main F-Droid download link, instead download the most recent stable release
+01:03:01 <private99[m]> Thank you
+01:03:04 <private99[m]> Will try that now
+01:03:36 <strcat[m]> https://f-droid.org/repo/org.fdroid.fdroid_1011050.apk
+01:03:55 <strcat[m]> https://f-droid.org/en/packages/org.fdroid.fdroid/ see there, the "download f-droid" button is a generic link on every page
+01:03:59 <strcat[m]> and gives you an out-of-date version
+01:04:15 <strcat[m]> it's very strange that they are resistant to fixing this and I think more people need to report the issues it causes
+01:04:18 <private99[m]> A secondary question. There is an app called "locker" on fdroid which after a certain amount of failing password entry's from the google lock screen it will wipe device
+01:04:25 <private99[m]> Is that good to use?
+01:04:33 <private99[m]> Or won't work eight grapheme
+01:04:36 <private99[m]> Grapheme*
+01:04:41 <strcat[m]> don't know what you mean by google lock screen
+01:04:51 <strcat[m]> private99: I wouldn't recommend using a device manager
+01:04:55 <private99[m]> The lock screen when entering phone
+01:05:00 <strcat[m]> I recommend reading https://grapheneos.org/faq#encryption
+01:05:06 <private99[m]> OK thanks
+01:05:12 <strcat[m]> a software enforced limit doesn't add much
+01:05:18 <private99[m]> Gonna check that out
+01:05:31 <strcat[m]> even with a fully random 6 digit PIN you are secure against a brute force even if the attacker compromises the OS completely with exploits
+01:05:38 <strcat[m]> they would have to compromise the hardened secure element
+01:05:44 <strcat[m]> to brute force
+01:05:53 <private99[m]> <strcat[m] "they would have to compromise th"> Ahh interesting
+01:05:56 <strcat[m]> setting a software limit on attempts does very little
+01:06:18 <private99[m]> That my main threat model which is someone phsically trying to enter the phone
+01:06:39 <strcat[m]> yeah so, a software limit could be bypassed if they have exploited the OS
+01:06:53 <strcat[m]> the hardware-based throttling is far more useful and already quickly throttles to 1 day per attempt
+01:06:56 <private99[m]> In that scenario I would be better off using a secondary user profile for most things correct ?
+01:07:17 <strcat[m]> the reason it's useful to use a secondary user is primarily because the Owner profile has to be unlocked after booting
+01:07:19 <strcat[m]> in order to use the phone
+01:07:26 <private99[m]> That hardware based throttling is based on the titan chip ?
+01:07:43 <strcat[m]> private99: that part of it is, yes
+01:08:00 <strcat[m]> https://grapheneos.org/faq#encryption explains it all
+01:09:07 <rosie> Question about settings:  in Permitted Networks (for system updates), which selection do I need to force GOS to update only over wifi?  It's not clear to me from the Usage Guide.
+01:09:22 <strcat[m]> the SoC encryption support provides hardware-bound, hardware accelerated key derivation
+01:09:25 <private99[m]> Thanks appreciate it the info and help
+01:09:26 <strcat[m]> that adds a short delay to each key derivation from a passphrase, etc.
+01:09:27 <private99[m]> This is very good work and really appreciate the community and devs putting in their efforts into this .
+01:09:27 <strcat[m]> it accomplishes little for a weak credential like a PIN
+01:09:28 <strcat[m]> the Titan M provides a Weaver implementation which offers hardware enforced throttling growing with failed attempts up to 1 day per attempt delays
+01:09:29 <strcat[m]> the OS takes your credential, derives key with scrypt
+01:09:51 <strcat[m]> then it has ~10 or so uses of that derived key, for each one it trivially derives a new key with personalization string using sha512
+01:10:07 <private99[m]> Interesting
+01:10:17 <strcat[m]> one of the uses of the key is sending a derived key to Titan M as part of Weaver, and Titan M gives back a token that was randomly generated earlier
+01:10:27 <strcat[m]> that token is an extra required input to derive the disk encryption keys
+01:10:34 <private99[m]> So in that case would it be makes sense to put for the owner profile a alphanumeric password
+01:10:39 <strcat[m]> if you don't provide correct credential-derived key to Titan M, it won't give back the token
+01:10:47 <private99[m]> While secondary profile a 8 digit pin
+01:10:49 <strcat[m]> and it throttles via a secure tamper resistant internal timer
+01:11:00 <strcat[m]> private99: all depends on how you want to use it
+01:11:05 <strcat[m]> private99: encryption is per-profile
+01:11:10 <strcat[m]> owner profile also encrypts certain device-wide data
+01:11:18 <private99[m]> Ahh
+01:11:29 <strcat[m]> encryption is per-profile based on the profile's lock method
+01:11:44 <private99[m]> Okok I was gonna do it so they would have to break into owner first and then try again to break into the secondary profile
+01:11:45 <strcat[m]> if you have super sensitive data you rarely need to access, put it in a dedicated user profile with a strong passphrase and rarely unlock the profile
+01:11:54 <strcat[m]> and use the 'end session' button when finished with it
+01:12:03 <private99[m]> OK that's perfect
+01:12:06 <strcat[m]> which clears away encryption keys from memory/hardware
+01:12:08 <private99[m]> Thanks for the help and info
+01:12:28 <strcat[m]> for most people, using Owner profile as main profile is fine, and if you have super sensitive data put it in a secondary profile
+01:12:40 <strcat[m]> if you want to take maximum advantage of how things work you can use a secondary profile as your main one
+01:12:55 <private99[m]> Yah I think IMA prefer that method
+01:12:57 <strcat[m]> so then, you can boot up the device, unlock Owner profile, and create/delete new users, or use it for basic usage
+01:13:00 <private99[m]> Secondary profile
+01:13:02 <strcat[m]> and your main profile is still at rest
+01:13:16 <strcat[m]> so, as an example, say you want to delete your main profile
+01:13:19 <strcat[m]> if it's a secondary profile
+01:13:26 <strcat[m]> you can delete it without unlocking it
+01:13:38 <strcat[m]> from Owner
+01:13:54 <strcat[m]> the only way to completely wipe Owner is via factory reset, although you could do via recovery wipe data
+01:14:01 <private99[m]> Hmm
+01:14:01 <strcat[m]> https://grapheneos.org/faq#encryption has a lot of info
+01:14:16 <rosie> Where is the "end session" button?  Is that only for multiple profiles?
+01:14:17 <strcat[m]> there is no best option or specific recommendation
+01:14:23 <strcat[m]> rosie: it's only for secondary profiles
+01:14:32 <strcat[m]> rosie: end session for Owner is reboot
+01:14:39 <private99[m]> So in an emergency situation its possibpy to quickly delete the second pro
+01:14:44 <rhclayto> Suppose you are using the owner profile, you put it into Lockdown mode, somebody gets physical possession of your phone. What do they need to do to bypass the lockscreen, & what does GrapheneOS do to make that job harder?
+01:14:44 <strcat[m]> rosie: since Owner has data needed for other profiles to work, etc.
+01:14:56 <rosie> So there's no way to close all running apps at once other than a reboot?
+01:14:57 <strcat[m]> rhclayto: recommend reading https://grapheneos.org/faq#encryption
+01:15:17 <strcat[m]> rosie: not clear what you mean by closing all running apps or why you want to do that
+01:15:21 <strcat[m]> doesn't seem related to stuff above
+01:15:38 <strcat[m]> by all apps do you mean all system components? seems to imply rebooting
+01:16:17 <strcat[m]> rhclayto: lockdown simply disables secondary unlock methods, does not do what you seem to think, and 'bypass lockscreen' is not 'break encryption'
+01:16:24 <strcat[m]> rhclayto: you'll need to read https://grapheneos.org/faq#encryption and ask a clearer question
+01:16:25 <vanderPoel> is it recommended to install it on some older device from 2015 I wanted to first test run it on such
+01:16:27 <vanderPoel> ?
+01:16:34 <strcat[m]> rhclayto: lockdown != end session
+01:16:38 <strcat[m]> different options
+01:16:53 <strcat[m]> vanderPoel: no, recommended cheapest device is a Pixel 4a
+01:16:59 <rhclayto> Hi strcat. I read that FAQ, & it was very informative, but my grasp of the encryption & security mechanisms of GrapheneOS are not I think good enough to map that information onto certain hypothetical scenarios.
+01:17:26 <strcat[m]> rhclayto: well, going to be difficult to answer then, beyond the information that's already there
+01:17:47 <strcat[m]> rhclayto: https://grapheneos.org/features and https://grapheneos.org/faq#encryption is really all the info that can be provided
+01:18:01 <vanderPoel> and there is any unofficial list of confirmed phone models ?
+01:18:15 <strcat[m]> vanderPoel: https://grapheneos.org/faq#device-support
+01:19:19 <rhclayto> So in the scenario where the session is not ended, what is the procedure someone would use to bypass the lock? Those kinds of scenarios, what protection is offered (or lack thereof) in various states of locked/unlocked, session active/session inactive, would help general users grasp what is going on.
+01:20:10 <rosie> you mentioned an end session button, and that brought up a question I had been wondering about.  With both my Samsung and Pixel 4a, there's a button that will bring up all running apps and let me switch among them.  With the Samsung, there is also a button to close all of the running apps at once.  I'm not finding a similar button on the Pixel
+01:20:11 <rosie> 4a.  The end session button you referred to sounded similar, but apparently it's not.
+01:20:12 <strcat[m]> https://grapheneos.org/faq#encryption covers it
+01:20:28 <strcat[m]> rosie: that button doesn't close all running apps
+01:20:36 <strcat[m]> the recent apps page are user-facing activities not 'running apps'
+01:20:50 <strcat[m]> clearing them away doesn't mean stuff isn't running
+01:21:05 <rosie> Ok, is there a way to close all of those user-facing activities at once?
+01:21:06 <strcat[m]> and 'end session' is simply 'logout' rather than 'lock screen'
+01:21:48 <strcat[m]> and since encryption is per-profile, it was designed to purge the encryption keys in RAM/registers
+01:21:55 <strcat[m]> to put the profile fully back at rest
+01:22:05 <strcat[m]> rhclayto: you're just not going to get better info than we have on the site
+01:22:20 <strcat[m]> rhclayto: this isn't a medium where I can provide more detailed info than we do there, the info on the site is the best you are going to get
+01:22:45 <strcat[m]> unclear what you want to be covered there that's not covered already
+01:23:29 <strcat[m]> and I am aware it is quite detailed but that is necessary
+01:24:02 <rhclayto> Well, I think it would be great if the GrapheneOS project gets to the point where it can afford to hire professional copywriters, because that FAQ might explain a lot to people who are already well-versed in security & encryption, but it leaves much to be desired for a more general audience.
+01:24:41 <strcat[m]> rhclayto: I don't expect a general audience to end up with a technical understanding of how things work
+01:24:57 <strcat[m]> the FAQ is answering how encryption is implemented
+01:25:01 <strcat[m]> it is a technical answer
+01:25:11 <strcat[m]> it is not giving advice on using the OS, that wasn't the question it is supposed to answer
+01:25:20 <sjsndnjdejd> <strcat[m] "rosie: that button doesn't close"> “end session” doesn’t closes all but closes apps inside the session right?
+01:25:24 <strcat[m]> if you want advice on how to use the OS, that's much different than a technical question
+01:25:25 <rhclayto> Right, that is what that FAQ gives, a technical underartanding. What it doesn't give is an understanding of what the technical details mean for practical usage in various scenarios.
+01:25:34 <strcat[m]> if you ask a technical question, you get an  technical answer
+01:25:42 <strcat[m]>  * if you ask a technical question, you get a technical answer
+01:25:57 <vanderPoel> ok one question,  I read it so if I don't have a google phone then graphene os is not for me ? Samsung galaxy 20
+01:25:58 <strcat[m]> rhclayto: so, here's the problem: you're asking how it protects against something and what guarantees it provides, etc.
+01:26:02 <strcat[m]> technical question -> technical answer
+01:26:12 <strcat[m]> rhclayto: you're asking how it would be attacked, etc.
+01:26:15 <grapheneos_user_> <strcat[m] "technical question -> technical "> Mind-blowing
+01:26:17 <strcat[m]> you aren't asking for usage advice
+01:26:18 <rhclayto> I asked for a non-technical explanation, actually. The FAQ gives a somewhat technical explanation.
+01:26:33 <nux> Wow! GrapheneOS install on Pixel 5 was smooth as buttah! :P
+01:26:36 <strcat[m]> rhclayto: you can't really get a non-technical explanation for a highly technical question
+01:26:47 <strcat[m]> you'll need to ask a question that's not so technical then
+01:26:52 <strcat[m]> don't ask how things work on a technical level?
+01:27:08 <strcat[m]> if you ask a very broad, technical question
+01:27:12 <strcat[m]> that is what you are going to get in response
+01:27:37 <strcat[m]> if you ask a much more specific question that's not about the implementation details and how things work that's a different thing
+01:27:37 <tor3nduser[m]> <strcat[m] "rhclayto: you can't really get a"> are you part of the graphene team?
+01:27:49 <strcat[m]> why?
+01:28:00 <tor3nduser[m]> you seem to know alot
+01:28:07 <tor3nduser[m]> ..  why? lol
+01:28:17 <grapheneos_user_> He's just a user
+01:28:50 <tor3nduser[m]> no.. yes. ?
+01:28:58 <strcat[m]> the FAQ answers "How is disk encryption implemented?"
+01:29:06 <sjsndnjdejd> <tor3nduser[m] "no.. yes. ?"> yes, lead dev
+01:29:10 <rosie> vanderPoel, Yes, that's correct.  The only phones supported are in that list.  If you believe that GraphenOS is the right OS for your phone, you have to get one that is supported, rather than try to make GraphenOS fit the phone you have/want.
+01:29:10 <rhclayto> I asked what an entity who gains possession of your device in locked but session-active mode would have to do to get into your data. I guess you could call that 'technical', it's a matter of semantics, but in nay case it's not clearly answered in the FAQ you referenced.
+01:29:26 <strcat[m]> it is clearly answered there
+01:29:34 <strcat[m]> it's not the question it is answering but it does provide all that info
+01:30:14 <tor3nduser[m]> <sjsndnjdejd "yes, lead dev"> shut up lol
+01:30:37 <strcat[m]> and in the last paragraph it mentions apps being able to use the keystore to keep data at rest
+01:30:39 * sjsndnjdejd  < https://matrix.org/_matrix/media/r0/download/matrix.org/wwErvcjyLjnhpVEORRRctVkZ/message.txt >
+01:30:43 <grapheneos_user_> <tor3nduser[m] "shut up lol "> No he actually is
+01:30:48 <strcat[m]> when logged in by locked
+01:30:52 <rhclayto> If it is a question it answers by indirect inference, then it's not clearly answered to a non-expert audience.
+01:30:59 <strcat[m]>  * when logged in but locked
+01:31:04 <strcat[m]> rhclayto: it answers the question
+01:31:35 <tor3nduser[m]> <grapheneos_user_ "No he actually is"> daniel micay?..
+01:32:08 <tor3nduser[m]> lol no.
+01:32:16 <rosie> Here we go again?
+01:32:29 <grapheneos_user_> This debate could not come at a better time
+01:32:46 <grapheneos_user_> Or at least a more coincidental time
+01:32:57 <tor3nduser[m]> strcat is daniel micay ?..
+01:33:02 <strcat[m]> rhclayto: do you understand what it means by data being at rest?
+01:33:16 <grapheneos_user_> <tor3nduser[m] "strcat is daniel micay ?.."> Yes
+01:33:33 <rhclayto> You guys need a PR department. I mean, insisting that everything is already explained well-enough, in the face of users who say it's not, is just really bad communication.
+01:33:57 <rhclayto> No, I actually don't understand that or the implications of it.
+01:33:57 <rny> rhclayto: #grapheneos is not a business
+01:34:12 <strcat[m]> I consider it pretty rude to suggest it is badly written rather than it being a technical answer to a technical question
+01:34:22 <akc3n[m]> <rhclayto "You guys need a PR department. I"> That's your opinion. This is a nonprofit
+01:34:29 <rhclayto> I know it's not a business, but I assume it has a desire to spread its goodness to a wide audience? or just a small insider's group?
+01:34:34 <strcat[m]> if you think that I cannot write documentation and explanations that are non-technical you couldn't be more wrong
+01:34:41 <rny> akc3n[m]: not even, its just an open source project with loosely coordinated developers
+01:34:44 <rny> :P
+01:34:53 <GrapheneOS-Teleg> <d​eadlypayload> looking for someone to help me make GrapheneOS rom changes. BTC Reward available.
+01:35:02 <rny> with a lead developer taht goes above and beyond to write excellent technical documentation
+01:35:05 <strcat[m]> I find it pretty rude implying that the docs there are badly written
+01:35:12 <rny> only to have users ignore what is being written
+01:35:18 <rny> 😢
+01:35:19 <strcat[m]> the question it is answering is how encryption is implemented
+01:35:22 <tor3nduser[m]> i didnt see a problem with any of the documents.
+01:35:22 <akc3n[m]> rhclayto: and the docs are very well written. I used to have a hard time with them at first, but like anything else in life, applying yourself and learning about what everything means...
+01:35:24 <strcat[m]> not "what end users should know about encryption"
+01:35:34 <strcat[m]> that's a different question
+01:35:36 <tor3nduser[m]> pretty straight forward to me.
+01:35:57 <strcat[m]> type of answer varies based on the question
+01:36:22 <strcat[m]> you ask how stuff is implemented and how it would be attacked? that's going to inherently be a pretty technical and nuanced answer to a very broad question like that focused on technical details
+01:36:49 <strcat[m]> I'm not going to give an inaccurate answer or oversimplication so ask a simpler / more specific question if you want a simpler answer
+01:37:08 <strcat[m]> do you understand what it means for data to be at rest?
+01:39:55 <akc3n[m]> * rhclayto: and the docs are very well written. I used to have a hard time with some technical wording at first, but like anything else in life, applying yourself and learning about what everything means...
+01:39:57 <rhclayto> My goodness, you guys take this stuff personal, don't you? I actually asked a specific question, you referred me to a FAQ that does not answer that specific question, you say the answer to it can be inferrred from what is written there, I say I don't feel competent to make that inference, you say 'well, there's nothing that can be done, the documentation is as good as you're going to get', & that it's rude to question the quality of the
+01:39:57 <rhclayto> documentation. It may be great documentation, for a certain audeince, but completely unhelpful to another. That is what professional copywriters do, write for their audience. it's not an insult to hope for you guys that you can hire the right people to do that job. Grow up.
+01:40:21 <nux> rosie: So I'm interested to try the Web interface installer at some point, based on your comments. I think it's also interesting that you flashed a phone with a phone! :)
+01:42:39 <th0mcat> <nux "rosie: So I'm interested to try "> Flashed a Pixel 3 XL a couple hours ago via the web installer.  It literally couldn't be simplier
+01:42:50 <rhclayto> So nevermind.
+01:42:53 <grapheneos_user_> <nux "rosie: So I'm interested to try "> Well, a smartphone is a computer after all...
+01:43:16 <nux> th0mcat: Yeah, they've got it dialed in pretty well.
+01:43:30 <nux> grapheneos_user_: Really? ;)
+01:43:30 <grapheneos_user_> <rhclayto "documentation. It may be great d"> Chill
+01:43:34 <tor3nduser[m]> <rhclayto "So nevermind."> i agree
+01:43:36 <strcat[m]> rhclayto: doesn't really seem you want a question answered
+01:44:28 <nux> th0mcat: I haven't tried the Web installer yet but I think I will try it on my next load.
+01:44:37 <tor3nduser[m]> you know if you are really the lead dev on graphene. more power to ya really.  you guys do a great job. but my god being nicer would be cool
+01:44:46 <rhclayto> No, you just can't answer it. And so . . . much . . ego.
+01:45:24 <nux> th0mcat: I just used the CLI method on a brand new Pixel5 and it was very easy.
+01:45:30 <rosie> @nux  the documentation does state that you can use one phone's browser to flash another phone using the Web installer, but I had initially interpreted that to mean a phone that already had GOS installed.  I would never have thought of it if one of the mods here hadn't suggested it, and by golly, it worked!
+01:45:36 <grapheneos_user_> rhclayto: if you want a basic high level explanation
+01:45:55 <nux> rosie: That's pretty cool!
+01:47:19 <nux> th0mcat: rosie: Now I just need to wait for my Pixel 4a to backup to my Nextcloud instance so that I can import everything over to the Pixel 5.
+01:47:46 <entry1> <rhclayto "So nevermind."> I think you went about this the wrong way and telling the lead developer to grow up isn't very kind. A more suitable question would be "Is there a difference with GrapheneOS data at rest (before unlock) and after first unlock, and are there any known vulnerabilities for companies like Cellebrite (who work with law enforcement) to unlock a GrapheneOS device.
+01:47:57 <grapheneos_user_> <entry1 "I think you went about this the "> He's banned
+01:48:00 <entry1> Nvm, sorry you're getting attacked today
+01:48:13 <entry1> <grapheneos_user_ "He's banned"> Yep lol
+01:48:16 <strcat[m]> think those are the same person and not acting in good faith
+01:48:21 <grapheneos_user_> <entry1 "Yep lol"> Hehe
+01:48:29 <grapheneos_user_> :P
+01:48:36 <th0mcat> Yeah that was super concern-trolly
+01:49:12 <strcat[m]> again, some very weird stuff going on there
+01:49:14 <strcat[m]> similar to earlier
+01:49:17 <strcat[m]> hope people can see that
+01:49:17 <grapheneos_user_> How is strcat supposed to write non technical documentation for a technical answer
+01:49:24 <grapheneos_user_> Makes no sense whatsoever
+01:49:34 <strcat[m]> I wrote nearly all the docs on the site and there are plenty of non-technical docs there
+01:50:04 <grapheneos_user_> * How is strcat supposed to write non technical answers for a technical question
+01:50:11 <strcat[m]> don't appreciate someone claiming that I'm not capable of writing good documentation and teaching people things in a way they can understand
+01:50:19 <entry1> He was in here yesterday and name dropped JollyRoger, but that could have been a way to seem innocent. For anyone reading the logs or who hasn't seen what was deleted, he insulted the lead developer who was trying to assist him kindly and insulted him again. Another user joined in together.
+01:50:30 <strcat[m]> you can see I asked several times if they knew what at rest meant and was fully willing to explain it in detail
+01:50:42 <grapheneos_user_> Wow
+01:50:44 <strcat[m]> they wouldn't respond
+01:50:49 <strcat[m]> entry1: who was?
+01:51:05 <strcat[m]> yesterday I mean
+01:51:13 <grapheneos_user_> <strcat[m] "they wouldn't respond"> "that answer can't stop me because I can't read!"
+01:51:29 <grapheneos_user_> What it seems like
+01:51:31 <entry1> Yes, you did strcat. Completely justified. strcat rhclayto
+01:51:41 <strcat[m]> can explain what exactly happened yesterday?
+01:52:14 <strcat[m]> there have been raids on the channel in the past few days, as expected
+01:52:43 <entry1> He was in here and said he was referred by PeterEaston to the room. It seemed innocent enough and he could have been lying 100%
+01:53:00 <strcat[m]> entry1: doesn't really seem problematic?
+01:53:02 <entry1> We pointed him to the OT room as well.
+01:53:38 <entry1> Trying to think exactly what he asked. No, he seemed innocent enough but today he acted very hostile towards you.
+01:53:47 <sphinx[m]> <strcat[m] "you can see I asked several time"> > rhclayto
+01:54:10 <dhsjwbbsjxndbs> tf is going on
+01:54:19 <akc3n[m]> <strcat[m] "hope people can see that"> Ya I've been catching on to patterns lately, and thanks for laying out how they operate.
+01:56:28 <strcat[m]> sphinx: and I was going to explain it in detail to them and they kept insulting my writing instead and implying I need to hire someone to write for me
+01:56:32 <strcat[m]> which is actually pretty insulting
+01:56:43 <strcat[m]> and by the way I got involved in open source initially by writing documentation
+01:57:44 <linuxwolf[m]> would installing stock android aosp on a second device provide any type of security or is it pretty open?
+01:57:58 <strcat[m]> linuxwolf: there are no official AOSP releases as a whole OS
+01:58:09 <strcat[m]> unclear what you mean by 'stock android aosp'
+01:58:22 <strcat[m]> stock is used to refer to what comes on the device from retail / factory
+01:58:47 <strcat[m]> AOSP is the open source OS forked by vendors and others to make stock OSes and alternate OSes for the devices
+01:58:51 <strcat[m]> AOSP doesn't have releases itself
+01:59:02 <strcat[m]>  * AOSP doesn't have releases with builds itself
+01:59:05 <strcat[m]> it has source code releases
+01:59:37 <linuxwolf[m]> i guess i meant if you download and build aosp fro. source
+01:59:41 <linuxwolf[m]> from*
+02:00:18 <linuxwolf[m]> <strcat[m] "stock is used to refer to what c"> yea true lol.    i just meant nothing done to it
+02:00:43 <strcat[m]> AOSP requires device support code to be added
+02:00:55 <linuxwolf[m]> ah i see
+02:00:55 <strcat[m]> so, you'll need to clarify more what you're trying to do
+02:01:09 <dhsjwbbsjxndbs> <strcat[m] "and by the way I got involved in"> archwiki administrator 0 0
+02:01:12 <strcat[m]> you can't simply build AOSP for a device, you need to add the device support code for it
+02:01:34 <strcat[m]> yeah I got involved in editing the Arch Linux wiki and was an administrator there
+02:01:38 <strcat[m]> and I wrote a lot of the content on it
+02:01:55 <linuxwolf[m]> im not trying to do anything. i just wanted to know if any security is implemented in it for my old pix 3a
+02:02:01 <strcat[m]> including a lot of the install guide, etc.
+02:02:06 <strcat[m]> and I've written a lot of other docs
+02:02:07 <linuxwolf[m]> ah ok. i may check that out
+02:02:16 <strcat[m]> some highly technical, some fairly technical, some not very technical at all
+02:02:33 <strcat[m]> FAQ answers vary in how they address it based on the question
+02:02:35 <akc3n[m]> <strcat[m] "and I wrote a lot of the content"> That's pretty sweet... Never knew that, thanks! I'm on their lots.
+02:02:54 <linuxwolf[m]> yea really. arch wiki is awesome 😆
+02:03:07 <strcat[m]> the one about how encryption is implemented is meant to be a technical answer, avoiding saying things requiring being a developer to understand, but assuming background in understanding encryption
+02:03:24 <strcat[m]> it's not meant to explain how disk encryption or key derivation work as concepts
+02:03:36 <strcat[m]> it's meant to be an answer for people who want the technical details and understand those topics
+02:03:47 <strcat[m]> if you don't want technical details, that isn't a question/answer for you
+02:03:54 <strcat[m]> if you want advice on how to use the OS, that's not meant for that
+02:03:57 <linuxwolf[m]> what documentation are you referring to?
+02:04:40 <strcat[m]> I'm referring to the fact that I don't appreciate someone trying to imply that I'm bad at writing and need to hire 'professional copywriters' because they don't like the answer I gave to their question
+02:04:53 <entry1> <akc3n[m] "That's pretty sweet... Never kne"> Always learn something new everyday in here. Dude is a walking book of knowledge and releases everything to the world for free and open source. Needs a book written on him, but an autobiography would be the best tbh because another author would mess it up 😂
+02:05:28 <strcat[m]> that section is supposed to be technical and requires knowing encryption terms
+02:05:32 <nux> Is there a GrapheneOS forum where one may post devices installed with GOS for sale? I'd list my Pixel 4a on Gazelle or Swappa but I suspect it wouldn't appeal to the average security-unconcious person with GrapheneOS running on it.
+02:05:34 <strcat[m]> that's the point of it
+02:06:07 <strcat[m]> it's actually quite frustrating putting so much effort into writing that stuff and then having that response to it
+02:06:37 <strcat[m]> and once I put substantial effort into making content there I want to use it as an answer, that was the point of writing it
+02:07:14 <strcat[m]> https://grapheneos.org/faq#notifications here's an example of a section that's meant to get across a lot of non-technical info while providing technical details as a bonus
+02:07:34 <strcat[m]> but that encryption section is literally "how is encryption implemented?"
+02:07:51 <strcat[m]> which from my interpretation what was basically what they were asking here: how is it implemented and how would it be attacked
+02:07:56 <nux> Probably best just to re-flash it back to Google's OS and sell it that way but figured I'd ask.
+02:08:08 <entry1> <strcat[m] "it's actually quite frustrating "> You're not falling on 100% deaf ears, I can assure you that. Can't imagine your pain when you're the epitome of a "good" person trying to better the world
+02:08:13 <linuxwolf[m]> <strcat[m] "it's actually quite frustrating "> idk i think you guys did a good job.   i understand the documentation on the website..
+02:08:19 <strcat[m]> I could make another encryption section about more specific things
+02:08:23 <strcat[m]> I wanted to make one about the keystore
+02:08:29 <strcat[m]> I do not really want to make one with 'advice'
+02:08:38 <strcat[m]> because there is no one size fits all advice
+02:08:49 <strcat[m]> what I can do is explain how things work, like that section
+02:08:57 <strcat[m]> or provide a section on advantages/disadvantages to different approaches
+02:09:06 <strcat[m]> people ultimately have to choose what's best for their needs
+02:09:16 <strcat[m]> there can be more info on encryption there
+02:09:26 <akc3n[m]> <strcat[m] "I could make *another* encryptio"> Do you think you would do that then? I would love to learn from it.
+02:09:37 <akc3n[m]> As I'm sure others will too
+02:09:39 <strcat[m]> maybe but not as a response to this
+02:09:51 <akc3n[m]> I understand. And agree.
+02:09:54 <strcat[m]> stuff like this discourages me from writing it
+02:10:45 <akc3n[m]> No. Please. Your writing is amazing. And extremely beneficial to everyone and anyone who wants to learn. Please don't be discouraged by idiot trolls.
+02:11:04 <strcat[m]> anyway if you read that section I think you can see I did try to make a technical answer as understandable as possible but defining terms, etc. isn't in scope
+02:11:17 <nux> akc3n[m]: +1
+02:11:31 <grapheneos_user_> <nux "Is there a GrapheneOS forum wher"> Off topic, will answer in that channel
+02:11:50 <nux> grapheneos_user_: Oh yeah, I forgot about that channel. Thanks!
+02:12:01 <strcat[m]> > All data, file names and other metadata is always stored encrypted.
+02:12:05 <strcat[m]> it says that pretty early
+02:12:32 <strcat[m]> anyway point of the section is not to define terms or how disk encryption works in general
+02:12:52 <strcat[m]> it's specifically meant to say how it is implemented in AOSP with a modern device fully providing the hardware features for it and what GrapheneOS changes
+02:13:25 <strcat[m]> it is not "what is disk encryption?" "how does disk encryption work?" etc
+02:13:51 <strcat[m]> and it's not "what are the security properties of the approach to disk encryption?" either
+02:14:06 <strcat[m]> that's just meant to be implied, for people who understand what it's talking about
+02:14:11 <entry1> The advantages and disadvantages for comparisons in opsec would be huge to read, but again you have a lot on your plate already. You could write a book(s) about the operating system and underlying security features and enhancements and I'd want to read every page. You always remain as impartial as possible, but most laypeople want "absolutes" and ultimately your opinion (even though you always specify their isn't a one
+02:14:11 <entry1> size fits all approach and that it can get too technical). The website is an amazing tool and when people have questions, I always try to link it directly since it answers them better and can answer a ton of other questions that will arise.
+02:14:43 <strcat[m]> yes people want overly simple answers to a very broad a nuanced question
+02:15:13 <strcat[m]> if you ask a question about the security properties and how it could be attacked you really need to start by understanding that section
+02:15:13 <strcat[m]> and go from there
+02:15:22 <strcat[m]> otherwise I could make an overly simplified take on it
+02:15:55 <strcat[m]> and I can't read minds, I can't know if someone really just wants some simple reassurance or basic explanation
+02:16:03 <strcat[m]> if they ask how it works I take that as what it means
+02:16:35 <strcat[m]> > GrapheneOS enables support for ending secondary user profile sessions after logging into them. It adds an end session button to the lockscreen and in the global action menu accessed by holding the power button. This fully purges the encryption keys and puts the profiles back at rest. This can't be done for the owner profile without rebooting due to it encrypting the sensitive system-wide operating system data.
+02:16:54 <strcat[m]> > Using a secondary profile for regular usage allows you to make use of the device without decrypting the data in your regular usage profile. It also allows putting it at rest without rebooting the device. Even if you use the same passphrase for multiple profiles, each of those profiles still ends up with a unique key encryption key and a compromise of the OS while one of them is active won't leak the passphrase. The
+02:16:54 <strcat[m]> advantage to using separate passphrases is in case an attacker records you entering it.
+02:17:11 <strcat[m]> I think this is a really good explanation
+02:17:16 <strcat[m]> I don't understand what is wrong with it
+02:17:27 <linuxwolf[m]> question.  what is meant by "user facing" firewall.
+02:17:41 <strcat[m]> linuxwolf: toggles, knobs, frills for end users to change
+02:17:50 <linuxwolf[m]> ah. thanks
+02:17:50 <entry1> Exactly, and you can open a can of worms because you are so often quoted. If there is misinterpretation of the person's question and an oversimplified answer given, it could lead to other people being confused and even more questions.
+02:18:25 <strcat[m]> a lot of care went into writing stuff in a way that it doesn't get misinterpreted and I edit it if that's happening
+02:18:35 <strcat[m]> it has to be nuanced and detailed sometimes
+02:19:00 <strcat[m]> someone having your device while a profile is logged in doesn't mean they inherently get data from it
+02:19:06 <strcat[m]> they would have to exploit the OS
+02:19:16 <strcat[m]> and as it explains in the final paragraph apps can keep data at rest when locked
+02:19:17 <strcat[m]> using keystore
+02:19:46 <strcat[m]> imo those 2 paragraphs are a good answer and a lot of information beyond what they explicitly state is implied by them
+02:21:02 <strcat[m]> there could be a separate question about that kind of thing but it's not going to be what people want since it's all going to have to be nuanced and detailed in the same way
+02:21:30 <strcat[m]> profile logged in means the OS has access to most of that profile's data
+02:21:59 <strcat[m]> not all, particularly when locked, but most, and it's up to apps to use keystore
+02:22:44 <linuxwolf[m]> any plans to implement the ability to utilize the pixel 5s adaptive charging feature?
+02:22:50 <strcat[m]> so, sorry for not putting misleading or dishonest marketing BS / claims on the site like nearly anyone else...
+02:23:08 <strcat[m]> linuxwolf: all the normal charging stuff works fine
+02:23:22 <strcat[m]> linuxwolf: no plans to implement machine learning of your habits to adjust things like brightness, charging, etc.
+02:24:17 <linuxwolf[m]> i was referring to the feature where if an alarm is set then the phone will charge slower throughout that time period to reach 100% just prior to the alarm going off
+02:24:33 <linuxwolf[m]> i think they call it adaptive charging
+02:24:52 <rny> why'd this be something controlled by the clock app?
+02:25:02 <rny> its the battery controllers job to decide how many amps to pull from the charger
+02:27:10 <entry1> Thank you for being a good person. I seriously hope you don't get too overburdened with the constant trolling/attacks to just stop what you're doing overall and become probably one of the best blackhat hackers there could possibly be. You deserve more resources and help than you get.
+02:33:04 <strcat[m]> linuxwolf: which uses machine learning type stuff
+02:33:14 <strcat[m]> linuxwolf: and also what happens if you need to get up early and your phone is half charged
+02:33:48 <strcat[m]> we have all the standard charging throttling stuff based on heat, capacity, etc.
+02:33:57 <rny> 🙃
+02:33:58 <strcat[m]> charges slower near max capacity, avoids making it too hot, etc.
+02:34:05 <strcat[m]> standard USB-PD stuff integrated into SoC + battery
+02:34:10 <strcat[m]> very sophisticated already
+02:34:29 <rny> ML coerces people into 16/8 day-night cycles
+02:34:31 <rny> :P
+02:39:33 <linuxwolf[m]> <strcat[m] "we have all the standard chargin"> thats good to know.  i just noticed yesterday that my phone said it was rapid charging.
+02:39:44 <linuxwolf[m]> which led me to look for a way to turn off rapid charge
+03:25:26 <d3nm6ugnffwftn2j> Hi, recently I've been noticing from a certain update some apps are not adjusted to System Language. I have Japanese language set on my phone, it used to be that the software downloaded would correctly show Japanese but now they all revert to English for some reason. Noticable apps are Google Maps, Google Photos, Deezer, Shazam and many more. I would appreciate if anyone knew what went wrong. Thanks a lot
+03:26:26 <TheJollyRoger> entry1: ah, crap, looks like I got back a little late. He appeared on my github asking me some questions. Some I answered, but a few I didn't exactly feel qualified to answer so I just linked the FAQ and the IRC channel. Nevermind that though, if he's been disrespectful, that has noplace here.
+03:27:22 <TheJollyRoger> Ah well. In the future, I might take my old drafts down because they're only up there for historical preservation, they're not curated.
+03:28:58 <TheJollyRoger> For the record, the existing documentation's much better than what I could do, with my understanding of the operating system at this point in time. I'm not sure I could break it down much further without it starting to sound condescending...
+03:34:02 <dhsjwbbsjxndbs> <d3nm6ugnffwftn2j "Hi, recently I've been noticing "> If you use aurora Store that could can be where the issue is from
+03:35:13 <d3nm6ugnffwftn2j> <dhsjwbbsjxndbs "If you use aurora Store that cou"> I see. Is it because their recent 4.0 update that doesn't do language spoof very well?
+03:36:14 <dhsjwbbsjxndbs> It pretty widely reported after v4 release
+03:36:33 <dhsjwbbsjxndbs> a lot of new shared accounts are UK Google accounts
+03:37:55 <dhsjwbbsjxndbs> you can use a Japanese account download, apps that are more localized to Japan
+03:38:21 <d3nm6ugnffwftn2j> Oh that's the reason why. I'll go and try that. Thanks a lot for the help!😄
+03:57:53 <entry1> <TheJollyRoger "entry1: ah, crap, looks like I g"> Oh no worries! Thanks for all your help in the room to and to pointing him here! It was a shame it came to that and I only mentioned your name since I remember him joining yesterday and mentioned how you helped him out. Wasn't calling you out whatsoever my man
+03:58:24 <TheJollyRoger> entry1: Oh, hehe, no callout taken mate! Thanks for the heads-up, all is well.
+04:05:16 <TheJollyRoger> Sorry if that was a bit gruff.
+04:05:30 <TheJollyRoger> Wasn't my intention!
+04:15:51 <entry1> You're not referring to me right? (Not to make things about myself lol)
+04:19:05 <TheJollyRoger> entry1: oh no no no, not referring to you, ahaha.
+04:19:41 <TheJollyRoger> You're good P.-)
+04:51:12 <John69> https://www.ebay.com/itm/333952068836
+05:02:31 <akc3n[m]> Spam ^
+05:09:27 <hopethisisuniq> I'm running into an issue and before I submit a bug report I thought I'd ask here if anyone else has encountered this:
+05:09:28 <hopethisisuniq> I installed Signal (through Aurora Store) and went through the setup and registration, including restoring messages from a backup, but within a few seconds after that the app closed suddenly. Now when I try to open it it will open to a white screen (for about a quarter of a second) and then close. In my notifications bar it tells me that Signal has
+05:09:28 <hopethisisuniq> a background connection enabled. I've tried force stopping it and rebooting the phone to no success.
+05:09:37 <hopethisisuniq> This is my third time trying to set up the app. I did the same thing yesterday with the same problem. I then uninstalled Signal and reinstalled it but did not restore from a backup. But because I want my old messages I then tried setting it up again today and once again restoring from a backup. Anyone have any thoughts? Or should I just submit a
+05:09:37 <hopethisisuniq> bug report? Thank you.
+05:10:49 <TheJollyRoger> Hello hopethisisuniq, I'm running the latest of Signal, haven't seen what you're seeing. If you have access to the developer options, you can capture and send a tombstone.
+05:11:21 <hopethisisuniq> OK I'll do that
+05:12:20 <hopethisisuniq> Hmmm this is happening on a secondary user account so maybe I can't activate developer options?
+05:12:54 <TheJollyRoger> Hmm, haven't had any problems with Signal on a secondary user account either.
+05:13:48 <hopethisisuniq> I more meant that I can't seem to activate developer options from within a secondary account. I'll try to replicate this in the phone's owner account
+05:14:43 <TheJollyRoger> Great!
+05:50:41 <ihopethisisuniq> Hmmm... reinstalled and registered signal on my owner account and now it isn't crashing. I'll try to figure out how to replicate the problem but if I guess I'll try reinstalling it on the secondary account where I was running into the issues.
+05:51:03 <ihopethisisuniq> *if I can't replicate the crashes
+06:00:18 <ihopethisisuniq> OK now it's crashing again and I tried to capture a bug report but I'm not sure if I'm doing it right:
+06:00:18 <ihopethisisuniq> I went to Developer options and clicked on Bug report. I then opened signal to replicate the issue and then clicked on Details under the bug report notification. I gave it a title and summary and clicked Save and then chose to share it. And then it went to a blank screen. Am I doing this right?
+07:19:23 <Ann_Caleb78> Hello All!
+07:19:44 <Delta[m]1> <ihopethisisuniq "Hmmm... reinstalled and register"> I think for GrapheneOS you still have to install an actual Signal .apk and not the Aurora store/Google Play version? I think that might be your problem.
+07:26:35 <Ann_Caleb78> i have graphene installed on my Pixel 4a. anybody know why, when enabe DND, that DND doesn't work unless I enable DND and have to cut my Volume all the way down, also, to get DND to work?
+07:27:14 <helloworldkk87[m> <Delta[m]1 "I think for GrapheneOS you still"> The aurora store gets the same apk from playstore
+07:27:22 <helloworldkk87[m> Should not matter
+07:28:54 <Delta[m]1> <helloworldkk87[m "The aurora store gets the same a"> I meant this https://signal.org/android/apk/
+07:30:10 <helloworldkk87[m> That version just has the bult in updater
+07:30:33 <Delta[m]1> And notifications
+07:30:45 <helloworldkk87[m> Notifications work on both
+07:31:02 <Delta[m]1> They never used to
+07:31:12 <helloworldkk87[m> Right
+07:32:13 <Delta[m]1> You used to have to specifically install this version for GrapheneOS, which was completely independent of Google services
+07:32:44 <Delta[m]1> i.e the notifications
+07:33:01 <helloworldkk87[m> Right
+07:33:01 <helloworldkk87[m> Also lets take this to off topic
+07:33:05 <kskdj[m]> <Delta[m]1 "You used to have to specifically"> Which one
+07:33:22 <helloworldkk87[m> #grapheneos-offtopic:matrix.org
+07:33:36 <Delta[m]1> <kskdj[m] "Which one"> The .apk offered on their site
+08:11:50 <Ann_Caleb> wth just happened?
+08:19:26 <Ann_Caleb> wth just happened? anybody know?
+09:13:34 <iccedlemontea[m]> Hey guys what is the "sensors" permission?
+09:14:15 <helloworldkk87[m> https://github.com/Peter-Easton/GrapheneOS-Knowledge/blob/master/GrapheneOS-Security-Q%26A.md#if-i-deny-an-app-the-sensors-permission-what-happens-this-permission-toggle-isnt-available-on-regular-android
+09:14:36 <helloworldkk87[m> That explains it well
+09:32:53 <iccedlemontea[m]> That explained it very clearly. Thanks for sharing that resource
+10:15:27 <GrapheneOS-Teleg> !PrivacyGoods has joined the Telegram Group!
+11:54:50 <lkjlpojnk> Hi, I am preparing to flash my Pixel 4a 5g with GrapheneOS. In the official Web installation guide, it says to turn on oem locking, but it says nothing about enabling USB debugging. Is it correct to leave USB debugging off? I was under the impression this was needed.
+11:54:51 <lkjlpojnk> Sorry for this question, I am doing this for the first time and just like to double check so as to avoid bricking my phone
+11:55:18 <lkjlpojnk> *oem unlocking* of course
+11:59:47 <sphinx[m]> lkjlpojnk: yes, don't deviate from the guide
+12:00:05 <lkjlpojnk> Ok, so I leave USB debugging toggled off, correct?
+12:00:26 <sphinx[m]> correct
+12:01:18 <lkjlpojnk> Thanks!
+12:33:07 <Babe69> Hot Limited Item!!! https://www.ebay.com/itm/333952068836
+12:34:07 <Babe69> Hot Limited Item!!! https://www.ebay.com/itm/333952068836
+12:34:48 <helloworldkk87[m> Tf is this xd
+12:35:21 <DHFuchsiaOSwhen> Some random spamming
+12:41:13 <lkjlpojnk> Hi, I am in the process of flashing GOS via WEB Installer and ran into an error
+12:42:01 <lkjlpojnk> the Web Installer says "Error: Unable to claim Interface", and the device shows fastbootd with the options to reboot system now, enter recovery, reboot to bootloader or power off
+12:43:14 <DHFuchsiaOSwhen> <lkjlpojnk "the Web Installer says "Error: U"> reboot again to bootloader, flash it using different usb port or usb cable
+12:43:35 <DHFuchsiaOSwhen> <DHFuchsiaOSwhen "reboot again to bootloader, flas"> Try doing this btw (assuming the cable that came with the phone is not used)
+12:43:59 <lkjlpojnk> I am using the original cable and no adapter. Should I use a different port?
+12:45:29 <OffTopic> Hello, this is off topic, but everyone here seems to be intelligent on the subject of privacy and security.
+12:45:50 <OffTopic> What messaging app, would you guys suggest ? Signal ? or FOSS-Molly ?
+12:45:58 <DHFuchsiaOSwhen> <lkjlpojnk "I am using the original cable an"> Yeah
+12:46:34 <lkjlpojnk> I rebooted into bootloader, plugged the cable into a different port and pressed the Flash Release button, but it says "Error: An operation that changes interface state is in progress."
+12:46:39 <helloworldkk87[m> #grapheneos-offtopic:matrix.org
+12:47:08 <DHFuchsiaOSwhen> <lkjlpojnk "I rebooted into bootloader, plug"> Refreshing may help
+12:48:11 <DHFuchsiaOSwhen> <OffTopic "What messaging app, would you gu"> A shorthand answer, FOSS-Molly for having separate passphrase and having encryption at rest, Signal for lesser parties to trust
+12:48:36 <DHFuchsiaOSwhen> <OffTopic "What messaging app, would you gu"> (Also, the offopic room is at #grapheneos-offtopic)
+12:48:57 <lkjlpojnk> Thanks, refreshing worked.Its flashing now
+12:48:58 <OffTopic> Ok, thank you !!
+12:54:21 <lkjlpojnk> Thank you so much DHFuchsiaOSwhen , the installation worked perfectly with the other port
+13:15:26 <lkjlpojnk> Hi, how do I verify apk files on GrapheneOS?
+13:52:54 <signalarch[m]> <lkjlpojnk "Hi, how do I verify apk files on"> If you are trying to on your phone I believe https://f-droid.org/app/com.oF2pks.classyshark3xodus will show the sha256 of apks
+14:51:35 <Stephen[m]> Anyone have an issue with occasions of GrapheneOS on a Pixel 3XL freezing up? I'm trying to figure out if its just if I have to many apps running in the background or something.
+14:52:07 <tom-griffin[m]> <Stephen[m] "Anyone have an issue with occasi"> I have the same problem
+14:52:27 <tom-griffin[m]> But I'm on a 4xl
+14:52:48 <Stephen[m]> I usually check RAM usage, but mine typically stays at 3.4gb/3.8gb
+14:54:16 <DHFuchsiaOSwhen> Maybe related btw: https://github.com/GrapheneOS/os_issue_tracker/issues/531#issuecomment-812075727
+14:55:00 <Stephen[m]> I'll check it out
+14:58:06 <Stephen[m]> Ah, yes. Sounds like it is related. I usually notice it on my phone if I'm watching newpipe, vinyl music player, or bromite. But it is really random. I need to see if I can log what happens before it freezes
+14:59:35 <Stephen[m]> Does anyone know how I could go about logging data when the phone freezes up?
+15:00:30 <DHFuchsiaOSwhen> <Stephen[m] "Does anyone know how I could go "> Bug report toggled on in developer options
+15:00:59 <DHFuchsiaOSwhen> or adb logcat with adb debugging on
+15:08:41 <Stephen[m]> Good stuff. I'll try it out
+15:15:03 <Stephen[m]> <DHFuchsiaOSwhen "Bug report toggled on in develop"> So I would probably just run the bug report right after a SystemUI freeze correct?
+15:15:24 * Stephen[m] uploaded an image: (59KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/QXFDOZSbIMOtGlHoTNyOKNdZ/Screenshot_20210409-111246.png >
+15:29:10 <mrx777[m]> Hello guys
+15:33:34 <Stephen[m]> Sup
+15:43:31 <Babe69> https://www.ebay.com/itm/333952068836
+15:46:14 <cacheline> I'm interested in GrapheneOS for my personal device. But, I'm wondering if there's an easy way to figure out which of my apps do NOT use the Play Services library.  Are there any ways to determine this without first trying to install & use the app?
+15:46:14 <cacheline> Also, since Project Treble is using play services to distribute OS updates, as far as I understand it, how does that work for OS updates for GrapheneOS?
+15:46:15 <cacheline> And as an Android app dev, would I need to skip using a lot of the AndroidX libraries and such in order for apps to work on GrapheneOS?  Or is it strictly things like maps, gms, and other play-* maven artifacts that won't work in GrapheneOS?
+15:46:45 <cacheline> Is there an easy way to install GrapheneOS on the standard emulator bundled with Android Studio, so I can test it out?
+15:53:53 <p8tuahpirua5ra[m> who here uses signal with grapheme?
+15:54:51 <p8tuahpirua5ra[m> no matter what I do I can't get it to vibrate or ring when someone texts or calls. its permanently stuck on silent. how do I get it off silent?
+15:55:33 <cacheline> I haven't tried it, but have you gone to the Settings app to the Signal settings, and adjusted the notification channel settings there?
+15:55:59 <Stephen[m]> <cacheline "I haven't tried it, but have you"> Yes, I would check this
+15:56:48 <p8tuahpirua5ra[m> its under settings accounts then signal?
+15:58:08 <cacheline> Long press on the Signal icon and choose the app info option (may look like an "i" in a circle)... then click Notifications
+15:58:44 <cacheline> Will look approximately like this: https://i.stack.imgur.com/zpwUb.jpg
+15:59:18 <cacheline> The UI tends to change slightly across Android releases, so it may look somewhat different.
+15:59:29 <Stephen[m]> <p8tuahpirua5ra[m "its under settings accounts then"> Settings>apps and notifications> notifications
+16:01:11 <p8tuahpirua5ra[m> it's turned on
+16:01:29 <p8tuahpirua5ra[m> but still stuck on silent
+16:02:29 <Stephen[m]> Are you getting a notification for background connection enabled on signal?
+16:02:31 <cacheline> Well, it's more than just turned on.  In Android 8, they added "notification channels", so apps could have different settings for various types of notifications (vibrate, sound, blinking led, etc).  You need to adjust all the settings for the notification channel in question
+16:02:38 <p8tuahpirua5ra[m> yea I am
+16:02:51 <akc3n[m]> <cacheline "Is there an easy way to install "> Have you checked the build page on Grapheneos.org?
+16:02:54 <p8tuahpirua5ra[m> it's there but its not showing right now
+16:03:17 <p8tuahpirua5ra[m> how do you turn it on?
+16:04:31 <Stephen[m]> Mine just shows up when the signal background service is running
+16:04:59 <Stephen[m]> You could try force stopping, then open the app, see if that does anything
+16:05:00 <cacheline> akc3n[m] not as of yet.  So, I'll need to build for an emulator target?
+16:08:11 <p8tuahpirua5ra[m> I restarted my phone now it shows up
+16:08:49 <akc3n[m]> <cacheline "akc3n not as of yet.  So, I'll n"> Please read https://grapheneos.org/build it has all the information
+16:08:54 <cacheline> Another thought occurs to me: since GrapheneOS doesn't have the Play Store, how can I obtain an app if it's not on F-Droid?  Do I have to hope the devs published an APK somewhere that I can sideload?
+16:09:46 <p8tuahpirua5ra[m> I use apkpure
+16:12:18 <Stephen[m]> Also the Aurora Store is a good opt
+16:13:11 <Stephen[m]> <p8tuahpirua5ra[m "I use apkpure"> Might want to double check those apks b4 u install
+16:13:49 <cacheline> Interesting.  Seems to have a few apps I use just from a basic perusal.  I even see my company's app there.  So, super curious, how do they do it?  Do they just manage to scrape the Play Store? (Not upset about it, genuinely curious)
+16:14:43 <tony_l[m]> <p8tuahpirua5ra[m "I use apkpure"> apkmirror publishes hash and cert fingerprint
+16:15:09 <p8tuahpirua5ra[m> signal still won't allow me to get notifications
+16:15:34 <p8tuahpirua5ra[m> the message shows up butnit won't vibrate or ring. its stuck on silent
+16:16:37 <Stephen[m]> <cacheline "Interesting.  Seems to have a fe"> I believe it uses fake gmail accounts generated and they use those to allow you to download apps
+16:16:48 <cacheline> Anyway to send a link to screenshots of the Signal notifications settings you used?
+16:16:52 <Stephen[m]> They call it their tokenizer or something
+16:17:43 <cacheline> So, it proxies the download?  Or it uses the accounts to get the APK and mirror on their server?
+16:17:59 <Stephen[m]> <cacheline "Interesting.  Seems to have a fe"> Aurora - App Store
+16:18:53 <Stephen[m]> <cacheline "So, it proxies the download?  Or"> Not sure, but lots of info on their telegram server and gitlab I think
+16:18:58 <cacheline> https://aurora-store.en.softonic.com/android <-- this?
+16:20:45 <GrapheneOS-Teleg> <t​hemikep> java.io.FileNotFoundException: open failed: ENOENT (No such file or directory) at android.os.ParcelFileDescriptor.openInternal(ParcelFileDescriptor.java:344) at android.os.ParcelFileDescriptor.open(ParcelFileDescriptor.java:231) at androidx.core.content.FileProvider.openFile(:2) at android.content.ContentProvider.openAssetFile(ContentProvider.java:2004) at android.content.ContentProvider.openTypedAssetFile(ContentProvider.
+16:21:04 <Stephen[m]> Yes, but I feel like softonic is sketch, its on fdroid  https://f-droid.org/en/packages/com.aurora.store/
+16:21:06 <GrapheneOS-Teleg> <t​hemikep> I get thsis error when I try to update some Apps via Aurora
+16:21:39 <mrx777[m]> <p8tuahpirua5ra[m "no matter what I do I can't get "> Via Home screen bubble then click on the settings icon
+16:21:49 <cacheline> Stephen[m] well, I was wondering more about if there's a web interface for Aurora, just so I could see what they have while on my laptop :-)
+16:21:55 <cacheline> thanks, for all the info btw
+16:22:34 <Stephen[m]> Ah gotcha. Its an exact mirror of the play store, so it should have all the same apps
+16:22:40 <Stephen[m]> *I think
+16:23:28 <cacheline> Sweet...  I love Android, but am increasingly leery of Big Tech's hooks into everything.  Just trying to figure out the pieces to do a switch & what apps, if any, would break for me in switching over
+16:33:42 <danielk[m]> Switched from Android to GrapheneOS some months ago...with F-droid and Aurorastore for Banking Apps absolut great decision in my opinion! Thx to the Dev(s)! And also great having to possibility to support via Monero!
+16:34:16 <GrapheneOS-Teleg> Z​1fX4DYhtGBmPVPUcHFh shared a photo on Telegram with caption: ''
+16:35:23 <mrx777[m]> <Stephen[m] "Might want to double check those"> You mean chexk the apk from aurora store?
+16:37:56 <Stephen[m]> <mrx777[m] "You mean chexk the apk from auro"> I was just thinking it is probably a good idea to check hash of the apk if its downloaded from the internet
+16:38:05 <mrx777[m]> What is the fastest way to install apps on Graphene?
+16:38:41 <Stephen[m]> Fdroid, then Aurora if you need apps from the play store
+16:38:51 <helloworldkk87[m> If you install apps from Aurora store they are verified. No need to check hash
+16:38:54 <mrx777[m]> <Stephen[m] "I was just thinking it is probab"> Maybe downloading the apk via the official website and install it via adb
+16:39:14 <mrx777[m]> <helloworldkk87[m "If you install apps from Aurora "> You sure??
+16:39:24 <helloworldkk87[m> Well 99% sure :D
+16:39:58 <Stephen[m]> If you check auroras website they probably go into some detail about it
+16:40:27 <helloworldkk87[m> Also there is off topic channel where we usually talk about this kinda stuff
+16:40:27 <helloworldkk87[m> You can join here -> #grapheneos-offtopic:matrix.org
+16:41:27 <mrx777[m]> With Graphene you can create a image and deploy it on other devices?
+16:48:41 <p8tuahpirua5ra[m> I need help. why is my entire phone silent?
+16:48:55 <p8tuahpirua5ra[m> texts from anything don't make a sound or vibrate
+16:52:13 <mrx777[m]> Go to..
+16:54:16 <mrx777[m]> <p8tuahpirua5ra[m "texts from anything don't make a">  Try Settings > Display > Advanced > Lock Screen > Notifications on lock screen
+16:56:42 <mrx777[m]> Settings > Apps &Notifications > make sure the settings is right.
+16:57:44 <p8tuahpirua5ra[m> notifications on lock screen what should I put it as?
+16:59:44 <helloworldkk87[m> Depends
+16:59:44 <helloworldkk87[m> I use show notifications when decice unlocked
+17:01:02 <p8tuahpirua5ra[m> that didn't do anything
+17:01:21 <p8tuahpirua5ra[m> all it did was show apps running on my lock screen. still no sound
+17:03:20 <helloworldkk87[m> Ohhh it has nothing to do with that
+17:04:28 <fomijafi[m]> Settings - Sounds - ring & notification volume ???
+17:04:55 <fomijafi[m]> don't mean to be dense but just making sure you've checked the system settings
+17:12:59 <GrapheneOS-Teleg> P (@p​pp1234ppp) has joined the Telegram Group!
+17:47:44 <bikeman1234[m]> Hi! I have a pixel 5 and a Pixel 4a with GrapheneOS, on both i experience some problems with SMS, but only in alternative profiles not the owner profile.  Sometimes I get a notification about SMS but i cant find the SMS, i know there should be one as I have tried texting myself. This happens almost everyday and it works again when i restart the phone, at all times the notifications only vibrates no sound even if
+17:47:44 <bikeman1234[m]> the settings say it should make sound and the volume is max
+17:47:58 <bikeman1234[m]> Owner profile no problems
+17:52:00 <southron[m]> With the default messaging app I always receive SMS but it vibrates only in user profile.  The only time I received no notification was with 3rd party SMS apps.
+17:52:24 <bikeman1234[m]> I have the default one
+17:53:11 <southron[m]> The built in app is pretty ancient. Maybe it doesn't fully support user profiles or there is a setting I haven't figured out.
+17:55:32 <bikeman1234[m]> I want to use signal as SMS app but it seems it cant be signed in on multiple profiles
+17:58:40 <kepoff[m]> <bikeman1234[m] "I want to use signal as SMS app "> you could use something like Molly for this, which is basically hardened Signal
+17:59:02 <kepoff[m]> But it might be better to ask this on the off topic channel:  #grapheneos:matrix.org
+17:59:19 <bikeman1234[m]> ok
+17:59:24 <kepoff[m]>  #grapheneos-offtopic:matrix.org
+17:59:24 <kepoff[m]> oops
+17:59:50 <kepoff[m]>  * But it might be better to ask this on the off topic channel:  #grapheneos-offtopic:matrix.org
+18:01:39 <odinos[m]> For the license of a paid app I need to have a certain email address registered in my OS
+18:01:47 <odinos[m]> How do I accomplish this without a native email app?
+18:02:33 <odinos[m]> "The Pro version will only work on Android devices where this email is registered as an Android account." it says on the paypal payment page
+18:52:06 <entry1> <odinos[m] "For the license of a paid app I "> There isn't an email exactly registered in an OS. You can just have access to the email?
+18:52:44 <entry1> Unlike a Google account signed in or an iOS email
+18:57:10 <odinos[m]> I dont understand
+18:58:52 <TheJollyRoger> odinos[m]: don't quote me on this, but if I recall correctly, paid apps are handled via Play Services. Some aspects of play services are privacy invasive and need to be deeply integrated into the operating system in order to function, so GrapheneOS does not bundle them.
+18:59:20 <TheJollyRoger> In other words, the device needs to be linked to a Google account.
+18:59:51 <odinos[m]> No this licensing method was specifically made for people without play services
+19:00:32 <TheJollyRoger> Alright, you'll have to take it up with upstream directly, then.
+19:00:49 <odinos[m]> https://yatse.tv/yatse-payment-troubleshooting
+19:00:57 <TheJollyRoger> Yep, you'll have to take it up with them, then.
+19:01:16 <TheJollyRoger> I can't help you with that, unfortunately.
+19:01:35 <odinos[m]> Well their dev is saying to contact the rom dev
+19:01:47 <odinos[m]> I just need to register an email as android account
+19:01:58 <odinos[m]> youre saying this is not possible? regardless of the licensing thing
+19:03:43 <odinos[m]> https://community.yatse.tv/t/license-without-google-services/2270/10
+19:03:48 <TheJollyRoger> Well, under settings that's handled by the app.
+19:04:42 <odinos[m]> When I press add account in OS settings there is no option to enter an email
+19:04:51 <TheJollyRoger> Yeah. That should be handled by the app.
+19:04:56 <odinos[m]> what app
+19:05:06 <TheJollyRoger> The app you're trying to use.
+19:05:25 <TheJollyRoger> Apps like Signal, Linphone, OpenKeyChain that use account sync should populate that automatically.
+19:05:57 <odinos[m]> On other roms adding an email account is handled by a default mail app
+19:06:19 <odinos[m]> I'm only asking how I can achieve this in GOS
+19:07:05 <TheJollyRoger> Yeah. I think I'm out of ideas for you, someone else is going to have to step in here.
+19:07:08 <TheJollyRoger> Sorry mate.
+19:07:15 <odinos[m]> okay no problem
+19:07:18 <TheJollyRoger> (I'm not a developer, I'm just the channel greeter)
+19:07:31 <TheJollyRoger> (So ahoy!)
+19:08:16 <sizzyb> greetings. would there be a reason that my PIN is no longer working?
+19:08:23 <TheJollyRoger> Ahoy!
+19:08:27 <TheJollyRoger> Your unlock pin?
+19:09:29 <sizzyb> ya. my unlock PIN isn't working. I literally unlocked it, 2 seconds later attempted to turn off Location from top pulldown menu, and it requested a PIN. I entered the same PIN to unlock the device in the first place, and it's not working
+19:09:56 <TheJollyRoger> Might've mistyped it?
+19:10:54 <sizzyb> I'm on my  13th attempt... have meticulously entered to ensure no extra numbers, right order, etc etc
+19:10:58 <TheJollyRoger> That's all I can think of. A few people here have ended up forgetting their lock pins and having to start over again by resetting from recovery.
+19:11:25 <TheJollyRoger> Dunno, there's not much of a reason this would happen.
+19:11:47 <sizzyb> I have no problem doing that... it's just really weird... I'll attempt to reset & see if I can replicate the problem...
+19:12:02 <TheJollyRoger> Sure. If you need to reset via recovery I'll walk you through the process.
+19:13:09 <sizzyb> In the absence of an online guide, that would be incredible
+19:14:17 <TheJollyRoger> Sure. Alright, so... first thing first, this is the only warning you will get when doing this: if we reset your phone via recovery, there is no way back, because the security chip will shred its access tokens and generate new ones. So even if you do find the password at a later date, even if the SSD is intact, the contents can't be recovered.
+19:14:31 <TheJollyRoger> So try to exhaust all other options before we try this, if there's anything you value on that phone.
+19:14:49 <TheJollyRoger> There is no "oops" switch.
+19:15:41 <sizzyb> Understood. Luckily only installed last week, so losing valuable info is a non-issue
+19:16:11 <TheJollyRoger> Great! Ok, so the first step is, we're going to reboot to the bootloader, I want you to power off your phone via the power menu.
+19:16:35 <TheJollyRoger> Once it's powered off, I want you to press and hold down the VOLUME DOWN key, then press and hold the POWER key until you see the black "Fastboot Mode" screen.
+19:17:25 <TheJollyRoger> Once you get there, use VOLUME UP or VOLUME DOWN to scroll through the options until you get to "Recovery mode" Select it by tapping and releasing POWER once.
+19:18:09 <TheJollyRoger> You'll see the yellowscreen "different operating system" warning (you can skip it by double tapping POWER) followed by the OEM logo, and then it'll drop you at a black screen with the Green Robot lying on its back with a "!" and "No Command."
+19:18:16 <TheJollyRoger> Once you see that, I want you to do this part very quickly:
+19:19:21 <TheJollyRoger> You need to quickly press and hold POWER, then tap and release VOLUME UP then let go of VOLUME UP and then let go of POWER.
+19:19:56 <TheJollyRoger> You should arrive at a menu labelled: "GrapheneOS Recovery" which should have several options, "Wipe Data/Factory Reset" should be near the middle of the menu.
+19:20:42 <TheJollyRoger> This should get you back to a fresh start of GrapheneOS.
+19:23:47 <sizzyb> Ahoy! Thanks TheJollyRoger
+19:23:52 <TheJollyRoger> Arr, hope this helps!
+19:41:10 <sizzyb> I couldn't replicate the issue, but I believe last boot I didn't allow apps access to location at all. This boot I allowed location upon permission
+19:51:35 <osm2lis> Hi, does anyone know how I can sync my Pixel 4a 5g with my laptop running Ubuntu 20.04? If I connect it via USB-C cable, it can be mounted, however the file browser shows the phone as empty and I cannot modify anything
+19:52:34 <entry1> <osm2lis "Hi, does anyone know how I can s"> Did you enable data transfer on the device itself when you have it unlocked?
+19:52:58 <osm2lis> I don't think so. How do I do that?
+19:55:49 <osm2lis> Got it, thanks for the pointer!
+20:00:01 <entry1> No problem! Sorry, missed that message earlier. Glad you got it, very common question
+20:02:22 <chile09[m]> Hello
+20:04:47 <chile09[m]> Is it possible to install GrapheneOS on a nexus 6P
+20:05:00 <jpds> chile09[m]: No, the supported devices are on the website
+20:06:12 <chile09[m]> So it's just the Google Pixel models?
+20:06:33 <jpds> chile09[m]:  Yep
+20:08:47 <chile09[m]> Is there something which prevents GrapheneOS from being ported to a different device?
+20:10:19 <tony_l[m]> <chile09[m] "Is there something which prevent"> rtfm
+20:10:47 <skwisgaar[m]> chile09: the security/privacy goals of GrapheneOS only can be accomplished on Pixel devices at this point in time. You could port it but it wouldn’t be the same.
+20:11:29 <tony_l[m]> *
+20:11:29 <tony_l[m]> https://grapheneos.org/faq#device-support
+20:12:06 <skwisgaar[m]> tony_l: you can point people to documentation without being a dick
+20:17:34 <helloworldkk87[m> Lol
+20:19:12 <chile09[m]> So the pixel has certain firmware features unavailable in other devices
+20:26:19 <helloworldkk87[m> https://github.com/Peter-Easton/GrapheneOS-Knowledge/blob/master/GrapheneOS-General-Q%26A.md#why-does-this-project-only-support-pixels-i-want-to-get-away-from-google-i-dont-want-to-have-to-buy-google-to-get-away-from-google
+20:26:39 <chile09[m]> It has IOMMU support
+20:27:04 <helloworldkk87[m> This also shines alot of light on topic:
+20:27:04 <helloworldkk87[m> https://grapheneos.org/faq#future-devices
+20:31:22 <Cliff[m]> Hello everyone, my graphene device keeps autocorrecting my words to english words, i already switched off settings -> system -> language and input -> spellchecker , but I can't find autocorrect?
+20:32:15 <Lynn[m]> Cliff You have to go into the keyboard settings, I believe.
+20:32:49 <Cliff[m]> Lynn 🏳️‍🌈: could you point me in the right direction
+20:33:49 <Lynn[m]> Settings -> System -> Language and Input -> Virtual keyboard -> Select your keyboard
+20:36:35 <jcenny[m]> Hi, does anybody had a problem with ReactNative apps and update 2021.03.19.14 on Pixel4a devices? I'm getting a SIGSEGV on startup. On 2021.03.06.00 the crash wasn't happening, same App version. Thank you
+20:37:18 <jcenny[m]> *on app startup
+20:54:47 <Cliff[m]> Lynn 🏳️‍🌈: finally found it thank you!
+20:56:19 <chile09[m]> This is the SoC -> https://www.qualcomm.com/products/snapdragon-730g-mobile-platform
+21:01:22 <snoopy> jcenny[m]: Do you have an example for a reactnative app?
+21:01:59 <jcenny[m]> yes, the app that's crashing is com.sella.BancaSella (  libc    : Fatal signal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x430979814030 in tid 19921 (mqt_js), pid 19866 (ella.BancaSella)
+21:02:10 <jcenny[m]> banking app
+21:16:26 <GrapheneOS-Teleg> Cloud (@S​pektrum_light) has joined the Telegram Group!
+21:18:18 <GrapheneOS-Teleg> <S​pektrum_light> Hello all; I'm really intrested in degoogling my phone, but I saw that grapheneOS is exclusive to pixels; tho in the build section of the website there are generic target: my question is: is it worth it build a rom for a generic target (because apparently you lose like 70% of graphene features) =
+21:47:01 <failbetter[m]> Is it possible to get gesture typing working with the graphene os keyboard?
+21:54:18 <snoopy> jcenny[m]: I just istalled and started "etesync" github says its also react native and it works on my pixel 4a.
+21:55:04 <helloworldkk87[m> <GrapheneOS-Teleg "<Spektrum_light> Hello all; I'm "> Not in my opinion. And if you think GrapheneOS is just de-googled phone you are missing 95% of the point. GrapheneOS is to protect you from memory corruption vulnerabilities and software exploits, and contain apps you've installed on your device and prevent them from exploiting your operating system. And alot the security is tied to the hardware and only Pixels
+21:55:04 <helloworldkk87[m> have it right now
+21:55:27 <helloworldkk87[m> Just my opinion tho
+21:55:33 <snoopy> failbetter[m]: It may be possible, but there need to be someone who puts time and effort in it to make it reality
+21:55:49 <jcenny[m]> snoopy: yes, not all apps are behaving like the com.sella.bancasella. I'm trying to understand why that app is crashing.
+21:56:27 <snoopy> jcenny[m]: Maybe the app got an update?
+21:56:36 <jcenny[m]> nope, same version
+21:56:41 <snoopy> And crashes if it doesn't find a stock android with google? :x
+21:56:46 <jcenny[m]> working before grapheneos upgrade
+21:57:12 <jcenny[m]> it was complaining about google services missing, but it was working fine
+21:57:49 <jcenny[m]> The crash log is always the same
+21:59:09 <jcenny[m]> this: https://github.com/facebook/react-native/issues/25060 is a very similar error
+22:00:16 <snoopy> I assume the app isn't open source?
+22:00:38 <jcenny[m]> Yes, that's not opensource
+22:02:57 <snoopy> I don't see much changes in the update, not sure what could've happened here
+22:06:50 <jcenny[m]> could a full crash log help in finding the problem?
+22:13:17 <snoopy> jcenny[m]: More information is more helpful, I guess
+22:13:33 <jcenny[m]> Should I have to file a bug on github?
+22:37:47 <private99[m]> Got a question. I run graphene with mullvad VPN always on and DNS is the mullvad adblock server.
+22:37:48 <private99[m]> I want to install one of those VoIP apps like textme or textfree from the aurora store . however I noticed it has a lot of trackers on it. If I download it is the app sandboxed or will it be able to report and track what I do across graphene os and websites I visit
+22:37:48 <private99[m]> What information about the phone will it have  other than phone model? Will it have android I'd ?
+22:51:38 <arcibald[m]> Hello. Is there any open source / trusted MDM for pixels with graphenos on them?
+23:24:04 <TheJollyRoger> Hello private99[m], apps are always sandboxed, and with respect to "trackers" on Aurora store,
+23:24:56 <TheJollyRoger> arcibald[m]: There aren't. We recommend against third party device administrators, they present a lot of attack surface
+23:25:48 <TheJollyRoger> private99[m]: with respect to trackers on Aurora Store, something you ought to know is that just because an app includes a library such as firebase, that's not actually a sign of it being invasive or not. It's actually at the discretion of the app developers to use the librariesand what for.
+23:26:11 <TheJollyRoger> Consequently, them merely being included is not a "smoking gun" of the app being invasive, nor is the lack of them an indication that the app is trustworthy.
+23:26:22 <TheJollyRoger> Because it's up to the app developers to determine how they are used and what they do.
+23:27:07 <TheJollyRoger> private99[m]: apps on GrapheneOS are always sandboxed, all the time, and this cannot be turned off nor disabled by you. Apps are only able to see what data you permit them to see, and they can only enumerate other apps within their own respective profile.
+23:29:50 <TheJollyRoger> Sandboxing cannot be disabled by you, nor can apps "opt out" of it. Similarly, interprocess communication (which is limited to apps in the same profile) is a two-way street: even if an app was written by the NSA that whitelisted every other app in the world for interprocess communication, that wouldn't count for anything unless all the other app authors that they wanted to communicate with
+23:29:52 <TheJollyRoger> became complicit.
+23:43:37 <ahmouse> Does anyone know how to verify that secure boot works properly?
+23:43:52 <ahmouse> Or just point me in the right direction
+23:44:25 <jj1013[m]> <ahmouse "Does anyone know how to verify t"> First you must check the device boots correctly after locking the bootloader, then you verify the authenticity of the OS with Auditor.
+23:44:29 <jj1013[m]> > <@freenode_ahmouse:matrix.org> Does anyone know how to verify that secure boot works properly?
+23:44:29 <jj1013[m]>  * First you must check the device boots correctly after locking the bootloader, then you verify the security of the OS with Auditor.
+23:45:43 <strcat[m]> @room Copperhead stopped most of their attacks on the project a couple weeks ago. It's likely that will be coming to an end in the near future. Unfortunately, there are others doing far worse things than Copperhead has ever done. CalyxOS and their community are engaging in incredibly underhanded attacks on the project involving harassment, bullying and spreading misinformation about the project. Itworse than anything
+23:45:44 <strcat[m]> Copperhead has ever done. They attempt to portray us as the perpetrators for correcting their false claims and defending ourselves from them. It's not the case.
+23:46:22 <strcat[m]>  * @room Copperhead stopped most of their attacks on the project a couple weeks ago. It's likely that will be coming to an end in the near future. Unfortunately, there are others doing far worse things than Copperhead has ever done. CalyxOS and their community are engaging in incredibly underhanded attacks on the project involving harassment, bullying and spreading misinformation about the project. It's worse than
+23:46:22 <strcat[m]> anything Copperhead has ever done. They attempt to portray us as the perpetrators for correcting their false claims and defending ourselves from them. It's not the case. They've already done immense damage and we're working on putting together a plan to start addressing it.
+23:47:08 <strcat[m]> any further raids on the channel, concern trolling, harassment, etc. is unlikely to be connected to Copperhead but rather most of it is now perpetrated by CalyxOS and their core community including people they support and collaborate with
+23:48:05 <tony_l[m]> * https://grapheneos.org/faq#device-support
+23:50:10 <vata0[m]> What’s going on with calyx?
+23:50:30 <backupaccmovedto> im not very familiar what is happening with the Copperhead thing?
+23:50:30 <backupaccmovedto> that is it about exactly?
+23:50:30 <backupaccmovedto> (i just know that it was the predecessor of grapheene os)
+23:50:48 <strcat[m]> https://grapheneos.org/history
+23:50:51 <strcat[m]>  * https://grapheneos.org/history/
+23:51:25 <vata0[m]> I know copperhead was trying to sue the dev from here
+23:51:40 <Felix[m]4> I'm also quite confused. What exactly is happening? I'm really out of the loop
+23:51:42 <vata0[m]> But I didn’t know anything about there being something funky with calyx
+23:52:32 <Superstig[m]> Yeah, what's going on with Calyx?
+23:52:41 <strcat[m]> vata0: Copperhead spent multiple years waging an all out war against us attempting to wipe out the project to benefit themselves
+23:52:43 <Superstig[m]> I'm out of the loop as well.
+23:52:44 <vata0[m]> Felix: pretty sure there’s a post on this sub Reddit about the copperhead shit
+23:53:01 <strcat[m]> because they see it as a competitor which harms their profits since GrapheneOS is much better, is the original project, and is free open source software
+23:53:04 <backupaccmovedto> i see
+23:53:05 <backupaccmovedto> btw why the hardened malloc?
+23:53:05 <backupaccmovedto> what is the issue with the original one
+23:53:06 <backupaccmovedto>  * i see
+23:53:06 <backupaccmovedto> btw why the hardened malloc?
+23:53:06 <backupaccmovedto> what is the issue with the original one?
+23:53:06 <jj1013[m]> <vata0[m] "Felix: pretty sure there’s a pos"> Sure thing.
+23:53:23 <strcat[m]> backup acc; moved to @java:furry.lol: https://github.com/GrapheneOS/hardened_malloc/README.md
+23:53:32 <chile09[m]> is LineageOS any good?
+23:53:42 <vata0[m]> I thought y’all was friendly with calyx
+23:53:48 <backupaccmovedto> <chile09[m] "is LineageOS any good?"> i like it a lot
+23:54:03 <vata0[m]> I’ve never heard them say anything bad and I’m in there a lot
+23:54:16 <Felix[m]4> <vata0[m] "Felix: pretty sure there’s a pos"> Alright, I'll check it out
+23:54:29 <chile09[m]> <backupaccmovedto "i like it a lot"> The security isn't as good as graphene obviously
+23:54:37 <backupaccmovedto> true
+23:54:42 <backupaccmovedto> it has more user freedom
+23:54:44 <backupaccmovedto> you can root it
+23:54:50 <backupaccmovedto> and microg is available
+23:54:54 <jj1013[m]> <chile09[m] "is LineageOS any good?"> It may be FLOSS, but it is a really big downgrade on security due to it depending on an always-unlocked bootloader.
+23:54:57 <Felix[m]4> <chile09[m] "is LineageOS any good?"> Really good privacy but not as secure
+23:55:07 <Superstig[m]> Depends on what you want to do with your Android ROM.
+23:55:15 <TheJollyRoger> Hi guys, Lineage isn't topical to GrapheneOS, but I'll entertain this one.
+23:55:21 <kradav[m]> <jj1013[m] "It may be FLOSS, but it is a rea"> it can work with locked bl
+23:55:25 <jj1013[m]> <backupaccmovedto "you can root it"> microG is not even near deGoogled.
+23:55:31 <backupaccmovedto> <jj1013[m] "microG is not even near deGoogle"> im aware
+23:55:41 <jj1013[m]> Also, root is also a security downgrade.
+23:55:41 <backupaccmovedto> but its useful
+23:55:41 <backupaccmovedto> i
+23:55:42 <backupaccmovedto>  * but its useful
+23:55:43 <Superstig[m]> LineageOS trades user freedom for security.
+23:55:49 <TheJollyRoger> So, with respect to the old security and privacy debate, I'll put it this way: Privacy is a byproduct of security, and security is a prerequisite for privacy.
+23:55:51 <Superstig[m]> Just depends on what you want.
+23:55:54 <backupaccmovedto> i dont think it should be in there by default
+23:55:54 <backupaccmovedto> but the posibility to install it
+23:55:56 <exifran[m]> <backupaccmovedto "but its useful"> Not really
+23:56:07 <TheJollyRoger> That's our philosophy; GrapheneOS and LineageOS are very different projects, and are intended for two very very different audiences.
+23:56:58 <TheJollyRoger> If you want to play System Administrator or Power User with your phone, be my guest on Lineage, but be aware that LineageOS sees much of the security mitigations and policies as being antithetical to their approach to cater to power users who desire to do what they want, and don't want security to get in the way.
+23:57:26 <chile09[m]> <Felix[m]4 "Really good privacy but not as s"> could you explain further please; it is topical because both are Android ROMs and comparing them shows how they are different and potentially better/worse
+23:57:30 <TheJollyRoger> Ultimately, I chose GrapheneOS because I learned the hard way numerous times that sometimes being a power user isn't necessarily a compliment.
+23:57:33 <backupaccmovedto> <exifran[m] "Not really"> it depends on what you want
+23:58:19 <strcat[m]> vata0: the leader of their organization has directly participated in bullying/harassment against me and supports / promotes a content creator who is literally obsessed with me and essentially stalks me across platforms while organizing raids on the channel + harassment
+23:58:30 <kradav[m]> i wouldnt say, that it caters to different audiences. i would like to see a bigger overlap, with lineageos qol features and grapheneos security
+23:58:40 <strcat[m]> vata0: it's unacceptable, and it's at the point where I'm willing to ban people simply for supporting a project engaging in that
+23:59:06 <strcat[m]> the fact that they spent months putting together a bunch of lies/misrepresentations and doctored 'evidence' to misrepresent me defending myself like this against their attacks is ridiculous
+23:59:08 <vata0[m]> Dam
+23:59:09 <strcat[m]> they have caused immense harm
+23:59:14 <strcat[m]> going forward there is zero tolerance policy
+23:59:21 <Felix[m]4> <chile09[m] "could you explain further please"> Well for starters, it doesn't include Google service stuff out of the box which is good for privacy. It requires an unlocked bootloader though which is trash for security
+23:59:24 <strcat[m]> if you support a project engaging in that, you aren't welcome here

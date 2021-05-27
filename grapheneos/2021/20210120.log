@@ -1,0 +1,1075 @@
+00:01:44 <rny> the first vendor to release open hardware will also be the last!
+00:02:03 <rny> since they are gonna get rickrolled so bad by all the other vendors
+00:04:53 <TheJollyRoger> Argh. I really hope not.
+00:22:26 <zer011[m]> Hello
+00:25:24 <TheJollyRoger> Ahoy!
+00:29:28 <zer011[m]> Maybe you can suggest a program like I gnupg running on grapheme os
+00:30:27 <TheJollyRoger> zer011[m]: if you're looking to use your Yubikey on GrapheneOS, you can download OpenKeyChain.
+00:30:56 <TheJollyRoger> Yubikeys and J3H145 Dual-Interface cards will work with OpenKeyChain via NFC on GrapheneOS (although U2F is not yet implemented).
+00:31:24 <TheJollyRoger> If you're looking for secure communication tools, the best you can get is Signal, which fully tested and working on GrapheneOS.
+00:33:27 <zer011[m]> I am looking for such programs that I can encrypt my letter, and send to another person who would have my public key being able to read that letter
+00:35:52 <zer011[m]> Yea I now try install openkeychain
+00:35:59 <strcat> zer011[m]: strongly recommend using a proper secure messaging system instead of PGP
+00:36:30 <strcat> PGP should only be a last resort if you can't use a messaging system with modern cryptography, forward secrecy, a reasonable trust system and UI, etc.
+00:46:51 <zer011[m]> strcat: What software do you think is currently the safest? It was only my idea if I kept that secure system in an encrypted message. Wouldn't that get double protection?
+00:48:07 <strcat[m]> zer011: PGP is far more likely to cause harm to you than help you
+00:48:26 <strcat[m]> for example, it's unsafe to import a PGP key that you didn't create yourself
+00:48:36 <strcat[m]> GPG can't handle untrusted input safely
+00:48:37 <rny> strcat[m]: why would anyone do that ^?
+00:48:43 <rny> @_@
+00:49:14 <louipc> to check someones signature
+00:49:36 <rny> importing a (private) key is how i read it
+00:49:42 <strcat[m]> no
+00:49:44 <strcat[m]> a public key
+00:49:47 <rny> its routine to have to import someone else's public key
+00:49:51 <rny> otherwise how to check!?
+00:49:55 <strcat[m]> it's unsafe to import a public key from an attacker
+00:49:59 <strcat[m]> yeah that's unsafe
+00:50:04 <strcat[m]> GPG can't do that safely
+00:50:05 <louipc> hehehe
+00:50:18 <strcat[m]> rny:  you don't
+00:50:42 <strcat[m]> rny:  also not supposed to use keyservers anymore largely because ANYONE can add data to other people's keys
+00:50:49 <strcat[m]>  * rny:  also not supposed to use the distributed keyservers anymore largely because ANYONE can add data to other people's keys
+00:51:07 <rny> ye, i got that memo
+00:51:09 <louipc> plus most of them didnt even deploy tls
+00:51:25 <rny> pgp is web of trust, why bother with tls?
+00:51:26 <strcat[m]> rny:  yeah but I think you missed that it's unsafe to import a public key
+00:51:36 <strcat[m]> those keyservers make it unsafe to import even your own public key
+00:51:41 <strcat[m]> because people could have added unsafe data to it
+00:51:43 <strcat[m]> and GPG can't handle it
+00:51:48 <strcat[m]> that's the issue with those keyservers
+00:52:00 <strcat[m]> but the source of the issue is that it can't import a key safely
+00:52:13 <louipc> rny: for fun
+00:52:37 <strcat[m]> the proper way to use GPG is to remove it and use a modern secure messaging system
+00:52:47 <rny> gpg not being able to import a key safely, is it a standard's issue or an implementation issue?
+00:52:54 <strcat[m]> and if you really have a need to sign / encrypt files on a case by case basis then use a well made tool for it
+00:53:01 <rny> strcat[m]: gpg is not just for messaging though, i use it for other things
+00:53:07 <strcat[m]> rny: GPG is very poorly implemented and maintained
+00:53:16 <strcat[m]> PGP has standards issues such as being hard-coded to use SHA1
+00:53:31 <strcat[m]> and not having stuff expected of a modern encryption system
+00:53:46 <strcat[m]> rny: it's a mix of GPG issues and PGP issues
+00:55:04 <strcat[m]> in general you should be phasing it out
+00:55:08 <strcat[m]> find better alternatives
+00:55:27 <strcat[m]> use signify, minisign or another alternative for signing
+00:55:38 <strcat[m]> rny: depends on what specifically you're doing with it
+00:55:39 <rny> i just use pgp for my password manager
+00:57:32 <strcat> rny: https://github.com/FiloSottile/age is much better for encrypting files
+00:58:14 <strcat> if you also want to sign it as coming from you instead of it being anonymous, also need signify
+00:59:53 <strcat> it's still authenticated encryption without using signify but keep in mind it's anonymous (no proof it came from anyone in particular)
+01:00:48 <zer011[m]> Yea you give me much information, I try it understand:) I am new in this thinks
+01:01:17 <strcat> but don't use age for secure messaging - use a proper secure messaging system with forward secrecy
+01:03:51 <zer011[m]> What about briar?
+01:06:54 <TheJollyRoger> zer011[m]: Just use Signal.
+01:07:32 <rny> lots of work to do to rewrite `pass` to use `git`, `age` and `signify`
+01:08:23 <TheJollyRoger> I really hope someday, age and signify can be used to work with Trezor-Agent. That'd be boss.
+01:10:11 <frostedpanel[m]> * > <@strcat:matrix.org> @room btw, due to https://github.com/matrix-org/matrix-appservice-irc/issues/1194 Matrix users will be kicked after 30 days of not speaking in the channel, please just rejoin the channel if that happens, need to try to get them to prioritize fixing this
+01:10:11 <frostedpanel[m]> 😀
+01:10:46 <TheJollyRoger> Either that, or GnuPG needs to just "kill the baby" and drop backwards compatibility entirely and enforce strong, modern ciphers and cryptography. No more protocol negotiation back to 1993.
+01:12:01 <strcat[m]> rny: just `age`, don't see a reason the others are needed for that
+01:12:07 <rny> ye, i dont get what the pgp working group is thinking
+01:12:28 <rny> why let broken crypto hold back pgp
+01:12:34 <strcat[m]> TheJollyRoger:  it has no modern cryptography option at all
+01:12:43 <TheJollyRoger> Yeah.
+01:12:47 * TheJollyRoger starts drowning his sorrows.
+01:13:01 <rny> strcat[m]: what do you mean by there's no modern options?
+01:13:02 <strcat[m]> and the whole keyring and trust model is terrible
+01:13:07 <strcat[m]> the whole UX around it is terrible
+01:13:12 <strcat[m]> rny: I mean it inherently uses SHA1
+01:13:28 <rny> cant they revise the standard and drop SHA1 completely?
+01:13:35 <TheJollyRoger> rny: we've been trying to!
+01:13:40 <rny> and just increment the major version
+01:13:56 <rny> decades old softwares often make major API revisions
+01:14:00 <TheJollyRoger> Werner Koch and the others sent in a draft as RFC 4880bis, which added SHA256 fingerprints and EAX mode for the cipher.
+01:14:18 <strcat[m]> rny: or we could just use `age` and do away with the mess of the GPG keyring, weird trust model, and messed up + massively overcomplicated UX
+01:14:19 <TheJollyRoger> But it's... it's in limbo.
+01:14:22 <strcat[m]> easier to use something good
+01:14:34 <strcat[m]> rny: it has problems beyond not using modern crypto
+01:14:50 * TheJollyRoger starts drowning his sorrows.
+01:14:58 <TheJollyRoger> *keeps drowning
+01:15:09 <rny> web of trust is a reasonable trust model
+01:15:29 <strcat[m]> it's really not, at least as meant by GPG
+01:15:31 <TheJollyRoger> The thing that makes me sad about it is that I shouldn't need to write 200 pages of theory on key management in order for users to send a message.
+01:15:36 <rny> so as long as everyone who participates in it knows what they are doing
+01:15:41 <frostedpanel[m]> * > <@strcat:matrix.org> @room btw, due to https://github.com/matrix-org/matrix-appservice-irc/issues/1194 Matrix users will be kicked after 30 days of not speaking in the channel, please just rejoin the channel if that happens, need to try to get them to prioritize fixing this
+01:15:42 <frostedpanel[m]> 👀
+01:15:42 <rny> which is an implicit assumption
+01:15:45 <TheJollyRoger> As luck would have it, 200 pages *just simply wasn't enough.*
+01:15:50 <strcat[m]> rny: which is ofc not right
+01:16:02 <strcat[m]> rny: so, you verify your mom's safety number for your messaging system
+01:16:08 <TheJollyRoger> I mean, I WANT to finish the book. I want to help them out, but...
+01:16:13 <strcat[m]> how does that imply you trust all verifications she has done or ever will do?
+01:16:19 <strcat[m]> it makes no sense as a trust model
+01:16:34 <strcat[m]> and what does it even mean?
+01:16:48 <strcat[m]> so, for example, if I meet someone on Matrix and have a chat with them
+01:16:56 <strcat[m]> that is when I first met them
+01:16:59 <strcat[m]> that is the person I met
+01:17:17 <strcat[m]> if they earn my trust over time, it's that person who earned my trust, an out-of-band verification isn't useful
+01:17:25 <strcat[m]> if I start a Signal conversation with them we can bootstrap it via Matrix
+01:17:28 <strcat[m]> same for elsewhere
+01:17:47 <strcat[m]> anyway how does it make any sense for someone else to trust my verification on Signal that it's the person I talk to on Matrix
+01:17:52 <strcat[m]> there is context for that
+01:17:57 <strcat[m]> I verified it's the same person I talk to on Matrix
+01:18:08 <strcat[m]> it doesn't mean I trust them, or that I know them irl, or that I checked their government papers
+01:18:47 <strcat[m]> GPG web of trust is basically a pretend game of "we checked your government papers" which is pretty meaningless (easy to fake, and are you even trained on verifying a passport at same shitty TSA level?)
+01:18:52 <strcat[m]> and people DO NOT actually do that in practice
+01:19:30 <strcat[m]> rny: I was an Arch Linux packager - that required having 3 signatures from the master keys on my key - none of them verified who I was or anything, it's just not what people actually do
+01:19:57 <strcat[m]> anyway it really makes no sense
+01:20:06 <strcat[m]> when I verify who someone is on Signal there is context for that
+01:20:13 <strcat[m]> if I know them irl then I'm verifying it's that person I know irl
+01:20:30 <strcat[m]> if I know them online, I'm verifying it's the person with that username I know on a few platforms online
+01:20:45 <strcat[m]> I'm not verifying their legal identity / government papers
+01:21:11 <strcat[m]> GPG has delusions that it's based on verifying people's "real" identity and outsourcing this system to a "web of trust" that's just a bunch of BS
+01:21:22 <strcat[m]> rny: I'll happily go sign 1000 people's keys with a script right now
+01:21:24 <strcat[m]> it's meaningless
+01:21:38 <strcat[m]> why do people I've never heard of constantly sign my keys on those shitty keyservers? shrug
+01:22:16 <strcat[m]> GPG web of trust is just a more messed up form of counting Twitter followers
+01:23:10 <TheJollyRoger> I guess I can hang up my Reebok Pumps that I save for going to Keysigning parties...
+01:23:28 <TheJollyRoger> (I'm joking)
+01:23:30 <strcat[m]> also key rotations are really important and if you're going to do 1 thing on top of basic verification it should be that
+01:23:40 <strcat[m]> and yet despite all the complexity GPG has
+01:23:43 <strcat[m]> it can't even do that
+01:23:51 <hypokeimenon[m]> For some reason seeing Reebok makes me feel old
+01:24:15 <pvelli> hey folks
+01:24:23 <pvelli> Im trying to install grapheneos
+01:24:26 <TheJollyRoger> hypokeimenon[m]: Bwahahaha, you know the feeling!
+01:24:30 <TheJollyRoger> Ahoy pvelli, yeah what's up?
+01:24:37 <pvelli> but my fastboot isnt seein any devices
+01:24:42 <pvelli> haha hey
+01:24:43 <strcat[m]> pvelli: which OS
+01:24:51 <pvelli> Thru windows
+01:24:51 <strcat[m]> is the phone booted into the bootloader menu?
+01:25:04 <pvelli> Yea i clicked volume down and power btn
+01:25:14 <pvelli> im in fastboot mode on my phone
+01:25:18 <strcat[m]> pvelli: what kind of cable / port is it connected with
+01:25:24 <pvelli> usb c
+01:26:00 <pvelli> same one that phone came with
+01:26:29 <pvelli> at first i d9wnloaded repo thru command line
+01:26:37 <pvelli> but then i tried from sdk site
+01:26:41 <pvelli> still no go
+01:28:41 <TheJollyRoger> Wonder if it's missing the driver...?
+01:28:45 <TheJollyRoger> Oh.
+01:28:58 <pvelli> got dcd
+01:29:08 <pvelli> reloadin the page signed me out
+01:29:18 <pvelli> did you answer anythin?
+01:31:07 <TheJollyRoger> Er, not quite...
+01:31:53 <TheJollyRoger> I was taking a bit of a guess, but have you got any spares? (Just in case, we've had problems with USB C to C on some platforms because of some vendors' not properly implementing USB)
+01:33:39 <pvelli> spare usb c cables?
+01:33:55 <TheJollyRoger> Yeah, any A to Cs.
+01:34:41 <pvelli> i have a charger cable from my othe phone
+01:34:50 <pvelli> ill try connectin it
+01:36:58 <pvelli> hmm stil no go
+01:37:12 <pvelli> i dont think is be able to us an a cable on a 4a tho
+01:37:14 <TheJollyRoger> Try to use the rear ports of your motherboard, we've had bad experiences with some motherboards and front ports before, but not sure which ones do or don't handle USB on the front ports.
+01:37:19 <TheJollyRoger> A to C?
+01:39:30 <pvelli> im using a laptop
+01:40:45 <TheJollyRoger> Okay! Uh... huh. I'm kinda out of ideas at the moment, unless the driver needs to be updated...?
+01:40:55 <TheJollyRoger> (Through device manager)
+01:41:08 <pvelli> yea ill see
+01:41:16 <TheJollyRoger> Okay!
+01:45:39 <rny> You're supposedly meant to sign another person's key over coffee and a real life meetup under the web of trust model.
+01:45:55 <rny> But yeah you make a fine point about people not knowing to do the right thing
+01:49:44 <pvelli> weird eve when i connect my pixel 4a when its on
+01:50:04 <strcat[m]> rny: still doesn't make much sense
+01:50:08 <pvelli> it deosnt show another device mext to c disk
+01:50:10 <strcat[m]> doesn't make sense to me so it's not what I am going to do
+01:50:18 <pvelli> unlike my regulsr phone
+01:50:23 <strcat[m]> rny: for example, I met you online, your real life identity is not how I know you
+01:50:50 <strcat[m]> if I met you irl if I wanted to verify something it's that it's the same person I know
+01:52:38 <strcat[m]> seeing someone's supposed government issued ID and knowing their supposed legal name
+01:52:42 <strcat[m]> doesn't make me trust them more
+01:53:18 <strcat[m]> I don't sign people's GPG keys because I think it's a bunch of nonsense
+01:53:49 <strcat[m]> and I don't think GPG is worth the attention of doing something like signing a bunch of keys to prove a point
+01:54:21 <strcat[m]> people don't really use it aside from systems using it under the hood as an ugly implementation detail
+02:11:39 <eric80> cannot get bootloader unlock phone- pixel4a?
+02:12:46 <TheJollyRoger> eric80: What's going on?
+02:13:50 <eric80> am trying to install grapheneos- am at point where phone is in fastboot mode but computer cannot see phone to unlock fastboot
+02:14:06 <eric80> message is waiting for device
+02:14:07 <TheJollyRoger> Windows, Linux, or MacOS?
+02:14:13 <eric80> windows
+02:16:00 <TheJollyRoger> Hmm. Yipes, someone was just in here with the same issue, but I'm out of ideas at the moment >_<.
+02:16:09 <TheJollyRoger> Is device manager able to see it?
+02:16:16 <TheJollyRoger> (While the phone's in fastboot?)
+02:16:51 <eric80> yes but has a splat
+02:17:05 <TheJollyRoger> Can device manager update the driver?
+02:17:48 <eric80> not automatically
+02:18:07 <TheJollyRoger> Let me search through the channel logs
+02:22:56 <TheJollyRoger> Someone more knowledgeable than I is going to need to chip in on this, sorry >_<.
+02:24:27 <rny> strcat[m]: you could execute a knowledge-based authentication protocol in the IRL meetup, once authenticated, you then sign the pgp public key that i give you
+02:25:20 <Shane39> Hello
+02:25:31 <seashield[m]> .
+02:25:38 <rny> Shane39: hi
+02:26:40 <Shane39> Hoping to get some assistance with a Graphene install.  Seems my device isn't being recogonized when I try to run the fastboot flashing unlock command
+02:27:31 <pvelli> i installed graphene OS
+02:27:40 <pvelli> it worked thru linux
+02:27:48 <TheJollyRoger> Hey pvelli welcome back.
+02:27:52 <pvelli> thanks
+02:27:57 <TheJollyRoger> Glad to hear it worked on Linux, welcome aboard the ship!
+02:28:09 <pvelli> btw, how come it still says google when it starts up, is that normals?
+02:28:15 <pvelli> im guessing cuz its a google phone
+02:28:20 <TheJollyRoger> Shane39: oh man, yipes, suddenly seems a lot of people are having the same issue.
+02:28:40 <TheJollyRoger> pvelli: yeah, the "Google" screen you see when you first start up is burned into the phone's bootROM, it's not a part of GrapheneOS.
+02:28:45 <TheJollyRoger> sorry,
+02:28:49 <TheJollyRoger> not bootrom, Bootloader.
+02:28:49 <pvelli> oh thank god
+02:28:51 <TheJollyRoger> Which is signed and verified.
+02:28:52 <pvelli> haha
+02:28:55 <pvelli> thanks
+02:29:13 <TheJollyRoger> Yeah, it's normal. Your phone should display "Your device is loading a different operating system" in yellow text.
+02:29:31 <TheJollyRoger> That's also normal too, because if it didn't, your phone would be loading the Google version of android.
+02:29:47 <TheJollyRoger> It's only if that screen turns orange and says "Software integrity is not guaranteed!" that you need to worry.
+02:30:14 <TheJollyRoger> Shane39: eric80 hang on a moment, I might not be able to help you guys out since I'm not sure what's going on... might have to wait a bit for help >_<.
+02:30:20 <Shane39> ok
+02:32:54 <pvelli> hey at bootup if i uncheck the location permission of gathering data, i wont be able to use maps app right?
+02:35:26 <rny> Shane39: what OS
+02:35:32 <Shane39> Win10
+02:35:47 <rny> Shane39: have you tried a different usb cable?
+02:35:51 <rny> usb port?
+02:36:22 <Shane39> yeah.  just got back from buying a USB a to C cable, and I tried the C to C cable that came with the phone
+02:40:40 <Shane39> just sits here at "waiting for any device"
+02:42:36 <pvelli> im trying to install f droid, but vinadium said "nah man, cuz security" is f-droid.org the official site?
+02:43:06 <TheJollyRoger> pvelli: if you would like to sideload apps, you must add vanadium to the whitelist when it prompts.
+02:44:40 <pvelli> ah true thanks
+02:47:17 <TheJollyRoger> If you decide to install F-Droid or Aurora, you must similarly add them to the whitelist to sideload apps as well.
+02:47:39 <pvelli> yup
+02:48:28 <pvelli> btw if i use waze from aurora, i heard waze is actually google too
+02:48:33 <rny> Shane39: have you tried different usb ports?
+02:48:55 <rny> Shane39: you need to check if the PC actually picks up the device
+02:49:18 <Shane39> yeah.  I tried both USB A ports.  Only have 1 C port
+02:49:18 <rny> win10, iirc produces a jingle if the phone is connected
+02:49:35 <rny> if the PC cant pick up the device, then its probably a hardware problem
+02:49:41 <pvelli> Shane39 i dunno if you are having a similar problem as i had. But earlier fastboot on windows wasnt pickin up my device, i rebooted into linux and installed graphne no problem
+02:50:12 <Shane39> going to restart my machine.  I'll be back
+02:51:44 <pvelli> im super fascinated by how newpipe works
+02:52:07 <pvelli> how the hell does it parse the site to play videos?
+02:56:01 <eric80> downloading android usb driver cured problem with unlocking boot driver in windows.  woohoo up and running!!
+02:56:13 <rny> pvelli: do finnicky stuff and run the js webapp to extract video URIs?
+02:56:57 <rny> its offtopic btw
+02:57:01 <pvelli> ah
+02:57:03 <pvelli> shoot
+03:07:28 <TheJollyRoger> eric80: whew! Glad to hear that worked! Welcome aboard the ship!
+03:07:38 <TheJollyRoger> Don't forget to lock the bootloader!
+03:10:10 <eric80> locked it- cant figure out how to include shane39 in the fix
+03:14:41 <TheJollyRoger> He's disconnected from the chat, I'll let him know what your fix was when he gets back, thank you for letting me know!
+03:15:36 <TheJollyRoger> I'm gonna go see if we need to add it to the instructions.
+03:16:14 <eric80> Good deal.
+03:30:08 <squairron[m]> What identifiers do apps I install use to make me unique and how can I reset them on Graphene?
+03:32:03 <TheJollyRoger> squairron[m]: depends. For some legitimate use cases, it's your username.
+03:32:34 <TheJollyRoger> Or rather, the user name you provide them.
+03:32:36 <TheJollyRoger> For others:
+03:32:38 <TheJollyRoger> https://grapheneos.org/faq#non-hardware-identifiers
+03:33:45 <squairron[m]> Okay so just the account I use? I hope and is there a certain ID on the phone that all apps use to identify me? And if there is do I not have to worry about that on Graphene?
+03:34:11 <squairron[m]> Oops I just saw the link you posted I will take a look too
+03:34:15 <TheJollyRoger> Scroll to the previous answer about hardware identifiers: apps cannot extract hardware identifiers.
+03:35:00 <squairron[m]> Okay thank you for the help!
+03:35:41 <TheJollyRoger> Anytime!
+03:52:17 <pvelli> Hey someone told me that grapheneos comes with nextdns preconfigured, im not seeing that to be the s
+03:52:18 <pvelli> case
+03:52:32 <somenerd[m]> it doesn't
+03:53:01 <M1f4a9[m]> TheJollyRoger: In the archives I saw this remark by you: OEMs like Google actually have to pay qualcomm extra to have Qualcomm allow them to do user-provisionable verified boot keying.
+03:53:12 <M1f4a9[m]> Is this certain or a rumor?
+03:53:49 <rny> pvelli: no it does not come nextdns preconfigured
+03:54:11 <TheJollyRoger> M1f4a9[m]: confirmed by one of the Google employees via Tweet, but I don't have the bookmark at the moment.
+03:56:30 <M1f4a9[m]> Damn that sucks. Depending on how much it is and if per device or per license/line of devices, it would make it incredibly difficult to convince other vendors to do this.
+03:58:06 <RamenLover> Hey is there a recommended network monitoring app on f droid?
+03:58:09 <TheJollyRoger> M1f4a9[m]: yeah. I believe that the reason why Google pays extra to have user-provisionable bootloaders is because they want to do testing and development. The existence of open source projects like GrapheneOS that give back to upstream is worth it to them.
+03:59:05 <somenerd[m]> also Google's an Android reference device
+03:59:10 <TheJollyRoger> Yeah.
+03:59:51 <M1f4a9[m]> Huawei and Samsung make phones with their own socs and could do it without paying extra, but these companies don't give a shit and are even hostile towards people that don't want their crap on their phones.
+04:00:16 <M1f4a9[m]> And MediaTek is horrible with security.
+04:02:26 <take_a_deep_brea> <RamenLover "Hey is there a recommended netwo"> Netguard . Although you cannot use the android VPN for anything else when Netguard is enabled.
+04:04:03 <somenerd[m]> offtopic
+04:04:18 <somenerd[m]> maybe move to offtopic if you want to continue on netguard
+04:04:27 <take_a_deep_brea> <M1f4a9[m] "Huawei and Samsung make phones w"> Corporates are in _general_ funny that way . They are not built to give back anything . Nothing specific to software industry in this regard .
+04:04:36 <take_a_deep_brea> oh yeah , sure .
+04:05:08 <RamenLover> somenerd[m] do I create  new channel?
+04:05:16 <somenerd[m]> no
+04:05:26 <somenerd[m]> #grapheneos-offtopic
+04:05:29 <RamenLover> What do you mean move to offtopic?
+04:05:36 <somenerd[m]> join that channel
+04:05:37 <take_a_deep_brea> lmao , no RamenLover:  there you go #grapheneos-offtopic:matrix.org
+04:05:44 <somenerd[m]> that's the matrix one
+04:05:49 <somenerd[m]> they're on freenode
+04:05:57 <somenerd[m]> so just #grapheneos-offtopic
+04:06:02 <RamenLover> I see thanks
+04:06:05 <take_a_deep_brea> i see
+04:10:15 <M1f4a9[m]> <take_a_deep_brea "Corporates are in _general_ funn"> Samsung is just dumb because make most of their money on phone hardware sales and they can't get it through their thick heads that they'd sell more if people weren't tied to their shitty software/ecosystem.
+04:10:45 <somenerd[m]> I feel that this is a bit offtopic
+04:11:00 <deappledapple> Getting offtopic, for sure
+04:11:11 <jameshandcockand> Off topic is two words
+04:11:44 <M1f4a9[m]> I'm just brainstorming about possible alternatives to Pixels.
+04:11:44 <somenerd[m]> yeah I write it like this due to the channel being #grapheneos-offtopic
+04:13:48 <M1f4a9[m]> Complete reliance on Pixels and Google keeping the custom verified boot for Pixels isn't ideal.
+04:14:16 <lucaszanella[m]> I've read about the plans to use virtualization and then in the future substitute the linux kernel by another kernel with a linux compatibility layer. How will the drivers work? Drivers use internal structures of the kernel. It's almost impossible to write a kernel compatible with the drivers without rewriting the entire linux kernel.
+04:14:28 <somenerd[m]> GrapheneOS is planning to make custom hardware
+04:14:47 <TheJollyRoger> Well, we hope in a distant future to.
+04:14:55 <somenerd[m]> yeah
+04:15:14 <M1f4a9[m]> That would be great, but given the size of the project I don't see that happening anytime soon.
+04:15:21 <somenerd[m]> yeah
+04:15:23 <TheJollyRoger> Yeah.
+04:15:44 <lucaszanella[m]> <somenerd[m] "GrapheneOS is planning to make c"> Unless grapheneos creates the display, wifi, etc, I don't see how it would work since the manufacturer would probably just have drivers for linux
+04:16:01 <somenerd[m]> I meant the message above
+04:16:04 <somenerd[m]> not yours sorry
+04:16:10 <lucaszanella[m]> oh ok
+04:19:16 <M1f4a9[m]> There might be smaller Chinese companies that would be willing to make a GrapheneOS version of one of their existing products. Problem is that you would have to keep the base Android distribution up to date yourself, and just that probably takes a full time developer.
+04:20:11 <somenerd[m]> people are welcome to try to build GrapheneOS for another device
+04:20:46 <M1f4a9[m]> Without custom verified boot, it's not really GrapheneOS
+04:21:08 <somenerd[m]> there are a few other requirements as well
+04:21:11 <deappledapple> Also gotta take into account that relockable bootloader is not only the standards GrapheneOS  is looking for a hardware
+04:21:18 <somenerd[m]> yeah
+04:21:19 <lucaszanella[m]> <somenerd[m] "people are welcome to try to bui"> I'm planning on buying a Poco M3 to do that. I've been researching and reading grapheneOS, bought an SSD just for that, did a sucessful build
+04:21:34 <somenerd[m]> might not have verified boot though
+04:21:43 <somenerd[m]> or a lot of other security features
+04:21:47 <deappledapple> https://grapheneos.org/faq#future-devices
+04:22:23 <lucaszanella[m]> <somenerd[m] "or a lot of other security featu"> I've chosen a cheap phone just to test and see what I can do. In the future maybe I can choose a better one (and more expensive)
+04:22:27 <jameshandcockand> I feel like you should build a successful build for the Poco phone *before* you buy one
+04:22:47 <jameshandcockand> So you know it can actually be done
+04:23:26 <lucaszanella[m]> <jameshandcockand "I feel like you should build a s"> How would I know it works? I can build the kernel, integrate the kernel to the graphene build system, but nothing more than that. Am I right? I'd have to have the phone to do almost anything
+04:23:55 <jameshandcockand> Get someone else who has one to try
+04:24:06 <jameshandcockand> Are you an android developer?
+04:24:29 <lucaszanella[m]> <jameshandcockand "Are you an android developer? "> I mean, I've had developed some aps, but I'm not an AOSP developer. I just want to try
+04:26:57 <TheJollyRoger> lucaszanella[m]: Good luck man! I'm wanting to learn to develop stuff as well, learning experience!
+04:27:10 <deappledapple> That's okay, it starts off as trying and figuring out stuffs there
+04:27:24 <deappledapple> <TheJollyRoger "lucaszanella: Good luck man! I'm"> Yeah, good luck ^^
+04:27:42 <lucaszanella[m]> Thanks everyone. I've been reading Gaphene's source for some days. It's going to take a while but I'm not gonna give up
+04:27:49 <TheJollyRoger> Yarr!
+04:34:14 <take_a_deep_brea> way to go lucaszanella: ! also , while you are at it , the various issue trackers may also benefit from your attention ( you too may , as its kind of a roadmap and will give you perspective ) https://grapheneos.org/contact#reporting-issues
+05:40:47 <Thatcher[m]> I'm learning android development too in hopes of someday contributing to this project
+10:10:48 <fuchser[m]> Hi Guys, I'm running graphene on my pixel3 and wonder if you guys have a good GCam port for me?
+10:10:48 <fuchser[m]> i got one from https://www.celsoazevedo.com/files/android/google-camera/ but it crashes if i use the second selfi cam.
+10:12:48 <take_a_deep_brea> fuchser:  this room is for discussion about grapheneOS system itself . discussion about apps dont take place here . however #grapheneos-offtopic:matrix.org
+10:12:55 <take_a_deep_brea> can be used to discuss about apps
+10:13:45 <take_a_deep_brea> also the app you mentioned above , a gcam port is not supported so you at best can expect suggestions from other people in this toom and the off topic room
+10:13:46 <fuchser[m]> ah, sorry and thanks!
+10:13:53 <take_a_deep_brea> no sweat .
+10:14:12 <take_a_deep_brea>  * also the app you mentioned above , a gcam port is not supported so you at best can expect suggestions from other people in this room and the off topic room
+10:34:36 <jeronath[m]> Hello everybody ! I have installed graphene on pixel 4a a few months ago. Everything works fine except that I cannot use rpn mode with orbot. I am a newbie about these things, the different protocols and the connections between vpn orbot tor private dns etc. Do you know a good tuto for these things ? Somebody can help me ? I use expressvpn with orbot. thanks in advance. Nath a french guy (so sorry for my english😉)
+10:42:12 <take_a_deep_brea> jeronath:  only one app can use Android VPN at a time. so either you can use expressVPN or orbot in VPN mode but not both at the same time
+10:42:37 <take_a_deep_brea> you can still use orbot but not in its VPN mode
+12:01:37 <rrr> hello everyone I m romain from France i m new here
+12:02:10 <take_a_deep_brea> hello rrr:
+12:02:36 <rrr> i learned only recently about privacy concerns via google and tried to install graphene os  as it seems really bad how our data are utilized
+12:03:46 <rrr> Unfortunately  i run a youyube video tutorial to install on a pixel 3a. tutorial was good
+12:04:12 <rrr> but my phone seems broken now i m stuck on "no commad"with a broken android robot image
+12:09:33 <take_a_deep_brea> rrr: it is not the recommended way to install grapheneOS.
+12:10:21 <take_a_deep_brea> you should follow this instead : https://grapheneos.org/install
+12:11:32 <rrr> i unfortunately did follow the tutorial already my current issue from all the learning i have is that adb device is unauthorized but because i cannot log into my phone anymore i cannot authorize usb debugging
+12:11:37 <take_a_deep_brea> * you should have followed these instructions nstead : https://grapheneos.org/install
+12:12:00 <take_a_deep_brea> no problem.
+12:12:19 <take_a_deep_brea> we can pick up from where your phone was left in a broken state
+12:12:45 <take_a_deep_brea> but you need to tell us what you did till now step-by-step
+12:13:04 <rrr> i can certainly details step by step. thanks a lot.
+12:13:16 <take_a_deep_brea> that is the closest you can come to communicating the phones present state over a chat room
+12:13:42 <take_a_deep_brea> could you send a link of that video ?
+12:14:07 <rrr> yes i m going to detail everythin really broken down bear with me few seconds please
+12:14:34 <rrr> 1 - the tutorial i sued was https://www.youtube.com/watch?v=U6at2Dzay94
+12:14:52 <take_a_deep_brea> no problem, rrr.
+12:14:56 <rrr> 2 - to install adb on macos i used method one here https://stackoverflow.com/questions/31374085/installing-adb-on-macos
+12:15:14 <rrr> 3 - i have successfully installed and i could see my device
+12:15:56 <rrr> 4 - i had downloaded the stable release for pixel 3a form the grapheneos here sargo-factory-2021.01.05.03.zip
+12:17:00 <rrr> 5 - i ran flash all. sh
+12:18:17 <rrr> 6 - i have seen briefly seen on my phone a grapheneos  fastboot on my phone
+12:18:43 <rrr> 7 - since i see fastboot mode product revision: sargo MP1.0 (ROW)
+12:19:12 <rrr> bootlader version: b4s4-0.3.6863017
+12:19:43 <rrr> baseland version: g670-00084-201008-b-6891501
+12:20:13 <rrr> serial number: 0AGAYS0106H
+12:20:21 <rrr> secure boot: PRODUCTION
+12:20:29 <rrr> NOS production:yes
+12:20:46 <rrr> DRAM: 4GB Micron LPDDR4X
+12:20:54 <rrr> eMMC: 64GB Micron
+12:20:59 <rrr> Device state: unlocked
+12:21:06 <rrr> Boot slot: A
+12:21:15 <rrr> Enter reason: no valid slot to boot
+12:21:20 <rrr> and i m stuck there
+12:23:34 <deappledapple> <rrr "2 - to install adb on macos i us"> Um... The source of platform tools caused it
+12:23:58 <deappledapple> https://grapheneos.org/install#standalone-platform-tools
+12:24:07 <take_a_deep_brea> yeah
+12:24:43 * deappledapple sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/QdHYaoNNOynDjXYkLKwOZRFm/message.txt >
+12:25:37 <deappledapple> Unfortunately, gonna start over and reflash it, this time using the updated platform-tools, good luck :)
+12:26:07 <rrr> reason why i did it is because this video is kind of how i learned about grapheneos
+12:26:49 <rrr> now unfortunately i cannot reflash my issue is i should need to access  the phone to authorize any computer but i cannot access the phone anymore
+12:27:06 <rrr> if i could i would love to use the updated platform tools oyu mentioned
+12:27:19 <deappledapple> <rrr "now unfortunately i cannot refla"> If you can reboot to bootloader, you can still reflash
+12:27:30 <take_a_deep_brea> they should be able to
+12:28:00 <rrr> i was assuming because adb tells me
+12:28:02 <rrr> List of devices attached
+12:28:02 <rrr> 0AGAYS0106H	unauthorized
+12:28:17 <rrr> so i was thinking my first move would be to change it to authorized
+12:28:19 <take_a_deep_brea> rrr:  adb is unnecesary for installation
+12:28:25 <rrr> ok !
+12:28:31 <rrr> i ll start from scratch then
+12:28:44 <take_a_deep_brea> what we need is the fastboot to work
+12:29:18 <take_a_deep_brea> just follow the official instructions to the letter and you will have graphene running in no time .
+12:29:59 <take_a_deep_brea> make sure that your setup fulfills all the requirements listed in the https://grapheneos.org/install
+12:33:05 <rrr> hey i m reading all the installation page entirely. i do not understand everything as i m not advanced person  and it s first time i m using common line but it looks well detailed !
+12:33:11 <rrr> my setup is compliant yes
+12:34:42 <deappledapple> It's copy paste friendly pretty much
+12:35:12 <deappledapple> Except for the images, just change sunfish to sargo, as you have sargo images
+12:35:26 <rrr> yes it helps to feel comfortable and also i feel i m learning stufff
+12:35:51 <rrr> where are you guys from ? USA ?  thanks anyway for the support
+12:36:00 <rrr> also how can i tip the community ?
+12:36:03 <rrr> i want to
+12:36:16 <deappledapple> Various places
+12:36:44 <deappledapple> Donate to GrapheneOS here:
+12:36:44 <deappledapple> https://grapheneos.org/donate
+12:37:14 <deappledapple> <deappledapple "Except for the images, just chan"> Rather, you have Pixel 3a
+12:38:05 <rrr> i ve just made a donation via paypal thanks
+12:38:18 <rrr> so im stuck there
+12:38:21 <rrr> tar: Error opening archive: Failed to open 'sargo-factory-2021.01.05.03.zip'
+12:38:21 <rrr> romainnicod@MacBook-Pro-2 ~ %
+12:39:49 <take_a_deep_brea> what was the command you typed in ?
+12:41:01 <take_a_deep_brea> was it   --------%   tar xvf sargo-factory-2021.01.05.03.zip
+12:42:16 <take_a_deep_brea>  * was it : `romainnicod@MacBook-Pro-2 ~ % tar xvf sargo-factory-2021.01.05.03.zip`
+12:42:34 <rrr> i realized first i made a mistake then i tried to fixe and typed romainnicod@MacBook-Pro-2 ~ % tar xvf sargo-factory-2021.01.05.03.zip
+12:42:54 <take_a_deep_brea> what is the result ?
+12:42:58 <rrr> now i get tar: Error opening archive: Failed to open 'sargo-factory-2021.01.05.03.zip'
+12:42:58 <rrr> romainnicod@MacBook-Pro-2
+12:44:17 <rrr> i m wondering if maybe i made a mistake while downloding it
+12:44:21 <rrr>  im gonna try again
+12:44:53 <deappledapple> Is it on the home directory?
+12:45:44 <rrr> i did type this to donwload romainnicod@MacBook-Pro-2 ~ % curl -O https://releases.grapheneos.org/factory.pub
+12:46:03 <rrr> it looks like it s downloading again
+12:46:14 <rrr> (fingers crossed)
+12:46:15 <take_a_deep_brea> yes
+12:48:56 <rrr> making progress but not getting this error message romainnicod@MacBook-Pro-2 ~ % cd sargo-factory-2021.01.05.03.zip
+12:48:56 <rrr> cd: not a directory: sargo-factory-2021.01.05.03.zip
+12:48:57 <rrr> romainnicod@MacBook-Pro-2 ~ %
+12:50:02 <rrr> my bad i typed .zip i m so stupid
+12:50:12 <rrr> im wasting your time
+12:50:36 <deappledapple> <rrr "i did type this to donwload roma"> Well, the downloaded file is not yet the factory image itself
+12:51:03 <shurke> press tab to autocomplete filenames to avoid that type of error
+12:51:25 <rrr> ok guys ! i think i made it
+12:51:38 <rrr> on my phone i see a screen called fastbootd
+12:51:52 <rrr> grapheneosboot
+12:52:02 <deappledapple> <rrr "on my phone i see a screen calle"> Yeah, don't do anything, let it flash
+12:55:16 <deappledapple> Then once "press any key to continue", do:
+12:55:16 <deappledapple> fastboot flashing lock
+12:56:30 <rrr> on the terminal on my ocmputer it looks finished but the phone shows me a big warning sign fastoot mode
+12:56:43 <rrr> and at the bottom enter reason:reboot bootloader
+12:57:38 <deappledapple> Looks normal
+12:58:25 <deappledapple> https://grapheneos.org/install#locking-the-bootloader would be last step before post-installation
+12:59:33 <rrr> yes i was looking at this one but don t get it because installaiton guide says i should do form bootloader interface
+12:59:57 <rrr> but it only tells me: the bootloader is unlocked ....
+13:00:04 <rrr> i have no button to chage
+13:00:09 <rrr> i can only launch graphenos
+13:00:42 <deappledapple> <rrr "but it only tells me: the bootlo"> Yeah, go back to bootloader
+13:00:47 <deappledapple> That's not done yet
+13:01:30 <deappledapple> > <@leeya:kde.org> Then once "press any key to continue", do:
+13:01:30 <deappledapple> > fastboot flashing lock
+13:01:30 <deappledapple> Or if you're there, stay, and input in terminal this one, as this enforces verified boot
+13:02:22 <rrr> no i did not managed
+13:02:32 <rrr> i arrived on the graphene logo
+13:03:04 <rrr> when i type in terminal fastboot flashing lock
+13:03:05 <rrr> nothing happens
+13:03:26 <deappledapple> Yeah, because you're not in bootloader
+13:04:05 <deappledapple> reboot back to bootloader
+13:04:06 <deappledapple> https://grapheneos.org/install#locking-the-bootloader
+13:05:23 <deappledapple> Did rrr left?
+13:05:34 <rrr> never
+13:05:51 <rrr> i would first thank you all and i also would stay to help future people like me
+13:06:07 <rrr> i m just trying to figure out how to arrive to bootloader again
+13:06:22 <deappledapple> Power button + volume down button
+13:06:45 <deappledapple> <deappledapple "Power button + volume down butto"> Advise to shut down the phone, wait for a while before doing this
+13:08:22 <rrr> ok now im in bootloader
+13:09:01 <rrr> but the only options are barcode/rescue mode/recovery mode/restart bootloader/start /power off
+13:09:12 <rrr> nothing offering me to lock again
+13:09:25 <deappledapple> On your terminal
+13:09:34 <deappledapple> fastboot flashing
+13:09:46 <deappledapple> fastboot flashing lock
+13:09:52 <deappledapple> Rather
+13:10:05 <rrr> yeah whatever i type in the terminal does nothing
+13:10:13 <rrr> it like it turned into a text editor
+13:10:16 <rrr> i m gonna reopen
+13:10:18 <deappledapple> Just to double check, is your device detected, or is the fastboot there:
+13:10:18 <deappledapple> fastboot --version
+13:10:18 <deappledapple> fastboot devices
+13:10:40 <rrr> no nothing happens in the terminal
+13:10:44 <deappledapple> <rrr "i m gonna reopen"> You have to reset the $PATH if you do
+13:10:54 <rrr> ok let me go back to that
+13:13:38 <rrr> i locked it now i do have a warning message device loading different system and i arrive on grapheneos
+13:14:04 <deappledapple> <rrr "i locked it now i do have a warn"> That's much better
+13:14:12 <deappledapple> <rrr "i locked it now i do have a warn"> That's normal for locked bootloader
+13:14:44 <rrr> ok it looks i m all set
+13:14:50 <rrr> and i ve joined this community
+13:15:00 <rrr> now i want to give back what i received as help
+13:15:39 <rrr> i m gonna take a nap and will be back thanks again all !
+13:15:59 <deappledapple> <rrr "i m gonna take a nap and will be"> See https://grapheneos.org/install#post-installation for further stuffs to do such as checking if the OS installed is not tampered with, such as Auditor attestation
+13:16:30 <take_a_deep_brea> rrr:  well make sure you go to dev mode and disable oem unlockiing
+13:16:59 <deappledapple> <rrr "i m gonna take a nap and will be"> Nice that you got the OS flashed for today ^^ good night
+13:18:56 <take_a_deep_brea> <rrr "now i want to give back what i r"> _sigh_ , wish some companies felt the same way
+13:19:30 <deappledapple> True
+13:19:39 <deappledapple> Google does to some extent, on open source
+13:19:50 <take_a_deep_brea> yeah.
+13:20:21 <penners[m]> Hi everyone. Does anyone know if different encryption keys are used for different user accounts?
+13:21:11 <deappledapple> Short answer: Yes. Long answer, see https://grapheneos.org/faq#encryption
+13:22:51 <penners[m]> Ah, it's right there in the FAQ! Thanks a lot
+14:03:56 <rrr> hey i was curious
+14:03:58 <rrr> i do have a google pixel slate tablet running on chrome os
+14:12:41 <deappledapple> <rrr "hey i was curious"> Hmmm?
+14:15:22 <deappledapple> Not sure, but this info may be relevant: https://grapheneos.org/faq#device-support
+14:33:50 <jeronath[m]> take_a_deep_breath: thanks for your answer ! Do you know a good tuto or web on these subjects for learning from scratch ?
+14:39:36 <jeronath[m]> RISEUP.NET : I have another demand : I would like to get a safer mail service and so on. I have looked at riseup.net but I need an invite code to suscribe to their services. In this forum does somebody use riseup and will give me an invite code ?
+14:55:47 <deappledapple> <jeronath[m] "RISEUP.NET : I have another dema"> Try asking at #grapheneos-offtopic:matrix.org  as well, though you'd probably be DMed of it instead
+14:59:07 <Kurai> jeronath[m]: I have an account there, never used their serivice though. write me a pm
+15:21:35 <jeronath[m]> <Kurai "jeronath: I have an account ther"> Thanks a lot but I don't find how to write you a private message on element ;-)
+15:22:25 <nscnt[m]> jeronath: Click on his little profile picture. "Direct message"
+15:24:09 <jeronath[m]> <nscnt[m] "jeronath: Click on his little pr"> thanks a lot !
+16:19:56 <SkyFox[kdeorg][m> Hey, I am on Windows 10 trying to install Graphene on a Pixel 4a. I enabled OEM unlocking and am currently in Fastboot mode. I ran `fastboot flashing unlock` to which it replies `< waiting for any device >`. I am using the cable packaged with the phone. I don't see the confirmation on the screen of the phone
+16:21:09 <hypokeimenon[m]> I think JollyRoger recently helped someone with a similar problem.
+16:21:25 <SkyFox[kdeorg][m> 🤔 I'll look at scrollback
+16:23:21 <hypokeimenon[m]> <eric80 "downloading android usb driver c"> ^
+16:24:47 <hypokeimenon[m]> By the way, searching 'waiting for any device' in the room is a bit alarming.
+16:25:58 * jonathancross sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/UXnObtbUnTYUItRBdukyHZuI/message.txt >
+16:27:10 <strcat[m]> jonf3n: sounds like the issue is you don't have working internet access
+16:27:30 <strcat[m]> you need working internet access for it to check for updates and update
+16:27:36 <strcat[m]> jonf3n: maybe you're using a broken network or VPN
+16:27:43 <strcat[m]> maybe you're using a broken DNS configuration
+16:27:46 <strcat[m]> up to you to figure out what's broken
+16:28:02 <strcat[m]> I would suggest using the option to reset network settings in the Settings app
+16:28:18 <strcat[m]> and reconnect to the network
+16:28:33 <Washipp> Hello
+16:28:33 <Washipp> First time joining, any rules or just the normal "dont be an asshole"?
+16:28:46 <strcat[m]> jonf3n:  the OS is informing you that you don't have working network access
+16:28:51 <strcat[m]> so, fix that
+16:29:00 <strcat[m]>  * jonf3n:  the OS is informing you that you don't have working internet access
+16:30:46 <hypokeimenon[m]> <Washipp "First time joining, any rules or"> Yeah, pretty much. Off topic chatter goes in #grapheneos-offtopic:matrix.org and look up https://freenode.logbot.info/grapheneos/20210120 or the Graphene OS F.A.Q. for any topics that have already been discussed
+16:32:20 <frontman[m]1> Feature request: a second password that resets phone and a limit on password attempts then phone wipes (but not like with a cloth). 🙂
+16:32:58 <Washipp> I haven't really found any infos on the Pixel 4a 5G except the notes in the FAQ. Are there any infos on support right now?
+16:34:30 <strcat[m]> covered in the FAQ
+16:34:36 <strcat[m]> https://grapheneos.org/faq#supported-devices
+16:34:43 <strcat[m]> sounds more like you're unhappy with the answer
+16:34:49 <strcat[m]> you won't get a different answer here though
+16:35:30 <strcat[m]> frontman: the OS already supports a limit on # of attempts but I suggest reading https://grapheneos.org/faq#encryption
+16:35:35 <strcat[m]> and considering what you expect that to accomplish
+16:35:45 <strcat[m]> if an attacker can exploit the OS, a limit on # of attempts implemented by the OS doesn't do anything
+16:36:06 <strcat[m]> frontman: so, I don't understand in what threat model that would be a useful feature
+16:36:17 <strcat[m]> please read the section on encryption first
+16:36:34 <SkyFox[kdeorg][m> <hypokeimenon[m] "^"> That worked, thanks
+16:36:39 <strcat[m]> particularly the info on how attempts to derive the key are already throttled to 1 / day
+16:36:49 <SkyFox[kdeorg][m> Would it make sense to use signify in WSL?
+16:36:55 <strcat[m]> by the secure element
+16:37:04 <strcat[m]> SkyFox [kde.org]: no, not really
+16:37:26 <jonathancross> <strcat[m] "I would suggest using the option"> I reset networking, but still get the "Limited connection" warning.
+16:37:35 <strcat[m]> jonf3n: yeah, so figure out why, and fix that
+16:37:39 <strcat[m]> it's not an Updater issue
+16:37:40 <strcat[m]> it's a network issue
+16:37:50 <strcat[m]> the Updater won't run if the OS doesn't think there's working internet
+16:37:57 <strcat[m]> neither will anything else that has a constraint on having working internet
+16:38:08 <strcat[m]> updates are done as part of a scheduled job depending on internet access
+16:38:15 <strcat[m]> if the OS is telling you that your internet access is broken, you need to fix that
+16:38:28 <take_a_deep_brea> maybe they can sideload update for time being ?
+16:38:37 <strcat[m]> jonf3n: disable VPN if you have one, turn off any weird filtering on your network, make sure your DNS works
+16:38:45 <strcat[m]> it's not an updater issue
+16:38:47 <strcat[m]> it's an internet issue
+16:38:55 <strcat[m]> if they sideload the update they'll still have broken internet
+16:39:09 <strcat[m]> the update client isn't the only thing not running for them
+16:39:46 <take_a_deep_brea> oh yeah , their network settings is the issue , that will get carried over .
+16:40:34 <jonathancross> I just realized that the date was wrong and it was not being updated from network (despite 500Mbps connection on device).
+16:40:35 <jonathancross> Fixing that manually has triggered the update.
+16:40:48 <take_a_deep_brea> i was just saying they could may be update first as it seems to be quiet some time since thehy updated
+16:41:00 <take_a_deep_brea> oh nevermind , me
+16:41:09 <strcat[m]> jonf3n: well that makes sense, you didn't have working HTTPS
+16:41:15 <strcat[m]> jonf3n: although the time updates should have corrected that
+16:41:25 <strcat[m]> but I think atm the time updates can be broken by the time being incorrect
+16:41:28 <strcat[m]> ideally rny can take a look at that
+16:41:42 <strcat[m]> it's supposed to ignore the time set on the device for network time updates
+16:41:44 <strcat[m]> but I don't think it is
+16:41:45 <strcat[m]> help wanted
+16:43:29 <jonathancross> <strcat[m] "jonf3n: well that makes sense, y"> I still don't know why wifi is acting strange, other devices (laptop, pixel2) are working fine and clearly the connection works (vanadium at least).
+16:44:19 <strcat[m]> jonf3n: sounds like you found the issue already
+16:44:30 <strcat[m]> jonf3n: you said your time was set incorrectly, that means HTTPS wouldn't have been working properly
+16:45:07 <strcat[m]> jonf3n: time has to be set correctly for encrypted connections using certificates / keys with start and end dates for validity to work
+16:45:21 <strcat[m]> if your time is set to 3 months ago, then any certificates created after that point won't be considered valid
+16:45:30 <strcat[m]> if your time is set to 3 months from now, a bunch of stuff will be considered expired
+16:45:35 <strcat[m]> it's quite important to have the correct time
+16:45:46 <strcat[m]> the OS tests whether HTTP and HTTPS work
+16:45:56 <strcat[m]> it was telling you that it wasn't all working in an urgent notification
+16:46:06 <strcat[m]> that was the error message you needed to address
+16:51:52 <jonathancross> <strcat[m] "jonf3n: sounds like you found th"> After updating the OS, I am not seeing the Wifi connection problem message anymore... hopefully that stays :-)
+16:55:47 <came2complain[m]> Good evening everybody
+16:57:27 <take_a_deep_brea> good evening came2complain:  . any complaints ?
+16:57:40 <came2complain[m]> yeah... fuck that lockdown
+16:57:51 <came2complain[m]> what a damn year we've had ha?
+16:58:57 <take_a_deep_brea> well  its been abnormal , yes . on the other hand , do you have anything grapheneOS specific ?
+16:59:42 <came2complain[m]> yes - I'd like to know what it takes to avoid the google complain about loading a different OS - I assume it's because the OS isn't signed with googles key?
+17:00:00 <strcat[m]> use a phone built to run GrapheneOS as the stock OS
+17:00:11 <came2complain[m]> since there doesn't seem to be a bypass I assume the bootloader isn't open source?
+17:00:11 <strcat[m]> so, start by making one
+17:00:14 <strcat[m]> and use that
+17:00:17 <take_a_deep_brea> lmao
+17:00:29 <strcat[m]> came2complain: it has nothing to do with open or closed source
+17:00:39 <strcat[m]> the Qualcomm EDK2 bootloader is open source
+17:00:48 <strcat[m]> came2complain: the device has verified boot, and GrapheneOS is not the stock OS
+17:01:01 <strcat[m]> on any device that is not made to run GrapheneOS as the stock OS, that notice will be there
+17:01:05 <came2complain[m]> that's the plan. I intend to copy the hw ingredients of the pixel 3a 1 to 1 - but I am sure I can't use the Titan M so I wonder if it can be replaced with a tpm from STM
+17:01:13 <strcat[m]> on a device made to run GrapheneOS as the stock OS, that notice will be there if you run anything else
+17:01:20 <strcat[m]> came2complain: no, a TPM has no use
+17:01:31 <strcat[m]> doesn't implement any relevant APIs, doesn't have the required capabilities
+17:01:47 <came2complain[m]> I'd like to prototype a device specifically built to run grapheneOS
+17:01:47 <strcat[m]> I'm also unsure why you would copy a Pixel 3a
+17:01:52 <came2complain[m]> couldn't find any yet
+17:02:18 <strcat[m]> you're free to work on that
+17:02:41 <strcat[m]> a device made to run GrapheneOS will have that same notice when running an OS other than GrapheneOS including a custom build of it
+17:02:49 <strcat[m]> it's supposed to be there
+17:03:15 <strcat[m]> has nothing to do with open vs. closed source
+17:03:35 <came2complain[m]> well some part of the device must expect another OS
+17:03:44 <strcat[m]> if you theoretically made an open hardware SoC and entirely open hardware for every single other component that notice will still be there when running anything but the stock OS
+17:03:49 <came2complain[m]> that part could be changed if it was possible?
+17:03:54 <strcat[m]> came2complain: and it has nothing to do with open vs. closed source
+17:04:15 <strcat[m]> came2complain: yes, make a new device that has a different key (an official GrapheneOS key) for the stock OS
+17:04:15 <came2complain[m]> can you please explain what part exactly is responsible for that denial?
+17:04:30 <strcat[m]> the verified boot implementation
+17:05:00 <strcat[m]> the late stage bootloader is responsible for verifying the core OS and handing off verification responsibility for the rest of the OS to it
+17:05:25 <strcat[m]> when running anything but the stock OS via a custom verified boot key, it will show that notice, as part of the implementation
+17:05:31 <take_a_deep_brea> came2complain:  thats not a denial . more of a warning , rarely seen by anybody other than people who should know what they are doing if they reached that screen
+17:05:34 <strcat[m]> when you flash GrapheneOS on a device, it flashes the custom verified boot key
+17:05:50 <strcat[m]> when you're using a custom verified boot key, that notice is shown
+17:05:59 <strcat[m]> a device made to run GrapheneOS would work exactly the same way
+17:06:09 <strcat[m]> the difference is that GrapheneOS official releases would be the stock OS
+17:06:23 <came2complain[m]> and there is no way to change the expected key in the verified boot implementation of the pixel phones because that part can't be modified to expect the Graphene OS key - correct?
+17:06:47 <strcat[m]> it would be a security vulnerability if you could bypass verified boot
+17:06:51 <strcat[m]> and as I said, a device made to run GrapheneOS would work the same way
+17:07:04 <came2complain[m]> Ok
+17:07:06 <strcat[m]> if you replaced the official releases of GrapheneOS with another OS with a custom verified boot key, you would see that notice on boot
+17:07:12 <came2complain[m]> I understood that.
+17:07:28 <came2complain[m]> So the part is implemented by the hw vendor
+17:07:30 <strcat[m]> it would be a security vulnerability with a substantial reward available if you found a verified boot bypass
+17:08:01 <strcat[m]> each phone has a build of the late stage bootloader with the stock OS verified boot key set in it
+17:08:17 <strcat[m]> if the phone supports custom verified boot keys, it has an implementation of dealing with those
+17:08:47 <strcat[m]> if a phone was built to run GrapheneOS, we would be signing the firmware and it would be our key configured in the code
+17:09:08 <came2complain[m]> ok
+17:09:09 <strcat[m]> came2complain: I suggest looking at the Qualcomm EDK2 bootloader source code
+17:09:22 <strcat[m]> you can see how this is configured and used
+17:09:41 <came2complain[m]> I assume the Titan-M can't be purchased from google to be used in non-google products?
+17:09:45 <strcat[m]> if we had our own device, we would have our own build of that set
+17:09:52 <strcat[m]> came2complain: it's not available for purchase
+17:10:04 <strcat[m]> another secure element would need to be used
+17:10:10 <strcat[m]> implementing the APIs used by the OS
+17:10:31 <strcat[m]> you cannot just use some arbitrary secure element with random APIs not used by the OS
+17:10:31 <came2complain[m]> any recommendation?
+17:10:38 <strcat[m]> a TPM has no use and doesn't have the necessary capabilities
+17:10:43 <strcat[m]> I don't have a recommendation
+17:11:00 <strcat[m]> you would need a secure element where you can put your own firmware or at least applets on it
+17:11:13 <strcat[m]> and you'd need to implement the required APIs
+17:11:46 <strcat[m]> Weaver, firmware updates with insider attack resistance, enforcement of bootloader / verified boot state, StrongBox keymaster (the largest portion of the APIs) including stuff like secure input
+17:12:25 <strcat[m]> also I don't see any reason to copy the Pixel 3a - it's a past generation device, and there is no reason you have to copy the specs of any Pixel phone
+17:13:11 <strcat[m]> you need hardware with proper fully functional AOSP support complying with the usual CDD/CTS requirements including providing the recommended security features, not just mandatory ones
+17:13:26 <strcat[m]> no reason to copy Pixel specs specifically
+17:15:06 <strcat[m]> so, for example, if it was an upcoming device, it would probably be using the Snapdragon 888, a bunch of memory (more than Pixels), a secure element implementing those things (Qualcomm SPU may not be capable of doing it - unclear), all the components properly configured with IOMMU containment (SoC is handled for you), etc.
+17:15:06 <came2complain[m]> I assumed that there would be less work to do if the hw is the same as the one in the pixel
+17:15:16 <strcat[m]> Pixel 3a is a legacy device
+17:15:21 <came2complain[m]> besides the verified boot implementation and the secure module
+17:15:36 <strcat[m]> a reference platform has working verified boot
+17:15:46 <strcat[m]> you won't be implementing that yourself
+17:16:02 <strcat[m]> you would at most be implementing secure element based storage of state
+17:17:05 <strcat[m]> unless you're planning on doing something very strange, the assumption is that you're using an existing mobile SoC with the vendor provided AOSP support
+17:17:30 <strcat[m]> a secure element matching Pixels is outside the scope of what they would provide
+17:17:44 <strcat[m]> verified boot support is mandatory and not something you have to make
+17:18:02 <came2complain[m]> ok I want a secure element in the device
+17:18:21 <strcat[m]> unclear which SoC vendors provide working support for alternative verified boot keys out-of-the-box but verified boot itself is mandatory and standard
+17:18:22 <came2complain[m]> it's one of the main reasons why pixels are more secure than other android devices isn't it?
+17:18:38 <came2complain[m]> so there'd be the hardest work to do I guess
+17:18:40 <strcat[m]> and a device meant for running GrapheneOS doesn't necessarily need to support running another OS, it's a design decision to make
+17:18:52 <strcat[m]> there could be development and production variants
+17:19:06 <strcat[m]> with production only supporting GrapheneOS itself
+17:19:17 <strcat[m]> Pixels use the same devices for production and development once they reach the production stage
+17:19:30 <strcat[m]> not mandatory to do things that way
+17:21:29 <strcat[m]> came2complain: Pixels are set up as secure production devices with proper security updates provided monthly, and they provide the recommended security features from the CDD along with other improvements over what's mandatory
+17:21:35 <strcat[m]> came2complain: they also have full support for the hardware security features for an alternate OS
+17:21:40 <strcat[m]> which is quite unique
+17:22:10 <strcat[m]> and they get day 1 updates to new major OS versions for the device as a whole
+17:23:17 <strcat[m]> and they deal with other things like providing Wi-FI anonymity which may require custom requests for component vendors
+17:24:37 <strcat[m]> having a proper device created to run GrapheneOS will require substantial resources - money, developers, partnerships with companies
+17:24:48 <strcat[m]> it's not something someone is going to do on their own
+17:25:42 <strcat[m]> need to work with a competent hardware partner
+17:26:39 <strcat[m]> baseline is essentially a Qualcomm SoC reference device with the latest, highest end SoC
+17:26:59 <came2complain[m]> <strcat[m] "it's not something someone is go"> I know
+17:27:02 <strcat[m]> the Qualcomm SPU may be able to satisfy the secure element requirements but I'm skeptical about it currently meeting the requirements
+17:27:15 <came2complain[m]> MediaTek not sufficient?
+17:27:21 <came2complain[m]> They're easier to source
+17:27:31 <strcat[m]> they've historically had really bad security
+17:27:59 <strcat[m]> it doesn't make sense for us to produce a device that has substantially worse security
+17:28:14 <strcat[m]> I don't think they have a competitive platform on the security front
+17:28:17 <strcat[m]> and I don't see them having one
+17:28:21 <came2complain[m]> ok
+17:28:30 <came2complain[m]> STSAFE-A100 an option for the secure element?
+17:28:35 <strcat[m]> the goal is not producing a device but producing a device that is at least as secure as a Pixel
+17:29:33 <came2complain[m]> During the Trump administration the Chinese HW partners that would have been able to provide the necessary AOSP support weren't allowed to source Qualcomm Chipsets
+17:30:05 <came2complain[m]> they always asked said they can only provide MediaTek
+17:30:12 <strcat[m]> afaik only Huawei was forbidden from working with US companies
+17:30:48 <strcat[m]> pretty sure there are manufacturers elsewhere including Taiwan, South Korea, India, etc.
+17:30:54 <came2complain[m]> Trust me we couldn't source qualcomm from the Chinese partners that usually were able to provide this kind of solutions
+17:31:05 <came2complain[m]> in the low volumes we require
+17:32:01 <strcat[m]> low volume is a major assumption, I think if we were producing a device to run GrapheneOS we would be able to sell far more of them, and small tasks like implementing an app install / update system with our own repo, etc. would be easy to deal with
+17:32:08 <strcat[m]> to make the OS more suitable for non-technical people
+17:32:45 <came2complain[m]> yes
+17:32:54 <came2complain[m]> that's the goal
+17:33:13 <strcat[m]> seems to be a company that actually made a truly secure device at least as secure as Pixels and got the endorsements that it would get would be higher volume than Pixels themselves
+17:33:38 <strcat[m]> but as soon as a company starts making compromises like using MediaTek, using an older generation SoC, not having a comparable secure element, etc.
+17:33:45 <strcat[m]> I lose interest and it wouldn't have official GrapheneOS support
+17:34:11 <strcat[m]> I want it to launch with a current SoC, a high end one, and a bunch of memory, we struggle with the current amount of available memory due to hardened_malloc + exec spawning
+17:34:17 <came2complain[m]> that's why I'm here asking questions :D
+17:34:28 <strcat[m]> proper secure element providing the same APIs as Pixels
+17:34:46 <strcat[m]> and if we wanted we could add extensions
+17:34:52 <strcat[m]> so, for example, see https://grapheneos.org/faq#encryption about what baseline Weaver does
+17:37:24 <strcat[m]> came2complain: what I want is basically a Qualcomm reference device with the highest end SoC, a ton of memory, comparable secure element, properly set up as a secure production device like Pixels (secure IOMMU configuration for peripheral components, etc.)
+17:37:42 <strcat[m]> came2complain: where we control it as an OEM, our keys are the OEM keys for firmware, etc.
+17:38:00 <came2complain[m]> find me the secure element
+17:38:05 <came2complain[m]> the rest shouldn't be an issue
+17:38:17 <strcat[m]> came2complain: and then we can build on that, such as having a sensors off kill switch turning off cameras, microphones, all the accelerometer/gyroscope/compass/proximity sensor type things, etc.
+17:38:33 <strcat[m]> wire speakers in a way that they can't be used as mics
+17:38:35 <came2complain[m]> to be honest I don't want gps present
+17:38:38 <came2complain[m]> or front camera
+17:38:43 <came2complain[m]> for the base model
+17:38:51 <strcat[m]> well we want that
+17:38:53 <strcat[m]> we want a normal usable device
+17:38:54 <came2complain[m]> I'd go even the Snowden way and not put internal mics in
+17:38:57 <strcat[m]> I don't see the issue with a GPSD
+17:39:00 <strcat[m]>  * I don't see the issue with a GPS
+17:39:05 <strcat[m]> came2complain: that's not what we want
+17:39:14 <strcat[m]> we want a sensors off switch to disable input to the device
+17:39:29 <strcat[m]> but the GPS thing is hard to understand
+17:39:39 <came2complain[m]> then let's do a base model with what you want and a more paranoid model with what I want :D
+17:39:39 <strcat[m]> you can determine location with cellular, Wi-Fi, Bluetooth
+17:39:45 <strcat[m]> or even audio recording, etc.
+17:39:50 <strcat[m]> came2complain: I don't want any security theater
+17:39:59 <strcat[m]> if you have an accelerometer that's a microphone
+17:40:05 <strcat[m]> if you have Wi-Fi / cellular, that's location tracking
+17:40:09 <strcat[m]> audio recording is usable for location tracking too
+17:40:25 <came2complain[m]> no need for an accelerometer imho
+17:40:25 <strcat[m]> a sensors off switch makes sense
+17:40:32 <strcat[m]> came2complain: it has to be a usable device
+17:40:50 <strcat[m]> we don't want to make some niche thing without standard functionality and it should satisfy the CDD / CTS requirements
+17:40:54 <came2complain[m]> My 2 model approach could satisfy everyone
+17:41:01 <strcat[m]> no
+17:41:05 <strcat[m]> we want 1 model of phone
+17:41:32 <strcat[m]> and we won't be involved in anything security theater stuff
+17:44:01 <strcat[m]> just have a hardware switch disabling audio recording - which includes turning off cameras, accelerometers, gyroscopes, compass, etc. because you can use all those things for audio recording
+17:44:10 <strcat[m]> so, a sensors off switch
+17:44:25 <strcat[m]> people use front cameras a lot including for video calling
+17:44:55 <Albakham[m]> Doesn't make sense to want a unusable phone, the more paranoid approach is simply to not own a phone
+17:45:19 <strcat[m]> just give people a case that covers it if they don't want it usable at all, or have a separate switch for it, but that makes things more complicated
+17:45:29 <strcat[m]> and I don't want separate switches for things that do not accomplish anything
+17:45:40 <strcat[m]> so for example, a microphone kill switch by itself that doesn't prevent audio recording isn't wanted
+17:45:53 <strcat[m]> it should be based on meaningful semantics not implementation details
+17:46:03 <strcat[m]> a GPS kill switch makes no sense - you don't need GPS to determine location
+17:46:04 <strcat[m]> in fact
+17:46:10 <strcat[m]> as people encounter when using location on GrapheneOS
+17:46:16 <strcat[m]> GPS really sucks at quickly determining location
+17:46:24 <strcat[m]> and barely works / doesn't work inside, etc.
+17:46:35 <came2complain[m]> ok
+17:46:49 <came2complain[m]> hw killswitch isn't that easy to implement
+17:46:55 <strcat[m]> and I don't see a point in not including useful sensors when we can support disabling them
+17:47:05 <strcat[m]> came2complain:  seems easy enough
+17:47:34 <strcat[m]> if phones weren't so fragile and packed together with barely any room inside I could even see retrofitting them onto an existing device
+17:47:43 <strcat[m]> but it's impractical to even take apart a phone
+17:48:02 <came2complain[m]> STSAFE-A100 ?
+17:48:12 <came2complain[m]> we need the secure element
+17:48:17 <strcat[m]> came2complain: don't know anything about that
+17:48:26 <came2complain[m]> the rest can be sourced
+17:48:34 <strcat[m]> yes need a secure element that supports custom firmware or at least applets
+17:48:44 <strcat[m]> and it needs to be able to support insider attack resistance for firmware upgrades
+17:48:48 <strcat[m]> and it has to be a high quality secure element
+17:49:08 <strcat[m]> also speakers need to be wired in a way that prevents using them as a mic
+17:49:15 <strcat[m]> don't know what that involves
+17:49:21 <strcat[m]> I'm not an electronics engineer
+17:50:16 <came2complain[m]> If we want to achieve a level of security equal or greater than the pixels, we won't get around a proper secure element
+17:50:33 <strcat[m]> sure
+17:50:42 <strcat[m]> maybe the Qualcomm SPU on the Snapdragon 888 has advanced to the point that it is usable for it
+17:50:45 <strcat[m]> I don't know
+17:50:56 <strcat[m]> if it doesn't have a way to do insider attack resistance for firmware upgrades, it hasn't
+17:50:57 <came2complain[m]> who knows?
+17:51:00 <came2complain[m]> :D
+17:51:02 <strcat[m]> and if it doesn't have a secure timer, it can't do Weaver
+17:51:50 <COVID-1984> strcat[m]: what do you think about the "modular phone" idea? Google had a project, forgot the name, about this...
+17:52:08 <strcat[m]> opposite of what we want
+17:52:15 <came2complain[m]> "Project Ara"
+17:52:18 <COVID-1984> The chip/embedded experts I talked to in the valley all insisted it is a stupid idea "cuz we gotta make stuff as small & cheap as possible"
+17:52:24 <strcat[m]> if anything we want to pair components like the screen like Apple
+17:52:34 <COVID-1984> but I like the lego-like / desktop-computer-like idea for phones
+17:53:00 <strcat[m]> if we make our own phones I expect it to be expensive and tamper resistant
+17:53:21 <strcat[m]> it would be serving a specific purpose
+17:53:26 <COVID-1984> The "not able to work on your own phone" seems like security via obscurity
+17:53:39 <COVID-1984> like if there's a HW bug in the security chip, you could replace it
+17:53:44 <strcat[m]> in what sense?
+17:53:45 <COVID-1984> and the people who don't care much could just keep it
+17:53:46 <strcat[m]> look at Auditor
+17:53:56 <strcat[m]> COVID-1984: ????
+17:54:12 <COVID-1984> Right Project Ara
+17:54:15 <COVID-1984> I liked that idea
+17:54:29 <COVID-1984> I think it will emerge naturally if hobbyists start building phones more
+17:54:42 <strcat[m]> if the phone has a hardware backdoor it's pretty crazy to think you should be just replacing a component and still using it
+17:54:47 <strcat[m]> COVID-1984: yeah, which is fine, and it's the opposite of what we want
+17:54:56 <strcat[m]> if the secure element is a separate chip, it needs to be paired with the SoC
+17:55:06 <strcat[m]> by definition it can't just be a drop in chip
+17:55:11 <strcat[m]> how is it paired then?
+17:55:16 <COVID-1984> you could actually look into hardware backdoors as a hobbyist without having loads of expensive equipment & time
+17:55:36 <COVID-1984> strcat[m]: sure, each discrete unit would make sense
+17:55:37 <Albakham[m]> <COVID-1984 "like if there's a HW bug in the "> Being able to replace the security chip kills the goal of the security cjip
+17:55:42 <COVID-1984> it wouldn't be like the smallest parts broken down
+17:55:45 <strcat[m]> doesn't sound realistic to me
+17:55:50 <COVID-1984> you'd have to replace SoC + some stuff as a block
+17:55:51 <COVID-1984> like a lego
+17:56:06 <Albakham[m]> * Being able to replace the security chip kills the goal of the security chip
+17:56:09 <strcat[m]> I would prefer it if an attacker couldn't easily open up the phone and replace the screen with a malicious one etc.
+17:56:22 <strcat[m]> the goal would not be making a general purpose mainstream device but rather a hardened one
+17:56:22 <COVID-1984> Albakham[m]: if replacing teh chip kills security, then good luck if anyone has the money to replace your soldiered on chip
+17:56:36 <strcat[m]> COVID-1984: it doesn't kill the security
+17:56:38 <strcat[m]> the point is that it doesn't work
+17:56:42 <COVID-1984> strcat[m]: it would be much harder because phones wouldn't be so identical
+17:56:46 <strcat[m]> you bricked the phone
+17:57:03 <COVID-1984> right now they could just replace the whole phone and you'd try to unlock it with your face/finger/code - and it would send it to them, they'd use it on your real phone :)
+17:57:20 <strcat[m]> if you take the Titan M from one Pixel and swap it with another you bricked it if the batch keys are different
+17:57:32 <COVID-1984> strcat[m]: right, that's what I was trying to say to Albakham[m]
+17:57:52 <strcat[m]> you could swap it back and unbrick it... but you can't just replace it
+17:58:00 <COVID-1984> Not saying to get rid of that particular approach. I'm definitely not saying "modularity above everything"
+17:58:25 <COVID-1984> strcat[m]: right so FBI can swap and unbrick our pixels?
+17:58:27 <strcat[m]> ok imagine a Pixel but the pairing isn't just between the secure element and SoC
+17:58:44 <strcat[m]> but also the SoC and SSD, SoC and touchscreen, SoC and camera modules
+17:58:57 <strcat[m]> etc
+17:59:16 <strcat[m]> I don't want to make a modular device or a repairable device, it's not the goal for us
+17:59:23 <COVID-1984> ya not trying to convince you
+17:59:33 <COVID-1984> was just hoping someone with more knowledge would steelman my idea :)
+18:00:02 <COVID-1984> because it is intuitive to me... and I know it doesn't necessitate bad security
+18:01:13 <billzster> Hi Folks - Trying to secure my GraphenOS the best I can =. Question if I download an app from say Aurora that has tracker/logger on it but I disable all permissions - including "Network". Is it safe to use the app with confidence that it can not communicate with outside parties. Ex: "Nova Launcher" uses Google Firebase. Also can someone suggest an
+18:01:13 <billzster> app to monitor what app traffic is being used.
+18:01:30 <strcat[m]> and based around the assumption that it would be initially very low volume
+18:01:42 <strcat[m]> and we'd still want to be using high end hardware, for security reasons
+18:01:44 <strcat[m]> it would be expensive
+18:02:02 <strcat[m]> billzster: GrapheneOS doesn't have Play services / Firebase stuff
+18:02:30 <COVID-1984> strcat[m]: yes very hard to get started... Would love to see blogs from some ex-chip-fab engineers
+18:02:38 <strcat[m]> billzster: those kinds of "tracker" notices are highly misleading and inaccurate
+18:02:52 <strcat[m]> billzster: you need to understand that what it does is detecting common third party SDKs which they have deemed to be tracking, often quite arbitrarily
+18:03:15 <COVID-1984> Someone can just build the tools, then build a car with those tools... but for a chip, they have to build tools to make a shitty chip and slowly iterate it seems... building each set of tools along the way... now I wonder about TSMC's chip fab tools
+18:03:18 <strcat[m]> billzster: it being present in the app as a library doesn't imply that the app always uses it, and doesn't imply it uses the functionality that has been deemed to be tracking
+18:03:19 <COVID-1984> probably impossible to buy
+18:03:34 <strcat[m]> billzster: and an app certainly doesn't need to use one of those common 3rd party SDKs to do something you would consider privacy-violating
+18:03:47 <strcat[m]> they can do that entirely on their own... they don't need help from a 3rd party library
+18:03:52 <strcat[m]> billzster: it's a misguided approach
+18:04:04 <strcat[m]> if you don't trust the app, doesn't use it as your launcher
+18:04:13 <strcat[m]>  * if you don't trust the app, don't use it as your launcher
+18:04:25 <strcat[m]> best practice would be using the standard GrapheneOS launcher
+18:05:06 <strcat[m]> COVID-1984: cars have computers in them and can't simply be built / worked on to the same extent as 30 years ago
+18:06:48 <billzster> Never knew that strcat[m]  very informative. Thank you. Is the statement true though if I use an app and block all permissions the certainly it would be more secure or can an app thats blocked still communicate outside in another way.
+18:07:01 <COVID-1984> strcat[m]: ya but you get my analogy
+18:07:07 <COVID-1984> "car without computer" :P
+18:07:17 <strcat[m]> COVID-1984: also there's a lot less that can go wrong with a non-ICE car so most fixes would probably involve stuff that involves computers
+18:07:24 <strcat[m]>  * COVID-1984: also there's a lot less that can physically go wrong with a non-ICE car so most fixes would probably involve stuff that involves computers
+18:07:26 <somenerd[m]> imo you shouldn’t use the app then
+18:07:44 <somenerd[m]> (If you don’t trust it)
+18:07:52 <somenerd[m]> Even with all perms disabled
+18:08:03 <strcat[m]> so for example, good luck working on a Tesla yourself - but you can expect every other car to end up that way
+18:08:24 <billzster> I dont trust my self but I still have to operate. But yeah I get it
+18:08:30 <strcat[m]> billzster: an app can play audio by default if it's in the foreground, there's a way to communicate with the outside world
+18:08:40 <strcat[m]> billzster: doesn't have to be audible to humans
+18:08:44 <somenerd[m]> Audio permission?
+18:09:07 <somenerd[m]> (I mean is that even possible?)
+18:09:30 <strcat[m]> billzster: Network permission disables any direct network access (even to localhost) and also indirect access via any APIs with the INTERNET permission as a requirement
+18:09:44 <strcat[m]> billzster: the app can still communicate via mutual consent with other apps within the same profile
+18:09:52 <strcat[m]> just can't call their APIs that require INTERNET permission
+18:10:19 <strcat[m]> billzster: anyway you're talking about setting the app as your launcher, that places a fair bit of trust in it
+18:10:36 <strcat[m]> billzster: really should not be using an app you don't trust as your launcher or *especially* your keyboard
+18:11:21 <somenerd[m]> Yeah
+18:11:58 <somenerd[m]> >billzster: an app can play audio by default if it's in the foreground, there's a way to communicate with the outside world
+18:11:58 <somenerd[m]> Also, could bluetooth be a problem?
+18:12:02 <billzster> Thats correct about launcher and I trust the Nova - that was just an example that showed the firebase tracker. In the end the only apps I need to trust is the email client and launcher
+18:12:08 <strcat[m]> in fact that's 2 good things to add to Auditor: check if a non-system keyboard or launcher is being used
+18:12:23 <strcat[m]> somenerd: bluetooth requires the user to pair devices, requires user interaction
+18:12:25 <somenerd[m]> (A way to exfiltrate data)
+18:12:33 <strcat[m]> somenerd: unless you have the location permission
+18:12:38 <somenerd[m]> The app can’t use it?
+18:12:46 <strcat[m]> don't know what you mean
+18:12:49 <strcat[m]> the app has to ask to pair
+18:12:56 <somenerd[m]> I see
+18:13:11 <strcat[m]> an app can't just communicate via Bluetooth without the user letting it
+18:13:35 <strcat[m]> it's not a user-facing permission because there's a case-by-case consent system
+18:14:09 <strcat[m]> people misunderstand the purpose / function of the 'normal' permissions
+18:20:35 <pokpo> how to do the first verification as I have not another Graphene OS phone
+18:20:54 <billzster> Two questions - Probably not possible but 1. Is there a way to monitor traffic (App to Location) available. Is there a way to redirect traffic to say localhost what say app foes to firebase redirect to localhost
+18:33:45 <strcat[m]> pokpo: it doesn't have to be a GrapheneOS phone
+18:33:50 <strcat[m]> the Auditor can be any Android 7+ phone
+18:34:14 <strcat[m]> there's also the remote attestation service https://attestation.app/
+18:34:30 <aoude[m]> billzster maybe not the answer you're looking for but VPNs can be used for redirection and to monitor traffic (traffic control on fdroid)
+18:34:30 <strcat[m]> billzster: you can use NetGuard but again you're mostly going to be misleading yourself
+18:34:34 <strcat[m]> and feeling like you're doing something useful
+18:41:53 <pokpo> Thanks
+18:48:56 <billzster> I use openvpn with a vpn provider. I am aware of NetGuard but its not the same as a true VPN in my opinion. Will look at traffic control. To bad we cant just use a host file - wondering if a terminal using netstat would work
+18:58:18 <billzster> Did you mean TrackerControl aoude[m] - If so - This is another VPN app - Not exactlly what I was looking for but TY
+18:59:43 <strcat[m]> billzster: it's not meant to be a VPN, it uses the VPN service to route traffic through itself, which is what the feature provides
+18:59:46 <strcat[m]> you can forward from it to an actual proxy
+18:59:52 <strcat[m]> anyway what you're doing seems really misguided
+19:00:00 <strcat[m]>  * anyway what you're trying to do seems really misguided
+19:00:30 <strcat[m]> if you let the app use the internet, you're letting it talk to those services you don't want it to even if you block directly communicating with them
+19:00:46 <strcat[m]> what you're trying to do fundamentally won't work because they can send the information to those from their own server
+19:01:40 <aoude[m]> <billzster "Did you mean TrackerControl aoud"> Yeah TrackerControl 😅
+19:01:41 <strcat[m]> it's meaningful to block internet access as a whole
+19:01:55 <strcat[m]> trying to do it in a granular way doesn't work the way you seem to think
+19:02:23 <strcat[m]> and you definitely don't want a 'hosts file'
+19:02:47 <strcat[m]> maybe what you want to do is filter DNS in which case, the best way to do that is DNS
+19:03:04 <strcat[m]> not a legacy way of doing a subset of what it provides
+19:03:21 <billzster> Thanks strcat[m]  for the reply - I understand what your saying "Either Trust or Don't" no other way around it. Got It! I was over reaching
+19:03:34 <strcat[m]> if an app really wanted it could just exfiltrate data via DNS itself, no need to talk to any specific host
+19:03:41 <strcat[m]> here's an example
+19:03:54 <strcat[m]> consider an app that queries some_data.example.com
+19:03:56 <billzster> Keep going strcat[m]  love the info
+19:04:10 <strcat[m]> this ends up ultimately querying the example.com authoritative DNS server
+19:04:20 <strcat[m]> an app can exfiltrate data to their own servers simply via your DNS provider
+19:04:30 <strcat[m]> they don't need any direct communication with their servers to exfiltrate data
+19:04:34 <strcat[m]> what you're trying to do doesn't work
+19:04:56 <strcat[m]> if you permit the app to access the internet, even just making DNS queries via your ISP DNS or your DNS provider of choice, it can exfiltrate data via the internet quite directly
+19:05:33 <strcat[m]> when it sends a query exfiltrated_data_random.example.com to say your ISP DNS, that gets forwarded along to the authoritative DNS servers for example.com, a server that example.com chose
+19:05:53 <strcat[m]> using DNS to exfiltrate data is a common approach in malware
+19:06:16 <strcat[m]> that way they never make a connection to their own servers directly
+19:06:26 <strcat[m]> it's a common way of doing things in a really sneaky way
+19:06:44 <strcat[m]> sure, most malware is written by idiots, but stuff like this isn't hard
+19:06:57 <strcat[m]> anyway, from there, they can send off data to anywhere they want
+19:07:00 <strcat[m]> any third parties, whatever
+19:07:15 <strcat[m]> if you permit them to access the internet at all, you permit them to exfiltrate data anywhere
+19:07:21 <strcat[m]> that's just the reality
+19:07:37 <strcat[m]> I suggest not giving the app data you don't want it having
+19:07:56 <strcat[m]> that is what the app sandbox and permission model is based around: not giving apps sensitive data without consent
+19:09:10 <billzster> Got it - I surrender - Now if like a child I installed many apps, uninstalled when realized I was not content with it but now have concluded what is bare essential for my new GraphenOS - do you recommend to unlock boot loader and reinstall GrapnenOS to have a clean install because maybe the uninstalled apps might have left some crumbs that should
+19:09:11 <billzster> be rectified?
+19:09:58 <strcat[m]> there's no reason to do that
+19:09:59 <strcat[m]> if you really wanted you could factory reset, which is equivalent to unlocking and flashing it again, but you really don't need to do that
+19:10:39 <strcat[m]> I suggest reading documentation like https://grapheneos.org/faq#encryption and the other info on those pages even though it may not directly answer your specific questions because it indirectly answers a lot of it
+19:10:45 <strcat[m]> as part of covering other things
+19:11:46 <billzster> You Rock! All of you...TY so much for your time and educational points...
+19:14:02 <r0tt0r[m]>  when systemupdate is happening does inactive partition flashed with the update and made active?
+19:14:51 <take_a_deep_brea> i think thats how AB partitioning works
+19:16:19 <strcat[m]> r0tt0r: it writes out the update to the inactive set of partitions, if it's an incremental update, it does that by reading the active ones and calculating what it needs to write out based on the deltas
+19:16:33 <strcat[m]> once it finishes writing out all the images, it verifies all of them
+19:16:59 <strcat[m]> then it does post-installation work - it goes through all the apps and makes sure they are all compiled for the new release, so it'll recompile your installed apps
+19:17:11 <strcat[m]> then, when it's done all that, it will mark the new update as ready
+19:17:49 <strcat[m]> so, next time the OS boots, it will boot the new version instead - and if it successfully makes it to late stage boot, it will mark the new update as the active OS and the old set will be inactive (and after that point, it can't roll back anymore)
+19:17:55 <strcat[m]> if it fails to boot multiple times, it rolls back
+19:18:06 <strcat[m]> (until it has succeeded, then it's disabled + locked in with rollback prevention)
+19:21:07 <RamenLover> Hey I asked a  question in offtopic channel, if someone who knows about aurora can take a look, would be much appreciated
+19:40:19 <r0tt0r[m]> <strcat[m] "(until it has succeeded, then it"> thx 👍🏻
+20:05:31 * anupritaisno1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/yqElfILiFCBLSfgEwjBtSqEH/message.txt >
+20:51:45 * cx7dd[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/spxytYAgRBSeDmkseRuYDuKz/message.txt >
+20:59:31 <jmacnd> what's a good messenger app for grapheneOS? the native one sucks!
+21:00:30 <cx7dd[m]> Try QKSMS
+21:10:59 <jmacnd> I will give that a whirl!
+21:28:13 <Maxattax> okay so I understand this is frowned upon in the community, but I want to understand *why* better: rooted graphene, and graphene with microg... can anyone point me to resources?
+21:28:56 <TheJollyRoger> Hello Maxattax, I'm on my way off the computer, but I can give you a bit about why in a nutshell
+21:29:06 <TheJollyRoger> So, with respect to rooting:
+21:29:54 <TheJollyRoger> A bit of background with Android; on Android, there are only a few very specific processes with root equivalent access. The first one's init, the second one's kernel, and the third one is vold.
+21:30:46 <TheJollyRoger> Everything else is, for safety, written as separate companents, entirely walled off from system with mandatory access controls and constrained to only have access to what they need to do, and *only* what they need to do.
+21:31:43 <TheJollyRoger> If you make root application accessible, then that essentially destroys this security model, and not only that, it also precludes the use of verified boot, which means no more device integrity or attestation, and no over the air updating.
+21:32:57 <TheJollyRoger> The idea of "the computer should do what the user tells it to do" conceptually sounds great, until we realize that you're running other people's programs on your computer, and they are just as much users as you are.
+21:34:23 <Maxattax> Fair enough, thanks for explaining that. The main things I wanted root for were: ad blocking, and automatic updates. Fdroid doesn't allow auto updates without root... are there workarounds for this?
+21:35:26 <Maxattax> sad that rooting is done universally, would be cool if it worked like sudo where the app asks the user if it's okay to use a permission
+21:35:32 <TheJollyRoger> The other thing is that MicroG we consider to be an antifeature; our philosophy is that Google's services are invasive, requires deep integration with the operating system, and simply implementing these invasive services in a way that's been discovered via reverse-engineering is not good for the security of your device.
+21:36:38 <hilly> Hello everyone i hope someone can help me with flashing grapheneos on my pixel 4a. I have been looking on the internet all day but i cant solve the problem I have. I have a W10 computer and never had any programs like platform tools in my computer before i just downloaded it this morning.
+21:36:38 <hilly> I have recieve the following error when i try to flash-all.bat
+21:36:39 <hilly> fastboot : The term 'fastboot' is not recognized as the name of a cmdlet, function, script file, or operable program. C
+21:36:40 <hilly> heck the spelling of the name, or if a path was included, verify that the path is correct and try again.
+21:36:40 <hilly> At line:1 char:10
+21:36:41 <hilly> + $version=fastboot --version; try { $verNum = $version[0].substring(17 ...
+21:36:41 <hilly> +          ~~~~~~~~
+21:36:42 <hilly>     + CategoryInfo          : ObjectNotFound: (fastboot:String) [], CommandNotFoundException
+21:36:42 <hilly>     + FullyQualifiedErrorId : CommandNotFoundException
+21:36:43 <hilly> fastboot too old; please download the latest version at https://developer.android.com/studio/releases/platform-tools.html
+21:37:25 <nscnt[m]> hilly: Do you use the PowerShell?
+21:37:25 <TheJollyRoger> Maxattax: in theory, we could bundle the F-Droid privileged extension, but F-Droid also contains a large amount of legacy code, and we also consider F-Droid to be insecure due to their security practices and their contravention of the decentralized Android app signing/certificate model.
+21:37:29 <Carylmarx> do what it says, get the latest platform tools and unzip into your path
+21:37:38 <hilly> yes powershell
+21:38:00 <hilly> Downloads\platform-tools_r30.0.5-windows\platform-tools> ./fastboot --version
+21:38:01 <hilly> fastboot version 30.0.5-6877874
+21:38:17 <hilly> it should be the most recent version
+21:38:20 <Carylmarx> you need to add to your path
+21:38:24 <nscnt[m]> That's not what you should do
+21:38:37 <TheJollyRoger> Maxattax: App accessible root is all-or-nothing, it doesn't quite work the way you think it would work in that arrangement.
+21:38:54 <nscnt[m]> hilly: Don't follow unofficial tutorials/guides
+21:38:57 <TheJollyRoger> Maxattax: remember, with verified boot, even if you did root the phone, any changes you make to the system partition get undone the next reboot.
+21:39:16 <TheJollyRoger> hilly: you've followed an unofficial guide. You'll need to follow the one on https://grapheneos.org/install
+21:39:31 <TheJollyRoger> The computer is telling you that fastboot is not in your command path.
+21:39:50 <TheJollyRoger> Either that or you've missed a step.
+21:40:17 <TheJollyRoger> You'll need to backtrack to find out where to set the proper command path, and from the proper directory.
+21:40:24 <Carylmarx> so, i'm following official guide and getting errors in ./flash-all.bat:
+21:40:25 <Carylmarx> PS C:\Users\carylmarx\sunfish-factory-2021.01.05.03> .\flash-all.bat
+21:40:25 <Carylmarx> Sending 'bootloader_a' (8341 KB)                   OKAY [  0.280s]
+21:40:26 <Carylmarx> Writing 'bootloader_a'                             (bootloader) Flashing Pack version s5-0.3-6835615
+21:40:26 <Carylmarx> (bootloader) xbl signature verify fail
+21:40:27 <Carylmarx> FAILED (remote: 'Validate packed image fail')
+21:40:27 <Carylmarx> fastboot: error: Command failed
+21:40:28 <Carylmarx> Rebooting into bootloader                          OKAY [  0.050s]
+21:40:28 <Carylmarx> Finished. Total time: 0.050s
+21:40:29 <Carylmarx> Sending 'radio_a' (72372 KB)                       OKAY [  1.700s]
+21:40:29 <Carylmarx> Writing 'radio_a'                                  (bootloader) Flashing Pack version SSD:g7150-00023-201008-B-6891498
+21:40:30 <Carylmarx> (bootloader) Flashing partition modem_a
+21:40:30 <Carylmarx> OKAY [  0.480s]
+21:40:31 <Carylmarx> Finished. Total time: 2.430s
+21:40:31 <Carylmarx> Rebooting into bootloader                          OKAY [  0.050s]
+21:40:32 <Carylmarx> Finished. Total time: 0.050s
+21:40:32 <Carylmarx> < waiting for any device >
+21:40:33 <Carylmarx> Erasing 'avb_custom_key'                           OKAY [  0.200s]
+21:40:47 <TheJollyRoger> Carylmarx: wait for it to tell you "Press any key to exit"
+21:41:23 <Carylmarx> it does.  what about the FAILED statuses?
+21:42:22 <TheJollyRoger> Someone more knowledgeable than I will need to chime in on that, unfortunately.
+21:42:27 <TheJollyRoger> I also have to run.
+21:42:41 <TheJollyRoger> Sorry.
+21:42:46 <Carylmarx> no worries
+21:42:51 <Maxattax> TheJollyRoger: thanks for MicroG explanation and Fdroid privileged... in my own usage, I see it as a greater relative risk to not have my apps up to date consistently than it is to forget manually updating
+21:49:57 <hilly> I did miss the step about the PATH
+21:50:13 <hilly> But i get the same error now i added it
+21:50:28 <Carylmarx> I';m looking over instructions and I see that Win10 is required.  I'm using windows 7.  Grrrr
+21:50:39 <Carylmarx> perhaps that's the soufce of my issues
+21:54:08 <blk> Carylmarx: what phone?
+21:56:36 <Carylmarx> pixel 3
+21:57:10 <blk> You're trying to flash the factory images for a Pixel 4a
+21:57:24 <Carylmarx> oh
+21:58:10 <blk> Please read the install guide very carefully.
+21:58:56 <eric80> I have recently installed GrapheneOS and am trying to install apps.  I want to maintain privacy but there is an app- Lockdown Logic that I need to download and it says its GSF dependent?  Will it work and will it compromise security?
+22:00:48 <qubits> Hi what is the reason when i get message fastboot to old?
+22:03:42 <mrxx_0[m]> qubits you don't have the last version of fastboot
+22:04:17 <qubits> who to install last version?
+22:04:34 <mrxx_0[m]> https://grapheneos.org/install#standalone-platform-tools
+22:05:00 <mrxx_0[m]> Are you following the official tutorial? Everything is in it
+22:05:20 <qubits> I m actually trying to help someone
+22:05:35 <qubits> I installed succesfully my googlepixel
+22:06:57 <mrxx_0[m]> Well that someone doesn't have the lastest fastboot version as the message suggested it
+22:09:43 <qubits> 30.0.5-6877874
+22:09:47 <qubits> this is version
+22:10:13 <came2complain[m]> does anyone have a design for issues 28 and 29?
+22:10:55 <Carylmarx> blk: getting another error now with correct image
+22:10:56 <Carylmarx> archive does not contain 'system_other.img'
+22:10:56 <Carylmarx> extracting vendor.img (498 MB) to disk...ziparchive W 01-20 14:09:16  2064 10896 Zip: unable to truncate file to 5230757
+22:10:57 <Carylmarx> 80: File too large
+22:10:57 <Carylmarx> fastboot: error:
+22:10:58 <Carylmarx> failed to extract 'vendor.img': I/O error
+22:10:58 <Carylmarx> Rebooting into bootloader                          OKAY [  0.000s]
+22:10:59 <Carylmarx> Finished. Total time: 0.000s
+22:11:33 <mrxx_0[m]> qubits: hum strange, your path is set in the same terminal ?
+22:12:20 <mrxx_0[m]> came2complain: what are you talking about ?
+22:12:54 <hilly> is this the exact line to paste into powershell to set the right pat
+22:12:55 <hilly> $env:Path = "$pwd\platform-tools;$env:Path"
+22:13:15 <kirby> Hi everybody
+22:13:33 <kirby> im installing graphene on my pixel 3a XL
+22:14:03 <blk> Carylmarx: it looks like you might be out of storage on the Windows machine
+22:14:31 <kirby> getting an issue where it says Android System Theres an internal problem with your device contat your manufacturer for details
+22:14:31 <qubits> mrxx i was thinking that could be the case
+22:14:34 <Carylmarx> 30GB in C: and 2 GB in /tmp
+22:14:55 <Carylmarx> windows 7
+22:15:34 <Carylmarx> bumping /tmp to 4gb
+22:16:03 <Carylmarx> no error that time.  Thanks!
+22:18:22 <mrxx_0[m]> kirby: after flashing GrapheneOS ?
+22:19:33 <kirby> mrxx_0[m] yes i think the flash wasnt successful
+22:19:51 <kirby> but I just ran the batch script again and I think it worked
+22:20:14 <kirby> it was weird it was asking me to setup vanilla android again
+22:23:04 <qubits> On Windows, launch a regular non-administrator instance of the PowerShell terminal. Do not use the legacy Command Prompt or administrator variant of PowerShell.
+22:23:30 <qubits> Can someone explain how to launch non administrator instnance of the powershell
+22:23:55 <qubits> Mhy friend is trying to install on windows 10 , i m using macbook
+22:30:50 <qubits> okay it was indeed wrong path
+22:53:40 <chris15> hello
+22:55:01 <mynacol[m]> chris15: hi
+22:55:28 <chris15> can someone help me with installing graphene os?
+22:56:21 <mulbr[m]> <eric80 "I have recently installed Graphe"> You need microg probably. Not sure how to do that with graphene but you could try calyxos
+22:57:12 <chris15> thank you
+23:19:23 <Maxattax> mulbr[m]: is microg not possible on Graphene?
+23:28:28 <dazinism> Maxattax: no
+23:30:07 <dazinism> Think there are plans to implement support in a secure way(its normally not), but not sure when it would be done.
+23:46:09 <Sam[m]7> Hi, long time fan of GrapheneOS, however I’m curious, I can’t seem to get GrapheneOS to connect a call in element/riot.im; since everyone here uses matrix, has anyone else found a way around this issue? Should I be using a different matrix client? It doesn’t seem to matter what server I’m on or what permissions I have enabled on my device, all calls will answer, microphone/camera permissions are enabled, yet I get
+23:46:09 <Sam[m]7> audio/video
+23:49:36 <Sam[m]7> Pixel 4a "sunfish" if that matters
+23:52:58 <frontman[m]1> chris15: what do you need

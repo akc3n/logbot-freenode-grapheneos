@@ -1,0 +1,1784 @@
+00:00:31 <TheJollyRoger> justanotherlurke: If there were large amounts of people that were doing that, that would be fantastic, but I don't think many people will have that kind of a setup.
+00:01:13 <TheJollyRoger> The big thing about anonymity is that what makes it effective tends to be a large amount of people all looking the same: when Peter looks the same as Patrick, and Patrick similarly is indistinguishable from Anita, who looks like Alice...
+00:01:16 <duck[m]> how does the security of arm trustzone compare to titan m
+00:01:45 <TheJollyRoger> The more people join their crowd, the harder it will be, to tell Peter from Alice because the bigger their anonymity set is.
+00:02:37 <TheJollyRoger> duck[m]: the Titan M is a different chip entirely, it's physically separated and it's specifically designed to isolate against things like timing attacks or side-channels.
+00:03:24 <TheJollyRoger> The Titan M was designed for mobile phones specifically.
+00:04:13 <justanotherlurke> <TheJollyRoger "justanotherlurker: If there were"> That's why I keep suggesting it on mobile. One would get tor anonymity without ff's sandboxing shortcomings.
+00:04:44 <TheJollyRoger> Timing attacks, and side-channel leaks are an issue with ARM Trustzone, which is why Google figured they would do their own security chip.
+00:05:02 <TheJollyRoger> justanotherlurke: Well... ideally, the people to suggest it to would be the Tor Browser developers.
+00:05:15 <TheJollyRoger> Since that way, they could roll out the change for *everyone* all at once.
+00:05:57 <justanotherlurke> <TheJollyRoger "justanotherlurker: Well... ideal"> But then what about desktop?
+00:05:58 <TheJollyRoger> Since that's what you want: you don't want fragmentation, or you actually paradoxically end up harming your own anonymity set, *and* those of the others.
+00:06:18 <TheJollyRoger> That's unfortunately what upstream is going to have to figure out.
+00:06:29 <justanotherlurke> <TheJollyRoger "Since that's what you want: you "> I agree.
+00:06:57 <justanotherlurke> Like merging vanadium and bromide sounds great...
+00:07:12 <TheJollyRoger> It's unfortunate though but Tor Browser has a *huge* amount of Firefox-specific tooling; a buddy of mine, Jeremy Rand, is in the process of porting Tor Browser to PowerPC64 Little Endian, and discovered that some of the tooling is REALLY old.
+00:07:28 <TheJollyRoger> Like, we are talking bootstrapping from before the days of Debian Jessie old.
+00:07:56 <louipc> ouch
+00:08:03 <TheJollyRoger> Yeah.
+00:08:23 <justanotherlurke> That's the challenge, I guess. Rewriting means throwing away most of it. Trying to fix remains trying.
+00:08:41 <TheJollyRoger> And having to use reaaally old GCC binaries that are specific to the x86, that sort of thing.
+00:09:01 <TheJollyRoger> Yeah.
+00:09:29 <TheJollyRoger> So that's probably why Upstream Tor Browser is in a hard spot. They've invested so much effort into Firefox, but are kind of stuck.
+00:11:08 <justanotherlurke> Exactly. Best combustion engine 20 years from now....
+00:11:56 <yhtr654> Hello, I wanted to ask a quick question.
+00:11:57 <yhtr654> I noticed that CalyxOS and GrapheneOS both take the Pixel-only route. What is it about Pixels that make them presumably the best option for a security-focused custom ROM?
+00:11:57 <yhtr654> Also I see you're talking about Tor Browser's relationship with Firefox/Mozilla. I was actually talking to someone else about that. While I'm here, what are the possibilities for the future of Tor Browser? What about a switch to degoogled-chromium? Is the only option starting a project to build a new browser, engine included, from scratch, under a
+00:11:58 <yhtr654> F/OSS license?
+00:12:18 <TheJollyRoger> Hello yhtr654, I'll break it down a little:
+00:13:29 <TheJollyRoger> In a nutshell, GrapheneOS, CalyxOS, RattleSnakeOS, and #!OS (HashBangOS) all focus on Pixel exclusively because all other Android OEM handset vendors either deliberately, or through their own incompetence, cripple the handset's bootloader security features if you run your own operating system on them that isn't the vendor's.
+00:14:10 <TheJollyRoger> Samsung, for instance, will permanently blow out fusing in your bootloader if you attempt to change the bootloader lock state, and then say "you bought it, it's your problem now."
+00:15:42 <yhtr654> I see...ironic that it's only Google that doesn't do that, haha.
+00:16:01 <TheJollyRoger> The second reason is that the Pixels have the most diligence in terms of upstream and vendor support, and the best security features, and the best IOMMU mitigations/modem isolation.
+00:16:33 <TheJollyRoger> They're also the most open; plenty of other vendors, again Samsung is a grevious offender in this, do proprietary everything, and don't play nice.
+00:17:17 <TheJollyRoger> yhtr654: well, it makes sense: Google doesn't actually make that much money off the Pixel handsets. They make money off the licensing and Android Ecosystem, so they actually want people to be developing for Android and contributing to upstream.
+00:17:27 <TheJollyRoger> So they make it easy for us.
+00:17:47 <TheJollyRoger> From a simple game theory standpoint, when you take the "big picture" into account, it actually makes a surprising amount of sense.
+00:17:52 <TheJollyRoger> They do it because it makes them more money in the end.
+00:19:43 <mr_hebi_san[m]> Even Google appears to clamp down the bootloaders on their refurbs.  I tried two allegedly unlocked Pixel phones from refurbishers, only one of which could OEM unlock, and neither of which would respond to fastboot unlock at all.
+00:20:03 <justanotherlurke> <yhtr654 "I noticed that CalyxOS and Graph"> Quoting https://madaidans-insecurities.github.io/android.html:
+00:20:05 <TheJollyRoger> The Pixels are also what I'd consider a "reference implementation" of Android, so Google spends time, money and diligence on making sure their handsets are the "yardstick" by which all others are judged against in terms not just of completeness of the API, but also in software and firmware support.
+00:20:16 <mr_hebi_san[m]> I assume their line of thought is that if they are going to take a loss on a device that hard, then they might as well monetize you without you getting another say
+00:20:23 <TheJollyRoger> mr_hebi_san[m]: I've heard of this as well... unfortunately I can tell you the reason why this happens but it's far less conspiratorial than you think:
+00:21:03 <mr_hebi_san[m]> Tell me a story, Mr. Jolly Roger
+00:21:38 <yhtr654> I'd like to hear as well.
+00:21:43 <TheJollyRoger> It's partially because toward the end of a handset's life, the resellers will try to bail as many devices as they can to shift the stock off their shelves, which has the effect of flooding the market with locked devices they want to get rid of before they become useless. Usually at this time, many people are trading in most of their old devices because they've paid off their tabs.
+00:22:12 <TheJollyRoger> This has the effect of flooding the market with previously owned devices, many of which were sold at retail and are carrier and bootloader locked, and at that point, many of them no longer have their original packaging.
+00:23:00 <TheJollyRoger> The kids being paid eight bucks an hour to box them up and ship them out aren't going to be checking.
+00:23:11 <TheJollyRoger> Either to put them into their retail boxes or sort them out by SKU.
+00:24:25 <mr_hebi_san[m]> Oof, the last part does make sense
+00:24:34 <TheJollyRoger> So it's not that Google is running this great big conspiracy to lure you in with an unlockable handset and then bait-and-switch you to lock you in, it's because the kids being paid eight bucks an hour to sort their wares at retail aren't told the difference and don't check to see what SKU number is.
+00:25:22 <TheJollyRoger> Chances are, if you send in a phone to be refurbished and get back a locked one, it's due to this: it's cheaper for them to replace an RMA'd used version with one that got sent back in and still works.
+00:25:38 <TheJollyRoger> But again, the kids throwing phones in boxes don't know that there *is* a difference.
+00:26:24 <TheJollyRoger> Toward the end of the phone's life, carrier locked phones essentially get bailed as waste or nearly so, and often the sellers don't know the difference anyways.
+00:26:28 <TheJollyRoger> That's why.
+00:31:39 <TheJollyRoger> I should stress - "Towards the end of a phone's life" generally means when people start paying off their tabs, or once the supplies of the phone start running low at Google.
+00:31:56 <TheJollyRoger> In some cases this can mean as little as 6 months, to a year.
+00:33:20 <TheJollyRoger> Since that's what we saw with the Pixel 4.
+00:34:29 <TheJollyRoger> yhtr654: if you'd like to discuss more on Tor Browser and Chromium specifically, I'd like to cordially invite you to the #grapheneos-offtopic channel, where you'll likely find people who'll discuss it more in depth!
+00:34:44 <mr_hebi_san[m]> Is that so?  I hadn't been interested in a new phone in several years and didn't realize the 4's effective attention span was so short
+00:34:55 <yhtr654> Thanks for the info, and yeah I'll do that.
+00:36:52 <TheJollyRoger> mr_hebi_san[m]: yeah, I was too. It's a good phone but... the problem was it just didn't deliver very good percieved value, being as expensive as it was, and I gather the impression that a lot of people did not like Google trying to turn it into the "iAndroid" especially removing the fingerprint scanner.
+00:37:00 <mr_hebi_san[m]> Given this, do you suppose the support window for the 4 will indeed be as long as expected and that the project hopes for?
+00:37:32 <yhtr654> But yeah one more question regarding GrapheneOS while on this topic, how much longer will Pixel 4a be supported? Is it recommended to just get an unlocked Pixel 5 instead?
+00:37:38 <TheJollyRoger> mr_hebi_san[m]: It'll remain supported for three years from the day it first appeared on the Google Store, because likely Google has already paid Qualcomm for three years of firmware and out-of-tree code support.
+00:37:45 <TheJollyRoger> As well as publicly committed to supporting it.
+00:37:51 <yhtr654> Ah, thanks mr_hebi, lol
+00:37:53 <mr_hebi_san[m]> I admit I was unimpressed when the 3 took away the headphone jack, and was less impressed that the 4 took away yet more.  The 4a was a relief
+00:38:41 <TheJollyRoger> yhtr654: To get an idea of how long Pixels are supported for, look at the date that they were first released and sold publicly in the Google Store, then count three years.
+00:39:44 <TheJollyRoger> That's how long they'll be supported for from upstream and from Qualcomm.
+00:40:23 <TheJollyRoger> Once Qualcomm abandons the handset though, they essentially force our hand to abandon it as well, since once Qualcomm stops maintaining the handset, it is no longer going to be keeping pace with exploits.
+00:40:52 <TheJollyRoger> But it's more than likely that once Google releases the handset on the store, they've already paid Qualcomm for, and Qualcomm has agreed to those three years.
+00:42:04 <mr_hebi_san[m]> Fascinating, I didn't know the support hole went quite that deep
+00:42:41 <TheJollyRoger> Yeah. The way it works with SoCs is... a little weird.
+00:42:59 <TheJollyRoger> I should preface this with that Linux as a kernel lacks a stable driver interface.
+00:43:13 <TheJollyRoger> This is, according to the kernel developers, a "feature."
+00:43:36 <Lupita[m]> Is exFAT supported on GOS?
+00:43:36 <Lupita[m]> I can't mount a newly formatted exFAT microsd connected via USB OTG adapter.
+00:43:36 <Lupita[m]> And GOS formats the microsd as FAT32, not great for 512gb card.
+00:43:56 <TheJollyRoger> So the idea is, people who want drivers to run in Linux have to write their drivers into the kernel, one way or another, or compile a stub interface into the kernel to talk to a binary driver running in kernel space, the way Nvidia does it.
+00:44:08 <TheJollyRoger> Lupita[m]: I don't think so, not at this time.
+00:44:58 <TheJollyRoger> So, what ends up happening is that the chip vendors (Qualcomm, in this case) design the chip to work with one kernel that they then freeze in time.
+00:45:20 <TheJollyRoger> Qualcomm then tries to backport security fixes to it, and puts in a large amount of their own code.
+00:45:38 <TheJollyRoger> Because Linux does not have a stable driver interface, this is what they have to do to get the kernel to support the SoC.
+00:45:55 <TheJollyRoger> Couple that with the firmware: a modern phone doesn't just have one operating system, it runs dozens of them.
+00:46:46 <TheJollyRoger> Phones will indeed have the firmware for the radios, but this is the same for a desktop: your SSD, your GPU, even your USB controller... all those devices need firmware.
+00:47:02 <TheJollyRoger> So Qualcomm has to update those as well, and that means developer time.
+00:47:21 <TheJollyRoger> So, the OEMs negotiate and come to an agreement with Qualcomm for how long Qualcomm keeps supporting their chip.
+00:48:00 <jdiidiebhdukdkks> a question: does graphene's vanadium browser leak webrtc? and is firefox better?
+00:48:02 <TheJollyRoger> Google negotiates and pays for three years, from their launch date. That's three years of Qualcomm committing to maintain the out-of-tree code for the kernel, and three years of them supplying signed and validated firmware updates for the SoC.
+00:48:31 <TheJollyRoger> jdiidiebhdukdkks: I'll have to get back to you on WebRTC. Firefox is insecure because it is not internally sandboxed like Vanadium is.
+00:49:06 <TheJollyRoger> jdiidiebhdukdkks: https://grapheneos.org/usage#web-browsing This explains the difference between Chromium and Firefox. The takeaway from it is that Firefox is insecure and has an "all your eggs in one basket" approach to security.
+00:49:43 <TheJollyRoger> Some vendors pay for two years. Most of the other android phone vendors I've seen usually negotiate and pay for two.
+00:50:09 <TheJollyRoger> Some pay for only one, and some don't bother negotiating for firmware and out of tree code updates, and simply release handsets that are insecure from before you've even bought them.
+00:50:37 <goratellormandiv> For everyone physically blocking your camera lens, what is out there that serves as a more elegant solution than a piece of electrical tape?
+00:50:39 <TheJollyRoger> So this is why some vendors (not gonna say which ones) can release phones that have insane amounts of RAM and cameras and big screens for comparatively cheap, and they seem like a bargain.
+00:51:03 <TheJollyRoger> It's because all that cost is being paid for out of vendor diligence, not updating the kernel code, and not giving firmware updates.
+00:51:47 <TheJollyRoger> I once read a YouTube comment that said "One Plus, I can pay $800 for a phone with 6GB of RAM and 128GB of storage and a really powerful camera, with Google I pay $800 and I get 3GB of RAM and 64GB of storage? Why?"
+00:52:26 <TheJollyRoger> That's where the money comes out of: insecure firmware, lack of attention to the kernel code, and not paying the OEM to update the firmware, and lying about security patch levels.
+00:53:03 <goratellormandiv> I tried searching for one to purchase for a Pixel phone but all I found were web cam blockers
+00:53:35 <goratellormandiv> I couldn't even find cases with opposable lens or camera blockers
+00:54:56 <TheJollyRoger> goratellormandiv: I'm not sure. I think there are some cases that have little slides over them but can't remember who made them.
+00:55:37 <goratellormandiv> Any leads on where I can get one would be wonderful
+00:58:28 <TheJollyRoger> Got it. I haven't got any suggestions at the moment, I just use a Spigen case because they're very protective, but they're also very inexpensive.
+00:59:03 <snooopy> TheJollyRoger: Is there any evidence about these issues with 3rd party providers?
+00:59:37 <TheJollyRoger> snooopy: well, given OnePlus' track record in this channel...
+00:59:42 * TheJollyRoger grimaces.
+00:59:45 <snooopy> :'D
+01:00:34 <TheJollyRoger> I can't really point you to a concrete site you can read, but I can point you to that. Apparently, their implementations of verified boot are broken and so full of bugs to the point where you can boot them unverified and the phone will still say "verified!"
+01:01:46 <snooopy> lets hope the EU makes the new law which should force retailer to give a garuantee for regular updates for a few years fast. that could help on that issue~
+01:03:01 <snooopy> selling broken devices just because people don't see that they're broken shouldn't be allowed, but that is going faaaaaar offtopic
+01:28:52 <TheJollyRoger> snooopy: yeah.
+01:28:57 <TheJollyRoger> Well, I gotta head off for a bit!
+01:34:50 <fast1[m]> What do I need to do to ensure that apps in another user profile can't run in the background?
+01:35:06 <strcat[m]> end the session
+02:09:13 <SteveBallmer2456> Hello
+02:09:33 <SteveBallmer2456> Does LTE only mode disable GSM completely?
+02:09:55 <SteveBallmer2456> Ive heard LTE has a "GSM compatability layer"
+02:10:03 <SteveBallmer2456> And im trying to avoid using GSM
+02:14:37 <SteveBallmer2456> Nice
+02:15:05 <SteveBallmer2456> [6:09:32 PM] <SteveBallmer2456> Does LTE only mode disable GSM completely?
+02:15:05 <SteveBallmer2456> [6:09:53 PM] <SteveBallmer2456> Ive heard LTE has a "GSM compatability layer"
+02:15:06 <SteveBallmer2456> [6:10:01 PM] <SteveBallmer2456> And im trying to avoid using GSM
+02:17:04 <timetravelingman> Does anyone else not have the LTE-only option anymore? After the January 23rd update?
+02:17:43 <timetravelingman> For me, it basically disappeared after that, but on the flip side my phone never uses anything but LTE anyway
+02:17:49 <timetravelingman> I'm on ATT
+02:18:31 <SteveBallmer2456> Ill check
+02:23:01 <GNUDimarik> this related with "no valid slot to boot" error. I hope it will help someone:
+02:23:02 <GNUDimarik> I generated keys and extracted right vendor like described here: https://grapheneos.org/build#extracting-vendor-files-for-pixel-devices
+02:23:02 <GNUDimarik> For making it work I flashed stock graphene os images before
+02:23:13 <GNUDimarik> so now it works fine
+02:23:29 <PsyberNetic16374> Hi
+02:23:37 <PsyberNetic16374> I have LTE only mode still, yes
+02:25:30 <Emvista[m]> Can the GrapheneOS camera only take photos?
+02:25:58 <mr_hebi_san[m]> no, it scans QR.  I wouldn't be able to sync element if it couldn't
+02:26:22 <Emvista[m]> Oh, found the switch. The video button was hidden.
+02:26:47 <mr_hebi_san[m]> Aaah, that's a thing it can do too. :)
+02:27:17 <mr_hebi_san[m]> Unfortunately I don't think any of the ROMs I've found have better or more intuitive cameras than stock
+02:27:58 <Emvista[m]> It's actually pretty nice. I expected it to be worse based on the comments about it.
+02:28:47 <mr_hebi_san[m]> Set the expectations low so they're easier to clear ;)
+02:28:47 <mr_hebi_san[m]> I kid.  I really do notice a difference though, mostly in lower light indoors
+02:30:26 <mr_hebi_san[m]> On the one hand, it's not a primary goal of this (or most) projects.  On the other hand, these sort of "superficial" things are what average users really care about.  You take away their Snapchat, their Insta, their Gmail, and now you tell them the camera's worse? 😆
+02:30:52 <PsyberNetic16374> I think the camera is the same
+02:31:05 * Emvista[m] uploaded an image: IMG_20210206_213021.jpg (70KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/aRdTANCesjqsnPRaGhstxFRE/IMG_20210206_213021.jpg >
+02:31:11 <Emvista[m]> Here's a test pic
+02:31:42 <PsyberNetic16374> Great
+02:31:58 <Emvista[m]> Exposure works fine against a light source
+02:36:17 <PsyberNetic16374> Looks fine to me
+02:43:54 * Emvista[m] uploaded an image: signal-2021-02-06-214230.jpg (75KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/xZGITSrSUAhzfXNvGJzdluYl/signal-2021-02-06-214230.jpg >
+02:44:08 <Emvista[m]> Here's a photo from a GCam
+02:44:35 <Emvista[m]> A bit more details, but that's it
+02:44:57 <mr_hebi_san[m]> photo 2 has brighter brights and better contrast.  It makes a difference.  It has a cheerier feel
+02:45:16 * Emvista[m] uploaded an image: signal-2021-02-06-214230 (1).jpg (76KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/guSQKuFzcxVQFFtPgNtFDiul/signal-2021-02-06-214230 (1).jpg >
+02:45:23 <Emvista[m]> With night sight
+02:45:28 <mr_hebi_san[m]> I'd be interested to know what part of the google magic actually drives the camera
+03:30:37 <rny> mr_hebi_san[m]: fancy algorithms inside gcam.apk
+03:31:10 <rny> and a special set of selinux policies that apply exclusively for gcam
+03:31:18 <rny> to have access to hardware dsp
+03:32:01 <mr_hebi_san[m]> <rny "to have access to hardware dsp"> That right there is the magic
+03:34:01 <rny> googley special sauce
+04:18:57 <timetravelingman> <PsyberNetic16374 "I have LTE only mode still, yes"> Do you have AT&T?
+04:26:28 <strcat[m]> Emvista: the AOSP Camera app has recently gotten a lot less bad due to fixes under the hood
+04:26:43 <strcat[m]> and will soon properly support external USB cameras too not that it's actually useful
+04:52:51 <noobna[m]> <timetravelingman "Does anyone else not have the LT"> I don't have the LTE option either
+04:55:17 <TheJollyRoger> timetravelingman, noobna[m], It should be under preferred network type, do you guys see under preferred network type there?
+04:55:21 * mr_hebi_san[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/yzoUaMuxJBbRhyveRVgWaMNz/message.txt >
+04:55:56 <TheJollyRoger> mr_hebi_san[m]: yeah! That's the right one.
+04:57:17 <timetravelingman> <TheJollyRoger "timetravelingman, noobna, It sho"> No option for preferred network type for me
+04:57:32 <nux> Anyone else on here use the ProtonMail app and notice that the latest version crashes when attempting to compose an email?
+04:57:41 <timetravelingman> Again, I have AT&T
+04:57:47 <TheJollyRoger> timetravelingman: woah. Woah woah er, which device have you got...?
+04:57:55 <timetravelingman> pixel 4a
+04:58:50 <TheJollyRoger> Okay, oh wow this is so weird. "Settings -> Network & Internet -> Mobile Network" doesn't yield it?
+04:58:59 <timetravelingman> No sir
+04:59:00 <TheJollyRoger> It should be second last from the bottom.
+04:59:04 <TheJollyRoger> o.O
+04:59:19 <TheJollyRoger> Ok, one moment, give me a sec.
+04:59:32 <noobna[m]> <TheJollyRoger "timetravelingman, noobna, It sho"> I have 4g
+05:00:08 <mr_hebi_san[m]> Could this have to do with AT&T migrating off of 4G?
+05:00:19 <mr_hebi_san[m]> Or rather away from LTE
+05:00:29 * timetravelingman uploaded an image: IMG_20210207_000016_01.png (106KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/SdJtrnVZANqRHoAhuJhlkWCA/IMG_20210207_000016_01.png >
+05:02:32 <TheJollyRoger> I'm just swapping around some cards, let me see...
+05:06:49 <TheJollyRoger> Hmm. I haven't got any other cards that function at the moment. The menu changes though as I insert different cards. wonder if it's contextual?
+05:07:51 <timetravelingman> Perhaps, perhaps. How odd!
+05:08:10 <TheJollyRoger> Yeah. I'll see if I can find an answer on this.
+05:13:15 * noobna[m] uploaded an image: Screenshot_20210207-060945.png (81KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/XLmjRoXvVEvZHZqoukHWByfc/Screenshot_20210207-060945.png >
+05:13:39 <noobna[m]> Would the 4g be the same as LTE?
+05:17:46 <Emvista[m]> <timetravelingman "No option for preferred network "> Same here
+05:18:21 * Emvista[m] uploaded an image: Screenshot_20210207-001658.png (102KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/PpOfKpQrQbjwKTmIaRVCDoJU/Screenshot_20210207-001658.png >
+05:42:36 <graph> LTE only mode not in latest update ?
+05:46:05 <mr_hebi_san[m]> <graph "LTE only mode not in latest upda"> I do see it, but I'm on t-mobile.  It might be an AT&T thing?
+06:36:20 <Jeremy_Rand_DT[m> <TheJollyRoger "It's unfortunate though but Tor "> FWIW there are some reasons why Tor Browser uses an old Debian as their build container.  Whether they're *good* reasons is debatable, but it's not just because they haven't updated their build scripts in years or something like that.
+06:39:57 <TheJollyRoger> Jeremy_Rand_DT[m: oh, huh, oh wow.
+06:40:05 <TheJollyRoger> I gotta admit, I kinda didn't think of that!
+06:42:25 <TheJollyRoger> Glad there is some reason then o.O!
+06:43:59 <strcat[m]> new release will be in beta soon
+06:44:10 <strcat[m]> it just takes ages to generate deltas from 2 previous releases
+06:44:23 <TheJollyRoger> \o/ Woohoo!
+06:45:08 <Jeremy_Rand_DT[m> TheJollyRoger: the reason I remember is that they need a build container with a very old glibc, because if you build with a current glibc, the resulting binaries will fail to work properly on OS's whose glibc is older.  Tor Browser has a few users who are still on the oldest supported CentOS (I don't know why), so Tor Browser's build container needs to use a glibc that's less than or equal to the version in that
+06:45:09 <Jeremy_Rand_DT[m> CentOS.  Which in practice means a really old Debian.
+06:45:12 <Jeremy_Rand_DT[m> There are probably other reasons too, that's just the one I recall.
+06:46:10 <strcat> lol @ self-inflicted GNU problems
+06:49:02 <Jeremy_Rand_DT[m> In the big scheme of things there are much bigger issues with Tor Browser's build system workflow than just the usage of an old Debian.  Like the fact that no one besides a few Tor Project employees ever build it.  To the point that basically every time I poke that build system with a stick, I find a new issue, which is usually an issue that none of the Tor devs knew about.
+06:51:22 <strcat> building code with old toolchains / libc is really bad
+06:51:24 <Jeremy_Rand_DT[m> <strcat "lol @ self-inflicted GNU problem"> I actually heard a rumor that the Bitcoin Core devs are playing around with distributing binaries that are statically linked to musl.  I think this is the issue: https://github.com/bitcoin/bitcoin/issues/18110
+06:51:26 <strcat> you get known vulnerabilities
+06:51:37 <Jeremy_Rand_DT[m> Would be interesting if Tor moved in that direction
+06:51:40 <strcat> Jeremy_Rand_DT[m: static linking isn't required to resolve this
+06:51:44 <strcat> it's a self-inflicted issue
+06:52:21 <strcat> you build Android apps with the latest SDK and dynamically link libc (generally) and it's backwards compatible with your minSdkVersion because there are API levels and new symbols are gated by them
+06:52:42 <strcat> and libc has a symbol export list with API levels, as do other core libraries, and all the frameworks stuff
+06:52:51 <strcat> they choose to have those issues
+06:53:23 <Jeremy_Rand_DT[m> strcat: do you happen to have a link handy where I could read up on the vulns that show up from building with an old glibc?  I could point the Tor devs to it, maybe they'd be willing to resolve it.
+06:53:53 <strcat> old toolchain is the main issue
+06:56:12 <Jeremy_Rand_DT[m> strcat: the toolchain Tor uses is current (they build a current GCC and/or Clang from source), so if it's just a toolchain issue, Tor is fine
+06:56:26 <strcat> it
+06:56:32 <strcat> involves both
+06:56:37 <strcat> but toolchain is more important
+06:57:51 <TheJollyRoger> Jeremy_Rand_DT[m: Woah, oh wow, so that's why they're stranded on those old Debian containers and old binaries...
+06:58:00 <TheJollyRoger> Oh man. That's...
+06:58:04 <TheJollyRoger> Oh god.
+06:59:07 <TheJollyRoger> Jeremy_Rand_DT[m: holy cow. So they're hamstrung by those last couple holdouts that are still straggling along on CentOS... 6? That's... aaargh.
+07:01:36 <Jeremy_Rand_DT[m> strcat: if you can provide a link to reading material about the security impact that the old glibc (with a current toolchain) would have, I'd be happy to raise the concern with the Tor devs.  (This is not my area of specialty, but I enjoy learning, and I care about this.)
+07:02:39 <JTL> Jeremy_Rand_DT[m: Gentoo's repositories have a bunch of scary warnings for old glibc versions, so they might know.
+07:03:03 <TheJollyRoger> JTL oh hey that's a great idea. I'll go and start asking around.
+07:03:14 <JTL> #gentoo or #gentoo-dev probably
+07:03:27 <TheJollyRoger> Whew. I'll go join up.
+07:03:57 <Jeremy_Rand_DT[m> JTL: I wouldn't be surprised if some of Gentoo's warnings are irrelevant here since Tor only uses the old glibc at build time (at run time the user uses the system glibc).
+07:04:29 <Jeremy_Rand_DT[m> So I'm specifically interested in the issues that happen when an old glibc is used at build time but a new glibc is used at run time
+07:04:39 <Jeremy_Rand_DT[m> Which is a weird enough scenario that I don't have any idea what search terms to use
+07:05:23 <JTL> Without going in the further detail I'd probably figure out the rationale of whoever added those warnings in the first place.
+07:07:14 <strcat> Jeremy_Rand_DT[m: at build time means they're using the old headers, runtime code, etc.
+07:07:38 <strcat> so any security improvements / bug fixes in newer versions aren't there
+07:10:14 <TheJollyRoger> Okay! Gonna see who I can prod about this.
+07:10:39 <Jeremy_Rand_DT[m> I guess the other question I'd have is: let's say I can convince the Tor devs that old glibc is a security problem.  Clearly they were running into some kind of compat issue when building with a new glibc.  It sounds from what strcat said that there's a more correct workaround than downgrading the build-time glibc... I am not familiar with what that workaround would be; is there documentation on what Tor Browser's
+07:10:40 <Jeremy_Rand_DT[m> build scripts would need to do in order to work around it?
+07:11:10 <strcat[m]> I mean, I consider using glibc and the GNU toolchain to be a problem
+07:11:34 <strcat[m]> what I was saying is that glibc's compatibility issues are unnecessary and self-inflicted
+07:11:54 <strcat[m]> they could have you declare the min version you support and make it work properly
+07:11:57 <strcat[m]> when building with newest
+07:12:08 <strcat[m]> they have to properly version when new symbols are introduced, etc.
+07:12:43 <strcat[m]> and now imagine the platform is versioned that way as the old with a single simple API level: all libraries, APIs, etc.
+07:13:16 <strcat[m]> not 1 library
+07:13:19 <strcat[m]> all
+07:13:22 <strcat[m]> and other APIs
+07:16:06 <strcat> new release now in Beta
+07:19:11 <TheJollyRoger> Fingers crossed!
+07:19:41 <nonie689[m]> How can I set mobile to 3g and 4g only and just when it does not exist to gsm
+07:20:12 <nonie689[m]> how can I Insert some apps into autostart?
+07:21:10 <TheJollyRoger> nonie689[m]: You'll need to check Preferred Network under mobile data for the option. I don't know how much longer GSM will be around for since 2G is being phased out.
+07:23:17 <nonie689[m]> When I set 4g (recommened) it chance sometimes to gsm - but 4g are availeble
+07:24:19 <TheJollyRoger> nonie689[m]: set to "4G only."
+07:25:14 <TheJollyRoger> 4G (recommended) will fall back to 3G or GSM if the signal for 4G is weak or the phone's not seeing it.
+07:26:31 <nonie689[m]> I have.. but then i am sometimes without network
+07:27:55 <TheJollyRoger> nonie689[m]: then there's nothing you can do. Likely what's happening is that your cellphone carrier is just being unreliable.
+07:29:05 <TheJollyRoger> There are entirely innocent reasons for why 4G may drop off from time to time: your cellphone provider's problems aside, weather, network congestion, terrain, line of sight... it will depend on all that and more.
+07:48:51 <nonie689[m]> And how can i add apps in autostart?
+07:52:59 <TheJollyRoger> nonie689[m]: If I recall correctly the apps themselves must support it, but I could be wrong.
+07:59:54 <hobo8818[m]> Any info on progress on MicroG?
+08:00:04 <hobo8818[m]> Like when is it coming
+08:01:40 <nonie689[m]> hobo8818: use aurora
+08:03:18 <TheJollyRoger> hobo8818[m]: I'm sorry but I can't really commit to a firm date. It will come when more contributors step up to make a stub handler for Google services that have not been given a fallback happen.
+08:03:45 <Preload[m]> <hobo8818[m] "Any info on progress on MicroG? "> https://github.com/GrapheneOS/os_issue_tracker/issues/204
+08:04:17 <TheJollyRoger> I should stress again: GrapheneOS is not a business where you put money in and get a phone back, but rather it aims to be a collaborative open source project without a profit/monetization model. It depends on the contributions from its community to work.
+08:05:36 <TheJollyRoger> If the project had enough assets it might be possible to put a bounty on certain issues, since that actually worked well for the Web Installer, but I cannot give you an ETA, since GrapheneOS is not a business or a corporation or company. It's a collaboration.
+08:07:41 <hobo8818[m]> <TheJollyRoger "hobo8818: I'm sorry but I can't "> Okey thank you :) I dont know how to code so cant really help that way but will donate
+08:08:32 <TheJollyRoger> hobo8818[m]: Yarr, thank you, shipmate! On behalf of the project, we appreciate donations, they do help keep this ship sailing!
+08:11:47 <hobo8818[m]> :)
+08:18:13 <skrillz[m]> Hello
+08:18:45 <TheJollyRoger> Ahoy!
+08:26:57 <hobo8818[m]> Hello:)
+08:30:37 <dar_gomml[m]> hobo8818 quite a strange number combination you have in your nickname...
+08:33:45 <hobo0000[m]> There
+09:10:50 <nonie689[m]> How can I access /data/data/com.termux/files/hom
+09:13:21 <rny> you cant
+09:13:28 <rny> nonie689[m]: ^
+09:14:47 <rny> read about android scoped storage
+09:19:53 <certainindividua> Since today none of my apps can access the camera on my 4a. Tried a reboot and checked settings, but can't find the problem. Does anyone know the right steps?
+09:24:35 <hobo0000[m]> For me on 4a rebooting device allows me to take about 3 photos and than breaks again and have ro reboot.. Havent found sollution
+09:26:51 <certainindividua> Hmmm. That doesn't sound great. I'll try some more things and report back if I find anything.
+09:32:10 <hobo0000[m]> I think I saw people reporting this problem on githubs issuetracker tho. That 4a camera isnt working
+09:33:19 <certainindividua> Weird. It has been working for months now.
+09:38:11 <certainindividua> It was a sensor permission thing in my case. Thought I checked all permissions. Geez. I'm sorry.
+09:41:03 <hobo0000[m]> Not for me.. The camera app has all permissions but it wont work. Neither does the Signals camera
+09:44:51 <certainindividua> Aww that sucks. I had all permissions set up, but Sensors just blanket over all those.
+10:26:37 <strcat[m]> https://twitter.com/FiloSottile/status/1358231799458103297
+10:26:39 <strcat[m]> retweet if you can
+10:26:57 <strcat[m]> certainindividual: maybe you disabled a system component needed forit
+10:27:00 <strcat[m]> either that or it's a hardware issue
+10:27:15 <strcat[m]> certainindividual: ah nvm you figured it out
+10:27:53 <strcat[m]>  * certainindividual: maybe you disabled a system component needed for it
+10:31:27 <fast1[m]> Is there a way to open links from other apps in incognito mode in Vanadium?
+10:32:53 <strcat[m]> fast1: I don't think there is atm but it could be implemented
+10:34:09 <dar_gomml[m]> 😀
+10:34:25 <hobo0000[m]> <strcat[m] "fast1: I don't think there is at"> Always Incognito Mode would also be nice
+10:44:26 <Sukuna[m]> <hobo0000[m] "Always Incognito Mode would also"> That's actually what "Open links in incognito tab always" mode is.
+10:45:05 <Sukuna[m]> Which is only present in Bromite as for now.
+10:53:28 <hobo0000[m]> Oh
+11:15:21 <joeski> Hey guys, what information does a phone using grapheneos still send to google servers even if anonymous?
+11:18:31 <anupritaisno1[m]> joeski: all communication is documented on the website
+11:20:40 <joeski> I read but dell still can't fully understand for a fact what is still being sent out
+11:20:55 <joeski> Dell = still
+11:22:24 <strcat[m]> joeski: read https://grapheneos.org/faq#default-connections
+11:22:34 <strcat[m]> joeski: it doesn't communicate with Google servers
+11:23:11 <strcat[m]> joeski: sounds like you're getting your information from a certain YouTube influencer who spreads misinformation and pretends to be an expert when he isn't
+11:23:12 <hobo0000[m]> <joeski "Hey guys, what information does "> None
+11:23:12 <strcat[m]> but rather just bullshits nonstop
+11:23:12 <strcat[m]> so, don't do that anymore, don't get info from clueless YouTube influencers
+11:23:49 <strcat[m]> GrapheneOS doesn't have microG and microG is not really 'anonymized' anyway
+11:24:01 <strcat[m]> if that is what you are thinking, we don't include that
+11:24:22 <strcat[m]> there's a whole section on the site documenting the default connections
+11:24:37 <strcat[m]> once you put in a SIM and connect to a mobile network there are also connections to your carrier
+11:24:46 <strcat[m]> but that's not default and that's fairly straightforward
+11:25:00 <strcat[m]> some carriers may host their stuff on AWS, Azure, Google Cloud, etc. - that's a carrier choice thing
+11:25:23 <rny> my carrier casually routes things to a nsa data collection center /s
+11:27:13 <SkyFox[kdeorg][m> <rny "my carrier casually routes thing"> NWS - NSA Web Services
+11:29:00 <hobo0000[m]> <strcat[m] "so, don't do that anymore, don't"> Are you talking about Techlore or TheHatedOne
+11:30:26 <strcat> someone else
+11:30:46 <hobo0000[m]> Oh
+11:30:55 <strcat> techlore is a major source of misinformation and dishonest claims too though
+11:31:17 <somenerd[m]> yeah
+11:31:19 <Sukuna[m]> <strcat "someone else"> Braxman ? xD
+11:31:24 <strcat> yes
+11:31:44 <strcat> sounded to me like what they were misled by
+11:31:45 <hobo0000[m]> Havent even heard of him but I think thats good xd
+11:31:56 <strcat> one of the common things he bullshits about
+11:31:58 <somenerd[m]> techlore also led to a bunch of devices bricking
+11:32:27 <strcat> yeah and he won't take down the video that causes people to brick their phones + he has a follow up on removing the safety check added to help people
+11:32:27 <joeski> stranded[m] what are you talking about? I just asked, i didn't say anything i heard or think, don't even have a clue about what YouTube channel you're talking about
+11:32:48 <rny> somenerd[m]: how do you brick a pixel
+11:32:59 <rny> if anyone has bricked a pixel, please teach me how to brick one
+11:33:05 <strcat> rny: soft bricking usually
+11:33:05 <somenerd[m]> more like soft brick ig
+11:33:15 <rny> what does soft bricking even mean?
+11:33:18 <strcat> but it can hard brick if you flash corrupt bootloader
+11:33:21 <rny> stuck in fastboot?
+11:33:21 <strcat> on both slots
+11:33:34 <rny> why'd anyone change the boot slot is beyond me
+11:33:49 <somenerd[m]> I mean, I don't think most people know cli
+11:33:52 <somenerd[m]> or bootloaders
+11:33:54 <rny> cant people read the fucking cli commands?
+11:34:03 <somenerd[m]> they just see a "trusted" person
+11:34:19 <somenerd[m]> and watch the video
+11:34:34 <somenerd[m]> which, well, I can't blame them
+11:34:47 <somenerd[m]> luckily the WebUSB interface came out
+11:35:01 <hobo0000[m]> People are just that, people. People make errors and are dumb and when making like official install guide you should note that
+11:39:51 <fast1[m]> <strcat[m] "end the session"> How do you do that? Just switch to another user?
+11:40:17 <strcat[m]> fast1: press end session
+11:40:19 <strcat[m]> on lockscreen
+11:40:24 <strcat[m]> or end the session via action menu
+11:41:32 <fast1[m]> Okay thanks
+11:46:53 <Sukuna[m]> <hobo0000[m] "People are just that, people. Pe"> Well, THEHATEDONE's video is very helpful for noobs to install GrapheneOS.
+11:48:12 <strcat[m]> people should use https://grapheneos.org/install/web now if they aren't familiar with CLI
+12:00:35 <take_a_deep_brea> Sukuna:  the hated one puts a good effort at folllowing official instructions but falls short because he uses the browser and file manager for some preliminary steps . and as GUI can vary a lot for people on different desktops its really more confusing then just using curl for downloading the OS image
+12:00:58 <strcat[m]> https://grapheneos.org/install/web
+12:01:02 <strcat[m]> just tell people to use that
+12:01:09 <somenerd[m]> yeah
+12:01:19 <hobo0000[m]> Will do sir
+12:01:43 <somenerd[m]> maybe pm techlore and the others (not sure if they'll recommend it though)?
+12:02:04 <somenerd[m]> (I mean, techlore isn't exactly in good faith.... but still)
+12:02:31 <hobo0000[m]> I have tried but he is not responding in any way
+12:07:52 <frezh[m]> is there a way to add more homescreens?
+12:08:23 <AshB[m]1> Im a noob to custom rom modding and the Web installer worked a charm
+12:08:44 <AshB[m]1> It's exceptionally intuitive
+12:11:30 <SkyFox[kdeorg][m> <frezh[m] "is there a way to add more homes"> They seem to be removed automatically when there are no icons, so you can move some icon to the side to create a new homescreen
+12:11:56 <take_a_deep_brea> <AshB[m]1 "Im a noob to custom rom modding "> awesome!
+12:12:11 <AshB[m]1> Im so confident in it im going to gift my father a pixel 4a and have him flash GrapheneOS on it himself using it.
+12:12:39 <frezh[m]> It doesn't work ,already tried that
+12:12:41 <hobo0000[m]> Coool
+12:13:16 <SkyFox[kdeorg][m> <frezh[m] "It doesn't work ,already tried t"> 🤔
+12:13:56 <frezh[m]> Seriously try it, just shows me a border that I can't pass
+12:13:58 <mynacol[m]> frezh: You can only add new screens to the right side
+12:14:25 <frezh[m]> Yeah I am aware but can't go pass the border it is weird
+12:14:36 <mynacol[m]> On the default Graphene launcher this works. Just tested
+12:15:12 <frezh[m]> I have the default launcher too
+12:15:43 <mynacol[m]> You really have to go to the side of the screen. Maybe a protective case is blocking you?
+12:17:56 <frezh[m]> So when I try , a opaque box pops up. I am unable to move outside the box
+12:19:56 <frezh[m]> So I can only add a new home screen with widgets but not an app? Why is that?
+12:20:27 <nscnt[m]> You can do it. No idea what you do...
+12:28:44 <frezh[m]> Yeah is a screen record
+12:29:04 * frezh[m] uploaded a video: screen-20210207-072800.mp4 (3118KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/QAkSANWQDBrAVfYfUsJWvhGH/screen-20210207-072800.mp4 >
+12:29:14 <frezh[m]> Right here you can see what I am talking about
+12:29:39 <mynacol[m]> Place another item on the same screen first
+12:29:55 <mynacol[m]> You cannot have empty screens (AFAIK)
+12:30:20 <Preload[m]> https://web.archive.org/web/20210207115325/https://twitter.com/GrapheneOS/status/1356408035854450694?s=20
+12:30:20 <Preload[m]> Just saw this, what exactly happened here?
+12:30:25 <noobna[m]> Is there any advantage to having certain apps in a separate user space so is not in the owner space?
+12:30:33 <frezh[m]> I understand now mynacol, is there a reason for this though ?
+12:31:09 <mynacol[m]> <frezh[m] "I understand now mynacol, is the"> Standard behavior on AOSP
+12:31:26 <frezh[m]> I got you, thanks for the explanation
+12:33:21 <mynacol[m]> <noobna[m] "Is there any advantage to having"> https://grapheneos.org/faq#encryption
+12:33:30 <mynacol[m]> Read this first
+12:36:53 <loxerat[m]> hey quick question. does this mean Pixel 4a 5G is supported now?
+12:36:53 * loxerat[m] uploaded an image: 324234.png (72KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/JAGLTEUZXRYNCMetSuFBKJcK/324234.png >
+12:36:56 <loxerat[m]> https://grapheneos.org/releases#changelog
+12:36:57 <alex-resist> Hey folks, is it correct that the latest update (Pixel 3a XL, stable) is huge (778MB) and the download is stuttering? I thought it was just a Vanadium update
+12:38:50 <mynacol[m]> <alex-resist "Hey folks, is it correct that th"> You probably didn't get the delta update. For more info see here https://grapheneos.org/usage#updates
+12:39:47 <alex-resist> The OTA updates on the website are huge as well
+12:40:04 <alex-resist> https://grapheneos.org/releases#bonito-stable
+12:40:19 <alex-resist> bonito-ota_update-2021.02.06.05.zip is 778 MB
+12:45:12 <take_a_deep_brea> yep they were big . for some reason .
+12:45:25 <take_a_deep_brea> sunfish here .
+12:47:23 <strcat[m]> alex-resist: the incrementals weren't deployed right
+12:47:27 <strcat[m]> that's all
+12:47:43 <strcat[m]> and was too late for downloads that already started
+12:48:00 <strcat[m]> you're welcome to clear the app data and make it start over
+12:48:03 <strcat[m]> with the incremental
+12:48:09 <strcat[m]> there aren't always guaranteed to be incrementals anyways
+12:48:44 <strcat[m]> alex-resist: the updates listed on the site are *always* the full updates, think you're confused
+12:49:05 <strcat[m]> the updates listed on the site are the ones for updating from any version
+12:49:26 <alex-resist> strcat ok thx, I didn't notice. I never checked the size of the OTA updates. Just now because it seemed odd
+12:49:36 <strcat[m]> nothing odd or unusual
+12:49:49 <mynacol[m]> In other words: ota update != delta update
+12:49:49 <alex-resist> Will clear the app data and retry the update
+12:49:54 <strcat[m]> the incrementals didn't get deployed due to a connection that died
+12:50:20 <strcat[m]> there are 1000+ downloads going of the full updates so yeah you can expect it to take some time
+12:50:22 <strcat[m]> not unusual
+12:50:35 <strcat[m]> deltas are not always going to be provided, and some updates the deltas will be large
+12:50:45 <strcat[m]> and if you miss an update there generally won't be a delta
+12:51:00 <strcat[m]> you've just gotten used to us always making deltas for current-1 to current
+12:51:03 <strcat[m]> and staying up-to-date
+12:51:20 <take_a_deep_brea> yeah , lmao
+12:51:41 <strcat[m]> the intention was to provide deltas for this update and they were generated but the upload connection died
+12:51:53 <alex-resist> Ok, after clearing the seamless update client data and restarting the update, it's (quite literally) downloading 100 times faster. I guess this is now the correct file size
+12:51:59 <strcat[m]> and no one mentioned it for beta
+12:52:07 <strcat[m]> alex-resist:  same speed, it's just a much smaller file
+12:52:19 <strcat[m]> the delta wasn't available before, now it is
+12:52:22 <strcat[m]> either way it's correct
+12:52:35 <strcat[m]> there are deltas for the past 2 releases to current
+12:52:44 <strcat[m]> but again, they weren't available when this was pushed to beta and then stable
+12:53:03 <strcat[m]> stuff needs to be reported when it's in beta, not stable, it's just an optimization so it doesn't matter though
+12:53:26 <strcat[m]> alex-resist: there's absolutely no guarantee that we provide deltas
+12:54:08 <alex-resist> strcat that's fine, it's just the first time the update took so long. Especially with a seemingly small update
+12:55:31 <alex-resist> Now it's already finished, I can restart and enjoy my Vanadium :)
+12:55:56 <strcat[m]> it's working through all the downloads
+12:56:00 <strcat[m]> just an unfortunate missed optimization
+12:56:02 <strcat[m]> not a big deal
+12:56:54 <strcat[m]> alex-resist: once it starts downloading a full update (if incremental isn't available) it won't abandon that and switch to incremental
+12:57:05 <strcat[m]> alex-resist: could have written it to do that but didn't
+12:57:16 <alex-resist> It's probably a good load test for the server
+12:57:41 <strcat[m]> yeah 2000+ downloads of an 800M file concurrently
+12:57:46 <strcat[m]> oh well
+12:58:09 <hobo0000[m]> Nice xd
+12:58:14 <strcat[m]> the incrementals are finished being deployed now so anyone starting to download it from one of the past 2 releases now will get the incrementals
+12:58:43 <alex-resist> Also, thank you for creating this update in the first place. That Chromium bug seemed too important to ignore
+12:58:51 <strcat[m]>  * yeah 2000+ concurrent downloads of an 800M file
+12:59:05 <strcat[m]> alex-resist: usually Chromium security updates are only every 6 weeks
+12:59:17 <strcat[m]> this was different
+12:59:42 <strcat[m]> it's not more dangerous than the usual fixed vulnerabilities but rather the difference is it was found being exploited in the wild
+13:01:00 <strcat[m]> alex-resist: the releases server has 2gbit bandwidth so it's fine
+13:01:17 <strcat[m]> alex-resist: we could add a 2nd one (or more) if needed
+13:01:37 <strcat[m]> seems to be a good indication that even without incrementals the current server would be fine
+13:14:40 <alex-resist> 2000 downloads on a 2 GBit connection leaves 1 Mbit per download, which is not exactly thrilling for a 800MB file. The question is how rapidly these updates should be deployed. If the goal is that everyone should receive the update within 24 hours, it's perfectly fine. If everyone should be able to receive it within one hour, it's not possible *this* time. But it's probably also wasted money to rent more servers that are only used
+13:14:41 <alex-resist>  once or twice a month. I get it, it's a bit complicated
+13:15:23 <strcat[m]> there are incrementals deployed now anyway
+13:15:39 <strcat[m]> if people would have mentioned it during the beta (yesterday) I'd have finished the deployment
+13:15:44 <strcat[m]> you brought it up too late
+13:16:26 <mynacol[m]> Switched back to beta. Maybe I can catch some problems in the future
+13:16:28 <take_a_deep_brea> as an aside , alex-resist: you have no idea how thrilling even 1Mbit per download can be . beleive me , lmao .
+13:16:41 <alex-resist> I understand. Ideally I would have an additional device permanently on beta, but currently it's not possible :/
+13:17:07 <strcat[m]> alex-resist: we could add more of these 2gbit servers
+13:17:20 <strcat[m]> they are like $40/month each or something
+13:17:27 <strcat[m]> just easier to have 1
+13:18:29 <strcat[m]> alex-resist: there were probably more concurrent downloads at peak
+13:18:32 <strcat[m]> dunno
+13:19:10 <strcat[m]> down to ~600 now and the newer ones are larger incrementals so they go much faster
+13:20:13 <strcat[m]> alex-resist: the server could reboot every 5 mins and ppl would still download it just fine - the update client is very robust
+13:20:52 <strcat[m]> 3+ years ago we didn't use incrementals regularly at all
+13:21:06 <strcat[m]> consider it a throwback
+13:21:20 <strcat[m]> and OVH didn't used to offer more than 100mbit for a VPS
+13:21:28 <strcat[m]> so imagine that
+13:21:43 <alex-resist> I see I see
+13:21:51 <alex-resist> We're discussing issues on a high level
+13:21:52 <strcat[m]> they added the higher bandwidth tiers in 2020
+13:22:09 <alex-resist> The infrastructure would have handled it fine without any further action, so that's a big plus
+13:22:21 <strcat[m]> yes incrementals are just an optimization
+13:22:23 <strcat[m]> not guaranteed
+13:22:29 <strcat[m]> if you turn off your phone for a month
+13:22:33 <strcat[m]> you're not getting an incremental
+13:22:48 <strcat[m]> it's for `current - 1` to `current`
+13:22:51 <strcat[m]> generally
+13:22:58 <mynacol[m]> I think the current resources suffice. The 40$ can be spend better IMO
+13:23:02 <strcat[m]> this time we did both `current - 2` and `current - 1` to `current`
+13:23:08 <mynacol[m]> * I think the current resources suffice. The 40$ can be spent better IMO
+13:23:13 <strcat[m]> so it's kinda a shame that they didn't get fully deployed
+13:23:18 <strcat[m]> they actually got 100% uploaded
+13:23:45 <alex-resist> strcat do you happen to know if the stock Pixels already got that Chromium update?
+13:23:49 <strcat[m]> but then as the script was hashing them to check that it uploaded properly it died and I didn't notice, that's all
+13:23:59 <strcat[m]> alex-resist: Chrome is updated via Play Store like other apps
+13:24:05 <strcat[m]> alex-resist: they do staged rollouts usually
+13:24:10 <strcat[m]> dunno if they made an exception for this
+13:24:20 <strcat[m]> it usually takes a LONG time for them to push out the updates to everyone
+13:24:57 <giffgaff[m]> Hi all, does Graphene OS provide any protection against active IMSI catchers? Or is there any settings OS settings to change to improve self defence against active IMSI attack
+13:27:52 <mynacol[m]> <giffgaff[m] "Hi all, does Graphene OS provide"> This page answers some of your questions https://grapheneos.org/faq#cellular-tracking
+13:28:06 <mynacol[m]> Feel free to follow-up
+13:30:30 <strcat[m]> giffgaff: use encrypted communications not legacy insecure calls and texts
+13:31:00 <strcat[m]> giffgaff: the LTE only mode feature offered by GrapheneOS is for attack surface reduction and LTE does NOT make it so that you should trust networks
+13:31:36 <strcat[m]> LTE is not secure and networks should not be trusted, you shouldn't be assuming that if you make an unencrypted call that travels through multiple carriers, etc. that it is private
+13:31:46 <strcat[m]> use encrypted communications
+13:32:04 <strcat[m]> end-to-end encryption is ideal but transport encryption is enough to avoid trusting networks
+13:45:16 <giffgaff[m]> From my window i have been watching the police come and go. I have seen them deploying something that looks like a IMSI catcher. They leave it in the boot of a car. I  see them coming in them coming and going to the car.
+13:46:00 <mynacol[m]> giffgaff: Then you should consider turning on airplane mode
+13:46:21 <giffgaff[m]> Airplane mode is turned on
+13:48:06 <giffgaff[m]> Please see this video and let me know what you think?
+13:49:37 <badactor[m]> Where is the video?
+13:51:03 <giffgaff[m]> Hold on
+13:57:05 <strcat[m]> giffgaff: networks are already insecure
+13:57:05 <strcat[m]> as I said
+13:57:06 <strcat[m]> use encryption
+13:57:21 <strcat[m]> if you're sending data in the clear over networks it's already not private
+13:58:08 <strcat[m]> don't use traditional calls and texts, they aren't secure
+13:58:11 <strcat[m]> the solution is not using them
+13:58:17 <strcat[m]> use Signal or Matrix
+13:58:42 <strcat[m]> if someone won't install Signal to talk to you they aren't worth talking to anyway
+13:59:13 <take_a_deep_brea> lol
+14:02:54 <somenerd[m]> I mean, use encrypted texts
+14:03:11 <somenerd[m]> that's the most suggested defense here afaict
+14:04:01 <alex-resist> strcat could a mode be implemented in addition to LTE-only that is "data-only"?
+14:04:38 <alex-resist> Not sure if the modem would play along though
+14:05:26 <alex-resist> A mode that would protect against accidental phone calls and silent SMS
+14:06:14 <strcat[m]> VoLTE is already 'data only'
+14:06:15 <somenerd[m]> ?
+14:06:16 <somenerd[m]> you mean Wi-Fi only?
+14:06:19 <giffgaff[m]> Hold on I'm going to have to use another phone to record the screen. When I'm using android for screen recording the videos all black
+14:06:44 <strcat[m]> why record the screen?
+14:07:00 <alex-resist> strcat it's more about not receiving stuff. Completely deactivating legacy telephony and SMS
+14:07:18 <strcat[m]> VoLTE uses data
+14:07:20 <strcat[m]> it's VOIP basically
+14:07:26 <Preload[m]> <alex-resist "strcat could a mode be implement"> Isn't LTE-only mode data only?
+14:07:28 <strcat[m]>  * it's VOIP
+14:07:48 <strcat[m]> the issue is you're trusting the networks
+14:08:00 <alex-resist> Maybe I'm misunderstanding something. Can a phone in LTE-only mode not receive SMS?
+14:08:08 <strcat[m]> you can see the network connections that VoLTE, RCS, etc. make
+14:08:19 <strcat[m]> a lot of the carriers just host that stuff via AWS / Google
+14:08:27 <somenerd[m]> I'm seriously confused, wdym "data-only"?
+14:08:35 <somenerd[m]> only using cellular networks?
+14:08:59 <strcat[m]> alex-resist: so, when using LTE to send texts and make calls
+14:09:00 <alex-resist> somenerd: deactivating legacy telephony and SMS completely. Only allowing data connections via LTE.
+14:09:02 <strcat[m]> alex-resist: that's SIP
+14:09:14 <strcat[m]> alex-resist: texts and calls via LTE are data
+14:09:19 <strcat[m]> you can see the connections
+14:09:20 <somenerd[m]> isn't that just LTE-only?
+14:09:28 <alex-resist> strcat Ok that's good to know, I did not know that
+14:09:34 <strcat[m]> alex-resist: LTE only mode gets rid of all the legacy nonsense already
+14:09:46 <strcat[m]> alex-resist: but those are still cell network based calls and texts
+14:09:55 <alex-resist> I thought a phone in LTE-only mode could still receive legacy SMS, but apparently my knowledge is limited
+14:10:05 <strcat[m]> alex-resist: it can receive SMS, via SIP
+14:10:31 <strcat[m]> alex-resist: LTE texts and calls are data
+14:10:47 <alex-resist> Ok, to be more precise: would silent SMS still work with LTE-only? Or are silent SMS a legacy thing
+14:10:56 <strcat[m]> so when you enable LTE only mode if you don't have working IMS, VoLTE, etc. you can't make/receive texts/calls
+14:11:13 <strcat[m]> alex-resist: SMS still works with LTE only mode
+14:11:20 <strcat[m]> don't understand why you're bringing up silent SMS suddenly
+14:11:42 <strcat[m]> silent SMS just means marking a message as a no-op basically
+14:11:46 <alex-resist> strcat because it would be desirable to deactivate SMS completely
+14:11:51 <strcat[m]> why
+14:12:07 <alex-resist> Well, as the other person said above, to force someone to use e.g. Signal
+14:12:13 <alex-resist> No accidental phone calls, no SMS
+14:12:17 <strcat[m]> you can disable the Messaging app
+14:12:18 <somenerd[m]> use Wi-Fi only or something
+14:12:25 <somenerd[m]> why a "data-only" mode
+14:12:26 <strcat[m]> texts and calls can work via Wi-Fi
+14:12:35 <strcat[m]> LTE only is data only mode
+14:12:45 <strcat[m]> LTE text and calls are via data
+14:12:45 <somenerd[m]> yeah, afaict it is
+14:12:56 <strcat[m]> alex-resist: VoLTE is SIP, SMS via LTE is SIP
+14:12:59 <strcat[m]> it's VOIP
+14:13:03 <strcat[m]> VOIP via carriers
+14:13:21 <strcat[m]> LTE only mode is data only mode
+14:13:32 <strcat[m]> the point of it is attack surface reduction
+14:13:44 <strcat[m]> alex-resist: we could offer the option to disable texts, calls, etc.
+14:13:50 <strcat[m]> you essentially have that at a high level
+14:13:52 <strcat[m]> disable Messaging app
+14:13:52 <alex-resist> strcat Ok, that's actually good to know. I'm using LTE-only mode all the time, I just never noticed because I never use my phone as a phone.
+14:14:10 <strcat[m]> alex-resist: you wouldn't notice - if you have working VoLTE it all works fine
+14:14:30 <strcat[m]> alex-resist: a VoLTE call doesn't appear any different to a user other than not having terrible quality audio
+14:14:47 <strcat[m]> if you have working VoLTE + LTE then it's using VoLTE whether or not you have LTE only mode enabled
+14:15:03 <strcat[m]> LTE only mode disables using protocols older than LTE, which means all texts/calls are via data
+14:15:23 <strcat[m]> without LTE only mode, if you have LTE but not VoLTE, it falls back to 3G for calls
+14:15:25 <alex-resist> Ok so one way to protect against accidentally sending SMS is disabling the messaging app, which obviously makes sense. But you could still receive SMS, right?
+14:15:43 <strcat[m]> alex-resist: I mean, you can 'receive' them but you won't have an app for it
+14:16:05 <strcat[m]> basically, it's not clear to me what you want to do
+14:16:17 <strcat[m]> we could offer morea toggles for stuff for lowering attack surface further
+14:16:18 <alex-resist> I wonder if it's possible to block incoming calls and SMS, even when using VoLTE
+14:16:25 <strcat[m]>  * we could offer more toggles for stuff for lowering attack surface further
+14:16:37 <alex-resist> Sorry, it took a while to understand the situation with LTE-only mode :/
+14:16:40 <strcat[m]> the thing is to use Signal you need to have the ability to receive texts or calls
+14:16:49 <strcat[m]> since it has to confirm the number
+14:17:09 <alex-resist> strcat but Signal needs that only once. It could temporarily be allowed to activate Signal and then deactivated again
+14:17:30 <noobna[m]> <strcat[m] "alex-resist: we could offer the "> That would be good😄
+14:17:55 <strcat[m]> we could add more toggles to disable stuff but our focus will be on stuff that can be disabled by default or at least that many people would want to disable
+14:18:22 <alex-resist> strcat I see, I should add that I'm really happy with LTE-only mode already
+14:18:27 <strcat[m]> alex-resist: you could probably disable IMS / VoLTE if you want to break being able to do calls/texts
+14:18:39 <strcat[m]> LTE only mode + disable VoLTE and you won't have working calls
+14:18:53 <alex-resist> strcat yes, that's what I had in mind, I just wasn't able to phrase it properly
+14:18:59 <strcat[m]> (and VoWiFi but chances are you don't have working VoWiFi anyway, and both are IMS/SIP)
+14:20:19 <alex-resist> I wasn't aware that LTE-only + no VoLTE might be exactly what I was looking for
+14:21:47 <strcat[m]> alex-resist: https://en.wikipedia.org/wiki/IP_Multimedia_Subsystem
+14:22:04 <strcat[m]> alex-resist: LTE texts, calls, etc. are all data-based via IMS
+14:22:15 <strcat[m]> (LTE and later)
+14:22:41 <strcat[m]> alex-resist: so, essentially, disabling IMS + using LTE only gets you what you want
+14:22:48 <strcat[m]> there is probably already a way to disable IMS
+14:23:36 <strcat[m]> alex-resist: SMS for LTE, RCS, VoLTE, VoWiFi are all IMS-based
+14:23:42 <strcat[m]> all normal data, you can see the connections being made
+14:24:04 <strcat[m]> you can see a lot of carriers are just using Google's hosting for RCS, etc.
+14:24:20 <strcat[m]> dunno why RCS even exists but whatever
+14:24:47 <strcat[m]> makes more sense to me to abandon carrier-based texts / calls than making a new standard adding fancy stuff
+14:25:49 <strcat[m]> alex-resist: so, for the LTE and up world, there's only data, the difference is whether you use IMS for carrier-based communications vs. app-based stuff (Signal, Matrix, etc.)
+14:26:04 <strcat[m]> alex-resist: IMS-based texts/calls are literally just SIP
+14:26:39 <alex-resist> Ok, thanks a lot, so much stuff to read/think about
+14:26:42 <duck[m]> Is VoWiFi a better choice than leaving the cellular radio on
+14:27:04 <alex-resist> To me it feels that mobile telephony was a huge mistake from the beginning and we are only now starting to fix it
+14:27:08 <strcat[m]> it's not any more secure of a communications mechanism
+14:27:27 <strcat[m]> duck: VoWiFi still trusts the carrier networks, if you want secure calls use an end-to-end encrypted app
+14:27:54 <strcat[m]> Wi-Fi and cellular are both implemented in different sandboxes on the baseband
+14:28:51 <strcat[m]> the advantage of Wi-Fi is that it can be more anonymous
+14:28:57 <strcat[m]> https://grapheneos.org/usage#wifi-privacy
+14:29:21 <strcat[m]> duck: since our recommendation is to avoid carrier-based texts and calls, I can't recommend VoWiFi
+14:29:29 <strcat[m]> use Signal or Matrix for calls
+14:29:34 <strcat[m]> Signal for regular folks
+14:29:54 <alex-resist> So, best solution for people who don't need anonymity is GrapheneOS + Signal + LTE-only + VoLTE deactivated (except for registering Signal)
+14:30:23 <strcat[m]> alex-resist: disabling VoLTE probably doesn't disable SMS via IMS
+14:30:28 <strcat[m]> you probably want to disable IMS as a whole
+14:30:43 <alex-resist> strcat I see, so there is one step missing
+14:30:46 <strcat[m]> IMS provides data-based calls, SMS, RCS, etc.
+14:30:58 <strcat[m]> alex-resist: if you disable IMS then VoLTE is gone
+14:31:06 <strcat[m]> and VoWiFi
+14:31:29 <strcat[m]> alex-resist: it's simpler to just think of it as IMS-based (carrier) services vs. app-based services
+14:31:38 <strcat[m]> alex-resist: if 2G/3G are out of the picture that's all there is
+14:31:49 <alex-resist> I do have several Pixel 3a here, but unfortunately no additional SIM card. I'd really be interested in trying such things
+14:31:52 <strcat[m]> alex-resist: and IMS isn't strictly via cellular
+14:31:54 <strcat[m]> alex-resist: it works via Wi-Fi
+14:32:03 <strcat[m]> you can text and call via carrier networks using Wi-Fi
+14:32:44 <strcat[m]> alex-resist: that largely doesn't work on GrapheneOS because they tend to require carrier bloatware for Wi-Fi stuff
+14:33:02 <strcat[m]> alex-resist: but, in theory, it works, and on the stock OS it's more widely available thanks to having carrier bloatware apps
+14:33:39 <strcat[m]> alex-resist: cellular vs. Wi-Fi doesn't really impact whether you can use carrier-based texts/calls anymore when they implement all this stuff
+14:33:46 <strcat[m]> alex-resist: cellular is data, Wi-Fi is data
+14:33:50 <strcat[m]> IMS uses data
+14:33:55 <strcat[m]> it's just SIP.
+14:34:48 <alex-resist> Apart from the functionality aspect, IMS also seems like a big attack surface
+14:34:48 <strcat[m]> alex-resist: it's perfectly modern technology, the issue is depending on carriers to provide these services and *trusting* them since it has no E2E encryption
+14:35:30 <alex-resist> Although IMS code quality is probably still much better than 2G/3G
+14:35:31 <strcat[m]> alex-resist: Signal is a lot of attack surface too (WebRTC in particular)
+14:35:46 <somenerd[m]> hmm
+14:35:59 <alex-resist> strcat oof good point
+14:36:11 <take_a_deep_brea> yep
+14:36:13 <strcat[m]> alex-resist: https://android.googlesource.com/platform/external/ims/+/refs/heads/master/rcs/
+14:36:20 <strcat[m]> alex-resist: it's largely Java
+14:36:39 <noobna[m]> Is it possible to have only cell and WiFi data and normal calls and SMS blocked?
+14:36:39 <noobna[m]> For making a signal account can be done on a dumbphone still to get the code
+14:37:05 <strcat[m]> noobna: LTE only mode is data only mode
+14:37:15 <strcat[m]> as explained above
+14:37:19 <strcat[m]> you still have carrier-based calls and texts if your carrier supports IMS (data-based calls and texts)
+14:37:26 <strcat[m]> recommend reading through the conversation above
+14:37:32 <strcat[m]> you can disable IMS
+14:41:33 <strcat[m]> if you want to think of it this way, it's a federated communications network (carriers) with bridges to legacy networks - the issue with the whole thing is lack of end-to-end encryption so you're trusting these carriers and their security
+14:41:42 <illustratorius[m> Using Graphene OS and I love it. I'm trying to get away from all things google. I discovered that many apps use google analytics for tracking crashes. Is this something that tracks my phone and information?
+14:41:48 <strcat[m]> that's why we strongly recommend using end-to-end encrypted calls/texts
+14:42:01 <strcat[m]> illustratorius: apps are sandboxed, not clear what you mean by tracking your phone and information
+14:42:18 <strcat[m]> illustratorius: recommend reading about how the application model and permission / access grant systems work
+14:42:43 <noobna[m]> <strcat[m] "you still have carrier-based cal"> I don't have LTE mode we have 4g 3g 2g only in the option here
+14:42:44 <noobna[m]> Just thought would be good to have calls and SMS blocked and only use the sim for data
+14:42:49 <alex-resist> Slightly offtopic, but is Signal using WebRTC only for video calls or for everything? If they're using it for normal calls, it seems like a regression in terms of attack surface
+14:42:50 <strcat[m]> illustratorius: apps also definitely don't use google analytics for tracking crashes, you're mixing things up
+14:43:03 <strcat[m]> noobna: so set '4G only'
+14:43:09 <strcat[m]> noobna: your carrier prefers calling LTE 4G
+14:43:16 <strcat[m]> same thing
+14:43:30 <strcat[m]> the OS respects what the carrier wants to call it
+14:43:39 <strcat[m]> alex-resist: for voice/video calls
+14:43:59 <strcat[m]> alex-resist: RedPhone didn't use WebRTC, Signal uses it for voice calls too
+14:44:07 <alex-resist> strcat crap ok
+14:45:11 <strcat[m]> alex-resist: it used to use https://en.wikipedia.org/wiki/ZRTP and more traditional VOIP
+14:45:17 <strcat[m]> alex-resist: moved to Signal protocol + WebRTC
+14:45:59 <noobna[m]> <strcat[m] "the OS respects what the carrier"> I had 4g only mode on and was still reciveing msgs tho
+14:46:16 <strcat[m]> noobna: yes, as I said, LTE only mode is data only mode
+14:46:35 <strcat[m]> noobna: and carriers supporting modern technology have data-based calls and texts
+14:46:46 <strcat[m]> so carrier-based calls and texts should still work fine in LTE only mode
+14:46:48 <alex-resist> noobna I also just learned this, LTE-only does not deactivate SMS
+14:47:06 <strcat[m]> it disables 2G/3G
+14:47:06 <noobna[m]> Ah OK got cha😅
+14:47:13 <strcat[m]> SMS via IMS still works
+14:47:18 <strcat[m]> i.e. SMS via SIP
+14:47:41 <strcat[m]> and similarly, VoLTE and VoWiFi still work
+14:47:43 <strcat[m]> explained this above
+14:48:07 <strcat[m]> disabling 2G/3G is a different thing than disabling carrier-based communication services
+14:48:16 <strcat[m]> the combination of disabling 2G/3G and disabling IMS would do that
+14:48:24 <strcat[m]> since LTE and up use IMS for that stuff
+14:48:29 <alex-resist> So much bloat everywhere, just to appeal to mainstream users :)
+14:48:30 <strcat[m]> went through all this
+14:48:42 <strcat[m]> alex-resist: IMS isn't that bad it's just SIP
+14:48:59 <strcat[m]> alex-resist: if you weren't concerned about privacy / end-to-end encryption it's not like you'd care
+14:49:21 <strcat[m]> alex-resist: you probably get better audio quality with it than Signal
+14:49:37 <strcat[m]> it's modern... but not private
+14:49:57 <strcat[m]> we recommend against carrier-based calls/texts because of privacy
+14:50:01 <alex-resist> Why is noone creating a "unified messaging system" that also features e2e?
+14:50:15 <strcat[m]> alex-resist: well in theory RCS is supposed to have E2E encryption but...
+14:50:33 <strcat[m]> why would you want to keep using carrier-based texting?
+14:50:37 * SkyFox[kdeorg][m > <@freenode_alex-resist:matrix.org> Why is noone creating a "unified messaging system" that also features e2e?
+14:50:37 * SkyFox[kdeorg][m waves from the Matrix side of the bridge
+14:50:38 <strcat[m]> even if it has fancy features and E2E encryption?
+14:51:00 <strcat[m]> do you really want to be limited by what your carrier feels like supporting and to be stuck using their servers?
+14:51:17 <alex-resist> Such a unified system would not be confined to a carrier
+14:51:24 <mynacol[m]> BTW you may block messaging on your end, but most users won't get an information that the SMS does not get received (there are delivery receipts, but they are probably off by default).
+14:51:24 <mynacol[m]> So people can still send you messages
+14:51:31 <alex-resist> It would be a universal standard that apps could also use as a basis
+14:52:12 <somenerd[m]> well, lots of protocols attempt that
+14:52:20 <somenerd[m]> to varying levels of success
+14:52:26 <take_a_deep_brea> <alex-resist "It would be a universal standard"> https://xkcd.com/927/
+14:52:37 <somenerd[m]> LOL
+14:52:47 <somenerd[m]> yeah that comic's a good example of what happens
+14:52:53 <strcat[m]> alex-resist: I mean, they're using SIP for SMS and calls, that's a 'universal standard', doesn't mean they will federate with you
+14:53:04 <strcat[m]> alex-resist: RCS, etc. is a standard you can implement
+14:53:05 <mynacol[m]> When can we deprecate E-Mail? 🙄
+14:53:09 <strcat[m]> doesn't mean they are going to federate with you
+14:53:13 <somenerd[m]> matrix tries, XMPP tries
+14:53:15 <alex-resist> I see I see :)
+14:53:44 <SkyFox[kdeorg][m> <mynacol[m] "When can we deprecate E-Mail? 🙄"> Never, it will haunt the Internet till the end of time
+14:53:46 <strcat[m]> alex-resist: RCS wasn't made by Google but it is essentially Google's answer to iMessage and is meant to end up with E2E encryption
+14:53:54 <strcat[m]> alex-resist: but both RCS and iMessage are stupid
+14:54:38 <strcat[m]> iMessage is arguably a lot worse since at least with RCS every carrier is allowed to use it and federate
+14:54:45 <strcat[m]> anyways
+14:54:47 <strcat[m]> the whole thing is dumb
+14:54:53 <strcat[m]> why would you want to have carrier-based messaging
+14:55:04 <strcat[m]> alex-resist: I don't see why you want something more than what's available
+14:55:17 <strcat[m]> we really don't need more messaging standards
+14:55:24 <strcat[m]> we're using one right now, this is fine, please no more
+14:55:37 <take_a_deep_brea> lol
+14:55:52 <SkyFox[kdeorg][m> Well, technically, we are using 2 right now :P
+14:55:58 <somenerd[m]> I mean, yeah
+14:56:09 <strcat[m]> alex-resist: we don't have RCS really in GrapheneOS (we have OS support but not an RCS app, similar to eSIM)
+14:56:20 <strcat[m]> alex-resist: it probably makes sense for us to just remove the RCS apps
+14:56:22 <somenerd[m]> but no one really uses those "universal protocols" yet
+14:56:30 <strcat[m]>  * alex-resist: it probably makes sense for us to just remove the low-level OS RCS apps
+14:56:41 <strcat[m]> alex-resist: I don't want to support RCS, it's stupid
+14:56:52 <somenerd[m]> > alex-resist: RCS wasn't made by Google but it is essentially Google's answer to iMessage and is meant to end up with E2E encryption
+14:56:52 <somenerd[m]> google has too many messaging apps
+14:57:06 <strcat[m]> somenerd: RCS is an open standard
+14:57:12 <strcat[m]> somenerd: not a specific app
+14:57:12 <mynacol[m]> <strcat[m] "alex-resist: I don't want to sup"> Kill it before people depend on it!
+14:57:26 <strcat[m]> somenerd: Android Messages supports RCS (NOT the AOSP Messaging app atm)
+14:57:33 <strcat[m]> it looks like they are adding full RCS support to AOSP
+14:57:41 <strcat[m]> mynacol: ppl can't depend on it
+14:57:42 <somenerd[m]> similar to SMS?
+14:57:45 <strcat[m]> I can't see Apple implementing RCS
+14:57:50 <strcat[m]> somenerd: RCS is just modern SMS
+14:57:51 <somenerd[m]> yeah
+14:58:15 <strcat[m]> somenerd: SMS already functions via IMS (data-based), RCS is a new messaging standard with rich text, long messages and so on
+14:58:15 <somenerd[m]> I mean, Apple would prefer to do away with SMS as well
+14:58:26 <somenerd[m]> it's just that everyone uses it
+14:58:27 <strcat[m]> yeah but RCS does not let you drop SMS
+14:58:34 <strcat[m]> ppl will not just suddenly not have SMS anymore
+14:58:41 <strcat[m]> and RCS is still carrier-based messaging
+14:58:47 <strcat[m]> it's possible for carriers to simply delegate RCS to Google
+14:58:50 <strcat[m]> T-Mobile does that, etc.
+14:59:01 <hobo0000[m]> Damn you write fast strcat
+14:59:47 <strcat[m]> somenerd: a lot of carriers are getting increasingly less interested in hosting this kind of stuff
+14:59:50 <strcat[m]> and are just delegating it to Google
+15:02:26 <strcat[m]> someone was recently complaining about it because T-Mobile uses Google for RCS, etc.
+15:02:33 <strcat[m]> that is true whether or not you use Android
+15:02:38 <strcat[m]> it's just how they choose to host it
+15:03:33 <strcat[m]> anyway think about how much spam there is via SMS and now imagine if it was an open network anyone could federate with
+15:19:54 <Emvista[m]> Will using multiple users have the same affect as using insular/shelter to set up a work profile?
+15:20:37 <Emvista[m]> I need to use social media for my brand, and don't want them to sabotage my personal information.
+15:20:45 <jakewise[m]> install question>>>
+15:20:59 <strcat[m]> Emvista: user profiles each have their own encryption keys and are controlled by you, not an app
+15:21:05 <caffiene[m]> Do I need to do anything special when my phone has the seamless update client pop up on pixel 4a?
+15:21:14 <jakewise[m]> Can I use a Mac to walk through the Install instructions?
+15:21:37 <Emvista[m]> <strcat[m] "Emvista: user profiles each have"> Good to know
+15:21:39 <strcat[m]> caffiene: wait for it to install and then reboot when it tells you to - nothing will break if you reboot prematurely but it'll have to resume the download (or restart the install)
+15:22:02 <strcat[m]> https://grapheneos.org/usage#updates
+15:22:09 <strcat[m]> https://grapheneos.org/releases#about-the-releases
+15:22:13 <caffiene[m]> So is that just an android update?
+15:25:18 <mynacol[m]> jakewise: If not already, please follow exclusively the official installation guide https://grapheneos.org/install/ . Using other videos/guides has led to bricking devices, so be warned.
+15:25:57 <strcat[m]> caffiene: it's a GrapheneOS update
+15:26:04 <strcat[m]> caffiene: it's GrapheneOS, not Android, not really clear what you mean
+15:26:20 <Emvista[m]> Web install was a piece of cake
+15:26:24 <jakewise[m]> <mynacol[m] "jakewise: If not already, please"> Yes, that's that I'm using. IN the "Connecting the phone" section, it only refers to Linux or Windows
+15:26:31 <caffiene[m]> @strcat:matrix.org: I got ya, I just read what it said on the website
+15:26:41 <Emvista[m]> Even easier than flashing calyx
+15:26:44 <strcat[m]> caffiene: https://grapheneos.org/releases#changelog
+15:26:45 <mynacol[m]> And about your original question: Any PC/Mac is fine. Just follow the web installer
+15:26:47 <strcat[m]> has the release notes
+15:27:56 <SkyFox[kdeorg][m> <jakewise[m] "Yes, that's that I'm using. IN t"> On macOS you just connect the phone, Linux and Windows are listed there, because they may have extra steps
+15:28:44 <jakewise[m]> <mynacol[m] "And about your original question"> Thanks.
+15:29:28 <SkyFox[kdeorg][m> Yes, in the browser
+15:29:31 <jakewise[m]> <SkyFox[kdeorg][m "On macOS you just connect the ph"> Thanks.
+15:29:53 <strcat[m]> jakewise: yes it uses WebUSB to flash the OS on the phone from the browser
+15:30:13 <strcat[m]> it will ask you to select a USB device and grant the web page access to it
+15:30:58 <strcat[m]> you have to confirm unlocking on the phone and then confirm locking at the end
+15:31:05 <strcat[m]> all covered there
+15:31:08 <strcat[m]> it's really quite easy
+15:31:19 <strcat[m]> the main issue people have is using unreliable / broken USB cables
+15:31:38 <jakewise[m]> <strcat[m] "jakewise: yes it uses WebUSB to "> Cool. I have an unlocked phone, but outside of the steps (like Enabling OEM unlocking) that explicitly are noted as doing something on the phone, everything else will be: browser-based and through the USB.
+15:31:49 <strcat[m]> if you're on a Mac then I assume you have a USB-C port and can use the cable that comes with the phone so not an issue
+15:32:00 <strcat[m]> jakewise: yes
+15:32:11 <strcat[m]> jakewise: all you need is a browser with WebUSB support like Chrome, Brave, Edge, etc.
+15:32:15 <strcat[m]> jakewise: no other software
+15:32:41 <strcat[m]> we have our own JavaScript-based implementation of fastboot
+15:32:44 <strcat[m]> so no need for anything else
+15:33:01 <jakewise[m]> <strcat[m] "the main issue people have is us"> This is my primary concern. I do *not* have a USB C (older mac), but have a A-C port converter and the factor cable from the Pixel 4a
+15:33:18 <strcat[m]> jakewise: make sure to use a reliable USB-A to USB-C cable then
+15:33:26 <strcat[m]> high quality one
+15:33:51 <strcat[m]> jakewise: if you have another Android phone you could do the flashing from there, technically, although it takes substantially longer
+15:34:52 <jakewise[m]> <strcat[m] "jakewise: make sure to use a rel"> I don't have one of those, but I have regular USB 2.0 to USB C + the factory cable.
+15:35:10 <strcat[m]> jakewise: if it's actually a proper cable it will work
+15:35:28 <strcat[m]> jakewise: if it's something like an Anker cable it's going to work
+15:35:32 <strcat[m]> if it's some sketchy off brand one, probably not
+15:35:41 <strcat[m]> it won't brick the phone
+15:35:50 <jakewise[m]> <strcat[m] "jakewise: if it's actually a pro"> Is the USB-C cable that came in the box
+15:36:04 <strcat[m]> the USB-C cable that comes with it is great but that's USB-C to USB-C
+15:36:18 <SkyFox[kdeorg][m> <jakewise[m] "Is the USB-C cable that came in "> And the adapter?
+15:36:18 <jakewise[m]> <strcat[m] "jakewise: if it's something like"> It's not a cable, is just a port converter.
+15:36:25 <strcat[m]> the converter it comes with is fine too but I doubt you have a cable you can plug into that
+15:36:26 <SkyFox[kdeorg][m> > <@jakewise:matrix.org> Is the USB-C cable that came in the box
+15:36:26 <SkyFox[kdeorg][m>  * And the USB-C to USB-A adapter?
+15:36:46 <strcat[m]> unless you actually have a USB-A to USB-A cable I don't see how you could use that
+15:37:16 <strcat[m]> jakewise: if you don't have a device you can connect the USB-C cable to (you COULD use another Android phone to flash this one), then you need a cable for this
+15:37:22 <strcat[m]> you need a cable for connecting it to your computer
+15:37:25 <jakewise[m]> https://www.amazon.com/gp/product/B079LYHNSR/ref=ppx_yo_dt_b_asin_title_o02_s00?ie=UTF8&psc=1
+15:37:36 <jakewise[m]> ^ that is the port converter
+15:37:45 <jakewise[m]> Sorry.. not advertizing
+15:37:54 <strcat[m]> jakewise: it's worth trying
+15:37:59 <strcat[m]> just be aware it may be garbage that doesn't work properly
+15:38:06 <strcat[m]> so you may need to get another cable to complete the install
+15:38:58 <mynacol[m]> In the meantime you won't have a functioning device (probably) so don't depend on it
+15:39:59 <jakewise[m]> <strcat[m] "so you may need to get another c"> Understood.
+15:40:08 <loxerat[m]> sry for asking again but does the newest release mean that pixel 4 5G is supported/works?
+15:40:08 <loxerat[m]> https://grapheneos.org/releases#changelog
+15:40:16 * loxerat[m] uploaded an image: 324234.png (72KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/vOdnWaIhDSZdxdlNzZYTDWaI/324234.png >
+15:40:49 <take_a_deep_brea> loxerat:  i think that is totally experimental
+15:40:50 <jakewise[m]> <strcat[m] "it won't brick the phone"> Just wanted to confirm... if this port converter does not work, my phone will *not* be bricked, correct?
+15:41:14 <strcat[m]> jakewise: it likely won't have an OS to boot but it's extremely unlikely it would be *bricked*
+15:41:22 <strcat[m]> jakewise: you'd just need to get a working cable and complete installing the OS
+15:41:24 <jakewise[m]> > <@strcat:matrix.org> so you may need to get another cable to complete the install
+15:41:24 <jakewise[m]>  * Understood.
+15:41:24 <jakewise[m]> edit: just ordered.
+15:41:46 <jakewise[m]> <strcat[m] "jakewise: you'd just need to get"> Cool.
+15:41:59 <strcat[m]> jakewise: I don't think we've ever seen someone brick a device for real due to any issue like that
+15:42:08 <strcat[m]> jakewise: what's pretty common is a cable that's flaky and drops connection
+15:42:11 <strcat[m]> which cannot brick the device
+15:42:21 <strcat[m]> but it would interrupt the install and it wouldn't be possible to finish
+15:42:30 <strcat[m]> so there wouldn't be any fully installed OS
+15:42:40 <strcat[m]> but that's not a problem can just flash it again with a working cable
+15:43:07 <strcat[m]> that could happen if your web browser crashed,  cable got yanked out, etc. anyway - it's safe, just have to complete the install properly
+15:43:17 <strcat[m]>  * that could happen if your web browser crashed,  cable got yanked out, etc. anyway - it's safe, just have to complete the install properly from the beginning of the flashing again
+15:49:38 <take_a_deep_brea> nice.
+15:50:43 <strcat[m]> what's not safe is following some third party video telling you to use a third party fastboot implementation
+15:50:52 <strcat[m]> which may do things in an unsafe way and brick your phone for real
+15:51:33 <take_a_deep_brea> yep
+15:57:09 <mr_hebi_san[m]> <strcat[m] "what's not safe is following som"> Is this that techlore guy?  I have to say that after installing Graphene and spending time here his credibility is near zero at this point
+15:57:45 <strcat[m]> yes, among others
+15:58:01 <strcat[m]> mr_hebi_san: he knows his video causes harm to our users
+15:58:13 <strcat[m]> mr_hebi_san: he is leaving it up out of spite even though it's wrong, always was wrong, and doesn't work properly
+15:58:15 <strcat[m]> and bricks phones
+15:58:29 <strcat[m]> he made a follow-up video that tells people to remove the safety check that someone ported to Windows for us
+15:58:32 <strcat[m]> which checks the fastboot version
+15:58:47 <strcat[m]> someone ported that to Windows for us, largely because of videos like this telling people to do things incorrectly
+15:58:58 <strcat[m]> and he makes a follow-up video saying to edit the flashing script to delete the safety check
+15:58:59 <strcat[m]> great
+15:59:22 <strcat[m]> and that was before he was actually acting maliciously towards us and harassing developers
+15:59:30 <somenerd[m]> amazing, clearly trustworthy and non-malicious behavior
+15:59:43 <mr_hebi_san[m]> 🤦‍♂️
+15:59:44 <take_a_deep_brea> <strcat[m] "and he makes a follow-up video s"> a textbook example  of a pain in the ass
+15:59:46 <strcat[m]> leaving up those videos continues causing harm to our users though
+16:00:03 <somenerd[m]> he's done a bunch of other things
+16:00:12 <somenerd[m]> including slightly hypocritical ones
+16:01:13 <mr_hebi_san[m]> I honestly wondered if he was being paid to do this or if he was simply motivated personally
+16:01:29 <strcat[m]> mr_hebi_san: just has a grudge against us and that's how he is
+16:03:02 <strcat[m]> if he cared at all about end users he'd take down the incorrect / dangerous videos
+16:03:25 <strcat[m]> and if he was a decent person he'd stop spreading misinformation and trying to get people to harass me
+16:03:32 <strcat[m]> go ahead and ask him if he'll do either
+16:04:09 <strcat[m]>  * go ahead and ask him if he'll do any of that
+16:04:15 <somenerd[m]> I mean, I asked him to change a few things in his Calyx vid...
+16:04:25 <mr_hebi_san[m]> I think I would prefer to have as little contact with questionably ethical people as possible :p
+16:05:12 <caffiene[m]> The video I originally followed was by (The Hated One)
+16:07:37 <take_a_deep_brea> caffiene: The Hated One's video install is closer to official cli based  installation . but now the recommendation for most people is https://grapheneos.org/install/web
+16:08:49 <caffiene[m]> take_a_deep_breath: yeah I messed mine up haha. So then I followed the official guide and someone here walked me through it. Very helpful community here
+16:09:29 <mr_hebi_san[m]> This web based installer is impressive.  I used it, and while I do wish that the wording in the lock and unlock sections instructed a user to use the volume rocker and actually confirm on the phone instead of saying "you're unlocked" it was seamless
+16:10:09 <strcat[m]> it does say to do that
+16:10:19 <strcat[m]> it reports the status it gets from the phone though
+16:10:28 <strcat[m]> some phones wait until the user actually unlocks to report back, others don't
+16:11:05 <mr_hebi_san[m]> Huh.  I wonder why it didn't for me?  I already knew to look to the phone, so it wasn't a problem to me
+16:11:12 <strcat[m]> it does say that
+16:11:14 <strcat[m]> look at the page
+16:11:20 <strcat[m]> https://grapheneos.org/install/web#unlocking-the-bootloader
+16:11:24 <strcat[m]> > The command needs to be confirmed on the device and will wipe all data. Use one of the volume keys to switch the selection to accepting it and the power button to confirm.
+16:11:36 <strcat[m]> you got confused by it reporting the status of the command it asks the phone to do
+16:11:59 <strcat[m]> it's not our choice that some phones say "OKAY" immediately in response to unlocking while others wait and report if it succeeded
+16:12:12 <strcat[m]> depends on phone model
+16:12:32 <strcat[m]> it's possible they gave up reporting success that way and expect you to run another command to see if it worked, don't know
+16:13:05 <mr_hebi_san[m]> That makes sense, and I understand the issues involved when you just have to work with the output of the phone itself
+16:26:20 <mynacol[m]> strcat I just searched a bit around. With `fastboot oem device-info` you can get the current unlock status. Alternatively, fastboot may report that the bootloader is already unlocked by repeatedly sending `fastboot oem unlock` (untested).
+16:26:20 <mynacol[m]> With cases for the different devices and the above methods, we could make the webinstaller even more intuitive.
+16:26:41 <strcat[m]> mynacol: that's not how to do it
+16:26:42 <strcat[m]> and that's outdated info
+16:26:50 <strcat[m]> I know how to check the lock state
+16:26:53 <mynacol[m]> Okay, sorry
+16:27:36 <strcat[m]> we would need to work around the differences across devices
+16:27:55 <strcat[m]> and it would be better for devices to behave consistently
+16:29:32 <strcat[m]> 1st step would be figuring out how each device model behaves
+16:29:45 <strcat[m]> it'd have to be hard-wired to handle them appropriately
+16:29:50 <strcat[m]> not really worthwhile, I think
+16:30:32 <somenerd[m]> I mean, would be nice to see if it's unlocked or not
+16:30:36 <mynacol[m]> Well, I don't have the resources to test, have only a Pixel 4a
+16:30:42 <strcat[m]> somenerd: it says on the phone
+16:30:44 <strcat[m]> if it's unlocked
+16:30:50 <somenerd[m]> oh wait lol
+16:30:56 <somenerd[m]> then there's probably no need
+16:31:11 <strcat[m]> they have a status line saying unlocked in red or locked in green
+16:31:21 <strcat[m]> and we report a proper error
+16:31:27 <somenerd[m]> maybe as a sort of frill, but nothing much more
+16:31:28 <strcat[m]> if you don't unlock and try to flash
+16:32:02 <strcat[m]> the way the devices return results for the unlock command is just inconsistent
+16:32:08 <strcat[m]> some wait for confirmation then return result
+16:32:26 <strcat[m]> others return success as meaning the prompt was triggered
+16:32:57 <strcat[m]> and you'd have to check the lock state with the appropriate getvar command
+16:32:58 <strcat[m]> not worth working around
+16:32:58 <strcat[m]> it says how to confirm unlocking
+16:33:24 <strcat[m]> the result message just thinks it unlocked already - it doesn't hide that text, it's still there, after the button and result text
+16:33:58 <strcat[m]> none of the text that's there at the start is removed
+16:34:10 <strcat[m]> results are shown after the buttons
+16:34:20 <strcat[m]> so, right under the result for unlocking, it says how to confirm
+16:35:28 <strcat[m]> basically what you're asking for is to have it wait and then check to see what the user did, to report to the user what they can see on the device screen - maybe worthwhile? but they can see it anyway
+16:35:43 <strcat[m]> it's not worth it atm
+16:35:47 <mynacol[m]> Alright. So its a minor nitpick
+16:37:31 <somenerd[m]> mostly aesthetic
+16:38:13 <strcat[m]> we did talk about it before when designing it
+16:38:13 <somenerd[m]> since it shows no practical use, as strcat said
+16:38:14 <strcat[m]> it just didn't seem worth doing atm
+16:38:22 <somenerd[m]> makes sense
+16:38:35 <somenerd[m]> would look sorta cool though imo
+16:39:24 <strcat[m]> eventually plan is to have a fancier UI
+16:39:33 <strcat[m]> kdrag0n has an early deployment of it
+16:40:50 <somenerd[m]> cool
+16:40:50 <pikaman[m]> Hey all, got an update today. Saw in the release announcements a rework of the network time updates. It doesn't seem to be immediately working over here, I have set it now manually. Is there something I should do?
+16:41:52 <strcat[m]> pikaman: was it working before?
+16:42:07 <pikaman[m]> Yes
+16:42:27 <strcat[m]> so you set the time wrong and it's not working?
+16:42:43 <strcat[m]> how did you test it and come to the conclusion it's not working, basically?
+16:43:12 <strcat[m]> I just set my time wrong, then turned on network time and it fixed it
+16:43:29 <pikaman[m]> Using network providing time sets it automatically back to 1st of January 1970
+16:43:57 <strcat[m]> that sounds pretty change
+16:44:03 <strcat[m]> and I don't really see how the change could cause that
+16:44:23 <neoman54[m]> I had the same issue
+16:44:41 <pikaman[m]> Is the use if network time immediately? Maybe I should wait for a bit
+16:44:53 <strcat[m]> can you explain better what happened
+16:44:58 <strcat[m]> you updated and it screwed up your time, or what?
+16:45:05 <neoman54[m]> And I can't connect to the internet at all. via wifi or data
+16:45:06 <faxing[m]> I updated this morning and don't have the bug for what it's worth
+16:45:18 <strcat[m]> need a much clearer description of what happened, and what you did
+16:46:32 <pikaman[m]> <strcat[m] "you updated and it screwed up yo"> Basically, it set it back to 1970. Did another reboot, but no change. To access the Internet I had to set the time manually.
+16:46:51 <strcat[m]> pikaman: so you had network time enabled, and you updated, and your time got set back after the update?
+16:46:59 <strcat[m]> very strange, and don't see how the change could cause that
+16:47:08 <strcat[m]> it only changes how certificates are validated
+16:47:14 <pikaman[m]> <strcat[m] "pikaman: so you had network time"> Yes
+16:47:28 <strcat[m]> rny: ^
+16:47:54 <strcat[m]> pikaman: so if you enable network time right now, what happens?
+16:51:22 <pikaman[m]> It jumps back to the 1st of January 1970, time becomes 1AM
+16:51:23 <pikaman[m]> Plus a few minutes I've been using the phone for
+16:51:45 <strcat[m]> yeah so I don't see how the change could cause anything like that
+16:51:53 <strcat[m]> you'll need to get `adb logcat` output
+16:52:21 <strcat[m]> are you using any kind of strange VPN setup?
+16:52:51 <strcat[m]> https://github.com/GrapheneOS/platform_frameworks_base/commit/ac1c20fc1fc1a9c8add9a5be0005c97c83730f89
+16:56:32 <strcat[m]> pikaman: it sounds to me like it was never actually working for you and that something is blocking / breaking the connection like TLS interception
+16:56:45 <strcat[m]> and what changed is that if it fails a certain way it still tries to set the time based on it
+16:56:46 <strcat[m]> which I'll fix
+16:56:53 <strcat[m]> but there's something broken about your network
+16:58:29 <pikaman[m]> No VPN set-up, pihole on my wifi network though
+16:58:43 <pikaman[m]> let me see if I can get that logcat output
+16:59:17 <strcat[m]> pikaman: sounds like you're blocking time.grapheneos.org connections
+16:59:22 <strcat[m]> or doing TLS interception that breaks it
+16:59:53 <strcat[m]> I do think I see an issue but it implies that must be happening for you to hit it
+17:00:06 <strcat[m]> it's an issue with the new error handling code rny wrote
+17:04:03 <strcat[m]> I'll do a new release but it's quite possible it's not going to resolve your issue
+17:04:16 <strcat[m]> and if it does 'resolve' it, you still have the problem that your network is broken
+17:04:18 <mr_hebi_san[m]> I have a question about the Graphene screenshot editor.
+17:04:18 <mr_hebi_san[m]> Why does it so heavily pixelate the screenshot while editing?  It is almost unusable if I want to highlight text since I can't read anything
+17:04:29 <mr_hebi_san[m]> Can I change this behavior?
+17:04:33 <strcat[m]> it's the AOSP gallery app
+17:04:36 <strcat[m]> you're welcome to use a different editor app
+17:05:00 <mr_hebi_san[m]> Huh.  Do you have a recommendation?
+17:05:07 <strcat[m]> no, I don't have a recommendation
+17:05:15 <strcat[m]> you're free to use the app of your choice, rather than the AOSP gallery app
+17:05:42 <Sukuna[m]> <mr_hebi_san[m] "Huh.  Do you have a recommendati"> Simple Gallery from f-droid ia pretty good.
+17:06:08 <Sukuna[m]> * Simple Gallery from f-droid is pretty good.
+17:08:04 <strcat[m]> and btw, we really need more people helping with Beta channel testing
+17:08:19 <strcat[m]> not many people are using the Beta channel so not many issues are found before stuff is pushed out via Stable
+17:09:00 <strcat[m]> I find blatant problems in the internal testing but we rarely get any reports from Beta testers
+17:09:06 <strcat[m]> if any at all?
+17:09:26 <strcat[m]> it's more work to be using the Beta channel and we could start using Stable directly if it's not adding value
+17:09:31 <take_a_deep_brea> @strcat:matrix.org: i am on beta
+17:10:13 <take_a_deep_brea> just that my usage is pretty vanilla . if i find something , will report
+17:10:48 <strcat[m]> well, working on a new release today for this
+17:11:02 <strcat[m]> essentially the issue is that if your network is broken and has never previously gotten network time since boot
+17:11:08 <strcat[m]> and it breaks the connection
+17:11:21 <strcat[m]> then it's possible it resets the time to Unix epoch
+17:11:44 <strcat[m]> due to missing return in code that was added for improved error reporting
+17:11:50 <strcat[m]> so, fixing that today
+17:12:25 * jonzlo[m] uploaded an image: 3rd place MFs.jpeg (113KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/nfyXUUEPcbdaEqiGDKXnysOQ/3rd place MFs.jpeg >
+17:13:41 <jonzlo[m]> <jonzlo[m] "3rd place MFs.jpeg"> Me as a beta tester.
+17:23:35 <pikaman[m]> <strcat[m] "essentially the issue is that if"> Would some logcat lines help track down the issue? As I am fairly new to this
+17:29:51 <nux> Anyone else on here use the ProtonMail app and notice that the latest version crashes when attempting to compose an email?
+17:31:01 <hobo0000[m]> I am using it but doesnt crash for me
+17:32:15 <Adam16628482717> Whats the latest update?
+17:32:49 <strcat> https://grapheneos.org/releases#2021.02.06.05
+17:33:02 <strcat> but there's going to be a new one probably tomorrow with a couple more minor changes anyway
+17:33:26 <nux> hobo0000[m]: I'm on version 1.13.25 (latest one in Aurora Store dated 02 February 2021) and when I attempt to compose emails, it crashes. What version are you on?
+17:33:35 <Adam16628482717> Nice any security enchamcements
+17:34:05 <Adam16628482717> Also, does LTE only mode disable GSM completely
+17:34:10 <hobo0000[m]> <nux "hobo0000: I'm on version 1.13.25"> Im on same version
+17:34:35 <Adam16628482717> Ive heard LTE has a GSM compatability layer
+17:34:39 <strcat> Adam16628482717: it disables all protocols other than LTE
+17:34:42 <strcat> no
+17:34:43 <strcat> it disables older protocols
+17:34:59 <Adam16628482717> Does LTE only mode disable GSM completely
+17:35:06 <nux> hobo0000[m]: Have you tried to compose an email with it lately? Me and another user are experiencing the same issue on this latest version.
+17:35:08 <strcat> yes, it disables all other protocols
+17:35:12 <jalb> Sometimes I think that GOS should record its own video explaining how to install GrapheneOS, somethjing official, no avoid those videos out there. I see that many people are looking for videos instead of text to install it.
+17:35:21 <jalb> *to avoid
+17:35:42 <strcat[m]> jalb: don't need it, there's https://grapheneos.org/install/web
+17:35:55 <strcat[m]> people probably shouldn't be using the CLI install guide if they aren't familiar with the CLI
+17:36:16 <jalb> strcat[m], yes but people first look for a video and then...
+17:36:23 <hobo0000[m]> <nux "hobo0000: Have you tried to comp"> Yeah but it works..
+17:36:40 <jalb> they only find those videos
+17:37:01 <strcat[m]> so we can do something to make it so you can't even start following them, like moving things around
+17:37:06 <strcat[m]> don't really feel like it
+17:37:07 <jalb> For those people it could be good, to be an official video, and you can change it or delete it when you wnat
+17:37:11 <jalb> *want
+17:37:13 <strcat[m]> there's https://grapheneos.org/install/web
+17:37:20 <strcat[m]> if people choose to follow an inaccurate video, it's their fault
+17:37:28 <nux> hobo0000[m]: Receiving/reading works fine. It's just composing crashes for us. We're on the latest GrapheneOS on Pixel 4a devices. What hardware are you on?
+17:37:30 <strcat[m]> we say not to use them on our site
+17:37:37 <jalb> ok
+17:38:35 <strcat[m]> jalb: contact the people who posted the inaccurate videos
+17:38:37 <strcat[m]> ask them to take it down
+17:38:51 <strcat[m]> report it as harmful / misleading content
+17:39:01 <jalb> I know but they won't do it and I read a lot about it here, those problems, it was only to avoid it
+17:39:07 <strcat[m]> if the video is accurate and follows our guide properly then it doesn't matter
+17:39:09 <jalb> But I will
+17:39:26 <jalb> I will tell them
+17:39:44 <hobo0000[m]> <nux "hobo0000: Receiving/reading work"> Im on pixel4a too but it works fine.. Weird
+17:40:32 <jalb> Updating... I'll let you know if it happens to me what it's told about time
+17:40:39 <jalb> pixel 3a
+17:40:50 <jalb> Thanks for the update!
+17:42:44 <strcat[m]> currently starting a new release fixing the new error reporting code for time updates
+17:42:58 <strcat[m]> so no need to discuss that more, will be addressed in the next release
+17:43:17 <nux> hobo0000[m]: We've uninstalled/reinstalled the ProtonMail app and we both get the same result when attempting to compose emails. The compose screen shows for a fraction of a second and then crashes. Most of the time the app recovers to the initial list of received emails page but sometimes it exits entirely. I can't believe nobody else is having the same issue! Thanks anyway though...
+17:43:24 <jalb> ok
+17:44:18 <hobo0000[m]> <nux "hobo0000: We've uninstalled/rein"> Thats weird..🤔🤔🤔
+17:45:44 <strcat[m]> nux: check `adb logcat` for error output
+17:48:59 <nux> strcat[m]: Checking now...
+17:53:04 <jalb> All ok here after the update in my Pixel 3a
+17:53:12 <jalb> Date is ok
+17:55:18 <nux> strcat[m]: Nothing jumps out at me in the logs except for google services missing, which makes sense and has never caused the app to crash before...
+17:57:12 <nux> strcat[m]: Found this --> EventSequenceValidator: Transition from INTENT_STARTED to INTENT_FAILED
+17:58:22 <strcat[m]> nux: do you see anything else
+17:58:28 <strcat[m]> that looks like the result of handling the error
+17:58:36 <strcat[m]> rather than the error itself
+17:58:38 <strcat[m]> the error itself would be earlier
+18:02:41 <nux> strcat[m]: It's hard to correlate logcat output for the specific action due to so much unrelated output. Immediately before the transition to INTENT_FAILED there are a bunch of audio ralated entries. Probably unrelated though...
+18:03:35 <strcat[m]> nux: it's tagged with what produced the output
+18:03:37 <nux> strcat[m]: I think I can filter them on process ID. Hold on...
+18:03:56 <nux> strcat[m]: Yeah, just realized that. Checking again...
+18:14:27 <m2tu[m]> Does anyone know why when i  dissable some lines on Androidmanifest.xml of SystemUI ... when i build and flash the whole phone become changed and not funcionally?
+18:14:47 <m2tu[m]> no status bar and power button not work to lock phone
+18:17:52 <nux> strcat[m]: The two numeric fields after the date are what? I'd like to use one or both to filter the output to relevant output from the ProtonMail processes. I filtered on the first field but it seems I might be losing some relevant data.
+18:19:50 <strcat[m]> nux: pid and tid
+18:20:25 <nux> strcat[m]: process ID and what is tid?
+18:20:33 <strcat[m]> if it actually crashes (like a segmentation fault, not an uncaught Java exception) then the traceback comes from another process
+18:20:39 <strcat[m]> nux:  thread id
+18:20:44 <strcat[m]> just ignore tid
+18:20:51 <nux> strcat[m]: ok
+18:21:02 <strcat[m]> the main thread in a process has pid == tid
+18:21:11 <strcat[m]> secondary threads have the same pid but their own unique tid
+18:21:30 <nux> strcat[m]: I didn't see any segmentation faults.
+18:21:45 <strcat[m]> filtering by pid is probably enough
+18:25:10 <nux> strcat[m]: Yeah, I now have a more concise output, that is filtered on PID, in a text file and I'm going through it now.
+18:25:13 <m2tu[m]> Can i prevent bluetooth from setting on my editing SystemUI manifest file ?
+18:28:04 <strcat[m]> m2tu: don't understand the question
+18:28:13 <strcat[m]> can you clarify what you're trying to do?
+18:29:33 <snooopy> Uh, it seems that this bug fixed itself in one of the past stable releases? https://github.com/GrapheneOS/os_issue_tracker/issues/24
+18:30:09 <m2tu[m]> Im trying to edit AndroidManifest.xml of SystemUI app in build maps...  What i try to do is to block bluetooth
+18:30:11 <m2tu[m]>  <!-- <uses-permission android:name="android.permission.BLUETOOTH" />-->
+18:30:11 <m2tu[m]>     <!--<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />-->
+18:30:11 <m2tu[m]>     <!--<uses-permission android:name="android.permission.BLUETOOTH_PRIVILEGED" />-->
+18:30:26 <snooopy> referring to https://github.com/GrapheneOS/os_issue_tracker/issues/225, my night light enables and disables itself automaticly on sunset-ish and sunrise-ish
+18:31:17 <m2tu[m]> and  stop usb debugging
+18:31:18 <m2tu[m]> <activity android:name=".usb.UsbDebuggingActivity"
+18:31:18 <m2tu[m]>             android:permission="android.permission.MANAGE_DEBUGGING"
+18:31:55 <m2tu[m]> i did coment out the lines . but after i build and flashed phone... i dind no status bar and limited settings.
+18:33:29 <m2tu[m]> can u use SystemUI to prevent some functions in the phone ?
+18:33:38 <m2tu[m]> or is it wrong app to work on
+18:34:06 <zelzek[m]> hi, i'm new to the matrix instance, but not exactly new to graphene.  i was wondering if i could ask some advice on my use-case and respective applications.
+18:35:49 <strcat[m]> zelzek:  ues
+18:36:00 <strcat[m]> zelzek: if it's specifically about GrapheneOS this is a good channel for it
+18:36:18 <strcat[m]> zelzek: if it's more general then #grapheneos-offtopic:matrix.org is better
+18:36:24 <strcat[m]> you could ask relevant stuff here and other stuff there
+18:36:30 <strcat[m]> not that important
+18:36:48 <zelzek[m]> Thanks.
+18:37:00 <zelzek[m]> ill ask here but if you feel it's off topic, please ask me to move.
+18:39:03 <zelzek[m]> i have a pixel 4 with graphene and love it.  I work in the computer security area of research and use XMPP/Signal/Note taking/Matrix/Music/Tor/VPN (For my private mesh) daily.  My employer requires a phone number on file and likes to text/call me so I'm not sure how to handle that as a.) I don't use baseband and if i did it would be for data only. b.) I'm not sure what voip clients are availble on android/graphene.  My
+18:39:03 <zelzek[m]> ask is what's a solid xmpp/matrix client and also any client that can handle Voip/Sip via Voip.ms or something else that can receive text messages for my employer.
+18:40:14 <zelzek[m]> I have been looking at conversations and blabber for xmpp, i occasionally use fediverse services but having a pleroma/mastodon client is not necessary, but the main gotcha is keeping in touch with employer without having to give out a baseband e164 number
+18:40:51 <wrt[m]> <zelzek[m] "i have a pixel 4 with graphene a"> beeperhq.com looks like it could
+18:42:20 <zelzek[m]> <wrt[m] "beeperhq.com looks like it could"> this looks interesting, i appreciate the suggestion.
+18:42:24 <gusr1727[m]> The clock is all fucked all after the latest update
+18:42:26 <duck[m]> beeper just hosts matrix bridges
+18:42:29 <peculiarly_small> I recently updated my phone (Pixel 3a) and after restarting the time and date got reset to 1970 Jan 1st, and will no longer connect to my internet network. Has anyone experienced this? I'm not sure how to fix this
+18:42:38 <gusr1727[m]> * The clock is all fucked up after the latest update
+18:43:00 <zelzek[m]> i use matrix quite a bit and have written my own bridges as well.  would be nice to tie it all together.
+18:43:11 <gusr1727[m]> If "Use network provided time" is checked, it reverts to Jan 1st 1970,
+18:43:33 <wrt[m]> <duck[m] "beeper just hosts matrix bridges"> couldn't you use the SMS bridge?
+18:44:01 <wrt[m]> <wrt[m] "couldn't you use the SMS bridge?"> or does it have to be on the same device?
+18:44:23 <gusr1727[m]> With "Use network provided time-zone" checked, I'm getting an inaccurate time
+18:44:40 <strcat[m]> peculiarly_small-hamster: gusr1727: a new release is being made to address it, for now, fix the date
+18:44:46 <zelzek[m]> <wrt[m] "or does it have to be on the sam"> as long as i can receive/send messages with a bridge via sms that's fine.
+18:45:04 <gusr1727[m]> I have it set to UTC, and it's 12:02, which is completely off
+18:45:09 <zelzek[m]> i could write a telnyx/twilio integration and bridge it.  but my boss likes to call me.
+18:45:25 <strcat[m]> gusr1727: as I said, for now, fix the date, a new release is being made to address the issue
+18:45:52 <strcat[m]> HTTPS, etc. won't work with an incorrect date, that's expected
+18:45:54 <gusr1727[m]> <strcat[m] "gusr1727: as I said, for now, fi"> Got it. As a temporary workaround, the clock can be set manually
+18:45:59 <strcat[m]> yes
+18:46:00 <wrt[m]> <zelzek[m] "as long as i can receive/send me"> https://gitlab.com/nova?sort=latest_activity_desc
+18:46:11 <strcat[m]> we didn't get any issues reported when the release was in Beta so an issue with it wasn't discovered
+18:46:15 <strcat[m]> we need more people using the Beta channel
+18:46:23 <gusr1727[m]> * Got it. As a temporary workaround, the date and clock can be set manually
+18:46:28 <strcat[m]> gusr1727: the issue is there's something odd about your network and it's breaking time updates at least some of the time
+18:46:35 <strcat[m]> and there's an issue we had to fix with how it handles errors
+18:46:43 <strcat[m]> it's fixed now, being made into a new release
+18:48:45 <gusr1727[m]> strcat Thanks! Sorry for the duplicates, still trying to get used to element on mobile
+18:48:55 <zelzek[m]> i think all of the bridges in that repo can cover my bases especially when my phone is off and i just want to work on my laptop.
+18:49:29 <zelzek[m]> for matrix is element the default client on android?  I have my own home instance for myself and friends/colleagues and never tried a mobile client before.
+18:49:56 <zelzek[m]> also if there's a place i can send donations to daniel and team that'd be good.  graphene really gave me back some control of my mobile usage.
+18:50:24 <nux> strcat[m]: It looks like ProtonMail compose intent requests network services and during that process, something goes wrong (ConnectivityService NetworkRequestInfo binderDied) and it goes downhill from there, eventually force killing the compose activity and recovering to main. This level of debug is beyond my capabilities at this point.
+18:51:08 <nux> strcat[m]: My guess is some sort of network permission issue.
+18:51:12 <zelzek[m]> as for mail, i'm not worried about that.  i only check my mail when needed and i built my own bridge from my mail server to signal for now.  but can likely be integrated into matrix.
+18:51:26 <TheJollyRoger> Ahoy zelzek[m], there is a donation address (several of them) for Bitcoin, Monero, Github sponsorship, or if all else fails, Pay Pal at https://grapheneos.org/donate ! On behalf of the project, any donations you can send are going to really help and really be appreciated!
+18:52:00 <anupritaisno1[m]> strcat you here?
+18:52:01 <anupritaisno1[m]> So a user reported network activity on an app that was not granted the network permission ever
+18:52:02 <anupritaisno1[m]> I told them to come here but they haven't
+18:52:40 <anupritaisno1[m]> What would you tell them?
+18:52:41 <anupritaisno1[m]> It's some random app they claim to have gotten off fdroid
+18:53:15 <m2tu[m]> does anyone know what this is :
+18:53:43 <m2tu[m]>  <meta-data android:name="com.google.android.backup.api_key" android:value="AEdPqrEAAAAIWTZsUG100coeb3xbEoTWKd3ZL3R79JshRDZfYQ" />
+18:53:53 <m2tu[m]> foudn in androidmanifest of SystemUi ?
+18:56:02 <zelzek[m]> TheJollyRoger:  thank you!
+18:59:42 <strcat> m2tu[m]: api key for backup service
+18:59:47 <strcat> not used by us
+18:59:52 <strcat> it's an example
+19:00:21 <m2tu[m]> ok thanks.. i thought this blocked me to make changes
+19:00:57 <m2tu[m]> plz.. can u answer if there is in SystemUI manifest i shall block bluetootha nd usb debugging ?
+19:01:08 <strcat> I really don't know what you're talking about
+19:01:19 <strcat> I don't know what you're trying to do or why you think this is the way to do it
+19:01:27 <m2tu[m]> when i changed it , the whole phone become unstable
+19:01:52 <strcat> you do not need to build the OS to disable Bluetooth / USB debugging and if you want to prevent people from using it on a phone that you own
+19:01:56 <strcat> use a device manager
+19:01:57 <m2tu[m]> im new and want to lean
+19:19:04 <strcat[m]> https://grapheneos.org/releases#2021.02.07.17
+19:19:18 <strcat[m]> new upcoming release fixing the error handling issue for time updates
+19:19:30 <strcat[m]> don't need more reports of that now
+19:19:32 <alex-resist> ...with incremental updates? :)
+19:19:40 <strcat[m]> ideally, we get issue reports when a release is in beta
+19:19:51 <strcat[m]> alex-resist: yes, as always, they just weren't deployed fully last time
+19:20:04 <alex-resist> I know, I was joking
+19:20:15 <alex-resist> Thanks again for your work! Seriously
+19:20:38 <userman23[m]> I am not sure if this is a GrapheneOS issue, or an app issue.  But I am not getting any audio notifications from my Signal app when I get a new message... I checked my settings, and notifications are on.
+19:21:00 <TheJollyRoger> Thank you strcat[m]
+19:21:05 <mr_hebi_san[m]> Yes thank you for all this hard work strcat and everyone else
+19:22:24 <strcat[m]> it will take longer than usual for this release to become available, just announcing it early to minimize more reports of the time sync error handling issue
+19:22:30 <strcat[m]> hopefully the fix works well
+19:22:40 <m2tu[m]> Is there a way to remove ScreenRecorder?
+19:22:59 <strcat[m]> you can remove apps that are included by removing them from PRODUCT_PACKAGES
+19:23:11 <alex-resist> strcat I'm gonna dedicate one Pixel 3a for testing beta releases, at least for a while
+19:23:12 <TheJollyRoger> userman23[m]: Hang on a second and let me test audio alerts from Signal.
+19:23:23 <TheJollyRoger> alex-resist: Beautiful!
+19:23:27 <userman23[m]> thank you
+19:23:33 <strcat[m]> alex-resist: the issue with the previous one is we wanted to get that Vanadium update out
+19:23:36 <strcat[m]> so tested it for 1 day
+19:23:40 <strcat[m]> didn't have any issue reports
+19:24:00 <strcat[m]> if we only have 300 people using beta and only 50 of them are going to promptly report issues (if at all), we aren't getting much coverage from it
+19:24:01 <m2tu[m]> ok thanks ;:)
+19:24:20 <strcat[m]> alex-resist: a common thing is we release something in beta, wait 2-3 days
+19:24:34 <strcat[m]> alex-resist: release via stable, then, within an hour, get 10 people reporting some minor issue
+19:24:41 <m2tu[m]> i managed to remove face camera and left back only.... begin to love programming :))))
+19:24:48 <strcat[m]> alex-resist: so, clearly, we need more beta testing
+19:25:53 <alex-resist> I always thought you had dozens of beta testers, but apparently that is not the case
+19:25:56 <TheJollyRoger> userman23[m]: Text and calls produce audio notifications with both default and tuned settings. Custom notifications (Contact-specific alerts) are also working as expected as well.
+19:26:41 <strcat[m]> alex-resist: we have more than dozens
+19:26:51 <strcat[m]> alex-resist: but if an issue impacts 1/300 people
+19:26:53 <userman23[m]> TheJollyRoger: thank you for checking.  Any ideas where to go from here?  My phone is up to date, a restart has already been done... not really sure what else to try... a re-install of the app?
+19:26:58 <strcat[m]> alex-resist: and only 20% of the beta testers actually report issues they hit
+19:27:06 <strcat[m]> alex-resist: I think a lot of people use beta just to get it sooner
+19:27:13 <strcat[m]>  * alex-resist: and if only 20% of the beta testers actually report issues they hit
+19:27:25 <alex-resist> I think that is true
+19:27:30 <strcat[m]>  * alex-resist: and if only 20% of the beta testers actually report issues they hit, low chance of having it reported
+19:27:35 <alex-resist> People are on beta to be edgy but don't report issues
+19:27:41 <strcat[m]> yeah so maybe people did hit the issue in beta
+19:27:45 <strcat[m]> but we didn't hear about it
+19:27:49 <alex-resist> Or they didn't care
+19:28:06 <strcat[m]> well, same thing, not reported, so no reason for us to cancel releasing via stable
+19:28:08 <strcat[m]> that's how it works
+19:28:20 <strcat[m]> it's worked fine on all my devices
+19:28:25 <strcat[m]> it's an issue with the error handling for time updates
+19:28:35 <strcat[m]> if there is no error, it works fine, and we did test error handling
+19:28:43 <strcat[m]> it requires the first time sync to fail, I think
+19:28:47 <strcat[m]> to hit the issue
+19:29:08 <strcat[m]> it's possible there's some other issue but pretty sure I fixed it properly
+19:29:10 <TheJollyRoger> userman23[m]: I also have signal set for "Not optimized" so it can run in the background, if that makes any difference?
+19:32:22 <alex-resist> strcat I probably wouldn't have noticed an issue with the last release because beta deployment probably was super fast. I'm on a 100 Mbit connection so I probably wouldn't have noticed the size of the update
+19:32:47 <alex-resist> But I will keep one device on beta for a while and try to help whenever I can
+19:32:58 <strcat[m]> alex-resist: I'm talking about the time sync thing
+19:33:12 <strcat[m]> alex-resist: it's an edge case that's only going to happen to people with broken networks
+19:33:24 <alex-resist> Ok I see
+19:33:27 <strcat[m]> so we needed to have someone with that problem using the beta and actually reporting an issue when they found it
+19:33:29 <strcat[m]> and we didn'tr
+19:33:32 <strcat[m]>  * and we didn't
+19:33:38 <alex-resist> I was talking about the update size issue, I wouldn't have noticed it even in beta
+19:33:50 <alex-resist> strcat I see, there is almost no one left
+19:34:22 <strcat[m]> basically if your first time sync since boot to time.grapheneos.org fails
+19:34:26 <strcat[m]> it screws up the time, I think
+19:34:45 <strcat[m]> because the error reporting code that was added makes it return success instead of failure
+19:35:07 <strcat[m]> but then it'll fix it next time
+19:35:16 <strcat[m]> so, unless your network is broken
+19:35:18 <strcat[m]> it's temporary
+19:39:08 <MottelMottel> Hello!
+19:39:09 <MottelMottel> Many weeks ago I installed GrapheneOS on my unlocked Pixel3a.
+19:39:09 <MottelMottel> I followed all instructions on their site.
+19:39:10 <MottelMottel> Now I found all these Android things on my data-usage...
+19:39:10 <MottelMottel> Seamless Update Client
+19:39:11 <MottelMottel> Android OS
+19:39:11 <MottelMottel> Android OS>com.qualcomm.qcrilmsgtunnel
+19:39:12 <MottelMottel> Android OS>Input Devices
+19:39:12 <MottelMottel> Android OS>Fused Location
+19:39:13 <MottelMottel> Android OS>com.quicinc.cne.CNEService.CNEServiceApp
+19:39:13 <MottelMottel> Android OS>MmsService
+19:39:14 <MottelMottel> Android OS>com.android.wallpaperbackup
+19:39:14 <MottelMottel> Android OS>cell Broadcast Service
+19:39:15 <MottelMottel> Android OS>com.android.localtransport
+19:39:15 <MottelMottel> Android OS>Key Chain
+19:39:16 <MottelMottel> Android OS>com.android.ons
+19:39:16 <MottelMottel> Android OS>com.qti.qualcomm.datastatusnotification
+19:39:17 <MottelMottel> Android OS>com.qualcomm.qti.telephoneservice
+19:39:46 <strcat> MottelMottel: those are standard OS components, mostly tied to implementing mobile data / services
+19:40:18 <strcat> nothing to be concerned about there
+19:41:36 <strcat> and that's just a list of stuff that's considered an OS component
+19:41:58 <skrillz[m]> Firefox or chrome?
+19:41:58 <skrillz[m]> Tor or VPN?
+19:42:28 <strcat> skrillz[m]: it's not really on-topic for this channel unless it's specifically about GrapheneOS
+19:42:34 <wrt[m]> ff and tor
+19:42:51 <strcat> you can't give someone advice like that without having an understanding of their use case
+19:42:59 <strcat> this is not the place to blindly promote software you like
+19:43:35 <m2tu[m]> MottelMottel: You can try to remove them if u dont use them from adb
+19:43:44 <strcat> m2tu[m]: no
+19:44:10 <strcat> please don't advise that someone disables OS components
+19:44:15 <strcat> when they don't have an understanding of it
+19:44:15 <m2tu[m]> if he don't use siimcard
+19:44:19 <strcat> they should not be using adb
+19:44:20 <strcat> no
+19:44:32 <m2tu[m]> you right :)
+19:44:40 <strcat> they shouldn't have developer options enabled, it's not a good idea
+19:44:49 <strcat> messing around with adb disabling stuff without knowing what it is
+19:44:50 <TheJollyRoger> wrt[m]: skrillz[m] with respect to the use case of GrapheneOS, is to just use Vanadium, and to avoid Gecko-based browsers as they are not internally sandboxed. The usage guide is here: https://grapheneos.org/usage#web-browsing
+19:44:51 <strcat> not a good plan
+19:44:54 <skrillz[m]> For data use on graphene; vanadium is a given for chrome
+19:45:05 <TheJollyRoger> *the use case of GrapheneOS, the project's stance is to just use Vanadium
+19:45:33 <strcat> chrome isn't the same thing as chromium
+19:45:34 <TheJollyRoger> as for other use cases, productive discussion about other platforms is welcomed in #grapheneos-offtopic.
+19:45:36 <strcat> vanadium isn't chrome
+19:46:22 <skrillz[m]> How about for data? I found a pass through firewall with blacklists that doesn't touch dns, I can stack with a VPN or tor
+19:48:41 <strcat[m]> skrillz: not clear what you mean, and you're unlikely to be getting the value you expect from an additional firewall
+19:48:50 <strcat[m]> fine-grained firewall filtering isn't really something that works properly
+19:49:10 <strcat[m]> if an app can make DNS queries it can exfiltrate data to anywhere
+19:49:36 <TheJollyRoger> I always encourage homebrewing for the purposes of experimentation and testing. I don't however, encourage expecting privacy from something that is experimental and likely to break in strange ways. Schneier's axiom (put mildly) of "it's easy to not see the flaws in your own design" comes into play.
+19:49:48 <MottelMottel> and the google logo at the beginning, no concern either?
+19:50:01 <TheJollyRoger> MottelMottel: no concern either. It just lets you know who made the handset.
+19:50:01 <strcat[m]> MottelMottel: it's the brand of the phone, shown at boot
+19:50:14 <skrillz[m]> Just trying to block trackers on some apps. Otherwise I was thinking of a separate device for luckypatcher to remove trackers and then install the apk on graphene ; I can block at domain level dns
+19:50:19 <MottelMottel> TYVM!!!
+19:50:37 <strcat[m]> skrillz: not clear what you mean by 'tracker', apps are sandboxed, they have the data and access you trust them to have
+19:50:49 <strcat[m]> skrillz: if you don't trust an app with data, don't give it to them
+19:51:00 <strcat[m]> skrillz: filtering some of their requests is not going to stop them giving it to third parties in any way
+19:51:17 <strcat[m]> skrillz: https://twitter.com/GrapheneOS/status/1356400290640125952 and about trying to do fine-grained filtering
+19:51:36 <strcat[m]> skrillz: and recommend reading the documentation on our site too which covers these things
+19:52:12 <skrillz[m]> pDns +Ovpn and Netguard+Orbot DNS blocking without rerouting DNS
+19:52:41 <MottelMottel> Can you please recommed, secured/private calendar (for reminders and todos etc.) that work well in GrapheneOS? The calendar that comes with it, it only shows the dates, no option to add anything in it. TY!!
+19:53:00 <skrillz[m]> It can't perform the DNS queries if its blocked this way
+19:53:44 <skrillz[m]> And its masked in the vpn,/tor BC it uses their DNS and doesn't have webrtc leaks
+19:53:58 <strcat[m]> MottelMottel: Etar is decent
+19:54:16 <strcat[m]> skrillz: it can perform DNS queries, that's how the app works
+19:54:28 <strcat[m]> skrillz: I think you're misunderstanding how DNS works and what that post says
+19:54:39 <strcat[m]> skrillz: it's not talking about DNS leaks for a VPN
+19:54:58 <strcat[m]> skrillz: it's talking about apps being able to send data to any party they want via DNS queries, through the OS configured DNS server
+19:55:00 <MottelMottel> Thank you! is nextcloud recommended to use with GrapheneOS for a beginner?
+19:55:11 <strcat[m]> they do not have to make any direct connection to the servers they're exfiltrating the data to
+19:55:35 <skrillz[m]> Yes and I'm saying it can be blocked I can block requests to grapheme os on the backend
+19:55:41 <strcat[m]> MottelMottel: you can use it if you want, don't think there's any advice that can be given on that
+19:56:00 <TheJollyRoger> MottelMottel: It depends. Nextcloud quality of service, features, availability, and privacy varies by who's hosting it.
+19:56:21 <mynacol[m]> skrillz: You know Graphene has an integrated firewall more powerful than any app solution?
+19:56:23 <strcat[m]> skrillz: I think you're misunderstanding the point being made
+19:56:46 <MottelMottel> TheJollyRoger do you mean the server provider?
+19:56:56 <strcat[m]> the app asks the OS to resolve <data>.domain.tld
+19:57:07 <strcat[m]> it sends a DNS query to your configured DNS server for that
+19:57:26 <strcat[m]> which chains along to whatever DNS server is actually resolving the requests rather than forwarding
+19:57:32 <TheJollyRoger> MottelMottel: yes, the person (or group) that's providing your Nextcloud service.
+19:57:43 <strcat[m]> and then that contacts the authoritative DNS server chosen by domain.tld
+19:57:50 <strcat[m]> and queries <data>.domain.tld
+19:58:05 <strcat[m]> which means it can send and receive (via the response) arbitrary data from any party
+19:58:18 <strcat[m]> through normal DNS queries made via the normal DNS server for the network
+19:58:22 <strcat[m]> or that you've chosen to override it with
+19:58:40 <strcat[m]> and this applies to other things, not just DNS, but DNS is there for basic network functionality to work
+19:58:44 <strcat[m]> so it's a nice example
+19:59:01 <strcat[m]> skrillz: the app never connects to that server, your configured DNS server does
+19:59:07 <mynacol[m]> skrillz: From the Graphene website: Network permission toggle disallowing both direct and indirect network access, superior to a purely firewall-based implementation only disallowing direct access to the network without covering inter-process communication (enabled by default for compatibility)
+19:59:45 <strcat[m]> DNS allows sending / receiving data to arbitrary parties with no direct connections to them simply by querying records for their domains
+19:59:57 <strcat[m]> via your usual DNS server
+19:59:59 <mynacol[m]> And yes you can still use VPN/Tor/whatever if you want to
+19:59:59 <strcat[m]> that's how DNS works
+20:00:21 <TheJollyRoger> Huh. DNS Sidechannel.
+20:00:36 <strcat[m]> not really a side channel
+20:00:42 <TheJollyRoger> Oh.
+20:00:54 <strcat[m]> TheJollyRoger: https://twitter.com/GrapheneOS/status/1356400290640125952
+20:00:58 * skrillz[m] uploaded an image: Screenshot_20210207-150032.png (131KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/nyfabzQZDTJOAFWLcaTVcfbe/Screenshot_20210207-150032.png >
+20:01:53 <skrillz[m]> DNS filter w native graphene passthrough
+20:02:08 <TheJollyRoger> skrillz[m]: I don't think you're listening.
+20:02:28 <skrillz[m]> Am I wrong then ? I can block the queries
+20:02:36 <mynacol[m]> skrillz What is your goal? Filtering DNS requests but why? Being "anonymous"?
+20:02:52 <strcat[m]> skrillz: please read that thread and the documentation on the site
+20:02:57 <MottelMottel> TheJollyRoger TYVM!
+20:03:36 <strcat[m]> we have official advice on this stuff
+20:03:37 <skrillz[m]> It doesn't leave the device and I'm trying to block ads and tracker connections within apps . bromite has adblocking built in so that's fine but other apps dont
+20:03:38 <strcat[m]> skrillz: you're using a VPN + custom DNS filtering
+20:04:15 <skrillz[m]> Yes
+20:04:15 <strcat[m]> skrillz: that means you do not have anonymity with the VPN, but rather, you stand out from all other users of the VPN
+20:04:16 <strcat[m]> so you can be detected by every site, etc.
+20:04:16 <strcat[m]> as a unique person
+20:04:16 <strcat[m]> based on your unique setup
+20:04:17 <strcat[m]> skrillz: we cover this on our site
+20:04:43 <strcat[m]> we could more strongly recommend using the VPN provided DNS if it's not clear what the consequences are from not doing that
+20:04:56 <strcat[m]> but I think we explain it pretty well
+20:05:07 <skrillz[m]> Oh because I'm the only VPN user that's blocking ads I thought I'd only stand out if I used a different DNS than the vpn
+20:05:14 <strcat[m]> there's official advice on this so if you want advice there's good advice on the site and that twitter thread is relevant too
+20:05:36 <skrillz[m]> The DNS filter doesn't change the DNS servers though
+20:05:48 <strcat[m]> skrillz: because sites can enumerate your blocking rules, they can list 20 domains chosen to detect different filters / differentiate them and connect to those (or more)
+20:05:59 <mynacol[m]> skrillz: BTW your modus operandi is based on blocklists and "default allow". This is prone to failure. The following article explains this http://www.ranum.com/security/computer_security/editorials/dumb/
+20:06:02 <strcat[m]> skrillz:  sure but they can see what you block and don't block, and that's part of your fingerprint
+20:06:14 <skrillz[m]> Yeah gotcha
+20:06:42 <strcat[m]> if you want to blend in with other VPN users you should use their DNS servers and don't do additional filtering, etc. beyond what they offer
+20:06:49 <strcat[m]> there's a reason the Tor Browser has none of that
+20:07:03 <strcat[m]> although it does nothing to stop you screwing it up
+20:07:16 <strcat[m]> and they have a lot of foot guns that are present
+20:07:20 <strcat[m]> easy ways to screw it up
+20:08:06 <mynacol[m]> skril Youlz  You are better off using services and apps that meet your privacy needs.
+20:12:48 <MottelMottel> One last question from this beginner in Privacy/GrapheneOS: Any way to protect my privacy from mobile service providers without using internet based apps such as "Signal"? Avoiding servers and internet? —using actual SMS and calls (i tried "Silence" for SMS,  but it didn't  work on the  recipients side (non-GrapheneOS)) TY!
+20:13:22 <anupritaisno1[m]> mynacol: interesting article btw
+20:13:59 <strcat[m]> MottelMottel: don't use carrier-based calls and texts
+20:14:10 <strcat[m]> MottelMottel: the carriers have access to the metadata and data
+20:14:22 <strcat[m]> MottelMottel: not just your carrier, other carriers, other parties
+20:14:30 <TheJollyRoger> MottelMottel: You'll need to establish a clear threat model first.
+20:14:51 <strcat[m]> MottelMottel: not clear what you mean by 'avoiding servers and internet'
+20:15:17 <strcat[m]> MottelMottel: SMS and calls are implemented via servers, and on a modern connection, they are implemented via normal IP connections over data (cellular or even Wi-Fi if supported)
+20:15:34 <TheJollyRoger> MottelMottel: if you want to avoid servers and the Internet, you can turn on Airplane Mode and switch WiFi off... but this doesn't leave you with much you can do with your device.
+20:15:51 <strcat[m]> MottelMottel: modern implementation (LTE) of carrier-based texts and calls is over data using a variant of SIP
+20:16:03 <MottelMottel> strcat[m] are you saying, only when I actually make a call and use SMS, or just by having their service activated on my grapeheneOS device even when not texting not calling?
+20:16:03 <strcat[m]> either way, legacy or modern, it uses their servers
+20:16:36 <strcat[m]> I'm saying that in no way do you avoid using servers / internet access by only using carrier-based calls / texts
+20:17:01 <strcat[m]> I don't know what you're trying to accomplish but what you're saying is concerning
+20:17:08 <strcat[m]> avoid carrier-based calls and texts
+20:17:27 <skrillz[m]> Is sip over carrier data better?
+20:17:28 <strcat[m]> use Signal as an easy to use baseline where's it's very easy to convince others to adopt it
+20:17:39 <strcat[m]> skrillz: better than what?
+20:17:44 <strcat[m]> skrillz: not clear what you're asking
+20:17:54 <strcat[m]> skrillz: SIP is how SMS and calls are implemented in LTE
+20:18:00 <MottelMottel> TheJollyRoger I thought even on ariplane mode they can collect data, no? Won't the decive load data to them right after going back from Airplaine mode? and arent's mics still pottentially collecting and analyzing and comparing noise enviroment to dtermine locations, etc.?
+20:18:18 <strcat[m]> skrillz: the carriers have access to the data and metadata, it uses their servers, and the servers of other carriers, it's a federated network of carriers
+20:18:52 <strcat[m]> MottelMottel: that doesn't make sense - you're not reasoning about it in a logical way
+20:19:15 <strcat[m]> MottelMottel: you're talking about it as if the device is deeply compromised but yet you're also not treating it that way
+20:19:48 <MottelMottel> strcat[m] i have no problem using signal, but i find many of my contacts are still using whatssapp and not Signal, so no way to send secured messages when the 2 parties do not share same app?
+20:19:52 <strcat[m]> MottelMottel: if you have airplane mode enabled, the cellular radio transmit/receive is disabled, you aren't connected to a mobile network
+20:19:54 <skrillz[m]> Sorry I meant VoIP
+20:20:16 <strcat[m]> skrillz: VOIP is how carrier-based calls work for LTE and above
+20:20:43 <strcat[m]> skrillz: Voice over IP is not really a very specific thing
+20:20:45 <strcat[m]> and as I said
+20:20:51 <strcat[m]> carrier-based calls are not private
+20:20:57 <anupritaisno1[m]> @strcat:matrix.org: wifi calling too then?
+20:21:11 <strcat[m]> what about it?
+20:21:16 <strcat[m]> I think I've been really clear
+20:21:57 <strcat[m]> MottelMottel: if you want to communicate with them securely, get them to install Signal
+20:22:10 <strcat[m]> if they won't install Signal they must not want to talk to you very much, because that's a low bar
+20:22:13 <TheJollyRoger> MottelMottel: that's correct. Your contacts must be on Signal, in order for you to use Signal with them.
+20:22:24 <TheJollyRoger> Signal and WhatsApp do not interoperate.
+20:22:34 <MottelMottel> are carriers collecting data (like location) even when not making calls or sending sms?
+20:22:52 <strcat[m]> if you have cellular enabled, yeah
+20:23:12 <strcat[m]> you're actively connected to their network
+20:23:16 <strcat[m]> it knows where you are
+20:23:22 <strcat[m]> and presumably you're using data
+20:23:23 <TheJollyRoger> There is a legitimate need for that: they need to know which towers to transmit and recieve from.
+20:24:16 <MottelMottel> so unless i use wifi, if I need internet, I must let them collect my data, correct? Or am I missing somthing?
+20:24:27 <pikaman[m]> <strcat[m] "https://grapheneos.org/releases#"> Thanks for the hard work, appreciated :)
+20:24:32 <strcat[m]> MottelMottel: I mean the Wi-Fi network / ISP is going to collect data too
+20:24:43 <strcat[m]> MottelMottel: but Wi-Fi can be used anonymously on our supported devices
+20:24:51 <strcat[m]> if you AVOID doing things that uniquely identify you to networks
+20:25:07 <strcat[m]> which probably means using a common VPN
+20:25:11 <MottelMottel> right, but what about if i am using Orbot?
+20:25:34 <MottelMottel> in VPN mode and bridges, and i enable VPN on GrapheneOS
+20:25:58 <strcat[m]> considered a VPN for this context
+20:25:59 <TheJollyRoger> MottelMottel: you'll still need to adhere to basic principles of opsec even if you use the tools.
+20:26:21 <strcat[m]> MottelMottel: you just have to reason about things in a logical way
+20:26:27 <strcat[m]> decide what you want and think it through
+20:26:54 <strcat[m]> lots of information available on our site and the Twitter accounts of the project
+20:27:24 <strcat[m]> https://grapheneos.org/faq
+20:27:28 <strcat[m]> https://grapheneos.org/usage
+20:27:40 <strcat[m]> lots of information beyond those pages too
+20:27:59 <MottelMottel> got it, befire I leave you alone with my beginner questions, for today, would you recmmend sources of info for a beginner, so i can make more educated inquieres in the future? material made for beginners with no previous technical knowdlge? just a fan of technologie and new-fan of privacy
+20:28:12 <MottelMottel> great thank you! those good for beginners?
+20:28:23 <strcat[m]> a lot of it is
+20:28:39 <MottelMottel> thank you so much, SUPER appreciated!
+20:28:42 <TheJollyRoger> MottelMottel: a good place to follow is https://twitter.com/DanielMicay
+20:29:30 <MottelMottel> I stoped using Twitter :/  ... but if you guys using it and Micay is in there I imagine theres a secured/private way to use it?
+20:30:45 <hypokeimenon[m]> secured/private, not really
+20:30:46 <strcat[m]> it's public
+20:30:54 <strcat[m]> don't use twitter DMs to have private conversations on it
+20:30:54 <hypokeimenon[m]> but, you can use nitter
+20:30:57 <hypokeimenon[m]> https://github.com/zedeus/nitter
+20:30:58 <strcat[m]> use it as a public forum
+20:31:04 <strcat[m]> don't see the issue with that
+20:31:58 <strcat[m]> my usage of twitter isn't meant to be private: I publish stuff through it
+20:32:02 <strcat[m]> tweets, likes, etc. are published
+20:32:28 <strcat[m]> I don't treat DMs as private, just a way to get other people not to jump in
+20:32:53 <strcat[m]> assume they'll be leaked and will be public
+20:34:22 <strcat[m]> all this stuff is getting too off-topic
+20:34:34 <MottelMottel> so just having it installed, isnt that an issue? dont these apps, track and collect data by just being installed on your device? or that's incorrect (so sorry for my level of ignorance)
+20:34:43 <strcat[m]> apps are sandboxed
+20:34:47 <strcat[m]> you choose what data / access to give them
+20:35:06 <hypokeimenon[m]> which apps?
+20:35:08 <strcat[m]> so, of course, an app knows what data you enter into it and how you use it
+20:35:31 <MottelMottel> okay strcat[m] my appologies, will leave now :)  - will do my education on provacy
+20:35:35 <strcat[m]> and no one suggested using their app anyway
+20:35:36 <MottelMottel> much appreciated!
+20:35:39 <strcat[m]> there is mobile.twitter.com
+20:35:53 <strcat[m]> don't use an app when the website is good enough - or in this case, a lot less bad
+20:36:06 <hypokeimenon[m]> MottelMottel: I think the main point here is about practicing good digital hygiene and OPSEC. If you're using an application you don't want to, projects like Graphene OS give you tools to isolate it from stuff that matters more to you
+20:36:09 <MottelMottel> got it! thank you SO much!
+20:36:29 <skrillz[m]> Would downloading something like Snapchat or Facebook be safe in a work profile app like island ?
+20:36:36 <strcat[m]> definitely don't use twitter to have private conversations
+20:36:43 <hypokeimenon[m]> Assume anything you post or do on the platform will be mined, leaked or abused at some point for agendas outside of your control, and exercise due caution
+20:36:46 <strcat[m]> assume they'll leak all your DMs
+20:36:52 <strcat[m]> or that their employees will spy on them
+20:36:57 <skrillz[m]> And would it be able to see other apps or data in the island ?
+20:37:06 <MottelMottel> but for example, instagram, if one needs it for work, that only works as an app, any way around that?
+20:37:10 <hypokeimenon[m]> <strcat[m] "don't use an app when the websit"> yep, this ^
+20:38:00 <strcat[m]> just bear in mind that any site or app you use knows exactly what data you enter into it, how you use it (what you view, etc.)
+20:38:07 * skrillz[m] uploaded an image: Screenshot_20210207-153736.png (74KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/MfoBBQYLeNRrtfMdQRpFlGMT/Screenshot_20210207-153736.png >
+20:38:15 <strcat[m]> and they don't need any third party access from the client side to send that to every third party they want
+20:38:39 <hypokeimenon[m]> <MottelMottel "but for example, instagram, if o"> what data do you not want to be associated with your general/personal life while you use it?
+20:38:53 <hypokeimenon[m]> start from there, and then you can figure out ways to compartmentalise
+20:39:03 <strcat[m]> you can also put it in a user profile
+20:39:09 <strcat[m]> if it demands access to say, contacts, to work
+20:39:16 <strcat[m]> put it in a user profile without any contacts
+20:39:35 <hypokeimenon[m]> MottelMottel: #grapheneos-offtopic:matrix.org
+20:39:37 <strcat[m]> if it doesn't force you to grant it access to stuff then just don't give it access
+20:39:43 <strcat[m]> if it does, use a user profile
+20:40:08 <MottelMottel> THANK YOU ALL SO MUCH!
+20:40:16 <strcat[m]> don't give an app data or access to stuff you don't want it to have
+20:40:19 <TheJollyRoger> Good luck, shipmate.
+20:40:26 <strcat[m]> and it forces that, put it in a user profile where you're fine with giving it that access
+20:40:26 <Undispelled[m]> <skrillz[m] "And would it be able to see othe"> As far as I'm aware, work profiles are limited to exist as two separate "islands". You can choose to install an app in one profile and it will only have access to data in that island
+20:40:38 <strcat[m]> if it demands access to photos, put it in a user profile without any of your photos, etc.
+20:40:38 <anupritaisno1[m]> @strcat:matrix.org: pm btw it's kinda urgent
+20:41:23 <Undispelled[m]> skrillz so if I install Facebook and Snapchat in the island, its like having a separate phone with those two apps, so yes, they can see each other
+20:42:01 <strcat[m]> we recommend user profiles
+20:42:07 <strcat[m]> which are controlled by the user, not a third party app\
+20:42:11 <strcat[m]>  * which are controlled by the user, not a third party app
+20:42:15 <strcat[m]> and each has their own encryption key
+20:42:35 <strcat[m]> work profiles are designed for remote management of a profile via a device manager, the device manager owns it, not you
+20:42:46 <strcat[m]> and you can only have 1 per user profile
+20:43:11 <strcat[m]> we aren't in control of what a device manager chooses to do with a work profile
+20:43:17 <strcat[m]> it could make it so that it's not properly isolated
+20:43:57 <TheJollyRoger> strcat[m], sometime would you like me to start a proposal or open an issue for exposing more of the profile functionality to the user, and integrating it into the settings? I typed something up like that but sort of left it and set it aside.
+20:44:38 <strcat[m]> TheJollyRoger: we did it in the past but like many things lack of help maintaining it means it goes away
+20:44:41 <strcat[m]> we need a LOT more help with development
+20:45:19 <TheJollyRoger> strcat[m]: Aye, captain.
+20:45:32 <TheJollyRoger> I will sit on it for now!
+20:46:04 <giffgaff[m]> When I type a website address into the search bar on Tor and press enter. The search begins with insecure connection
+20:48:46 <giffgaff[m]> Also when I clear the logs on Proton Mail it should ask me to confirm password but it clears the logs without conforming
+20:49:41 * giffgaff[m] uploaded a video: screen-20210207-203754.mp4 (52847KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/busnCHjMsruSNqQCnniAOOlu/screen-20210207-203754.mp4 >
+20:50:13 <hypokeimenon[m]> giffgaff: the mobile network, run by you.
+20:50:30 <strcat[m]> giffgaff: doesn't sound like stuff that's related to GrapheneOS
+21:02:45 <giffgaff[m]> Airplane mode is turned on
+21:02:50 <giffgaff[m]> I'm using WiFi
+21:06:02 <giffgaff[m]> I'm running Grapheme OS. The time and date on my device changed and I was unable  connect to the internet a few hours ago
+21:07:19 <strcat[m]> giffgaff: it's a known issue, a new release has been announced resolving it
+21:07:29 <strcat[m]> giffgaff: you can manually fix the time for now
+21:08:34 <strcat[m]> having the wrong time will break HTTPS, etc. due to certificate expiry so that's expected
+21:08:35 <strcat[m]> set the correct time and it'll work fine
+21:09:13 <strcat[m]> the issue wasn't detected in internal or Beta testing because it only impacts people with a broken network
+21:09:14 <strcat[m]> has been fixed, new release will be available soon
+21:09:15 <strcat[m]> https://grapheneos.org/releases#2021.02.07.17
+21:10:25 <strcat[m]> we need more Beta testers to help find and report issues like this so that the Beta channel serves the intended purpose of catching these issues before they make it to Stable
+21:10:37 <strcat[m]> using the Beta channel does no good if you don't report issues though
+21:10:58 <giffgaff[m]> I'm using a stable channel
+21:14:05 <strcat[m]> I'm explaining it for other people
+21:15:07 <giffgaff[m]> Apologies I thought you where talking to me.
+21:25:13 <jakewise[m]> <strcat[m] "we need a LOT more help with dev"> Out of curiosity and interest, what are the core skills needed for Development? What languages, background, etc
+21:25:48 * giffgaff[m] uploaded an image: Screenshot_20210207-212425.png (70KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/JbXsdJKHnQZrxvnJgdPVpcmE/Screenshot_20210207-212425.png >
+21:25:48 * giffgaff[m] uploaded an image: Screenshot_20210207-212358.png (64KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/sPOsBXELKIujnDoWfFkcywtG/Screenshot_20210207-212358.png >
+21:25:49 * giffgaff[m] uploaded an image: Screenshot_20210207-212342.png (31KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/omcEJAfIWCRvDyrGuDCjFhTE/Screenshot_20210207-212342.png >
+21:25:59 <giffgaff[m]> Orbot in 51 Y
+21:28:15 * giffgaff[m] uploaded an image: Screenshot_20210207-212736.png (89KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/rWRBwrfPIVWDVaoAyjdIokuo/Screenshot_20210207-212736.png >
+21:29:07 <giffgaff[m]> 21 December 1969 - 18 Jan 1970. What happened?
+21:30:20 <SkyFox[kdeorg][m> <giffgaff[m] "21 December 1969 - 18 Jan 1970. "> <del>You've stumbled upon a temporal anomaly</del>
+21:31:14 <TheJollyRoger> You need to find the time crystals to reactivate and escape through the time portal!
+21:32:37 <mr_hebi_san[m]> <jakewise[m] "Out of curiosity and interest, w"> I'm curious too.  However, I would be a bit surprised if it involved much in the way of my own slice of Android developer knowledge.  I rarely go much deeper than simply writing code for apks in Java for applications, or using Unity for games.
+21:33:23 <mr_hebi_san[m]> > <@jakewise:matrix.org> Out of curiosity and interest, what are the core skills needed for Development? What languages, background, etc
+21:33:23 <mr_hebi_san[m]>  * I'm curious too.  However, I would be a bit surprised if it involved much in the way of my own slice of Android developer knowledge.  I rarely go much deeper than simply writing code for apks in Java, or using Unity for games.
+21:33:53 <skrillz[m]> Its the date the time stamping began for certs ^
+21:34:42 <mr_hebi_san[m]>  * I'm curious too.  However, I would be a bit surprised if it involved much in the way of my own slice of Android developer knowledge.  I rarely go much deeper than simply writing code for apks in Java, or using Unity for games.  Or writing bridges between the two.
+21:35:42 <ted_lavender[m]> Can any users from the U.S.A. reccomend a particular carrier to use and why?
+21:36:45 <nscnt[m]> Being a lil masochistic is the first step to become a developer
+21:38:00 <strcat[m]> giffgaff: I explained it to you alreadty
+21:38:05 <strcat[m]>  * giffgaff: I explained it to you already
+21:38:09 <strcat[m]> you don't need to post 20 screenshots
+21:38:30 <anupritaisno1[m]> We have rolled out a fix for this issue
+21:38:35 <anupritaisno1[m]> And it will be available soon
+21:38:41 <anupritaisno1[m]> * We are rolling out a fix for this issue
+21:38:43 <strcat[m]> giffgaff: please read my response above
+21:38:48 <strcat[m]> anupritaisno1: I already replied to them in detail
+21:38:55 <strcat[m]> anupritaisno1: it's unhelpful to repeat it
+21:38:56 <anupritaisno1[m]> Sorry a little tired
+21:39:00 <strcat[m]> they need to read my response
+21:39:18 <strcat[m]> anupritaisno1: okay, don't try to provide help in the channel right now then, focus on the work you're doing
+21:39:23 <anupritaisno1[m]> giffgaff I understand the inconvenience it has caused you. Please wait for the release
+21:39:23 <strcat[m]> you're trying to do too many things at once
+21:39:26 <giffgaff[m]> Why did you remove all my photo uploads?
+21:39:42 <anupritaisno1[m]> You can get the release faster if you wish to by opening the updater app and checking for updates
+21:39:47 <strcat[m]> anupritaisno1: I already gave a reply, it's not helpful
+21:40:33 <giffgaff[m]> Calm down I was only asking the  question
+21:40:46 <strcat[m]> giffgaff: did you read my response?
+21:41:00 <SkyFox[kdeorg][m> Imagine being a web server and seeing a TLS certificate from 1970 👀
+21:41:04 <anupritaisno1[m]> giffgaff: you uploaded too many photos and you need to understand that might be annoying to the other people here. Please don't take that as something else.
+21:41:04 <anupritaisno1[m]> Your issue has been resolved and we are rolling out a fix rn
+21:41:05 <strcat[m]> giffgaff: you need to set the date manually for now, then you'll get an update with a fix for the issue and you can set it to automatic again
+21:41:08 <strcat[m]> SkyFox [kde.org]: that's not the issue
+21:41:49 <strcat[m]> giffgaff: you posted several pages of screenshots after I'd given you a full explanation above, and you're asking about it as if I didn't reply
+21:41:58 <strcat[m]> so I removed it because we don't need 3 pages of screenshots about it
+21:42:06 <strcat[m]> the issue is known, you got an explanation
+21:42:27 <giffgaff[m]> I seen your reply. I was only asking what happened with the update
+21:42:30 <ted_lavender[m]> My location I am pretty much limited to T-Mobile or Verizon, can anyone reccomend one over the other?
+21:42:36 <strcat[m]> giffgaff: I explained that
+21:43:01 <strcat[m]> giffgaff: it's a known issue, a new release has been announced resolving it
+21:43:31 <anupritaisno1[m]> giffgaff: ok I'll do one thing. I started a PM, I'll keep it open until your issue is not fixed. That sound good with you?
+21:44:05 <strcat[m]> giffgaff:  https://app.element.io/#/room/#grapheneos:matrix.org/$1612732038129796hODYi:matrix.org
+21:44:25 <strcat[m]> did you read my response? I explained what happened and how to work around it
+21:44:32 <strcat[m]> and that there's a new release coming with a permanent fix
+21:44:43 <strcat[m]> I don't know why you posted all those images and asked again
+21:44:52 <anupritaisno1[m]> @strcat:matrix.org: pm
+21:44:57 <strcat[m]> I can paste my responseif that would be helpful
+21:46:02 <strcat[m]>  * I can paste my response if that would be helpful
+21:46:12 * strcat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/tYCNWPBPhjsDrYYmHVfHDZzG/message.txt >
+21:46:55 <strcat[m]> giffgaff: set the date/time correctly by hand for now
+21:47:12 <strcat[m]> the new release which has been announced has a fix for the error handling issue
+21:47:32 <giffgaff[m]> Its all good at my end. I done I reset and disabled the seamless client update
+21:47:46 <strcat[m]> you shouldn't disable updates
+21:47:55 <strcat[m]> the new update resolves the issue
+21:48:10 <strcat[m]> don't know what you mean by reset, but that won't have helped you at all
+21:48:49 <strcat[m]> the solution was setting your date/time correctly
+21:49:14 <strcat[m]> then getting the new update, and enabling network time again
+21:49:15 <strcat[m]> I'm not sure why you ignored my answer, posted all that stuff, and reset...
+21:49:16 <strcat[m]> and disabled updates...
+21:49:36 <m2tu[m]> What are teh best dekstop setup for building  guys!
+21:50:05 <m2tu[m]> i plan to buy a 12core cpu will it be enough ?
+21:50:20 <strcat[m]> m2tu: sure, more cores is always better, but that's plenty
+21:50:29 * giffgaff[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/gysIuhRJyuQEicKzzkiBtGbh/message.txt >
+21:50:37 <strcat[m]> giffgaff: nah, that didn't solve anything
+21:50:41 <strcat[m]> giffgaff: and was totally unnecessary
+21:50:53 <strcat[m]> the solution was going into Settings and setting the time
+21:51:09 <m2tu[m]> ok.. will go for it
+21:51:23 <m2tu[m]> what is normal building time generally for noraml good dekstop?
+21:51:24 <strcat[m]> giffgaff: you didn't resolve anything, and by disabling updates, you're not going to get the fix for the issue you ran into 🤦
+21:51:36 <m2tu[m]> right now fullbuild is about 5 houer and edit 10 minuts
+21:51:53 <strcat[m]> m2tu: you aren't usually doing clean builds for development
+21:51:59 <strcat[m]> you're usually doing incremental builds
+21:52:36 <m2tu[m]> m target-files-package
+21:52:42 <m2tu[m]> means incremental ?
+21:52:47 <strcat[m]> no
+21:52:54 <strcat[m]> building when you already built, without removing `out/`
+21:52:57 <strcat[m]> is an incremental build
+21:53:01 <m2tu[m]> ahaa.
+21:53:05 <strcat[m]> the build system figures out what it has to rebuild
+21:53:07 <strcat[m]> so it takes a minute
+21:53:09 <strcat[m]> instead of an hour
+21:53:20 <m2tu[m]> yeah thats what i do.. now takes 10-30 min to rebuild depend what i change
+21:53:22 <strcat[m]> for a production release, you should ALWAYS do a clean build
+21:53:41 <strcat[m]> m2tu: look at our build guide
+21:53:46 <strcat[m]> it has 2 paths: production release and development
+21:53:55 <strcat[m]> for production release you use target-files-package and then sign the release
+21:54:02 <strcat[m]> for development, you really want a dedicated development device
+21:54:05 <m2tu[m]> yeah i followed thee guide ... it was 1 misstake there bt i got around it
+21:54:06 <strcat[m]> so you can avoid doing that
+21:54:18 <strcat[m]> and just leave it unlocked + use non-signed builds on it
+21:54:31 <strcat[m]> because then you can simply use `m` and flash the images
+21:54:42 <strcat[m]> you skip assembling the target files package and the lengthy signing process
+21:54:49 <m2tu[m]> ahaa.
+21:55:04 <m2tu[m]> wopw so i i jsut do m .. i will nto lose my old release build ?
+21:55:07 <strcat[m]> also for some things you can build for the emulator (look at the guide's coverage of those targets, etc.)
+21:55:27 <strcat[m]> m2tu: if you don't remove `out/` you're reusing your existing build
+21:55:38 <strcat[m]> m2tu: if you run `m` alone it just won't remake the target files package
+21:55:49 <strcat[m]> the target files package is what the release.sh script uses as input
+21:55:53 <strcat[m]> you only need it for signed releases
+21:57:15 <m2tu[m]> yeaa i see ... i was afrid losing the old build so did not tryed yet
+21:57:30 <m2tu[m]> but till do it from now, seems it will same lots of time
+21:57:30 <strcat[m]> giffgaff: the 2021.02.06.05 release had a bug in the error handling code for time updates, which is resolved in 2021.02.07.17
+21:57:40 <m2tu[m]> thanks so much for advises
+21:57:45 <strcat[m]> giffgaff: the solution if you run into the edge case is manually setting the date/time properly and waiting for the 2021.02.07.17 release
+21:57:57 <strcat[m]> giffgaff: after being on the 2021.02.07.17 release, the problem should be gone, and you can turn network time back on
+21:58:35 <strcat[m]> giffgaff: that's what I explained to you, so I don't know why you wiped your data that way instead (quite odd way to reset too)
+21:59:03 <strcat[m]> giffgaff: you did not resolve the issue, you may run into it again, and by disabling updates you have disabled receiving the upcoming fix...
+21:59:52 <strcat[m]> giffgaff: I don't know how to make this any clearer: enable updates and if the unlikely scenario occurs that you run into the edge case again, don't reset your device, that doesn't fix it, just set the date properly
+22:00:12 <strcat[m]> the upcoming update resolves the issue
+22:00:31 <giffgaff[m]> I wiped the data over 2 hours ago.
+22:00:35 <strcat[m]> the issue is not triggered by updating, rather, updating is going to fix it and prevent it from happening again
+22:02:19 <alex-resist> strcat I see you're busy with other things, but would it be possible to announce (somewhere) when beta releases are available for testing? It might be a good idea to be able to trigger the update manually (before it happens automatically) so issues with the update process could be detected
+22:02:22 <giffgaff[m]> That's for the info. I understand the issue now
+22:03:11 <strcat[m]> alex-resist: I did that with the past update
+22:03:17 <strcat[m]> alex-resist: and left it for a day
+22:03:26 <alex-resist> strcat you did it here, which I appreciate, but I might miss the announcement
+22:03:46 <strcat[m]> atm my focus is on getting out the next release, which hopefully resolves the issue properly
+22:03:54 <peculiarly_small> My phone has the 2021.02.06.05 release installed, but I haven't restarted my phone and fully installed it yet - will the 2021.02.07.17 release download / install over the current update it has installed? (sorry if the grammar is weird 😣)
+22:03:58 <alex-resist> The current situation is that I do now have a Pixel 3a on beta, and I'm just waiting for the update to become available
+22:04:03 <strcat[m]> peculiarly_small-hamster: no
+22:04:05 <SkyFox[kdeorg][m> alex-resist: The updates are also posted on Twitter
+22:04:16 <strcat[m]> peculiarly_small-hamster: you have to boot into that first
+22:04:25 <alex-resist> Pretty sure the beta availability is not announced on Twitter
+22:04:28 <peculiarly_small> Okay, thank you!
+22:04:37 <strcat[m]> in theory the Updater could know how to cancel an update and install another but it doesn't
+22:04:45 <strcat[m]> one reason why is that if someone has a ridiculously slow connection
+22:04:54 <strcat[m]> they may take ages to finish downloading one...
+22:04:59 <strcat[m]> then another is released and it's cancelled
+22:05:16 <strcat[m]> and I think it'd confuse people
+22:05:32 <strcat[m]> for it to say the update is done, then cancel it, so if they reboot it's the same version as before the update
+22:05:33 <giffgaff[m]> * Thanks for the info. I understand the issue now
+22:05:52 <strcat[m]> maybe worth implementing but I think it's bad UX basically
+22:08:07 <strcat[m]> alex-resist: it's not really great if we get everyone to dl it all at once
+22:08:17 <strcat[m]> for beta it's less important
+22:08:37 <strcat[m]> so we could start explicitly asking for beta testing each release once it's pushed out to beta
+22:08:58 <strcat[m]> but I'm not going to announce exactly when it's pushed to stable on twitter because it's good to have the downloads spread out over 4 hours
+22:08:59 <alex-resist> strcat The situation is, I now have a separate phone on beta, and I might not notice the availability of an update because I won't be using it all the time
+22:09:10 <alex-resist> strcat not announcing stable, but announcing beta
+22:09:18 <strcat[m]> I know
+22:09:54 <strcat[m]> I'm pretty stressed out atm from the latest round of attacks by Copperhead against us including threatening more of our contributors
+22:10:08 <strcat[m]> a lot of that has been going on over the past few days
+22:10:22 <alex-resist> strcat Yeah i understand, sorry to be bothering you with these petty issues. Those are just small ideas that might be worth implementing in the long run
+22:10:41 <strcat[m]> we really need more help with Beta testing
+22:11:24 <strcat[m]> meaning: a lot more people using the Beta channel that are going to be quickly reporting issues that are introduced in the new update to the issue tracker (not mentioning it here, reporting to the tracker, so we see it and can treat it as an issue)
+22:11:41 <strcat[m]> so for example, when this new release it out
+22:11:48 <strcat[m]> people who ran into that edge case are needed in particular
+22:11:52 <strcat[m]> to verify it's fixed
+22:12:09 <alex-resist> Ok, so a good next step for me would be to create an account so I could post issues on the tracker?
+22:12:22 <alex-resist> I could absolutely do that
+22:12:29 <strcat[m]> yes
+22:12:49 <alex-resist> strcat ok good to know, I was always worried that this might flood you with irrelevant issues
+22:13:06 <r0tt0r[m]> got the update and checked changelog, saw update to network time
+22:13:08 <strcat[m]> I'll just close them if they're not relevant / wanted
+22:13:20 <strcat[m]> easier than dealing with this chat
+22:13:33 <strcat[m]> r0tt0r: there's a new pending release coming soon
+22:13:51 <alex-resist> strcat Ok good to know
+22:14:31 <alex-resist> I'll try to keep a device for beta testing. I cannot run my main phone on beta because it's really important, I have Conversations, Signal, Wire etc. on that device for business purposes
+22:15:50 <r0tt0r[m]> <strcat[m] "r0tt0r: there's a new pending re"> ok good to know indeed as the network time didnt work anymore
+22:16:22 <strcat[m]> r0tt0r: it's more likely that it wasn't working for you already
+22:16:27 <strcat[m]> r0tt0r: the issue is a broken error handling path
+22:16:40 <strcat[m]> if it was working, you wouldn't have seen an issue with it
+22:16:55 <strcat[m]> r0tt0r: unless there is a bigger issue with it but most people are not running into this problem
+22:17:03 <strcat[m]> r0tt0r: indicates it wasn't working for you
+22:17:08 <strcat[m]> or your connection is flaky
+22:17:20 <r0tt0r[m]> <strcat[m] "r0tt0r: it's more likely that it"> hmm, it was working fine before though i have a ntp server in lan
+22:17:39 <strcat[m]> r0tt0r: it doesn't use that
+22:17:52 <strcat[m]> r0tt0r: we already had HTTPS-based network updates prior to the recent update
+22:17:55 <strcat[m]> think you're confused
+22:18:08 <strcat[m]> we don't use ntp, we didn't use ntp prior to the recent update either
+22:18:16 <r0tt0r[m]> ye.i guess youre right
+22:18:40 <strcat[m]> we changed how certificate validation is done and a more detailed error reporting path that was added wasn't done correctly
+22:18:51 <strcat[m]> which results in it trying to use the time when it hasn't gotten one
+22:18:59 <strcat[m]> that's the issue that we fixed for the next release
+22:19:11 <strcat[m]> if you weren't hitting an error you wouldn't have had an issue
+22:20:25 <pinguin74> after installin built 2021.02.06.05 i am welcomed as user "2", is this related to the slot a/b schema?
+22:21:38 <strcat[m]> pinguin74: don't quite know what you mean
+22:21:54 <strcat[m]> A/B slots have nothing to do with something like that
+22:21:59 <r0tt0r[m]> <strcat[m] "if you weren't hitting an error "> thx for clarifying on this. will check after next update if the time fetch in network will be fixed. appreciated much
+22:22:12 <strcat[m]> r0tt0r: which device are you on
+22:22:18 <strcat[m]> r0tt0r: you could help by testing the release early
+22:22:45 <r0tt0r[m]> im on beta chan, is there alpha?
+22:23:04 <pinguin74> settings-->system--> "multi user" setings (dontknow the english term with english UI) there I am "logged in as 2"
+22:23:21 <strcat[m]> pinguin74: I mean, you're able to rename users
+22:23:29 <strcat[m]> the default user is called the Owner user
+22:23:35 <strcat[m]> maybe the locale you're using has a broken string for it
+22:23:56 <strcat[m]> try temporarily setting it to english
+22:23:59 <strcat[m]> and see what it says
+22:24:04 <strcat[m]> if it still says 2 you must have renamed it to 2
+22:24:06 <pinguin74> i know, i just saw the user name changed after last update. ok, just a minor things. thanx
+22:24:17 <r0tt0r[m]> <strcat[m] "r0tt0r: you could help by testin"> if brick is unlikely im directly up for it, else i need to prepare backup
+22:24:30 <strcat[m]> don't need a backup
+22:24:33 <strcat[m]> it just hopefully fixes time
+22:24:42 <strcat[m]> may not, in which case, I'll roll back the prior change
+22:24:45 <strcat[m]> and start the release over again
+22:24:53 <strcat[m]> so I need to know early because that's a major deviation in what I'm working on
+22:24:54 <r0tt0r[m]> ok
+22:25:00 <strcat[m]> I don't want to do 12 hours of work then have to throw it away
+22:25:21 <strcat[m]> r0tt0r: which device?
+22:25:38 <noobna[m]> <hobo0000[m] "Thats weird..🤔🤔🤔"> Proton mail is working fine for me
+22:25:44 <strcat[m]> atm I have coral and sunfish built, building flame
+22:25:52 <r0tt0r[m]> <strcat[m] "r0tt0r: which device?"> 4a
+22:26:04 <r0tt0r[m]> sunfish
+22:27:38 <r0tt0r[m]> ill just reboot with net time enable
+22:28:53 <strcat[m]> r0tt0r: https://releases.grapheneos.org/sunfish-ota_update-2021.02.07.17.zip
+22:28:57 <strcat[m]> r0tt0r: need to sideload I guess
+22:29:15 <strcat[m]> really appreciate testing it
+22:29:36 <strcat[m]> r0tt0r: I think the fix should kick in as soon as you reboot
+22:29:44 <strcat[m]> r0tt0r: you should leave network time off, before rebooting, I think
+22:29:47 <strcat[m]> r0tt0r: set the correct time
+22:30:03 <strcat[m]> r0tt0r: install the update, then enable network time after booting it up
+22:30:11 <strcat[m]> r0tt0r: it won't tell me anything if you don't do it that specific way
+22:30:30 <strcat[m]> because if you have a broken network connection it may fail after reboot even with the fix
+22:30:40 <strcat[m]> and that is what would have caused it originally
+22:35:39 <r0tt0r[m]> yep ok, have the bug, time is wrong with netw time on. have set to manual now.will take some time for dl and sideload.
+22:39:41 <r0tt0r[m]> short question as i never flashed the ota: just flash over or boot unlock etc needed?
+22:40:29 <noobna[m]> <MottelMottel "Can you please recommed, secured"> There's proton calendar was just released today for plus users
+22:48:23 <strcat[m]> r0tt0r: use adb sideload
+22:48:27 <strcat[m]> r0tt0r: you aren't flashing anything
+22:48:49 <strcat[m]> r0tt0r: https://grapheneos.org/usage#updates-sideloading
+22:48:56 <strcat[m]> r0tt0r: you don't need USB debugging enabled in the OS
+22:49:21 <strcat[m]> r0tt0r: it would be good if you could tell me info about your network setup like if you use a VPN, Private DNS, etc. to try to figure out what caused this issue too
+22:49:32 <strcat[m]> could do it in private message
+22:49:34 <strcat[m]> rather than here
+22:53:30 <skrillz[m]> So I set added a user profile instead of work but I can't add any apps to it, only owner is an admin
+22:53:58 <strcat> skrillz[m]: that's not how it works
+22:54:14 <strcat> skrillz[m]: you can install apps in a normal secondary user
+22:55:00 <strcat> skrillz[m]: I think you're misinterpreting an error you're getting from trying to install an outdated version of an app when you already have a newer one installed in the existing profile
+22:55:03 <strcat> you can't do that
+22:55:19 <strcat> so, for example, F-Droid posts an outdated version of F-Droid as the main download on their site
+22:55:39 <strcat> if you have a newer F-Droid installed you can't use that to install it in another profile, you need to download the up-to-date version
+22:55:56 <strcat> if you provide more information, I can give a better answer, rather than guessing what you're doing
+22:57:24 <skrillz[m]> Ah it was that from fdroid
+22:57:28 <skrillz[m]> Thanks!
+22:58:05 <strcat> skrillz[m]: yeah it is a gotcha with F-Droid because they don't update their download link
+22:58:45 <strcat> has been that way for probably all 7 years I've worked on the project?
+23:01:14 <r0tt0r[m]> <r0tt0r[m] "short question as i never flashe"> found the article on your site. went through with the update
+23:01:16 <SkyFox[kdeorg][m> Wait... I thought it was more recent...
+23:04:05 <r0tt0r[m]> <strcat[m] "r0tt0r: it would be good if you "> it works now, that was a quick time for fix
+23:04:32 <strcat[m]> r0tt0r: thanks for testing it
+23:06:08 <strcat> r0tt0r[m]: can you also test that the seedvault ui opens?
+23:06:13 <strcat> r0tt0r[m]: don't need to test that it works
+23:06:25 <r0tt0r[m]> sure one sec
+23:15:15 <r0tt0r[m]> <strcat "r0tt0r: can you also test that t"> yes it works
+23:17:20 <r0tt0r[m]> one improve: please include a search on your website would be quiet helpful as there is a lot of informations
+23:19:31 <wrt[m]> Just installed - great work, thanks so much 🙏
+23:20:14 <rny[m]> <r0tt0r[m] "one improve: please include a se"> whats wrong with `ctlr+f`?
+23:20:48 <rny[m]> search engines also index the website, if you must just punch in quoted queries into google or something.
+23:21:34 <r0tt0r[m]> <rny[m] "search engines also index the we"> oh ok if its indexed sure thats an option, ctrl f only works for current opened content
+23:23:21 <rny[m]> so query: "connectivity check" "graphene os" gives very good results
+23:23:30 <rny[m]> even gives some old IRC logs URL links LOL
+23:23:40 <rny[m]> this is with Google Search Engine
+23:24:11 <strcat[m]> r0tt0r: well you can do
+23:24:15 <strcat[m]> site:grapheneos.org search term
+23:24:16 <strcat[m]> in google
+23:24:23 <strcat[m]> and other search engines have similar
+23:24:39 <strcat[m]> we can't easily include search because that's a service
+23:25:00 <strcat[m]> also you'd want it to search text, not html code
+23:26:16 <r0tt0r[m]> ye indeed working though i somehow mostly use the site directly and circumvent 3rd parties
+23:26:38 <r0tt0r[m]> but indeed ok to use searchengine
+23:33:09 <strcat[m]> Pixel 4a Beta release is now available
+23:33:18 <strcat[m]> should fix the time sync edge case for the few people running into that
+23:33:22 <strcat[m]> testing appreciated.
+23:33:43 <strcat[m]> not going to leave this stuff in Beta for long since there's already an issue to resolve
+23:44:41 <strcat[m]> please test the Pixel 4a Beta, other devices coming soon
+23:51:56 <TheJollyRoger> Setting my 4 for Beta, Captain.
+23:53:51 <zelzek[m]> ill jump on a beta as well on my 4
+23:55:05 <zelzek[m]> i have a mint 3axl that someone gave me, but unfortunately carrier locked to t-mobile as i'm assuming they didnt pay the lease so can't do much with it
+23:56:42 <strcat[m]> zelzek: if you flash GrapheneOS on it shouldn't matter if it's carrier locked
+23:56:47 <strcat[m]> take out the SIM before flashing
+23:57:21 <zelzek[m]> @strcat:matrix.org: i pulled the sim, but when trying to hit the about 5x it won't let me unlock it.  unless flashboot will do it?
+23:57:55 <strcat[m]> zelzek: try putting in another SIM and doing a factory reset
+23:58:14 <strcat[m]> zelzek: also unregister it from Google account before reset
+23:58:35 <zelzek[m]> it's not registered at all, i ensured of that. i have an h20/att sim lying around, standby
+23:58:45 <strcat[m]> yeah so try putting in that other SIM
+23:58:47 <strcat[m]> and doing factory reset
+23:58:49 <strcat[m]> see what happens

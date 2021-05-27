@@ -1,0 +1,401 @@
+00:10:46 <louipc> thoughtmonster: archive does not contain 'dt.img'archive does not contain 'recovery.img'
+00:11:02 <louipc> those are the messages i would try to investigate
+00:15:33 <anupritaisno1[m]> louipc: they don't matter
+00:15:53 <louipc> oh weird
+03:58:13 <enxio27> Is there a way to read message traffic prior to joining?
+03:59:26 <TheJollyRoger> Hello enxio27, we have a logbot. The link is in the channel topic, at https://freenode.logbot.info/grapheneos <- that'll catch you up.
+03:59:42 <enxio27> Thanks!
+04:00:05 <TheJollyRoger> This channel's publicly logged and history goes back a long way.
+05:44:53 <yesman> I got Graphene OS installed and now I'm trying to install F-Droid. I downloaded and verified the .apk files on my linux system  and now I would like to transfer the file to my phone. How can I accomplish this?
+05:46:56 <deappledapple> Flash drives with otg, or use the usb cables
+05:47:25 <deappledapple> Then there'll be something on notifications to change from no data transfer to MTP (?)
+05:48:53 <yesman> I have the phone connected via usb currently. I didn't receive any notifications when I connected the phone
+05:51:14 <louipc> adb install
+05:54:08 <deappledapple> <louipc "adb install"> Don't really need adb
+05:54:26 <deappledapple> Just transfer the files to the phone, and install it on the files app
+05:55:03 <deappledapple> That trusts less on desktop OS which is less secure than GrapheneOS
+05:56:31 <take_a_deep_brea> yeah.
+05:56:58 <take_a_deep_brea> dontknow, feel more queasy when i use adb with graphene
+06:40:36 * stencil[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/NjcqupYVKIBAQwHiqnKJhSdT/message.txt >
+07:28:26 <strcat[m]> added a sentence to the encryption section of the FAQ clarifying that invalid input (above / below supported length) doesn't trigger an attempt at authentication and key derivation
+07:28:29 <strcat[m]> just gets rejected by the UI
+07:28:41 <strcat[m]> due to the unnecessary panic over that earlier
+08:25:10 <take_a_deep_brea> whats the max supported length ?
+08:55:38 <deappledapple> <take_a_deep_brea "whats the max supported length ?"> 64
+08:58:18 <deappledapple> https://github.com/GrapheneOS/platform_frameworks_base/commit/37d5441ec8281ec303bc01f2af230c860693f021
+09:00:24 <take_a_deep_brea> thanks
+09:09:12 <Thatcher[m]> How do i disable auto-updater in Graphene?
+09:09:37 <deappledapple> <Thatcher[m] "How do i disable auto-updater in"> Disable the Seamless Update App
+09:10:13 <deappledapple> <Thatcher[m] "How do i disable auto-updater in"> https://grapheneos.org/usage#updates-disabling
+09:11:07 <mishmasher[m]> Hi I was wondering if you lock your phone is it encrypted? Or do you really have to power it off?
+09:12:56 <deappledapple> <mishmasher[m] "Hi I was wondering if you lock y"> Have to restart to restore to before first unlock for all users. For secondary users, logout or "end session" flushes the encryption key for that user
+09:13:14 <deappledapple> <mishmasher[m] "Hi I was wondering if you lock y"> https://grapheneos.org/faq#encryption
+09:13:50 <deappledapple> From "Sensitive data is stored..." paragrap
+09:24:03 <mishmasher[m]> So basically the more secure way to do things is make another profile and use that for your sensitive data?
+09:24:21 <mishmasher[m]> And that data is encrypted when you end session?
+09:25:05 <deappledapple> Yeah, as said there
+09:33:47 <mishmasher[m]> All right and if you delete user with said sensitive data, how hard would it be to retrieve that data with forensic software? Since encryption key should be deleted too right?
+09:37:51 <deappledapple> <mishmasher[m] "All right and if you delete user"> No encryption keys, no data decryption
+09:38:59 <take_a_deep_brea> mishmasher:  youre better  of reading this https://grapheneos.org/faq#encryption
+09:39:33 <mishmasher[m]> <deappledapple "No encryption keys, no data decr"> Meaning the data isn't protected and retrieve-able?
+09:40:13 <deappledapple> <mishmasher[m] "Meaning the data isn't protected"> As in they can't really do anything even if they recovered the data, they can't decrypt it iirc
+09:41:05 <deappledapple> <mishmasher[m] "Meaning the data isn't protected"> Read the Weaver token paragraph for relevant details
+09:42:33 <mishmasher[m]> <deappledapple "As in they can't really do anyth"> Oh shi, I read "No encryption keys, no data ENCRYPTION" my bad. Lol.
+09:42:50 <strcat[m]> Thatcher: please read the info available in the usage guide and FAQ 1st
+09:42:51 <mishmasher[m]> Haven't had my coffee yet
+09:43:00 <mishmasher[m]> Thank you
+09:43:56 <mishmasher[m]> <strcat[m] "Thatcher: please read the info a"> I have read it just asking here to see if I got it correctly
+09:46:19 <strcat[m]> take_a_deep_breath: Degoogled FuchsiaOS when?: it's about the limit of the UI, not the device manager one
+09:46:29 <strcat[m]> the UI rejects overly short / long inputs
+09:47:04 <strcat[m]> if you enter 2 characters and press enter, it knows that can't be an actual attempt at unlocking, since that's never allowed
+09:47:15 <strcat[m]> it's straightforward
+09:48:19 <strcat[m]> it simply doesn't attempt to authenticate with invalid input, it gets rejected as invalid input
+09:48:44 <strcat[m]> I'm trying to use generic phrasing that applies to all lock methods
+09:48:48 <strcat[m]> since it's true for all
+09:49:14 <strcat[m]> if you press enter with empty / overly short input, it's just invalid use of the UI, it's not an actual unlock attempt
+09:49:29 <strcat[m]> doesn't actually try to authenticate/decrypt
+09:49:37 <strcat[m]>  * doesn't actually try to authenticate and derive keys
+09:49:55 <strcat[m]> also perhaps I need to make the last paragraph talking about the keystore more prominent since people seem to miss that
+09:50:07 <strcat[m]> it's a bit frustrating having documentation misinterpreted and people panicking about silly things
+09:54:35 <take_a_deep_brea> i get it. thanks for that clarification.and also ...we seem to have become an alt-right group using a pro Truml OS briefly.... dont see how that would work.
+09:54:49 <take_a_deep_brea> * i get it. thanks for that clarification.and also ...we seem to have become an alt-right group using a pro Trump OS briefly.... dont see how that would work.
+09:55:02 <take_a_deep_brea> lol
+10:17:49 <strcat[m]> take_a_deep_breath:  don't understand what you're talking about
+10:19:10 <take_a_deep_brea> <strcat[m] "take_a_deep_breath:  don't under"> https://en.m.wikipedia.org/wiki/Special:MobileDiff/999465912
+10:19:26 <strcat[m]> so why promote someone's trolling here?
+10:19:43 <strcat[m]> this is the on-topic room too
+10:19:57 <strcat[m]> if you want to discuss politics do it in offtopic but beware that offtopic does not mean anything goes
+10:20:15 <take_a_deep_brea> ok .
+10:20:28 <take_a_deep_brea> sorry.
+10:21:02 <take_a_deep_brea> i didnt mean to discuss politics .
+10:25:52 <take_a_deep_brea> will be more aware next time .
+10:32:18 <olu61> Glad to join this channel
+10:32:31 <deappledapple> Welcome ^^
+10:34:38 <olu61> Thanks !
+10:40:01 <olu61> I need some help. I'm trying to install grapheneos on my pixel 3a but it sticks at "Rebooting into fastboot"
+10:40:28 <strcat> sticks?
+10:41:50 <olu61> the installation is stuck, I mean
+10:42:07 <olu61> Sorry English is not my first language ^^
+11:38:21 <stencil[m]> OT: What's the suggested browser by daniel, Is there any verified boot laptop?
+11:41:48 <Golli[m]1> Vanadium and Bromite are the only 2 browsers officially recommended.
+11:42:06 <stencil[m]> *desktop
+11:42:18 <Golli[m]1> And currently there's no verified boot laptop, unless you look at something like the Librem line. But this is off topic.
+11:42:56 <stencil[m]> Also is there a OT grapheneos channel?
+11:43:31 <strcat> Golli[m]1: Librem is anti-security and the opposite of having verified boot
+11:43:36 <strcat> there ARE laptops with verified boot
+11:43:45 <strcat> you've repeatedly been told that afaik
+11:44:08 <strcat> Golli[m]1: a laptop that goes out of the way to break low-level security and prevent security updates is not helpful
+11:44:28 <strcat> and yes, it's off-topic, but spreading harmful misinformation here is problematic beyond that
+11:45:07 <strcat> and especially since they asked for what my recommendation would be that makes it even more problematic for you to use it as an opportunity to promote something that I've stated on many occasionals that I consider a scam due to repeated dishonest marketing and claims
+11:46:07 <strcat> stencil[m]: m1 macbook has strong hardware security measures and a form of verified boot, which like Pixels is usable by another OS
+11:46:30 <strcat> in the future ask in #grapheneos-offtopic:matrix.org
+11:46:42 <strcat> #grapheneos-offtopic on freenode (can see you're on matrix though)
+11:46:45 <stencil[m]> Thanks strcat!
+12:06:36 * AppAraat[m] starts speaking in Bernie Sanders voice
+12:06:42 <AppAraat[m]> I Am Once Again Asking for Your Support!
+12:06:50 <AppAraat[m]> What is the best method to transfer app config (and data) from my old phone (Pixel 2) to a new one (Pixel 3a) ?
+12:07:10 <AppAraat[m]> (It kinda saddens me that on my desktop system I can just git clone my dotfile repo and be done with it. AFAIK to this day on AOSP you have to jump through massive hoops. Unless there's a new method I'm unaware of.)
+12:08:05 <take_a_deep_brea> AppAraat: you can use termux app
+12:08:09 <stencil[m]> Isn'n there an included app?
+12:09:00 <AppAraat[m]> strcat: also, thank you _so_ much for bringing the latest update to the Pixel 2, I didn't have time yet to upgrade to a supported one but hopefully I can do that the following day(s).
+12:09:24 <AppAraat[m]> take_a_deep_breath: oh? How can Termux have access to app data of other apps?
+12:09:48 <AppAraat[m]>  * strcat: also, thank you _so_ much for bringing the latest update to the Pixel 2, I didn't have time yet to upgrade to a supported phone but hopefully I can do that the following day(s).
+12:10:01 <take_a_deep_brea> nevermind my suggestion
+12:10:10 <stencil[m]> GrapheneOS includes Seedvault as an OS backup service which must be explicitly enabled, and it has the option to automatically restore app data when an app is reinstalled, so it wouldn't lose track of it being the same profile.
+12:10:11 <take_a_deep_brea> stupid.
+12:10:31 <take_a_deep_brea> <take_a_deep_brea "nevermind my suggestion"> stupid.
+12:12:33 <AppAraat[m]> take_a_deep_breath: it's ok, no problem :)
+12:13:35 <Thatcher[m]> * 😁
+12:14:59 <AppAraat[m]> stencil: Under Settings > System > Backup? I'm checking it out right now, thanks.
+12:15:13 <Thatcher[m]> * 🐶
+12:22:58 <cereal_eater[m]> Is there a way to remove exif data from photos without an app on grapheneos?
+12:28:54 <AppAraat[m]> cereal_eater: I guess technically an app, but you can install `exiftool` in Termux and then point it towards your camera dir.
+12:29:52 <cereal_eater[m]> <AppAraat[m] "cereal_eater: I guess technicall"> Thanks, will try that.
+12:38:59 <stencil[m]> <AppAraat[m] "stencil: Under Settings > System"> Remember to actually backup to desktop or external something. No syncing between phone here(yet)
+12:39:25 <AppAraat[m]> thanks, I'll keep that in mind.
+12:49:27 <olu61> I'm once again asking for your support. Installing grapheneos on my pixel 3a phone and running ./flash-all.sh is stuck at fastbootd screen
+12:49:37 <olu61> thanks for the support
+12:52:02 <olu61> ...
+12:52:14 <olu61> archive does not contain 'vbmeta_system.img'
+12:52:23 <olu61> archive does not contain 'vendor_boot.img'
+12:52:37 <olu61> extracting super_empty.img (0 MB) to disk... took 0.000s
+12:52:47 <olu61> Rebooting into fastboot                            OKAY [  0.060s]
+12:53:40 <olu61> Sorry, I don't know how to format the outcome here
+12:57:57 <fll[m]> olu61: the flash-all script can't find the images it is supposed to flash onto the phone.
+12:59:21 <olu61> @fll[]
+12:59:24 <fll[m]> Either you didn't download the correct image or you are executing the script inside of the wrong folder....is what I can think of of the top of my head...
+13:00:31 <olu61> I downloaded the image from https://grapheneos.org/releases
+13:01:21 <fll[m]> https://releases.grapheneos.org/sargo-factory-2021.01.05.03.zip this is for 3a
+13:02:09 <olu61> yes. and all the images are in the same folder, I moved them to the standalone platform-tools folder
+13:03:09 <fll[m]> And you're not supposed to unzip the image...just in case ;)
+13:04:58 <olu61> I only unzipped the factory image I downloaded
+13:05:12 <JerrynDev[m]> <fll[m] "And you're not supposed to unzip"> So yo have to put the unzipped image into the platform tools folder?
+13:05:38 <pacman37[m]> I don't think librem has verified boot. Also, it's not recommended here
+13:07:35 <fll[m]> <olu61 "I only unzipped the factory imag"> Don't
+13:10:05 <JerrynDev[m]> <JerrynDev[m] "So yo have to put the unzipped i"> And only unzip the platform-tools?
+13:10:18 <olu61> ok but in this https://grapheneos.org/install it is recommended to extract the factory images and then move into the directory to run ./flash-all
+13:10:32 <olu61> I am confuzed !!!
+13:10:42 <olu61> X)
+13:12:21 <fll[m]> Oh, it is! My bad!
+13:12:41 <fll[m]> My memory failed me
+13:18:41 <olu61> How can I past the outcome here in a code format ?
+13:19:11 <olu61> Is it possible in this platform ?
+13:20:50 <fll[m]> olu61: are you doing this on a Debian/Ubuntu derivate?
+13:21:11 <olu61> No, on mac M1
+13:21:30 <olu61> Maybe I should switch to macOS Catalina
+13:21:46 <olu61> I am gonna give it a try and I will let you now
+13:21:52 <olu61> Thanks
+13:24:08 <fll[m]> I've no experience with Mac. Does fastboot devices show your phone?
+13:25:21 <olu61> Yes it does (actually ./fastboot devices does)
+13:27:32 <fll[m]> Just trying to cover the most common problems now:
+13:27:32 <fll[m]> Phone-computer connection faulty (either through udev rules or bad USB cable or USB controller driver) or computer using the wrong (old) fastboot
+13:29:01 <take_a_deep_brea> <olu61 "archive does not contain 'vendor"> olu61:  the part you pasted here is not of significance
+13:29:20 <take_a_deep_brea> it also occurs in my case
+13:30:13 <take_a_deep_brea> i am talking of the part of the terminal output you  pasted here in the beginning
+13:30:35 <olu61> it's actually "vendor_boot.img"
+13:30:53 <olu61> Yes it's the outcome ./flash-all.sh
+13:32:24 <olu61> it's part of the outcome of ./flash-all.sh
+13:32:58 <take_a_deep_brea> that part is fine.it does not matter.
+13:34:25 <take_a_deep_brea> in case you had some error further down in the terminal output , you got to look there
+13:34:49 <olu61> ok. Well ! the next outcome is : extracting super_empty.img (0 MB) to disk... took 0.000s
+13:35:02 <olu61> then : Rebooting into fastboot                            OKAY [  0.060s]
+13:35:04 <take_a_deep_brea> wait a sec
+13:35:28 <olu61> then the phone goes to fastbootd screen and is stuck there
+13:35:39 <take_a_deep_brea> take a look at this
+13:36:07 * take_a_deep_brea uploaded an image: IMG_20201212_122156.jpg (135KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/KSCOdNNnEuTUjQpzhNBedsSm/IMG_20201212_122156.jpg >
+13:37:27 <silentsolutions[> hi folks
+13:37:46 <olu61> It never reaches : < waiting for any devices >
+13:37:49 <take_a_deep_brea> <olu61 "then the phone goes to fastbootd"> oh kay that one ive seen before with someone else and couldnt find a solution for that problem.
+13:38:36 <take_a_deep_brea> olu61: im sorry i could help you only so far.
+13:39:15 <olu61> take_a_deep_brea thanks
+13:39:22 <olu61> ;D
+13:39:36 <silentsolutions[> does anyone know the exact contents of  an BiometricPrompt.AuthenticationResult object?
+13:39:39 <fll[m]> olu61: just to make sure, fastboot --version outputs something with 30+?
+13:40:52 <olu61> it outputs fastboot version 30.0.5-6877874
+13:41:23 <fll[m]> Good
+13:43:39 <olu61> I switched to Catalina and it is going beyond < waiting for devices>
+13:44:14 <olu61> waiting for the result now, it's running
+13:46:13 <olu61> It's finished flashing, I reboot the system and the graphene installation setup is here
+13:46:27 <olu61> 8)
+13:46:49 <olu61> look, the Mac M1 seems not to appreciate the installation
+13:49:04 <olu61> I am going to continue the installation tutorial.
+13:49:21 <fll[m]> I don't even know what M1 is :P
+13:49:52 <olu61> fll[m] lool, it's the new MacBook with apple silicon ship look
+13:50:23 <olu61> The installation worked with the MacBook with Intel ship
+13:50:34 <olu61> Anyway thanks a lot ;)
+13:50:45 <fll[m]> Ah ok, sounded like it was an OS version ;)
+13:50:58 <fll[m]> Happy you made it!
+13:51:19 <olu61> (y)
+13:51:25 <olu61> Thnaks
+14:30:13 <Thatcher[m]> I'm just popping in to report on the amazing battery life I'm getting with GrapheneOS on Pixel 4a, which is 14 to 15 hours screentime from 100% to 5%... Battery efficiency is the primary reason I wanted to switch to this OS and it is a dream only needing to charge it every other day!
+14:32:46 * Thatcher[m] uploaded an image: Screenshot_20210110-063142.png (107KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/OQtOxohSwYKgTeZqMoeiuJPz/Screenshot_20210110-063142.png >
+14:32:59 * Thatcher[m] uploaded an image: Screenshot_20210110-063208.png (118KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/JcjBXqQeYYglXcjSvDcpcprA/Screenshot_20210110-063208.png >
+16:29:00 <ash[m]> anyone else having issues installing apps from aurora store?
+16:29:47 <ash[m]> once installed, every app just keeps crashing
+16:29:55 <ash[m]> including gsf independent onew
+16:30:45 <stencil[m]> Maybe they crash without microg?
+16:32:13 <ash[m]> not sure, I've used some of the apps before but when reinstalling they immediately crash
+16:36:47 <ash[m]> even signal crashes from play store
+16:36:54 <ash[m]> welp
+16:37:06 <ash[m]> Aurora store
+16:37:09 <ash[m]> * well
+16:37:47 <stencil[m]> Signal has FMS
+16:38:08 <ash[m]> it works fine from standalone apk
+16:38:38 <stencil[m]> Https://signal.org/android/apk/
+16:38:38 <stencil[m]> Yes cause that has no fms
+16:39:42 <ash[m]> you're missing the point
+16:40:14 <ash[m]> I had it installed from aurora before
+16:40:24 <ash[m]> but now it crashes from it
+16:49:56 <elmo_outlaw[m]> HI, just joined.
+16:50:03 <Baobab> salute.
+16:50:18 <elmo_outlaw[m]> salute
+16:50:35 <stencil[m]> <ash[m] "I had it installed from aurora b"> Strange it isn't supposed to work without FMS
+16:51:45 <elmo_outlaw[m]> im going through the instructions and have got to the part where i flash-all.bat (im on windows 10) but i get the reply of fastboot too old download from xxxx but my fastboot version is fastboot version 30.0.5-6877874 is there anything i can do?     thanks
+16:53:28 <louipcm> elmo_outlaw:  did you follow the instructions at https://grapheneos.org/install ?
+16:53:49 <louipcm> you need to use powershell, and follow the commands carefully
+16:53:52 <elmo_outlaw[m]> <louipcm "elmo_outlaw:  did you follow the"> yes sir
+16:54:28 <louipcm> also don't use admin account
+16:54:32 <louipcm> i mean don't 'run as admin'
+16:54:56 <elmo_outlaw[m]> im not just opened cmd as usual not as administrator
+16:55:14 <louipcm> ok but you need to use powershell
+16:55:24 <elmo_outlaw[m]> i tried on my mac but fastboot wasnt reccognised im updating that to Big Sur now tho
+16:55:47 <louipcm> you can do it on windows 10 just fine
+16:56:14 <elmo_outlaw[m]> <louipcm "ok but you need to use powershel"> this is probably it burv, ill try figure it out
+16:56:39 <elmo_outlaw[m]> <louipcm "you can do it on windows 10 just"> i know itl be my own wrong doing somewhere matey thanks bro
+16:56:53 <louipcm> ok good luck
+16:57:15 * Tifriis[m] uploaded an image: IMG_20210110_160206.jpg (29KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/QuhwKAnvqAVmYGKQeNeyRUws/IMG_20210110_160206.jpg >
+16:58:28 <Tifriis[m]> First time using my Audio headphones with grapheneos. Is it normal ?
+16:58:29 <stencil[m]> elmo_outlaw just use Mac and save some hassel
+16:59:21 <elmo_outlaw[m]> <stencil[m] "elmo_outlaw just use Mac and sav"> lol i did bro, i got fastboot not recognised updating to big sur now tho. I WILL SORT IT 😆
+16:59:40 <Tifriis[m]> I tried other headphone, same issue (with official USB c \ jack 3.5 converger)
+16:59:53 <stencil[m]> Wait it out
+17:00:04 <stencil[m]> <Tifriis[m] "I tried other headphone, same is"> What does the info box say?
+17:00:28 <Tifriis[m]> Nothing happen when I tap on it
+17:02:59 <stencil[m]> Open phone after tapping
+17:04:12 <stencil[m]> Now?
+17:05:33 <Tifriis[m]> Nothing happened when I tap on the notification
+17:09:33 <elmo_outlaw[m]> hmm using powershell now replies with fastboot not recognized as name of cmdlet
+17:10:36 <elmo_outlaw[m]> scratch that its ./fastboot
+17:11:39 <strcat[m]> you're not following the official guile
+17:11:44 <strcat[m]>  * you're not following the official guide
+17:12:19 <strcat[m]> elmo_outlaw: delete what you downloaded
+17:12:30 <strcat[m]> elmo_outlaw: follow https://grapheneos.org/install from top to bottom, and don't deviate from the instructions there
+17:12:40 <strcat[m]> you definitely did your own thing or followed an unofficial guide if you're in the platform-tools directory
+17:12:51 <strcat[m]> run only the commands given there
+17:13:00 <strcat[m]> don't download it and extract it your own way
+17:13:39 <strcat[m]> and don't try to work around not setting PATH as explained there by changing directories
+17:15:05 <elmo_outlaw[m]> <strcat[m] "elmo_outlaw: follow https://grap"> ill start from scratch
+17:15:22 <strcat[m]> make sure to download / extract it as it says and set PATH
+17:15:44 <strcat[m]> and it has you check that `fastboot --version` is correct before flashing
+17:18:43 <elmo_outlaw[m]> done matey thanks, my bootloader is already unlocked so i am good to go to flash-all when i reach that point?
+17:20:28 <louipcm> yes
+17:20:57 <randomusertester> Is it possible to use a navigation app on GrapheneOS?
+17:21:11 <strcat> elmo_outlaw[m]: yes need to make sure fastboot --version gives right results at that point (after getting platform-tools set up)
+17:21:20 <strcat> elmo_outlaw[m]: and then as long as you have a reliable USB connection it will work
+17:21:26 <strcat> and then you just lock the bootloader and you're done
+17:22:23 <elmo_outlaw[m]> <strcat "elmo_outlaw: and then as long as"> all good so far just downloading the image now
+17:23:53 <louipcm> randomusertester:  i believe there are several ones that work to various degrees
+17:24:47 <louipcm> randomusertester:  please join #grapheneos-offtopic:matrix.org for chat about 3rd party apps
+17:25:20 <jungle_surfer[m]> randomusertester: magic earth work really gold in grapheneos
+17:25:37 <strcat> randomusertester: GPS and TTS both work well - you need a TTS app
+17:25:43 <strcat> so yes works fine
+17:25:50 <strcat> TTS -> text to speech
+17:26:10 <strcat> and yes offtopic is better for discussing which apps are based
+17:26:18 <strcat> are best*
+17:26:27 <strcat> guess that typo works too if I was 13
+17:27:09 <elmo_outlaw[m]> shall i choose reboot to bootloader on phone in order to lock it
+17:29:09 <elmo_outlaw[m]> You guys are stars, if we ever meet your officially allowed to slap me once
+17:29:16 <elmo_outlaw[m]> Thank YOU
+17:31:10 <take_a_deep_brea> <elmo_outlaw[m] "shall i choose reboot to bootloa"> if you havent locked bootloader yet please type
+17:31:23 * elmo_outlaw[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/csBfnJwXjkHMiHBIokDDmYAi/message.txt >
+17:31:40 <elmo_outlaw[m]> i swear im not usually this rarted 🤣
+17:31:49 <take_a_deep_brea> great! welcome to grapheneOS!
+17:32:22 <take_a_deep_brea> <elmo_outlaw[m] "i swear im not usually this rart"> no problem , i too got never during my first flash.
+17:32:38 <take_a_deep_brea> * no problem , i too got nervous during my first flash.
+17:33:17 <elmo_outlaw[m]> <take_a_deep_brea "no problem , i too got never dur"> Thanks man glad to be here
+17:36:42 <louipcm> did you take_a_deep_breath
+17:53:27 <take_a_deep_brea> yeah kinda .
+18:31:34 <OTGnoob> Hello, I am trying to install graphene OS on a pixel 4a and am having trouble with the flashing process. Does anyone have a minute to lend a hand?
+18:33:50 <louipc> best to just ask questions directly
+18:34:37 <OTGnoob> PS C:\Users\chris\sunfish-factory-2021.01.05.03> ./flash-all.bat
+18:34:37 <OTGnoob> fastboot not found; please download the latest version at https://developer.android.com/studio/releases/platform-tools.html and add it to the shell PATH
+18:35:04 <OTGnoob> platform-tools are downloaded and in my directory
+18:35:25 <strcat> did you run the command to set Path *before* you did cd into the sunfish directory?
+18:35:29 <mrxx_0[m]> Are you following the official install guide https://grapheneos.org/install ?
+18:35:38 <strcat> think you missed the $env:Path step
+18:35:43 <OTGnoob> Yes I am following the official install
+18:35:53 <strcat> and running fastboot --version to check that it worked before flashing
+18:36:05 <OTGnoob> PS C:\Users\chris\sunfish-factory-2021.01.05.03> $env:Path = "$pwd\platform-tools;$env:Path"
+18:36:09 <OTGnoob> I did that
+18:36:47 <louipc> did you verify and extract fastboot
+18:36:51 <OTGnoob> and checked the fastboot version but I did have to add the platform-tools/ to get it to run
+18:37:26 <louipc> hmm
+18:37:33 <strcat[m]> OTGnoob: no
+18:37:38 <strcat[m]> OTGnoob: you did it wrong
+18:37:45 <OTGnoob> O sorry that string was wrong I tried running it again while in sunfish directory
+18:37:51 <strcat[m]> OTGnoob: you were supposed to run that $env:Path command earlier, not when you did it
+18:37:56 <OTGnoob> but earlier I ran:
+18:38:05 <louipc> you shouldnt change directory
+18:38:08 <OTGnoob> PS C:\Users\chris> "$pwd\platform-tools;$env:Path"
+18:38:09 <strcat[m]> OTGnoob: close the terminal, start over (you can skip the downloads)
+18:38:26 <strcat[m]> that's not the command it has you run
+18:38:30 <OTGnoob> Oh so run the flash while still in users/chris?
+18:38:47 <strcat[m]> no
+18:38:58 <strcat[m]> the command you were supposed to run is `$env:Path = "$pwd\platform-tools;$env:Path"`
+18:39:13 <strcat[m]> you only used the second part which isn't a command by itself
+18:39:16 <strcat[m]> it's just a string
+18:39:25 <strcat[m]> close PowerShell
+18:39:27 <strcat[m]> open it again
+18:39:28 <OTGnoob> Yes I did that as well. I followed the install, the earlier copy paste was an attempt at troubleshooting
+18:39:43 <OTGnoob> Ok closing
+18:39:56 <strcat[m]> open it again, run the path command make sure that `fastboot --version` works properly (seems you skipped this) and continue with flashing
+18:40:05 <strcat[m]> as before
+18:40:35 <OTGnoob> Ok. one minute
+18:43:53 <OTGnoob> ok I think this will work this time.  When I tried running the fastboot check last time around it couldn't find the file unless i prefaced it with platform-tools/fastboot. This time it seems to be working properly
+18:44:02 <OTGnoob> PS C:\Users\chris> Remove-Item Alias:Curl
+18:44:03 <OTGnoob> PS C:\Users\chris> $env:Path = "$pwd\platform-tools;$env:Path"
+18:44:03 <OTGnoob> PS C:\Users\chris> fastboot --version
+18:44:04 <OTGnoob> fastboot version 30.0.5-6877874
+18:44:04 <OTGnoob> Installed as C:\Users\chris\platform-tools\fastboot.exe
+18:44:05 <OTGnoob> PS C:\Users\chris>
+18:45:59 <OTGnoob> We have lift off. Thanks strcat[m].
+18:46:35 <strcat[m]> OTGnoob: the issue was you only ran the full command in another directory
+18:46:49 <strcat[m]> and it references platform-tools via $pwd which means current directory
+18:47:05 <strcat[m]> so just wait for flashing to finish and run the locking command and it should be good
+18:50:09 <OTGnoob> Thanks!
+19:04:16 <bentley> it goes without saying that apps can see the list of installed apps. but can they see things that have been added to the home screen, like webpages via vanadium?
+20:09:12 <asht> Hey, do you know how and whether I can install the original Google Camera on GrapheneOS?
+20:10:10 <asht> I know my friend downloaded some APK from apkmirror and Gcam-Services-Provider but it didn't work
+20:19:06 <asht> She explained to me that it does open up, but then it just shows an icon of a camera
+20:46:09 <cyberparty> asht: The SELinux domains for Google Camera have been removed for a while, effectively preventing it from working properly.
+20:46:50 <asht> okay, is there anything I can do?
+20:48:21 <asht> Do you think it's possible for me to patch GrapheneOS and recompile it with the needed rules?
+20:50:55 <strcat> cyberparty: they haven't actually been removed yet
+20:50:59 <strcat> not the problem
+20:51:14 <strcat> the issue is it depends on Play services and they're not using the current version of that workaround app
+20:51:20 <strcat> or some issue like that
+20:51:32 <strcat> we do plan to remove the SELinux domains just as we removed all the Play services SELinux domains
+20:52:00 <strcat> shouldn't break it just prevents it from using the DSP and Visual/Neural Core directly so it'd use software and might lose features
+20:53:01 <asht> okay
+20:54:50 <asht> Did this Gcam-Service-Provider work in earlier versions of GrapheneOS?
+20:59:03 <cyberparty> strcat: Ah, my bad
+21:00:54 <asht> Well, thank you @strcat
+21:02:09 <asht> I'll see if I can implement some of Google's algorithms in the built in camera, so I could give back something to the community
+21:10:30 <wsahkgjhmma[m]> > I'll see if I can implement some of Google's algorithms in the built in camera, so I could give back something to the community
+21:10:30 <wsahkgjhmma[m]> That would be amazing. The Pixel camera hardware/software really does take much better photos. If it's all siloed off from network access I don't see the harm in using it.
+21:10:30 <wsahkgjhmma[m]> I tried the Gcam services provider app and it's not working for me either. The latest GitHub release is from Oct 26 so I'm guessing an update since then broke it.
+21:37:01 <brennev1n[m]> I'm probably gonna buy a Pixel 4XL pretty soon. Does anyone know if Mullvad VPN is working properly on Graphene?
+21:37:30 <ghost_matrix[m]> <brennev1n[m] "I'm probably gonna buy a Pixel 4"> Mullvad  works great
+21:37:36 <ghost_matrix[m]> I'm on pixel 4a
+21:38:41 <ghost_matrix[m]> The always on VPN kill switch works as well
+21:39:13 <brennev1n[m]> Sweet :) Thanks! And I suppose Signal won't be a problem as well? Since their app can be directly downloaded from their website.
+21:39:20 <ghost_matrix[m]> I have not had any issus running anything on graphene.
+21:39:20 <ghost_matrix[m]> I love it
+21:40:01 <ghost_matrix[m]> Signal works great!
+21:40:01 <ghost_matrix[m]> If you make another profile you will need to choose which profile you use it in mainly
+21:42:08 <ghost_matrix[m]> And if you use signal in a user profile and not on main you you need to make messages your default messaging app.
+21:42:08 <ghost_matrix[m]> So you can can get push notifications. And regular messages from non signal users
+21:42:08 <ghost_matrix[m]> Its just a qwirk when using signal on another user profile
+21:42:28 <ghost_matrix[m]> Still use signal of course ;)
+21:43:53 <brennev1n[m]> Good to hear! Can't wait. Im having a hard time finding a Pixel 4XL in my country though (does not officially sell here). The prices are ridiculous - some up to $1,1K :/
+21:43:55 <ghost_matrix[m]> It's not really an issue more of a qwirk really
+21:44:35 <ghost_matrix[m]> Yeah same kinda issue I did pay a bit for for mine as well
+21:45:18 <ghost_matrix[m]> But its worth the feeling of security and privacy.... Trust me
+21:45:41 <brennev1n[m]> I guess that's the price you pay for better privacy.  I just have to find one :D
+21:45:42 <ghost_matrix[m]> Think about how much an iPhone is.....ridiculous
+21:46:19 <brennev1n[m]> Hahaha yeah. iPhones are getting really ridiculous.
+21:50:04 <seq4923[m]> I wanted to buy a 4a in my country but it's sold out right now. Do you think they will come back?
+21:50:04 <seq4923[m]> The 4a for me still seems to have a reasonable price compared to the others.
+21:50:59 <brennev1n[m]> Have you tried looking for a used one?
+21:52:29 <seq4923[m]> Yes, didn't find a used one either. And the other used model that I found were sometimes almost as high as the new one.
+21:52:51 <Kurai> ghost_matrix[m] brennev1n[m]: just don't buy new, I got an 11 pro max 256gb for ~700eur
+21:55:26 <ghost_matrix[m]> I would suggest trying to find a 4a as they are priced reasonable
+21:55:45 <ghost_matrix[m]> I love my 4a, best phone I've ever had
+21:56:08 <ghost_matrix[m]> With graphene of course
+22:01:06 <rheaalleen[m]> Got a pixel 4 xl for 369€ best bang  for thw buck and grapheneos works flawless
+22:01:58 <brennev1n[m]> <ghost_matrix[m] "I would suggest trying to find a"> You're right about that. Just looled up some used ones and they are about half the price! Why's that? Is the specs that much "worse"?
+22:03:04 <ghost_matrix[m]> I'm not tonsure on the specs but my 4a is really good and I can't complain about anything really
+22:03:07 <deetot> Seems kinda pricey. Got my 3a for 300 aud
+22:03:13 <brennev1n[m]> > <@rheaalleen:matrix.org> Got a pixel 4 xl for 369€ best bang  for thw buck and grapheneos works flawless
+22:03:13 <brennev1n[m]> >
+22:03:13 <brennev1n[m]> Wow. You got a great deal. 64gb version i presume?
+22:03:17 <ghost_matrix[m]> * I'm not to sure on the specs but my 4a is really good and I can't complain about anything really
+22:03:22 <rheaalleen[m]> No, these usually have minor scratches
+22:03:28 <rheaalleen[m]> <brennev1n[m] "> <@rheaalleen:matrix.org> Got a"> Yes
+22:03:38 <seq4923[m]> Another benefit of the 4a is the old-fashioned headphone jack. I like having those.
+22:03:56 <ghost_matrix[m]> <seq4923[m] "Another benefit of the 4a is the"> 👆
+22:04:34 <rheaalleen[m]> Mine qas said to be pretty rhough, i had to find a magnifying glass to find scratches
+22:04:41 <brennev1n[m]> Oh dang. Thats actually a dealbreaker if thats not on the 4XL. I hate the new "trend" with removing those. Like....why???
+22:05:05 <rheaalleen[m]> I never used music, so it wasn't a problem
+22:05:59 <rheaalleen[m]> And you can get an adapter if you really need to use a cable
+22:11:00 <brennev1n[m]> that's too much of a hassle for me lol. The pixel 4a looks great though. Will  definitely look more into that one.
+22:19:37 <OTGnoob> asht: Install all microG 'Open Source Google Libraries' components. I added it to my F-droid repository and found all the components. Then go to https://www.celsoazevedo.com/files/android/google-camera/dev-cstark27/ and download the Gcam app.
+22:21:06 <OTGnoob> microG needs to be version 0.2.4-3-g47a61d6 to get the camera port from cstark to work
+22:22:01 <seq4923[m]> In which scenarios is there a real difference between gcam and the stock camera?
+22:24:50 <OTGnoob> There are features like pan/global photo, time lapse, geo-tagging etc.
+22:33:01 <Birdie[m]> With the Testing section on the Build page. The CTS installation and standalone SDK install instructions.
+22:33:02 <Birdie[m]> What am I looking at for GB download wise of bandwidth?
+22:33:02 <Birdie[m]> I only intended to play around on KVM emulator without actually installing a build on a physical pixel phone...
+23:16:44 <stateofdade[m]> Can anyone help with a fastboot issue?  I have the latest version, but when trying to install the latest Graphene, it says my fastboot is out of date.  Is there a way around this?  I can't run the bat file to flash without getting past this point.
+23:43:44 <louipcm> are you using powershell?
+23:51:11 <stateofdade[m]> I was using cmd in windows.  I'm able to install stock images or even aosp variants without issue

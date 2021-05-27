@@ -1,0 +1,814 @@
+00:00:00 <madaidan[m]> "no good"
+00:00:00 <madaidan[m]> I would commit unspeakable actions to get a workstation that good
+00:00:04 <strcat[m]> my current workstation was hit really hard by all the spectre/meltdown mitigations
+00:00:10 <strcat[m]> it is so much slower now
+00:00:12 <strcat[m]> it's ridiculous
+00:00:12 <HowardR> So I would specify x86_64 instead of redfin?
+00:00:25 <strcat[m]> HowardR: what are you trying to do? I need to know that
+00:00:40 <Lestat[m]> i understand but im in no position to get a monster pc
+00:00:40 <strcat[m]> madaidan.: https://www.amd.com/en/products/cpu/amd-ryzen-threadripper-3970x
+00:00:45 <strcat[m]> madaidan.: this is the worst CPU I am considering getting
+00:00:46 <Lestat[m]> Not just the lockdown but in general
+00:00:53 <strcat[m]> madaidan.: I wish zen 3 threadripper was out
+00:00:57 <strcat[m]> I really can't wait for it
+00:00:58 <HowardR> I'm trying to build from source like the build page says
+00:01:16 <strcat[m]> madaidan.: maybe I should do a zen 2 threadripper build and then do zen 3 when it comes out and just have 2 workstations
+00:01:17 <strcat[m]> shrug
+00:01:37 <strcat[m]> madaidan.: I pretty much consider my current workstation trash tier now other than the NVMe SSD still being good
+00:01:42 <strcat[m]> will probably reuse the same SSD
+00:02:08 <strcat[m]> Samsung 960 Pro 2TB still more than good enough other than being ridiculously small
+00:02:33 <HowardR> Did you not understand what I was doing?
+00:02:41 <strcat[m]> I checked and Samsung somehow doesn't have 4TB/8TB SSDs yet despite my 2TB one being from over 4 years ago
+00:02:46 <strcat[m]> HowardR: what are you trying to build for
+00:02:56 <strcat[m]> HowardR:  a release to run in the emulator for development? or to run on a Pixel 5?
+00:03:20 <Lestat[m]> So i can still contribute even with my piece of shit workstation right?
+00:03:21 <HowardR> I'm trying to build the dev (11) branch for Pixel5/redfin
+00:03:33 <strcat[m]> HowardR: so, for a Pixel 5
+00:03:37 <strcat[m]> HowardR: why are you using the emulator then?
+00:03:52 <HowardR> I don't have a Pixel phone
+00:04:10 <strcat[m]> HowardR: it's really better to build for the emulator then
+00:04:23 <strcat[m]> HowardR: https://grapheneos.org/build#build-targets
+00:04:25 <strcat[m]> `rm -rf out`
+00:04:37 <Lestat[m]> <Lestat[m] "So i can still contribute even w"> Its just gonna be 6 hours to compile
+00:04:40 <strcat[m]> and do it again with `sdk_phone_x86_64` as the target
+00:05:10 <strcat[m]> and then run `emulator` in the shell you set up with `source script/envsetup.sh` (you can also set up a 2nd one but keep in mind you need to run `choosecombo` in each if you want to build with them)
+00:05:27 <strcat[m]> HowardR: you'll be way happier with `sdk_phone_x86_64` + using `emulator` command, you don't need to deal with setting up the SDK emulator
+00:05:28 <madaidan[m]> <strcat[m] "madaidan.: I pretty much conside"> If that's trash tier then I wonder what mine is...
+00:05:33 <strcat[m]> the AOSP source tree has an emulator
+00:05:35 <GrapheneOS-Teleg> <g​ochoingles> Emulator? Which one?
+00:05:39 <strcat[m]>  * the AOSP source tree has a copy of the emulator
+00:05:46 <strcat[m]> and the one in the source tree doesn't need to manually set up
+00:05:54 <gnujihad[m]> Hey guys!
+00:05:57 <madaidan[m]> <Lestat[m] "So i can still contribute even w"> Yes
+00:05:59 <strcat[m]> they have a script that automatically opens all the correct images from your current `choosecombo` target
+00:06:19 <Lestat[m]> Awesome
+00:06:28 <gnujihad[m]> Graphene
+00:06:28 <gnujihad[m]> Has 3 carbon atoms covalently bonded together making them strong asf but has a delocalised electron which carries electrical current therefore it can conduct electricity also it’s kinda faggurt and the layers have weak intermolecular forced making them slide over each other which is what makes graphene soft 🤬 🏃‍♀️
+00:06:32 <strcat[m]> Lestat: you can contribute to OS dev with that it'll just be inconvenient
+00:07:07 <strcat[m]> gnu/jihad: can you not? thanks
+00:07:18 <gnujihad[m]> Wow
+00:07:37 <strcat[m]> gnu/jihad: #grapheneos-offtopic:matrix.org
+00:07:39 <Lestat[m]> <strcat[m] "Lestat: you can contribute to OS"> Dunno about inconvenient...i always have 2 machines doing something in the background so one more isnt really painful lol
+00:08:04 <HowardR> So every place the instructions say DEVICE I should specify x86_64?
+00:08:12 <strcat[m]> HowardR: no
+00:08:29 <strcat[m]> see this part?
+00:08:31 <strcat[m]> `choosecombo release aosp_sunfish user`
+00:08:37 <strcat[m]> for development with emulator
+00:08:39 <strcat[m]> do this:
+00:08:49 <strcat[m]> `choosecombo release sdk_phone_x86_64 userdebug`
+00:09:13 <strcat[m]> HowardR: you don't use this section: https://grapheneos.org/build#extracting-vendor-files-for-pixel-devices
+00:09:22 <strcat[m]> you basically just do:
+00:09:26 <strcat[m]> `source script/envsetup.sh`
+00:09:34 <strcat[m]> `choosecombo release sdk_phone_x86_64 userdebug`
+00:09:34 <strcat[m]> `m`
+00:09:37 <strcat[m]> then when it's built:
+00:09:39 <strcat[m]> `emulator`
+00:10:04 <HowardR> I've read that build document over and over. Do I not run the whole vender/.../execute-all.sh section?
+00:10:06 <strcat[m]> you don't need to make signing keys or do that part either
+00:10:11 <GrapheneOS-Teleg> K has joined the Telegram Group!
+00:10:22 <strcat[m]> HowardR: you don't do that, you only need that for doing a build to run on a Pixel
+00:10:34 <strcat[m]> HowardR: vendor files aren't needed for generic / emulator builds
+00:11:49 <strcat[m]> HowardR: it's basically just those 3 commands to build
+00:12:02 <strcat[m]> that vendor section is for building for a Pixel
+00:12:14 <strcat[m]> and you don't need to generate signing keys or sign builds with release.sh with them for a development build
+00:12:24 <strcat[m]> and you don't need `m target-files-package` if you aren't doing a signed release from it
+00:12:41 <strcat[m]> you just set up the environment, then choose the right target, then build with `m`, then run `emulator` to load it up in the emulator
+00:12:58 <strcat[m]> then you can make changes, run `m` again in that shell (or a new one set up with envsetup + choosecombo again) to do an incremental build
+00:13:12 <GrapheneOS-Teleg> Hulk has joined the Telegram Group!
+00:13:16 <HowardR> OK I'll try that and report back, thanks!!
+00:13:25 <strcat[m]> if you want to start with a fresh build, remove `out`, and if you want a new build number / build date make a fresh shell
+00:32:13 <GrapheneOS-Teleg> Thiago (@T​hiagoBorzaquel) has joined the Telegram Group!
+00:33:13 <dannyknoll3[m]> <strcat[m] "Lestat: you can contribute to OS"> Got a recommendation on a good first issue for this user to cut teeth? 😊 (Is that a taboo question?)
+00:33:58 <Lestat[m]> warning: i cant lay my hands on my workstation for around 3-4days
+00:34:06 <Lestat[m]> Temporarily moving
+00:34:21 <Lestat[m]> For 3 months
+00:34:27 <Lestat[m]> family stuff
+00:35:44 <Lestat[m]> And ive got other issues
+00:35:54 <Lestat[m]> So i cant contribute just yet
+00:35:58 <Lestat[m]> but soon
+00:36:14 <Lestat[m]> Ill let yall know once everythings solid and i can contribute
+00:36:25 <Lestat[m]> Cant wait for it :D
+00:40:10 <madaidan[m]> <dannyknoll3[m] "Got a recommendation on a good f"> Yes, it is
+00:41:03 <dannyknoll3[m]> Gotcha — just start digging in when you can, if you're motivated, Lestat .
+00:41:20 <Lestat[m]> Ayt
+00:52:29 <strcat[m]> dannyknoll3 (Danny@WorkOrderPro): add a default permission config for notification perm for launcher
+00:52:32 <strcat[m]> or something simple like that
+01:30:10 <Lestat[m]> <strcat[m] "dannyknoll3 (Danny@WorkOrderPro)"> Deny it or allow it? Lol
+01:34:12 <strcat[m]> allow it
+01:36:06 <Lestat[m]> Okay
+01:36:16 <troll1234[m]> hello
+01:39:05 <Lestat[m]> Welcome
+01:39:30 <troll1234[m]> I have a question
+01:39:36 <troll1234[m]> is this a fake #copperheadltd:matrix.org
+01:40:00 <troll1234[m]>  * is this room a fake #copperheadltd:matrix.org
+01:40:09 <troll1234[m]>  * is this room a fake -> #copperheadltd:matrix.org
+01:42:28 <Lotus[m]> troll1234:  Do not use CopperheadOS
+01:42:54 <Lotus[m]> https://www.reddit.com/r/CopperheadOS/comments/lpoidk/copperhead_ceo_has_admitted_to_their_new_os/
+01:46:14 <gnome_giga_vegan> has anybody had luck replacing battery in a pixel3 (or any pixel really)?
+01:47:26 <dannyknoll3[m]> gnome_giga_vegan: I babysit the tech at the store I trust to swap them. Inexpensive.
+02:11:39 <akc3n[m]> <gnome_giga_vegan "has anybody had luck replacing b"> https://www.ifixit.com/Guide/Google+Pixel+3+Battery+Replacement/124702
+02:14:24 <gnome_giga_vegan> any old battery off amazon/ebay good enough?
+02:14:47 <gnome_giga_vegan> any *new battery i mean, like not a specific brand or anything
+02:15:34 <akc3n[m]> <gnome_giga_vegan "any old battery off amazon/ebay "> Old? Why is Gods name would you want to buy and old battery?
+02:17:12 <dannyknoll3[m]> akc3n: "Any old" = "no specific kind" to look for
+02:17:24 <akc3n[m]> * I don't know, I usually buy battery's from a local business
+02:17:24 <akc3n[m]>   
+02:17:24 <akc3n[m]> Also, check out #grapheneos-offtopic:matrix.org
+03:37:53 <skagreek[m]> From what I read here, it's OK to have google maps with network on all the time. I originally figured it's good to keep all the network and sensors off until I actually need to use the maps, but I heard that makes no sense.
+03:38:17 <strcat[m]> it doesn't make much sense to temporarily turn Network off
+03:38:32 <skagreek[m]> Got it.
+03:39:01 <somenerd[m]> I believe that sensors can be temporarily turned off though
+03:39:04 <strcat[m]> if you're worried about the app gathering data and sending it somewhere... it would just send the data later when network access is available, and apps already have to deal with network access not always being available
+03:39:19 <strcat[m]> AOSP only permits sensor access for apps in the foreground by the way
+03:39:20 <skagreek[m]> wow, good point.
+03:39:30 <strcat[m]> so foreground service or foreground app
+03:39:36 <hypokeimenon[m]> Google Maps on Graphene OS? Well, whatever floats your boat/suits your needs.
+03:39:39 <strcat[m]> in order to use camera, microphone or sensors
+03:39:50 <strcat[m]> they need permission and foreground
+03:40:05 <skagreek[m]> didn't know about foreground, interesting.
+03:40:28 <skagreek[m]> I try to force quit any apps out of paranoia too. lol
+03:40:35 <Thatcher[m]> <hypokeimenon[m] "Google Maps on Graphene OS? Well"> I still use Rand McNally maps
+03:41:07 <skagreek[m]> Thatcher: Hey, I still got my Thomas guide.
+03:42:48 <asdf54> Can app icon badges be enabled. For instance unread messages on Signal icon?
+03:52:54 <skagreek[m]> Curious what "Victor" is. Under Sensors, there are 5 instances of it. Reddit page mentions it's an icon pack. Thanks.
+03:56:54 <skagreek[m]> Others with multiple instances named sam, rounded, kai, filled, etc. I guess it makes sense they are icons.
+04:11:16 <k5L37> If I choose local for seedvault backup, where is the back up located? Can't seem to find it
+04:12:09 <k5L37> Don't have usbc drive or nextcloud so I can only do local back up for now
+04:12:23 <DHFuchsiaOSwhen> Press three dot, then click show hidden files
+04:12:46 <DHFuchsiaOSwhen> Then you'd see the seedvault backup folder name which has a dot on the start
+04:26:52 <k5L37> Ah got it tyvm.
+04:33:00 <skagreek[m]> k5L37: This has been good with a microsd.
+04:33:03 <skagreek[m]> https://www.amazon.com/gp/product/B07YGXR8N3
+04:35:26 <k5L37> Hmm I ordered a usbc flash drive. Any reason to prefer one of the other?
+04:35:53 <skagreek[m]> oh that works too. I had a bunch of microSD, so I figured I'd use them.
+04:44:30 <sjsndnjdejd> <asdf54 "Can app icon badges be enabled. "> Think that's handled by the launcher you use
+04:50:03 <k5L37> I feel stupid asking but how do I restore a seedvault backup? I don't see the option.
+04:50:17 <k5L37> Didn't find much documentation on their github
+04:54:47 <zzxx123_>  on setup wizard or via adb command
+04:55:08 <skagreek[m]> The only method I noticed was restoring from the initial setup. Not sure if there are other ways.
+04:55:20 <skagreek[m]>  * The only method I noticed was restoring from the initial setup screen. Not sure if there are other ways.
+04:56:50 <k5L37> Hm ok. Also, is this backup tied to this physical phone? If I lost my phone, could I use this backup on a new phone?
+04:57:27 <sjsndnjdejd> depends on where you back it up to ofc
+04:57:39 <k5L37> Ok gotcha
+05:08:25 <asdf54> Is there a recommended launcher that allows app icon badges? I need to glance at Signal Icon and see how many unread messages.
+05:10:51 <asdf54> Is there a FOSS dialer with better logging? Need to see call time and duration without tapping screen.
+05:17:58 <skagreek[m]> asdf54: I know other launchers are out of the norm for security, but this launcher called "Square Home" launcher has animated icons for notifications.
+05:18:59 <skagreek[m]> So when there is a signal notification, it will show the actual texts/notification in the icon with a scroll. You can even make the icon 2x2 or whatever size you want.
+05:24:26 <strcat[m]> asdf54: the built-in launcher has that
+05:24:31 <strcat[m]> asdf54: you just have to enable it
+05:24:47 <skagreek[m]> Good to know.
+05:25:04 <strcat[m]> asdf54: long press home screen, press the notification dots option, enable it
+05:25:17 <strcat[m]> we'd like to have that enabled by default, that's what I just said to dannyknoll3 (Danny@WorkOrderPro) is a good first issue for someone to work on
+05:25:26 <strcat[m]> since they may just have to add a configuration file in /etc/
+05:25:31 <strcat[m]> to set the default permissions
+05:25:41 <skagreek[m]> Thanks
+05:35:58 <asdf54> Thanks. I enabled Notification dots. I now get a blue dot but it doesn't say how many messages. I'm used to a red dot with a count of unread messages. Is that possible?
+05:43:22 <strcat[m]> asdf54: it's not what the standard launcher implements
+05:43:32 <strcat[m]> asdf54: long press on it to see the specific notifications
+05:44:01 <strcat[m]> the notifications dots aren't really the traditional approach but rather people look at the actual notifications
+05:44:08 <strcat[m]> and status bar
+06:38:49 <chi00[m]> how do i get apps on my guest profile?
+06:40:02 <chi00[m]> Or allow permission for the guest profile to install its own apps.
+06:40:40 <mr_hebi_san[m]> You don't.  Guest doesn't have those abilities.  You would want to create a new User
+06:42:22 <chi00[m]> wait wtf that option didnt appear before ...
+06:42:30 <chi00[m]> but now it did.
+06:43:04 <chi00[m]> was that a bug or am I dumb?
+06:44:34 <mr_hebi_san[m]> Probably overlooked it.  I did that the first time I went to the multiple users screen
+06:45:32 <chi00[m]> You don't use the owner profile as your daily driver?
+06:46:12 <mr_hebi_san[m]> Nope
+06:46:18 <mr_hebi_san[m]> I don't anyway
+07:05:18 <pizzaeater69[m]> <chi00[m] "You don't use the owner profile "> For better security its better to use the owner profile just to manage other profiles
+07:06:22 <chi00[m]> UGH i just realized i can save money on protonmail with an annual subscription >_<
+07:07:06 <GrapheneOS-Teleg> River (@R​iverOfWoe) has joined the Telegram Group!
+07:07:09 <pizzaeater69[m]> Thats off topic but Protonmail thanks you for not knowing:D
+07:08:09 <oa93v> Does multiple profiles affect battery life?
+07:09:12 <chi00[m]> ^good question. I'm no expert but I'd say it does slightly
+07:09:17 <pizzaeater69[m]> I dont have proof but based on my personal usage it does
+07:09:21 <Lestat[m]> fuck man now im confused
+07:09:52 <chi00[m]> The owner profile is always "active" so it makes sense
+07:10:00 <Lestat[m]> At first i was rly confused, danny "cleared it up" and now that daniel posted that just now im completely lost
+07:10:43 <Lestat[m]> im gonna go cry until i figure out what im supposed to do
+07:22:14 <Lestat[m]> Do strcat you want notification dots to be enabled by default right?
+07:22:45 <Lestat[m]> I think i understand what u want a lil better
+07:26:57 <Lestat[m]> ill try working on it ig
+07:29:24 <strcat[m]> yes
+07:29:33 <strcat[m]> Lestat: look at what stock OS has in /etc
+07:29:43 <Lestat[m]> hmm
+07:29:45 <Lestat[m]> Okay
+07:29:45 <strcat[m]> probably just need a default-permissions file
+07:30:22 <strcat[m]> it is enabled by default but the launcher doesn't have the required permission by default
+07:30:30 <strcat[m]> would fix a usability / support issue for us to resolve it
+07:30:35 <Lestat[m]> Dont apps that come with aosp have priv apps allowlists or something like that
+07:30:39 <strcat[m]> frequently people asking about it
+07:30:43 <strcat[m]> it's not a privileged permission
+07:30:51 <Lestat[m]> Hm
+07:30:51 <Lestat[m]> okay
+07:31:12 <strcat[m]> launcher isn't a priv-app and it's not a privileged permission
+07:31:19 <Lestat[m]> Rly wish i knew aosp sourcecode even roughly here lol
+07:31:31 <strcat[m]> I don't think any code change is needed
+07:31:36 <strcat[m]> look into default-permissions
+07:31:40 <strcat[m]> as a starting point
+07:33:13 <Lestat[m]>  Yea i looked at the aosp page and sure enough its in /etc
+07:33:15 <Lestat[m]> Ayt
+07:33:35 <Lestat[m]> Will get started on studying once i can use my workstation
+07:36:12 <GrapheneOS-Teleg> <c​lannad> BTW
+07:36:17 <Lestat[m]> So as i understand /etc/permissions is where im supposed to make changes?
+07:36:18 <GrapheneOS-Teleg> <c​lannad> I already looked into this
+07:36:30 <GrapheneOS-Teleg> <c​lannad> There are no default permission files on stock
+07:36:45 <GrapheneOS-Teleg> <c​lannad> /etc/default-permissions
+07:37:03 <GrapheneOS-Teleg> <c​lannad> At least none related to the pixel launcher
+07:37:06 <Lestat[m]> Okay
+08:50:53 <anupritaisno1[m]> Btw have a fix for the problem of people pretending to be others on the telegram side
+08:51:35 <anupritaisno1[m]> Now if somebody has only a first name set and doesn't have a username a "!" is appended to their name at the beginning
+08:51:41 <anupritaisno1[m]> I'll deploy this later
+08:54:33 <anupritaisno1[m]> This should also avoid confusion as it isn't possible to tag people by their first name on telegram
+08:55:25 <anupritaisno1[m]> Since a "!" is not a valid character for a username you can be sure whether it's a first name or a username
+08:55:53 <anupritaisno1[m]> I initially thought we could print the telegram ID but that's too spammy and kind of theater if you ask me
+08:56:29 <anupritaisno1[m]> So if somebody joins with firstname set to clannad
+08:56:35 <anupritaisno1[m]> It'll show up as !clannad
+08:59:11 <anupritaisno1[m]> I'm still not sure if we should append IDs anyway
+09:00:15 <anupritaisno1[m]> It sure makes moderation easier btw
+09:00:16 <rny> why is taht an issue
+09:00:41 <anupritaisno1[m]> rny: let's say my username is clannad
+09:00:44 <rny> many people that use irc do not identify with nickserv
+09:00:49 <anupritaisno1[m]> The bot is basically
+09:00:58 <anupritaisno1[m]> Return firstname if no username
+09:01:14 <anupritaisno1[m]> So now somebody could set their first name to clannad and pretend to be me
+09:01:37 <rny> plenty of strcats on freenode
+09:01:38 <rny> LOL
+09:01:42 <anupritaisno1[m]> To fix this, I append a character at the beginning that can never be part of a username
+09:02:22 <rny> sounds good
+09:02:55 <anupritaisno1[m]> K, you there?
+09:03:12 <GrapheneOS-Teleg> <U​_can_call_me_k> Hi I am K
+09:03:29 <anupritaisno1[m]> Ah shit you have a username now
+09:04:14 * anupritaisno1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/MIukcDlGaQqInxRBPqEufCmw/message.txt >
+09:18:46 <datacloud[m]> It's possible to change the Google logo from boot?
+09:19:06 <pizzaeater69[m]> No
+09:23:16 <pizzaeater69[m]> "That's just the OEM's logo. It's a part of the late-stage qualcomm bootloader, but that part of the firmware is signed and verified. We can't change that portion." -TheJollyRoger
+09:23:39 <pizzaeater69[m]> * "That's just the OEM's logo. It's a part of the late-stage qualcomm bootloader, but that part of the firmware is signed and verified. We can't change that portion." -JollyRoger
+09:31:42 <accelerate[m]> <datacloud[m] "It's possible to change the Goog"> Adding to this. Is it possible to remove the "You are using a non standard OS"(or something like that) at boot?
+09:33:27 <pizzaeater69[m]> No. I think its part of verified boot
+09:36:25 <datacloud[m]> <pizzaeater69[m] "No. I think its part of verified"> I understand, thank you.
+09:42:28 <pizzaeater69[m]> * No. It's part of verified boot
+09:42:28 <pizzaeater69[m]> "Your device is loading a different operating system" means the bootloader is locked and verified boot is enforced.
+09:49:29 <linux_party> iLinux OS rocks! https://ilinuxos.com/screenshots.html
+09:56:17 <pizzaeater69[m]> How does that have anything to so with GrapheneOS
+09:56:34 <pizzaeater69[m]> * How does that have anything to do with GrapheneOS
+09:56:49 <linux_party> All technology is united! Be well!
+09:59:33 <GrapheneOS-Teleg> <K​ileXt> Looks bloated
+10:00:08 <linux_party> Then don’t use it! Use Ubuntu Bug Factory…
+10:00:25 <linux_party> I use it for 5 months now and I am thrilled!
+10:00:50 <DHFuchsiaOSwhen> Looks like Vanadium 89 has nice updates from upstream for usability purposes
+10:00:57 <DHFuchsiaOSwhen> It's more gesture nav friendly
+10:07:08 <GrapheneOS-Teleg> <K​ileXt> I am fine with arch, thanks.
+10:07:32 <GrapheneOS-Teleg> <K​ileXt> Also ubuntu is bloated too, it has an amazon shortcut so...
+10:08:01 <hard_taffy[m]> Does GrapheneOS need any German/Deutsch translations?
+10:08:28 <DHFuchsiaOSwhen> <hard_taffy[m] "Does GrapheneOS need any German/"> Not sure if GrapheneOS accepts translations atm
+10:23:31 <oligotrophia[m]> Does GrapheneOS support all system languages that AOSP does?
+10:24:48 <pizzaeater69[m]> Yes
+10:51:05 <GrapheneOS-Teleg> <J​xoec> Can protonvpn net shield prevent graphene from updating/working correctly?
+10:52:03 <Barbelo[m]> .
+10:53:10 <Barbelo[m]> is there anything i can do to make the camera connect yet?
+10:59:38 <pizzaeater69[m]> <GrapheneOS-Teleg "<Jxoec> Can protonvpn net shield"> It shouldn't but possible
+11:05:27 <GrapheneOS-Teleg> <J​xoec> @clannad @GrapheneOS  what do you think?
+11:08:05 <indianajonestheo> Personnaly, I've never had any problems updating while using it 😅
+11:09:13 <indianajonestheo> and I'm almost always on it
+11:09:56 <donkykong[m]> I also use proton plus VPN and get updates normally
+11:28:26 <noustfurkuphater> graphene still uses a lot of non-free software like for baseband. Does it do anything to protect the user from this software?
+11:31:51 <Lestat[m]> How fucking big is graphene source tree
+11:31:58 <Lestat[m]> Its been syncing for a while
+11:35:09 <GrapheneOS-Teleg> <K​ileXt> Proprietary != backdoor/malware
+11:35:49 <pizzaeater69[m]> Non-free software isnt always bad
+11:43:55 <noustfurkuphater> <GrapheneOS-Teleg "<KileXt> Proprietary != backdoor"> not always but proprietary= things we can't do stuff with so if it fucks up, it is on the proprietor to fix. Dependency on one entity to keep software secure when they tend to feel pressure from their governments and own company interests to exploit the user isn't a good thing. Software should be controlled by the community so proprietary is inherently a
+11:43:55 <noustfurkuphater> security risk at the least and malware at most.
+11:44:24 <noustfurkuphater> <pizzaeater69[m] "Non-free software isnt always ba"> depends on what you consider bad to be
+12:20:23 <oligotrophia[m]> Not that it is of big focus but is there a way to use an equalizer for system audio? Something like dolby atmos?
+12:23:47 <GrapheneOS-Teleg> <K​ileXt> +1
+12:29:14 <GrapheneOS-Teleg> <c​lannad> What you do with third party apps like protonvpn is your responsibility
+12:29:24 <GrapheneOS-Teleg> <c​lannad> Not the right channel to ask anyway
+12:29:29 <GrapheneOS-Teleg> <c​lannad> Ask in OT
+12:29:56 <GrapheneOS-Teleg> <c​lannad> @grapheneosofftopic
+12:39:12 <GrapheneOS-Teleg> Asad has joined the Telegram Group!
+13:06:57 <dazinism> noustfurkuphater: All smartphones have proprietary components. Hardware, Firmware and Software. Theres always parts that can't be fixed. There isn't currently a solution to this.
+13:07:33 <dazinism> Despite what some phone projects may, kind of, suggest
+13:07:46 <dazinism> Qualcomm, AOSP and Pixels do a pretty good job of isolating stuff.
+13:10:39 <dazinism> Only other devices which may have higher levels of integrated security are iPhones
+13:10:47 <dazinism> As far as I know
+13:11:13 <noustfurkuphater> <dazinism "noustfurkuphater: All smartphone"> that is my point. That is why all phones are unsafe even the L5 as it still has proprietary baseband even though they have it run on another cpu.
+13:11:39 <dazinism> Everything is unsafe
+13:12:12 <dazinism> Arguably safety isn't black or white - but shades of grey
+13:13:26 <dazinism> You'll likely find more info searching the logs
+13:13:26 <noustfurkuphater> <dazinism "Only other devices which may hav"> but it's an iphone. Even if it had a free implementation of the security of their OS, I couldn't care because of how they have locked their device down. Iphones aren't good enough because apple's entire model is proprietary.
+13:13:27 <dazinism> https://freenode.logbot.info/grapheneos
+13:13:44 <noustfurkuphater> though they release a few free things
+13:13:44 <dazinism> Or on the GrapheneOS reddit
+13:13:50 <noustfurkuphater> <dazinism "Arguably safety isn't black or w"> yes
+13:15:27 <noustfurkuphater> I mean mobile phone's literally have GPS. Can never really be trusted.
+13:15:43 <noustfurkuphater> that's just scary
+13:15:51 <lavonni[m]> can gps not be passive?
+13:15:54 <dazinism> If you want a computing device with an opensource OS and good security, its a reasonable claim that you can't get better than the latest Pixels with GrapheneOS
+13:15:57 <noustfurkuphater> we've just taken it to be normal
+13:16:12 <noustfurkuphater> <lavonni[m] "can gps not be passive?"> not sure what that means. Explain please.
+13:16:36 <noustfurkuphater> <dazinism "If you want a computing device w"> Idc for O/S. I want a freed one.
+13:16:41 <dazinism> noustfurkuphater: pretty much all laptops have WiFi. Can locate a device by which WiFi network it sees.
+13:16:43 <nscnt[m]> noustfurkuphater: You conclude that software that is proprietary is insecure. You're wrong. What you are doing is borderline concern trolling.
+13:16:56 <noustfurkuphater> I don't just want a freed OS but a freed device entirely
+13:17:00 <nscnt[m]> Most things are open source, but it doesn't help you
+13:17:08 <nscnt[m]> It's signed
+13:17:14 <nscnt[m]> and part of a root of trust
+13:17:20 <dazinism> noustfurkuphater: that would be great. Its a long way off still
+13:17:27 <noustfurkuphater> <dazinism "noustfurkuphater: pretty much al"> kill switch or just ethernet up. If cba then just remove that card.
+13:18:13 <noustfurkuphater> <nscnt[m] "noustfurkuphater: You conclude t"> Said it previously that it is inherently a security risk. Not troll.
+13:18:15 <nscnt[m]> Move to #grapheneos-offtopic / #grapheneos-offtopic:matrix.org
+13:18:49 <lavonni[m]> <noustfurkuphater "not sure what that means. Explai"> can you not just have gps triangulate without having to explicitly ask satellites?
+13:19:22 <noustfurkuphater> <lavonni[m] "can you not just have gps triang"> woah I'm not sure. I now think I do not understand much of the technology.
+13:20:12 <noustfurkuphater> Oh well we still have the 3g,4g and worst the 5g and they are just a bit um no thanks
+13:21:15 <dazinism> noustfurkuphater: all these concerns are well known. You aren't really adding anything new
+13:21:44 <noustfurkuphater> I feel like I'm making myself move a bit more
+13:21:51 <noustfurkuphater> I think I no longer want a mobile phone
+13:21:57 <dazinism> GPS is passive. You don't transmit to the satellites, just recieve
+13:22:38 <noustfurkuphater> well until at least a freed comes along
+13:22:50 <dazinism> It will be a long time
+13:23:05 <noustfurkuphater> guess I won't use one ever again then
+13:23:13 <dazinism> Also pretty much the same for all.computers
+13:23:27 <dazinism> Sadly
+13:23:32 <noustfurkuphater> I will just have a burner for when I am required by organisations to give a phone number
+13:23:54 <noustfurkuphater> <dazinism "Also pretty much the same for al"> Well some get pretty close like a libre thinkpad
+13:24:12 <noustfurkuphater> powerpc computers seem interesting for desktop
+13:25:44 <dazinism> Its a big problem to solve avoiding to have to trust the people who make your device/software. They are so complex. Guess ultimately hard to avoid having to trust anyone.
+13:28:16 <dazinism> You can get a POWER PC, but then what software/firmware will you use? Can you really trust that?
+13:28:39 <noustfurkuphater> exactly
+13:28:44 <noustfurkuphater> an absolute constant battle
+13:29:18 <noustfurkuphater> even when you get what you wanted, your hardware may become obsolete in just a few years for the tasks you require it to do.
+13:29:36 <noustfurkuphater> as example, core 2 duo in a libre thinkpad
+13:30:35 <noustfurkuphater> God I wish a genius like creators of TLS could just find a magic way to bypass things like ME and a magical, universal firmware for all secondary storage and just everything
+13:35:30 <dazinism> noustfurkuphater: if you want more info theres loads of discussion of all this kind of stuff in the logs. https://freenode.logbot.info/grapheneos
+14:00:19 <GrapheneOS-Teleg> ComplicatedPenguin (@P​engu_Gone_Complicated) has joined the Telegram Group!
+14:21:45 <asdf54> We live mostly on fdroid apps. Been checking out aurora store apps. App Warden finds "google admob" tracker in many apps including firefox. How much of privacy concern is this? Warden doesn't find any trackers or loggers in Brave,  Bromite, or Duck browsers.
+14:23:49 <GrapheneOS-Teleg> <c​lannad> dazinism we have iommus to isolate modems
+14:23:58 <GrapheneOS-Teleg> <c​lannad> Everything is explained on the website
+14:28:29 <interesting[m]> is there a way to lock a graphene device such that I couldn't unlock it even if tortured.
+14:29:03 <interesting[m]> somehow destroy it, or reset or something
+14:29:14 <interesting[m]> so that pin is useless
+14:29:22 <pizzaeater69[m]> There is not
+14:29:31 <interesting[m]> I see
+14:30:14 <pizzaeater69[m]> This might shine a little light on topic: https://grapheneos.org/faq#anti-theft
+14:31:03 <GrapheneOS-Teleg> toxa (@t​oxaxy) has joined the Telegram Group!
+14:32:25 <interesting[m]> maybe plausible deniability? for example I could "unlock" one account, but the real account would remain hidden
+14:33:16 <DHFuchsiaOSwhen> Not feasible, the encrypted part would still be detected
+14:33:32 <interesting[m]> I see
+14:39:26 <rahoon_goaway[m]> Can the vibration pattern/length for notifications be changed?
+14:39:26 <rahoon_goaway[m]> I haven't managed to find the setting for it, if it exists in GOS.
+14:50:58 <GrapheneOS-Teleg> <K​ileXt> Damn what a life you must have
+14:51:50 <DHFuchsiaOSwhen> > <@rahoon_goaway:matrix.org> Can the vibration pattern/length for notifications be changed?
+14:51:50 <DHFuchsiaOSwhen> > I haven't managed to find the setting for it, if it exists in GOS.
+14:51:50 <DHFuchsiaOSwhen> Can turn off or on some feedbacks on Accessibility > Vibration and Haptic Strength, not exactly for changing  pattern (or strength)
+14:57:48 <dakac> Can anyone tell me does Messenger, WhatsApp and Discord work on GrapheneOS?
+14:59:54 <poisonoushydra[m> Yes, yes, and I have not tested it.
+15:00:02 <asdf54> What is your interest in Graphene if not privacy?
+15:00:16 <redman[m]> dakac: Jesus. Quite the privacy nightmare line-up, there. Yes, all (at minimum) have fully compatible webapps.
+15:00:20 <redman[m]> asdf54: Security, probably.
+15:01:41 <dakac> Yeah, I know, I found FOSS alternatives for all other apps, but my friends use these
+15:02:20 <pizzaeater69[m]> I dont think Discord gets notifications tho because it needs googleplayservices
+15:02:25 <redman[m]> dakac: Matrix bridges are pretty accessible to the individual now for those networks.
+15:02:38 <redman[m]> <pizzaeater69[m] "I dont think Discord gets notifi"> Their webapp doesn't have desktop notifications?
+15:02:45 <asdf54> My teenagers have persuaded all their friends to load Signal.
+15:03:18 <dakac> I'm slowly getting mine to transition as well, but as you might imagine, people don't care all that much
+15:04:55 <dakac> pizzaeater69[m] Yup, GrapheneOS doesn't have google play services on which a lot of these apps rely on. That's what got me wondering
+15:06:31 <asdf54> Can you use them by the web without loading their app? A friend of mine found he can get notifications without the app by changing to the "not mobile" website.
+15:08:12 <redman[m]> And/or installing the PWA to the homescreen
+15:08:34 <dazinism> dannyknoll3 (Danny@WorkOrderPro): you were asking about advice for people interested in doing some Graphene development
+15:08:44 <dazinism> Jolly has some related stuff
+15:08:47 <lavonni[m]> i feel like the os itself is privacy that there is no point in giving up as you don't benefit really. on the otherhand whatsapp is a network of people itself. of course not ideal :(
+15:08:47 <dazinism> https://github.com/Peter-Easton/GrapheneOS-Knowledge
+15:09:22 <dazinism> Theres also some stuff at
+15:09:22 <asdf54> I'm new here. What's the technique to direct a response to the person I'm responding to?
+15:09:24 <dazinism> https://hub.libranet.de/wiki/graphene-os/wiki/Helping-graphene-os
+15:09:51 <redman[m]> asdf54: Like this.
+15:09:52 <dazinism> asdf54: quote their name is probably best
+15:10:08 <asdf54> shortcut besides typing it?
+15:10:32 <dakac>  @<username>
+15:10:35 <redman[m]>  asdf54: tap display name — on mobile anyway
+15:11:34 <dazinism> On IRC maybe tap name, maybe type a few letters then press tab key
+15:11:35 <redman[m]> dazinism: Thank you! I've got a fellow looking through the codebase now, with a contribution in mind!
+15:12:25 <asdf54> dazinism: Thanks. That works.
+15:12:35 <redman[m]> That tab autocomplete is nice.
+15:13:06 <asdf54> Anyone worry about "google admob" tracker in Aurora apps?
+15:13:15 <DHFuchsiaOSwhen> <dakac "Can anyone tell me does Messenge"> https://nitter.snopyta.org/DanielMicay/status/1367594481084592130#m
+15:13:25 <redman[m]> asdf54: Sry, looked to me like you were on Matrix.
+15:13:46 <DHFuchsiaOSwhen> All works without Play services, although Discord has no notifications without it. Use cases where these are separated in user profiles is alright
+15:14:44 <dakac> DHFuchsiaOSwhen that's awesome!
+15:15:32 <asdf54> I'm 3rd day into cutover to graphene daily driver. Is migroG frowned on?
+15:15:54 <redman[m]> asdf54: hit #grapheneos-offtopic:matrix.org
+15:15:54 <zzxx123_> ;
+15:16:00 <dakac> Discord not having notifications is not a big deal, they don't work well anyway
+15:16:32 <DHFuchsiaOSwhen> Mostly, using GrapheneOS compared to other Android OS is an improvement in privacy and security regardless of the sets of apps used
+15:16:45 <asdf54> red50milk[m]: thanks
+15:18:07 <DHFuchsiaOSwhen> <asdf54 "I'm 3rd day into cutover to grap"> https://grapheneos.org/#never-google-services
+15:19:45 <DHFuchsiaOSwhen> That's the planned implementation after considering between Play services stub and microG fork on maintainability, privacy and security
+15:21:45 <dazinism> asdf54: known trackers may be an issue, some stuff helps the developers fix apps. Up to you to decide.
+15:21:45 <dazinism> Problem is apps can still do all the same 'tracking' without using a 3rd party tracking framework that would show up
+15:22:00 <dazinism> Theres advice on selecting apps here https://hub.libranet.de/wiki/and-priv-sec/wiki/apps
+15:23:24 <dazinism> Should probably add a bit clarifying about trackers....
+15:23:46 <dazinism> Or should I say 'trackers'
+15:24:41 <GrapheneOS-Teleg> ΛD ΛSTRΛ++ has joined the Telegram Group!
+15:33:05 <GrapheneOS-Teleg> <m​adaidan> Oh god oh fuck
+15:33:19 <GrapheneOS-Teleg> <P​engu_Gone_Complicated> 😏
+15:36:16 <kotaofshekels[m]> Hey guys who own the pixel 5 is it running smoothly on grapheneos? was it worth it vs buying a Pixel 4a? seems like the pixel 5 is a bit overpriced but I don't mind paying the extra 300 if it runs more smoothly
+15:39:49 <M3manu31[m]> <kotaofshekels[m] "Hey guys who own the pixel 5 is "> All good just Signal app gives no notifications on my P5
+15:40:00 <lavonni[m]> i have a 4a and it feels just like a phone really
+15:40:07 <lavonni[m]> it is boring but works
+15:41:35 <GrapheneOS-Teleg> <ΛD ΛSTRΛ++> I have arrived
+15:42:08 <GrapheneOS-Teleg> <m​adaidan> Stop fucking munching on my jorts the homies are getting a lil anxious
+15:42:53 <GrapheneOS-Teleg> <c​lannad> I must remind you that this is an official channel for grapheneos
+15:43:14 <GrapheneOS-Teleg> <c​lannad> Such behavior isn't acceptable here
+15:43:45 <GrapheneOS-Teleg> <m​adaidan> lmao
+15:43:48 <GrapheneOS-Teleg> <m​adaidan> ok
+15:45:02 <d3nm6ugnffwftn2j> <M3manu31[m] "All good just Signal app gives n"> You might want to check the battery optimization settings
+15:48:44 <kotaofshekels[m]> <lavonni[m] "it is boring but works"> Ok because a few years ago I bought a cheap motorola that had great reviews but regretted it when I saw the performance was subpar. That's my fear if I buy the pixel 4a. How is it boring, what does it lack?
+15:49:12 <kotaofshekels[m]> > <@lavonni:matrix.org> it is boring but works
+15:49:12 <kotaofshekels[m]>  * Ok because a few years ago I bought a cheap motorola that had great reviews but regretted it when I saw the performance was subpar. That's my fear if I buy the pixel 4a. How is it boring, what does it lack? Boring is what I'm looking for. I have a Galaxy s10 plus and the bloatware has reached astral levels. Pathetic.
+15:49:49 <redman[m]> Few if any regret Pixel hardware.
+15:50:07 <kotaofshekels[m]> <M3manu31[m] "All good just Signal app gives n"> Weird I thought signal has their own push notification system if they notice you don't have gapps
+15:50:22 <asdf54> Can't find LTE-only setting.  "Settings ➔ Network & Internet ➔ Mobile network ➔ Preferred network type." There's no "preferred network type" in my settings?
+15:52:00 <redman[m]> asdf54: Having same issue, and wondering if it's related to my inability to make/receive calls.
+15:53:19 <mr_hebi_san[m]> Discord on a mobile browser is 100% unusable.  They have no interest in making a mobile site.  It's the app or nothing.
+15:54:08 <asdf54> Calls work fine for me. I see reference to settings options at grapheneos.org/ that I don't see on my phone.
+15:54:13 <mr_hebi_san[m]> Or I guess one of those shady Discord open source front ends that send your data to who knows what MITM on its way to Discord
+15:58:35 <lavonni[m]> <kotaofshekels[m] "Ok because a few years ago I bou"> it feels fine, the only bloatware is the bloatware i install. i don't play games though so I couldn't say
+16:03:37 <asdf54> My Pixel4 has no fingerprint reader. Any thoughts about using face unlock?
+16:04:47 <zzxx123_> mr_hebi_san[m] do you have proof an thirdparty discord client is doing that? you can say the same for any other services that have thirdparty clients tbh, not just discord
+16:11:06 <redman[m]> zzxx123_: Unless he's talking about ones that downgrade security. Interested as well, but should be in #grapheneos-offtopic:matrix.org
+16:13:40 <asdf54> Can anyone else go here: Settings ➔ Network & Internet ➔ Mobile network ➔ Preferred network type
+16:13:57 <pizzaeater69[m]> Yes
+16:14:22 <pizzaeater69[m]> You can enable LTE-only from there
+16:14:43 <asdf54> Is there some setting that prevents me from seeing Preferred Network type?
+16:16:38 <asdf54> pizzaeater69[m] Thanks. I can't see Preferred Network type under Mobile network.
+16:26:14 <dazinism> Wonder if thats something to do with your carrier?
+16:27:18 <dazinism> Seeing it on my 3XL
+16:28:02 <nscnt[m]> I thought I remembered an open issue and the conclusion was that it was the carrier, but I can't find it right now
+16:28:30 <redman[m]> asdf54: What carrier, BTW?
+16:28:41 <asdf54> Thanks everyone. Puretalk carrier.
+16:29:19 <redman[m]> Who are they an MVNO of?
+16:29:31 <asdf54> ATT
+16:31:25 <asdf54> Sorry, I se MVNO settings under Access Point Names.  GID?
+16:33:47 <mr_hebi_san[m]> <zzxx123_ "mr_hebi_san do you have proof an"> The one I'm thinking of notes in its documentation that it sends data to a "Litecord" server, which then forwards to Discord and back.  While Litecord is open source too, who knows what the server owner is doing with their install?
+16:34:41 <mr_hebi_san[m]> So even if the front end is squeaky clean you can't know about the server between the client and real Discord
+16:35:24 <mr_hebi_san[m]> Not unless you run it yourself and point your own front end at your own Litecord
+16:47:54 <zzxx123_> i can't find anywhere in their doc about sending data to Litecord server.
+16:48:58 <asdf54> Seems like the Graphene dialer doesn't let me block numbers. I tried Simple Dialer which allows blocking numbers. It doesn't report time-stamp from calls except current day. Better FOSS dialer?
+16:49:48 <zzxx123_> and you were taking about Discord front ends, then proceeds give an example of a  discord backend  to prove your point?
+16:52:15 <nscnt[m]> zzxx123_: #grapheneos-offtopic / #grapheneos-offtopic:matrix.org
+16:54:24 <thetranstocommie> <asdf54 "Seems like the Graphene dialer d"> the one I was thinking of was Koler, but looks like it was discontinued. I'd also suggest sticking to stock apps if possible just bc they're likely going to be the most secure and privacy resecting.
+16:58:03 <asdf54> thetranstocommie: Thanks. Graphene benefits far out-weigh the inconveniences. Just hoping someone else had found a secure/private alternative.
+17:01:29 <kotaofshekels[m]> People who have bought the pixel 4a, any regrets VS taking the Pixel 5? Does it work up to your expectations?
+17:03:11 <mr_hebi_san[m]> <zzxx123_ "and you were taking about Discor"> https://gitdab.com/distok/cutthecord/src/branch/master/patches/README.md
+17:04:29 <mr_hebi_san[m]> If you're distrustful of Discord already, then an alternative front-end that even has an option of forwarding to a MITM at all doesn't increase your security
+17:07:24 <nscnt[m]> Please move to #grapheneos-offtopic / #grapheneos-offtopic:matrix.org
+17:13:23 <redman[m]> kotaofshekels: I'm clinging to my 3aXL fleet. You can't really go wrong with these devices.
+17:13:30 <redman[m]> Pixels are pretty solid.
+17:20:29 <ghkngfjkbgi[m]> I want to install and use the Google Pixel Camera app on my Google Pixel 3 XL with GrapheneOS, any way to do it? IF possible then without MicroG, anyone have any viable solution? I am sure it would work on other Pixel devices too and others might want to do the same... Thanks a bunch in advance!
+17:28:04 <redman[m]> ghkngfjkbgi: https://freenode.logbot.info/?q=Gcam&ch=grapheneos&w=a
+18:44:43 <fybb> Quick question, isn't the path to otatools.zip at line 27 @ script/release.sh incorrect since the $OUT variable isn't used/declared anymore? Had to change it to "out/target/product/$1/otatools.zip" when creating a release earlier today
+19:00:34 <Thatcher[m]> <kotaofshekels[m] "People who have bought the pixel"> I regret not paying an extra $349 for an additional 0.2" of screen size and other minor upgrades
+19:03:23 <strcat[m]> fybb: no it's not incorrect
+19:03:34 <strcat[m]> fybb: you're meant to run that in a shell with the environment set up properly, not a new shell
+19:09:22 <asdf54> ghkngfjkbgi[m] I got PXv8.1_GCam-v1.2.apk working on grapheneos on Pixel4 after loading microG first. https://www.celsoazevedo.com/files/android/google-camera/f/changelog1526/ Also loaded google photos but photos crashes a lot. No problem with the camera so far. Good info here but I couldn't get the APK created by the "adb pull" command to work
+19:09:22 <asdf54> after installing. The PX camera installed and works fine.
+19:11:07 <asdf54> Open camera is a great option. Will use that if/when PX camera stops working.
+19:12:37 <fybb> strcat[m]: ok, do you know where $OUT is set?
+19:14:11 <j-james[m]> <asdf54 "ghkngfjkbgi I got PXv8.1_GCam-v1"> Also re: this, GCam only works up to a certain version depending on the Pixel model
+19:14:46 <j-james[m]> Ex. on the 4a, only version 7.4 and under work
+19:14:57 <strcat[m]> fybb: it's set as part of doing the build, you're supposed to use the same shell
+19:15:12 <strcat[m]> if you don't use the same shell then it's your responsibility to set the variables it needs
+19:16:02 <strcat[m]> asdf54: please don't recommend that people do broken stuff and install sketchy third party things, thanks
+19:16:18 <fybb> strcat[m]: ok, thanks. I'll give it a shot tomorrow and try to see where I went wrong
+19:17:44 <strcat[m]> asdf54: there are people who use the actual Google Camera on GrapheneOS, and while there's little assurance that will actually keep working (since it will likely depend more on Play services) they at least aren't running some weird old third party modified variant of it
+19:21:44 <braxtono[m]> Is there a way for vanadium to mitigate these already? https://orenlab.sise.bgu.ac.il/p/PP0
+19:22:23 <braxtono[m]> CSS fingerprinting ,no JavaScript
+19:24:34 <strcat[m]> braxtono: that's not about fingerprinting...
+19:24:51 <strcat[m]> braxtono: and yes, Vanadium (and Chromium) has a sandbox with site isolation
+19:25:27 <strcat[m]> braxtono: sites need to choose to set things up so that they are isolated well from other sites
+19:26:42 <asdf54> ghkngfjkbgi[m] I'm not recommending PX GCam dated 2021-01-25. Just noting that it has worked for me. Also I'm not recommending microG just that I haven't experienced problems yet in about 2 weeks of testing and using as daily driver for 5 days.
+19:26:43 <strcat[m]> https://w3c.github.io/webappsec-post-spectre-webdev/ is a guide for web site developers
+19:26:49 <Lotus[m]1> are all applications sandboxed by default in android?
+19:26:55 <Lotus[m]1> I may be wrong
+19:27:03 <strcat[m]> they're always sandboxed
+19:27:10 <strcat[m]> there is no option to have a non-sandboxed app
+19:29:04 <dannyknoll3[m]> asdf54: Doesn't it bitch about you changing the OS, if microg has been smushed into the situation?
+19:29:44 <strcat[m]> Google Camera doesn't care if you run it on another OS, they aren't using Google Camera though
+19:29:48 <strcat[m]> they're using some third party fork
+19:30:15 <strcat[m]> I suggest dropping the topic since I've made it clear that it's inappropriate to be encouraging doing broken things and using sketchy third party software
+19:31:16 <strcat[m]>  * they're using some third party modified variant
+19:35:27 <kotaofshekels[m]> <Thatcher[m] "I regret not paying an extra $34"> So basically seems like the pixel 5 only good point is the better contrast ratio and the better materials used to build the phone. I saw benchmarks showing they have the same performance.
+19:37:11 * braxtono[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/pfgINFbuwVkImVVygvuoMDgJ/message.txt >
+19:40:10 <strcat[m]> braxtono: please read what I wrote in response already
+19:40:20 <strcat[m]> braxtono: read the web browsing section on our site
+19:40:32 <strcat[m]> Firefox and Tor do not have site isolation and cannot protect you much from side channel attacks
+19:40:38 <strcat[m]>  * Firefox and Tor Browser do not have site isolation and cannot protect you much from side channel attacks
+19:41:01 <strcat[m]> Chromium has site isolation, but as it will with any browser, it depends on sites setting themselves up to be isolated from others
+19:41:20 <strcat[m]> I linked https://w3c.github.io/webappsec-post-spectre-webdev/
+19:41:43 <nscnt[m]> it's 404
+19:42:07 <strcat[m]> wasn't when I linked it
+19:42:08 <strcat[m]> it was renamed
+19:47:28 <strcat[m]>  * https://mikewest.github.io/post-spectre-webdev/ is a guide for web site developers
+19:47:33 <strcat[m]>  * I linked https://mikewest.github.io/post-spectre-webdev/
+19:47:42 <asdf54> strcat: PX camera subject dropped.  Is there consensus on camera apps here?
+19:48:02 <strcat[m]> nscnt: braxtono: it's still at https://github.com/mikewest/post-spectre-webdev
+19:48:09 <strcat[m]> GitHub Pages version of it seems gone at the moment
+19:48:12 <strcat[m]> being moved around
+19:48:30 <strcat[m]> missed chance to see rendered version easily if you didn't already open what I linked earlier
+19:48:34 <strcat[m]> until they set it up again
+19:49:10 <strcat[m]> anyway point is that Chromium provides site isolation and web sites can be set up to provide really good isolation
+19:49:56 <strcat[m]> Tor Browser tries to provide that kind of semantic isolation for everything but the issue is there isn't a foundation below those high level semantics to actually isolate them
+19:50:16 <mynacol[m]> asdf54: You should not ping str_cat directly if not important
+19:50:39 <mynacol[m]> asdf54: Takes time from him otherwise spent on development for the project
+19:50:48 <asdf54> myn*
+19:51:25 <mynacol[m]> asdf54: And look here for the official stance regarding camera: https://grapheneos.org/usage#camera
+19:51:33 <asdf54> mynacol[m] Thanks. Learning my way around.
+19:51:39 <strcat[m]> not entirely up-to-date
+20:09:06 <wncry[m]> Hi everyone, is there a posibility to show notifications from other profiles (eg. system update notification from owner profile to user profile)?
+20:12:28 <smctwo> Other way around I have seen, I think it is possible user is active
+20:15:37 <wncry[m]> Ok, kinda bummer wanted to use user for day to day usage and owner as administrator of sorts, well thanks anyway.
+20:19:26 <nscnt[m]> wncry: Is just the lack of the system update notifications the problem or what?
+20:21:07 <wncry[m]> Well, also a sms notifications, for updates i could use atom feed
+20:21:39 <nscnt[m]> wncry: SMS notifications work across users
+20:23:12 <wncry[m]> <nscnt[m] "wncry: SMS notifications work ac"> Interesting, that would imply i did something wrong when setting up user account
+20:24:14 <strcat[m]> wncry: you have to enable calls/texts
+20:24:21 <strcat[m]> it's per-user configuration
+20:24:56 <wncry[m]> Ok, I will give it a try.
+20:28:32 <nscnt[m]> System update notifications are displayed by design only for the Owner user. This could be changed if we want to change the original design.
+20:30:54 <wncry[m]> <nscnt[m] "System update notifications are "> Ok that doesn't bother me as much as absence of SMS notifications, i have tried to enable call/text access to user from owner but nothing...
+20:34:08 <awast> hello
+20:34:38 <awast> the signify command to verify sargo-factory-2021.03.06.00.zip.sig outpus FAIL
+20:35:06 <awast> couldnt find any information on that in the documents
+20:43:12 <smctwo> from which OS you are trying to verify?
+20:43:55 <awast> arch
+21:02:59 <awast> i got it to work
+21:03:11 <awast> now the flash failed, did i just brick the phone?
+21:03:24 <awast> Device product is 'blueline'.
+21:03:25 <awast> Update requires 'sargo'.
+21:03:25 <awast> fastboot: error: requirements not met!
+21:03:26 <awast> Rebooting into bootloader
+21:07:34 <mynacol[m]> awast: What pixel do you have?
+21:08:46 <mynacol[m]> You almost never can brick these phones. As long as it can boot into bootloader mode, everything is fine.
+21:09:00 <awast> argh.
+21:09:04 <awast> sry im an idiot
+21:09:11 <awast> i grapped a 3 not a 3a
+21:09:18 <awast> *grabbed
+21:09:57 <mynacol[m]> Thought so. Hope it works now 👍
+21:10:18 <awast> currently downloading the image, i really hope so too :)
+21:11:00 <awast> im sorry, phones are alien to me.everything without a keyboard scares me :D
+21:12:03 <mynacol[m]> awast: Then a phone with a qwerty keyboard may be the best for you :P
+21:15:56 <awast> yeah, i miss my old whackberry :/
+21:30:22 <awast> it worked!
+21:30:38 <awast> thanks, you guys rock
+21:30:45 <awast> have a beautiful day
+21:36:57 <kotaofshekels[m]> In my country Pixel 5 is 630 euros VS Pixel 4a is 350 euros. What do I choose????
+21:37:11 <kotaofshekels[m]> I know in your country it's $699 vs $350
+21:37:44 <mynacol[m]> <kotaofshekels[m] "In my country Pixel 5 is 630 eur"> Both are fine
+21:37:59 <kamesjitt616[m]> Depends what you need
+21:39:41 <kotaofshekels[m]> I like that it feels good to use and smooth. Nice screen
+21:39:46 <kotaofshekels[m]> I don't care about 5g
+21:40:25 <kotaofshekels[m]> One time I bought a motorola moto G (3rd gen), and it SUCKED
+21:40:31 <kotaofshekels[m]> So I'm scared to make the mistake again
+21:40:39 <kotaofshekels[m]> To get a shitty phone
+21:41:36 <b1101> I just like having a smaller sized phone. it's why whenever I upgrade from p3, it will probably be 5
+21:44:24 <GrapheneOS-Teleg> <K​ileXt> 5g phones are futur proof
+21:45:01 <GrapheneOS-Teleg> <K​ileXt> Pixel 5 has a big battery and 90hz screen and wireless charging
+21:45:25 <GrapheneOS-Teleg> <K​ileXt> If you value these these things it might be worth it
+21:58:31 <GrapheneOS-Teleg> Federico has joined the Telegram Group!
+22:09:24 <GrapheneOS-Teleg> <X> You might also want to take a look at how long they will be supported.
+22:11:16 <GrapheneOS-Teleg> <K​ileXt> True I forgot about that
+22:11:38 <GrapheneOS-Teleg> <K​ileXt> 4a 5ghave one more month than the pixel 5
+22:12:19 <Duxy[m]> I currenty have everything setup in the owner profile. The only things I do are watching YouTube (Newpipe), listening podcasts (Antennapod), Browsing (Vanadium/Bromite), messaging (Whatsapp/Signal/Element) and sometime I use OsmAnd for navigation. And I got KeepassDX/Aegis. All my messengers don't have permission for storage but just network and contacts. Would using a separate user profile make sense? All apps are
+22:12:19 <Duxy[m]> sandboxed anyway so whatsapp doesn't have access to any other app. I feel like it won't add anything or am musunderstanding stuff?
+22:12:41 <Duxy[m]> And calling sometimes ofc
+22:13:16 <Duxy[m]> * I currenty have everything setup in the owner profile. The only things I do are watching YouTube (Newpipe), listening podcasts (Antennapod), Browsing (Vanadium/Bromite), messaging (Whatsapp/Signal/Element) and sometime I use OsmAnd for navigation. And I got KeepassDX/Aegis. All my messengers don't have permission for storage but just network and contacts. Would using a separate user profile make sense? All apps are
+22:13:16 <Duxy[m]> sandboxed anyway so whatsapp doesn't have access to any other app. I feel like it won't add anything or am I misunderstanding stuff?
+22:15:04 <GrapheneOS-Teleg> <X> A second profile is useful e.g.in case you want to use the phone in one, but keep more private data at rest in the other profile.
+22:16:16 <Duxy[m]> So for storing private files?
+22:18:41 <GrapheneOS-Teleg> <X> To protect them in a scenario the unlocked phone (because you used it for a phone call) gets into the wrong hands (e.g.robber). Data in the still locked second profile would be protected.
+22:19:51 <GrapheneOS-Teleg> <X> I do not use the main account for anything.
+22:21:09 <Duxy[m]> I don't store any private files on my phone so I guess it's irrelevant for me
+22:21:40 <Duxy[m]> Thanks
+22:23:02 <GrapheneOS-Teleg> <X> How about exposing your private messages? And getting access to your keepass-file for brute-forcing on another device?
+22:23:04 <visla[m]> I've been checking out the "Mass Extraction" report from Upturn - is GrapheneOS resistant to mobile device forensic tools (MDFTs) used by police departments?
+22:23:12 <Duxy[m]> Is WiFi calling preferred over cellular btw?
+22:24:18 <Duxy[m]> My private messages only contain "the dog has been out this late" and making appointments
+22:24:49 <Duxy[m]> And my keepass doesn't contain anything important
+22:24:50 <GrapheneOS-Teleg> <X> For secure calls the experts here say not to use cellular.
+22:25:11 <GrapheneOS-Teleg> <X> ...but signal etc.
+22:25:34 <Duxy[m]> Tell that to all the organisations
+22:27:23 <snoopy> all my files on my phone are private :x?
+22:27:47 <bushido-bol[m]> Just got my Pixel 5 in the mail, boutta load it up with a fresh install
+22:28:07 <GrapheneOS-Teleg> <X> https://grapheneos.org/faq#encryption explains that way better than I could.
+22:28:37 <Duxy[m]> Nice, I'm gonna wait for 3A EOL before buying a new phone.
+22:28:46 <visla[m]> GrapheneOS-Teleg: was that in response to me or snoopy ?
+22:29:34 <bushido-bol[m]> Duxy: I just managed to run over my 3xl last week so it was a bummer
+22:33:58 <b1101> if I I have two wap's in my apt. should the phone switch to the strongest signal automatically?
+22:34:11 <strcat[m]> yes
+22:34:20 <strcat[m]> it will choose the better one
+22:34:32 <strcat[m]> may not be the one with a stronger signal if the weaker one is good enough and faster
+22:36:09 <Duxy[m]> bushido-bol: ouch
+22:47:05 <TheJollyRoger> visla[m]: The value of these UFED devices are greatly overstated. Much of the time, they are simply a way to extract files from devices that have already been unlocked. Essentially, they are a glorified way of using ADB. Some of them simply offer prepackaged exploits to unlock devices that are known to be vulnerable or have for any reason, been powered on with the disk unlocked, but are on the
+22:47:07 <TheJollyRoger> lockscreen.
+22:48:31 <TheJollyRoger> visla[m]: So, in a nutshell, they offer ways to extract images for phones *that you have the password for*, or a way to unlock outdated phones via prepackaged exploits. They aren't as big an issue as they would like you to believe them to be, and if you use a secondary profile and use GrapheneOS' "end session" button when you no longer need the keys to be in memory, they're not a problem at
+22:48:33 <TheJollyRoger> all.
+22:50:19 <TheJollyRoger> visla[m]: in short, UFED machines are a bikeshed discussion and you don't need to worry about it so long as you stay up to date, or, if you do believe yourself to be the target of one, use what we recommend by only using the owner profile to power on and manage other user profiles, which allows the user profiles to be locked and the keys ejected from memory when not in use, coupled with a
+22:50:21 <TheJollyRoger> strong password. (GrapheneOS allows passphrases of up to 64 characters in length).
+22:50:41 <visla[m]> TheJollyRoger: Thanks for the reply. My Pixel is in the mail and should arrive Thursday or Friday. I'm not educated on the secondary profile or end session button yet.
+22:51:21 <TheJollyRoger> visla[m]: Great, well, I'll just tell you in advance then. Under "Settings" you will find options for multiple users.
+22:51:52 <TheJollyRoger> I believe under Settings -> System -> Multiple Users.
+22:52:12 <TheJollyRoger> The owner profile has several important system configuration settings encrypted, so as a result the Owner profile MUST be unlocked to finish powering on the phone.
+22:52:41 <visla[m]> If I'm hearing you right, it's the same idea s not operating Linux as root?
+22:52:44 <TheJollyRoger> But you can add multiple profiles. These provide separate workspaces,
+22:53:11 <TheJollyRoger> visla[m]: It's very similar. Except even on the owner profile, apps are always FULLY SANDBOXED as strongly as possible.
+22:53:39 <TheJollyRoger> Apps are *always* sandboxed on Android, and GrapheneOS seeks to strengthen the sandboxing and mitigate exploits.
+22:54:05 <TheJollyRoger> However, the profiles go a bit further than this: each one allows a separate contextual workspace to be provided.
+22:54:22 <visla[m]> Like Linux virtual desktops?
+22:54:40 <TheJollyRoger> Not quite. The profiles will have their own contact list and its own calendar, and its own app, essentially,
+22:55:01 <visla[m]> Oh that's very interesting
+22:55:03 <TheJollyRoger> it's like having multiple phones compressed into one, which can OPTIONALLY be made to share the same wireless service provider.
+22:55:26 <TheJollyRoger> Their own application data, their own app storage, their own shared storage partition...
+22:55:37 <TheJollyRoger> Essentially, the profiles have nothing to do with each other, except for one thing:
+22:55:46 <strcat[m]> visla: nothing to do with 'virtual desktops'
+22:56:27 <strcat[m]> user profiles are separate user accounts with their own lock method, their own encryption keys (disk encryption is per-profile), etc.
+22:56:27 <TheJollyRoger> App installations are global, but each profile will appear to have its own copy of that app, and its own separate app data.
+22:56:30 <visla[m]> If a profile isn't provided permissions to share the wireless service provider and that profile is active, is it then cut off from being physically tracked via cell towers?
+22:56:35 <GrapheneOS-Teleg> <X> Don't they all use the network of the currently active profile?
+22:56:36 <TheJollyRoger> The only catch is, the app *MUST* be the same version.
+22:56:48 <strcat[m]> visla: you seem quite confused
+22:56:51 <strcat[m]> visla: that doesn't make sense
+22:57:06 <strcat[m]> visla: I suggest reading the FAQ
+22:57:13 <TheJollyRoger> visla[m]: only Airplane mode can prevent you from being tracked via the cell towers.
+22:57:17 <strcat[m]> required reading before posting questions here, really
+22:57:24 <TheJollyRoger> Point, yes, read the FAQ.
+22:57:59 <visla[m]> I've read some of it, but obviously not the parts that answer some of my questions.
+22:58:04 <TheJollyRoger> visla[m]: With respect to "being tracked by cell towers" I would like to offer you a simple experiment. Write a letter to your sweetheart, put it in an envelope, put a stamp on the envelope without a return address and without a destination address and see if it arrives.
+22:58:07 <visla[m]> TheJollyRoger:
+22:58:19 <visla[m]> TheJollyRoger: Thanks for all of the insight!
+22:58:22 <TheJollyRoger> Your cellphone service provider *needs* to know which towers to route to.
+22:58:41 <TheJollyRoger> If it doesn't know which towers to route to so it can connect to your device, how is it going to deliver you connectivity?
+22:59:17 <Duxy[m]> would it be possible/a good idea to force/recommend using a separate user profile when installing GrapheneOS? It's a long time since I installed it btw so maybe it actually does.
+22:59:45 <TheJollyRoger> Duxy[m]: no, it would not, because some people have no need to make use of different contextual identities.
+23:00:26 <visla[m]> I see your point. My threat model is very small so far as I'm aware and these are issues that I hopefully won't run in to, but I'm curious none the less. I know very little about cellular networking.
+23:01:23 <Duxy[m]> TheJollyRoger: but you could make an info screen recommending it for the users that do need it right?
+23:01:44 <Duxy[m]> * TheJollyRoger: but you could make an info screen at install recommending it for the users that do need it right?
+23:02:01 <TheJollyRoger> Duxy[m]: The recommendation is in the FAQ. Multiple users can be found in the settings, or by tapping on the icon in the corner of the pulldown menu.
+23:02:26 <TheJollyRoger> But if you'd like to add it to the launcher, you're welcome to, if you have a goal and threat model in mind.
+23:04:37 <TheJollyRoger> visla[m]: There's nothing nefarious about the cell network. It's transport agnostic, but these days over 95% of the internet is TLS encrypted anyways. Rather than rely on network level authentication, which would entail TRUSTING THE NETWORK, modern web traffic relies on the transport layer itself being secure.
+23:04:40 <Duxy[m]> TheJollyRoger: I know they are in there but I figured it might be a nice addition. I'm not a developer so xD
+23:04:56 <TheJollyRoger> That's why it's not a big problem for the cellular network to be security-agnostic.
+23:05:04 <TheJollyRoger> Duxy[m]: Hehe, I gotcha!
+23:05:34 <TheJollyRoger> Because it's better that the network be security agnostic, and easier to make the *applications* and the traffic that your applications send internally secure, than to trust the network.
+23:07:29 <TheJollyRoger> Essentially, the cellular network is no more nefarious than any other way to connect to the internet.
+23:07:38 <visla[m]> TheJollyRoger: I think I get what you're saying
+23:07:54 <TheJollyRoger> Your cellphone service provider has a legitimate need to be able to route traffic to your cellphone, just as your home internet service provider needs to know which house they have to run the wire into.
+23:08:02 <TheJollyRoger> As well as if you've paid your bills that month.
+23:09:21 <TheJollyRoger> visla[m]: yep, hope this makes sense. There's a lot of misunderstanding about this sort of thing.
+23:09:24 <TheJollyRoger> I will be back shortly.
+23:10:21 <asdf5465> Any recommendations about using face unlock?
+23:10:51 <visla[m]> My initial concern was whether a cop could pull me over for speeding and then plug a device into my locked device and crack/decrypt my data, but it sounds like that's not the case.
+23:11:29 <GrapheneOS-Teleg> <g​ochoingles> Fingerprint unlock + incredibly long passphrase is a better approach IMO.
+23:11:59 <asdf5465> Thanks but pixel 4 has no fingerprint unlock
+23:12:06 <GrapheneOS-Teleg> <g​ochoingles> Sometimes depends on your threat model.
+23:12:21 <GrapheneOS-Teleg> <g​ochoingles> Whoops.
+23:14:27 <GrapheneOS-Teleg> <g​ochoingles> For an easy unlock method, face unlock then. But I think that should go along with a really long passphrase.
+23:15:01 <visla[m]> This might not be the right room for this, but is anyone aware of the actual password and decryption cracking ability of LEOs? Articles I've read make it sound like mobile devices are easier to break into than other encrypted devices but I don't know why that would be.
+23:15:27 <GrapheneOS-Teleg> <g​ochoingles> You could use the off-topic chat.
+23:17:07 <skwisgaar[m]> asdf5465: face unlock is actually more secure than fingerprint, so you don’t need to be concerned about using it. Whether you use a long passphrase or not depends on whether you want to rely on the Titan M chip to protect against someone trying to guess your password.
+23:17:28 <skwisgaar[m]> That depends on your threat model
+23:17:37 <GrapheneOS-Teleg> <g​ochoingles> Wow. I thought they were just as safe.
+23:18:34 <skwisgaar[m]> It’s not that the pixel fingerprint sensor is insecure, just that it’s less secure than face unlock.
+23:18:51 <skwisgaar[m]> Probably not a significant difference to most users
+23:19:32 <SkyFox[kdeorg][m> <skwisgaar[m] "It’s not that the pixel fingerpr"> Doesn't that apply only to face unlock like the one in Pixel 4?
+23:20:31 <skwisgaar[m]> SkyFox [kde.org]: I am comparing the pixel implementations only
+23:21:00 <skwisgaar[m]> I would imagine that some other phones have poorly implemented face unlock where a pixel fingerprint sensor would be preferable
+23:21:11 <skwisgaar[m]> But I don’t know for sure
+23:21:34 <SkyFox[kdeorg][m> <skwisgaar[m] "SkyFox [kde.org]: I am comparing"> But  that's what I mean. On a Pixel 4a a fingerprint would be more secure than face unlock, afaik
+23:22:20 <skwisgaar[m]> SkyFox [kde.org]: is the face unlock technology different between pixels? I wasn’t aware of that
+23:22:35 <SkyFox[kdeorg][m> <skwisgaar[m] "SkyFox [kde.org]: is the face un"> Yes
+23:22:41 <duck[m]1> 3d ir unlock > fingerprint
+23:23:02 <SkyFox[kdeorg][m> <duck[m]1 "3d ir unlock > fingerprint"> But other Pixels don't have that
+23:23:09 <skwisgaar[m]> Ok then that’s worth looking into, I’m not sure
+23:23:12 <duck[m]1> dropped because of covid
+23:23:20 <Duxy[m]> Oh shit, I think I finally understand the profile/end session thing..... If I use a seperate user profile and tap the end session button that profile will be encrypted again while I'm still able to be called right? While if I just use the owner profile data will still be decrypted if I lock the phone again??
+23:23:34 <SkyFox[kdeorg][m> <SkyFox[kdeorg][m "But other Pixels don't have that"> Only Pixel 4 (XL). That's what their top bezel is for
+23:23:42 <strcat[m]> Duxy: if a profile isn't logged in, then the data is at rest, OS cannot decrypt the data
+23:23:48 <TheJollyRoger> visla[m]: Yes, it's definitely not the case. He'd need to know your password(s) first, or you would need to be using a device that has a known vulnerability to a prepackaged exploit.
+23:23:54 <strcat[m]> Duxy: end session puts it back at rest
+23:24:00 <strcat[m]> Duxy: the data on storage is never decrypted
+23:24:16 <Duxy[m]> strcat: thats genius lol
+23:24:17 <strcat[m]> it's about whether the OS has the keys to decrypt data from it
+23:24:21 <TheJollyRoger> Duxy[m]: yes, that's it. If you hit that gray "End Session" button, the phone will eject the cryptographic keys from its memory and the data will be put at rest. It cannot be decrypted without the password.
+23:24:30 <strcat[m]> Duxy: recommend https://grapheneos.org/faq#encryption to learn about this
+23:25:28 <TheJollyRoger> asdf5465: There is no concern with face unlock. The phone doesn't store your face. The secure element can check via "fuzzy hashing" if it matches what came before, but your phone does not store nor transmit your face.
+23:26:29 <TheJollyRoger> asdf5465: By design, it will not work if you are wearing a mask over your nose and mouth, or if your eyes are shut.
+23:27:08 <skwisgaar[m]> TheJollyRoger: are you aware of the security differences between 4a and 4 face unlock methods?
+23:27:11 <jay46> strcat: hi... I can't figure out why just regular SMS messages are not making a notification sound for new messages. It will vibrate but not make the new message notification sound. Any ideas... ?
+23:27:12 <TheJollyRoger> asdf5465: if you are still worried about accidentally unlocking your phone, you can enable lockdown, and then tap "lockdown." This will switch the biometric sensors off and require the pincode to unlock the phone again.
+23:27:47 <strcat[m]> jay46: sounds like you don't have making a sound enabled
+23:27:47 <TheJollyRoger> skwisgaar[m]: Well, I do know that I can unlock my phone by nudging it, if it's tilted toward my face.
+23:28:12 <duck[m]1> ir based face unlock is great tech
+23:28:18 <TheJollyRoger> The phone must be within around roughly two, to roughly two and a half feet for this to work.
+23:28:23 <TheJollyRoger> Otherwise it's out of range or is too close.
+23:28:40 <strcat[m]> jay46: or your sound is just off
+23:28:57 <jay46> strcat: shouldnt be a tough thing but i can go to that app, notifications are on, sounds are on for ringing etc.
+23:29:06 <TheJollyRoger> visla[m]: as for password cracking on the Pixels, please read the FAQ on encryption.
+23:29:31 <jay46> just nothing for incoming texts.
+23:29:37 <TheJollyRoger> visla[m]: on the Pixel 3s and later, to completely exhaust the key space for even a weak four-digit password would take over 650 years.
+23:29:49 <skwisgaar[m]> I was more curious if the technology behind the face unlock on the 4 is more sophisticated or difficult to bypass than the 4a.
+23:29:59 <duck[m]1> 4 is much better
+23:30:03 <strcat[m]> 4a doesn't have face unlock
+23:30:08 <TheJollyRoger> visla[m]: Please read the FAQ on encryption, the Pixels have a very sophisticated hardware-bound keying system and security chip.
+23:30:40 <TheJollyRoger> skwisgaar[m]: I don't think there's much difference? It's biometrics, so it's done via fuzzy hashing in the secure element, but the password is required to unlock the keys.
+23:30:45 <TheJollyRoger> I could be wrong though.
+23:30:51 <visla[m]> <TheJollyRoger "visla: Please read the FAQ on en"> Thank you, I'm reading about it now
+23:30:53 <duck[m]1> hardware is different
+23:30:56 <skwisgaar[m]> Lmao of course
+23:31:09 <duck[m]1> pixel 4 does ir dot projection
+23:31:18 <GrapheneOS-Teleg> <X> Where would I find this?
+23:31:40 <GrapheneOS-Teleg> <g​ochoingles> Does GOS' multiusers function allow for hiding the device's UUID, serial number and the SIM phone number? AFAIK Android apps can not see the IMEI.
+23:31:45 <anupritaisno1[m]> We recommend users get the latest devices we support for the best security and privacy
+23:31:45 <TheJollyRoger> Yeah, the Pixel 4 will fire a short lived, but intense burst of infrared light from two scanners mounted near the earpiece of your phone.
+23:32:04 <Duxy[m]> strcat: I actually read the FAQ again this afternoon but somehow I either accidentally skipped that part or it just didn't correctly register. Sorry
+23:32:08 <TheJollyRoger> @gochoingles - Android *itself* hides the Device's UUID, serial number, SIM, and IMEI.
+23:32:13 <duck[m]1> does 4a do face unlock at all
+23:32:22 <TheJollyRoger> @gochoingles - please read the FAQ on non-resettable hardware identifiers.
+23:32:25 <skwisgaar[m]> Why are people telling me about security differences in face unlock when 4a doesnt even have it lol
+23:32:25 <anupritaisno1[m]> Pixel 5 currently has the strongest encryption
+23:32:38 <TheJollyRoger> duck[m]1: The 4a does NOT RPT NOT allow for face unlock. That feature is only found on 4, and 4XL.
+23:33:17 <anupritaisno1[m]> It is also harder to steal the encryption keys off the pixel 5 even when AFU
+23:33:25 <TheJollyRoger> @gochoingles: https://grapheneos.org/faq#non-hardware-identifiers please read this with respect to hardware identifiers.
+23:33:32 <TheJollyRoger> Apps CANNOT access hardware identifiers.
+23:34:12 <TheJollyRoger> ONLY NON-USER FACING SYSTEM UTILITIES that are ISOLATED and SANDBOXED and are ABSOLUTELY REQUIRED TO CONNECT have access to non-resettable hardware identifiers.
+23:34:46 <TheJollyRoger> @gochoingles: https://grapheneos.org/faq#hardware-identifiers Sorry, this one.
+23:35:20 <strcat[m]> apps cannot see the phone number without you explicitly giving them it
+23:35:31 <anupritaisno1[m]> The wrappedkey_v0 flag enables the use of hardware-wrapped keys. When enabled, FBE keys are not generated by software, but rather are generated by Keymaster using the STORAGE_KEY tag. Then, each FBE key actually provided to the kernel is the STORAGE_KEY key exported from Keymaster, which causes it to be wrapped with a per-boot ephemeral key. The kernel then provides the wrapped keys directly to the inline
+23:35:31 <anupritaisno1[m]> encryption hardware. When implemented correctly, the unwrapped keys are never present in system memory, and a compromised wrapped key cannot be used after a reboot. This flag requires hardware support, Keymaster support for STORAGE_KEY, kernel driver support, the inlinecrypt mount option, and either the inlinecrypt_optimized or emmc_optimized flags.
+23:35:44 <strcat[m]> if you explicitly give them Phone information then yes they have the phone number because you explicitly gave it to them
+23:35:49 <anupritaisno1[m]> Pixel 5 has support °
+23:35:50 <strcat[m]> but there is no way for apps to obtain hardware identifiers
+23:35:55 <Duxy[m]> Now that I wanna setup a user profile. Should I just factory reset the phone and then setup the second profile or is deleting all the apps in the owner profile and setting up the second profile acceptable as well?
+23:35:56 <anupritaisno1[m]> * Pixel 5 has support ^
+23:35:57 <strcat[m]> covered well in FAQ
+23:36:07 <anupritaisno1[m]> https://source.android.com/security/encryption/file-based
+23:36:40 <strcat[m]> Duxy: the only reason to factory reset would be to guarantee that in the future, past data stored in the owner profile couldn't be recovered when it's unlocked
+23:37:00 <strcat[m]> depends if you really want that kind of guarantee
+23:37:26 <strcat[m]> the data will largely be overwritten in the NAND over time after deleting it but there is no guarantee without deleting the profile
+23:37:35 <strcat[m]> and for owner profile deleting it requires a factory reset since it's the system profile
+23:37:44 <strcat[m]> part of why we recommend taking advantage of user profiles
+23:37:46 <Duxy[m]> strcat: okay thanks might as well do it.
+23:37:57 <strcat[m]> anupritaisno1: the wrappedkey stuff is not really that useful in practice
+23:38:03 <anupritaisno1[m]> strcat: weird question, blkdiscard -s supported? (Or even meaningful)
+23:38:08 <strcat[m]> anupritaisno1: it closes a feature gap with iOS but really isn't that useful
+23:38:14 <Duxy[m]> Is allow phone/sms to the user profile recommended or?
+23:38:22 <strcat[m]> anupritaisno1: not very meaningful
+23:38:29 <anupritaisno1[m]> Got it
+23:38:32 <Duxy[m]> * Is allowing phone/sms to the user profile recommended or?
+23:38:48 <strcat[m]> Duxy: if you're going to be using as your regular profile, and need those to work, ofc
+23:38:58 <strcat[m]> we recommend avoiding carrier-based texts and calls whenever possible though
+23:39:19 <strcat[m]> use secure texts/calls
+23:39:23 <anupritaisno1[m]> Just read the documentation that unlocking the bootloader on the pixel triggers a secure erase
+23:39:35 <anupritaisno1[m]> Was curious why that's all
+23:40:06 <strcat[m]> anupritaisno1: it doesn't do a secure erase, it securely deletes the material needed to derive the keys ever again
+23:40:16 <strcat[m]> anupritaisno1: encryption avoids reliance on SSD secure erase
+23:40:32 <strcat[m]> secure erase can't erase something it can't access anymore
+23:40:58 <Duxy[m]> strcat: well some sites still only offer SMS 2fa and I do occasionally get calls. If that won't work without giving it access then I will have to yes.
+23:41:04 <strcat[m]> anupritaisno1: a lot of desktop SSDs just always have their own internal encryption on
+23:41:19 <strcat[m]> anupritaisno1: and they do 'secure erase' for the drive as a whole by just wiping the key
+23:41:26 <anupritaisno1[m]> strcat: AFAIK that's just theater, no?
+23:41:36 <TheJollyRoger> Oh god.
+23:41:38 <strcat[m]> sure because they always have the key
+23:41:44 <strcat[m]> but it works for secure erase
+23:41:49 <strcat[m]> that part isn't
+23:41:49 <anupritaisno1[m]> Have read reports that they didn't implement this correctly
+23:41:50 <TheJollyRoger> I'm getting flashbacks to the time I attempted to use hdparm.
+23:41:56 <strcat[m]> anupritaisno1: as I said above
+23:42:01 <strcat[m]> this feature isn't needed
+23:42:04 <strcat[m]> because of encryption
+23:42:09 <TheJollyRoger> they don't call the flag "--please-destroy-my-drive" please destroy my drive for nothing.
+23:42:19 <strcat[m]> it's not how profiles or the device as a whole are securely deleted
+23:42:21 <anupritaisno1[m]> <TheJollyRoger "they don't call the flag "--plea"> What
+23:42:36 <TheJollyRoger> anupritaisno1[m]: I accidentally bricked an SSD once using hdparm by not knowing what I was doing.
+23:43:00 <GrapheneOS-Teleg> <g​ochoingles> Hoo! That flag seems scary.
+23:43:04 <anupritaisno1[m]> That's pretty messed up yo
+23:43:30 <TheJollyRoger> Yeah, it's only intended to be used for testing, I was being a toxic self-defeating poweruser and I thought I knew everything.
+23:43:35 <TheJollyRoger> It was a lesson I had to learn.
+23:43:59 <anupritaisno1[m]> We've all been there
+23:44:47 <anupritaisno1[m]> I was once the dumb guy who shipped linux-libre for security reasons in glassrom only realizing how stupid it was later
+23:45:14 <TheJollyRoger> Oh yipes. Glad you moved off that o.O!
+23:45:17 <Duxy[m]> I used to dd my SSDs, now they're all broken lol. I knew I shouldn't have done it but I was naive haha
+23:46:06 <anupritaisno1[m]> <TheJollyRoger "Oh yipes. Glad you moved off tha"> I was pretty much just scammed by the floss community into thinking it was secure
+23:46:14 <TheJollyRoger> Duxy[m]: ohhhh crap, yeah very hard on the SSD!
+23:46:24 <TheJollyRoger> anupritaisno1[m]: crap, that was me too, a few years ago :(
+23:48:39 <TheJollyRoger> @gochoingles - yeah, hdparm allows you to speak directly to the PATA/SATA/SAS interface in the kernel... but it's VERY dangerous to do that, even if you know exactly what you are doing. You can cause permanent, irreversible damage to the hard disk, sometimes even if you succeed in what you are trying to do.
+23:50:02 <Rudd-O[m]> <anupritaisno1[m] "I was once the dumb guy who ship"> Why was that bad?
+23:50:29 <TheJollyRoger> Rudd-O[m]: it means you've essentially made your computer vulnerable to any hardware/firmware exploits.
+23:51:32 <TheJollyRoger> Because now you've rolled back any and all firmware/microcode mitigations and you've returned them to a state where they are known to be vulnerable.
+23:52:08 <TheJollyRoger> Rudd-O[m]: it's essentially the equivalent of turning off security updates, for your hardware.
+23:53:56 <Rudd-O[m]> Oops.
+23:54:00 <TheJollyRoger> Yeah.
+23:54:19 <Rudd-O[m]> Roger that.
+23:58:43 <pinkylittlecat[m> read the man pages, it has "dont use this command, its dangerous!"

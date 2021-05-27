@@ -1,0 +1,573 @@
+01:00:47 <M7777777y[m]> Is the default graphene rom itself reproducible? So if you build it and compare they will have the same checksum?
+01:00:54 <M7777777y[m]> If so that's really cool
+01:02:06 <M7777777y[m]> But it would be good to have a way to be checking this automatically with updates and such as well
+01:02:23 <M7777777y[m]> I think GNU GUIX is working on something like that
+01:03:18 <strcat[m]> there's no GrapheneOS ROM, it's an OS
+01:03:21 <strcat[m]> the builds are reproducible
+01:04:22 <strcat[m]> the Linux kernel builds currently have some minor issue from a configuration option but those are built separately and as I said earlier I get around to resolving those issues, no one is using this so no one is reporting them or fixing them
+01:04:36 <strcat[m]> and it's not actually useful beyond minimizing delta update sizes, so it's a low priority
+01:04:59 <strcat[m]>  * and it's not actually useful outside of certain development work beyond minimizing delta update sizes, so it's a low priority
+01:05:25 <strcat[m]> Linux kernel is built separately though
+01:05:38 <strcat[m]> help welcome resolving whatever the latest minor issue is that appeared
+01:06:13 <M7777777y[m]> I will probably be trying to build it when I get some time so, I'll try to report issues if the build fails
+01:06:22 <strcat[m]> the build doesn't fail
+01:06:31 <strcat[m]> please don't use the issue tracker for questions / support
+01:06:46 <strcat[m]> if the build fails it's a mistake on your part, I'm talking about build reproducibility
+01:07:15 <M7777777y[m]> You're right, my mistake again, must be very tired sorry lol
+01:07:44 <strcat[m]> atm I think there's some new configuration option or change that was backported from mainline which causes a minor Linux kernel build reproducibility issue
+01:07:56 <strcat[m]> Chromium builds and GrapheneOS / AOSP builds are still reproducible
+01:08:20 <strcat[m]> kernel builds are not right now due to some minor difference, might be something like an upstream script using git describe
+01:08:23 <strcat[m]> don't know, help welcome
+01:08:34 <strcat[m]> very low priority since this has never provided any value and people aren't using it
+01:26:39 <M7777777y[m]> Maybe I am over estimating the threat of a devs build device being compromised and compromising the binaries, but wouldn't having some kind of distributed way to verify across multiple sources that the builds match provide a significant value? i e like a sort of web of trust for reproducible builds. Not specifically saying this is something I expect from graphene as most OS's don't have it yet, this would apply to
+01:26:39 <M7777777y[m]> packages too on linux.
+01:29:44 <anupritaisno1[m]> 7y: technically this is supported on android
+01:29:50 <anupritaisno1[m]> You can require multiple signers
+02:24:01 <strcat[m]> anupritaisno1: for user installed apps, kind of
+02:24:15 <strcat[m]> it's not really an n-of-m signing system
+02:24:22 <strcat[m]>  * it's not really an m-of-n signing system
+02:24:38 <strcat[m]> 7y: and how would this help with that?
+02:24:42 <strcat[m]> are you reviewing the sources?
+02:24:43 <strcat[m]> no
+02:24:54 <strcat[m]> is you or anyone else going to do that with the builds? no
+02:25:01 <rhythm[m]> Official member from Graphene OS should make a video on installation process (stey by step) and add in website. It will be very helpful for noob like me... thank you
+02:25:08 <strcat[m]> will I expend substantial effort testing something that has no value? no
+02:25:17 <strcat[m]> we have reproducible builds
+02:25:20 <strcat[m]> if there's a regression, submit a patch
+02:25:46 <strcat[m]> rhythm: https://grapheneos.org/install/web is easy enough that it really doesn't need a video
+02:25:59 <strcat[m]> a video would be extremely difficult to maintain since it would have to be redone for even minor changes to the process
+02:26:08 <strcat[m]> and it would have to cover all the notes, warnings, etc. that are there
+02:26:15 <strcat[m]> it's not a good format for it
+02:26:50 <strcat[m]> if you're not using the web installer, you're using the approach for users who are experienced with command-line interfaces and since the commands can literally be copy-pasted it really isn't hard for them
+02:27:06 <strcat[m]> the CLI install guide is not for people who aren't experienced with CLI
+02:27:28 <strcat[m]>  * the CLI install guide is not meant for people who aren't experienced with CLI although as I said copy pasting works fine (with device name changed to the right one)
+02:27:51 <strcat[m]> the only thing we're likely to do is add a stronger recommendation to use the installer
+02:28:03 <rhythm[m]> I don't have wifi sir
+02:28:14 <rhythm[m]> <strcat[m] "the CLI install guide is not for"> In which part
+02:28:16 <strcat> so tether to your old phone
+02:28:19 <strcat> or install from your old phone
+02:28:31 <strcat> rhythm[m]: the CLI install guide is explicltly aimed at people familiar with CLI
+02:28:38 <strcat> it's not meant for people that aren't highly technical
+02:32:40 <strcat[m]> we made the web installer for everyone else
+02:32:52 <strcat[m]> if we made a video... it would be about the web installer
+02:33:03 <strcat[m]> it would make very little sense to make a video for the CLI guide
+02:33:11 <strcat[m]> and it doesn't make much sense for the web installer either
+02:33:17 <strcat[m]> as I said it's simply not a good format for it, and would be really hard to maintain
+02:33:27 <strcat[m]> there are weekly tweaks to the guides
+02:33:43 <strcat[m]> video would be removed as soon as it wasn't aligned 100% with the official instructions
+02:34:03 <strcat[m]> it's not a reasonable request
+02:36:06 * rhythm[m] uploaded an image: (117KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/LSdiuCJTagmvgFHRkvZKitch/IMG_20210513_080525.jpg >
+02:36:26 <rhythm[m]>  Using latest p tools . Still showing old p tools
+02:36:56 <strcat[m]> you're not following the official guide
+02:37:05 <strcat[m]> you're doing some nonsense from an unofficial guide
+02:37:10 <strcat[m]> we won't provide support for it here
+02:37:40 <strcat[m]> why do you have PowerShell open in that directory and why is flash-all.bat there?
+02:37:45 <strcat[m]> because you're not following the official guide
+02:38:01 <rhythm[m]> Then
+02:38:07 <strcat[m]> as I said it's not permitted here
+02:38:10 <strcat[m]> I said that yesterday too
+02:39:05 <strcat[m]> follow the official guide
+02:39:12 <strcat[m]> please don't ask for help here if you're not doing that
+02:39:45 <strcat[m]> if you have another phone use the web installer from there
+02:40:10 <strcat[m]> it's starting to seem like trolling
+02:41:38 <M7777777y[m]> Graphene OS actually has some pretty extensive documentation on the site you should check it out
+02:41:39 <M7777777y[m]> Good docs are always better than a video
+02:42:55 <strcat[m]> rhythm: really don't know why you think a video would help you
+02:43:01 <strcat[m]> your problems are all caused by you trying to use inaccurate videos
+02:43:18 <strcat[m]> delete all that stuff you set up
+02:43:21 <strcat[m]> start over with the official guide
+02:43:42 <strcat[m]> do what I said yesterday
+02:43:55 <rhythm[m]> Ok thanks
+02:46:01 <louipc> i dont get it but for some reason people like videos even tho most of them are full of irrelevant 'info'
+02:46:49 <M7777777y[m]> I find videos annoying, slow and hard to follow especially relating to terminal stuff
+02:47:24 <strcat[m]> web installer is really easy
+02:48:00 <strcat[m]> CLI guide requires copy-pasting the commands, editing the device name and not missing one
+02:48:34 <strcat[m]> if you don't have internet then you'll need to do what I said yesterday and substitute the curl commands with downloading the same file to the directory that PowerShell opens in
+02:48:53 <strcat[m]> if you had done that instead of following unofficial guides/videos it'd be done ages ago
+06:36:07 <GrapheneOS-Teleg> <!Hulk> test test 8
+06:37:22 <GrapheneOS-Teleg> <!Hulk> We're back online!
+07:53:28 <LordOfLaceration> Yesterday I tried to install grapheneOs and got stuck at the fastbootd part. I noticed that the device (pixel 4a 5g) doesn't show up. Neither in lsusb nor dmesg. It gets recognized when in its in the bootloader. The cable works fine with other devices. Any ideas?
+07:59:05 <freebyrd[m]> <strcat[m] "web installer is really easy"> Web installer failed to find device for me, and the CLI got stuck once failing to find the device, but second try worked perfectly. It is really easy 😀
+07:59:55 <strcat[m]> you probably either had a broken cable or you followed incorrect instructions and had adb running which would interfere
+08:03:01 <rhythm[m]> <strcat[m] "if you don't have internet then "> finally im able to install GOS. thank you so much fr ur help...and thnks everyone who helped me....
+08:03:21 <freebyrd[m]> One suggestion for the CLI instructions: signify is available on macOS using macports. Works just fine.
+08:03:21 <freebyrd[m]> Adb is also on macports. 😀
+08:10:56 <freebyrd[m]> <strcat[m] "you probably either had a broken"> The browser *never* saw my phone, adb did immediately. I suspect a browser issue is more likely than a bad cable.
+08:11:19 <strcat[m]> you aren't supposed to use adb
+08:11:24 <strcat[m]> it's not used for the installation process
+08:11:51 <strcat[m]> if adb saw your phone it wasn't in the bootloader interface mode
+08:12:16 <strcat[m]> the installation guides cover everything, the issue is in deviating from them
+08:15:26 <freebyrd[m]> <strcat[m] "you aren't supposed to use adb"> I never claimed to have used it during installation.
+08:15:49 <strcat[m]> and which browser did you try to use?
+08:15:51 <strcat[m]> on which OS?
+08:23:10 <freebyrd[m]> <strcat[m] "and which browser did you try to"> Chrome on macOS 11
+08:56:30 <freewilzy> I wonder why the SMS app on grapheneos has so many permissions? When i want to deny acces to microphone, media amd files i get a alert that the basics of the device maaybe wont work if i demy this
+09:08:28 <GhostSplinterSix> Deny them access and see what happens. If nothing does, then you're fine.
+09:10:46 <freewilzy> Well i m afraid i wont tlnotice immediatly, there areamy functions that can brake, maybe someone knows what harm it wil do
+09:23:01 <strcat[m]> freebyrd: it says that for *all* system apps
+09:23:37 <strcat[m]> denying permissions for OS components is not accomplishing much and you're likely to break things
+10:13:58 <jalb> Hello, what do you think about this related to freenode?: https://fuchsnet.ch/privat/fn-resign-letter.txt
+10:19:51 <jalb> I don't know if it's related to grapheneos or not because this channel is in freenode
+10:20:18 <jalb> Sorry if this is not appropriate
+10:24:41 <mrx777[m]> eSIM not supported in Graphene?
+10:24:56 <trttl> this was to be expected to happen at some point after pia got involved
+10:25:00 <trttl> but it's off-topic
+10:25:56 <jalb> ok, but it's something to know if Gos channel is in freenode and if it affects or not
+10:26:11 <jalb> Anyway forget about it, thanks
+10:27:05 <GrapheneOS-Teleg> <!Hulk> mrx777[m]: please read this https://github.com/GrapheneOS/os-issue-tracker/issues/159
+10:27:33 <nscnt[m]> jalb: Hi, I think it's fine to share the link here. Indeed,
+10:27:37 <nscnt[m]> oops
+10:27:43 <mrx777[m]> Thanks
+10:27:50 <GrapheneOS-Teleg> <!Hulk> LordOfLaceration: hello, are you still having the installation problem?
+10:28:00 <mrx777[m]> But any reasons why Graphene doesnt support it as default?
+10:28:22 <GrapheneOS-Teleg> <!Hulk> it's all covered in the link i sent
+10:28:39 <somenerd[m]> this comment may help: > The issue is not having an app for registration / configuration, not lack of OS support.
+10:28:43 <somenerd[m]>  * this comment may help: >The issue is not having an app for registration / configuration, not lack of OS support.
+10:28:55 <somenerd[m]> https://github.com/GrapheneOS/os-issue-tracker/issues/159#issuecomment-752779474
+10:39:14 <mrx777[m]> Thanks I will test it on p3a, 4a and 5.
+10:40:09 <GrapheneOS-Teleg> Yerbol (@n​amename0077) has joined the Telegram Group!
+10:41:18 <GrapheneOS-Teleg> <!Hulk> Welcome @namename0077 !Please read the rules, before posting your questions.https://loui.ca/grapheneos.org/static/irc-rules.txt
+10:41:40 <GrapheneOS-Teleg> <n​amename0077> Hello! Can you help me, please. Is Samsung A40 supported by GrapheneOS?
+10:41:41 <mrx777[m]> What is DSDS?
+10:42:10 <GrapheneOS-Teleg> <!Hulk> @namename0077 it is covered in the faq, please read the rules
+10:42:10 <mrx777[m]> And *#*#INFO#*#*
+10:42:11 <nscnt[m]> @n​amename0077 https://grapheneos.org/faq#supported-devices
+10:42:17 <mrx777[m]> In letter of number?
+10:43:25 <GrapheneOS-Teleg> <!Hulk> mrx777[m]: you can read about it here https://discussions.apple.com/thread/8113909
+10:43:44 <GrapheneOS-Teleg> <n​amename0077> thanks
+10:45:20 <GrapheneOS-Teleg> <n​amename0077> thanks
+10:45:46 <GrapheneOS-Teleg> <!Hulk> mrx777[m]: also, here it is explained better https://en.wikipedia.org/wiki/Telephone_keypad
+10:46:10 <mrx777[m]> <GrapheneOS-Teleg "<!Hulk> mrx777: you can read abo"> Using Android with Graphene!
+10:46:35 <mrx777[m]> Anyone using Graphene on an Apple device? 🤣
+10:46:40 <iknowlessthanjon> yes
+10:46:49 <iknowlessthanjon> a graphene smartphone cover
+10:48:31 <jalb> thank you nscnt[m]
+10:55:36 <mrx777[m]> How can I load the eSIM?
+10:55:53 <mrx777[m]> I just removed the physical sim card
+10:57:35 <GrapheneOS-Teleg> <!Hulk> in GrapheneOS you currently can't
+10:57:44 <GrapheneOS-Teleg> <!Hulk> unfortunately
+11:12:06 <GrapheneOS-Teleg> <N​orwegianFrost> Doesn't make sense
+11:13:07 <exm[m]> Goodmorning all,
+11:13:07 <exm[m]> Question is there e-sim availble for the pixle 4a with grapheneOs ?
+11:15:19 <GrapheneOS-Teleg> <!Hulk> exm[m]: good morning! Please read this https://github.com/GrapheneOS/os-issue-tracker/issues/159
+11:20:57 <exm[m]> Thnxs 👍🏼
+11:21:20 <GrapheneOS-Teleg> <!Hulk> You're welcome!
+11:36:56 <Narada> hi everyone, I have trouble installing GrapheneOs at the step: "obtainimg factory images". When I click on "Flash release" it says : "Error: Undefined". Any help would be warmly welcome ! Thanks !
+11:37:42 <GrapheneOS-Teleg> <!Hulk> Narada: hi, are you blocking cookies?
+11:38:07 <Narada> I will check that right away
+11:38:26 <GrapheneOS-Teleg> <!Hulk> Which OS, browser are you using?
+11:38:40 <Narada> Google Chrome
+11:39:00 <GrapheneOS-Teleg> <!Hulk> OS?
+11:39:14 <Narada> yes cookies were blocked,,, trying again now
+11:39:23 <Narada> windows 10 i beleive
+11:40:00 <GrapheneOS-Teleg> <!Hulk> As mentioned in the guide, you should not use incognito mode
+11:40:18 <Narada> its dowloading ! Thanks !
+11:40:25 <GrapheneOS-Teleg> <!Hulk> Cookies should be allowed and other settings are supposed to be at their defaults
+11:40:34 <GrapheneOS-Teleg> <!Hulk> You're welcome!
+11:40:47 <Narada> Legend !
+13:01:48 <edsh[m]> Hi GrapheneOS community. I have two questions about this amazing project:
+13:01:48 <edsh[m]> 1) Is it possible/planned to use Vanadium/Bromite on the desktop?
+13:01:48 <edsh[m]> 2) What is the best way to secure a phone shipping (I set up a phone and send to friend by mail) with the attestation service?
+13:02:20 <GrapheneOS-Teleg> <!Hulk> edsh[m]: hello and welcome!
+13:02:29 <somenerd[m]> 1. I'm not sure if you can run either (unless you manually port the patches and build Chromium)
+13:02:47 <somenerd[m]> there are no plans to port them to desktop afaik
+13:03:04 <GrapheneOS-Teleg> <!Hulk> you can plug your pixel to a monitor using a DisplayLink, therefore making your phone a desktop PC
+13:03:08 <somenerd[m]> and Vanadium partially depends on OS hardening
+13:03:23 <somenerd[m]> > <!Hulk> you can plug your pixel to a monitor using a DisplayLink, therefore making your phone a desktop PC
+13:03:23 <somenerd[m]> I think they meant on a desktop OS
+13:03:59 <GrapheneOS-Teleg> <!Hulk> yeah, but you've answered about that already :P
+13:06:13 <edsh[m]> Thanks. What is about question 2) ?
+13:07:28 <GrapheneOS-Teleg> <!Hulk> so you have a GrapheneOS phone that you want to ship somewhere else, and make sure that it was not tampered with during the shipping?
+13:08:11 <GrapheneOS-Teleg> <!Hulk> did i understood you correctly?
+13:08:23 <GrapheneOS-Teleg> <!Hulk> * understand
+13:11:26 <sesr[m]> hello
+13:11:53 <GrapheneOS-Teleg> <!Hulk> sesr[m]: hi there
+13:12:01 <edsh[m]> Exactly. I know that I am out of luck against a sophisticated attacker, because of the possibility of soldering chips.
+13:12:30 <sesr[m]> i am building graphene, do i need to download the branch manifest?
+13:12:36 <edsh[m]> However, I want to apply everything possible.
+13:12:46 <GrapheneOS-Teleg> <!Hulk> what i did in the past, which i think makes sense but maybe others have better ideas
+13:13:05 <sesr[m]> or can i download the stable version only, and the kernel?
+13:13:12 <GrapheneOS-Teleg> <!Hulk> set-up the phone, set-up a long password
+13:13:28 <GrapheneOS-Teleg> <!Hulk> make some photos of yourself
+13:13:39 <GrapheneOS-Teleg> <!Hulk> reboot the phone and ship it
+13:13:49 <sesr[m]> i have build already a mdm on graphene, but want to build my own graphene
+13:14:11 <edsh[m]> <GrapheneOS-Teleg "<!Hulk> make some photos of your"> What do you mean?
+13:14:18 <GrapheneOS-Teleg> <!Hulk> when it arrives at the destination, you can tell your friend the password
+13:14:34 <edsh[m]> <GrapheneOS-Teleg "<!Hulk> reboot the phone and shi"> The shutdown the phone is the best, right?
+13:14:36 <sesr[m]> can somebody help me a little bit out here?
+13:14:49 <GrapheneOS-Teleg> <!Hulk> if the phone was not tempered with, they will be able to see the photos
+13:14:54 <somenerd[m]> > can somebody help me a little bit out here?
+13:14:54 <somenerd[m]> I suggest waiting for a while
+13:14:59 <somenerd[m]> or use the logbot
+13:15:18 <edsh[m]> Photos on the phone?
+13:15:25 <DHFuchsiaOSwhen> <sesr[m] "can somebody help me a little bi"> A starter for trying to build is checking out https://grapheneos.org/build
+13:15:26 <GrapheneOS-Teleg> <!Hulk> sesr[m]: sorry, i'm knowledgeable enough to help you
+13:15:42 <GrapheneOS-Teleg> <!Hulk> edsh[m]: yes
+13:15:49 <GrapheneOS-Teleg> <!Hulk> does it makes sense to you?
+13:16:23 <edsh[m]> Whats about using the Auditor app?
+13:16:25 <edsh[m]> Pairing the phones. Does this procedure help with shipping?
+13:16:27 <sesr[m]> <GrapheneOS-Teleg "<!Hulk> sesr: sorry, i'm knowled"> i have been builiding, my question was if i need to download the branch or stable version is enough
+13:17:01 <sesr[m]> this the first time on graphene, i can see must download also the kernel.
+13:17:02 <GrapheneOS-Teleg> <!Hulk> edsh[m]: yes, shutting down the phone is the best
+13:17:56 <sesr[m]> is little bit confusing on the website.
+13:18:19 <GrapheneOS-Teleg> <!Hulk> edsh[m]: yes, using Auditor also makes sense, and you're supposed to set it up right after the installation of GrapheneOS
+13:18:24 <sesr[m]> or is there any tutorial video building graphene?
+13:18:40 <GrapheneOS-Teleg> <!Hulk> sesr[m]: there is no video
+13:19:11 <edsh[m]> Okay. Yes I read that the Auditor app is TOFU. Can you help me with the best practices?
+13:19:37 <GrapheneOS-Teleg> <!Hulk> do you have a second GrapheneOS phone?
+13:19:38 <sesr[m]> so i must download the branch manifest, stable version  manifest, and kernel????
+13:20:18 <somenerd[m]> think that https://grapheneos.org/build#downloading-source-code can help
+13:20:31 <DHFuchsiaOSwhen> If the GrapheneOS is already flashed, do the Auditor attestation yourself, send screenshots to them
+13:21:05 <edsh[m]> I scan the new phone with my phone?
+13:21:14 <DHFuchsiaOSwhen> Yeah, twice
+13:21:24 <edsh[m]> Twice?
+13:21:55 <edsh[m]> Challenge and Proof (twice) okay
+13:22:02 <sesr[m]> i have read that already, its a bit confusing. i have downloaded many times and to try make my own build
+13:22:14 <DHFuchsiaOSwhen> <edsh[m] "Twice?"> New phone is auditee, old phone is auditor, and yes, to obtain strong pairing/verification
+13:22:28 <edsh[m]> So, I end up with two phones which are paired, right?
+13:22:50 <edsh[m]> I read the docs.
+13:22:57 <edsh[m]> However, I am not 100% sure.
+13:23:12 <edsh[m]> That is the reason why I am here,
+13:23:20 <edsh[m]>  * That is the reason why I am here.
+13:23:32 <DHFuchsiaOSwhen> Ok, two phones are required
+13:23:55 <DHFuchsiaOSwhen> The one to be checked for attestation is auditee (new phone), other is auditor
+13:24:18 * edsh[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/wqyLVZbApEJDbfSkNxCkHWBo/message.txt >
+13:24:25 <edsh[m]> I ship the phone?
+13:24:38 <DHFuchsiaOSwhen> <edsh[m] "I ship the phone?"> Yes
+13:25:26 <edsh[m]> And then my friend must verify the phone arrival?
+13:25:32 <edsh[m]>  * And then my friend must verify the phone at arrival?
+13:25:42 <edsh[m]> How?
+13:25:47 <DHFuchsiaOSwhen> They can, if they have another phone
+13:26:25 <DHFuchsiaOSwhen> Otherwise, they can send the QR code of auditee at first step through Signal/Element for you to scan, then the QR code of auditor for them to scan
+13:26:39 <edsh[m]> My friend up with the phone, the screenshot and an other phone with the auditor app? Whats next?
+13:26:42 <DHFuchsiaOSwhen> To see that it did formed a strong pairing/verification
+13:28:54 <DHFuchsiaOSwhen> Before you try this with your friend, just to be sure, attempt those steps yourself between two devices
+13:30:13 <edsh[m]> Sure. How can I proof the authenticity?
+13:30:54 <edsh[m]> Why is a secure channel needed? Because of private (sensitive) information or the risk of modification?
+13:31:48 <DHFuchsiaOSwhen> <edsh[m] "Why is a secure channel needed? "> Yes
+13:32:13 <edsh[m]> Yes? There was an "or" in my sentence!
+13:32:34 <Patrick[m]4> Inclusive or :P
+13:32:34 <edsh[m]> Logic panicked...
+13:33:58 <edsh[m]> I am still stuck at the proof phase of the Auditor app. I have the screenshot, the phone and a second one. What happens next?
+13:36:26 <DHFuchsiaOSwhen> Is this before shipping or after shipping?
+13:36:30 <edsh[m]> By providing the screenshot to my friend what information can he obtain from it?
+13:37:11 * edsh[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/ccCAWFvMVYNaerAVKWtOQiks/message.txt >
+13:37:36 <edsh[m]> Also: Does it matter if I send the screenshot before or after shipping?
+13:38:10 <GrapheneOS-Teleg> <!Hulk> send it after, i think
+13:39:14 <DHFuchsiaOSwhen> <edsh[m] "By providing the screenshot to m"> The screenshot of the attestation result kinda speaks for itself
+13:39:35 <edsh[m]> In what sense?
+13:39:56 <DHFuchsiaOSwhen> But to explain it briefly, it checks for device integrity, whether the device has any apps granted accessibility device, or has device admin apps granted
+13:40:58 * DHFuchsiaOSwhen  < https://matrix.org/_matrix/media/r0/download/matrix.org/BqhmPEEpCkktGvNTYUpsgbaK/message.txt >
+13:41:31 * DHFuchsiaOSwhen  < https://matrix.org/_matrix/media/r0/download/matrix.org/ioMXDeDORHcFQStLxarhGpSw/message.txt >
+13:42:08 <DHFuchsiaOSwhen> Also, at the top section, it checks for the patch level, whether the flashed GrapheneOS was from upstream or modified too
+13:42:53 <edsh[m]> Whats about the screenshot order. Before shipping, After or does it not matter?
+13:43:16 <edsh[m]>  * Whats about the screenshot order. Before shipping, ffter or does it not matter?
+13:43:21 <edsh[m]>  * Whats about the screenshot order. Before shipping, after or does it not matter?
+13:44:04 <DHFuchsiaOSwhen> <edsh[m] "Whats about the screenshot order"> When you send it to friend?
+13:44:27 <DHFuchsiaOSwhen> After, at least to explain to your friend the results
+13:45:21 <DHFuchsiaOSwhen> Or show the OS is not tampered with, or rather, is not installed with dangerous apps, nor has some settings modified...
+13:45:21 <DHFuchsiaOSwhen> (Since the OS, when tampered, will not boot anyways thanks to verified boot)
+13:45:56 <sesr[m]> hello guys anybody here ever build there own graphene os build??????????
+13:46:03 <DHFuchsiaOSwhen> For the results though, you need to screenshot those (the weak, yellow one and the strong, green one before you ship)
+13:48:00 <edsh[m]> But how does the verification process work? My friend is scanning the phone with the other one?
+13:49:02 <DHFuchsiaOSwhen> <sesr[m] "hello guys anybody here ever bui"> I haven't personally (I just have experience on Chromium), so can't help as much atm, but to be able to build, you need to install the prerequisites (those packages are for Arch and/or Debian) before starting too
+13:49:50 <DHFuchsiaOSwhen> <edsh[m] "But how does the verification pr"> Well, the purpose of scanning it yourself first twice is to see for yourself the attestation result at strong pairing
+13:50:40 <DHFuchsiaOSwhen> Then the friend and you will do "local" attestation, while the QR code is exchanged through a secure messaging platform on another device to be scanned to check if it indeed had formed strong pairing before
+13:50:43 <edsh[m]> Ah, and my friend does the same and afterwards compare the screenshot with his reseult?
+13:51:03 <edsh[m]>  * Ah, and my friend does the same and afterwards compare the screenshot with his result?
+13:51:13 <DHFuchsiaOSwhen> Yeah
+13:51:59 <mrx777[m]> > <@leeya:kde.org> I haven't personally (I just have experience on Chromium), so can't help as much atm, but to be able to build, you need to install the prerequisites (those packages are for Arch and/or Debian) before starting too
+13:51:59 <mrx777[m]> > Might want to wait for a better response fron those who build the OS (the commands listed there work as is,  otherwise it'd be reported and changed by now, at least that was the case in Vanadium here)
+13:51:59 <mrx777[m]> You probably meaning MDM
+13:52:55 <mrx777[m]> MDM you mean
+13:53:16 * edsh[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/lMZfRkGVBtrSwLGNfGzoDHkd/message.txt >
+13:53:17 <GrapheneOS-Teleg> <!Hulk> * not
+13:53:33 <sesr[m]> Helloooo
+13:53:49 <sesr[m]> somebody here ever build graphene????
+13:54:05 * edsh[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/JSHLOlmrWaNfXEIjIMpHapuf/message.txt >
+13:54:15 <nscnt[m]> sesr: Yes
+13:54:45 * edsh[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/VwjLwJSYMlXRIMEOCXXMwKYE/message.txt >
+13:55:01 <GrapheneOS-Teleg> <!Hulk> (i just re-read my messages, and it made no sense)sesr[m]: * sorry, i'm NOT knowledgeable enough to help you
+13:59:40 <sesr[m]> <nscnt[m] "sesr: Yes"> okay can you help me out a bit?
+14:02:50 <nscnt[m]> sesr: I hope so. Ask your question
+14:03:26 <DHFuchsiaOSwhen> <edsh[m] "> <@edsh:matrix.org> So it is li"> Yeah, more or less it's like that
+14:03:55 <edsh[m]> More or less? What is less?
+14:04:15 <edsh[m]> I want to make it right. Not 30% half ass way.
+14:04:28 <nscnt[m]> edsh: Do you mean shipping the entire phone? CC: Security, Privacy, Community (moderation) standards, where art thou?
+14:05:16 <edsh[m]> Yeah sure. I have a friend. He wants a phone. So shipping the entire phone.
+14:05:32 <DHFuchsiaOSwhen> <edsh[m] "More or less? What is less?"> I mean it's approximately the summary
+14:05:39 <GrapheneOS-Teleg> <!Hulk> nscnt[m]: this is the problem statement: so you have a GrapheneOS phone that you want to ship somewhere else, and make sure that it was not tampered with during the shipping?
+14:05:42 <sesr[m]> <nscnt[m] "sesr: I hope so. Ask your questi"> The bootanimation, of the grapheneOS we want to change, but no where is any bootanimation.zip to replace it, so how would it be possible to change this?
+14:06:01 <edsh[m]> <GrapheneOS-Teleg "<!Hulk> nscnt: this is the probl"> Exactly.
+14:07:08 <nscnt[m]> edsh: @!Hulk I see
+14:07:34 <edsh[m]> So after understanding the procedure. Can anybody link my specific device, because of the screenshot?
+14:08:57 <edsh[m]> Like some authoritarian gov which wants to know who flashed the phone in the first place?
+14:10:23 <a6> hey people
+14:10:30 <nscnt[m]> sesr: I haven't worked on it and don't know the details of its working at this point. My guess would be that adding the bootanimation.zip in the right place according to the official documentation should be sufficient
+14:10:36 <a6> do i need a google phone for graphene
+14:10:49 <GrapheneOS-Teleg> <!Hulk> a6: hello, please read the rules
+14:11:14 <GrapheneOS-Teleg> <!Hulk> a6: currently supported devices are listed in the faq
+14:11:24 <a6> ok thanks
+14:12:00 <nscnt[m]> sesr: There are a few odd things you need to be aware of to get it to work, which should be described in the documentation if I remember correctly
+14:12:40 <lackshan[m]> sesr Check the grapheneos build manifest. I might be wrong but I think it gets logos and animations from a git repo
+14:13:53 <lackshan[m]> https://github.com/GrapheneOS/branding
+14:13:55 <lackshan[m]> This one
+14:14:17 <lackshan[m]> So you'd repo sync, replace the animation then build it
+14:15:42 <edsh[m]> <edsh[m] "Like some authoritarian gov whic"> ?
+14:17:07 <DHFuchsiaOSwhen> <edsh[m] "So after understanding the proce"> Depends on what platform you send the photo
+14:18:13 <nscnt[m]> edsh: Your friend doesn't have access to another Android phone?
+14:18:15 <edsh[m]> Sure. The messenger must be anonymous. However, I am curious about the info which can be extracted from the screenshot itself.
+14:18:29 <edsh[m]> <nscnt[m] "edsh: Your friend doesn't have a"> He has.
+14:19:09 <nscnt[m]> edsh: Why not let him verify it himself?
+14:19:26 <edsh[m]> <nscnt[m] "edsh: Why not let him verify it "> What do you mean?
+14:19:41 * DHFuchsiaOSwhen  < https://matrix.org/_matrix/media/r0/download/matrix.org/jxUwaLbZKvpnzWXhHoIBrBZf/message.txt >
+14:20:39 <nscnt[m]> edsh: He can verify his GrapheneOS phone with any other Android phone and after that he can enable the scheduled remote attestation
+14:20:39 <edsh[m]> ?
+14:20:47 <DHFuchsiaOSwhen> <nscnt[m] "edsh: Why not let him verify it "> Would have offered that if it wasn't for the condition in the last part of the question. In theory, there's negligible difference of doing so, assuming the phone is left untouched when shipping
+14:21:32 <DHFuchsiaOSwhen> <nscnt[m] "edsh: He can verify his Graphene"> This is also true
+14:21:38 <edsh[m]> I want to focus mainly on securing the shipping.
+14:22:24 <nscnt[m]> That's what I addressed
+14:23:11 <edsh[m]> nscnt:
+14:23:26 <edsh[m]>  * nscnt: Can you please give me the necessary steps?
+14:24:08 <DHFuchsiaOSwhen> nscnt  suggest to have your friend do the local attestation themself
+14:24:50 <nscnt[m]> edsh: Ship the phone and you are done. He can verify it as described in https://attestation.app/tutorial
+14:24:57 <DHFuchsiaOSwhen> (Sorry about the other seemingly complex solution, on attempt to check for the device integrity prior to shipping, then check after shipping, might have misunderstood the question)
+14:25:18 <edsh[m]> My friend isn't very technically. That is the starting point of the phone shipping idea.
+14:25:29 <nscnt[m]> Sure, edsh can verify it himself as well before shipping
+14:26:20 <nscnt[m]> edsh: Take another Android phone, then install Auditor. Camera to QR code, camera to QR code, done
+14:26:47 <edsh[m]> I want to avoid tampering within phone shipping. I guess the first solution works better, right?
+14:27:00 <nscnt[m]> edsh: No, not really
+14:28:13 <edsh[m]> Oh man. I am confused now. Can anybody explain me the possible options llike ELI5?
+14:28:59 <DHFuchsiaOSwhen> 1) have your friend do attestation themself after shipping
+14:29:07 <nscnt[m]> There would be some minimal advantage due to Trust On First Use (TOFU), but meh
+14:29:22 <DHFuchsiaOSwhen> Which also checks if something happened during shipping too (just the same, but they had to do twice)
+14:29:43 <DHFuchsiaOSwhen> <nscnt[m] "There would be some minimal adva"> Yeah, that was what I am trying to achieve, but my bad for complicating it?
+14:30:12 <DHFuchsiaOSwhen> <DHFuchsiaOSwhen "1) have your friend do attestati"> Still works like the first solution, no need for internet access
+14:30:16 <nscnt[m]> Security, Privacy, Community (moderation) standards, where art thou?: /shrug You're not wrong
+14:30:25 <edsh[m]> <DHFuchsiaOSwhen "Yeah, that was what I am trying "> Not using the attestation service have benefits? What benefits?
+14:30:29 <nscnt[m]> ¯\_(ツ)_/¯ :]
+14:32:21 <DHFuchsiaOSwhen> <edsh[m] "Not using the attestation servic"> I mean on having your phone paired with the phone to be shipped, then your friend will perform the 3rd pairing to your phone may have some complications on sending the QR code and getting stuff done?
+14:32:53 <DHFuchsiaOSwhen> The other one which doesn't need your interaction or internet is them doing the attestation themself
+14:33:08 <acronym[m]> <edsh[m] "Oh man. I am confused now. Can a"> I am not an expert but my thought is you could could do the pairing and set up an attestation account with remote verification, then give your friend the account credentials. He (she) could then change password if that is allowed. Pardon me if my terminology is off.
+14:34:13 <DHFuchsiaOSwhen> That works, but isn't sending password a little more risky than QR codes (genuine question up for discussion)?
+14:34:20 <nscnt[m]> edsh: What do you want to achieve? You want your friend to hold a verified, unmodified GrapheneOS phone in his hands, right?
+14:34:36 <edsh[m]> <nscnt[m] "edsh: What do you want to achiev"> Yes
+14:41:32 <edsh[m]> What is the best solution?
+14:42:11 <acronym[m]> <DHFuchsiaOSwhen "That works, but isn't sending pa"> You wouldn't be comfortable sending credentials in a one time Signal disappearing message?
+14:42:44 <nscnt[m]> edsh: Every boot of your phone verifies, that it'll boot up an unmodified version of firmware/OS/etc. See verified boot[1]. Now you still want to be sure that it is indeed GrapheneOS. Therefore, it should be enough if you leave the verification to him. Especially if he has his own Android phone, he will benefit from pairing it with his own phone. This will lead to stronger future verifications if he wants to verify it
+14:42:44 <nscnt[m]> locally again in the future. In addition, he can enable scheduled remote verification. If the authentication server fails to successfully verify a phone, he will receive an email notification and he can check with his other already-paired Android phone if it was simply because e.g. he didn't have an internet connection for period X or whether his phone was actually modified. [1]
+14:42:44 <nscnt[m]> https://source.android.com/security/verifiedboot/verified-boot
+14:42:53 <edsh[m]> Sure. Signal, Session, etc.
+14:43:19 <acronym[m]> <edsh[m] "What is the best solution?"> Get your friend to buy a new phone and install him/herself.
+14:44:28 <edsh[m]> Sorry, but is not helpful at all.
+14:44:41 <edsh[m]>  * Sorry, but this is not helpful at all.
+14:45:14 <edsh[m]> <nscnt[m] "edsh: Every boot of your phone v"> Thanks! So there is no benefit to his security, if I pair before shipping?
+14:45:54 <nscnt[m]> edsh: Negligible, I would say
+14:46:03 <DHFuchsiaOSwhen> There's a slight benefit in the short term, but mostly nullified and even disadvantaged in the long term imho
+14:46:24 <edsh[m]> <nscnt[m] "edsh: Negligible, I would say"> What is the negligible part?
+14:46:28 <acronym[m]> <edsh[m] "Sorry, but is not helpful at all"> If your friend can grasp all the confusing shit you are entertaining then doing a web install should be easy.
+14:47:06 <edsh[m]> Again: Not an option.
+14:47:12 <DHFuchsiaOSwhen> <nscnt[m] "There would be some minimal adva"> This is the negligible or slight benefit
+14:47:22 <DHFuchsiaOSwhen> edsh
+14:48:01 <nscnt[m]> edsh: The "uniqueness" would be pinned in your phone and your friend could check, that this pinned uniqueness matches the phone he currently holds in his hands
+14:48:15 <edsh[m]> How does the phone result looks like by being modified (aka not GrapheneOS)?
+14:48:40 <edsh[m]> Is it a slightly different number or a big ass red warning?
+14:48:50 <nscnt[m]> edsh: It will always be clearly written on the screen as well
+14:50:08 <nscnt[m]> edsh: Everything else is just details or is complementary (like background color)
+14:51:33 * edsh[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/UJnCnHoceyETZHkMPpmMQcGb/message.txt >
+14:52:06 <nscnt[m]> edsh: Yes
+14:52:43 <edsh[m]> Thanks a lot.
+14:52:59 <edsh[m]> Anything else important that I missed?
+14:54:22 <edsh[m]> Flashing from a secure laptop and verifying signatures is obvious.
+14:56:08 <nscnt[m]> edsh: As I said, you can verify it as well. However, you can skip having your friend verify it against _your_ "pinned uniqueness"
+14:57:52 * edsh[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/sUMoyGfeZZRgAEZxTyfwdkqp/message.txt >
+15:05:08 <nscnt[m]> edsh: 1. Well, more to make sure the installation of a genuine GrapheneOS image was successful. 2. No, not correct. You would only have the "uniqueness" already pinned to _your_ phone. And it would only have any use if you actually did it with the "sending screenshots back and forth." It's not wrong to do, doesn't hurt, and you can do it, but I don't think it would be actually beneficial
+15:06:42 <edsh[m]> What is also important for 1)
+15:08:09 <nscnt[m]> If it's a verified, unmodified GrapheneOS installation that your friend has in his hands (and he can verify it himself, even if it would be a first trust for him), your already pinned verification is not really of much use. This is what I base my argument on
+15:08:34 <nscnt[m]> edsh: "Tampering before shipping"?
+15:09:23 <edsh[m]> Like malware intercepting the flashing,
+15:10:21 <edsh[m]>  * Like malware intercepting the flashing,.
+15:10:25 <edsh[m]>  * Like malware intercepting the flashing.
+15:10:59 <edsh[m]> Can you please explain me the benefits of "uniqueness"?
+15:11:15 <nscnt[m]> It's unique
+15:11:38 <nscnt[m]> If it's modified, it's not the same as the unique thing you have there
+15:12:36 <edsh[m]> So it protects me if the GrapheneOS fingerprint is compromised like the root cert?
+15:14:39 <nscnt[m]> If for some reason the "fingerprint" is not the same, yes
+15:15:07 <edsh[m]> But this can only happen when the GrapheneOS root cert is compromised?
+15:20:31 <nscnt[m]> I can't give you any concrete examples right now
+15:21:47 <edsh[m]> Is it like trusting my paired version of GOS more than the official one?
+15:26:00 <nscnt[m]> The good thing is that one reboot is enough to undo any corruptions of the phone (regardless of whether it was a malicious, intentional change by an adversary or accidental corruption from the system itself)
+15:26:46 <nscnt[m]> <edsh[m] "Is it like trusting my paired ve"> Could you rephrase that? Not sure what you mean
+15:27:31 <edsh[m]> <nscnt[m] "The good thing is that one reboo"> Because of verified boot?
+15:27:53 <nscnt[m]> Any official, genuine release of GrapheneOS for the same phones are the same
+15:28:07 <nscnt[m]> edsh: Yes, because of verified boot
+15:28:42 <edsh[m]> <nscnt[m] "Could you rephrase that? Not sur"> I asking why uniqueness is better. What uniqueness? Uniqueness from my phone install against the official GrapheneOS fingerprint, right?
+15:30:36 <nscnt[m]> You won't be able to sleep well anymore once you realize what basic mitigations against vulnerabilities the Pixel phone has compared to any other desktop (with any operating system)
+15:32:46 <edsh[m]> Can you point me to good resources about the Pixel security and Android security besides of the GOS website?
+15:35:25 <nscnt[m]> Auditor pins the uniqueness. This uniqueness is a result of various parts, including values that your hardware creates. If an adversary tries to modify your phone, they simply won't be able to replicate this uniqueness. This is where it gets interesting when you have another phone with Auditor and the initial pairing. Auditor will immediately recognize that it doesn't match
+15:35:46 <nscnt[m]> edsh: If you want to read a paper https://arxiv.org/abs/1904.05572
+15:37:13 <nscnt[m]> There's official Android Open Source Project (AOSP) documentation at https://source.android.com/
+15:38:00 <nscnt[m]> https://developer.android.com/ for the pure application stuff
+15:40:05 <nscnt[m]> The last two are not specific security write-ups, but it is often covered for the various topics you can find there
+15:40:36 <nscnt[m]> I don't have any specific Pixel security docs saved at this point
+15:40:49 <edsh[m]> Yes, please give me all papers, docs, etc. I am also a programmer. I am happy about technical stuff too.
+15:41:41 <needhelp> hello - sorry if the is has been asked. I've been looking to find a solution, but have yet to be able to find one that works.  I Have a pixel 3xl I'm trying to enable OEM unlocking, but it is greyed out.  are there any resources that you can recommend?
+15:43:26 <edsh[m]> Do you have a SIM locked phone?
+15:44:40 <nscnt[m]> needhelp: Does the phone have Internet access?
+15:45:16 <edsh[m]> <nscnt[m] "Auditor pins the uniqueness. Thi"> I understood the pairing and uniqueness stuff. However, why is it better to pair against my phone not the Auditor app of a random third party Android?
+15:47:51 <nscnt[m]> edsh: What I brought up earlier was only because it would be _your_ phone that only you have access to and not your friend. It would be better if he used his own phone, which he would also have access to in the future.
+15:48:28 <edsh[m]> Okay. I understood this.
+15:50:01 <edsh[m]> But, then I don't understood the security differences of verification after shipping with an additional phone or by me sending screenshots.
+15:59:09 <nscnt[m]> Auditor is based on Trust On First Use (TOFU). The first pairing with Auditor is the weakest because it can only verify that it is _some_ unmodified GrapheneOS phone. After the first pairing, the uniqueness we talked about is pinned to the phone that verified. If you verify it again in the future with that phone, it knows it has verified that other phone before and has more details to compare it to. The security
+15:59:10 <nscnt[m]> difference is just that: it already has something to compare it to. Otherwise, it doesn't have that. And my argument was that there would be no advantage to both of you being able to compare it to those "more details"
+16:02:46 <edsh[m]> Okay. So a strong pairing is basically a repetitive pairing?
+16:04:47 <edsh[m]> Because of the already gathered uniqueness?
+16:05:27 <nscnt[m]> It's not really pairing anymore since it's already been paired, but yes
+16:07:33 <edsh[m]> Yes, you are right.
+16:08:23 <edsh[m]> A strong pair is a pair with more information behind. This is possible, because a preexisted exchange of uniqueness.
+16:08:32 <edsh[m]> This is more correct, right?
+16:09:16 <nscnt[m]> edsh: Yea, you got it
+16:09:29 <edsh[m]> Nice.
+16:09:56 <edsh[m]> And a weak pair is a first pair.
+16:09:57 <edsh[m]> ?
+16:10:01 <nscnt[m]> Yes
+16:11:23 <nscnt[m]> "Successfully performed basic initial verification and pairing." on first pair
+16:11:35 <nscnt[m]> "Successfully performed strong paired verification and identity confirmation." on future verification
+16:11:35 <edsh[m]> Where is the uniqueness derived from? Is it only TPM waver differences and backed keys?
+16:12:16 <nscnt[m]> edsh: Have a read with some linked resources at https://attestation.app/about
+16:12:32 <edsh[m]>  * Where is the uniqueness derived from? Is it only TPM wafer differences and backed keys?
+16:13:18 <edsh[m]> I can find my answer there?
+16:13:30 <edsh[m]> I read the docs before. Is it new?
+16:14:34 <nscnt[m]> No, not really. Yes, it should contain the answer
+16:16:16 <edsh[m]> And a hash of the uniqueness is compared by verification.
+16:16:37 <edsh[m]>  * And a hash of the uniqueness is compared by verification?
+16:48:03 <alba[m]> can I use "android auto" with my pixel 4 ?
+16:49:22 <alba[m]> what about pixel ear wearables?
+17:22:09 <Mastermind[m]> Hey all. How are you checking your voicemail?
+17:24:57 <hasnoname[m]> <Mastermind[m] "Hey all. How are you checking yo"> Holding 1
+17:25:23 <hasnoname[m]> I mean tap and hold 1
+18:35:11 <Cliff[m]> <nscnt[m] "Auditor pins the uniqueness. Thi"> Does the auditor device need an internet connection for local check? And if i only use local attestation for first check and then remote attestation after does it make a difference since it is not the same device doing the check?
+18:41:17 <Cliff[m]> Lets say after installation before connection to the internet, i perform an audit like the website says. I then switch to remote attestation for ease of use. Or is it better to keep an old android 8+ device at least just for local attestation in the future?
+18:41:44 <nscnt[m]> Cliff: No, you do not need an Internet connection for local verification
+18:43:00 <Clannie> Hi
+18:44:26 <Cliff[m]> Does it have any security benefits to keep using the auditor app after the first 2 checks (1 weak paring 2nd strong) or can i trust the verified boot?
+19:12:09 <GrapheneOS-Teleg> <!Hulk> Cliff[m]: please read https://attestation.app/about
+19:12:55 <GrapheneOS-Teleg> <!Hulk> also yes, it does make sense to keep checking your phone by using Auditor after the initial successful pairing
+19:13:23 <GrapheneOS-Teleg> <!Hulk> imagine that while you were sleeping an evil maid would try to tamper with your phone
+19:13:58 <GrapheneOS-Teleg> <!Hulk> or that your kid accidentally enabled USB debugging and connected your phone to an infected pc
+19:14:34 <GrapheneOS-Teleg> <!Hulk> checking-in with Auditor is what makes sure that none of these happened/or did any damage
+19:15:22 <GrapheneOS-Teleg> <!Hulk> Clannie: hello!
+19:15:54 <GrapheneOS-Teleg> <!Hulk> alba[m]: i guess, pixel ear wearables should work fine
+19:16:09 <GrapheneOS-Teleg> <!Hulk> i don't know about Android Auto tho
+19:18:17 <Cliff[m]> <GrapheneOS-Teleg "<!Hulk> checking-in with Auditor"> Thanks!, what is the preferred method here for most, local or remote attestation?
+19:19:05 <Cliff[m]> And i already read the site offcourse just couldn't find info on my questions
+19:20:02 <Cliff[m]> Wouldn't remote attestation have a weak first pairing too?
+19:20:27 <GrapheneOS-Teleg> <!Hulk> afaik, yes
+19:22:53 <GrapheneOS-Teleg> <!Hulk> iirc, local is preferred, i can't properly elaborate about it
+19:26:06 <Cliff[m]> Thanks, thats my plan to keep using an old offline android device for auditing and only connect to internet for updating the apps/os
+19:59:57 <blaqkbsd[m]> Hey.. I'm new to this. Does LTE mode switch off 5G too or just disabling 2/3g code?
+20:01:12 <GrapheneOS-Teleg> <!Hulk> afaik, 5G keeps working
+20:02:07 <blaqkbsd[m]> I have some extra questions if anyone willing to help. Does GrapheneOS have an option to change IMEI on user request or is this a fixed hw identifier? And Netguard still needed or internal firewall ? And another question: can I do attestation using my first (single) device via the attestation app remote server or do I need 2 pcs of hardware to validate one with another?
+20:02:53 <GrapheneOS-Teleg> <!Hulk> Read the FAQ please
+20:02:53 <blaqkbsd[m]> <GrapheneOS-Teleg "<!Hulk> afaik, 5G keeps working"> Ok, so LTE mode on to disable legacy 2g and 3g (and probably some bugs) having 4g/5g (newer, hopefully clean code). Sounds great
+20:03:19 <blaqkbsd[m]> <GrapheneOS-Teleg "<!Hulk> Read the FAQ please"> I read the FAQ twice and I am unsure about these questions :)
+20:04:12 <GrapheneOS-Teleg> <!Hulk> IMEI: there is no option to change it
+20:05:07 <GrapheneOS-Teleg> <!Hulk> Very few system components/apps have access to it, so do you really need to change it?
+20:05:10 <blaqkbsd[m]> I already moved to Offtopic channel for user questions.
+20:05:53 <akc3n[m]> ḃl̔a͂q̔k͡b̊s̅d̏: When you're connected to the cellular network, it knows your IMEI. That's how a cell phone network works. Different sim cards give you a different subscriptions, but not a different IMEI. The way it works is your IMEI identifies the radio uniquely.
+20:06:02 <blaqkbsd[m]> <GrapheneOS-Teleg "<!Hulk> IMEI: there is no option"> I think its would be a nice feat when changing sims and providers. When dumping all your friends and getting a new life (jk)
+20:06:40 <akc3n[m]> ḃl̔a͂q̔k͡b̊s̅d̏: buy a new phone then with a new logic board and new radios with new imei
+20:07:07 <akc3n[m]> ḃl̔a͂q̔k͡b̊s̅d̏: If an app requested your IMEI or your SIM card serial number or subscriber ID or any other nonresettable hardware IDs, it would get an error.
+20:07:07 <akc3n[m]> As @Hulk said, please read the FAQ.
+20:07:19 <blaqkbsd[m]> Probably FCC won't like such a great feat. I know many Asian cellphones from a particular brand all used to ship with the same IMEI. It adds another level of privacy for some people... and in some countries to evade mobile tax registration for tourists overstaying
+20:07:51 <akc3n[m]> ḃl̔a͂q̔k͡b̊s̅d̏: Android past version 10 does not allow apps to know non-resettable hardware IDs.
+20:07:54 <blaqkbsd[m]> <akc3n[m] "ḃl̔a͂q̔k͡b̊s̅d̏: buy a new phon"> There is nothing in the FAQ about these things... I read it front to back and reverse. I wouldn't come on chat if it was in there CLEARLY.
+20:08:12 <blaqkbsd[m]> <akc3n[m] "ḃl̔a͂q̔k͡b̊s̅d̏: Android past v"> Ok thank you for your help
+20:11:40 <todd221> hey guys, I'm trying to flash GrapheneOS to my Pixel 3a. When I try to connect the phone to my Debian linux machine with
+20:11:40 <todd221> fastboot devices
+20:11:41 <todd221> the phone does not show up. (I tried the same device with another phone I have and it works fine).
+20:11:41 <todd221> Has probably to do with the udev rules? Please assist.
+20:11:43 <akc3n[m]> ḃl̔a͂q̔k͡b̊s̅d̏: https://grapheneos.org/faq#hardware-identifiers
+20:16:22 <GrapheneOS-Teleg> <!Hulk> Hi todd221:
+20:16:32 <GrapheneOS-Teleg> <!Hulk> Please use the web-installer
+20:19:05 <todd221> Hi! If I use the web-installer it tells me "no compatible device found" once I click "Unlock bootloader".
+20:19:44 <GrapheneOS-Teleg> <!Hulk> Exactly, which means you have troubles with your USB connection
+20:20:07 <GrapheneOS-Teleg> <!Hulk> And CLI won't really help solving it afaik
+20:20:24 <GrapheneOS-Teleg> <!Hulk> Does your PC come with USB-C port?
+20:20:36 <todd221> Yes. I have  USB-C on my machine.
+20:21:06 <GrapheneOS-Teleg> <!Hulk> Are you using Google's cable to connect your phone and your PC?
+20:21:19 <todd221> Yes.
+20:21:39 <todd221> I've just connected another phone with the same cable and it worked just fine.
+20:21:40 <GrapheneOS-Teleg> <!Hulk> Is your phone booted to the bootloader interface?
+20:21:44 <todd221> Yes.
+20:22:08 <GrapheneOS-Teleg> <!Hulk> Did you setup the udev rules properly?
+20:22:27 <blaqkbsd[m]> <GrapheneOS-Teleg "<!Hulk> And CLI won't really hel"> Yes I can use a Raspberry PI with a USB cable connector and hook it to a second phone
+20:22:47 <todd221> With
+20:22:48 <todd221> $ lsusb
+20:22:48 <todd221> the pixel 3a does not show up in the output. Wherease the other phone showed up.
+20:23:04 <GrapheneOS-Teleg> <!Hulk> Try these udev rules https://github.com/M0Rf30/android-udev-rules
+20:23:36 <todd221> Ok, thanks!
+20:29:36 <todd221> I've followed the instructions on the github page but the device is still not showing up.
+20:32:12 <GrapheneOS-Teleg> <!Hulk> Hmm
+20:32:24 <GrapheneOS-Teleg> <!Hulk> Which browser are you using?
+21:02:44 <dig_nerds[m]> Hi! Will GOS stop to support some devices in the future?
+21:03:48 <GrapheneOS-Teleg> <!Hulk> dig_nerds[m]: hi, please read the rules
+21:03:59 <GrapheneOS-Teleg> <!Hulk> your question is covered in the FAQ
+21:04:18 <dig_nerds[m]> thank you
+21:04:30 <GrapheneOS-Teleg> <!Hulk> you're welcome!
+21:05:36 <dig_nerds[m]> GrapheneOS-Teleg: Understand, when Google stop to support, you guys will no longer support them as well.
+21:07:28 <GrapheneOS-Teleg> <!Hulk> i would word more accurately like this: "after Google stops to support a device, one shouldn't expect GrapheneOS project to keep supporting that device"
+21:10:00 <dig_nerds[m]> I hope Linux phone can do better than right now at the time the EOF of my phone.
+21:11:29 <GrapheneOS-Teleg> <!Hulk> that is off-topic
+21:19:15 <akc3n[m]> <dig_nerds[m] "I hope Linux phone can do better"> #grapheneos-offtopic:matrix.org and BTW in ref to Linux phones ( check out https://madaidans-insecurities.github.io/linux-phones.html )
+21:19:46 <GhostSplinterSix> Oh, god....THAT article...
+21:21:11 <todd221> I'm using Chrome. But it's not showing up in the CLI when I do
+21:21:12 <todd221> $lsusb
+21:21:12 <todd221> so it's not the browser.
+21:23:55 <GrapheneOS-Teleg> <!Hulk> todd221: do you have another Android phone with a USB-C port nearby?
+22:36:09 <strcat[m]> hardened_malloc version 8 released: https://github.com/GrapheneOS/hardened_malloc/releases/tag/8
+22:36:12 <strcat[m]> https://twitter.com/GrapheneOS/status/1392971252273405957
+22:36:18 <strcat[m]> https://www.reddit.com/r/GrapheneOS/comments/nbtd9j/hardened_malloc_version_8_released/
+22:38:47 <akc3n[m]> Thank you strcat
+22:48:30 <todd221> Yes, I do.
+22:49:34 <GrapheneOS-Teleg> <!Hulk> todd221: try installing GrapheneOS using that phone
+22:50:39 <todd221> Do you mean installing GrapheneOS on that phone? Flashing it to that phone?
+22:51:33 <GrapheneOS-Teleg> <!Hulk> no, i mean using another Android phone to install GrapheneOS on your pixel
+22:51:45 <GrapheneOS-Teleg> <!Hulk> instead of using your PC
+22:53:30 <todd221> Cool. How do I do that?
+22:54:23 <GrapheneOS-Teleg> <!Hulk> the instructions are exactly the same: https://grapheneos.org/install/web
+22:55:26 <GrapheneOS-Teleg> <!Hulk> things to note: you're practically bound to use Google Chrome (or Vanadium if you have it)
+22:55:58 <todd221> So I download the .zip on my phone and flash it via the web-installer?
+22:56:12 <GrapheneOS-Teleg> <!Hulk> you don't need to download the zip
+22:56:21 <GrapheneOS-Teleg> <!Hulk> just follow the guide word-to-word
+22:56:33 <todd221> Okay. Thank you@
+23:07:31 <rawtaz> off they go :3
+23:21:04 <Cliff[m]> Has anyone used a graphene device to make another one?
+23:21:04 <Cliff[m]>  Can i also update the stock pixel os to the latest security update using hotspot on my graphene device? Has anyone tried this
+23:23:34 <GrapheneOS-Teleg> <!Hulk> Cliff[m]: that should work
+23:43:17 <GrapheneOS-Teleg> <c​asper667> How can you get ciphr on graphene? Thanks
+23:43:43 <Uusitulokas> I get this error when I tried to install grapheneos to pixel 5: fastboot: error: Failed to identify current slot
+23:44:30 <GrapheneOS-Teleg> <!Hulk> Uusitulokas: hello, let me try to help you
+23:44:43 <GrapheneOS-Teleg> <!Hulk> which OS, browser are you using?
+23:44:45 <Uusitulokas> thanks
+23:45:29 <Uusitulokas> Manjaro and cli, not web
+23:45:49 <GrapheneOS-Teleg> <!Hulk> please use the web-installer instead
+23:45:54 <Uusitulokas> I installed everything by the book
+23:46:18 <GrapheneOS-Teleg> <!Hulk> also, Manjaro is not officially supported
+23:46:32 <GrapheneOS-Teleg> <!Hulk> might or might not work out
+23:46:36 <Uusitulokas> I have the stock usb cable that came with pixel 5
+23:47:02 <GrapheneOS-Teleg> <!Hulk> so you have USB-C port in your PC?
+23:47:22 <Uusitulokas> I just have Firefox and it's not supported either
+23:47:45 <Uusitulokas> yes I have, but it is on front tho
+23:47:51 <GrapheneOS-Teleg> <c​asper667> Ok
+23:48:16 <GrapheneOS-Teleg> <!Hulk> so, your motherboard doesn't really have USB-C port, correct?
+23:49:01 <Uusitulokas> can I just ctrl c on installation script? and then try different cable from back of the computer?
+23:49:46 <Uusitulokas> Not directly but there is pins for usbc and cable goes to front of the case
+23:49:47 <GrapheneOS-Teleg> <!Hulk> try it
+23:50:12 <Uusitulokas> I'm just try not to brick the ne phone
+23:50:12 <GrapheneOS-Teleg> <!Hulk> oh in this case, your motherboard does not have USB-C port
+23:50:38 <GrapheneOS-Teleg> <!Hulk> find a different PC or an Android phone
+23:50:55 <Uusitulokas> I managed to unlock bootloader with that cable tho
+23:51:13 <GrapheneOS-Teleg> <!Hulk> unlocking the bootloader is easy
+23:51:28 <GrapheneOS-Teleg> <!Hulk> fastboot requires perfect USB
+23:51:37 <Uusitulokas> ok

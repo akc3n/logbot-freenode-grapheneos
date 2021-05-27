@@ -1,0 +1,606 @@
+00:00:30 <Guest55058> Right, so the issue is that it doesn't turn on at all.
+00:01:05 <Guest55058> Mid flash-all it went into <waiting for devices> and then never turned back on
+00:01:23 <Guest55058> So I can't get to that screen
+00:22:03 <chrismachine[m]> ^^ this issue happened to my brother as well, he's thinking about just buying a another pixel 4a and trying again
+00:23:06 <M9thplayer[m]> <chrismachine[m] "^^ this issue happened to my bro"> is this just a problem with the 4a or something?
+00:24:10 <chrismachine[m]> no idea, he ran flash-all and it just replied with <waiting for any device>, phone was totally bricked
+00:24:38 <M9thplayer[m]> shit that sucks
+00:24:51 <M9thplayer[m]> might be a 4a thing
+00:25:03 <M9thplayer[m]> idk though
+00:25:07 <chrismachine[m]> idk man, I have a 4a, worked fine for me
+00:25:14 <M9thplayer[m]> that's good
+00:29:20 <thomashensel[m]> looks like a common issue on the 4a, suggestions range from putting it on a charger for a few hours and holding the power button reeeeeally long
+00:29:47 <chrismachine[m]> ok I'll buy a clamp for him
+00:31:12 <chrismachine[m]> Got a link to a thread containing the solutions?
+00:31:14 <M9thplayer[m]> <thomashensel[m] "looks like a common issue on the"> that's weird af
+00:38:13 <Pollytron> Is there a faq that recommends different apps for basic functions after installing graphene?  Anything about how to preserve your data from a standard android before switching (e.g. contacts) before making the move? It'll be my first time.
+00:39:41 <covid-1984[m]> <Pollytron "Is there a faq that recommends d"> Would check #grapheneos-offtopic:matrix.org for this... But to move contacts and stuff Dav5x I think it is called
+00:39:59 * jamesbrunet[m] uploaded an image: (7KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/HdOTzzLkMaqgVlRlUaHHlYnG/image.png >
+00:40:07 <jamesbrunet[m]> Final update on the pixel 5 battery issue thread from earlier. Google has conceded.
+00:40:58 <jamesbrunet[m]> (They tried to blame grapheneos for my battery troubles)
+00:42:27 <M9thplayer[m]> Bruh i wouldn't have mentioned graphene os or any sort of modifications at all if i were you
+00:42:36 <jamesbrunet[m]> Eh, whatever.
+00:42:47 <M9thplayer[m]> Glad you got your warranty though
+00:43:08 <M9thplayer[m]> I would never mention modifications in warranty since it is just another thing they can toss back at you
+00:43:51 <jamesbrunet[m]> Fair enough, I figured they might be able to figure out so there was no sense lying about it. Pretty sure it was still covered by the return policy too. But I hear ya.
+00:44:03 <M9thplayer[m]> yup yup
+00:44:17 <M9thplayer[m]> I'd only mention it if it is necessary
+00:44:38 <M9thplayer[m]> Pretty happy for you getting that warranty though
+00:44:47 <jamesbrunet[m]> they asked me directly if I modified my OS, and much like george washington I cannot lie
+00:45:05 <jamesbrunet[m]> what would I be without my honour
+00:45:41 <M9thplayer[m]> eh yeah, it depends for me
+00:46:29 <M9thplayer[m]> In that case i'd probably vaguely mention it
+00:48:01 <thomashensel[m]> okay this is supremly confusing. using Element on grapheneos, with the notification setting optimized for real time, do you see a constant notification like for fairmail/telegram?
+00:48:26 <M9thplayer[m]> I don't think so, but the notifications are finicky in my experience
+00:48:37 <M9thplayer[m]> If you don't have the app open
+00:48:59 <duck[m]> <thomashensel[m] "okay this is supremly confusing."> element fdroid builds have websocket support for push notifications
+00:49:37 <thomashensel[m]> duck, can you explain what that means?
+00:50:39 <M9thplayer[m]> <thomashensel[m] "duck, can you explain what that "> There is no central notification service since the one used on stock android relies on google services. (AFAIK)
+00:50:52 <M9thplayer[m]> > <@thomas.hensel:tchncs.de> duck, can you explain what that means?
+00:50:52 <M9thplayer[m]>  * There is no central notification service on graphene since the one used on stock android relies on google services. (AFAIK)
+00:51:07 <M9thplayer[m]> Therefore the apps have to handle the notifications their self
+00:51:19 <thomashensel[m]> i know, which is why i expected there to be a constant notification for the real time setting
+00:51:36 <thomashensel[m]> it says so in the setting as well but i don't see it
+00:52:41 <duck[m]> <thomashensel[m] "duck, can you explain what that "> in order to get notifications without fcm the app runs a foreground service to keep the connection alive and all foreground services must display a notification
+00:52:58 * duck[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/bDeqnIekZgAhfTYjjzGGvjfJ/message.txt >
+00:53:16 <thomashensel[m]> yup, and fairmail and telegram are doing that but i cant get eleent to do it
+00:53:39 <M9thplayer[m]> yeah element notifications on graphene have been weird for me too
+01:17:51 <dazinism> F-Droid version of Element doesn't have push notifications. They just wake up the device and pull messages.
+01:18:19 <thomashensel[m]> yeah like telegram/fairmail/threema on non GSF phones
+01:18:57 <dazinism> If you want reasonably quick notifications you have to have it set to wake regularly which uses a fair amount of battery
+01:19:21 <dazinism> Can change the scheduling in the settings in the app
+01:19:31 <dazinism> Under notifications
+01:19:34 <thomashensel[m]> I understand thats not the issue though
+01:19:54 <duck[m]> element does it differently than most other apps
+01:19:55 <thomashensel[m]> there are three options under notifications for background sync mode
+01:20:43 <dazinism> Unlike k9, Fairemail has IMAP IDLE which is push. If your mail server supports that
+01:20:59 <thomashensel[m]> Optimized for battery -> let android do the scheduling including doze mode, optimize for real time -> should show a permanent notification for the service but doesn't, no background sync
+01:21:29 <thomashensel[m]> my issue is just that the permanent notification for the optimize for realtime mode doesnt show up
+01:21:53 <duck[m]> exempt element from battery optimization
+01:22:08 <dazinism> Have you hidden the notification?
+01:22:30 <thomashensel[m]> i don't think so i double checked it, nothing is hidden
+01:22:49 <dazinism> Can check in android settings > notifications
+01:24:26 <thomashensel[m]> yeah, should show all notifications, it just doesnt but there's an open bug ticket
+01:26:42 <thomashensel[m]> do you see that permanent notification dazinism
+01:26:52 <dazinism> I also don't get a notification. Guess they are doing something different
+01:27:13 <dazinism> Had to turn it on
+01:28:00 <dazinism> I use matrix mainly for project chats. Nothing I need quick  notifications for
+01:28:27 <dazinism> So I keep all that stuff off
+01:37:42 <dazinism> thomas: was chatting with one of the element android devs a few months back about this
+01:38:26 <dazinism> They were complaining about the way different phone manufacturers do power management in weird ways
+01:38:46 <thomashensel[m]> yeah huawei and such, all the messengers are complaining
+01:38:51 <dazinism> Think its mainly the Chinese manufacturers
+01:39:22 <thomashensel[m]> but afaik the way telegramm-foss does it is the only correct way to do it on non-google play service phones
+01:39:32 <dazinism> As they don't have Googles push messaging on phones sold in China
+01:40:56 <dazinism> https://dontkillmyapp.com/
+01:41:15 <thomashensel[m]> i have developed for android a long time ago but even for me it's impossible to understand how the background stuff works on android anymore. It's gotten too complicated
+01:41:51 <dazinism> Yeah Telegram, Conversations, Signal, WhatsApp all kind of do it right
+01:42:09 <dazinism> Though some are a bit better than others
+01:42:21 <Guest50779> thomas: it's really not that complicated
+01:42:41 <Guest50779> and vendors aren't allowed to do their own thing anymore for the most part
+01:43:28 <Guest50779> https://developer.android.com/topic/performance/power/power-details is how the limits work without a battery optimization exception
+01:43:39 <Guest50779> if you want to do something continuously you need a foreground service
+01:44:05 <Guest50779> if you want to do stuff during doze or start foreground services from the background (on Android 12), etc. you need the battery optimization exception
+01:44:40 <dazinism> I wonder what element are trying to do now, as they don't appear to have a foreground service notification
+01:45:02 <Guest50779> well, if they don't have the foreground service, it's clearly wrong and not capable of doing push
+01:45:11 <Guest50779> at least not in any proper way
+01:45:16 <Guest50779> they are doing things incredibly wrong then
+01:45:17 * dazinism goes off to double check
+01:45:38 <dazinism> They are still doing pull
+01:45:43 <Guest50779> keep open connection to server from foreground service
+01:45:51 <Guest50779> send events through it
+01:46:11 <Guest50779> use OS alarm timer (allow while idle mode) to occasionally ping it
+01:46:17 <Guest50779> throttle it based on reliability of network
+01:46:43 <Guest50779> listen to network change events in the foreground service to explicitly handle those in case something weird happens if desired (connection should probably die and give you an exception though)
+01:47:23 <Guest50779> need battery optimization exception to avoid doze preventing it waking
+01:48:23 <Guest50779> dazinism: if all they do is poll then they could use an allow while idle alarm with a delay, but without battery optimization exception they won't be able to connect to the network
+01:48:59 <Guest50779> but if they poll users get the notifications really late
+01:49:18 <Guest50779> here's the thing: what do they do when the app is in the foreground? clearly they don't poll, right?
+01:49:26 <Guest50779> why are they not just doing the same in the background... ?
+01:49:31 <dazinism> They ask to exempt optimization and a 'listening for events' notification pops up from time to time for a second or two
+01:50:06 <Guest50779> dazinism: which is fine if they are just polling but that's pretty bad
+01:50:25 <duck[m]> https://github.com/vector-im/element-android/pull/2080
+01:52:20 <dazinism> Yeah, they've kind of wanted proper push notifications forever, but always had other stuff with higher priority
+01:52:24 * thomashensel[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/CBseLgqkgccgbijjtNVdGpvm/message.txt >
+01:53:06 <dazinism> Can hide the stupid foreground service notifications
+01:53:10 * thomashensel[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/iOqNqTbQsqsOMkRDmsgjIRVg/message.txt >
+01:53:24 <Guest50779> no apps should be polling for stuff like that
+01:53:25 <thomashensel[m]> <dazinism "Can hide the stupid foreground s"> yeah, id just rather not have any foreground service, i want it to doze
+01:53:41 <Guest50779> foreground service does not stop doze
+01:53:51 <dazinism> Conversations uses next to no battery
+01:53:56 <Guest50779> you're really misunderstanding how it works and what they should be doing to be efficient
+01:53:59 <dazinism> Most the time
+01:54:01 <Guest50779> conversations uses push not polling
+01:54:14 <dazinism> Yeah
+01:54:24 <Guest50779> i.e. it does not do anything it just sits there waiting for the server to push and occasionally makes sure connection hasn't silently died
+01:54:27 <Guest50779> but that can be throttled
+01:54:39 <Guest50779> I don't understand why anyone would not use push in 2021
+01:54:46 <Guest50779> it is not hard to leave a TCP connection open
+01:54:53 <Guest50779> and wait to receive
+01:55:03 <Guest50779> and do keep alives
+01:55:14 <Guest50779> which can be very throttled
+01:55:33 <Guest50779> it can be a lot longer than 10 minute intervals on a very reliable network, just has to throttle it
+01:56:03 <thomashensel[m]> let me see if i understood it correctly then
+01:56:06 <Guest50779> foreground service definitely doesn't stop doze
+01:56:18 <Guest50779> foreground service absolutely doesn't mean the app is continuously doing work
+01:56:23 <Guest50779> or keeping the device awake
+01:56:24 <Guest50779> at all
+01:56:45 <Guest50779> you're really overcomplicating things and suggesting that apps do things in a way that is super UX unfriendly and super inefficient
+01:56:47 <Guest50779> at the same time
+01:56:51 <Guest50779> polling is bad
+01:56:55 <Guest50779> polling does not belong in 2021
+01:57:35 <Guest50779> the app should just be sitting there waiting for events to be pushed from their server
+01:57:39 <Guest50779> asleep
+01:57:39 <thomashensel[m]> not that i disagree with you that push > polling but the UX is complicated AF wither way without GSF
+01:57:45 <Guest50779> no
+01:57:48 <Guest50779> it's not complicated
+01:57:56 <dazinism> Telegram FOSS also has decent push with real low battery draw
+01:57:59 <Guest50779> it's easy to implement and there is nothing complicated about it
+01:58:43 <dazinism> Element is weird/confusing because it does polling rather than push
+01:58:52 <Guest50779> yes it's super bad UX and inefficient
+01:59:02 <Guest50779> I don't know why they'd even implement that in the first place
+01:59:12 <Guest50779> they must use push when the app is in the foreground
+01:59:18 <Guest50779> why didn't they just do the same thing in the background???
+01:59:24 <Guest50779> I'm using the web app right now
+01:59:27 <Guest50779> clearly, this uses push
+01:59:36 <Guest50779> why do they not just keep doing in the background in their mobile app
+01:59:38 <Guest50779> that's not hard to do
+02:00:11 <Guest50779> Signal did a super lazy implementation of this where they just stopped turning off their websocket connection when going into the background and added foreground service to keep it alive
+02:00:13 <Guest50779> that's it...
+02:00:20 <Guest50779> they didn't add throttling so it's not very efficient
+02:00:25 <Guest50779> look at the PR adding this to Signal
+02:00:40 <Guest50779> it's not a lot of code, it's not complicated
+02:00:49 <dazinism> Guess most people have Google Play and whoever the app dev was did something weird for devices without Play
+02:00:51 <Guest50779> it works fine, if they cared about the efficiency improving that would be easy
+02:01:36 <Guest50779> they just haven't put any work into it since then
+02:01:41 <Guest50779> no work optimizing it
+02:01:49 <Guest50779> so it isn't optimized, not surprising
+02:02:06 <Guest50779> please stop pretending this is something complicated or hard to do, it's extremely harmful and contributes to the situation of app devs not doing it
+02:02:21 <Guest50779> https://grapheneos.org/faq#notifications all explained there
+02:02:40 <Guest50779> I'll happily write a trivial code sample showing how to do push if people don't understand it
+02:03:12 <Guest50779> I can't think of something more simple because apps ALREADY have to do it in the foreground
+02:03:15 * thomashensel[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/lKsGzatiLrrNNZWWyPXazDwl/message.txt >
+02:03:27 <Guest50779> so literally all this involves is keeping open a connection
+02:03:49 <Guest50779> Doze doesn't interfere with push in any way if the app has a battery optimization exception
+02:03:55 <Guest50779> and the battery optimization exception does not break Doze
+02:04:28 <Guest50779> polling is simply bad efficiency + bad UX and should never even be implemented
+02:04:34 <Guest50779> and that just makes it harder to do things
+02:04:43 <Guest50779> I don't see the point in investing time in doing things wrong
+02:04:49 <Guest50779> especially when doing it right is not hard
+02:05:35 <Guest50779> the only reason someone wouldn't do it right is if they're being cheap and don't want a connection to their servers from users not actively using the app to save some memory per user
+02:05:54 <dazinism> The dev that implemented the polling stuff Element is using isn't working there any more
+02:05:57 <Guest50779> and it's really not that much to scale it up
+02:06:06 <Guest50779> it makes no sense to do polling like that
+02:06:16 <dazinism> Left a couple of years back
+02:06:24 <Guest50779> FairEmail has a good reason: some IMAP servers are broken and don't do IMAP IDLE
+02:06:30 <Guest50779> any app where it talks to their own server has 0 excuse
+02:06:39 <Guest50779> it is literally easier for them to do push than polling
+02:06:46 <Guest50779> because they already need to do it in the foreground
+02:07:00 <Guest50779> this is not asking devs to implement something beyond continuing to do push when app isn't in the foreground
+02:07:21 <Guest50779> run a foreground service, don't close it in background, same code that maintains it in foreground works fine
+02:07:38 <Guest50779> now, making it more efficient is some work, which Signal didn't do
+02:08:00 <Guest50779> Signal took the approach of not really doing anything beyond asking for battery optimization exception + adding foreground service + not closing connection
+02:08:03 <Guest50779> look at the PR
+02:08:15 <Guest50779> most of the code they added was to warn users they are too lazy to make it work efficiently
+02:08:55 <thomashensel[m]> just to be clear, im not arguing it's hard to implement, i'm arguing the current state due to the varying implementations is really hard to configure correctly across all apps because most don't do it correctlly
+02:08:56 <Guest50779> when I send a message here, and you have the app open, you expect to get it right away, right? because the server sends the message through the connection
+02:08:57 <Guest50779> that's push
+02:09:01 <Guest50779> you're seeing push, right now, in element
+02:09:14 <Guest50779> so why did they not simply continue doing push in the background, when they already have push
+02:09:24 <Guest50779> you see this message
+02:09:25 <Guest50779> you see this
+02:09:27 <Guest50779> that's all push
+02:09:38 <Guest50779> the app is not polling 100 times a second, you're getting my messages from a connection that pushes them
+02:09:48 <Guest50779> they could simply continue doing that in the background
+02:09:50 <Guest50779> pretty obvious
+02:09:50 <duck[m]> polling sounds cooler than push 😎
+02:09:57 <dazinism> Signal did improve the push a bit at some stage didn't they, or am I getting confused
+02:10:12 <Guest50779> it is literally easier to do push than polling because you already had to do push in the foreground :\
+02:10:21 <jjstopper[m]> Is there a safe app to monitor CPU usage, temp etc? I don't have any issues. Just curiosity
+02:10:23 <dazinism> you're just saying that coz you're a duck
+02:10:26 <Guest50779> why do something different in the background?
+02:10:32 <Guest50779> why not reuse the same code?
+02:10:42 <Guest50779> and then when you make it more efficient in the background it gets more efficient in the foreground too
+02:10:54 <Guest50779> Signal making it more efficient for non-Play users would help Play users when they're using the app
+02:10:56 <duck[m]> reinventing the wheel here
+02:10:59 <Guest50779> same code
+02:11:04 <dazinism> Oh polling not pooling... 🤣
+02:12:49 <Guest50779> push is not complicated thing it's just a TCP connection where the server sends messages without the client asking for them (push)
+02:13:11 <Guest50779> polling: your client asks server for new messages every second, push: server sends them as they happen
+02:13:12 <thomashensel[m]> i think i understood it, Element IS NOT using push at all
+02:13:17 <dazinism> jjstopper: there used to be apps that did that, but don't think apps can access any of that any more
+02:13:23 <thomashensel[m]> even in the "optimiyed for real time" mode
+02:13:32 <jjstopper[m]> thomas: thanks!
+02:13:38 <Guest50779> thomas: I assume they *are* using it in the foreground
+02:13:52 <Guest50779> but sure looks like for some strange reason it never occurred to them that they could do it in the background
+02:13:55 <thomashensel[m]> yeah just not in the background version
+02:14:09 <Guest50779> yeah so, they just for some reason did not realize they could keep doing things properly in the background
+02:14:17 <Guest50779> they didn't need to implement any of that nonsense at all
+02:14:21 <Guest50779> they made their life harder for no reason
+02:15:27 <Guest50779> it's like their goal was to make it look hard
+02:15:44 <jjstopper[m]> If Daniel Micay is on here just saying thanks for an awesome os
+02:15:57 <thomashensel[m]> strcat is daniel afaik
+02:15:59 <jjstopper[m]> And to everyone else
+02:17:05 <jjstopper[m]> I guessed that but wasn't assuming
+02:24:34 <dazinism> jjstopper: you can see stuff about memory use in 'memory' and 'running services' in developer options.
+02:29:20 <jjstopper[m]> dazinism: OK thanks I'll do that
+02:41:49 <thomashensel[m]> can somone send me a private message, just trying to check if something works
+02:43:12 <thomashensel[m]> thx, done! I won't answer until the message appears on  my phone
+02:58:39 * thomashensel[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/EjIdSVvqsIaYRDcsFqBMdeuC/message.txt >
+04:37:32 <Guest54984> test
+04:42:15 <Railgun_Lover[m]> <rny "test"> exam
+04:43:13 <rny> hi
+04:43:21 <Railgun_Lover[m]> _rny: copperhead strcat flashbacks
+04:44:01 <Guest50305> funky to use the irc bridge on matrix
+04:44:11 <rny> wtf
+04:44:19 <Railgun_Lover[m]> <Guest50305 "funky to use the irc bridge on m"> Wait why
+04:47:26 <Railgun_Lover[m]> Changed your avatar to the same thing 3 times?
+04:49:21 <rny> i think i'll make a new account
+04:50:47 <Guest50305> oh whoops, i do have a different account
+05:55:47 <pwnr[m]> Hey sorry if this is the wrong place to ask but I'm a newb when it comes to this stuff. I run graphene on my pixel 4xl and I saw that one of the newer updates adds the option to "disable native debugging support". Should I do disable this? What are the pros and cons?
+07:15:58 <nscnt[m]> pwnr: It could break apps, which is why it's enabled by default
+07:19:07 <pwnr[m]> <nscnt[m] "pwnr: It could break apps, which"> OK thanks, I won't change it then
+08:08:02 <nscnt[m]> pwnr: *some apps (to clarify)
+08:19:16 <grorico> Hy there ... i've got a problem ! I have followed CLI install and now my 4A seems to be bricked.
+08:19:43 <grorico> Here's the output of install-all.sh
+08:19:53 <grorico> Sending 'bootloader_b' (8754 KB)                   OKAY [  0.360s]
+08:19:54 <grorico> Writing 'bootloader_b'                             (bootloader) Flashing Pack version r3-0.3-7051238
+08:19:54 <grorico> (bootloader) Flashing partition table for Lun = 0
+08:19:55 <grorico> (bootloader) Flashing partition table for Lun = 1
+08:19:55 <grorico> (bootloader) Flashing partition table for Lun = 2
+08:19:56 <grorico> (bootloader) Flashing partition table for Lun = 4
+08:39:07 <grorico[m]> Hy there ... i've got a problem ! I have followed CLI install and now my 4A seems to be bricked.
+08:39:07 <grorico[m]> Here's the output of install-all.sh
+08:39:15 * grorico[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/GNZaegzzoefsLxKRWLGGEsWj/message.txt >
+08:39:29 <grorico[m]> Can anyone help ?
+08:44:34 <nscnt[m]> grorico: Why do you think it's bricked? What's wrong?
+08:46:18 <grorico[m]> nothing happens when i press start button
+08:46:38 <nscnt[m]> grorico: You don't have to press anything
+08:46:40 <nscnt[m]> grorico: Does it get stuck at "<waiting for any device>"?
+08:46:51 <grorico[m]> yes
+08:47:16 <nscnt[m]> grorico: Try another cable/port
+08:47:43 <grorico[m]> Ok ... let me try
+08:48:37 <nscnt[m]> grorico: The flash process takes some time and doesn't require any input from you
+08:50:56 <grorico[m]> I waited a long time before doing anything
+08:51:39 <grorico[m]> I changed cable and port an relaunch install
+08:51:45 <grorico[m]> same issue
+08:52:32 <grorico[m]> I read it could be a problem with udev rules
+08:52:51 <grorico[m]> But i don't know what to do ...
+08:53:44 <nscnt[m]> grorico: What OS are you on?
+08:53:53 <grorico[m]> ubuntu 20.04
+08:55:08 <nscnt[m]> grorico: It sounds more like the device isn't recognized after rebooting into the bootloader (probably due to a bad connection)
+08:55:32 <nscnt[m]> grorico: fastboot is picky
+08:55:40 <grorico[m]> Is it normal that the screen is totally off ?
+08:56:24 <nscnt[m]> grorico: Well, you should be in the bootloader menu (titled as "Fastboot Mode")
+08:57:05 <grorico[m]> Here's the lsusb output
+08:57:07 * grorico[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/TIhPyXyNmjUhIJnYzsAhBHkz/message.txt >
+08:57:42 <nscnt[m]> grorico: You have a Pixel 4a, right? What release did you flash?
+08:57:58 <grorico[m]> Yes 4A
+08:58:09 <grorico[m]> I don't know the release
+08:59:39 <nscnt[m]> grorico: You should be in the directory of the release. What's written there? redfin-... or sunfish-... ?
+08:59:51 <grorico[m]> redfin
+09:00:47 <nscnt[m]> grorico: Probably bricked now, yes
+09:01:06 <nscnt[m]> grorico: You have sunfish and I think the firmware isn't compatible
+09:01:27 <nscnt[m]> grorico: You flashed the wrong release
+09:02:02 <grorico[m]> The install guide doesn't speak about that !!??
+09:02:44 <nscnt[m]> grorico: It does
+09:02:55 <nscnt[m]> redfin is just an example
+09:03:09 <nscnt[m]> That's why we recommend the WebUSB-based installation for most users
+09:03:16 <nscnt[m]> Less error prone
+09:03:27 <nscnt[m]> user-error prone
+09:04:52 <grorico[m]> There is really nothing i can't do ?
+09:05:32 <nscnt[m]> grorico: Returning the device
+09:06:07 <grorico[m]> To who ?
+09:07:58 <grorico[m]> Sure it's not a udev issue ?
+09:08:59 <grorico[m]> You're right !: It's written ! My bad !!!!
+09:10:18 <nscnt[m]> grorico: Pretty much, yes. You flashed the wrong image. You said yourself that your screen is black. Return to seller
+09:10:45 <grorico[m]> Ok ! Thank's for help !!!
+09:11:09 <grorico[m]> 😭
+09:30:19 <suckmydata> Why are there no settings to control startup applications?
+09:37:35 <suckmydata> Is anyone here
+10:14:22 <dakac> Just installed graphene, where can I download the stock (not modded/ported) google camera apk?
+10:14:45 <dakac> I tried with aurora but it says my device isnt supported
+10:34:57 <catfish[m]> dakac: you cannot. You can get good photos with open camera if you enable camera2 api
+10:38:14 <catfish[m]> suckmydata: if you don't want an app to run at startup you can disable it.
+11:10:26 <QuickQuestion> Oppose to doing a factory reset, couldn't I just reinstall Graphene ? Which would do a better job at wiping the phone ?
+11:20:34 <QuickQuestion> Is doing a factory reset just as efficient as reinstalling Graphene ?
+11:25:00 <helloworldkk87[m> <QuickQuestion "Is doing a factory reset just as"> When you hit factory reset on your cellphone, the Titan will destroy its access tokens and the phone will change the header partition. Without either the access tokens or if even one bit is changed of the header partition, the key derivation function will produce an incorrect result, and the data on the drive will be lost forever.
+11:25:47 <helloworldkk87[m> The data on it will be gone. Forever. No ifs, ands, or buts.
+11:30:15 <QuickQuestion> So factory reset is secure enough to wipe the phone where data can't be retrieved by any means ?
+11:30:56 <helloworldkk87[m> Yes.
+11:32:23 <QuickQuestion> Awesome ty !! I was thinking reinstalling the OS to re-write over everything would be the safest bet, but if you say factory reset is enough then I'll go with that.
+12:22:02 <honeybadger> I'm using GrapheneOS on a Pixel 4a 5g with OpenCamera, is there a way to switch to the wide angle lens?
+12:31:36 <ox-ie[m]> This is probably in the documentation somewhere, but does GrapheneOS have any extra features other than security and privacy specific ones? What are some of your favourites?
+12:33:32 <corticosteroid[m> ox-ie: partial list of features : https://grapheneos.org/features
+12:48:00 <GhostSplinterSix> <ox-ie[m] "This is probably in the document"> The link above with provide you with more than enough information regarding what you asked as well as other information regarding the OS. 👍
+13:12:09 <jojo99> who can I ask if I have a problem with graphene os?
+13:14:40 <Guest50779> the channel
+13:15:38 <anupritaisno1[m]> jojo99: just ask
+13:15:54 <jojo99> okay I`ll try. First hello to everybody.
+13:16:27 <anupritaisno1[m]> well hello there
+13:18:02 <GhostSplinterSix> Howdy. How's it going? Have you reviewed the website to see if your answer is on there?
+13:21:12 <jojo99> when I write sms, I  do this in more then one language. I loved allways the correction vocabulary, whitch is quiet practical. The problem I have now is that the language does not switch the correction vocabulary language. It allways uses the german vocabulary whitch is my first configured language. English or portugese only work, when I select
+13:21:12 <jojo99> them as my first system language. Hope you understand what I mean.
+13:23:01 <jojo99> Dont know if this was working ever on my phone with graphene os or if it was lineage what I had bevore.
+13:23:26 <nscnt[m]> jojo99: https://freenode.logbot.info/grapheneos/20210414#c7627603
+13:25:36 <nscnt[m]> jojo99: Spell checking is a system setting, not a keyboard setting which is why only the system language is used for spell checking. It's not needed for text correction, though
+13:26:15 <nscnt[m]> ... not only system language, but well, the one language you set and it defaults to system language
+13:27:52 <timeo13[m]> hey there, i had some feedback / idea
+13:28:06 <timeo13[m]> when your make a screenshot it's being safe as jpg so why not change it in png instead?
+13:28:24 <jojo99> thanks for you time, I`ll check this again.
+13:28:34 <anupritaisno1[m]> sounds unnecessary
+13:29:44 <timeo13[m]> why so?
+13:30:44 <timeo13[m]> since for me i use a app that remove jpg metadata
+13:31:52 <timeo13[m]> so i thought it might be better if the jpg metadata is gone by default
+13:32:26 <timeo13[m]> that's my personal opinion
+13:36:31 <strcat[m]> screenshots are taken as pngs
+13:36:35 <strcat[m]> don't know what you're talking about
+13:36:58 <strcat[m]> both png and jpeg have various forms of metadata
+13:49:15 <timeo13[m]> <strcat[m] "screenshots are taken as pngs"> i thought the screenshot was made with pressing power button and volume down button
+13:49:31 <timeo13[m]> but it is was mad with the camera app but not
+13:49:58 <timeo13[m]>  * but it was made with the camera app but not
+13:50:21 <timeo13[m]>  * but it was made with the camera app (my bad)
+14:07:50 <alwaysr[m]> Devs of GrapheneOS would you mind sharing your tools for development or point me a place where I get more details about it. Thanks
+14:11:38 <GrapheneOS-Teleg> <n​ottheenddotinfo> Thanks for fixing telegram bridge 👍
+14:12:04 <GrapheneOS-Teleg> <n​ottheenddotinfo> Sry, that was more ot
+14:14:02 <hypokeimenon[m]> It's okay just keep it to a minimum, IMO.
+14:15:11 <DHFuchsiaOSwhen> <alwaysr[m] "Devs of GrapheneOS would you min"> The github repository?
+14:15:14 <DHFuchsiaOSwhen> Oh, and also this: https://grapheneos.org/articles/grapheneos-servers
+15:04:10 <somenerd[m]> >Devs of GrapheneOS would you mind sharing your tools for development or point me a place where I get more details about it. Thanks
+15:04:10 <somenerd[m]> Suggest checking the docs, especially the source docs and the build docs
+15:04:23 <somenerd[m]> (And maybe the articles section)
+15:23:27 <dazinism> alwaysr: theres also this that may be useful
+15:23:28 <dazinism> https://hub.libranet.de/wiki/graphene-os/wiki/Helping-graphene-os
+15:24:56 <dazinism> Its a bit old, but I think much of it probably still stands
+16:01:08 <GrapheneOS-Teleg> Luke (@L​73689) has joined the Telegram Group!
+16:13:20 <mf83> Hi, when trying to unlock my phone with the web installer, it doesn't detect my phone. When doing it with the console it also gets stuck at "waiting for any device" after entering "fastboot flashing unlock". Can somebody help me please?
+16:13:33 <mf83> i have a pixel 3a
+16:14:23 <strcat[m]> make sure to follow the instructions about needing a reliable USB connection, booting the device into the bootloader interface and installing the necessary driver on Windows
+16:19:47 <GrapheneOS-Teleg> <!Alex> Found more success with USB C laptops
+16:20:02 <GrapheneOS-Teleg> <!Alex> Most USB A - USB C cables are shite
+16:31:45 <hitchhooker[m]> my pixel3 with gos has been shut down for 3 months and seems i cant connect to internet  to internet at all. is this perhaps some security feature forcing the update first?
+16:32:29 <strcat[m]> no
+16:32:52 <strcat[m]> more likely the time is set wrong so certificates don't validate
+16:34:34 <hitchhooker[m]> true
+16:46:36 <lou_filerman[m]> I've been looking around for some guidance on accessing apps for graphene, but not finding much. I assumed folks would be using f-droid, but then I was having issues verifying their apk, and I figured I may as well find out what other people are using. Is f-droid (or Aurora or something) typically used or do most sideload individual apks that they may or may not also build from source?
+16:47:08 <strcat[m]> > then I was having issues verifying their apk
+16:47:09 <strcat[m]> what do you mean by that?
+16:47:29 <strcat[m]> > or do most sideload individual apks that they may or may not also build from source?
+16:47:35 <strcat[m]> definitely not and also please clarify what you mean by sideload
+16:47:39 <strcat[m]> you shouldn't be using ADB on a production device
+16:47:44 <strcat[m]> you do not need ADB to install apps
+16:52:05 <lou_filerman[m]> OK well first off, I've only used stock android prior to this experiment, so please bear with my ignorance. When I downloaded the f-droid apk and signature file, then imported their key, I was able to verify the files but gpg told me their signing key was expired. Might have overlooked something, as im not terribly familiar with pgp signing (generally only verified by file hash in the past).
+16:52:24 <strcat[m]> apks themselves are signed
+16:52:28 <strcat[m]> gpg signing apks is misguided in the first place
+16:52:52 <strcat[m]> how are you using gpg on GrapheneOS if you haven't installed apps?
+16:53:12 <strcat[m]> sounds like you're making the severe mistake of using ADB on a production device, which means you're trusting a far less secure computer with extensive access from your phone
+16:53:25 <strcat[m]> ADB shouldn't be used on a production device
+16:53:33 <strcat[m]> and how did you obtain that GPG key? probably just from the same place you got the apk
+16:53:56 <strcat[m]> you're making yourself less secure, through complicating things and increasing attack surface
+16:54:08 <strcat[m]> adding more steps and complexity doesn't make you more secure
+16:54:55 <strcat[m]> there isn't a guide on this because most people would be taking the straightforward approach of installing the app and relying on the fact that the OS package manager does signature verification via pinning it after the initial installation
+16:55:16 <strcat[m]> we do not currently provide a first party repo and built in app install/update system
+16:55:17 <strcat[m]> it's planned
+16:55:24 <strcat[m]> using ADB this way will only make you drastically less secure
+16:55:42 <strcat[m]> GPG signing apks also makes no sense, apks are already signed and that's the signature which you should verify (and which the OS package manager already verifies)
+16:55:54 <strcat[m]> not possible to install an apk without the signature being verified
+16:56:12 <strcat[m]> so all you could really do of value is making sure it's signed with the expected key but getting the expected key from the same source you got the apk is no use
+16:57:12 <strcat[m]> once it's installed, the key is pinned, so the only time you get value from checking the key is the initial install
+16:57:26 <strcat[m]> and I mean the key the apk is signed with, not a misguided extra signature
+17:01:10 <lou_filerman[m]> I was using gpg to attempt to verify the apk on my desktop, because it was unclear how I could do that from graphene with no apps. I get that using adb in production is not ideal. I havent actually done anything to the device beyond installing the os. As far as they key, I used two different sources published by f-droid, not from the download page. But thats fine if I'm way out to lunch on all of this, I'm just
+17:01:10 <lou_filerman[m]> trying to get myself pointed in the right direction. What is the normal workflow for securely installing an app store/repo on grapheneos? Is there just a feature that I overlooked?
+17:01:36 <strcat[m]> do not install apps with `adb sideload` on a production device
+17:01:39 <strcat[m]> do not use adb on a production device
+17:01:46 <strcat[m]> do not verify apks with GPG, that is not how apks are signed
+17:01:54 <strcat[m]> GPG is also far less secure than the apk signing system
+17:02:35 <strcat[m]> we do not have a recommendation on the best way to obtain apps in terms of F-Droid vs. Aurora Store vs. from the app developer, and we won't
+17:02:43 <strcat[m]> but, we can officially recommend to avoid doing the things you're doing
+17:03:12 <lou_filerman[m]> Like trying to verify downloaded software?
+17:03:24 <strcat[m]> the package manager verifies every package before installing it
+17:03:27 <strcat[m]> you can't avoid that
+17:04:30 <strcat[m]> after first install, key is pinned and downgrades are prevented
+17:04:41 <strcat[m]> so, the only thing you could add is checking that the signing key is the expected one
+17:04:59 <lou_filerman[m]> How does one access the package manager in grapheneos? Or better yet, where is it documented?
+17:05:16 <strcat[m]> there is no way to install an apk without going through the OS package manager
+17:05:20 <strcat[m]> you're overcomplicating this
+17:05:44 <strcat[m]> you can't run an app that's not installed via the package manager
+17:06:31 <lou_filerman[m]> Where can I find documentation on installing apps via the package manager?
+17:06:57 <strcat[m]> there's no way to install apps without signature verification, an apk that isn't signed can't be installed
+17:07:17 <strcat[m]> the only thing you could check is on the first install, before it has pinned the key, you could check that it's the expected key you obtained out-of-band
+17:07:31 <strcat[m]> if you do not have a way to obtain the key out-of-band, you do not have anything you can do beyond what the package manager already does
+17:07:41 <strcat[m]> it always verifies packages before installing
+17:07:43 <strcat[m]> there is no alternative
+17:08:15 <lou_filerman[m]> OK I read you loud and clear on the verification. Where is the package manager documented?
+17:08:25 <strcat[m]> AOSP documentation?
+17:08:28 <strcat[m]> I don't know why you need that
+17:08:36 <strcat[m]> download the apk, install it, and the OS verifies it with the signing key and then from that point onwards has pinned the signing key + prevents downgrades
+17:09:19 <strcat[m]> we plan to add support for displaying the fingerprint of the signing key for the initial install prompt, but most app devs do not publish that out-of-band so it's not really useful in practice right now
+17:09:40 <strcat[m]> we also plan to add support for a first party app repository and app install/update system, but for now, that isn't implemented
+17:09:55 <strcat[m]> we aren't going to bundling F-Droid or Aurora Store in the OS for multiple reasons
+17:10:47 <strcat[m]> lou_filerman: the baseline apk system already does key pinning with support for authorized key rotations and does downgrade protection
+17:11:23 <strcat[m]> regardless of how you install packages: through the OS UI (open the apk, install it), via an app (F-Droid, Aurora Store) or via adb sideload (don't do this for production devices)
+17:11:37 <strcat[m]> there is no way to bypass the package manager's baseline signature verification, key rotation and downgrade protection
+17:11:39 <strcat[m]> that's universal
+17:11:42 <strcat[m]> including for system apps
+17:12:36 <lou_filerman[m]> Is there a recommended alternative at this time, or is it wholly up to the individual users to decide on app sources at their sole discretion?
+17:12:38 <strcat[m]> so, for example, if an app dev lost their signing key, they would need to have you uninstall the app and install the new one, there is absolutely no way to upgrade to one with a new signing key unless the previous signing key has authorized the rotation
+17:12:52 <strcat[m]> lou_filerman: we have no official recommendation
+17:13:13 <lou_filerman[m]> OK fair enough.
+17:13:34 <strcat[m]> F-Droid is commonly used with the official repository and others like the Izzy repository, Aurora Store is often used, and people often get apps directly from developers too, some of which can check for updates to themselves (Signal website apk, NewPipe and others)
+17:13:45 <strcat[m]> it all goes through the OS package manager
+17:14:39 <strcat[m]> our first party repo and built-in app install/update system will similarly just be a layer on top of the OS package manager, although it will have the auto-install permission available for an app built-in to the OS in order to optionally provide automatic updates
+17:14:54 <strcat[m]> not implemented yet
+17:15:18 <strcat[m]> lou_filerman: we don't build in F-Droid because it has serious flaws and doesn't meet our requirements, but we would happily offer our own build of it in our first party repo
+17:15:24 <strcat[m]> same with Aurora Store
+17:15:28 <strcat[m]> so, that's our plan
+17:15:33 <strcat[m]> contributions are very welcome
+17:15:43 <strcat[m]> no point fretting about it since we won't do anything other than that, we do things right, or not at all
+17:15:59 <strcat[m]> someone is also welcome to work on displaying key fingerprint in the initial install dialog
+17:16:07 <strcat[m]> and then you have to go encourage app devs to publish their key fingerprints
+17:16:16 <strcat[m]> somewhere other than where they publish the apk to have value
+17:18:29 <strcat[m]> (no point of displaying it in the upgrade dialog because the OS package manager enforces it already)
+17:22:03 <lou_filerman[m]> Good to know, thanks for the info. Not trying to gripe about things not being included, I have no issues with having to install software, just was a little unclear on what is apparently a normal and well known process for installing apps on grapheneos.
+17:23:49 <strcat[m]> I would say normal is probably installing F-Droid, Aurora Store, Signal, etc. from the app developers publishing those apps, then getting the updates through them
+17:23:57 <strcat[m]> but we don't have an official recommendation
+17:25:12 <strcat[m]> so, for example, in many cases you can install an app from the app developer, from the Play Store, from the official F-Droid repository, perhaps from a developer F-Droid repository, a third party F-Droid repository, various apk mirror sites of varying sketchiness, etc.
+17:25:35 <strcat[m]> beyond recommending against installing apps from say, apkpure, we don't have official recommendations
+17:25:37 <strcat[m]> do what you think is best
+17:25:54 <strcat[m]> when we have our own first party app repo, that's what will be recommended for the apps inside it (not many)
+17:30:07 <somenerd[m]> > someone is also welcome to work on displaying key fingerprint in the initial install dialog
+17:30:07 <somenerd[m]> this would be nice
+17:34:08 <somenerd[m]> Found the issue: https://github.com/GrapheneOS/os-issue-tracker/issues/211
+17:46:44 <faxing[m]> Does anyone know if US Mobile works on GrapheneOS?
+17:51:59 <Jacob[m]2> <faxing[m] "Does anyone know if US Mobile wo"> Yes it does, I've used it
+18:03:54 <faxing[m]> That's awesome! Which version, Verizon or TMobile?
+18:04:03 <faxing[m]> Or should they both work?
+18:12:47 <strcat[m]> both probably work better
+18:12:59 <strcat[m]> T-Mobile one likely 100% works including VoLTE, etc.
+18:13:27 <strcat[m]> Verizon may have certain things not working without their bloatware apps, it varies based on SIM type / MVNO
+18:13:55 <strcat[m]> T-Mobile almost always works 100% just like stock, as do most carriers in the world
+18:14:39 <strcat[m]> Sprint was one of the most screwed up carriers in the world but is thankfully obsolete and being phased out, and Verizon is the new contender for worst carrier in the world we know about now
+18:16:17 <M9thplayer[m]> Verizon works great for me
+18:18:13 <strcat[m]> it mostly works fine but not all the advanced features necessarily work
+18:18:21 <strcat[m]> it varies a fair bit
+18:29:56 <GhostSplinterSix> I switched from Sprint to T-Mobile when I started using GrapheneOS and it's been a great experience.
+18:49:12 <Jacob[m]2> <faxing[m] "Or should they both work?"> I have the Verizon one, it works just as well as it did on my iPhone
+18:49:51 <Jacob[m]2> Apart from the poor reception in my area, but that's not a OS issue at least
+19:06:34 <GrapheneOS-Teleg> Hawraa (@H​hkkmf86) has joined the Telegram Group!
+19:19:02 <p0lp0> Anyone having issues with MMS messages not coming through?
+19:20:31 <covid-1984[m]> <p0lp0 "Anyone having issues with MMS me"> You check your provider's MMS setup?
+19:20:42 <covid-1984[m]> often extra settings for that
+19:21:01 <p0lp0> I have not
+19:21:06 <p0lp0> I have google fi
+19:21:22 <p0lp0> Will do that now
+19:24:43 <p0lp0> Is the official Messages app now a pre req?
+19:25:27 <p0lp0> I was told by Google that I needed the official Fi app instslled
+19:26:24 <p0lp0> But when I installed it via apkmirror data stopped working on my phone
+19:27:06 <p0lp0> I uninstalled it and internet works fine now
+20:52:55 <topipik> Hey
+20:54:21 <GhostSplinterSix> <topipik "Hey"> Howdy. How's it going?
+20:55:31 <topipik> Doing good, you know if theres anyway to manage startup applications without root?
+20:55:51 <strcat[m]> not something that makes sense
+20:56:07 <strcat[m]> you can use force stop to prevent an app from running
+20:56:30 <strcat[m]> preventing an app from starting at boot does not prevent it from running automatically via persistent jobs, other broadcasts, etc.
+20:56:40 <strcat[m]> force stop prevents it running in general
+20:56:52 <topipik> I just don't want every app I download to automatically start when I turn on my phone is that wrong?
+20:57:05 <strcat[m]> that's not how it works
+20:57:21 <strcat[m]> and ignoring their boot broadcast receivers would not stop them starting themselves
+20:57:24 <strcat[m]> as I said, use force stop
+20:57:30 <strcat[m]> apps start in the force stopped state, until you run them
+20:57:46 <strcat[m]> so, for example, an app can register a persistent job starting itself every 15 minutes
+20:57:48 <souvlaki[m]> there actually is a workaround - to use work profile android feature, which you can put apps in and toggle work profile selector in the launcher when you need to use them
+20:57:54 <strcat[m]> force stop removes all jobs and stops it auto-starting
+20:57:57 <souvlaki[m]> Graphene supports work profiles
+20:58:07 <strcat[m]> force stop is the way to do this
+20:58:12 <topipik> How would I setup work profiles
+20:58:40 <souvlaki[m]> you can use Shelter from Fdroid, it's foss
+20:58:49 <souvlaki[m]> and works great for me in Graphene
+20:58:56 <topipik> Cool I'll check that out
+20:58:58 <strcat[m]> you don't need a third party app to stop apps from running
+20:59:20 <topipik> I don't like having to use force stop every time I use my phone
+20:59:35 <strcat[m]> don't know what you mean by every time
+21:00:39 <topipik> When you turn off your phone and back on apps start and I shouldn't have to manually force stop them
+21:00:51 <strcat[m]> that's not how it works
+21:01:11 <topipik> It is because I see it running?
+21:01:19 <strcat[m]> it isn't how it works
+21:01:31 <strcat[m]> if an app is not force stopped, it can be started by broadcasts, alarms, jobs, etc.
+21:01:52 <strcat[m]> one of those possibilities if the boot broadcast but it's hardly the only one, and those apps will generally have jobs, etc.
+21:01:58 <strcat[m]> so they'll start running without the boot receiver
+21:02:09 <strcat[m]> you have a misunderstanding of how the OS and app model works
+21:02:13 <strcat[m]> if an app isn't force stopped, it can run
+21:02:34 <topipik> The point is to not have to use force stop at all
+21:02:43 <strcat[m]> I mean, you don't have to use it
+21:03:48 <topipik> I understand theres ways to do things in settings but apps make things convenient because the developers focus on one sole thing opposed to a whole os
+21:03:50 <souvlaki[m]> work profiles is a full isolated environment - even if it runs, it's like a different Graphene setup. pretty handy feature which i use to isolate my big brother work apps
+21:03:53 <strcat[m]> disabling app boot receivers will not stop the apps from starting themselves and won't stop the OS from starting up recently used apps to have them already ready to go
+21:04:39 <strcat[m]> an app being loaded is different than it running though
+21:05:06 <topipik> What about cached apps? How can I manage those without force stopping each one?
+21:05:16 <souvlaki[m]> yea, allowing user to disable app/system services doesn't make any sense
+21:06:29 <strcat[m]> topipik: I don't know what you want to manage
+21:06:34 <strcat[m]> if you don't want apps running the way to stop them is force stopping them
+21:06:35 <strcat[m]> because it deals with all ways they can start themselves (jobs, alarms, broadcasts including but definitely not exclusive to boot receivers, etc.)
+21:06:45 <souvlaki[m]> <topipik "What about cached apps? How can "> the one and only answer for that - containing those apps and then you can switch them off by hand or use Daniel's approach and disable them by hand
+21:06:56 <strcat[m]> so, for example, a feed reader may have a job that starts itself every hour via a persistent job
+21:07:00 <strcat[m]> if you reboot, that still works fine
+21:07:05 <souvlaki[m]> * the one and only answer for that - containing those apps and then you can switch them off at once or use Daniel's approach and disable them by hand
+21:07:08 <strcat[m]> it doesn't need to register something to start itself at boot
+21:07:25 <strcat[m]> it could also listen for other broadcasts, it doesn't have to specifically / only listen to boot broadcasts
+21:07:52 <strcat[m]> rather than asking how to do something it's probably a lot more productive to explain what you want to accomplish not how you think it should be done
+21:08:01 <topipik> For example the app autostarts allows you to control which apps startup for certain actions like internet on/off bluetooth etc but requires root, I'm just looking to achieve that without root
+21:08:28 <strcat[m]> those don't work
+21:08:28 <souvlaki[m]> are you talking about app permissions here?
+21:08:56 <strcat[m]> no, they're talking about non-working features that certain stuff claims to offer but doesn't really
+21:09:30 <strcat[m]> here's the problem: you are focusing on how you think something should be done, and it isn't clear what you want to do and why
+21:09:38 <strcat[m]> your idea of how the OS / app model works is wrong
+21:09:39 <souvlaki[m]> don't see either where it would be useful
+21:09:56 <strcat[m]> if the goal is saving power use Background restriction option in app info
+21:10:28 <souvlaki[m]> yep, and if you don't want and app to use camera/etc - revoke that permission
+21:10:31 <strcat[m]> as it's worded "To save battery, stop APP_NAME from using battery in the background. This app may not work properly and notifications may be delayed."
+21:10:36 <strcat[m]> that's a standard feature
+21:10:58 <topipik> You yourself said that apps listen for other broadcasts not just boot so I want to be able to manage those broadcasts
+21:11:04 <strcat[m]> use that feature
+21:11:11 <topipik> I do use that
+21:11:12 <souvlaki[m]> i really don't understans their point now
+21:11:24 <strcat[m]> there are an unlimited set of broadcasts
+21:11:48 <strcat[m]> topipik: that feature is how the features you are talking about are exposed
+21:11:52 <strcat[m]> the feature just isn't misrepresented
+21:12:07 <strcat[m]> it uses exactly the same under the hood functionality that's misrepresented elsewhere
+21:12:10 <strcat[m]> look at what it does
+21:12:53 <souvlaki[m]> <topipik "You yourself said that apps list"> grapheneos uses no systemd fortunately, so it's impossible
+21:13:33 <topipik> Ahh ok so thats the reason
+21:13:45 <strcat[m]> background restriction also prevents apps from doing most things in the background
+21:13:47 <topipik> Systemmd is a security risk too yeah
+21:13:52 <strcat[m]> if you want to completely prevent it running you need force stop
+21:14:07 <strcat[m]> i.e. use app -> long press app icon in recent apps -> force stop
+21:14:15 <souvlaki[m]> yup, or you can remove/isolate it
+21:14:36 <souvlaki[m]> if you want it to persist
+21:14:44 <strcat[m]> profiles are nice but they aren't any more convenient than force stop for 1 app
+21:15:06 <souvlaki[m]> true
+21:15:13 <strcat[m]> I don't think it really answers their question
+21:15:26 <strcat[m]> unless they have 3 apps that should either be ALL force stopped or ALL allowed to run, at the same time
+21:15:34 <strcat[m]> if this is about per-app then force stop is the feature for it
+21:15:49 <strcat[m]> force-stop: cannot start itself again
+21:15:55 <strcat[m]>  * force stop: cannot start itself again
+21:16:09 <strcat[m]> background restriction: heavily restricts how it can run in the background but to some extent it can still run jobs, etc.
+21:16:17 <strcat[m]> (but not as much)
+21:16:47 <strcat[m]> also an app process being started does not mean the app can run
+21:16:52 <topipik> Yeah I'm just trying to manage multiple things at once like it would actually be pretty cool if you cold hold down running apps to select multiple apps to force stop at once
+21:16:59 <strcat[m]> GrapheneOS enables the app freezer feature
+21:17:26 <strcat[m]> which means apps can be started but prevented from running
+21:17:30 <strcat[m]> it uses cgroup freezer
+21:18:27 <strcat[m]> even without background restrictions, https://developer.android.com/topic/performance/power/power-details applies
+21:19:09 <strcat[m]> apps cannot just run continuously (without a foreground service) or keep starting themselves very frequently even without being restricted
+21:20:01 <strcat[m]> if you restrict background activity, that disables jobs, alarms and various broadcast receivers, etc.
+21:20:30 <strcat[m]> but the app can still run in certain ways, it isn't the same as being force stopped
+21:21:01 <topipik> Also for permissions is it possible to select multiple apps at once instead of clicking each one individually? Like "control shift" works on a mac?
+21:21:05 <strcat[m]> background restrictions feature is exposed elsewhere in a misleading way via multiple knobs (it turns on all of them) which appear to do more than they actually do
+21:21:22 <souvlaki[m]> looks like they thought Android has something like cron+systemd/openrc/runit/etc. embedded
+21:21:23 <strcat[m]> topipik: there's a permissions manager instead of going to each app and then to permissions
+21:21:42 <souvlaki[m]> which user can control
+21:21:46 <strcat[m]> souvlaki: I mean it has a far more sophisticated form of systemd timer units, i.e. jobs, alarms, etc.
+21:21:54 <strcat[m]> and you can control it (background restrictions disables alarms and jobs)
+21:22:07 <strcat[m]>  * and you can control it (background restrictions disables alarms and jobs, along with certain broadcasts)
+21:22:12 <strcat[m]> the OS already has restrictions without you doing anything
+21:22:15 <strcat[m]> look at https://developer.android.com/topic/performance/power/power-details
+21:23:00 <strcat[m]> if you rarely use an app, then unless it uses a foreground service, it eventually ends up only being able to run 1 job per day and there is a time limit on jobs
+21:23:52 <topipik> Idk I just started messing around with mobile os and I'm used to the control you get with sudo/chmod on debian, so kinda different.
+21:24:18 <strcat[m]> the background restriction feature already does more than what you specifically asked for
+21:24:33 <strcat[m]> topipik: apps there are not sandboxed / controlled by you
+21:25:33 <strcat[m]> but it sounds like what you really want is what force stop does, not what background restrictions do
+21:26:00 <strcat[m]> if you absolutely do not want it ever running then you need force stop
+21:26:32 <topipik> And that persists past reboot and trigger actions?
+21:26:48 <strcat[m]> it persists until you start the app again
+21:27:02 <strcat[m]> and apps start in force stopped state after you install them
+21:27:09 <strcat[m]> they can't start themselves until you've launched them
+21:27:14 <strcat[m]> force stop puts them back to that initial state
+21:27:53 <topipik> Well actually Termux didn't start force stopped
+21:29:38 <souvlaki[m]> you launched it after install, right?
+21:30:12 <souvlaki[m]> that's when it exited forced stop state
+21:30:18 <topipik> Nope I always go strait to permissions after install and force stop wasn't grayed out
+21:33:20 <topipik> That might be bug if thats the case might need to submit on github, if you guys want to test if it starts force stopped
+21:33:47 <strcat[m]> the UI not having it grayed out doesn't really imply it isn't stopped
+21:35:20 <topipik> So what are you force stopping then?
+21:36:24 <strcat[m]> verified that termux starts force stopped (and that option is grayed out)
+21:36:27 <strcat[m]> don't really know what you mean
+21:36:41 <strcat[m]> you starting the app takes it out of force stopped state
+22:43:27 <GrapheneOS-Teleg> <!X> Guys, just happened to read your discussion and again learned a lot. Special thanks to strcat for sharing your knowledge. Much appreciated.

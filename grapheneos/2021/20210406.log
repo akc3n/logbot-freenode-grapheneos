@@ -1,0 +1,475 @@
+00:25:00 <strcat> philogy[m]: it's a known issue with some routers that they don't clear out old dhcp entries and have a tiny table for them
+00:25:07 <strcat> among other router issues
+00:26:06 <rny> this is my first time hearing about dhcp entries not clearing after lease time has expired
+00:26:14 <rny> what do the implementors actually expect the router owner to do?
+00:26:20 <rny> do a reboot cycle every 24hr?
+00:26:35 <GrapheneOS-Teleg> <o​sscontrib> I wanna suggest something and I'm not sure this is the right place but currently Signify is used for sig verification, is there any reason not using gpg? I couldn't find a detail info about this.
+00:29:22 <GrapheneOS-Teleg> <m​adaidan> GPG is insecure.
+00:30:17 <GrapheneOS-Teleg> <o​sscontrib> What about GPG2 with hkps or https instead of hkp or http?
+00:30:35 <GrapheneOS-Teleg> <m​adaidan> Still insecure.
+00:31:03 <GrapheneOS-Teleg> <m​adaidan> Daniel and other security researchers have written about this in-depth.
+00:31:37 <GrapheneOS-Teleg> <m​adaidan> https://www.whonix.org/wiki/OpenPGP#Issues_with_PGP
+00:32:10 <GrapheneOS-Teleg> <o​sscontrib> Thanks I haven't kept up with the news so I didn't even know about this
+00:45:08 <GrapheneOS-Teleg> <o​sscontrib> Just a sudden interest, why is it that most projects use sha256 instead of sha512? Is it for 32bit backward compatibility?
+00:46:23 <Lynn[m]> osscontrib because a lot of projects use it. And it is secure.
+00:46:32 <GrapheneOS-Teleg> <m​adaidan> SHA256 is still secure. SHA512 can be unnecessary.
+00:47:35 <Lynn[m]> SHA512 is resistant to QCs, and not as hard to fuck up with like SHA256 (length extension attacks).
+00:51:40 <strcat[m]> sha256 output is smaller
+00:51:52 <GrapheneOS-Teleg> <o​sscontrib> Ohh I see
+00:52:09 <strcat[m]> sha256 is significantly faster on 32-bit, sha512 is a bit faster on 64-bit
+00:52:48 <rny> sha3 is the way to go
+00:53:09 <strcat[m]> there's a standard sha512/256 which isn't vulnerable to length extension attacks, is the same size as sha256 and is faster on 64-bit
+00:53:21 <rny> no length extensions in sponges
+00:53:27 <strcat[m]> just not commonly used since people don't know about those and also people care about 32-bit perf
+00:59:53 <Lynn[m]> I like BLAKE2b.
+01:00:24 <GrapheneOS-Teleg> <o​sscontrib> I've been reading the issues but I can't find the info that latest gpg is susceptible to MitM other than the fact that DPI hardware can detect PGP/GPG and just know I'm using it.
+01:02:28 <rny> would people just use blake instead of sha3 if they could?
+01:05:39 <GrapheneOS-Teleg> <o​sscontrib> Honestly if you're referring to the large population of people, they'll be comfortable using it as long as their distro provides the package without adding an additional repo or having to compile it themselves.
+02:03:34 <p0lp0> is there something that i'm supposed to do to enable my SIM card on a pixel 3 from Google Fi?
+02:40:36 <entry1[m]> <p0lp0 "is there something that i'm supp"> Physical or eSIM for Google Fi? eSIM isn't supported, but the physical SIM should work without anything needed on your end. Are you getting any functionality?
+02:42:22 <p0lp0> i think it's an esim since i don't remember messing with any SIM settings during activation with Google Fi
+02:42:42 <p0lp0> i did not remember this detail when flashing my firmware :/
+02:42:55 <p0lp0> i did just find this though - https://github.com/GrapheneOS/os_issue_tracker/issues/159#issuecomment-765451235
+02:43:50 <p0lp0> seems to be suggesting that if I reflash the factory image and reinstall grapheneOS it may be happier
+02:44:53 <p0lp0> entry1[m] now to look for a factory image
+02:46:09 <p0lp0> ...and looks like it was already provided for me here - https://grapheneos.org/install/web#replacing-grapheneos-with-the-stock-os
+02:46:30 <p0lp0> you crazy devs, what will ya think of next?? :p
+02:54:36 <entry1[m]> Do you have an actual SIM card? You can get one for Google Fi so it will be compatible with the project
+02:54:50 <p0lp0> entry1[m] i actually don't
+02:55:08 <p0lp0> i didn't think it was even an option with Google Fi-provided pixels
+02:56:33 <entry1[m]> It probably wasn't, but you can order one so it'll work for you. Believe it is around $5
+02:57:12 <entry1[m]> Nvm, $10. Amazon and Best Buy have them
+03:07:34 <p0lp0> too bad i already spent an hour or so setting my phone up :/
+03:08:11 <p0lp0> oh well. i wish i could say "live and learn" but i seem to always do it this way and never manage to change my approach no matter what
+03:10:04 <p0lp0> entry1[m], apparently Google Fi will just send me one for free
+03:10:25 <p0lp0> order a free sim from them here: https://fi.google.com/ordersim
+03:23:11 <p0lp0> curious. I seem to have managed to re-flash GrapheneOS.
+03:23:51 <p0lp0> though if im not mistaken this seems to be suggesting it put the factory stock OS on there - https://i.imgur.com/v61wYP3.png
+03:26:50 <p0lp0> but im definitely in graphene unfortunately
+03:33:15 <sphinx[m]> p0lp0: the GrapheneOS web installer is obviously only for installing GrapheneOS
+03:44:22 <p0lp0> sphinx[m] I took this to mean that it wasn't - "Installation of the stock OS via the stock factory images is the same process described above" and managed to confuse myself
+03:46:42 <sphinx[m]> p0lp0: https://developers.google.com/android/images#blueline
+03:48:52 <sphinx[m]> p0lp0: click 'Flash' next to the latest version (Apr 2021)
+03:49:26 <p0lp0> sphinx[m], so the blueline-factory image referenced in the screenshot i posted is not intended to refer to the pixel build, but to a graphene build?
+03:51:24 <sphinx[m]> p0lp0: in the screenshot you sent you are obviously reinstalling GrapheneOS
+03:52:55 <p0lp0> sphinx[m] so is the answer to my question "yes, grapheneOS uses the same name"?
+03:58:22 <sphinx[m]> p0lp0: sure, `blueline` is Pixel 3's codename
+03:59:34 <p0lp0> thanks! sphinx[m] for helping me get less confused
+04:00:20 <b1101> mms doesn't work on fi
+04:02:51 <p0lp0> b1101 good to know
+05:47:59 <strcat[m]> GrapheneOS 2021.04.05.20 release: https://grapheneos.org/releases#2021.04.05.20
+05:48:06 <strcat[m]> https://twitter.com/GrapheneOS/status/1379309146382667777
+05:48:12 <strcat[m]> https://www.reddit.com/r/GrapheneOS/comments/ml4prc/grapheneos_2021040520_release/
+06:08:03 <TheJollyRoger> Thank you for the update, strcat[m].
+06:43:27 <kskdj[m]> Thank you
+07:20:17 <wiegolf[m]> <philogy[m] "Adjusted the settings so that it"> As I traveled last month I also discovered some WIFIs I could not access the Internet. On one occasion I could investigate and the problem was my DNS setting in GrapheneOS could not been processed by the router. As I changed to another DNS it worked. I use fdns2.dismail.de as my DNS server.
+07:21:54 <wiegolf[m]> I have no idea how the router was configured there ...
+07:24:51 <wiegolf[m]> But if it is your router I would wireshark the reason...
+09:40:30 <fom[m]> <strcat[m] "GrapheneOS 2021.04.05.20 release"> Wow very fast
+09:44:01 <kskdj[m]> strcat what do you think about Whitechapel?
+11:31:42 <philogy[m]> What do I need to configure on my phone and router in order for the connection to work properly?
+12:10:13 <vpsvrm[m]> <Dendel "Does anyone have experience with"> CryptGoat: I bought Pixel 4 from BackMarket last year and everything went fine - I installed GOS smoothly 🙂
+12:11:04 <GrapheneOS-Teleg> <!Hulk> Lucky you)
+12:12:37 <DHFuchsiaOSwhen> <philogy[m] "What do I need to configure on m"> It works out of the box usually, unless the router (more often, on work) for some reason does not accept randomized MAC every connection (this is not taking into account hardware failures on either side btw)
+12:14:44 <GrapheneOS-Teleg> Izumi Sena (@I​zumiSenaSora) has joined the Telegram Group!
+12:44:36 <smbaa231[m]> strcat:
+12:50:47 <mynacol[m]> <kskdj[m] "strcat what do you think about W"> 1. Please do not ping the developers.
+12:52:33 <DHFuchsiaOSwhen> It's a fairly new information, doubt there is much to conclude atm
+12:56:15 <nscnt[m]> mynacol: A quote that contains the username pings again, I think ^^
+12:57:29 <somenerd[m]> yeah, believe that replies ping on matrix
+13:00:30 <laggingleg> do chips for mobile connectivity have their own internal (writable) firmware and can this be updated remotely by the provider?
+13:22:29 <dazinism> laggingleg: All component firmware is updated with the monthly security updates
+13:24:03 <laggingleg> dazinism: so the firmnware is some binary on the emmc flash and part of the OS? and just loaded into the chip *RAM* ?
+13:24:24 <laggingleg> iirc i read something about remote updates by the provider, not 100% sure though
+13:24:56 <laggingleg> i mean "non voluntary" upgrades in this case ...
+13:29:49 <manjaro-user__> Graphene os updates an hour after I try to flash my new pixel 5... I was getting issues about the wrong bootloader, would that be fixed now? My phone says r3-0.3-6873951, the install says I need r3-0.3-7051238.
+13:55:53 <dazinism> laggingleg: not sure of the details, guess its either as you suggest or the baseband has its own flash memory which is updated following the OS update.  The component firmware has to be signed by the device vendor (Google).
+14:12:49 <manjaro-user--> It boots! Seems it was either my cable or my (new) phone's usbc port. Regardless, holding it a tjust the right position while manually flashing each file seems to have worked.
+14:41:30 <philogy[m]> In the settings of my router my phone doesn't seem to have been assigned an IP address, what can I do?
+14:43:09 <laggingleg> is there any way to check if other firmware on the device, like the one for emmc,/ufs storage is the original one from the manufacturer? can you dump it somehow ?
+15:20:01 <hunter5> should I be able to tell when an update has been installed? I don't get any notifications or anything and I set update networks to any and tried tapping the check for updates field
+15:22:19 <nscnt[m]> hunter5: You'll receive a notification in the owner user when your device is waiting for a reboot to apply an update
+15:22:35 <nscnt[m]> hunter5: The button doesn't give any feedback at the moment
+15:22:51 <helloworldkk87[m> <nscnt[m] "hunter5: You'll receive a notifi"> I didnt.. Usually I do but the last update didnt give that
+15:24:21 <hunter5> what is owner user exactly? I didn't set up an account or something
+15:24:57 <hunter5> just a notification I guess, ok we will see if I get one then
+15:28:15 <nscnt[m]> hunter5: The owner user is the first user added to the device. If you haven't been in contact with multiple users, you probably use the owner/primary user
+15:28:28 <rosie> Are there any caveats with installing GrapheneOS under Debian?  I've been trying to get Arch Linux installed on my system, and I think I'm in over my head.  Trying to avoid Ubuntu if I can.
+15:29:07 <hunter5> it's a recommended os if you check the installation guide
+15:29:32 <rosie> I'm aware of that.  Just wondering whether there are any gotchas I need to be aware of.
+15:30:10 <hunter5> nscnt: ok thanks, now I just need to get the dns working...
+15:31:31 <hunter5> rosie: I just know that it works fine on qubes/debian
+15:32:43 <rosie> Ok, good.  Thinking I may jump the Arch Linux ship in favor of Debian (at least for now).  Personally,  I would prefer Mint, as I'm already familiar with it, but it's not supported by the GrapheneOS install.
+15:40:51 <nscnt[m]> helloworldkk87: Which update?
+15:49:05 <GrapheneOS-Teleg> <!Hulk> hunter5: GrapheneOS updates itself automatically without user interaction
+15:49:54 <GrapheneOS-Teleg> <!Hulk> the only proper way of knowing that it updated itself (while you were asleep) is by going to settings and checking the build number
+15:50:26 <hunter5> well I didn't see no notification, that should tell me reboot to update
+15:50:52 <hunter5> I installed blueline yesterday btw
+15:50:53 <GrapheneOS-Teleg> <!Hulk> it does reboot itself if allowed in settings
+15:51:10 <nscnt[m]> hunter5: Probably because there's no update
+15:51:28 <hunter5> then what is that ota you can sideload?
+15:51:48 <GrapheneOS-Teleg> <!Hulk> OTA - over the air
+15:52:07 <hunter5> so is that not an update?
+15:52:24 <hunter5> I can see no reboot in my uptime
+15:52:36 <nscnt[m]> It is -- for sideloading if you choose to do it this way
+15:52:39 <GrapheneOS-Teleg> <!Hulk> It is, and it is over the air (does not require a cable)
+15:53:07 <hunter5> off to sideloading it is then
+15:53:12 <nscnt[m]> No
+15:53:14 <nscnt[m]> What why
+15:53:21 <GrapheneOS-Teleg> <!Hulk> pls don't
+15:53:21 <hunter5> where is my update lol
+15:53:24 <nscnt[m]> Stuff getting mixed it
+15:53:27 <nscnt[m]> *here
+15:53:33 <GrapheneOS-Teleg> <!Hulk> Just check the build number
+15:54:23 <hunter5> wow I am an idiot, yeah ok
+15:54:37 <nscnt[m]> The OTA release is a way to sideload an update
+15:54:44 <nscnt[m]> You need a cable to sideload it
+15:54:54 <hunter5> yeah I thought this is an update I still need to receive
+15:55:12 <nscnt[m]> If you didn't disable the Seamless Update Client, you'll get updates over-the-air
+15:55:14 <hunter5> thanks for clearing it up
+16:02:57 <GrapheneOS-Teleg> !K-pop has joined the Telegram Group!
+16:05:38 <GrapheneOS-Teleg> <!Hulk> nscnt[m]: guess I should have just let you settle that one yourself without interference
+16:05:52 <GrapheneOS-Teleg> <!Hulk> sorry m8
+16:06:32 <nscnt[m]> @!Hulk : No worries c:
+16:22:44 <mrmccall[m]> Does Vanadium do anything to randomize your browser fingerprint?
+16:23:32 <GrapheneOS-Teleg> <!Hulk> mrmccall[m]: no, Vanadium is not Brave
+16:24:44 <GrapheneOS-Teleg> <!Hulk> afaik Brave is the only popular browser that does "fingerprint randomisation"
+16:25:03 <GrapheneOS-Teleg> <!Hulk> I don't think it is a "good" feature
+16:25:09 <wiegolf[m]> I use Bromite browser
+16:25:19 <mrmccall[m]> Thought so. I need to switch to Brave then. But I don't think it even randomizes it unless in strict mode,right?
+16:25:37 <mrmccall[m]> <GrapheneOS-Teleg "<!Hulk> I don't think it is a "g"> Why
+16:26:39 <southron[m]> Check out Bromite first. I've been really happy with it.
+16:28:12 <GrapheneOS-Teleg> <!Hulk> mrmccall[m]: required reading https://grapheneos.org/usage#web-browsing
+16:28:45 <hunter5> there is no way to install addons with these right?
+16:29:05 <GrapheneOS-Teleg> <!Hulk> with Bromite/Vanadium?
+16:29:08 <hunter5> yeah
+16:29:16 <GrapheneOS-Teleg> <!Hulk> you really really shouldn't
+16:29:44 <GrapheneOS-Teleg> <!Hulk> afaik it is possible, but requires a lot of things to do (not simple at all)
+16:29:47 <hunter5> what if I have multiple phones and times where I dont care about fingerprinting and just want to get rid of all theses annoyances
+16:30:13 <hunter5> I didnt realize how bad it's become always using ublock etc
+16:31:17 <hunter5> ok I will check again then, couldn't really find anything on the matter
+16:31:38 <GrapheneOS-Teleg> <!Hulk> hunter5: required reading https://grapheneos.org/faq
+16:31:55 <GrapheneOS-Teleg> <!Hulk> Long story short, of you want to block adds, just use a dns
+16:32:04 <hunter5> yeah been going through that
+16:32:08 <GrapheneOS-Teleg> <!Hulk> Or Bromite
+16:32:29 <hunter5> true but what about the cookies I dont care about, or other annoyances
+16:32:49 <GrapheneOS-Teleg> <!Hulk> Private browsing🤷‍♂
+16:33:04 <GrapheneOS-Teleg> <!Hulk> Tor browser?
+16:33:37 <GrapheneOS-Teleg> <!Hulk> Actually, this is pretty off topic
+16:33:47 <icebergfive> No dog in the fight but this is worth knowing about Brave: https://www.ctrl.blog/entry/brave-user-agent-detection.html
+16:33:59 <icebergfive> I'm also using Bromite and pretty happy so far
+16:34:19 <GrapheneOS-Teleg> <!Hulk> hunter5: If you want to discuss this issue more, let's move there
+17:10:43 <aniphreak> Hello?
+17:19:17 <aniphreak> Anyone here who is using whatsapp with grapheneos?
+17:20:10 <GrapheneOS-Teleg> !. has joined the Telegram Group!
+17:24:57 <helloworldkk87[m> <aniphreak "Anyone here who is using whatsap"> If youre thinking will it work on GrapheneOS the answer is yes
+17:28:18 <GrapheneOS-Teleg> <!🌏> Hi @helloworldkkim87 I moved to telegram. I did try to install whatsapp but im stuck on the opening screen, it keeps on scanning for a backup and it doesnt move forward. Anyways ill try an old version
+17:49:19 <_linux> question for anyone using proton mail apk on graphene os
+17:49:44 <_linux> downloaded files seem to get saved in the abyss.  anyone have this issue?
+17:50:26 <_linux> i cant find the saved anywhere in the phone ive looked everywhere except for plugging the phone into my linux pc and going through the file system that way
+17:53:44 <jj1013[m]> <TheJollyRoger "So I unfortunately can't walk yo"> Android Studio?
+17:55:14 <jj1013[m]> > <@freenode_TheJollyRoger:matrix.org> So I unfortunately can't walk you through it. I know that a few people here have compiled and run GrapheneOS in an emulator using Android Studio, but again, I haven't done that myself.
+17:55:14 <jj1013[m]>  * Android Studio? Is that safe to use?
+17:58:11 <r0tt0r[m]> hi, i saw reddit post about 04 5 20 release but on website its not yet publoshed?
+17:58:13 <jj1013[m]> <_linux "i cant find the saved anywhere i"> Maybe you should use a different file manager.
+17:59:12 <_linux> any suggestions?  i currently have only the file manager that comes on graphene by default
+18:00:02 <_linux> its like the proton mail application is saving the downloaded files somewhere i cant access using the default Files app
+18:01:55 <hunter5> _linux: I just got it to work using termux
+18:02:31 <_linux> you use termux to navigate folder structure?
+18:02:41 <_linux> and then mv the file to an accessible location?
+18:03:02 <hunter5> no I just selected open with termux and it will offer to save the file for you lol
+18:03:26 <hunter5> strange that proton doesnt offer a safe function
+18:04:00 <_linux> im trying to save a ca-cert file from the protonmail apk but it saves somewhere i cant access
+18:04:06 <hunter5> but it landed in some tmp folder for sure when you just open with a reader
+18:04:07 <_linux> i will try using termux
+18:04:17 <_linux> yes it is odd
+18:06:04 <_linux> youre a hero lol
+18:06:07 <_linux> it worked
+18:06:11 <_linux> thank you !
+18:06:16 <hunter5> terminals always save your ass
+18:06:22 <hunter5> no prob
+18:06:25 <_linux> that they do my friend
+18:09:15 <_linux> is 'ls' not a termux function? lol
+18:11:45 <hunter5> in termux you have to use list
+18:16:17 <_linux> it required a 2nd launch. it must have installed packages on first launch and needed to be restarted. now ls works
+18:16:49 <jj1013[m]> So Termux does not need root? Nice.
+18:16:55 <skwisgaar[m]> Please discuss this in OT
+18:17:21 <jj1013[m]> I was writing the same thing.
+18:17:51 <aliasmcalias[m]> ProtonMail is on Fdroid _linux
+18:18:02 <aliasmcalias[m]> That would be the better way to install it.
+18:18:27 <aliasmcalias[m]> As you'd receive security updates and signature checking.
+18:18:47 <r0tt0r[m]> <r0tt0r[m] "hi, i saw reddit post about 04 5"> dunno why but reddit showed an ancient post
+18:19:09 <jj1013[m]> <aliasmcalias[m] "ProtonMail is on Fdroid _linux "> Really? I thought it was ProtonVPN.
+18:20:24 <aliasmcalias[m]> Mine it shows up, but then I realize I have IzzyOnDroid
+18:20:44 <aliasmcalias[m]> @jj1013.:privacytools.io: Will continue on other chat, apologies.
+18:23:42 <_linux> jj1013[m]: no you can download the protonmail apk direct from their website
+18:23:50 <_linux> since its not in Fdroid there was no other option
+18:24:13 <_linux> and i prefer the client over opening protonmail in vanadium
+18:24:29 <jj1013[m]> <_linux "jj1013.: no you can download the"> Off-topic.
+18:25:34 <_linux> i apologize im not familiar with how the web interface works.  how do i get to off topic
+18:26:25 <_linux> nvm figured it out
+18:56:21 <GrapheneOS-Teleg> <!Hulk> Hey, did it work?
+18:59:56 <zvl12[m]> <aliasmcalias[m] "That would be the better way to "> better here : https://github.com/ProtonMail/proton-mail-android/releases
+20:16:39 * itsokiwantogohom  < https://matrix.org/_matrix/media/r0/download/matrix.org/IlePstWLraKgywJiFcFgMfjJ/message.txt >
+20:18:41 <strcat[m]> you can already configure it
+20:19:42 <strcat[m]> Settings -> Accessibility -> Vibration & haptic strength
+20:20:00 <strcat[m]> on devices with a high end haptic system it has multiple levels
+20:21:00 <itsokiwantogohom> <strcat[m] "on devices with a high end hapti"> Isn't the Pixel 4a such a device?
+20:21:33 <strcat[m]> 3a, 3a XL and 4a don't have it
+20:21:43 <strcat[m]> 3, 3 XL, 4, 4 XL, 4a (5G) and 5 have it
+20:22:33 <hunter5> turning off haptic feedback with the default keyboard doesn't work for me
+20:22:40 <hunter5> is that a known issue?
+20:22:49 <strcat[m]> keyboard has a separate setting
+20:22:52 <strcat[m]> it doesn't follow that one
+20:22:56 <strcat[m]> go to keyboard settings
+20:23:51 <hunter5> got it chief, thanks!
+20:24:02 <itsokiwantogohom> <strcat[m] "3, 3 XL, 4, 4 XL, 4a (5G) and 5 "> Interesting, I did not know that.
+20:26:13 <hunter5> any plans to improve the permission manager? there are a lot more options with lineage's privacy guard
+20:26:22 <hunter5> or even stock if I recall correctly
+20:26:31 <strcat[m]> more options doesn't mean better
+20:26:32 <strcat[m]> hunter5: no there aren't
+20:26:36 <strcat[m]> you're wrong
+20:27:17 <strcat[m]> hunter5: we won't add privacy / security theater options which do not work, and we also don't see a reason to expose options in redundant places, particularly to frame things that do not work as privacy/security features as such
+20:27:32 <strcat[m]> more ways to do the same things and useless frills != better
+20:27:53 <strcat[m]> be specific about what you want
+20:28:06 <strcat[m]> probably already a way to do it, if it's useful
+20:28:28 <hunter5> great answer thanks! on another matter, shouldn't revoking sensor access to an app prevent it from detecting device orientation?
+20:28:45 <strcat[m]> no because the app isn't detecting that
+20:28:57 <strcat[m]> the OS is telling it if it's in portrait or landscape mode
+20:29:02 <strcat[m]> not based on sensors used by the app
+20:29:09 <strcat[m]> otherwise how would locking it and force rotating it work?
+20:29:28 <hunter5> ahhh I see, interesting
+20:29:40 <hunter5> makes sense
+20:33:58 <itsokiwantogohom> <itsokiwantogohom "Interesting, I did not know that"> Guess I am stuck with either on or off on the 4a. Too bad.
+20:34:09 <nextrobn[m]> Does Graphene send any information to google?
+20:35:12 <hunter5> the only thing I'm aware of is connecting to a google server for the captive portal check
+20:35:53 <GrapheneOS-Teleg> <!Le marchand de rêves> What's Grapheneos support duration for a device?
+20:35:56 <nextrobn[m]> <hunter5 "the only thing I'm aware of is c"> But no information about your device? IMEI number etc
+20:36:04 <strcat[m]> hunter5: inaccurate
+20:36:12 <strcat[m]> nextrobn: their statement is inaccurate
+20:36:19 <hunter5> enlighten us then
+20:36:31 <strcat[m]> please see https://grapheneos.org/faq#default-connections
+20:36:36 <strcat[m]> hunter5: not my job to correct people
+20:39:06 <hunter5> ahh so you already gave an alternative to that, thats cool
+20:44:22 <b1101> had my first p3 randoom reboot. actually didn't want to reboot at first. kept rebooting every time it reached the google logo. kept holding power, but before it turned off it finally showed me the grapheneos logo, and booted. hopefully doesn't start happening. first time I was listening to a digital radio station through vlc over wifi, and had bluetooth headphones on for 1.5 hours. after the reboot it continued to work fine though for another 1.5-2
+20:44:22 <b1101> hours
+20:44:55 <strcat[m]> if it's rebooting before it reaches the OS that's a hardware failure
+20:45:04 <b1101> :/
+20:45:46 <b1101> possibly overheating. I know the p3 batteries had issues with that
+20:46:29 <b1101> I've only wireless charged the device a couple of times, but when I did it got really hot. stopped doing it after that
+20:48:54 <hunter5> b1101: good to know so I can avoid that
+20:49:17 <hunter5> so when the 3s reach their end of life this year, what exactly is meant by "no longer receive full security updates"
+20:49:43 <hunter5> is that by the GOS project or is this still referring to the firmware and driver updates?
+20:49:58 <strcat[m]> firmware and driver updates
+20:50:00 <strcat[m]> look at the Pixel 2
+20:50:02 <strcat[m]> covered in FAQ
+20:50:04 <strcat[m]> same thing applies
+20:51:01 <hunter5> I did I just found the details on what the extended support release means a bit lacking, thanks for the info!
+20:52:03 <hunter5> 3 years is not great to already abandon your phone but it does make sense from their standpoint I suppose
+20:54:11 <strcat[m]> the SoC is what stops being supported
+20:54:18 <strcat[m]> it will be moving to 4 years from 3 for newer devices soon
+20:54:34 <southron[m]> Oh nice
+20:54:43 <hunter5> SoC is equal to phone these days isn't it.
+20:54:59 <hunter5> or really? well I hope 3 line owners will get lucky on this one
+20:55:02 <entry1> Wow, that is amazing news.
+20:55:40 <ar-jan> Using GrapheneOS on a Pixel 4a, I've had a strange thing happen twice where I at some point during a phone call, the other party stopped hearing me, while I could still hear them. Anyone experienced this or heard of it?
+20:57:01 <hunter5> I've had this happen a lot recently using a prepaid phone. I think this could be related to network overload due to the pandemic
+20:57:18 <hunter5> more so than the rom you are using,
+20:57:40 <southron[m]> I had that problem on my IPhone even
+20:58:21 <ar-jan> Ah so network related it is.
+20:59:01 <hunter5> that being said I personally would not want to rely on a custom rom to use cell services reliably, but that's just my personal opinion
+20:59:20 <hunter5> just heard too much stories about stuff like emergency calls not working properly etc
+21:01:03 <ar-jan> I'd trust GrapheneOS a lot more in this respect than say some random unofficial LineageOS build or something
+21:01:25 <hunter5> true but it also happened with the official build!
+21:01:55 <strcat[m]> hunter5: please don't spread misinformation and FUD
+21:02:03 <strcat[m]> just stop
+21:02:08 <hunter5> oh you mean los being unofficial in general? then it applies all the same
+21:02:22 <strcat[m]> this is the GrapheneOS chat channel
+21:02:33 <hunter5> I made a disclaimer about it being stories I heard and it's just my personal opinion
+21:02:45 <hunter5> it was off topic though right
+21:02:45 <strcat[m]> yeah and that disclaimer doesn't make it okay
+21:02:54 <hunter5> understood
+21:03:21 <akc3n[m]1> #grapheneos-offtopic please.
+21:03:32 <strcat[m]> GrapheneOS is a production quality OS with stable releases that are tested on each device
+21:03:39 <strcat[m]> and a public Beta testing system
+21:03:52 <strcat[m]> it isn't some automatic nightly build of a development branch done by a build server
+21:04:11 <strcat[m]> also, it's an OS, built from source, not some customized version of the stock OS
+21:04:44 <strcat[m]> it doesn't make sense to refer to an OS as a ROM and it's not a 'custom' one and can happily ship as the stock OS on a device
+21:04:56 <strcat[m]> it's a common misunderstanding of what this project is
+21:05:36 <strcat[m]> it's a lot clearer to people if you refer to it as what it is instead of using confusing terms from places like XDA
+21:06:03 <strcat[m]> and saying positive or negative things about other OSes here is just not on-topic
+21:06:07 <strcat[m]> unless it's directly related to GrapheneOS
+21:06:16 <hunter5> well thanks for making that clear I am still learning about this project
+21:06:22 <strcat[m]> there is #grapheneos-offtopic:matrix.org
+21:06:28 <GrapheneOS-Teleg> Michael (@N​sane85) has joined the Telegram Group!
+21:06:31 <joeth[m]1> <strcat[m] "it doesn't make sense to refer t"> true, i never understood the reason why people call modified android OSs 'ROMs', they're not written to ROM they're written to MMC
+21:06:44 <strcat[m]> there's no eMMC anymore
+21:06:47 <strcat[m]> except on Pixel 3a
+21:07:04 <strcat[m]> even Pixel 1 had proper SSDs
+21:07:10 <GrapheneOS-Teleg> <N​sane85> Anyone else having a problem flashing with the web installer to a pixel 5 5g?
+21:08:09 <GrapheneOS-Teleg> <N​sane85> It times out while flashing system
+21:09:10 <joeth[m]1> <strcat[m] "even Pixel 1 had proper SSDs"> I never knew that, pretty cool. Unfortunately I run a 3a so it's eMMC for me :(
+21:25:32 <waffel360[m]> Hi there, I have 2 questions, 1st would be I need to get a copy of an apps files in /data/data/..... but can't seem to with adb (don't need to write)
+21:34:38 <Guest14541> @thejollyroger, this is jeremy from the other day
+21:35:01 <Guest14541> Error: Array buffer allocation failed
+21:35:19 <Guest14541> so here is what i did; i did a clean install of Windows 10
+21:35:41 <Guest14541> a complete clean slate; same error with the Web installer
+21:41:38 <Guest14541> flashing graphene via the webUI just doesnt seem to work for me
+21:41:59 <Guest14541> i literally wiped my computer to try
+21:42:37 <hunter5> sucks to hear, well there was another guy on here
+21:42:39 <hunter5> <N​sane85> Anyone else having a problem flashing with the web installer to a pixel 5 5g?
+21:42:48 <hunter5> from telegram
+21:43:11 <Guest14541> i worked with @thejollyroger quite a bit yeterday
+21:43:33 <Guest14541> i tried a clean install of windows and got the same error at the same time; Error: Array buffer allocation failed
+21:44:05 <Guest14541> flashing back to public
+21:44:51 <hunter5> it could have to do with a recent firmware update I guess
+21:45:01 <Guest14541> firmware of what
+21:45:10 <hunter5> the phone
+21:45:17 <Guest14541> i did an update to stock device prior to running the webio
+21:45:19 <hunter5> I don't think the os is at fault
+21:45:25 <Guest14541> web installer...
+21:45:42 <Guest14541> also updated computer so everything was current
+21:45:53 <hunter5> as you should but you could try flashing with the stock firmware
+21:46:13 <hunter5> oh wait you cant undo those updates I think
+21:46:30 <hunter5> not sure
+21:46:34 <Guest14541> flashing back to public now
+21:46:43 <Guest14541> so i can un brick this test device
+21:47:19 <hunter5> you could also try cli route for what it's worth
+21:47:33 <Guest14541> well i tried that yesterday
+21:47:43 <hunter5> I didn't even bother with the firmware update and it worked really well even on an unsupported os
+21:47:54 <hunter5> I don't have the 5 though
+21:47:55 <Guest14541> i kept getting errors saying that my SDK was out of date, despite just downloading fresh
+21:48:21 <hunter5> that sounds like some config file mismatch or something
+21:48:35 <Guest14541> yeahnot sure what to do there
+21:48:48 <hunter5> you also have the 5G version?
+21:48:49 <Guest14541> was hoping @thejollyroger would have some tips
+21:48:54 <Guest14541> yes
+21:49:28 <hunter5> Hmm well good luck to you guys then
+21:49:47 <Guest14541> LOL dont think he is active today
+21:50:13 <Guest14541> am willing to try CLI again; just need to make sure i can return to stock
+21:50:24 <strcat[m]> Guest14541: sounds like you don't have enough memory for web installer
+21:50:25 <Guest14541> android flash tool seems to be working for that
+21:50:27 <Guest14541> so thats good
+21:50:37 <Guest14541> whats the needed memory
+21:50:58 <strcat[m]> how much do you have?
+21:51:13 <Guest14541> 2GB
+21:52:12 <hunter5> that's exactly how much I used with Qubes but I did the tmp dir change fix to be safe
+21:52:32 <Guest14541> what is that?
+21:52:48 <hunter5> its a bunch of vms running on xen
+21:52:56 <hunter5> with usb proxies and such
+21:52:59 <Guest14541> roger
+21:53:48 <Guest14541> if i do CLI should i use factory or OTA?
+21:54:18 <hunter5> https://grapheneos.org/install/cli#obtaining-factory-images
+21:54:34 <hunter5> ota is over the air updates
+21:54:49 <Guest14541> right
+21:55:21 <Guest14541> if using CLI do i have to download with CURL? or cant i just download and extract the ZIP from "Releases"
+21:55:31 <GrapheneOS-Teleg> <!Hulk> Guest14541: welcome back! do you have another phone with usb Type-C?
+21:55:51 <Guest14541> no
+21:55:58 <Guest14541> tried a few cables too
+21:56:11 <Guest14541> currently using ANKER+
+21:56:19 <Guest14541> tried different ports
+21:56:28 <Guest14541> tried different (approved) browsers
+21:56:31 <Guest14541> tried CLI
+21:56:36 <Guest14541> im baffled
+21:56:51 <GrapheneOS-Teleg> <g​ochoingles> Could be your computer's fault...
+21:57:00 <GrapheneOS-Teleg> <!Hulk> i see, i don't think that 2gb RAM is enough, but don't take my word on this one
+21:57:17 <Guest14541> iphone otherwise; bought the Pixel 5 to test for full switch
+21:57:27 <Guest14541> roger on 2GB
+21:57:36 <Guest14541> not above buying other CPU for testing
+21:57:38 <hunter5> 2gb is minimum as per the guide
+21:57:45 <Guest14541> roger
+21:57:58 <Guest14541> wonder if that takes into account overhead for the Core OS
+21:59:14 <hunter5> you don't need to use curl, and I guess it does but I didn't write the guide
+21:59:27 <Guest14541> roger
+21:59:31 <hunter5> it's a good idea to use a system with more
+21:59:49 <Guest14541> haha this is becoming an expensive test
+21:59:50 <Guest14541> lol
+22:00:16 <Guest14541> i need to find a 2n1 that plays well with Ubuntu
+22:00:53 <hunter5> the thing is you can't account for how much ram your os uses
+22:01:03 <Guest14541> for sure
+22:01:22 <hunter5> so if you got a heavy distro and just 2gb then I bet that's where your problem is
+22:01:38 <hunter5> I thought you were also using some vm or something at first haha
+22:01:42 <Guest14541> just running win 10 latest so yeah thats probably the bottle neck
+22:01:50 <Guest14541> no, just a cheap netbook
+22:02:02 <hunter5> there is most likely your problem
+22:02:20 <Guest14541> yeah; well let me do some purchasing and more testing haha
+22:02:34 <hunter5> or just load debian into ram
+22:02:38 <hunter5> jk its hard
+22:03:00 <hunter5> but possible I found a guide even
+22:03:02 <Guest14541> lol
+22:03:06 <GrapheneOS-Teleg> <!Hulk> as to making this problem "less expensive" just order a new laptop/macbook, flash GrapheneOS and return the laptop)
+22:03:16 <Guest14541> yeah will do!
+22:03:17 <Guest14541> lol
+22:03:19 <GrapheneOS-Teleg> <!Hulk> overall 0$ cost
+22:03:28 <Guest14541> otherwise phone return too hah
+22:03:31 <hunter5> use the store notebook real quick lol
+22:03:31 <Guest14541> this was the test
+22:03:43 <GrapheneOS-Teleg> <!Hulk> hunter5: haahahahh XD
+22:03:44 <Guest14541> LOL now thats a thought
+22:03:57 <Guest14541> actually thats a good thought; wonder if i can pull that off
+22:03:59 <Guest14541> LOL
+22:04:04 <Guest14541> its web installer after all
+22:04:19 <GrapheneOS-Teleg> <!Hulk> that's some Cyberpunk wibes)
+22:04:38 <hunter5> excuse me sir while I use this display model to flash some snowden grade paranoia system onto my phone loool
+22:04:44 <Guest14541> just gotta keep the GEEK Squad off me
+22:07:12 <Guest14541> alright, ill report back after further testing
+22:08:17 <GrapheneOS-Teleg> <!Hulk> we're waiting for you Guest14541)
+22:08:45 <Guest14541> :)
+22:13:32 <strcat[m]> please help with testing the Beta release
+22:13:37 <strcat[m]> going to need to do a new release soon anyway
+22:13:55 <strcat> missed an update for 4a (5G) and 5
+22:14:07 <strcat> couple camera driver fixes
+22:19:06 <jj1013[m]> Does GrapheneOS have a clock app?
+22:19:31 <strcat> there's one included, why?
+22:21:15 <jj1013[m]> That is useful for alarms, in case I set any.
+22:26:04 <waffel360[m]> Hi there, I have 2 questions, 1st would be I need to get a copy of an apps files in /data/data/..... but can't seem to with adb (don't need to write)
+22:26:29 <GrapheneOS-Teleg> <!Hulk> jj1013[m]: yes, GrapheneOS comes with a clock app, which has the alarm functionality
+22:26:44 <strcat> waffel360[m]: adb backup, or run-as if the app is a debug build
+22:27:02 <strcat> or decrypt Seedvault backup (the built-in backup service) via the tool that's available for that
+22:27:11 <GrapheneOS-Teleg> <g​ochoingles> You could have pinged me ─ what you just pinged was my Matrix user.
+22:27:13 <waffel360[m]> run-as: package not debuggable
+22:28:06 <strcat> waffel360[m]: so use backup support
+22:28:11 <strcat> assuming app doesn't disable backups
+22:28:22 <strcat> you aren't being specific with what you want to do
+22:28:26 <strcat> so, that's the most help that can be given
+22:36:14 <GrapheneOS-Teleg> katinatez (@k​atinatez) has joined the Telegram Group!
+22:38:46 <hunter5> I wonder whether flight mode prevents all celltower connections even for emergency calls, so it can be used to avoid giving over positional data
+22:39:43 <hunter5> not sure if that's specific to the os or can be influenced from there
+22:55:31 <dazinism> https://security.googleblog.com/2021/04/rust-in-android-platform.html
+23:00:35 <strcat> hunter5: https://grapheneos.org/faq#cellular-tracking
+23:00:39 <strcat> hunter5: it disables the radio
+23:01:04 <strcat> making an emergency call is explicitly choosing to disable airplane mode via the UI
+23:01:15 <strcat> you obviously can't make an emergency call with the cellular radio disabled
+23:02:10 <hunter5> ok I really need to read that doc word for word
+23:03:16 <hunter5> I see, so that is how those calls just work even when you are in airplane mode
+23:03:30 <hunter5> good to know
+23:08:47 <DHFuchsiaOSwhen> <dazinism "https://security.googleblog.com/"> Cool
+23:10:13 <cipherpunk2077[m> hey
+23:10:38 <cipherpunk2077[m> i'm trying flash my pixel 5 in mac os big sur but this not is being detected by the automatic web installation
+23:10:58 <cipherpunk2077[m> is needed enable any feature extra on my computer or phone to be detected?
+23:11:09 <cipherpunk2077[m> i tried enabling the usb mode debug but the result is the same
+23:23:54 <GrapheneOS-Teleg> <k​atinatez> Hello, just installed GrapheneOS and noticed high battery drain, I read it was a bug to Signal app. So I unstalled signal to see if that helps. Any other settings to change for better battery?
+23:25:19 <strcat[m]> it has great battery life
+23:25:33 <strcat[m]> if you don't have great battery life you changed something or installed something that's draining it
+23:25:58 <strcat[m]> Signal doesn't have a "bug" draining battery life, but rather their push implementation isn't quite as efficient as it could be
+23:26:17 <strcat[m]> if you don't want Signal preventing deep idle states then simply don't give it the battery optimization exception it requests
+23:26:23 <strcat[m]> it will still work... it will just have delayed notifications when the device is in deep idle
+23:27:16 <strcat[m]> so, if you simply don't give it the battery optimization exception, you still have fully working Signal, you just don't get immediate notifications when device is totally idle
+23:27:24 <strcat[m]> will still get them, just delayed
+23:28:52 <GrapheneOS-Teleg> <k​atinatez> thanks will reinstall and check permissions
+23:40:37 <ryan[m]2> Once I had pdf viewer taking massive amounts of battery, even after a reboot. I had to disable it
+23:48:44 <hitchhooker[m]> <strcat[m] "so, if you simply don't give it "> do you still receive calls through signal or are they dependent on push notifications as well?
+23:49:42 <strcat[m]> hitchhooker: question is wrong :P
+23:49:51 <strcat[m]> I think I should add an FAQ entry on this
+23:50:17 <strcat[m]> let me write an faq section and I'll link it
+23:50:23 <hitchhooker[m]> cheers
+23:52:15 <GrapheneOS-Teleg> <!Hulk> cipherpunk2077[m: hi, do you still need installation assistance?
+23:52:51 <TheJollyRoger> Hi cipherpunk2077[m, when you are trying to flash, is your phone in Bootloader?
+23:53:30 <GrapheneOS-Teleg> <!Hulk> Yeeei, hello Peter P.-)
+23:54:17 <TheJollyRoger> If your phone's not in bootloader mode, even if your phone is plugged in and your hardware and cabling is good, the web installer can't talk to the bootloader, because the bootloader's not in control of the phone, the operating system is! You'll need to make sure that that's set first, if you haven't, the easiest way is to switch the phone off, then press and hold down the Volume Down key and
+23:54:18 <TheJollyRoger> then press and hold the Power button and keep those held down until you see a black screen with some white text and some red text.
+23:54:23 <TheJollyRoger> Ahoy @Hulk!
+23:54:44 <GrapheneOS-Teleg> <!Hulk> Imma head out now, have a good one)
+23:54:45 <cipherpunk2077[m> i fixed it already with a bit of help from strcat, thanks anyways :)
+23:54:52 <TheJollyRoger> Yarr, fare thee well @Hulk!
+23:55:07 <TheJollyRoger> cipherpunk2077[m: arr, glad to hear! Welcome aboard the ship!

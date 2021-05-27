@@ -1,0 +1,879 @@
+00:10:56 <alex-resist> I do not need Play services for anything so I'm just an observer
+00:11:57 <alex-resist> Apps that require play services are not really trying anyway, so I don't really care about them
+00:13:05 <alex-resist> People who need them can just switch to "the other" OS and they'll be fine probably
+00:36:23 <strcat[m]> I'm updating the section on the site
+00:36:28 <strcat[m]> to better explain the new plan
+00:36:46 <strcat[m]> which is essentially just that we are choosing a specific one of those 2  approaches and not doing the other one
+00:51:59 <strcat[m]> https://grapheneos.org/#never-google-services has been updated to remove one of the 2 planned approaches and to expand details on the chosen approach
+00:52:28 <strcat[m]> > We're developing a minimal Play services compatibility layer as a regular app without any special privileges. The app will provide a stub implementation of the entire Play services API pretending the servers are down and the functionality is unavailable. It will always be disabled by default since apps will detect Play services is available and will try to use it rather than alternatives. As an example, Signal would
+00:52:28 <strcat[m]> try to use a non-functional FCM implementation rather than their own server push implementation. The intention is that users will only enable this in profiles dedicated to running apps with an unnecessary hard dependency on Play services. We'll likely prevent enabling it in the owner profile to help users avoid those kinds of pitfalls.
+00:52:30 <k68> hi all! working through graphene installation to pixel 4a via web ui...hit a snag while attempting to unlock bootloader. Have fastboot installed on Windows 10, USB C cable recognizing phone...but modal launched by graphene web page "unlock bootloader" button tells me "no compatible device found"
+00:52:34 <strcat[m]> > Our Play services app won't have any special privileges or whitelisting in the OS like Play services or microG. There will be no support for bypassing arbitrary signature checks like the microG signature spoofing patch since it substantially compromises the OS security model and breaks other security features like verified boot. Instead, our app will be signed with a GrapheneOS Play services key and the only OS
+00:52:34 <strcat[m]> support for the app will be presenting the GrapheneOS Play services key as the Google Play services key.
+00:52:36 <k68> any thoughts/experience on this hiccup?
+00:52:51 <strcat[m]> k68: https://grapheneos.org/install/web#connecting-phone
+00:52:52 <k68> also, am I in the right channel to ask? yell at me if not :)
+00:52:57 <strcat[m]> k68: make sure to do this with Windows Update
+00:53:03 <strcat[m]> after connecting it in the bootloader interface mode
+00:53:53 <k68> strcat[m] tx for the answer...not clear on advice.
+00:54:03 <k68> Run Windows Update? Is that the advice?
+00:54:15 <k68> And thanks for the link...that is the install page I'm trying to use
+00:55:43 <k68> ...
+01:00:25 <KEI[m]1> @strcat:matrix.org: yt?
+01:00:52 <strcat[m]> KEI: read the 2nd paragraph in https://grapheneos.org/install/web#connecting-phone
+01:00:59 <strcat[m]> > On Windows, you may need to install a driver for fastboot. You can obtain this via the Windows Update optional updates if you don't already have it.
+01:01:12 <KEI[m]1> right tx
+01:01:24 <KEI[m]1> so, I believe I have fastboot installed...but thanks for the advice, i'll try again
+01:01:24 <strcat[m]> I could reorder some stuff to make it clearer how to do this
+01:01:28 <KEI[m]1> lol
+01:01:33 <KEI[m]1> hey, it's pretty clear imo
+01:01:41 <KEI[m]1> i'm assuming error between user and keyboard on my part
+01:02:04 <strcat[m]> KEI: you aren't supposed to install any software but rather go into Windows Update after connecting the phone
+01:02:04 <KEI[m]1> guess i'll just run all the win updates and see if that address it
+01:02:09 <strcat[m]> and go to optional updates
+01:02:12 <KEI[m]1> ah
+01:02:18 <strcat[m]> and install the bootloader interface driver it shows
+01:02:21 <KEI[m]1> okay then, yeah that wasn't clear
+01:02:22 <KEI[m]1> thanks!
+01:02:29 <KEI[m]1> so bring up Win Update in settings after connecting
+01:02:37 <strcat[m]> and go to optional updates in there
+01:02:38 <KEI[m]1> and then, to be explicit: what do i see there?
+01:02:40 <KEI[m]1> ok
+01:04:04 <KEI[m]1> so, seeing a series of op updates: Bluetooth, net, System, and a feature update v20H2 which I assume is a rollup
+01:04:13 <KEI[m]1> advice is to just install all and see what flies?
+01:04:51 <KEI[m]1> or should i be seeing a fastboot labeled update?
+01:09:42 <bethefriction[m]> Can you enter developer mode on another profile user?
+01:10:13 <bethefriction[m]> I tried and it won't let me but not sure if there is a work around
+01:12:38 <bethefriction[m]> I'm trying to connect and access files from a USB in another profile but need to access developer mode to enable USB file transfer
+01:12:48 <strcat[m]> enable it in the owner profile
+01:12:54 <strcat[m]> you can then use adb
+01:12:55 <bethefriction[m]> It is
+01:13:06 <strcat[m]> so you should be able to use adb regardless of which profile is active
+01:13:21 <strcat[m]> the owner profile is in charge of setting up those kinds of global settings
+01:13:30 <strcat[m]> commands like `pm` have a user parameter
+01:13:32 <bethefriction[m]> OK let me double check what I have enabled
+01:15:41 <KEI[m]1> <strcat[m] "and go to optional updates in th"> Thanks! Understood the flow, totally worked. Appreciate the explanation
+01:16:04 <KEI[m]1> Didn't realize I needed to launch Unlock Bootloader modal, keep open, before visiting Optional Updates
+01:16:11 <KEI[m]1> My muddle :)
+01:16:16 <KEI[m]1> Amped for Graphene, tx again
+01:16:16 <strcat[m]> KEI: you don't need to keep it open like that
+01:16:31 <strcat[m]> KEI: the device just needs to be plugged in while in the bootloader interface mode and then the optional update should show up
+01:16:38 <strcat[m]> the browser doesn't have to be involved yet
+01:16:38 <KEI[m]1> cool
+01:16:39 <KEI[m]1> did work
+01:16:40 <KEI[m]1> tx
+01:17:14 <KEI[m]1> fyi: the web page ui is slick. while i could do command line, this is super quick. tx for all those who put it together
+01:19:10 <borisdpython> howdy folks...any suggestions on a different build I can use this GrapheneOS is not going to work for me..really cool concept, too barebones...
+01:19:32 <borisdpython> I feel like I got my phone onto an island I can't get off of now
+01:19:35 <bethefriction[m]> So in my USB settings I have file transfer enabled. But that isn't working to access in other profiles. Should I be selecting another option?
+01:36:32 <bethefriction[m]> I tried every setting under USB configuration but nothing allows me to access USB in another profile.
+01:39:12 <akrugosei[m]> <borisdpython "I feel like I got my phone onto "> Lmfao - sounds like stock Android is more for you then
+01:40:35 <bethefriction[m]> <borisdpython "howdy folks...any suggestions on"> Have you tried CalyxOS?
+02:00:50 <strcat[m]> bethefriction: please don't promote that here
+02:02:54 <strcat[m]> bethefriction: every time you connect the device to a computer, you need to change the mode from charge only to the desired mode, same as with AOSP / stock Android
+02:03:26 <strcat[m]> bethefriction: the USB peripherals setting we add inside the Settings app is an unrelated thing for connecting peripherals to the phone
+02:04:14 <strcat[m]> bethefriction: the mode you choose when using the phone as a peripheral itself is not something persistent but rather each time you want to do that, you have to select the desired mode
+02:04:23 <strcat[m]> same as stock/AOSP
+02:04:41 <strcat[m]> you plug in the phone to a computer and select file transfer instead of charge only
+02:05:21 <strcat[m]> it's not a setting that's saved, it's a choice for the current connection only
+02:25:54 <rny> strcat[m]: have you considered just applying for ARIN membership and just outright maintaining an AS for graphene os?
+02:26:25 <louipc> what
+02:26:32 <rny> no more ip blacklisting shenenigans and can control your own routing :P
+02:27:03 <rny> i envy ARIN membership, it cheap, compared to APNIC
+02:28:58 <louipc> is there .os tld?
+02:29:48 <louipc> nope
+02:29:59 <rny> DNS names are IANA
+02:30:14 <rny> this is specific only to internetworking.
+02:30:54 <louipc> i mean that would be another cool thing to have lol
+02:30:57 <rny> huge price and effort just to avoid ip blacklisting :/
+02:31:00 <louipc> full control over a tld
+02:43:41 * hasnoname[m] uploaded a video: 20210210_183324_1.mp4 (23271KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/LKPvQFhJERRWDdsGIRYQPwjU/20210210_183324_1.mp4 >
+02:43:52 <hasnoname[m]> Is it normal to be able to skip initial login screen after reboot?
+02:46:13 <Lighwake[m]> Happened to me a few times. Not sure why exactly tho.
+02:48:18 <Lighwake[m]> Maybe because you have multiple users turned on.
+02:48:23 <hasnoname[m]> <Lighwake[m] "Happened to me a few times. Not "> I remember this feature from nexus 6p and some other phone. But this login comes way before in the boot process.
+02:49:13 <Lighwake[m]> I saw a setting "use one PIN" or something like that. That should fix that.
+02:50:18 <strcat[m]> hasnoname: don't see anything being skipped
+02:50:51 <strcat[m]> doesn't look like GrapheneOS
+02:51:42 <strcat[m]> not GrapheneOS
+02:52:01 <hasnoname[m]> <strcat[m] "doesn't look like GrapheneOS"> Oh no, it is gos
+02:52:25 <strcat[m]> 1) nothing is being skipped, 2) not GrapheneOS (or at least not *current* GrapheneOS)
+02:52:25 <hasnoname[m]> I can may be send another video showing the logo
+02:52:33 <strcat[m]>  * 1) nothing is being skipped, 2) not GrapheneOS (or at least not _current_ GrapheneOS)
+02:52:54 <strcat[m]>  * 1) nothing is being skipped, 2) not GrapheneOS (or at least not current GrapheneOS)
+02:53:00 <Lighwake[m]> It did happen to me once or twice. Maybe the update fixed it.
+02:53:10 <strcat[m]> nothing is being skipped
+02:53:29 <strcat[m]> I can tell that's not a (recent) release of GrapheneOS too
+02:54:07 <strcat[m]> I don't understand the claim that something is being skipped
+02:54:45 <rny> he probably meant whats with a different keyguard UI displaying
+02:54:57 <strcat[m]> that's not anything being skipped
+02:55:02 <strcat[m]> that's the OS completing loading of more stuff
+02:55:04 <take_a_deep_brea> me too . dont understand . and the initial PIN UI is not even recent aosp if i remember correctly
+02:55:17 <rny> agreed, nothing is being skipped.
+02:55:26 <strcat[m]> yeah that is not (current) GrapheneOS
+02:55:33 <rny> that being said, i dont know why a different keyboard display appeared
+02:55:38 <rny> i have never seen that happen on my phone
+02:55:38 <strcat[m]> so either it's not GrapheneOS, or it's a very old version of it
+02:55:46 <rny> *keyguard
+02:55:48 <strcat[m]> doesn't look like GrapheneOS to me
+02:56:04 <strcat[m]> maybe you think you're using GrapheneOS but that doesn't seem to be GrapheneOS
+02:56:36 <Lighwake[m]> <strcat[m] "so either it's not GrapheneOS, o"> If I recall correctly, it happened to me 3 days ago. A few days after I flashed gOS.
+02:56:52 <strcat[m]> lighwake: what happened?
+02:57:07 <Lighwake[m]> Exactly like in the video
+02:57:11 <strcat[m]> which is what?
+02:57:24 * hasnoname[m] uploaded an image: image.png (58KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/GjnYoxwrxMeHhkohnEhAjVzo/image.png >
+02:57:52 <Lighwake[m]> Request for a PIN, I was able to bypass it by skipping. Than the normal PIN was requested.
+02:57:57 <strcat[m]> hasnoname: except from that lock screen that's not what GrapheneOS looks like since a while
+02:58:02 <hasnoname[m]> On gos and latest version
+02:58:10 <strcat[m]> lighwake: that doesn't make any sense
+02:58:15 <strcat[m]> lighwake: there is nothing being skipped
+02:58:30 <take_a_deep_brea> lighwake:  using another keyboard ?
+02:58:46 <Lighwake[m]> Different UI
+02:58:54 <Lighwake[m]> Not regular PIN UI
+02:59:00 <strcat[m]> a different UI is not anything being skipped
+02:59:03 <strcat[m]> I don't know why that's being claimed
+02:59:22 <rny> hasnoname[m]: can you re-ask your question properly.
+02:59:28 <rny> and withdraw your claim that anything has been skipped.
+02:59:44 <Lighwake[m]> But you can bypass it by swiping back.  I guess it can be called "skipping"
+02:59:52 <strcat[m]> you aren't bypassing or skipping anything
+02:59:53 <take_a_deep_brea> lighwake: bypass would mean you didnt have to submit a pin/password ? dont understand .
+02:59:56 <rny> Lighwake[m]: it is not skipping, it is going back.
+03:00:19 <rny> Lighwake[m]: please get the vocabulary correct.
+03:00:33 <take_a_deep_brea>  * lighwake: bypass would mean you didnt have to submit a pin/password  .dont understand .
+03:00:44 <hasnoname[m]> <strcat[m] "a different UI is not anything b"> I usually get asked twice to enter the password after a reboot. Few days ago I tried to enter the password even before the black ui screen came up and was able to login. Today I tried to press back when that black ui came up and it took me to normal login screen.
+03:01:09 <Lighwake[m]> It happened right after a boot. So going "back" doesn't make sense.
+03:01:13 <strcat[m]> hasnoname: no, you don't get asked the password twice
+03:01:20 <strcat[m]> you seem quite confused about how the OS works
+03:01:38 <hasnoname[m]> <rny "lighwake: it is not skipping, it"> Is that black screen ui that asking for password is optional?
+03:01:43 <strcat[m]> you're using multiple profiles seemingly without realizing it
+03:01:54 <strcat[m]> either that or this is concern trolling
+03:02:15 <rny> i use multiple profiles, the other profiles dont prompt until they are switched to
+03:02:27 <take_a_deep_brea> yep
+03:02:42 <rny> hasnoname[m]: afaik, the keyguard UI prompt is user-initiated, on boot, it doesnt just appear.
+03:02:55 <hasnoname[m]> <strcat[m] "you're using multiple profiles s"> Do not have other profile not even guest
+03:02:59 <Lighwake[m]> I haven't had that problem after I switched off multiple users. That's not my concert.
+03:02:59 <take_a_deep_brea> @strcat:matrix.org:  i think they are just puzzled and didnt word their concern properly
+03:03:08 <somenerd[m]> odd claims though...
+03:03:21 <hasnoname[m]> <strcat[m] "either that or this is concern t"> I honestly not. I have had this doubt for a while
+03:03:26 <rny> regardless, i dont think its graphene os either
+03:03:35 <rny> the keyguard UI just doesnt pop up like that without user-initiation./
+03:03:59 <strcat[m]> GrapheneOS has a blue accent color, the OS in the video did not
+03:04:01 <rny> unless it was some old version that uses full disk encryption
+03:04:16 <Lighwake[m]> I'm just trying to explain what happened. Obviously there were at least two people on Graphene who had the same experience recently.
+03:04:27 <strcat[m]> doesn't sound like it
+03:04:32 <strcat[m]> and it looks more like concern trolling to me
+03:04:39 <strcat[m]> video posted is not GrapheneOS
+03:04:47 <strcat[m]> and nothing was bypassed or skipped
+03:05:05 <rny> anyways, since its concluded that its likely not grapheneos. its now offtopic
+03:05:17 <rny> please move the discussion to #grapheneos-offtopic
+03:05:35 <strcat[m]> GrapheneOS simply doesn't look like that
+03:05:35 <somenerd[m]> > I'm just trying to explain what happened. Obviously there were at least two people on Graphene who had the same experience recently.
+03:05:35 <somenerd[m]> what?
+03:05:40 <take_a_deep_brea> lighwake: not really sure how you could conclude two people
+03:06:11 <somenerd[m]> I mean, a sample size of 2 isn't much
+03:06:15 <somenerd[m]> 3-4, maybe
+03:06:27 <Lighwake[m]> <take_a_deep_brea "lighwake: not really sure how yo"> The messages are already deleted. I just said I had the same experience with the user that introduced this.
+03:07:01 <somenerd[m]> yeah I saw it, but still, two people isn't much
+03:07:13 <somenerd[m]> also file a bug on the os issue tracker
+03:07:14 <somenerd[m]> why here?
+03:07:16 <rny> nothing gets deleted here. they are logged.
+03:07:22 <somenerd[m]> who's gonna listen or care here?
+03:07:49 * zzxx123 smh my head
+03:08:13 <somenerd[m]> if you care about devs seeing and caring, go onto GitHub or something
+03:08:17 <somenerd[m]> not here
+03:08:22 <take_a_deep_brea> somenerd:  they think its an OS issue . lighwake  please get your wording right bypassing authentication is not a trivial matter . also the UI does cause doubt and what strcat said about accent color
+03:08:43 <somenerd[m]> also if it was, why would most people send it here?
+03:08:54 <strcat[m]> lighwake: you made a false claim that appears to me to be concern trolling
+03:09:05 <strcat[m]> lighwake: and you're just convincing me with the further messages
+03:09:15 <somenerd[m]> look, if anyone wants to make a claim or something, this is the wrong place
+03:09:41 <strcat[m]> lighwake: that video is not of GrapheneOS
+03:09:46 <strcat[m]> at least not current GrapheneOS
+03:10:20 <strcat[m]> and what was claimed by both of you is not shown in any way by the video
+03:10:27 <hasnoname[m]> <strcat[m] "lighwake: that video is not of G"> I'm upto date. I can send you another video or can do a video chat. I'm not trolling
+03:10:48 <somenerd[m]> then go onto GitHub or something
+03:10:49 <strcat[m]> super odd to have 2 accounts claiming something that's clearly not the case
+03:10:53 <Lighwake[m]> Sorry to bother anyone. I merely   said it happened to me to, but it seems its "concern trolling"
+03:11:02 <somenerd[m]> then go onto GitHub
+03:11:13 <somenerd[m]> no one's stopping you from filing an issue
+03:11:21 <somenerd[m]> instead of taking up people's time
+03:11:23 <strcat[m]> GitHub issue tracker is not a place to ask questions / get support, there's no indication of any bug in GrapheneOS
+03:11:29 <strcat[m]> the issue tracker takes my time too
+03:11:32 <somenerd[m]> I meant the bug apparently
+03:11:39 <strcat[m]> no indication of any bug
+03:11:44 <somenerd[m]> yeah
+03:11:49 <strcat[m]> the video shows trying to enter a PIN, going back, and then trying to enter PIN again
+03:11:57 <strcat[m]> I have no idea why anyone is claiming to have bypassed a PIN
+03:12:07 <somenerd[m]> and if there was, they wouldn't waste time here
+03:13:12 <strcat[m]> when you boot the device, it's locked
+03:13:21 <strcat[m]> you enter the lock method of the owner profile and it's unlocked
+03:13:22 <strcat[m]> that's it
+03:13:27 <strcat[m]> there are not multiple PINs
+03:13:34 <take_a_deep_brea> hasnoname: lighwake:  if you make a claim or support one its upto you to substantiate it . all we saw is one clippomg with doubtful UI . if you feel its not concern trolling like has happened in this room so many time before please substantiate the claim further .
+03:13:51 <take_a_deep_brea>  * hasnoname: lighwake:  if you make a claim or support one its upto you to substantiate it . all we saw is one clipping with doubtful UI . if you feel its not concern trolling like has happened in this room so many time before please substantiate the claim further .
+03:13:53 <strcat[m]> a profile has 1 primary lock method
+03:13:58 <hasnoname[m]> <strcat[m] "I have no idea why anyone is cla"> Not saying it's bypassed. I usually need to enter the pin twice to get in. That black ui then the regular ui
+03:14:00 <strcat[m]> and unless you have a SIM PIN that's the only thing to enter
+03:14:24 <strcat[m]> hasnoname: there is 1 primary lock method for a profile not 2
+03:14:30 <strcat[m]> you don't enter the lock method 2x
+03:14:54 <strcat[m]> if you want I can list out what's wrong with that image which makes me say that it is not GrapheneOS
+03:15:01 <strcat[m]>  * if you want I can list out what's wrong with that video which makes me say that it is not GrapheneOS
+03:15:37 <take_a_deep_brea> seriously SIM PIN UI is a lot different
+03:15:52 <Lighwake[m]> I will try to recreate what happened later. If it happens again I will take it to the issue tracker with a more detailed explanation and proof. If not, than even better.
+03:16:15 <Lighwake[m]> No one had to worry about anything.
+03:16:22 <hasnoname[m]> <strcat[m] "you don't enter the lock method "> That's the confusion. After I restart, I see the normal login screen then after few seconds it takes me to that black ui. I enter the pin and then it goes back to the normal login screen where I enter pin again. Don't have sim lock
+03:16:23 <take_a_deep_brea> i rebooted just to check that
+03:16:24 <Lighwake[m]> * No one has to worry about anything.
+03:16:55 <strcat[m]> hasnoname: that's not normal and your video is not GrapheneOS
+03:17:03 <strcat[m]> hasnoname: you have something else
+03:17:12 <strcat[m]> GrapheneOS doesn't have that green accent color anymore
+03:17:22 <take_a_deep_brea> hasnoname: i have rebooted countless times . i have never seen anything like this . and i am on the beta release
+03:17:25 <strcat[m]> you think you're using GrapheneOS but I don't think you are
+03:17:34 <strcat[m]> maybe you should be concerned about that
+03:17:46 <strcat[m]> GrapheneOS doesn't look like that
+03:18:05 <strcat[m]> I mean, totally possible you've got some weird device management stuff that makes it look like that
+03:18:08 <strcat[m]> but that's not how it normally looks
+03:18:09 * hasnoname[m] uploaded a video: video.mp4 (5952KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/FrWROtHKmsQZhenSwgekEEcN/video.mp4 >
+03:18:57 <bethefriction[m]> <strcat[m] "bethefriction: please don't prom"> No problem! I'm new to matrix and channels and still learning etiquette.
+03:19:43 <somenerd[m]> not really matrix per se
+03:19:50 <strcat[m]> hasnoname: do you have a device manager enabled?
+03:20:00 <take_a_deep_brea> bethefriction:  its not a matter of etiquette .
+03:20:33 <strcat[m]> take_a_deep_breath: that's about something else
+03:20:33 <somenerd[m]> yeah that too
+03:20:34 <hasnoname[m]> <strcat[m] "hasnoname: do you have a device "> Device admin?
+03:20:34 <take_a_deep_brea> no one wil say anything if you promote ios in off topic room
+03:20:34 <bethefriction[m]> <strcat[m] "bethefriction: every time you co"> What if I'm not connecting to a computer? I'm just trying to access files on a USB, which I'm able to do on the owner profile but not any others?
+03:20:58 <strcat[m]> hasnoname: you aren't bypassing something but rather that screen is NOT normal
+03:20:59 <strcat[m]> hasnoname: and you *should* be concerned both about that and about the deviations from the standard GrapheneOS UI
+03:21:13 <strcat[m]> hasnoname: I'm telling you that's not what GrapheneOS looks like
+03:21:17 <somenerd[m]> > no one wil say anything if you promote ios in off topic room
+03:21:17 <somenerd[m]> well, if you promote it logically
+03:21:32 <strcat[m]> hasnoname: do you have a device manager or accessibility service enabled?
+03:21:35 <hasnoname[m]> <strcat[m] "hasnoname: do you have a device "> I have device admin enabled.
+03:21:41 <strcat[m]> hasnoname: which
+03:21:53 <hasnoname[m]> Accessibility service bitwardem
+03:21:54 <strcat[m]> hasnoname: I suspect it's doing something very weird
+03:21:56 <strcat[m]> which is showing that UI
+03:22:03 <strcat[m]> which device admin?
+03:22:05 <hasnoname[m]> Device manager island
+03:22:19 <strcat[m]> hasnoname: I think it's doing something very strange
+03:22:30 <strcat[m]> and I recommend that people avoid device managers and accessibility services
+03:22:40 <strcat[m]> disable both and see what happens
+03:22:52 <strcat[m]> password managers should use autofill service / keyboard
+03:22:54 <strcat[m]> not accessibility service
+03:23:12 <strcat[m]> and accessibility service is really inappropriate for anything but a must have accessibility feature where it can't be provided any other way
+03:23:34 <strcat[m]> hasnoname: I'm guessing it's the device manager that's the issue
+03:23:46 <strcat[m]> anyway there's something seriously wrong
+03:24:59 <strcat[m]> turn off the device manager and the accessibility service (or start by turning off one or the other)
+03:25:06 <strcat[m]> reboot, see what happens
+03:27:06 <hasnoname[m]> <strcat[m] "turn off the device manager and "> That's it. It's the island. I removed Device admin and deleted island. I don't see that black ui after restarting.
+03:28:03 <strcat[m]> hasnoname: what device admin privileges was it given?
+03:28:05 <strcat[m]> that's really weird
+03:28:31 <strcat[m]> a device admin can certainly do weird stuff like that but it depends on what privileges they request and you can see a list
+03:29:17 <strcat[m]> that's really not a normal UI
+03:29:18 <hasnoname[m]> Sorry for the confusion. I wasn't sure if it was normal and thought that ui was a part of security after login
+03:30:08 <hasnoname[m]> <strcat[m] "hasnoname: what device admin pri"> Don't know. I removed it. I remember simply selecting activate this device admin app
+03:30:52 <mr_hebi_san[m]> The video is deleted now but it reminds me of the PIN ui that the OS shows you if you want to add biometrics.  Let me see if I can grab it
+03:31:07 <Lighwake[m]> That keyboard was a lot different from AOSP. Maybe it used your custom keyboard?
+03:31:20 <strcat[m]> that's not a keyboard
+03:31:33 <strcat[m]> the regular PIN entry UI isn't from the keyboard
+03:31:41 <Lighwake[m]> Part of the UI?
+03:31:52 * hasnoname[m] uploaded an image: e9a91c4e-8ca2-406d-8d72-d47873fe6952.png (76KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/nzgKqsmUapJHocNbKtauLBXq/e9a91c4e-8ca2-406d-8d72-d47873fe6952.png >
+03:31:52 <strcat[m]> look what was being shown in that video isn't the regular GrapheneOS UI
+03:31:53 <hasnoname[m]> <strcat[m] "the regular PIN entry UI isn't f"> There you go
+03:32:17 <strcat[m]> hasnoname: "control how and when the screen locks", "prevent use of some screen lock features"
+03:32:27 <mr_hebi_san[m]> I can't screenshot it because that UI explicitly forbids being screenshot :)
+03:32:32 <Lighwake[m]> I agree that It was not GraphineOS UI
+03:32:38 <strcat[m]> hasnoname: what was happening there is actually pretty concerning
+03:32:39 <mr_hebi_san[m]> That's probably for the best
+03:32:54 <Lighwake[m]> Then what was it?
+03:32:57 <strcat[m]> hasnoname: it looks like it's using device management features to partially roll back to some older screen lock UI in a broken way
+03:33:07 <strcat[m]> hasnoname: whatever it's doing is really broken
+03:33:13 <strcat[m]> and I don't know why Island would mess with the lock screen
+03:33:19 <strcat[m]> those are pretty concerning privileges
+03:33:43 <mr_hebi_san[m]> Yes that UI can be found in the phone.
+03:34:01 <strcat[m]> yes but not there
+03:34:03 <mr_hebi_san[m]> Go to biometrics and try to set a fingerprint
+03:34:11 <strcat[m]> I know it's a standard UI
+03:34:15 <strcat[m]> but it is not part of the lockscreen UI
+03:34:21 <strcat[m]> that looks like a prompt from a device manager
+03:34:29 <mr_hebi_san[m]> <strcat[m] "yes but not *there*"> True.  I wonder what logcat would reveal?
+03:34:55 <hasnoname[m]> <strcat[m] "hasnoname: it looks like it's us"> I thought it was like when I had nexus 6p. It used to ask for the password similarly in between the booting process and the usual login screen after it boots completely
+03:35:50 <Koba[m]> How to add socks5 proxy in vanadium?
+03:37:38 <strcat[m]> hasnoname: it's not
+03:37:52 <strcat[m]> Koba: route the traffic through a VPN
+03:38:06 <strcat[m]> Koba: rather than relying on apps to implement non-leaky proxy support
+03:38:37 <strcat[m]> use a VPN app
+03:38:44 <strcat[m]> if you really want you can send only 1 app's traffic through it
+03:38:49 <hasnoname[m]> <strcat[m] "hasnoname: it's not"> Figured that
+03:40:42 <strcat[m]> hasnoname: it's some UI from that device manager
+03:40:50 <strcat[m]> whatever it was doing is messed up
+03:41:02 <strcat[m]> I don't know if they intend to do that but I find it pretty weird they request those lockscreen permissions
+03:41:09 <strcat[m]> what valid reason would they have to be messing with the lockscreen UI?
+03:41:29 <strcat[m]> and why would they need to be able to wipe the device, etc?
+03:41:38 <strcat[m]> seems like some serious feature creep beyond managing a work profile
+03:41:54 <strcat[m]> and there's a reason we recommend using user profiles and not trusting a third party app to manage a work profile
+03:42:02 <strcat[m]> the app is in charge of the work profile
+03:42:10 <strcat[m]> they can disable it being isolated from the main profile if they want
+03:42:21 <strcat[m]> the device manager app owns the work profile
+03:42:23 <strcat[m]> not you
+03:44:13 <hasnoname[m]> <strcat[m] "and there's a reason we recommen"> I know. I had to put apps like Google maps and Spotify in work profile. I needed those apps to work along with main profile
+03:44:42 <hasnoname[m]> With multiple profiles, I can only share phone calls but not calls like from signal
+03:45:08 <somenerd[m]> well, signal doesn't have a way to tell that it's the same phone
+03:48:49 <hasnoname[m]> Well the main problem with maintaining multiple profiles is that I can't simultaneously use them both. Like talking on signal on one profile and using maps on another profile.
+03:48:49 <hasnoname[m]> It's nothing to do with graphene os.
+03:49:34 <honbunpun[m]> I'm trying to install f droid on a new profile, but it won't install, what's wrong?
+03:50:04 <Lighwake[m]> You're installing an old version
+03:50:22 <Lighwake[m]> It must match the one you have on your owner
+03:50:37 <mr_hebi_san[m]> <honbunpun[m] "I'm trying to install f droid on"> You can't use the version on the main site.  You have to specifically go to the page in fdroid with the latest version
+03:50:51 <honbunpun[m]> I downloaded the apk from f droid though
+03:51:17 <somenerd[m]> it's within the site
+03:51:21 <somenerd[m]> (apparently)
+03:52:04 <mr_hebi_san[m]> https://f-droid.org/en/packages/org.fdroid.fdroid/
+03:52:37 <mr_hebi_san[m]> Yeah you have to specifically download the latest version, which they tuck away in that page.
+03:53:14 <Lighwake[m]> They don't make it easy :)
+03:53:38 <mr_hebi_san[m]> Graphene will not allow you to install an downgraded app on a different profile when you have installed a higher version else where.
+03:54:23 <honbunpun[m]> I see.. I will try this link then, thanks
+03:55:29 <mr_hebi_san[m]> I've been wondering about this actually. Is the package installer privileged in ways that other parts of Android are not?  If the user profiles are strictly sandboxed then is there one and only one package installer that all of them must use?
+03:56:43 <strcat[m]> > Graphene will not allow you to install an downgraded app on a different profile when you have installed a higher version else where.
+03:56:51 <strcat[m]> it's how Android works
+03:56:53 <strcat[m]> AOSP is the same way
+03:57:23 <strcat[m]> the package manager verifies the signature of every package before installing it and prevents changing the key without a key rotation authorized with the old key
+03:57:28 <strcat[m]> and prevents downgrading the versionCode
+03:57:54 <strcat[m]> mr_hebi_san: the base system stuff like the package manager isn't simply an unprivileged app
+03:58:03 <strcat[m]> it's not an app running within a profile
+03:59:04 <take_a_deep_brea> @strcat:matrix.org:  isnt there a way to expose the work profile feature through the settings app ? is it necessar to have a third party app to do this ?
+03:59:24 <strcat[m]> take_a_deep_breath: the whole point of work profile feature is that it's a work profile owned by your company's device management app
+03:59:28 <strcat[m]> that's the purpose of the feature
+03:59:33 <strcat[m]> it's not meant for how people are using it this way
+03:59:44 <somenerd[m]> User profiles are meant for that
+03:59:46 <take_a_deep_brea> i understanf
+03:59:49 <mr_hebi_san[m]> That's interesting stuff.  This also seems related to the play store and its requirements for versioning
+03:59:50 <take_a_deep_brea> *d
+03:59:52 <strcat[m]> it's for BYOD where the user owns the device and the device manager owns this work profile
+03:59:53 <somenerd[m]> (since they are managed by the OS)
+04:00:12 <strcat[m]> it's not meant to be used as a way for the end user to isolate apps
+04:00:21 <strcat[m]>  * it's not meant to be used as a way for the end user to have an isolated workspace
+04:00:31 <strcat[m]> simply not how it's designed
+04:00:46 <strcat[m]> it would be possible to make a form of nested profile which was meant to be used that way but that is really not what work profiles are
+04:01:24 <take_a_deep_brea> also it makes sense to trust a companys device manager app as you trust them to pay you and other stuff
+04:01:46 <take_a_deep_brea> no brainer to trust a third party app with device manager priviliges
+04:02:33 <somenerd[m]> I mean, probably shouldn't lol
+04:02:39 <somenerd[m]> but it's advertised like that
+04:02:56 <strcat[m]> take_a_deep_breath: well also it doesn't need to ask for those other privileges
+04:03:05 <strcat[m]> it could just take control of the work profile
+04:03:08 <strcat[m]> and not ask for anything invasive
+04:03:13 <strcat[m]> like fucking with your lockscreen
+04:03:19 <strcat[m]> I dunno why it even wants to do that
+04:03:36 <strcat[m]> it does give you a list of what privileges it's going to grant to the device manager
+04:03:55 <strcat[m]> so for example if it was a remote wipe tool it'd ask for wiping privilege but presumably nothing else
+04:04:14 <hasnoname[m]> <strcat[m] "it would be possible to make a f"> It'd be great if there's that functionality
+04:04:32 <somenerd[m]> well, it's unneeded
+04:04:37 <strcat[m]> anyway I've never seen that UI and I still don't know why hasnoname's accent color is green
+04:04:44 <somenerd[m]> user profiles are already there
+04:06:26 <take_a_deep_brea> hasnoname:  i understood . the point is that is not the right way to improve app isolation . if apps need to be isolated that should not build on work profile feature .
+04:07:05 <strcat[m]> there is underlying infrastructure that makes sense to reuse
+04:07:13 <strcat[m]> but the work profile feature itself is just not suited to it
+04:07:29 <strcat[m]> it can be used to make an isolated workspace but having an app owning that rather than the user controlling it via the OS is just odd
+04:07:35 <take_a_deep_brea> also suggest next time you have an issue make sure an app with absurd priviliges is not present
+04:07:37 <strcat[m]> and then you depend on this app to set it up properly
+04:07:41 <strcat[m]> since it can be used in different way
+04:07:53 <strcat[m]> and yeah this app asking for ability to mess up the lockscreen
+04:07:56 <strcat[m]> is really weird
+04:08:03 <take_a_deep_brea>  * hasnoname: also suggest next time you have an issue make sure an app with absurd priviliges is not present
+04:08:11 <strcat[m]> I don't know why they are even displaying that prompt
+04:08:33 <strcat[m]> they are asking the OS to authorize the user... before unlocking?
+04:08:41 <strcat[m]> why not just leave it alone and let them unlock?
+04:08:42 <strcat[m]> don't get it
+04:08:45 <somenerd[m]> I mean, it having control over the profile is still a bit extreme
+04:09:32 <mr_hebi_san[m]> There is one difference: I can screenshot the normal unlock pin
+04:09:53 <mr_hebi_san[m]> I cannot screenshot that crazy pin screen
+04:09:56 <somenerd[m]> lol
+04:10:09 <somenerd[m]> idk why though
+04:10:24 <mr_hebi_san[m]> Seriously the screenshots eben reveal the afterglow from the button presses
+04:10:30 <somenerd[m]> probably won't leak your password...
+04:10:31 <somenerd[m]> what
+04:10:43 <mr_hebi_san[m]> Try it :)
+04:11:14 <somenerd[m]> not going to
+04:12:46 <Lighwake[m]> <mr_hebi_san[m] "Try it :)"> Is it when setting up biometrics?
+04:12:53 <honbunpun[m]> Did they take standard notes off fdroid? Can't find it
+04:13:05 <mr_hebi_san[m]> No, that biometric one cannot be screenshot
+04:13:33 <mr_hebi_san[m]> The standard lock screen with the fancy touch animations can be
+04:14:32 <honbunpun[m]> Is there a way to transfer some apps from owner profile to new profile or do you have to redownload them again?
+04:15:05 <Lighwake[m]> <honbunpun[m] "Is there a way to transfer some "> Not through the phone. They are entirely separate.
+04:15:43 <honbunpun[m]> <Lighwake[m] "Not through the phone. They are "> Okay thanks
+04:16:11 <Lighwake[m]> * Not through the phone. Their storage is separate.
+04:17:12 <mr_hebi_san[m]> God I wonder if you can screenshot the gesture unlock 😨
+04:18:03 <take_a_deep_brea> honbunpun: the whole point of user profiles is isolating data . wont it be self defeating if the OS provided a straightforward way to transfer data between them ?
+04:19:13 <bethefriction[m]> I'm trying to do that with a USB but my other profiles can't read it, can't figure out why
+04:20:30 <strcat[m]> hasnoname: really thought you just weren't using GrapheneOS because never seen any app using device management perms to do something so weird
+04:20:47 <strcat[m]> hasnoname: don't understand why your accent color is green tho
+04:23:44 <hasnoname[m]> <strcat[m] "hasnoname: don't understand why "> Where do you see it green? I see blue.
+04:25:16 <strcat[m]> hasnoname: in the original video you uploaded
+04:29:02 <take_a_deep_brea> @strcat:matrix.org:  its easy for a video of blue accent to get tinted to green maybe its just the lighting
+04:29:38 <hasnoname[m]> <take_a_deep_brea "@strcat:matrix.org:  its easy fo"> That's what I thought.
+05:45:43 <take_a_deep_brea> tld ?
+06:08:39 <somenerd[m]> top level domain
+06:09:18 <take_a_deep_brea> ok
+06:13:58 <strcat[m]> louipc: that's like 200k/year
+06:13:59 <strcat[m]> lol
+06:14:06 <strcat[m]> louipc: it would be interesting but gl with that
+06:14:14 <strcat[m]> that's comparable to the cost of licensing Snapdragon
+06:15:00 <somenerd[m]> > louipc: that's like 200k/year
+06:15:00 <somenerd[m]> lol wow
+06:15:37 <take_a_deep_brea> lmao
+06:15:54 <strcat[m]> > The evaluation fee is estimated at US$185,000.
+06:16:01 <strcat[m]> it's 185k to have your tld evaluated
+06:16:04 <strcat[m]> then it's 25k/year maintenance
+06:16:09 <strcat[m]> and other costs
+06:16:09 <somenerd[m]> how about something like graphene.os or something
+06:16:15 <strcat[m]> and you have to pay for all the infrastructure etc.
+06:16:19 <somenerd[m]> instead of a whole tld lol
+06:16:30 <strcat[m]> somenerd: yeah that's like 200k + 50k/year since the tld doesn't exist
+06:16:47 <strcat[m]> plus paying people to maintain infra
+06:16:49 <strcat[m]> and paying for infra
+06:16:56 <strcat[m]> paying for required partnerships
+06:17:05 <strcat[m]> a lot of these tld companies are going to go bankrupt
+06:17:07 <strcat[m]> it's a bubble
+06:17:16 <somenerd[m]> well, safe to say that no one's gonna use that for masquerading as GrapheneOS
+06:17:18 <strcat[m]> there are a bunch of new companies based around gtlds
+06:17:26 <strcat[m]> they're screwed imo
+06:17:47 <strcat[m]> it seems like their business model is getting people to buy domains, get stuck with them, and then they'll start massively raising prices
+06:18:58 <JTL> strcat[m]: In addition I think ICANN reserves all 2 letter TLDs for ISO country codes, so .os is a moot point
+06:19:59 <strcat[m]> we can found a country
+06:20:11 <take_a_deep_brea> well lets create a new country then. based on graphene user base .
+06:20:41 <somenerd[m]> > we can found a country
+06:20:41 <somenerd[m]> LOL
+06:20:42 <nullnode[m]> <strcat[m] "we can found a country"> I'm down, king strcat
+06:20:45 <strcat[m]> https://sealandgov.org/
+06:20:51 <JTL> Sealand doesn't have ISO recognition though
+06:20:53 <JTL> :p
+06:21:11 <nullnode[m]> <JTL "Sealand doesn't have ISO recogni"> we could help them
+06:21:18 <JTL> of course
+06:22:20 <nullnode[m]> could just disregard old DNS
+06:22:34 <nullnode[m]> I'm liking Handshake recently, it's gaining more traction
+06:22:48 <nullnode[m]> I use NextDNS to easily use it on Android in a hacky way
+06:25:58 <strcat[m]> if we found a country we don't need to pay for a gtld
+06:29:31 <nullnode[m]> <strcat[m] "if we found a country we don't n"> kekistan was already cancelled right? so no .kek?
+06:31:32 <nullnode[m]> what about inter planetary TLDs? has ICANN ever clarified it yet for mr musk?
+06:33:23 <linux-superman> iLinux OS 2 is released and it is based on Debian 10 Stable! https://ilinuxos.com
+06:33:42 <somenerd[m]> what?
+06:33:53 <nullnode[m]> <linux-superman "iLinux OS 2 is released and it i"> fucking span
+06:33:58 <nullnode[m]> > <@freenode_linux-superman:matrix.org> iLinux OS 2 is released and it is based on Debian 10 Stable! https://ilinuxos.com
+06:33:58 <nullnode[m]>  * fucking spam
+06:34:14 <linux-superman> Since when a Linux Distro is Spam?!
+06:35:17 <somenerd[m]> why are you releasing this here?
+06:35:32 <linux-superman> Because all technology is united man!
+06:35:43 <linux-superman> Peace! Love! Linux!
+06:35:49 <nullnode[m]> Last ISO image was last year
+06:35:54 <nullnode[m]> Not up to date
+06:36:03 <nullnode[m]> seems like some random dudes custom skin to debian
+06:36:16 <somenerd[m]> well, why are you using the ontopic channel
+06:36:20 <somenerd[m]> go to offtopic
+06:36:21 <strcat> linux-superman: may your bloodline be cursed for 10000 years, and goodbye
+06:36:41 <nullnode[m]> <strcat "linux-superman: may your bloodli"> straight cast a hex on the goy
+06:40:31 <zzxx123> iLinux lol
+06:40:37 <zzxx123> very original
+06:42:30 <nullnode[m]> some of the usernames that join and part in here kill me
+06:42:37 <nullnode[m]> "kotaofshekels left the room."
+06:42:53 <nullnode[m]> creative psyop/spamop
+06:44:47 <nullnode[m]> lol, I say it and a shift begins, lol
+06:48:38 <strcat[m]> our channel is infested with sockpuppets just so you know
+06:49:05 <strcat[m]> and Matrix kicks the legitimate users
+06:49:14 <strcat[m]> for lurking
+06:50:45 <Chicomsstolemylu> Sockpuppets?
+06:52:04 <strcat[m]> Chicom's stole my lunch money: people trying to harm the project will make a bunch of Matrix accounts and lurk here, then try to do coordinated attacks / spam later on
+06:52:08 <strcat[m]> like spamming gore
+06:52:14 <strcat[m]> or generally just being annoying
+06:52:24 <strcat[m]> and so we need to be pretty strict about moderation now
+06:52:37 <strcat[m]> because they do stuff like pretending to be stupid and wasting everyone's time trolling
+06:53:10 <strcat[m]> one of them admitted to being paid to do it because they felt bad
+06:55:43 <somenerd[m]> wow
+06:56:04 <Chicomsstolemylu> Damn
+06:57:27 <nullnode[m]> <strcat[m] "one of them admitted to being pa"> Such top tier support his ethics forced him to snitch on his employer, lol
+06:59:38 <take_a_deep_brea> lol , yeah . i mean its worse than spamming if someone actually just keeps asking questions here . time spent with these people is time taken away from someone really interested in the project .
+07:00:17 <somenerd[m]> and time taken from development
+07:00:35 <take_a_deep_brea> yeah
+07:05:48 <somenerd[m]> > because they do stuff like _pretending_ to be stupid and wasting everyone's time trolling
+07:05:48 <somenerd[m]> yeah, sad that they have to disguise themselves as that
+07:05:56 <somenerd[m]>  * > because they do stuff like _pretending_ to be stupid and wasting everyone's time trolling
+07:05:56 <somenerd[m]> yeah, sad that they disguise themselves as that
+07:06:16 <somenerd[m]> since some innocent people get caught due to the moderation
+07:06:30 <somenerd[m]> quite rare though, as they do listen to responses and read docs
+07:15:17 <pnrxa[m]1> There are a couple that struggle trying to follow 3rd party documentation and need to be pointed in the right direction
+07:15:45 <somenerd[m]> yeah
+07:17:37 <strcat[m]> the 3rd party docs are mostly wrong
+07:17:41 <strcat[m]> so that's the issue
+07:17:53 <somenerd[m]> yeah and third party installation guides
+07:19:38 <somenerd[m]> (which are quite wrong)
+07:52:12 <hard_taffy[m]> Does anyone else have a rare issue where the Clock app (version 11) resets and you lose all alarms, clocks, timers, and settings? I've had it happen today and in the past, but I don't know how to reproduce the issue. I'm using GrapheneOS 2021.02.07.17.
+07:55:32 <take_a_deep_brea> to my knowledge thats the first time someone has brought this issue up
+08:47:01 <rhythm>  hi everyone
+08:47:26 <rhythm> Im unable to flash latest image through command process on my sargo anymore. Dont know why. It showing an error on terminal then crashes. Also i cant use web installer because i don't have wifi connection. Then what to do any solution please help
+08:49:11 <strcat> are you trying to install GrapheneOS?
+08:49:17 <strcat> not clear what you're trying to do
+08:49:27 <strcat> rhythm: do you already have it installed?
+08:49:28 <mynacol[m]> rhythm what is the error message? From what OS are you installing?
+08:49:55 <rhythm> Now im stock
+08:50:01 <rhythm> Windows 10
+08:50:33 <strcat> why can't you use the web installer exactly?
+08:50:38 <strcat> you don't have internet access?
+08:50:39 <rhythm> I installed graphene January perfectly. But now i cant
+08:50:54 <rhythm> I don't have wifi
+08:51:21 <mynacol[m]> rhythm: Are you following https://grapheneos.org/install/cli ? What is the error message? On what step?
+08:51:46 <rhythm> Does anything changes in normal installation process?
+08:52:33 <mynacol[m]> Just follow the official guide. We cannot provide support for third-party guides or videos
+08:52:47 <rhythm> Yes...
+08:53:45 <rhythm> When im going to click flash all then terminal open 2 to 3 sec then chashes
+08:53:58 <rhythm> Crashes
+08:54:08 <mynacol[m]> You are not following the official guide
+08:54:54 <mynacol[m]> The easiest way would be to give your PC temporary internet access
+08:56:24 <rhythm> Anything changes in flashing process for command based flashing? Im not talking web installation process
+08:56:29 <mynacol[m]> Is this possible?
+08:56:49 <strcat[m]> rhythm: there's no point where you're supposed to click flash-all
+08:57:00 <strcat[m]> rhythm: there never has been
+08:57:02 <strcat[m]> follow https://grapheneos.org/install/cli
+08:57:04 <rhythm> Because i previously installed graphene on sargo. And long term user
+08:57:26 <rhythm> What
+08:57:26 <strcat[m]> use exactly the commands there with `sunfish` replaced with `sargo`
+08:57:48 <rhythm> I always did
+08:58:00 <strcat[m]> the official guide has never involved clicking on flash-all
+08:58:02 <rhythm> Okok
+08:58:28 <strcat[m]> it's really important to do the CLI approach exactly as documented there
+08:58:43 <strcat[m]> we recommend the web installer for most people because CLI requires carefully following those instructions exactly as written
+08:59:39 <somenerd[m]> also needs a lot of packages
+08:59:59 <rhythm> Actually i already downloaded latest image. I don't have wifi connection. Sadly
+09:01:56 <mynacol[m]> rhythm: Do you have `platform-tools` downloaded?
+09:02:02 <rhythm> Yes
+09:02:13 <rhythm> Also image
+09:02:19 <rhythm> Then unzipped
+09:02:47 <rhythm> Moved all files into platform tools folder
+09:02:57 <rhythm> Then i use flash all
+09:03:01 <mynacol[m]> Great
+09:03:06 <mynacol[m]> <rhythm "Then i use flash all"> No
+09:03:12 <rhythm> Y
+09:03:25 <rhythm> I always use this bt it worked
+09:03:44 <rhythm> But from February its nt working anymore
+09:04:00 <mynacol[m]> Right-click in the platform tools folder and select "open power shell here" (or sth like that)
+09:04:08 <rhythm> Ol
+09:04:11 <rhythm> Ok
+09:04:14 <rhythm> Then
+09:04:43 <mynacol[m]> First of all: follow what I say, don't deviate, don't add extra steps
+09:04:51 <mynacol[m]> Promise
+09:04:52 <rhythm> Ok
+09:05:19 <rhythm> Im following just say what to do step by step...im noob
+09:05:27 <rhythm> But i love graphene
+09:06:39 <mynacol[m]> So you are in Powershell (blue background) and the path is sth like C:...\platform-tools_r30.0.5-windows\
+09:06:52 <rhythm> Ok then
+09:07:45 <mynacol[m]> Are you? (forgot the question mark)
+09:09:04 <rhythm> Just tell me
+09:09:21 <mynacol[m]> Are you in Powershell?
+09:09:27 <rhythm> Yes
+09:09:27 <mynacol[m]> (blue background)
+09:09:31 <mynacol[m]> OK
+09:09:32 <rhythm> Yes
+09:09:45 <mynacol[m]> Tyoe "dir" and press enter
+09:09:51 <rhythm> Ok
+09:09:56 <rhythm> Then
+09:10:01 <mynacol[m]> You should get a list of files
+09:10:06 <rhythm> Ok
+09:11:22 <mynacol[m]> You have to see fastboot.exe, flash-all.bat, image-sargo-2020.12.12.03.zip and more
+09:11:42 <mynacol[m]> (Oh the date in the sargo zip is wrong)
+09:12:24 <rhythm> Yes..
+09:12:27 <rhythm> Wait
+09:12:29 <mynacol[m]> OK
+09:12:54 <rhythm> No option to open powershell
+09:12:59 <mynacol[m]> Now enter: $env:Path = "$pwd;$env:Path"
+09:13:19 <mynacol[m]> <rhythm "No option to open powershell"> Wait a sec
+09:13:26 <mynacol[m]> have to start my windows 10 vm
+09:14:27 <rhythm> Ok
+09:14:50 <mynacol[m]> <rhythm "No option to open powershell"> You can try holding shift while right-clicking in the explorer window
+09:15:12 <rhythm> Oh i forgot the process
+09:15:30 <rhythm> Wait i rebooted my pc
+09:15:58 <mynacol[m]> No problem
+09:16:11 <rhythm> Thnks for helping me
+09:16:28 <rhythm> Ihv trying fr 1 week
+09:16:29 <mynacol[m]> Open the folder where you unzipped platform tools and the sargo factory image
+09:16:36 <mynacol[m]> (again)
+09:17:01 <mynacol[m]> then hold shift while right-clicking in the explorer window
+09:17:03 <rhythm> Yes
+09:17:16 <mynacol[m]> and select "open powershell window here"
+09:17:54 <rhythm> Done
+09:18:08 <mynacol[m]> Now you have a window with blue background?
+09:18:16 <rhythm> Yes sir
+09:18:29 <mynacol[m]> Type "dir" now and press enter
+09:18:45 <rhythm> Yes done
+09:18:45 <mynacol[m]> what do you see?
+09:18:53 <rhythm> Showing many file
+09:19:26 <mynacol[m]> Do you see fastboot.exe, flash-all.bat, image-sargo-2021.02.07.17.zip and more
+09:19:29 <rhythm> Mode / lastwritetime/ length / name
+09:19:43 <rhythm> Wait
+09:19:59 <rhythm> Yes
+09:20:09 <mynacol[m]> All 3?
+09:20:13 <rhythm> Yes
+09:20:19 <mynacol[m]> OK
+09:20:42 <mynacol[m]> Now type: $env:Path = "$pwd;$env:Path"
+09:20:53 <mynacol[m]> (everything agter the first colon)
+09:21:31 <mynacol[m]> (I mean the ":")
+09:21:33 <rhythm> Wait if i goto fastboot mode tgen i cant talk to u...coz i dont have wifi...so please mind it
+09:21:46 <rhythm> Im following wait
+09:21:59 <mynacol[m]> Do you have any other device with internet?
+09:22:10 <rhythm> No
+09:22:15 <rhythm> Sir
+09:22:21 <mynacol[m]> OK
+09:22:29 <rhythm> Yh
+09:22:49 <mynacol[m]> let's try testing fastboot
+09:22:58 <mynacol[m]> Type: fastboot --version
+09:23:05 <mynacol[m]> what do you get?
+09:23:22 <rhythm> Wait
+09:24:34 <rhythm> That command nt working
+09:24:47 <rhythm> That path command
+09:25:02 <mynacol[m]> What was the output?
+09:26:20 <rhythm> Nothing
+09:26:49 <strcat[m]> there's not supposed to be output
+09:27:36 <rhythm> $env:Path = "$pwd;$env:Path"
+09:27:46 <rhythm> Is it correct
+09:28:38 <mynacol[m]> yes
+09:28:39 <mynacol[m]> Nontheless, I have to warn you. During install problems can arise (e.g. faulty usb cable). If you dont have any other device with internet connection, we cant help you. Worst-case you are stuck in fastboot mode on your device until you find the culprit and remove it. Until then, your phone cannot be used normally. Are you aware of the above and know the risks?
+09:29:10 <rhythm> Yes..i can flash stock
+09:29:15 <rhythm> Then
+09:29:26 <rhythm> Just tell me wht to do
+09:29:55 <rhythm> $env:Path = "$pwd;$env:Path"
+09:30:02 <mynacol[m]> If you have a faulty usb cable or port, the flash can fail mid-way and neither flashing to stock nor flashing to Graphene may fail.
+09:30:18 <rhythm> No no i have new one
+09:30:49 <rhythm> I use it daily
+09:31:39 <mynacol[m]> There is still a possibility
+09:32:15 <rhythm> Fastboot version is 30.0.5
+09:32:41 <rhythm> fastboot version 30.0.5-6877874
+09:32:52 <mynacol[m]> you might end up with a non-working device (which may be fixed, but we cant help you)
+09:33:09 <rhythm> Its ok
+09:33:19 <rhythm> Now what to do
+09:33:23 <mynacol[m]> OK
+09:33:50 * mynacol[m] posted a file: GrapheneOS install instructions.html (25KiB) < https://matrix.org/_matrix/media/r0/download/mynacol.xyz/iaecQiEkMqGgzCuYNcqLypsY/GrapheneOS install instructions.html >
+09:34:18 <mynacol[m]> Here is the webpage as a file. Please transfer it to your PC first
+09:34:51 <rhythm> Done sir
+09:35:10 <rhythm> Yeah i already saved it
+09:35:18 <rhythm> Thnks.
+09:35:24 <mynacol[m]> So you have the webpage on the PC
+09:35:26 <mynacol[m]> ?
+09:36:13 <rhythm> I mean i saved the installation process page as a offline
+09:36:28 <mynacol[m]> On the PC I assume
+09:36:39 <rhythm> Yes
+09:36:58 <rhythm> Now what to do next step
+09:38:39 <mynacol[m]> You can now follow the install instructions from "Connecting the phone" onwards. Good Luck!
+09:41:12 <rhythm> I have unlocked bootloader. Now
+09:45:28 <mynacol[m]> rhythm: The commands you have to enter are "fastboot flashing unlock", "./flash-all.bat" and "./flash-all.bat". But also read the instructions around it
+09:45:57 <mynacol[m]> rhythm: The commands you have to enter are "fastboot flashing unlock", "./flash-all.bat" and "fastboot flashing lock". But also read the instructions around it
+09:46:15 <rhythm> Okok
+09:46:20 <rhythm> Got it
+09:48:58 <happy-1[m]> <NewPerson "Hello - I'd be grateful for some"> Happen to me I click left then right on web page and it then worked after that so refreshed the page
+10:08:45 <rhythm> mynacol[m]: graphene bootted
+10:08:58 <rhythm> thn u so much brother
+10:09:11 <rhythm> thanks for ut help
+10:13:14 <mynacol[m]> rhythm: Nice. Welcome to Graphene 🎉
+10:25:02 <take_a_deep_brea> rhythm:  if you have any question regarding apps and stuff consult https://grapheneos.org/usage https://hub.libranet.de/wiki/and-priv-sec/wiki/apps and also there is the off-topic room #grapheneos-offtopic where you can ask questions
+11:56:12 <strcat> testing bridge
+11:57:31 <Albakham[m]> Really strange, I cannot send nor receive calls
+11:58:56 <Albakham[m]> When I call someone, the screen gets black and nothing happens
+11:59:18 <Albakham[m]> When someone calls me, they get instantly my voicemail
+12:00:05 <strcat> your screen going black sounds like the proximity sensor is blocked
+12:00:07 <somenerd[m]> well, the bridge works
+12:00:10 <strcat> by a faulty screen protector perhaps
+12:00:14 <strcat> somenerd[m]: works here, not in offtopic
+12:00:23 <somenerd[m]> huh
+12:00:32 <somenerd[m]> amazing and consistent quality
+12:00:36 <strcat> somenerd[m]: just send you a message on offtopic
+12:00:36 <Albakham[m]> <strcat "your screen going black sounds l"> Oups
+12:00:49 <strcat> Albakham[m]: calls not working sounds like a separate issue from that
+12:01:07 <strcat> some screen protectors are faulty and block the proximity sensor
+12:01:10 <strcat> *shrug*
+12:01:13 <Albakham[m]> I may have disabled the permission
+12:01:40 <somenerd[m]> <strcat "somenerd: just send you a messag"> nope did not see anything lol
+12:01:43 <somenerd[m]> curious as to what the message was lol
+12:02:03 <Albakham[m]> Mmh, no that's not it
+12:02:51 <Albakham[m]> When I make a call, it says call terminated ("appel terminé" in french)
+12:04:16 <strcat[m]> Albakham: go into permission manager and make sure you didn't disable Phone, etc. for relevant system apps?
+12:04:21 <strcat[m]> Albakham: make sure Phone app has Sensors perm?
+12:05:02 * Albakham[m] uploaded a video: screen-20210211-160407.mp4 (7821KiB) < https://matrix.org/_matrix/media/r0/download/tedomum.net/vHaoXimPIYTwdUzfYcbcobiA/screen-20210211-160407.mp4 >
+12:06:01 <strcat[m]> Albakham: check those permissions
+12:06:08 <strcat[m]> for system apps in general
+12:13:05 <Albakham[m]> I didn't change those...
+12:13:05 <Albakham[m]> I don't have phone calls notifications either, it's like I'm on offline mode
+12:13:52 <strcat[m]> Albakham: did you turn on LTE only mode?
+12:14:00 <strcat[m]> Albakham: perhaps without having working VoLTE on your carrier?
+12:14:13 <Albakham[m]> <strcat[m] "Albakham: did you turn on LTE on"> So I just found out, yes that's it
+12:15:18 <strcat[m]> Albakham: which carrier is it
+12:16:22 <Albakham[m]> Zeop, on the Réunion island, you probably don't know it ;)
+12:16:52 <take_a_deep_brea> lol
+12:17:28 <strcat[m]> Albakham: but yeah I guess they don't have VoLTE
+12:17:28 <strcat[m]> at least not that works for us
+12:17:59 <Albakham[m]> Yep
+13:51:10 <bethefriction[m]> <strcat[m] "so you should be able to use adb"> I've installed adb on my windows computer and can see my device in the command prompt window with the owner profile active. However, when I switch users it says the profile is not authorized to be in USB debugging mode.
+16:43:32 <savetheplanete8[> When graphene os is coming to Pixel 4a 5G?
+16:48:49 <TheJollyRoger> Hello savetheplanete8[ , at this moment I can't give you an ETA. Preparations are being made in the source tree, but we don't have any accurate estimates on when.
+16:49:33 <TheJollyRoger> I know this "it'll be ready when it's finished" answer sucks to hear, but I want to be realistic about this and not write a cheque that the dev team can't cash.
+16:52:19 <savetheplanete8[> Okay I understand till that I'll stay with CalyxOS.
+16:52:54 <savetheplanete8[> Thanks for the update 🤞
+18:37:52 <m2tu[m]> JollyRoger ur name says u lovet o smoke weed
+18:37:53 <m2tu[m]> is taht true or not
+18:41:44 <TheJollyRoger> m2tu[m]: It's not. So far I have randomly encountered about five people named some variant of "Jolly Roger" on Freenode IRC, and many different people over the internet have used the name.
+18:41:47 <TheJollyRoger> It's a very common name.
+18:41:55 <TheJollyRoger> So you're likely confusing me with someone else.
+18:43:05 <m2tu[m]> probally, or i seen a coffe shop in amsterdam with same name :)))
+18:43:42 <TheJollyRoger> Hahahaha well, unless someone were to bequeath me one, I'm not running a coffee shop in Amsterdam :P
+18:50:03 <SwankyBarbecue4[> Hey guys! How long should I expect to wait for the Pixel 4a 5G/ Pixel 5 to be supported? Sounds like the latest release works with these devices? Has that been confirmed?
+18:51:11 <Publius> It does not
+18:51:22 <Publius> And there isn't an ETA on support.
+18:51:35 <Publius> If you're in a hurry, you should get a Pixel 4
+18:53:31 * entry1[m] uploaded an image: Screenshot_20210211-135218.png (123KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/qyzyFAOJtiUbSyIkIArhWsbA/Screenshot_20210211-135218.png >
+18:53:35 <entry1[m]> Pixel 4a gets nearly an extra year in support. Much better than the 4 tbh
+18:54:00 <entry1[m]> * Pixel 4a gets nearly an extra year in updates. Much better than the 4 tbh
+18:54:38 <Publius> To be fair, by "pixel 4", I really meant the 4, the 4xl or the 4a
+18:54:42 <Publius> But you make a great point
+18:55:07 <entry1[m]> For sure! Just wanted to point that out
+18:59:27 <take_a_deep_brea> pixel 4 is a good device. pixel 5 however is a really bad deal imo .
+19:01:24 <entry1[m]> Pre-owned 3a costs $120 and the Pixel 4 is $240 (5 months longer updates for double the price). I would definitely recommend people use the 3a then upgrade to the 4a for $300
+19:01:42 <entry1[m]> But Pixel 4s are a nice phone nonetheless
+19:02:01 <entry1[m]> * But Pixel 4's are a nice phone nonetheless
+19:02:43 <Publius> Aren't you comparing pre-owned 3a to a new 4a though
+19:02:54 <Publius> That's not a fair comparison...
+19:03:15 <mrbrownbadger[m]> i wish there was a big screen pixel with a huge battery.
+19:03:35 <entry1[m]> Used 4a is $280-$300, new is $350 but price will decrease in coming months
+19:03:37 <SwankyBarbecue4[> entry1: wouldn't be 15, not 5 months between the 3a & 4a?
+19:03:49 <mrbrownbadger[m]> got the 4a5g and the screen looks tiny
+19:04:03 <entry1[m]> <SwankyBarbecue4[ "entry1: wouldn't be 15, not 5 mo"> 5 months between 3a and 4
+19:04:16 <Publius> entry1: Gotcha. I think it'd be really dumb to "save" $50 buying a used 4a instead of a new one...
+19:04:20 <SwankyBarbecue4[> oh, my bad!
+19:04:38 <entry1[m]> <Publius "entry1: Gotcha. I think it'd be "> Agreed, they have held their value quite well
+19:04:48 <mtcw[m]> thinking of buying the 4a5g and waiting for grapheneos release for it
+19:05:01 <mtcw[m]> the sale on right now is tempting
+19:05:08 <Publius> If $50 means that much to you, you should prolly buy the used 3a for $120!
+19:18:43 <m2tu[m]> anyone can help me with this :
+19:18:44 * m2tu[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/rAYmhuOLfcOUIZbKDGXLhRvz/message.txt >
+19:19:08 <m2tu[m]> if i set this to 5242 isntead = 10 times less
+19:19:27 <m2tu[m]> will this effect the apps usage. in any negative way?
+19:26:01 <Grappy777> Installing graphene for the first time but installation (web) seems stuck on 'restarting device'
+19:26:50 <Grappy777> It's been about 15 min since last visible progress
+19:29:58 <Grappy777> Last screen on phone was some kind of menu, it said "bootd" or something like that, but now it has been black for a while. Should i interact somehow to make it progress?
+19:32:45 <Grappy777> Instructions says i shouldn't interact until device is back to bootloader menu but it jasn't return to the original bootloader menu. Does graphene have a different looking bootloader menu?
+19:33:25 <Grappy777> hasn't returned to*
+19:36:20 <Grappy777> Touched the device and the fastbootd menu is still there. It look like i can manually reboot to bootloader. Should i do it?
+19:36:27 <nscnt[m]> Grappy777: You are probably right if you think something is wrong. However, it's hard to say at a glance what it is and how you could solve it.
+19:37:10 <nscnt[m]> Grappy777: You shouldn't have to manually reboot into the bootloader, no.
+19:37:36 <nscnt[m]> Maybe let's begin with some more information... What operating system are you on?
+19:38:03 <Grappy777> I'm on debian, raspi400
+19:38:28 <Grappy777> Flashing a 4a
+19:39:41 <Grappy777> First time flashing an android
+19:40:12 <nscnt[m]> I never heard of the Raspberry Pi 400. Taking a quick glance, I wouldn't be surprised if it's a connection issue because the whole pc is a keyboard, isn't it?
+19:40:51 <Grappy777> Yeah it's like an old amiga, just a keyboard ;)
+19:41:11 <take_a_deep_brea> oh , wow
+19:41:30 <take_a_deep_brea> i dont think usb will be supportef
+19:41:39 <take_a_deep_brea> *d
+19:41:51 <take_a_deep_brea> do you have another modern smartphone ?
+19:42:30 <take_a_deep_brea> * do you have another recent android device ?
+19:42:37 <take_a_deep_brea> * do you have another recent android device ?
+19:43:13 <Grappy777> Have an old samsung but also a macbook
+19:43:51 <Grappy777> What do you mean by usb not supported?
+19:44:11 <take_a_deep_brea> maybe
+19:44:30 <nscnt[m]> Grappy777: The fastboot tool expects quite a flawless connection. It can't handle any corruption when transferring data, etc.
+19:44:44 <take_a_deep_brea> i am not sure if the raspi usb is good enough .
+19:45:15 <take_a_deep_brea> <Grappy777 "What do you mean by usb not supp"> its my fault , my wording .
+19:46:03 <Grappy777> Perhaps i should just manually select 'Reboot to bootloader' and see what happens?
+19:46:35 <nscnt[m]> A poor or non-existent connection between the phone and the PC (caused by bad cables, drivers, ...) is the most common problem when trying to flash.
+19:47:00 <take_a_deep_brea> not a good idea . the installation does not require manual intervention untill the end
+19:47:03 <Grappy777> Got it, seems likely
+19:47:22 <Grappy777> So how do i proceed?
+19:47:36 <take_a_deep_brea> try using the mac
+19:48:11 <take_a_deep_brea> and if you have chrome on it try web installer
+19:48:43 <Grappy777> will try that, thanks
+19:50:12 <Grappy777> trying a second time on the r400 first, let's see how it goes
+19:50:40 <take_a_deep_brea> chrome/chromium/
+19:50:41 <take_a_deep_brea> also try and use the cable that came with the device .
+19:50:52 <Grappy777> have been using web usb on it before and it handled it without issues
+19:52:27 <take_a_deep_brea> nice
+20:37:50 <Grappy777> installed via macbook without any problem, thanks for the guiding
+20:43:22 <grabba[m]> Is there a way to freeze other users when using profiles?
+20:45:20 <take_a_deep_brea> grabba:  on the lock screen just press end session
+20:46:26 <take_a_deep_brea> else press power buton like you wanna poweroff the device then ina user profile you will see end session option there too
+20:55:13 <josephsmith> hey i have a question re installation of grapheneos
+21:05:19 <Thatcher[m]> josephsmith go for it
+21:12:12 <Guest60060> I noticed the latest stable release is for Pixel 4a does this also include 4a 5g
+21:15:18 <grabba[m]> <take_a_deep_brea "else press power buton like you "> Should I keep the admin acc blank? I notice when I swap into a user the admin connects to the internet and throttles the user connection ( replicate via VPN always on and block without, then swap to a user and compare the speed vs turning off the admin VPN so all connection is blocked and switching to a user
+21:15:25 <grabba[m]> Couple times there's been memory issues running out in the user too
+21:15:45 <grapheneos_user_> <Guest60060 "I noticed the latest stable rele"> No, 4a 5g has more in common with pixel 5 than 4. Pixel 4 support is irrelevant about 4a 5g
+21:17:04 <Guest60060> Thank you most appreciated!
+21:39:09 <Mruser42> Hello
+21:39:13 <Mruser42> One Question
+21:40:12 <Mruser42> is it easy to use the original "Google"-rom after I flashed my Pixel 4a with the webInstall ?
+21:40:59 <Mruser42> Or should i keep something in eyes ?
+21:42:38 <grabba[m]> Would this open source encrypted photo app harden grapheme? Aes256 and no network needed
+21:42:39 <grabba[m]> https://apt.izzysoft.de/fdroid/repo/dev.leonlatsch.photok
+21:44:27 <TheJollyRoger> Mruser42: If you have to return to the original Google operating system, it's the same workflow to return back at https://flash.android.com
+21:44:53 <nullnode[m]> <Mruser42 "is it easy to use the original ""> You can switch back and forth, but you gotta wipe your phone whenever you switch between the Google Stock ROM and the GrapheneOS ROM
+21:45:40 <anupritaisno1[m]> TheJollyRoger: no
+21:45:40 <mynacol[m]> <grabba[m] "Would this open source encrypted"> I doubt it. Storage is already encrypted and apps are strongly sandboxed
+21:45:41 <anupritaisno1[m]> You must erase the avb key
+21:46:02 <Mruser42> ok thanks
+21:46:11 <TheJollyRoger> anupritaisno1[m]: the android flash tool doesn't automatically unprovision third party avb custom keys?
+21:46:14 <TheJollyRoger> Got it.
+21:46:20 <nullnode[m]> <grabba[m] "https://apt.izzysoft.de/fdroid/r"> who made it? has it been audited? is it updated regularly? who maintains it? who is providing you the updates?
+21:49:02 <anupritaisno1[m]> Just get a life tbh
+21:49:50 <anupritaisno1[m]> It's just a photo editor and there's no real advantage to double encryption
+21:50:16 <nullnode[m]> <anupritaisno1[m] "Just get a life tbh "> Don't be that mean weeb
+21:50:36 * TheJollyRoger starts wondering about meet-in-the-middle attacks for people who try to double up on ciphers.
+21:51:13 <anupritaisno1[m]> * It's just a photo gallery and there's no real advantage to double encryption
+21:52:06 <nullnode[m]> > * <@freenode_TheJollyRoger:matrix.org> starts wondering about meet-in-the-middle attacks for people who try to double up on ciphers.
+21:52:06 <nullnode[m]> that's what I'm thinking in the greater threat model
+21:53:00 <nullnode[m]> Layering encryption may be dangerous at times
+21:53:33 <nullnode[m]> Anyone have a math/crypto background that could provide some insight?
+21:54:19 <TheJollyRoger> I couldn't tell you unfortunately, math and cryptography is beyond my level of understanding. We do know though that meet-in-the-middle attacks were known academically as far back as the late 1970's.
+21:55:09 <TheJollyRoger> *the math involved in cryptography is beyond my level of understanding
+21:55:52 <nullnode[m]> I always thought chaining crypto is fine, but that's in the same linear decryption routines, I try not have crypts in crypts
+21:55:58 <nullnode[m]> but I've done it, never seen an issue with it
+21:56:07 <Bughat33> Can anyone offer any pointers on using Fedora 33 to install. I was able to unlock the boot loader of a Pixel 4 using Fedoras stock adb but the version doesn't report the same way as Debian based systems.
+21:56:09 <nullnode[m]> just gotta never use the same keys/passwords
+21:56:31 <TheJollyRoger> Bughat33: Stop right there. You're about to cause a brick.
+21:58:23 <TheJollyRoger> Bughat33: Please install Chromium (Fedora includes it in their OS repositories) and use the web install at https://grapheneos.org/install/web . Fedora's included version of adb is liable to flash the wrong slot and result in an unbootable OS since it most likely doesn't support autodetection and is incorrectly versioned. You don't want this to happen.
+21:58:24 <grapheneos_user_> Bughat33: adb is not used in the installation process and whoever told you that is a dangerous rogue. Adb often causes bricked devices and it is dangerous for people **ahem techlore** to go around telling people to install GOS using adb.
+21:59:47 <grapheneos_user_> Use either the command line instructions at grapheneos.org/install or the web installer as our resident pirate has linked.
+22:00:39 <Bughat33> I have tried the web install on Chromium but it says device not found.
+22:01:03 <TheJollyRoger> Bughat33: you are likely missing the udev rules/permissions.
+22:01:54 <TheJollyRoger> One moment.
+22:02:27 <Bughat33> Ah I did have to install specific device rules in rules.d to be able to recognize the device with adb.
+22:03:15 <TheJollyRoger> Bughat33, ok then, quick sanity check: is the device on fastboot when you attempt to install?
+22:03:27 <TheJollyRoger> If so, this leaves two possibilities by way of elimination:
+22:03:43 <TheJollyRoger> A) your USB cable is missing a trace, if you are not using the Google branded cable.
+22:05:01 <Bughat33> The device is on fastboot but the cable is Type-c which I normally connect an external Nvme drive for backups.
+22:05:15 <TheJollyRoger> B) Your motherboard's USB slot is missing one or more required traces, is broken, or your BIOS/firmware doesn't implement all the necessary features that fastboot requires to talk to the device. Most motherboard vendors don't properly implement USB across all their slots or sometimes only implement the bare minimum features that they expect the majority of users to use like media transfer
+22:05:16 <TheJollyRoger> protocol, human interface devices, and mass storage... but not the functions required for debugging a bootloader.
+22:06:14 <TheJollyRoger> So the fact that it works for doing the most common tasks is not really a good indicator of it being good enough to install GrapheneOS.
+22:07:15 <TheJollyRoger> This is true for both the cable itself, and the plug it's inserted into.
+22:07:19 <Bughat33> I do have an expanscion card for usb 3.p with a type-c port. I just assumed the motherboard type-c was closer to the bone, so to speak.
+22:07:55 <Bughat33> Sorry I meant 3.0 type-c
+22:08:22 <TheJollyRoger> Bughat33: Try a few different ones. Try changing cables and/or ports, systematically. Usually for the majority of people, this tends to fix things because some vendors include one working port, but they often don't label which one it is.
+22:09:27 <TheJollyRoger> If you've downloaded and provisioned the correct udev rules, and you've restarted or properly reloaded the rules, and you're absolutely confident of that, if it still doesn't talk to fastboot,
+22:09:28 <Publius> Listen to TheJollyRoger; he knows wtf he's talking about
+22:09:43 <TheJollyRoger> or it allows you to unlock the bootloader but *not* to flash the OS, it's one of these two.
+22:10:57 <nscnt[m]> Bughat33: How did you install the udev rules? Fedora 33 has pretty bad packages or non at all.
+22:11:26 <TheJollyRoger> Heh, thanks Publius. I have to get rolling for now, but this should get you started; note though we've had a few users in here who have had the misfortune of having laptops or motherboards that have all of their USB slots broken.
+22:12:10 <Bughat33> Ok I'll tinker with that. I have to resize a btrfs filesystem to make room for a more Debian based system. I think I may have a problem with the export path.
+22:12:26 <TheJollyRoger> In which case, they've had to solve the problem by trying another computer, or another, until they find both one with a slot and a cable that fully implements the full and complete USB specification which allows fastboot to talk to the phone.
+22:12:52 <TheJollyRoger> But generally it boils down to these three problems. Udev, cables, and USB support on the motherboard.
+22:13:50 <zvl12[m]> Generic question : If you shoud GUESS bases on past developmets, how much time will it take for the Pixel 5 to go from Experimental stage to Stable release ?
+22:13:55 <TheJollyRoger> Alright, I gotta run, thanks for the help guys, and nscnt[m] good to know, I'll mark that down in case anyone else on Fedora has a similar issue... not the first time the package maintainers end up being behind, certainly won't be the last.
+22:14:48 <zvl12[m]>  * Generic question : If you should GUESS bases on past developments, how much time will it take for the Pixel 5 to go from Experimental stage to Stable release ?
+22:15:02 <zvl12[m]>  * Generic question : If you should GUESS based on past developments, how much time will it take for the Pixel 5 to go from Experimental stage to Stable release ?
+22:15:35 <TheJollyRoger> Before I go: zvl12[m] Sorry, we don't know, I'm unwilling to write a cheque the devs can't cash, and each device, as well as the support they require for full support, is unique.
+22:16:02 <Bughat33> I hand bombed SUBSYSTEM=="usb", ATTRS{idVendor}=="<MyPixelDeviceMajorMinorNodes>", MODE="0666" into a file called 51-android-rules. done remember the actual digits at the moment.
+22:16:06 <TheJollyRoger> So it will be done, when it is finished.
+22:17:40 <TheJollyRoger> Bughat33: it's a tad bit kludgy but try the following:
+22:18:05 <TheJollyRoger> wget https://raw.githubusercontent.com/M0Rf30/android-udev-rules/master/51-android.rules && sudo mv 51-android.rules /etc/udev/rules.d/51-android.rules && sudo udevadm control --reload-rules
+22:18:51 <TheJollyRoger> If after a reboot, fastboot.js in the browser is still unable to talk to your phone and unlock the bootloader and/or flash the installation it's your hardware at that point.
+22:18:59 <TheJollyRoger> Alright. Need to go.
+22:19:16 <TheJollyRoger> *and by hardware, I mean the cable or the computer's USB slots.
+22:19:20 <Bughat33> Ok thanks for all the help.
+22:23:07 <Bughat33> I'll make the udev changes and test on my other type-c port and if that doesn't work I see if I can pick up an official pixel type-c cable.
+22:29:18 <Bughat33> I tried your kludge and the web install is downloading the image. Thanks a whole bunch.
+22:30:19 <Bughat33> Bye, I might be back depending on outcomes.
+22:51:47 <warmjuice[m]> bye
+23:39:26 * mr_hebi_san[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/DrqDcAqegeUfeLYZSwdjacrU/message.txt >
+23:40:59 <mr_hebi_san[m]> Note : I didn't have a 3a cable.  I had to use the 4a's cable.  Would that cause an issue?

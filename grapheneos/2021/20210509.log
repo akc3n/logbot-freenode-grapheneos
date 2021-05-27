@@ -1,0 +1,371 @@
+00:19:24 <GrapheneOS-Teleg> <!Hulk> hey: how is it going?
+01:04:23 <timetravelingman> <helloworldkk87[m "The point of GrapheneOS is not t"> The "point" of it can be whatever you want lol
+01:04:54 <timetravelingman> For a lot of people it is to de-google and there's really nothing wrong with that
+01:09:33 <GrapheneOS-Teleg> <!Hulk> "De-googling" is an ill-defined term
+01:09:57 <GrapheneOS-Teleg> <!Hulk> You must trust Google if you're using a Pixel phone
+01:10:37 <DHFuchsiaOSwhen> To a certain extent that's true
+01:10:39 <GhostSplinterSix> Degoogled is a broad term and can mean a lot of things. GrapheneOS is an option (the best in my opinion) among many to get away from Big Tech and their tendencies.
+01:11:52 <DHFuchsiaOSwhen> <DHFuchsiaOSwhen "To a certain extent that's true"> AOSP doesn't have Google proprietary apps and services in the first place, tbf
+01:15:54 <akc3n[m]> <hey "i'm trying to stay away from goo"> Just a side note fyi, here's a write up by TheJollyRoger regarding Google/phone, etc. https://github.com/Peter-Easton/GrapheneOS-Knowledge/blob/master/GrapheneOS-General-Q%26A.md#why-does-this-project-only-support-pixels-i-want-to-get-away-from-google-i-dont-want-to-have-to-buy-google-to-get-away-from-google
+01:43:56 <Purefallen[m]> So Mozilla recently managed to have the genius idea of enabling JS Execution inside PDFs for Firefox 88 onwards. I am not using  the PDF Viewer anyway but it raised awareness of the issue that apparently even more viewer have it.. for whatever reason.
+01:43:56 <Purefallen[m]> Is JavaScript Execution in GrapheneOS's own PDF Viewer enabled and if so, why?
+01:47:36 <akc3n> Purefallen[m], https://github.com/GrapheneOS/PdfViewer
+01:47:49 <akc3n[m]> Purefallen:  > Simple Android PDF viewer based on pdf.js and content providers. The app doesn't require any permissions. The PDF stream is fed into the sandboxed WebView without giving it access to content or files. Content-Security-Policy is used to enforce that the JavaScript and styling properties within the WebView are entirely static content from the apk assets. It reuses the hardened Chromium rendering stack while
+01:47:49 <akc3n[m]> only exposing a tiny subset of the attack surface compared to actual web content. The PDF rendering code itself is memory safe with dynamic code evaluation disabled, and even if an attacker did gain code execution by exploiting the underlying web rendering engine, they're within the Chromium renderer sandbox with no access to the network (unlike a browser), files, or other content.
+02:12:49 <SpaceDaddy[m]> I would like to help the development of this OS
+02:22:36 <Railgun_Lover[m]> Imperial Space Moth: nice
+02:24:07 <Railgun_Lover[m]> CC: strcat: anupritaisno1 JollyRoger
+02:30:46 <sphinx[m]> ?
+02:30:46 <strcat[m]> Purefallen: no, it doesn't have that, and won't
+02:31:30 <strcat[m]> Imperial Space Moth: your help would be very appreciated, I'd suggest looking through the projects and their issue trackers and seeing what appeals to you
+02:31:50 <strcat[m]> and if you want to work on the OS itself https://grapheneos.org/build
+03:57:49 <SpaceDaddy[m]> let's do it
+04:03:18 <anupritaisno1[m]> Imperial Space Moth: accept the invite
+04:34:40 <jjstopper[m]> Is there anything about Grapheneos that would not allow my to add and  save an APN under Access Point Names. When I try to add one and hit save nothing saves
+05:15:52 <Thatcher[m]> <SpaceDaddy[m] "let's do it"> I like your attitude. 👍 Let's chip in and assist in making GrapheneOS even better!
+05:16:29 <joltman[m]> after several hours of full format of 128gb flash drive on Win10, i ended up getting the same "volume too big for FAT32" error. It seems newer versions of windows intentionally don't let you format drives bigger than 32gb as FAT32. will probably have to use 3rd party software or linux instead. annoying, but whatever. anyone know if ext4 usb drives are recognized by Pixel 3XL? probably would be superior to FAT32 if it's
+05:16:29 <joltman[m]> supported.
+05:20:47 <anupritaisno1[m]> <joltman[m] "after several hours of full form"> FAT32 doesn't really support anything beyond 32 GB
+05:21:47 <anupritaisno1[m]> It does have a theoretical limit of 16 TB
+05:21:59 <anupritaisno1[m]> But can it do so efficiently?
+05:22:35 <strcat[m]> joltman: ext4 isn't an appropriate filesystem for a removable drive and will never be supported
+05:22:41 <strcat[m]> exFAT will eventually be supported
+05:23:14 <strcat[m]> ext4 isn't meant to be usable that way due to mandatory POSIX permissions, etc.
+05:24:23 <anupritaisno1[m]> Ext4 technically can be supported
+05:24:31 <anupritaisno1[m]> But not as a removable drive
+05:24:35 <strcat[m]> it's not an appropriate filesystem for the use case
+05:24:37 <strcat[m]> and won't be supported
+05:24:38 <strcat[m]> as I said
+05:24:41 <anupritaisno1[m]> Only for adoptable storage
+05:24:44 <strcat[m]> fat32 does not have a 32GB limit
+05:24:48 <strcat[m]> that's a Windows limit
+05:24:56 <strcat[m]> and it supports drives formatted elsewhere with a larger size
+05:25:36 <strcat[m]> Windows is off-topic
+05:36:28 <joltman[m]> is anything other than FAT32 supported now?
+05:52:57 <strcat[m]> no
+05:53:28 <anupritaisno1[m]> strcat: we can add exfat support
+05:53:56 <anupritaisno1[m]> Not really hard to do so
+05:55:52 <strcat[m]> we're not adding out-of-tree exfat support
+05:56:09 <anupritaisno1[m]> Aight
+05:56:14 <strcat[m]> I've made this really clear before, what we do is the opposite of adding a bunch of attack surface through a half-baked out-of-tree kernel module
+06:13:25 <SpaceDaddy[m]> heard
+06:16:15 <evdevd> I thought exfat drivers were merged in mainline now
+06:16:33 <evdevd> Or is that only in recent 5.x kernels?
+06:18:33 <proweb> Help with installation - My laptop is booted into ubuntu 20.04. I want to install graphene os into google pixel 5 redfin. I am doing the webusb install using the browser google chrome. I clicked "Unlock bootloader" and it worked. I click "Download release" and I am stuck with "Error: undefined"
+06:19:27 <evdevd> do you have android-udev-rules installed?
+06:20:45 <proweb> evdevd I have not. I will try that
+06:24:24 <proweb> "On Arch Linux, install the android-udev package. On Debian and Ubuntu, install the android-sdk-platform-tools-common package." Since I am on Ubuntu I have android-sdk-platform-tools-common package installed and I have the error. Should I install android-udev also?
+06:30:32 <evdevd> no. if not having that package is not the issue idk about anything past that
+06:31:37 <strcat[m]> proweb: is it booted into fastboot mode?
+06:32:13 <proweb> strcat[m] Yes the phone shows "Fastboot Mode"
+06:43:54 <proweb2> I tried google chrome and ungoogled-chromium. I get the same error. I tried from firefox, the device wont even detect I guess it is because FF doesn't have webusb support.
+06:55:53 <proweb2> Chromium browser gives the error "Access denied". Installation guide says chromium on ubuntu is unsupported, still worth a try.
+06:59:10 <Pratyush[m]> i am on Ubuntu based distro, web installer just works as long as you have proper fastboot configured.
+07:00:16 <proweb2> Pratyush[m] which browser did you use? Did you install additional software related to android on your ubuntu?
+07:00:51 <Pratyush[m]> sad; chrome
+07:07:50 <proweb2> Pratyush[m]: Ubuntu and Google chrome version that you used?
+07:10:44 <Pratyush[m]> UBUNTU_CODENAME=focal,
+07:10:44 <Pratyush[m]> google-chrome-stable/stable,now 90.0.4430.93-1 amd64 [installed]
+07:12:08 <Pratyush[m]> proweb2:  https://developer.android.com/studio/run/device#setting-up
+07:12:15 <proweb2> I use Ubuntu focal and Google chrome 90.0.4430.93 too.
+07:12:42 <Pratyush[m]> setup udev rules and add your user to plugdev group
+07:12:49 <Pratyush[m]> follow the given link.
+07:15:40 * Pratyush[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/FalvnynvEftPgByPcMMSjRmt/message.txt >
+07:47:25 <cx2[m]> Friends… Two questions.
+07:47:25 <cx2[m]> 1. Do the radios in the Primary user continue to TX/RX when logged into a secondary user? Example: Would it be advised / necessary to run a VPN in both the Primary and Secondary profiles? (As far as I am aware Global VPN is not yet a thing…)
+07:47:57 <cx2[m]> 2. Does seed vault work across users or do they need to be backed up separately?
+07:52:29 <strcat[m]> the active user profile sets the network configuration
+07:52:31 <strcat[m]> you need to set up the VPN in each
+07:52:41 <strcat[m]> Seedvault is per-user, owner user backs up system stuff
+07:53:47 <cx2[m]> Great, thanks!
+07:53:47 <cx2[m]> I remember the topic of global vpn a while back… is that something that is possible? Out of scope?
+08:24:08 <strcat[m]> not wanted
+08:24:19 <strcat[m]> we want per-profile VPNs not a global one, that would be bad
+08:24:27 <strcat[m]> the current way is halfway to what we want
+08:24:44 <strcat[m]> cx2: the VPN functionality is *already* global, that's the problem
+08:25:02 <strcat[m]> per-user configuration is good, what needs changing is per-user implementation of it too
+08:25:42 <strcat[m]> so at least the UI is done correctly
+08:26:00 <strcat[m]> right now you can set up the same VPN everywhere and get that but what's really wanted is being able to have per-profile VPNs so they aren't tied together from using the same one
+08:28:02 <donkykong[m]> Not sure if its ment to happen or not but every time I connect a k400 wireless keyboard to my two gos phones once I disconnected the USB dongle the phone reboots
+08:29:20 <donkykong[m]> Also is there a good way to get the phone working on a TV or computer screen?
+08:58:43 <cx7dd[m]> In the build instructions for vandium the command "ninja" is used. But in the official chromium build instructions they use "autoninja". Why is that?
+10:38:17 <Assyria> Trying to install graphene on pixel 4xl via web usb. Up to part where i need to unlock bootloader but it says no compatible device found. what to do? Im using brave or chrome. followed the insttructions of the website
+10:41:13 <Assyria> downloaded a driver. seems fixed for that step
+10:59:56 <GrapheneOS-Teleg> <A​tlantistux> Hello
+11:19:58 <PyotrDoesTech> Hi, I have a stupid question or maybe it's not stupid.. i don't know... I'm about to buy a Pixel 5 phone and my question is if I could just directly unlock the phone and flash graphene on it or do I have to do the first initial setup, Android Update etc. before flashing GrapheneOS?
+11:23:54 <Pratyush[m]> you can directly flash GrapheneOS as long as it's unlocked model PyotrDoesTech
+11:23:55 <Pratyush[m]> you do have to do first initial setup but it can be offline only setup means do NOT have to log into google account.
+11:27:14 <sphinx[m]> PyotrDoesTech: it's covered in https://grapheneos.org/install/web#prerequisites
+11:45:20 <Assyria> Hey Guys im up to the part of unpacking the bootloader after downloading factory images. Its been 5 to 10 minutes and the blue status bar hasnt changed and my phone is still in fastboot mode and doesnt look like its starting to flash. Something im meant to do like unzip the file or something. Sorry not very tech savvy
+11:45:59 <strcat[m]> sounds like you don't have a reliable USB connection
+11:46:05 <strcat[m]> recommend reading everything there about that
+11:46:09 <strcat[m]> it doesn't take long to install
+11:46:13 <strcat[m]> no point in waiting like that
+11:46:18 <strcat[m]> reboot it back to bootloader interface again
+11:46:27 <strcat[m]> use the cable that comes with the phone
+11:46:30 <strcat[m]> make sure it's attached well
+11:47:40 <Assyria> reboot seemed to work. thanks Bud
+12:01:58 <GrapheneOS-Teleg> <!Hulk> donkykong[m]: hello, read this https://support.google.com/pixelphone/answer/2865484?hl=en
+13:01:35 <jjstopper[m]> strcat: Is there anything about Grapheneos that would not allow my to add and  save an APN under Access Point Names. When I try to add one and hit save nothing saves
+13:08:45 <helloworldkk87[m> Dont ping devs
+13:18:41 <hypokeimenon[m]> <helloworldkk87[m "Dont ping devs"> You can ping devs depending on the context/state of the room/conversation. It is just bad practice to single out particular developers out of the blue for questions that can be answered by any developer/contributor.
+13:22:01 <somenerd[m]> yeah, they are sorta correct in this situation though
+13:26:51 <jjstopper[m]> helloworldkk87: are you talking about my question?
+13:39:23 <helloworldkk87[m> Oh sorry
+13:53:26 <nscnt[m]> jjstopper: It should work. It works for me and others have done it too
+16:06:09 <proweb> Help with installation -
+16:06:09 <proweb> Attempt 1: Booted from ubuntu 20.04 in my laptop. Tried with browsers google chrome, chromium, ungoogled-chromium. I was able to "Unlock bootloader. But when I clicked "Download release" I got "Error: undefined"
+16:06:10 <proweb> Attempt 2: Booted from ubuntu 20.10. Now I am using google chrome. I am able to "Unlock bootloader. But when I clicked "Download release" I ama getting the same "Error: undefined"
+16:13:57 <GrapheneOS-Teleg> <!Hulk> proweb: hello, let me try yo help you
+16:14:06 <GrapheneOS-Teleg> <!Hulk> do you have a USB C port on your PC?
+16:15:19 <Pratyush[m]> proweb:  which device are trying to flash ?
+16:15:38 <proweb> GrapheneOS-Teleg: Thank you. Yes I have a USB C port in my laptop. I have connected the Google pixel 5 phone to it through a cable that came along with the purchase.
+16:15:52 <dnull> proweb: Have you tried the cli instructions? I had issues with the web installer, but the cli ones are copy/paste and worked the first time.
+16:16:20 <proweb> dnull: I am afraid to get into cli. But if web installer isn't working I have no other choice.
+16:16:58 <GrapheneOS-Teleg> <!Hulk> i'm pretty sure that if web doesn't work, the cli won't fix it
+16:16:58 <dnull> proweb: They might be able to help with the web installer, but the cli is really copy/paste
+16:17:23 <dnull> Hulk: did for me
+16:17:41 <dnull> Just my experience though
+16:18:05 <GrapheneOS-Teleg> <!Hulk> quite a lot of folks just copy.pasted the cli, and mistaken pixel 4a with pixel 4a 5g images
+16:18:16 <GrapheneOS-Teleg> <!Hulk> got irreversibly bricked at the end
+16:18:26 <proweb> Pratyush[m]: I have run the usermod and udevadm commands as you gave.
+16:18:38 <dnull> They said they have a pixel 5. Same as I do.
+16:18:59 <dnull> Otherwise I wouldn't have recommended it.
+16:19:13 <proweb> I am staring at the bootloader screen of my phone. It saays Product revision: redfin MP1.0(ROW)
+16:20:41 <proweb> I ran these commands before clicking the webusb buttons on the install page hoping it would help.
+16:20:42 <proweb> sudo usermod -aG plugdev <your-linux-username>
+16:20:42 <proweb> apt-get install android-sdk-platform-tools-common
+16:20:43 <proweb> udevadm control --reload-rules && udevadm trigger
+16:21:49 <Pratyush[m]> <proweb "sudo usermod -aG plugdev <your-l"> proweb:  ouch, replace <your-linux-username> with your actual linux username or if you don't know your username $USER will work just fine.
+16:22:36 <proweb> Pratyush[m]: I had replaced the username with the correct name. I run the command `id` now and I can see plugdev group added to my user
+16:23:29 <proweb> Are there many versions of google pixel 5 or is there only one?
+16:23:34 <GrapheneOS-Teleg> <!Hulk> i would recommend to delete everything and start over
+16:23:47 <GrapheneOS-Teleg> <!Hulk> here is one way of getting correct udev rules
+16:23:48 <GrapheneOS-Teleg> <!Hulk> https://github.com/M0Rf30/android-udev-rules
+16:24:22 <Pratyush[m]> <proweb "Are there many versions of googl"> afaik there is only one.
+16:25:08 <Pratyush[m]> <GrapheneOS-Teleg "<!Hulk> https://github.com/M0Rf3"> device is getting recognized, that's why unlocking works.
+16:25:43 <proweb> GrapheneOS-Teleg: I dont have the adb command installed. The official install page doesn't mention that. Do I need to install it?
+16:26:03 <DHFuchsiaOSwhen> No
+16:26:17 <GrapheneOS-Teleg> <!Hulk> nope, you don't need adb, just the udev
+16:26:46 <proweb> The device is getting recognized by the webusb. I can see in the browser page when I click the lock icon "Pixel 5 USB device"
+16:26:48 <Pratyush[m]> proweb:  you don't need adb, just a question are you comfortable checking your browser console for error ?
+16:28:34 <proweb> Browser's developer console gives these output:
+16:28:35 <proweb> When iclicked "Unlock bootloader" I get,
+16:28:35 <proweb> Command: getvar:unlocked
+16:28:36 <proweb> common.js:5 Response: OKAY yes
+16:29:14 <Pratyush[m]> proweb:  what about after clicking download button  ?
+16:29:55 <proweb> I click "download release" I get,
+16:29:55 <proweb> Command: getvar:product
+16:29:56 <proweb> common.js:5 Response: OKAY redfin
+16:29:56 <proweb> xxxxxx.web-install.js:2 Downloading https://releases.grapheneos.org/redfin-factory-2021.05.04.01.zip
+16:29:57 <proweb> xxxxxx.web-install.js:2 GET https://releases.grapheneos.org/redfin-factory-2021.05.04.01.zip net::ERR_FAILED 200
+16:31:09 <Pratyush[m]> error failed with 200 response code 🤯🤯 like what?
+16:32:03 <proweb> Yes, it failed with 200 code
+16:32:52 <proweb> Command: getvar:product
+16:32:53 <proweb> common.js:5 Response: OKAY redfin
+16:32:53 <proweb> xxxxxx.web-install.js:2 Downloading https://releases.grapheneos.org/redfin-factory-2021.05.04.01.zip
+16:32:54 <proweb> releases.grapheneos.org/redfin-factory-2021.05.04.01.zip:1 Failed to load resource: net::ERR_FAILED
+16:32:54 <proweb> xxxxxx.web-install.js:2 Uncaught (in promise) 0
+16:32:55 <proweb> s.onclick @ xxxxxx.web-install.js:2
+16:34:38 <Pratyush[m]> anyway i don't know why are you facing this issue, but if you need help with installation i can help you with cli don't worry it is going to be easy.
+16:34:38 <Pratyush[m]> but if you never used terminal before waiting for sometime while someone from admin reply is also an option.
+16:34:55 <Pratyush[m]> proweb:  ^
+16:36:31 <proweb> Pratyush[m]: Thank you. I am good with terminal and linux commands.
+16:38:12 * Pratyush[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/rmnDMzlLaLoZJxjNbFFLznQF/message.txt >
+16:42:05 <Pratyush[m]> proweb:  wait wait, are you blocking cookies on your browser.
+16:43:05 <proweb> Pratyush[m]: No. This is a brand new ubuntu 20.10 booted from live usb, and a brand new google chrome browser installed. No modifications done to the os or browser.
+16:45:27 <Pratyush[m]> just check chrome://settings/cookies to make sure,
+16:45:27 <Pratyush[m]> because blocking cookies give me same error
+16:45:34 <Pratyush[m]> proweb:  ^
+16:51:13 <proweb> In settings, I gave "Allow all cookies". Still the same error
+16:51:50 <proweb> Console throws the error at "Downloading https://releases.grapheneos.org/redfin-factory-2021.05.04.01.zip". But when I click the link the browser is able to download it. Idk why the javascript isn't able to do it.
+16:53:52 <proweb> I am downloading the file https://releases.grapheneos.org/redfin-factory-2021.05.04.01.zip
+16:53:52 <proweb> might take a while
+16:55:18 <Pratyush[m]> proweb:  once download instruction is easy to follow //
+16:55:18 <Pratyush[m]> you can check https://grapheneos.org/install/cli or just drop a message here
+16:55:47 <dnull> Huh
+16:56:00 <dnull> Offering the cli instructions.
+16:56:02 <dnull> Odd.
+16:56:42 <GrapheneOS-Teleg> <!Hulk> i might owe you an apology dnull
+16:57:34 <Pratyush[m]> dnull:  i don't any choice, there is something wrong with installer or browser
+16:57:41 <dnull> Hulk: hahaha no worries.
+16:58:06 <dnull> Pratyush[m]: I mentioned cli at the beginning
+16:58:18 <dnull> I had issues with the web installer too
+16:58:32 <dnull> Cli worked like a charm
+17:00:10 <Pratyush[m]> dnull: unless i have a good reason, i don't recommend cli. in this case may be browser or installer is broken.
+17:00:10 <Pratyush[m]> (imo cli works like a charm but it's not a good reason web installer works great too)
+17:00:30 <dnull> Yeah, I agree
+17:00:48 <dnull> I'd much rather people use the web installer too
+17:01:03 <dnull> Just relating my own experience
+17:01:39 <proweb> I prefer web installer too. I am good with cli but I don't wanna mess things and brick the device.
+17:02:00 <dnull> proweb: Just copy/paste
+17:27:50 <proweb> I have downloaded the zip file for redfin. I am going to install from cli. The install page says something about "Carrier variants of Pixels". Do I need to worry about it?
+17:31:21 <Pratyush[m]> <proweb "I have downloaded the zip file f"> your bootloader is unlocked, ignore it
+17:33:36 <proweb> " You can run fastboot --version to determine the current version. It must be at least 29.0.6"
+17:33:37 <proweb> I installed using apt - apt install android-tools-fastboot. When I run "fastboot --version" I get "fastboot version 1:8.1.0+r23-8"
+17:38:09 <proweb> Finally, installed fastboot of the required version.
+17:45:23 <proweb> Pratyush[m]: I ran the command "fastboot flashing unlock" and I'm getting the output "< waiting for any device >" and the cursor keeps blinking at the output
+17:46:17 <Pratyush[m]> proweb:  ouch why you installed fastboot with apt ?
+17:46:18 <Pratyush[m]> that is old legacy, unmaintained fastboot, purge that one and install as said in guide
+17:48:14 <proweb> Pratyush[m]: I have installed the fastboot as given in the guide. The version now correctly shows "fastboot version 1:8.1.0+r23-8
+17:48:14 <proweb> Installed as /usr/lib/android-sdk/platform-tools/fastboot"
+17:48:28 <proweb> I am not using the fastboot that is installed by apt
+17:48:30 <Pratyush[m]> proweb:  https://grapheneos.org/install/cli#obtaining-fastboot
+17:49:05 <Pratyush[m]> fastboot version 31.0.2-7242960
+17:50:59 <Pratyush[m]> proweb:  just purge apt installed fastboot with "apt purge  android-tools-fastboot" and install it as linked guide said
+17:51:06 <proweb> Okay
+17:52:58 <Pratyush[m]> proweb:  this's is what causing you installation issue the whole time
+18:05:32 <proweb> Pratyush[m]: I rebooted ubuntu 20.10. Opened firefox, downloaded google chrome and installed it using "Ubuntu Software". I ran the command "sudo apt install android-sdk-platform-tools-common". I did nothing else just to be careful. Now I went to web installer page. Unlocking bootloader worked fine, but "Download release" threw the same error -
+18:05:33 <proweb> 3bab072f.web-install.js:2 GET https://releases.grapheneos.org/redfin-factory-2021.05.04.01.zip net::ERR_FAILED 200
+18:05:59 <proweb> I am using live usb for ubuntu 20.10, so any package i installed before must 've been wiped out.
+18:10:05 <Pratyush[m]> "You should have at least 2GB of free memory available and 8GB of free storage space."
+18:10:05 <Pratyush[m]> are you sure you have this much space in live usb? taken from Prerequisites part ?
+18:11:13 <proweb> Yes I have the required memory and storage.
+18:13:52 <proweb> Going to continue the cli instructions. I gave "fastboot --version" and I get,
+18:13:52 <proweb> "fastboot version 31.0.2-7242960
+18:13:52 <proweb> Installed as /home/ubuntu/Downloads/platform-tools/fastboot"
+18:13:53 <proweb> which means I have installed it correct.
+18:14:23 <Pratyush[m]> great :) carry on with installation
+18:14:38 <proweb> I not give "fastboot flashing unlock" and I get "< waiting for any device >" with a blinking cursor waiting for some input
+18:14:45 <proweb> *now
+18:15:19 <Pratyush[m]> this is not a best secure advice but as you are on live usb run it with sudo
+18:15:39 <Pratyush[m]> sudo $(which fastboot) devices
+18:15:40 <TheJollyRoger> If you get that there are three possibilities: udev rules aren't set, USB cable is improperly traced, or USB firmware on the host does not support low-level device bugging.
+18:15:53 <TheJollyRoger> If it works as root, you need the correct udev rules.
+18:16:11 <TheJollyRoger> Unfortunately, I can't stay to guide you through the installation at this time.
+18:17:56 <proweb> TheJollyRoger: I have set the udev rules by running "sudo apt install android-sdk-platform-tools-common". That's what the install guide says.
+18:18:08 <TheJollyRoger> proweb: Then it's one of the other two possibilities.
+18:18:19 <TheJollyRoger> Or you haven't reloaded the rules by rebooting.
+18:18:46 <proweb> Will running "sudo apt install android-sdk-platform-tools-common" set the udev rules fine? Or do I need to do some extra steps?
+18:18:51 <TheJollyRoger> After the rules have been installed you need te reboot.
+18:18:55 <TheJollyRoger> *need to reboot
+18:19:06 <proweb> Can I reload it, without rebooting? I am on live usb
+18:20:57 <TheJollyRoger> try "sudo udevadm control --reload-rules"
+18:21:06 <proweb> I ran this # udevadm control --reload-rules && udevadm trigger
+18:21:06 <Pratyush[m]> <proweb "Can I reload it, without rebooti"> no, running with sudo is one options or reloading udev rules with
+18:21:13 <TheJollyRoger> I don't recommend installing from a liveCD.
+18:21:39 * Pratyush[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/fYeEktXPvzlDdzzpJtHpEZbL/message.txt >
+18:21:47 <Pratyush[m]> <TheJollyRoger "I don't recommend installing fro"> agreed.
+18:21:53 <TheJollyRoger> Yes, that should do it. If it gives you <waiting for any device> at this point though, try from a permanent OS installation.
+18:22:13 <TheJollyRoger> However, I cannot give you any further advice; installing in a nonstandard way, you're largely going to be on your own here.
+18:22:38 <TheJollyRoger> I have to get going. Good luck.
+18:26:29 <proweb> TheJollyRoger: The official guide doesn't say anything about live vs installed OS. I only recommends "OS running on bare metal" which is the case with me.
+18:28:36 <proweb> Pratyush[m]: I have unlocked the bootloader using web installer. Could that be the reason for the output "< waiting for any device >" when I run the command "fastboot flashing unlock"?
+18:28:40 <GrapheneOS-Teleg> <!Hulk> +1 for "you should go with a permanent OS installation"
+18:29:06 <GrapheneOS-Teleg> <!Hulk> it definitely might be the case proweb
+18:29:27 <proweb> Okay I will do it from installed OS.
+19:40:11 <GrapheneOS-Teleg> <L​73689> If using a sim card with mobile data always turned off, what can the carrier identify?
+19:55:44 <helloworldkk87[m> <GrapheneOS-Teleg "<L73689> If using a sim card wit"> https://grapheneos.org/faq#cellular-tracking
+20:18:01 <GrapheneOS-Teleg> <L​73689> Hi thanks for this , I have read this but I find it hard to digest (I'm not that bright) I just wondered if I was to only use a sim for phone calls and texts, no data, what would the carrier be able to see about my device
+20:22:18 <GrapheneOS-Teleg> <L​73689> I'm consider using a cheap dumb phone for calls and texts but I really can't be passed to carry 2 phones with me , I'd rather have a sim in my pixel, but don't want to be tracked either
+20:23:17 <GrapheneOS-Teleg> <!duck> then use airplane mode
+20:28:01 <Pratyush[m]> <GrapheneOS-Teleg "<L73689> Hi thanks for this , I "> linked page already explained it much better, but to keep it simple there is no way you can use your local tower/ cellular network without your location being tracked by isp/network provider.
+20:34:39 <trail_undergroun> <GrapheneOS-Teleg "<L73689> I'm consider using a ch"> Use VOIP numbers on a burner phone. They'll see where your phone is, but it shouldn't be connected to anything if it was bought anonymously and wasn't used for anything at all.
+21:16:38 <proweb> Pratyush[m]:  Successfully installed GrapheneOS when I discarded live usb boot and used ubuntu installed on harddisk. Live usb boot had been the problem all along.
+21:16:38 <proweb> A warning in the official guide about using live usb would have saved a lot of time.
+21:17:17 <GrapheneOS-Teleg> <!Hulk> congratz proweb
+21:17:22 <GrapheneOS-Teleg> <!Hulk> welcome aboard!
+21:18:07 <proweb> Thanks for your help, all the community members who patiently helped me.
+21:19:00 <proweb> At the end of the guide, there is something about removing non-stock key. Can I ignore it?
+21:19:38 <GrapheneOS-Teleg> <!Hulk> "Replacing GrapheneOS with the stock OS"
+21:19:57 <GrapheneOS-Teleg> <!Hulk> only if you want to replace GrapheneOS with the Stock OS
+21:20:32 <proweb> Not going to android again.
+21:20:33 <Pratyush[m]> <proweb "At the end of the guide, there i"> yes you should be ignoring that one, unless you want to go back to stock rom.
+21:21:20 <GrapheneOS-Teleg> <!Hulk> GrapheneOS is Android
+21:23:50 <proweb> After installing GrapheneOS, I turned developer options off and OEM unlocking off. Anything else I have to do?
+21:24:15 <proweb> I meant to say Android-Google :)
+21:25:07 <GrapheneOS-Teleg> <!Hulk> proweb: also recommended https://attestation.app/about
+22:02:08 <jemma> Hi so im trying to install graphene over the web installer, at first i could flash the factory image, but it would never finish, leaving me in fastbootd on my phone for hours, even if i left it over night, now when trying that stage it gives me the error "Error: You need to download a release first!" despite me installing it moments before in the
+22:02:09 <jemma> previous step,does anyone have any idea? i have no clue what to do - ive even tried various cables, usb ports etc just to be sure but i dont have another pc i can use
+22:03:10 <strcat[m]> sounds like you're either using Incognito mode (it says not to) or don't have enough space
+22:03:21 <strcat[m]> and/or don't have a reliable USB connection
+22:03:33 <strcat[m]> clear a bunch of disk space because the browser only allows a web page to use a % of free space
+22:05:04 <jemma> uhh hmm not in incognito and i am barely using any pc disk space this pc at max has half a gigs worth of stuff in saved word docs
+22:05:51 <jemma> unless all my usb ports are broken somehow, but ive never had any issue in any other usb based situation i have no ideas
+22:12:09 <GrapheneOS-Teleg> <!Hulk> jemma: hey, let me try to help you
+22:12:16 <GrapheneOS-Teleg> <!Hulk> which OS are you using?
+22:12:38 <jemma> so im on win 10 using chrome for the install
+22:12:59 <GrapheneOS-Teleg> <!Hulk> and does pc come with USB C port?
+22:13:02 <strcat[m]> use Edge instead
+22:13:08 <strcat[m]> you may have extensions breaking things
+22:13:21 <strcat[m]> you may have AV software that injects stuff into browser and breaks it
+22:13:28 <strcat[m]> and USB connection needs to be reliable
+22:13:44 <strcat[m]> most USB-A to USB-C cables are non-spec-compliant broken
+22:13:52 <strcat[m]> many older computers had broken USB-C ports
+22:14:35 <jemma> yeah i tried edge previously at the start but it just didnt even seem to work at all, ill try again though as i cant recall why it didnt work, no usb c ports on this pc just plain old usb
+22:15:33 <jemma> but ive tried all ports and like 5/6 dif cables most new
+22:16:20 <GrapheneOS-Teleg> <!Hulk> it doesn't matter
+22:16:42 <GrapheneOS-Teleg> <!Hulk> most USB A to USB C cables are broken "by design"
+22:16:45 <jemma> okay so edge says "Error: Unable to claim interface." on the first step - unlocking the bootloader
+22:17:34 <jemma> right so is my only solution to buy or find someone to borrow a new pc that has usb c to c?
+22:18:06 <GrapheneOS-Teleg> <!Hulk> or you can use a different Android phone with a USB C port
+22:19:16 <jemma> oh right i stupidly had no clue i could use another phone for the install i can try that then
+22:24:45 <jemma> okay so phone to phone i get this error "Error: Must be handling user gesture to show a permission request"
+22:25:25 <GrapheneOS-Teleg> <!Hulk> Which phone are you using for this, and which browser?
+22:25:46 <jemma> chrome and a huawei to a pixel 4a
+22:27:01 <GrapheneOS-Teleg> <!Hulk> I really don't know what does the error message you sent means
+22:27:17 <jemma> thats it word for word
+22:27:44 <GrapheneOS-Teleg> <!Hulk> What I mean is, I'm not knowledgeable enough to understand it
+22:28:18 <GrapheneOS-Teleg> <!Hulk> Try again, try a different phone, make sure that you're not in incognito mode on your browser
+22:28:38 <jemma> ah i see, damn, its making me feel quite syupid being unable to do the simple ver
+22:29:06 <jemma> no in incog its a fresh chrome install as i dont use chrome on my phone
+22:29:17 <jemma> no other phones to use
+22:31:54 <jemma> any further suggestions or have i stumped you haha, thanks for trying to help tho!
+22:32:43 <GrapheneOS-Teleg> <!Hulk> Yeah at this point, I'm just waiting for someone more knowledgeable than I to decrypt the error message
+22:33:23 <jemma> haha think i must be close to a full set of error messages at this point haha
+22:42:42 <GrapheneOS-Teleg> <!Hulk> send the error messages you get
+22:44:43 <strcat[m]> jemma: it sounds like you must have used adb or something and have it running
+22:47:28 <jemma> uhh it was a fresh install but lemme check
+22:49:00 <strcat> reboot the computer and try edge
+22:49:05 <strcat> it's probably a USB connection issue
+22:49:09 <strcat> along with whatever else is wrong
+22:49:18 <strcat> most USB-A to USB-C cables are broken
+22:49:39 <jemma> ive tried rebooting soo many times and doing every update i could find etc
+22:51:34 <strcat[m]> if you don't have a reliable / proper USB cable then nothing with software is going to resolve it
+22:51:42 <strcat[m]> you've probably just made things worse if anything
+22:52:44 <jemma> well id trust the stock cable from google, huawei and from my jbl speaker to work reliably surely and none of them worked
+22:53:34 <GrapheneOS-Teleg> <!Hulk> Cable from Google should definitely work, others are questionable
+22:54:12 <jemma> yeah and this cable is box fresh so were the others even as i have old ones already
+22:54:40 <GrapheneOS-Teleg> <!Hulk> Either way, you said you don't have USB C on your PC
+22:55:06 <GrapheneOS-Teleg> <!Hulk> Which means that you're not using Google's cable when trying to install from win10
+22:55:07 <jemma> no but ive done c to c on the phone too and got that error i sent
+22:56:05 <GrapheneOS-Teleg> <!Hulk> If I were you, I would just try installing from a different Android phone, by asking a friend or relative
+22:56:34 <jemma> yeah not really possible in my current situation sadly
+22:57:52 <GrapheneOS-Teleg> <!Hulk> that is sad(
+22:57:54 <jemma> think ill try a phone repair shop and see if i can pay them to install it for me and if not i guess i wasted $450 or whatever on a paperweight
+22:58:55 <strcat> you said you don't have a USB-C port
+22:59:01 <strcat> the cable that comes with the one is USB-C
+22:59:08 <strcat> jemma: use the phone again
+22:59:14 <strcat> stop trying to use the computer
+22:59:29 <jemma> i have tried the phone again
+22:59:54 <jemma> same error as before reinstalled chrome twice disable any adblocky stuff
+23:00:55 <tracker> Stop it damnit
+23:01:00 <tracker> Hacker
+23:01:16 <tracker> Dont hack my grapheneos phone and track my data
+23:01:39 <GrapheneOS-Teleg> <!Hulk> jemma: please ignore the messages sent by the user "tracker"
+23:01:57 <strcat> channels are being raided by trolls
+23:02:30 <jemma> yeah all good, didn't assume it was directed at me anyway
+23:04:38 <jemma> do you guys think my best option is to just take the hit of what it costs to pay a phone repair shop to do it? i dont have any more resources here i dont think and if i cant do the babys ver of the install the command line one seems way out of my paygrade
+23:05:18 <GrapheneOS-Teleg> <!Hulk> you should not use CLI, if web installer doesn't work for you
+23:05:57 <strcat> jemma: use your other phone to do it with Chrome
+23:06:38 <jemma> i have tried stcat several times as weve been over already several times
+23:06:53 <GrapheneOS-Teleg> <!Hulk> he keeps on getting this error "Error: Must be handling user gesture to show a permission request"
+23:08:41 <jemma> she but ya even with fresh installs of chrome i get it
+23:10:07 <GrapheneOS-Teleg> <!Hulk> Please accept my apology for this assumption
+23:11:07 <jemma> no worries at all lol
+23:11:17 <ride[m]> Hello. I am trying to use a usb c dac on my phone but it is set to "charging connected device".
+23:11:20 * ride[m] uploaded an image: (62KiB) < https://matrix.org/_matrix/media/r0/download/mozilla.org/529517f66030f2b53095583395a1ebf1e1e642d0/Screenshot_20210509-191045.png >
+23:11:34 <GrapheneOS-Teleg> <!Hulk> * She keeps on getting this error while trying to install from a phone "Error: Must be handling user gesture to show a permission request"
+23:12:05 <strcat> ride[m]: make sure to connect it while unlocked
+23:13:37 <ride[m]> <ride[m] "Hello. I am trying to use a usb "> Is this a known issue or a setting that is wrong? I've tried "usb controlled by this device" but it is stuck switching.
+23:13:45 <ride[m]> <strcat "ride: make sure to connect it wh"> The issue persists.
+23:14:18 <strcat> ride[m]: make sure you didn't disable USB peripherals in security settings
+23:14:24 <strcat> make sure it's on the default allow while unlocked
+23:15:45 <ride[m]> <strcat "ride: make sure you didn't disab"> That was my problem. Thank you!
+23:16:32 <GrapheneOS-Teleg> <!Hulk> What does this error in the web installer mean? "Error: Must be handling user gesture to show a permission request"
+23:18:01 <strcat[m]> probably that the browser is upset about the WebUSB permission dialog even though it was triggered by the user pressing the button
+23:18:11 <strcat[m]> so, some browser bug / overly strict rule
+23:18:19 <strcat[m]> haven't seen that before, maybe it's a Chrome A/B test
+23:18:25 <strcat[m]> try Bromite instead of Chrome on the phone
+23:18:41 <jemma> okay ill try bromite now
+23:23:46 <jemma> okay bromite didnt get the error so heres hoping, just obtaining factory image

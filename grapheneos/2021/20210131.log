@@ -1,0 +1,864 @@
+00:00:30 <silicon_jim[m]> Many companies have tried and failed at this, including google apple and Microsoft
+00:00:31 <SkyFox[kdeorg][m> I mean, doesn't Android already have that?
+00:00:59 <silicon_jim[m]> Sort of - they have MDM.
+00:01:12 <silicon_jim[m]> But its geared towards the corporate not the user
+00:01:18 <SkyFox[kdeorg][m> <SkyFox[kdeorg][m "I mean, doesn't Android already "> Every user profile on Android has a Work profile (which is not what I am using as a *work* profile), which can be managed by your employer's app
+00:01:47 <SkyFox[kdeorg][m> <silicon_jim[m] "But its geared towards the corpo"> Well, yeah, it's supposed to be managed by the employer
+00:02:07 <silicon_jim[m]> So if I'm on a work profile on graphene - I still can't add my works gsuite email acct
+00:02:12 <silicon_jim[m]> WO goog play services
+00:02:34 <SkyFox[kdeorg][m> Ah, well, that's not the problem of the feature
+00:03:12 <silicon_jim[m]> To me, the end user desiring a workable private mobile OS it is
+00:03:55 <pnrxa[m]> Can't you add your GSuite email acc to a different mail client on the work profile?
+00:03:55 <SkyFox[kdeorg][m> <silicon_jim[m] "To me, the end user desiring a w"> Maybe if the MicroG stuff gets added, you'll be able to set it up
+00:04:12 <SkyFox[kdeorg][m> <pnrxa[m] "Can't you add your GSuite email "> The company blocks IMAP
+00:05:37 <pnrxa[m]> Would activesync work or does that rely on IMAP?
+00:05:42 <pnrxa[m]> GSuite supports activesync
+00:05:56 <silicon_jim[m]> Will test that
+00:06:02 <silicon_jim[m]> But doubt it
+00:06:20 <silicon_jim[m]> Wasn't activesync a MS service?
+00:07:10 <silicon_jim[m]> We don't have active directory or utilize them wherever possible so would doubt it
+00:07:12 <SkyFox[kdeorg][m> <silicon_jim[m] "Wasn't activesync a MS service?"> It's probably a protocol rather than a service
+00:07:50 <silicon_jim[m]> Taking me back to palm pilot era
+00:08:08 <pnrxa[m]> You don't need active directory for activesync
+00:08:23 <SkyFox[kdeorg][m> Btw, FairEmail has an option specifically for Gmail
+00:08:26 <SkyFox[kdeorg][m> Can check that out
+00:08:36 <pnrxa[m]> Just add it to an activesync compatible mail client
+00:08:59 <pnrxa[m]> I use Nine but I don't know if it works without Play Services
+00:11:36 <pnrxa[m]> Also regular Gmail doesn't use activesync
+00:11:41 <pnrxa[m]> Just to make things confusing
+00:18:26 <strcat[m]> going to try to get the Windows fastboot USB driver issue fixed
+00:18:45 <strcat[m]> the issue is that a bunch of vendors have forks of the standard driver where they're just supposed to update the ids to their device's ones
+00:18:56 <strcat[m]> but a bunch of them didn't remove the Pixel ids
+00:19:01 <strcat[m]> and Microsoft apparently doesn't check
+00:19:04 <strcat[m]> it's the same driver
+00:19:20 <strcat[m]> Windows seems to just find an arbitrary one with matching ids and stops looking for more
+00:19:27 <strcat[m]> instead of showing you all options
+00:19:42 <strcat[m]> so I might need to get Google to upload the official driver to MS and also get MS to deal with the OEMs screwing it up
+00:19:46 <strcat[m]> I think I can get that done
+00:20:09 <strcat[m]> so yeah apparently
+00:20:14 <strcat[m]> you can just upload some USB driver to MS
+00:20:20 <strcat[m]> with another vendor's USB device ids
+00:20:33 <strcat[m]> and then Windows will show people with that other vendor's device your driver, not theirs, arbitrarily
+00:20:48 <strcat[m]> in this case I don't think it matters much since it's the same driver and is really simple
+00:20:52 <strcat[m]> but still, that's fucked up
+00:36:43 <strcat[m]> too bad it's Saturday
+01:27:56 <nodevicedetected> Hey there people
+01:28:07 <nodevicedetected> Anyone on?
+01:28:39 <grapheneos_user_> No
+01:29:08 <TheJollyRoger> *crickets*
+01:29:21 <nodevicedetected> Excellent
+01:30:08 <nodevicedetected> Anyone run into the issue, during installation, where the webinstall will not detect your device? (despite having usb debugging and oem on)
+01:30:49 <TheJollyRoger> nodevicedetected: usually that's resultant of the USB on your computer being incomplete (broken, vendor firmware not properly implementing the standard), or a cheap cable.
+01:30:57 <TheJollyRoger> As strange as this may sound, try switching ports.
+01:31:08 <louipc> or cable problem?
+01:31:19 <nodevicedetected> I've also tried to do it manually, using adb, and I can interface with the device, detect it, and force it to reboot into bootloader from the commandline
+01:31:31 <nodevicedetected> idk if that answers the above concerns
+01:31:40 <louipc> ok
+01:32:19 <nodevicedetected> but fastboot flashing unlock just hands on < waiting for any device>
+01:32:24 <nodevicedetected> hangs*
+01:32:33 <TheJollyRoger> nodevicedetected: Yep, this sounds USB on your computer is broken or not properly implemented. Fastboot uses the full featureset available to USB 3.1, and some motherboard vendors are extremely careless and do not implement them all.
+01:32:39 <TheJollyRoger> This can result in what you're seeing right here.
+01:33:05 <TheJollyRoger> Try switching ports, try switching cables, or switch to another computer entirely.
+01:33:21 <nodevicedetected> Okay cool, i'll give that a try
+01:34:24 <nodevicedetected> Just in case its worth mentioning, the cable I was using was supposedly oem and its usb-c -> usb-c connection
+01:34:47 <TheJollyRoger> Yeah. It's unfortunate, but most vendors are really bad about this. The USB standard is actually very complex since it takes an "everything and the kitchen sink" approach, and contains far more features than most users ever will use. So most vendors simply say "oh, they'll never use this" and don't implement it properly.
+01:35:06 <TheJollyRoger> It's worth mentioning that not even the cables that come with your Pixel 2/3/4 are actually up to the spec!
+01:35:41 <TheJollyRoger> They'll install GrapheneOS fine assuming your motherboard properly implements the specification, but they can't be used for some things our developers do in this channel such as UART Debugging.
+01:35:49 <nodevicedetected> oh well shit. The only other cables I have are a c to  c from samsung and some "3.1" a to c from some china amazon company
+01:36:28 <TheJollyRoger> So chances are, if you see this type of behaviour from your computer where the "typical" functions of the computer work fine but then fastboot just hangs, it's likely that USB on your motherboard is not properly implemented by your vendor.
+01:36:43 <louipc> the stock cable should be ok for installing
+01:37:36 <TheJollyRoger> Oh, yeah, crud, be extremely careful using substandard cables - cheap cables can cost you your device, especially because the voltage is significantly higher, and what device charges which has to be negotiated by the devices and what they're plugged into.
+01:37:38 <strcat[m]> nodevicedetected: which OS are you on?
+01:37:56 <nodevicedetected> win10
+01:38:17 <nodevicedetected> factory android on freshly factory'd phone
+01:38:41 <TheJollyRoger> *voltage, sorry, I mean the current.
+01:39:03 <strcat[m]> nodevicedetected: https://grapheneos.org/install/web#connecting-phone make sure to deal with the 2nd paragraph here
+01:39:20 <strcat[m]> nodevicedetected: also no reason you need USB debugging enabled in the OS - adb isn't involved in the process (no harm in it, just not needed)
+01:39:53 <nodevicedetected> I just installed adb minimal from the dev page
+01:39:57 <nodevicedetected> so it should be up to date
+01:41:32 <TheJollyRoger> nodevicedetected: The "minimal adb" package will result in a brick.
+01:41:58 <nodevicedetected> Ah, okay
+01:42:03 <TheJollyRoger> It needs to be 29.0 or later.
+01:42:07 <matt80> I had the exact same problem the other night. Using the oem cable that came with the Pixel4a. Changing to a different USB port is what worked for me. Strange but it worked.
+01:42:43 <TheJollyRoger> Third party versions of adb/fastboot don't support autodetection and often are versioned incorrectly, resulting in the checks failing.
+01:42:54 <TheJollyRoger> Best case scenario: miraculously they select the correct slot and it works.
+01:42:58 <TheJollyRoger> Worst case scenario: Brick.
+01:43:17 <nodevicedetected> copy that, ill go back and look for the full version
+01:43:21 <TheJollyRoger> Likely outcome: corrupted OS, unbootable device.
+01:43:53 <TheJollyRoger> nodevicedetected: if you're planning to do the commandline installation, it's mentioned in the official installation instructions at https://grapheneos.org/install/cli - you will need to remove all third-party fastboot/adb packages first.
+01:46:02 <nodevicedetected> ill try the webinstall again now using the other cable
+01:46:08 <TheJollyRoger> Great.
+01:46:37 <TheJollyRoger> When you start the process of flashing, wait for the device to return you to the bootloader. While it's at a screen called "fastbootd" the phone is being written to.
+01:47:12 <nodevicedetected> ah still no devices detected at the unlock option
+01:47:14 <strcat[m]> the guide says that now btw
+01:47:15 <strcat[m]> also https://github.com/GrapheneOS/grapheneos.org/commit/e9d409f992e34f991dae43e9ee582671b68719a4
+01:47:20 <TheJollyRoger> Oh whew, great!
+01:48:09 <strcat[m]> nodevicedetected: don't follow unofficial guides - adb is not used in the installation process, and 'minimal adb' is some sketchy third party software
+01:48:35 <TheJollyRoger> which has a nasty habit of incomplete installs and bricking devices.
+01:48:36 <strcat[m]> nodevicedetected: as I mentioned earlier, make sure to follow the 2nd paragraph in https://grapheneos.org/install/web#connecting-phone
+01:50:29 <nodevicedetected> Just a moment
+01:50:44 <matt80> BTW my installation is humming along nicely. Got a few more apps installed just downloading the apk's and installing that way. Talked with Xfinity today and they are sending me out a sim card.
+01:51:18 <TheJollyRoger> matt80: Glad to hear it!
+01:51:44 <nodevicedetected> I see a couple of optional updates but none of them seem to have anything to do with fastboot
+01:51:54 <nodevicedetected> ill just go ahead and install everything just to eliminate doubt
+01:52:38 <nodevicedetected> brb, restarting
+01:54:15 <matt80> Any suggestions on a KeePassXC app?
+02:02:09 <Chicomsstolemylu> KeepassDX
+02:03:18 <Chicomsstolemylu> What ive been using for a long time. Has a clean good looking material interface the ui makes sense it has options to use autofill and the phones biometric authentication
+02:10:13 <nodevicedetected> Hey fellas from earlier
+02:10:41 <nodevicedetected> I appreciate the tips! apparently it was a samsung optional update that I was missing (using a samsung laptop)
+02:12:09 <matt80> Good deal...it's working ok now? The USB port?
+02:14:04 <nodevicedetected> Yeah ive successfully unlocked, i'm now downloading
+02:14:56 <matt80> It takes awhile.  the phone looks suspiciously "not busy" but it will eventually reboot
+02:17:18 <nodevicedetected> ah now its saying failed to fetch... lol (for the obtaining factory image part)
+02:19:57 <matt80> I did the command line version so not much help.
+02:20:27 <nodevicedetected> Yeah I think I may just go ahead and switch to that, i already downloaded the latest image earlier
+02:21:22 <TheJollyRoger> nodevicedetected: it's working?
+02:21:26 <TheJollyRoger> Woohoo!
+02:21:43 <nodevicedetected> Yeah man, thanks for the tips!
+02:24:08 <TheJollyRoger> Arr!
+02:39:32 <TheJollyRoger> nodevicedetected: Any installation winds blowing yer way?
+02:41:49 <nodevicedetected> still downloading the image
+02:42:02 <TheJollyRoger> Got it.
+02:42:07 <nodevicedetected> couldnt figure out the windows shell shit so I went back to webinstall
+02:43:07 <TheJollyRoger> Worse comes to worst, if it doesn't do it, at this time of the day I'm available to to talk you through the CLI method.
+02:43:20 <nodevicedetected> ah well thats nice of ya m8
+02:43:21 <TheJollyRoger> The web version should take the guess work out though.
+02:43:33 <TheJollyRoger> Arr, it be what I be here for, shipmate!
+02:44:48 <nodevicedetected> seems like the webinstall download mightve got stuck. it still says download but I dont see the drive reducing in available space
+02:44:58 <nodevicedetected> downloading*
+02:45:02 <strcat[m]> did you download it?
+02:45:14 <strcat[m]> click download then wait for it to succeed
+02:45:14 <strcat[m]> it will give a status update
+02:45:31 <strcat[m]> won't necessarily use additional space, the browser might delete other cached stuff to make room
+02:45:43 <nodevicedetected> Yeah thats what I mean, it still says "downloading" but its been about 15 mins
+02:46:16 <nodevicedetected> ah well I didnt consider the browser making room for it
+02:47:47 <nodevicedetected> ill give it another 30 mins and see where i'm at. Thanks for the response!
+02:48:02 <TheJollyRoger> Of course.
+02:48:07 <strcat[m]> it's an ~800M file or w/e
+02:48:39 <nodevicedetected> Yeah i'm using work wifi, perhaps the connection is just slow today
+02:48:46 <strcat[m]> kdrag0n is working on making progress bars for the download, unpacking images and flashing images
+02:48:57 <nodevicedetected> that would be fantastic
+02:49:09 <TheJollyRoger> Oh yeah.
+02:49:11 <strcat[m]> or releases server has 2gbit bandwidth and generally is under low load because the update downloads are usually incrementals and finish really fast
+02:49:13 <nodevicedetected> or atleast have the ellipses move around
+02:49:21 <nodevicedetected> to show its not stuck
+02:49:49 <strcat[m]> I get ~480mbit download from our releases server atm
+02:50:03 <strcat[m]> usually 2x that when it's not under any load
+02:50:12 <nodevicedetected> well thats not bad
+02:50:32 <strcat[m]> I think my home internet is just slow atm from it being a peak time
+02:50:39 <strcat[m]> server doesn't seem to be maxing out bandwidth atm
+02:50:58 <strcat[m]> yeah it's not maxed out it has plenty of bandwidth
+02:51:02 <strcat[m]> so it's maxing out your connection
+02:51:05 <strcat[m]> just your connection must be slow
+02:54:13 <nodevicedetected> yeah thats likely it
+02:54:42 <nodevicedetected> forgot im not home haha, got 1gbs back there luckily
+04:40:31 <nodevicedetected> Hey TheJollyRoger still here?
+04:41:21 <strcat[m]> nodevicedetected: no but I can help
+04:41:33 * TheJollyRoger zooms in.
+04:41:37 <strcat[m]> oh nvm
+04:41:50 * TheJollyRoger sloppily wipes the rum off his face.
+04:41:53 <TheJollyRoger> *hic*
+04:41:56 <nodevicedetected> Well either of ya fellas hah
+04:42:03 <nodevicedetected> I went command line mode again
+04:42:07 <nodevicedetected> got every downloaded finally
+04:42:09 <TheJollyRoger> Preshent and a-*hic*-a-ccounted for, shipmatesh!
+04:42:13 <nodevicedetected> got it extracted
+04:42:21 <nodevicedetected> but ./flash-all.bat doesnt wanna work
+04:42:34 <nodevicedetected> thanks x)
+04:42:39 <TheJollyRoger> What do you get when you run it?
+04:42:44 * TheJollyRoger sobers up hastily.
+04:42:44 <strcat[m]> nodevicedetected: did you get the driver?
+04:43:28 <nodevicedetected> yeah, I was able to unlock it from the webinstall
+04:43:40 <nodevicedetected> but the download kept failing so I switched over to commandline
+04:45:04 <TheJollyRoger> Sure. What do you see when you hit ./flash-all.bat? Any logs...?
+04:45:22 <nodevicedetected> its saying:
+04:45:35 <nodevicedetected> "./flash-all.bat : The term './flash-all.bat' is not recognized as the name of a cmdlet, function, script file, or
+04:45:35 <nodevicedetected> operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and
+04:45:36 <nodevicedetected> try again.
+04:45:36 <nodevicedetected> At line:1 char:1
+04:45:37 <nodevicedetected> + ./flash-all.bat
+04:45:37 <nodevicedetected> + ~~~~~~~~~~~~~~~
+04:45:38 <nodevicedetected>     + CategoryInfo          : ObjectNotFound: (./flash-all.bat:String) [], CommandNotFoundException
+04:45:38 <nodevicedetected>     + FullyQualifiedErrorId : CommandNotFoundException"
+04:46:03 <TheJollyRoger> Got it, you need to have your environment path set to know where the fastboot executable is.
+04:46:12 <TheJollyRoger> Do you know where you downloaded and extracted platform-tools to?
+04:46:29 <nodevicedetected> yeah, I ran the "$env:Path = "$pwd\platform-tools;$env:Path"" command
+04:46:52 <nodevicedetected> and I checked the fastboot --version which showed me the directory
+04:46:53 <TheJollyRoger> Oh wait a minute
+04:46:57 <TheJollyRoger> I'm on crack-
+04:47:04 <TheJollyRoger> you're not in the correct working directory when you're running the command.
+04:47:19 * TheJollyRoger hastily grabs a cup of coffee and pounds it back.
+04:47:21 <nodevicedetected> oh?
+04:47:58 <TheJollyRoger> Yeah. You need to be in the directory where the flash-all script is located.
+04:48:07 <TheJollyRoger> You downloaded the image and unpacked it?
+04:48:16 <nodevicedetected> Yes
+04:48:23 <nodevicedetected> using the provided commands
+04:48:31 <TheJollyRoger> Ok. You need to change into that directory using the cd command.
+04:48:43 <TheJollyRoger> once you do, you can check to see if it's there, with get-childitem flash-all.bat
+04:48:55 <nodevicedetected> oh hell
+04:48:57 <TheJollyRoger> By default, if you followed the commands off the CLI tutorial, and your device is sunfish,
+04:49:27 <TheJollyRoger> this should be "cd sunfish-factory..." with the date.
+04:49:31 <TheJollyRoger> cd stands for "Change Directory."
+04:49:46 <nodevicedetected> gotcha ill give that a shit
+04:49:49 <nodevicedetected> shot*
+04:49:51 <TheJollyRoger> Look at your Powershell Prompt, and it will display what your current directory is.
+04:50:20 <TheJollyRoger> If you ever get lost, your prompt should tell you where you are as you navigate the seas of your computer's hard drives and SSD.
+04:50:52 <nodevicedetected> you're a champ
+04:50:56 <nodevicedetected> got the flash started
+04:51:19 <TheJollyRoger> Okay! Make sure the phone is placed flat on your desk, where it won't fall, and the cables are good and snug before you-- OK!
+04:51:34 <nodevicedetected> yeah all that is good :)
+04:52:32 <TheJollyRoger> It could take a minute or so. Once it's done, fastboot in powershell should give you a "Finished, press any key to continue" and then return you back to Powershell when you hit space or enter.
+04:52:38 <TheJollyRoger> (or any other key)
+04:52:50 <nodevicedetected> copy
+04:53:07 <nodevicedetected> oh
+04:53:09 <nodevicedetected> I think its done
+04:53:13 <nodevicedetected> that was quick
+04:53:14 <TheJollyRoger> Great!
+04:53:29 <TheJollyRoger> Yeah, USB 3.1 is *fast*!
+04:53:32 <TheJollyRoger> OK, don't unplug it just yet.
+04:53:44 <nodevicedetected> want to lock it back up now I assume?
+04:53:44 <TheJollyRoger> You can test the phone to see if it boots, or you can lock the bootloader immediately.
+04:53:56 <TheJollyRoger> Yes. You can optionally boot the device just to see first.
+04:54:04 <TheJollyRoger> But *don't* use it as a phone until we lock the bootloader.
+04:54:16 <nodevicedetected> okay Ill check it out
+04:54:28 <TheJollyRoger> Once it's returned you back to fastboot, you can select start. Now, it's going to give you an orange screen warning about the bootloader being unlocked.
+04:54:34 <TheJollyRoger> That's OK -- you should know what that screen looks like.
+04:54:46 <TheJollyRoger> We're going to lock it after we see that GrapheneOS boots.
+04:54:59 <TheJollyRoger> So it'll display the "Google" logo, then a warning about the bootloader being unlocked, then you'll see "GrapheneOS"
+04:55:23 <nodevicedetected> Yessssir, i'm now at the logo with the option for "NEXT >"
+04:55:36 <nodevicedetected> guessing I should reboot into bootloader now
+04:55:45 <TheJollyRoger> Great! OK! yeah, switch it off and start it back into the bootloader!
+04:56:13 <TheJollyRoger> After we lock the bootloader then we're going to boot it up one last time, and once you get through the startup tutorial, we're going to turn OEM unlock back off.
+04:56:41 <nodevicedetected> copy
+04:56:42 <TheJollyRoger> Once you reach the bootloader, "fastboot flashing lock" and confirming it on your phone should get the lock done.
+04:56:52 <nodevicedetected> to get back into the boot tools I want to run "$env:Path = "$pwd\platform-tools;$env:Path"" again no?
+04:57:12 <TheJollyRoger> Nope, you don't have to, since it's already been run for this particular powershell instance.
+04:57:31 <TheJollyRoger> If you closed Powershell and opened a new one you would, but if you didn't, s we don't have to.
+04:57:53 <nodevicedetected> ah okay
+04:58:35 <TheJollyRoger> You'll have to confirm it on your phone, once the computer starts the process.
+04:58:52 <nodevicedetected> just got it done
+04:58:58 <TheJollyRoger> Great!
+04:59:16 <TheJollyRoger> This time when you start the device, you'll notice that the orange screen changes to a yellow one with "Your device is loading a different operating system."
+04:59:16 <nodevicedetected> Really appreciate the help !
+04:59:21 <TheJollyRoger> S'what I'm here for!
+04:59:39 <TheJollyRoger> If you see this yellow screen caution, that's a *good* sign because it means the verified boot has now been switched on and is enforcing.
+05:01:01 <TheJollyRoger> Every time you reboot your cellphone, the handset will check to ensure the signature on the entire system partition match to the keys the flash-all script gave the bootloader, and if it's damaged, it'll try to revert or roll back the damage automatically if it doesn't match.
+05:01:14 <TheJollyRoger> You can skip this screen by double-tapping the power key twice in rapid succession.
+05:01:21 <nodevicedetected> sorry im a little distracted at work
+05:01:41 <TheJollyRoger> Sure no problem, let me know when to continue, but you're on the home stretch now!
+05:01:52 <TheJollyRoger> You're past the most difficult part!
+05:03:20 <nodevicedetected> yeah I wasnt paying attention when I booted it the second time x) but thanks for the info about the signature check
+05:03:43 <TheJollyRoger> Yeah. We can also check that the keys are the *correct* keys using attestation, which we'll do in a moment.
+05:03:44 <nodevicedetected> im through the set up and at the homescreen now
+05:04:07 <TheJollyRoger> Great! Ok, the last two steps, and these parts are optional...
+05:04:17 <nodevicedetected> looks like its got chrome preinstalled, thats sorta odd no?
+05:04:29 <nodevicedetected> and okay no problem!
+05:04:30 <TheJollyRoger> The first thing you're going to want to do is go back to developer settings (the same way you did earlier) and slide OEM unlocking to "OFF"
+05:04:47 <TheJollyRoger> After which, you'll want to slide Developer options to "OFF" to close that menu.
+05:05:04 <TheJollyRoger> Developer options shouldn't be used unless you're debugging the phone. Never use them in production!
+05:06:08 <nodevicedetected> done!
+05:06:18 <nodevicedetected> should I reboot?
+05:06:50 <TheJollyRoger> Yes, reboot the phone once it slides to off. The very last step is optional, it's to pair with the Attestation server for integrity self-monitoring at https://attestation.app/tutorial on a computer you trust. Again, this step's optional, but it ensures that you flashed the right image, and the keys are the correct and genuine keys.
+05:07:16 <TheJollyRoger> Since we didn't verify via signify (this part can't be done on Windows), the best thing to do is verify afterward.
+05:07:43 <TheJollyRoger> er, I mean, signify verification can't be done on Windows - verifying by remote attestation can be done on any device you trust that has a browser.
+05:07:57 <TheJollyRoger> So! About Chromium -- actually, pleasant surprise for you there!
+05:08:52 <TheJollyRoger> GrapheneOS includes its own hardened browser, called Vanadium, which is a privacy-focused patchset for Chromium, which actually does a lot of neat things - it improves on the sandboxing and security of Chromium, using GrapheneOS' improvements to sandboxing and memory safety.
+05:09:14 <nodevicedetected> ah okay I had heard about that
+05:09:29 <TheJollyRoger> It's designed to mimic the browser fingerprint of a normal Pixel, but improve on the strictness of the site isolation to mitigate exploits.
+05:09:41 <nodevicedetected> I'm probably going to end up using tor, but thats nice that they put that together
+05:10:02 <TheJollyRoger> Got it.
+05:10:12 <TheJollyRoger> It also provides the backend for WebView and PDF Viewer.
+05:10:22 <nodevicedetected> oh thats great
+05:10:26 <TheJollyRoger> Note that -- Vanadium depends on some GrapheneOS improvements, so it will likely not work elsewhere.
+05:11:34 <TheJollyRoger> GrapheneOS comes with its own secure PDF reader, since PDFs often are a security and privacy nightmare.
+05:12:20 <nodevicedetected> Yeah ive heard
+05:12:26 <nodevicedetected> thats fantastic
+05:12:28 <TheJollyRoger> Yeah!
+05:12:36 <nodevicedetected> just now getting the auditor app
+05:12:44 <TheJollyRoger> Great!
+05:13:33 <TheJollyRoger> That's pretty much it for installing GrapheneOS, once you're paired with Attestation Server. Attestation Server will occasionally ping your device every number of hours, and if your device doesn't check in, or checks in wrong, or if the keys change, then Attestation Server can send a "Hold it! Something's not right!" to an E-mail address you want to use.
+05:13:43 <TheJollyRoger> (Of course, this E-mail address should not be accessible from the device itself!)
+05:14:09 <nodevicedetected> successfully audited
+05:14:12 <TheJollyRoger> Woohoo!
+05:14:18 <TheJollyRoger> Welcome aboard the ship, shipmate!
+05:14:38 <nodevicedetected> oh very nice, just read the bit about server checks
+05:14:47 <nodevicedetected> thanks brother!
+05:14:52 <TheJollyRoger> Yarr, anytime!
+05:14:56 <nodevicedetected> ive got to get back to work x)
+05:15:05 <TheJollyRoger> If you find GrapheneOS useful, or want to support development work, please donate to us at https://grapheneos.org/donate -
+05:15:17 <TheJollyRoger> This project's funded entirely by donations, it keeps this vessel sailing!
+05:15:19 <nodevicedetected> absolutely
+05:15:30 <TheJollyRoger> Splice the mainbrace! Much appreciated!
+05:15:40 <TheJollyRoger> Fare thee well, and drop back in anytime ye like!
+05:15:50 <nodevicedetected> ill be throwing something your way once I get off of work
+05:15:54 <TheJollyRoger> The more the merrier onboard, as we sail for privacy! ^_^
+05:15:55 <nodevicedetected> good night!
+05:16:01 <nodevicedetected> hell yeah
+05:16:03 <TheJollyRoger> Thank you so much! Sleep well, shipmate!
+05:35:24 <strcat[m]> https://grapheneos.org/install/web has progress bars now
+05:35:34 <strcat[m]> testing it atm
+05:36:27 <TheJollyRoger> Woah! Awesomesauce, strcat[m]!
+05:39:46 <strcat> so glad Wi-Fi sharing qr code exists
+05:39:52 <strcat> for each time I flash this poor Pixel 3a
+05:40:03 <TheJollyRoger> Ahahaha oh no!
+05:40:14 <strcat> maybe I should pick a diff device cause I'm gonna kill the shitty NAND it has
+05:40:36 <strcat> Pixel 1 moved to UFS 2
+05:40:36 <TheJollyRoger> Woah. That... that could actually burn out the NAND chip?
+05:40:41 <strcat> Pixel 3a went back to eMMC to be cheaper
+05:40:44 <TheJollyRoger> Oh.
+05:40:44 <strcat> 4a is back to UFS
+05:40:47 <TheJollyRoger> OHHHH
+05:40:52 <TheJollyRoger> Oh wow, I didn't know that.
+05:41:45 <strcat> and you can safely assume that it being eMMC means having garbage flash memory, not just a slower interface for it
+05:41:54 <TheJollyRoger> Glad that they're no longer using eMMC, then.
+05:42:45 <TheJollyRoger> I'm kinda surprised, I thought that eMMC was only used in dime-a-dozen SD and MicroSD cards because those things you fill 'em up and then throw them away. And Teslas.
+05:42:51 <strcat> TheJollyRoger: so it's still technically an SSD but... the perf diff is like HDD vs SSD
+05:42:57 <TheJollyRoger> Jeez. >_<.
+05:43:25 <TheJollyRoger> And Teslas, where failure of a seventy cent part means replacing a $5000 media center!
+05:44:18 <strcat> part of why delta updates are important beyond bandwidth
+05:44:24 <strcat> minimizing wear of the NAND
+05:44:43 <TheJollyRoger> Jeez. Makes sense now.
+05:45:56 <strcat[m]> but yeah https://grapheneos.org/install/web now has progress bars so you can tell it's progressing
+05:46:01 <TheJollyRoger> Woohoo!
+05:49:25 * fckmepls[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/NIMDgFQGZPAvNRKgysNrETwk/message.txt >
+05:51:05 <strcat[m]> fckmepls: use https://grapheneos.org/install/web
+05:51:18 <strcat[m]> fckmepls: Debian doesn't have a proper fastboot package (it's completely broken and horribly out-of-date) and the platform-tools zip we suggest as an alternative is x86
+05:51:23 <strcat[m]> fckmepls: use Chromium + web installer
+05:52:24 <strcat[m]> which uses our own implementation of fastboot: https://github.com/kdrag0n/fastboot.js
+05:53:13 <strcat[m]> fckmepls: should work for you.
+06:52:43 <TheJollyRoger> Huh. Come to think of it, I wonder if the OEMs ever publish NAND/SSD lifetime estimates? I mean, everything's pretty engineered to stay within a certain amount of write cycles, don't know if they publish that information.
+06:53:17 <TheJollyRoger> I think Samsung might have for the nvme drives, but I couldn't find them.
+11:35:11 <datacloud[m]> Hi, one short question about the "phone app". I swiched to the dark mode, but the phone app will not support it. Is this normal? Is there another way to get a dark mode phone app?
+12:06:46 <nscnt[m]> data.cloud: Yes, that's expected. The Phone app doesn't have support for the dark theme. Of course, if you install an app that supports the dark theme, you will have an app with a dark theme.
+12:09:21 <datacloud[m]> <nscnt[m] "data.cloud: Yes, that's expected"> do you have a recommendation app?
+12:09:43 <somenerd[m]> this is a bit offtopic
+12:15:42 <nscnt[m]> Using legacy calls and texts is officially discouraged by GrapheneOS.[0] => Don't use it at all(?!). [0] https://grapheneos.org/faq#cellular-tracking
+12:17:55 <hypokeimenon[m]> Yeah, don't use them at all if possible.
+12:18:15 <somenerd[m]> yeah
+12:19:12 <nscnt[m]> For everything else where you have no other option, the included Phone app is sufficient.
+12:37:46 <bn365[m]> hello. i am new to group, need help to troubleshoot install. thank you for any help, i am trying 2 weeks to install, always stop at <Waiting for any device>. i have new Pixel 4a, update to driver, enable USB, Ubuntu 20.04, fastboot 30.0.5, have use 2 different USB A-C cable. nothing is working
+12:47:52 * bn365[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/cRWYFFcKpcBkRNhtxobRZueL/message.txt >
+12:51:16 <louipc> virtual machine is not a good idea
+12:51:33 <louipc> what's your main os
+12:51:45 <louipc> windows should work fine
+12:51:46 <nscnt[m]> bn365: Have you installed the udev rules?
+12:51:58 <SkyFox[kdeorg][m> <bn365[m] "hello. i am new to group, need h"> Have you installed udev rules: https://grapheneos.org/install/cli#flashing-as-non-root?
+12:52:39 <louipc> ive heard that debian has some usb problems, maybe ubuntu as well
+12:52:41 <bn365[m]> <nscnt[m] "bn365: Have you installed the ud"> i have install some udev rule, yes, but a friend help with this part so i am not sure if i do it correctly.
+12:54:54 <SkyFox[kdeorg][m> It might also be due to a bad USB port, maybe try another one
+12:55:05 <bn365[m]> <SkyFox[kdeorg][m "Have you installed udev rules: h"> i have follow the install guide exact for 2 weeks. i have deleted files after each attempt in case something is broken. i have already try this
+12:55:28 <louipc> there is also a new web installer
+12:55:36 <louipc> https://grapheneos.org/install/web
+12:55:37 <bn365[m]> <SkyFox[kdeorg][m "It might also be due to a bad US"> i have 4 usb port, 2 usb cable. i have mix and match all. i have remove all other usb item. nothing
+12:55:45 <SkyFox[kdeorg][m> <louipc "there is also a new web installe"> Would it help, if the USB port is the problem?
+12:56:00 <louipc> no it wont help if theres a usb problem
+12:56:05 <nscnt[m]> bn365: You try to unlock the bootloader and get stuck with the message <waiting for device>, right?
+12:56:49 <louipc> you could try a different computer
+12:57:26 <SkyFox[kdeorg][m> <bn365[m] "i have 4 usb port, 2 usb cable. "> Are you trying with the USB C cable and USB C to USB A adapter that came with the phone, btw?
+12:58:33 <bn365[m]> <nscnt[m] "bn365: You try to unlock the boo"> i can unlock bootloader. during 'sudo ./flash-all.sh' it get stuck <Waiting for any device> then stop at this screen: https://youtu.be/oO0UFZjuotg?t=840
+12:59:23 <bn365[m]> <SkyFox[kdeorg][m "Are you trying with the USB C ca"> i have try with cable that come with phone and i purchase new cable from bestbuy in case first was bad. i check to make sure 'data transfer' A-C cable
+13:00:04 <SkyFox[kdeorg][m> <SkyFox[kdeorg][m "Are you trying with the USB C ca"> Oh, wait, it comes with a wrong adapter, silly me. Nevermind
+13:00:23 <nscnt[m]> bn365: You type in the flash command and it starts working, but at some point there's the message <waiting for device>?
+13:00:47 <bn365[m]> <louipc "https://grapheneos.org/install/w"> i have not seen this before. i will try to follow this right now
+13:02:45 <bn365[m]> <nscnt[m] "bn365: You type in the flash com"> yes. all my install attempt are successful with no problem, full update to native OS, 4a phone, download file, fastboot v 30, ubuntu 20.04. i get to /flash-all.sh no problem. it stops for <Waiting for any device> during flash, then when i get <Wfad> message, the screen on phone stops at this screen: https://youtu.be/oO0UFZjuotg?t=840
+13:02:59 <niulma8248[m]> Is it possible to install magisk on grapheneos phone?
+13:03:19 <nscnt[m]> bn365: It takes some time for the script to finish. Did you wait without interrupting it?
+13:03:55 <bn365[m]> <nscnt[m] "bn365: It takes some time for th"> in some instance i am waiting 10 minutes before retry to install. do i need more wait than 10 min??
+13:04:18 <nscnt[m]> No, it shouldn't take that long.
+13:05:38 <bn365[m]> i am try louipc web install i do not see this before.
+13:06:21 <nscnt[m]> Sure
+13:06:48 <bn365[m]> thank you guys for help. i will say if this web install work. brb 15min
+13:15:31 <louipc> bn365[m]: it won't solve usb problems, but can make the other parts of install easier
+13:15:42 <louipc> maybe you can try on a different computer
+13:25:11 <bn365[m]> <louipc "bn365: it won't solve usb proble"> i am still doing a try of web install. i will borrow macOS computer if this do not work. i will report to this group how it work
+13:26:07 <louipc> cool
+13:31:11 <mynacol[m]> <niulma8248[m] "Is it possible to install magisk"> No, unless you want to lose most of the security features of Graphene OS
+13:32:26 <mynacol[m]> bn365: Stop attempting to follow third-party guides. Stick to the official methods under https://grapheneos.org/install/ and ask for help here if needed
+13:32:48 <mynacol[m]> Other guides may brick your device
+13:33:04 <bn365[m]> i have try this install method: https://grapheneos.org/install/web , it stop at this part: https://i.maga.host/tcvKs8s.png , phone screen stop at same screen as shown here: https://youtu.be/oO0UFZjuotg?t=840 .
+13:33:35 <bn365[m]> <mynacol[m] "bn365: Stop attempting to follow"> i have follow official guide 100%. only use other 3rd party for troubleshoot
+13:33:59 <bn365[m]> i will try macOS now. i am 2 weeks try to resolve <Waiting for any device> error
+13:35:41 <mynacol[m]> <bn365[m] "i will try macOS now. i am 2 wee"> The most probable reason is a broken USB implementation. So please try with another PC 🙂
+13:49:39 <bn365[m]> my friend only have macOS catalina. official guide for only support Big Sur macOS ☹️
+13:55:32 <Sean87> Greeting all. I have a Pixel 2 XL with an unlocked bootloader, TWRP installed and the phone successfully connected to a Win10 machine. When going through the Web install, I get the there are no devices connected message when I click the "Download Release" button. I have tried this in Chrome, Brave, and Edge, all with the same message.
+13:56:22 <SkyFox[kdeorg][m> <Sean87 "Greeting all. I have a Pixel 2 X"> You should be using the default recovery, no TWRP
+13:58:37 <SkyFox[kdeorg][m> Also Pixel 2 (XL) is EoL, the web installer probably doesn't support it
+13:58:45 <SkyFox[kdeorg][m> > <@freenode_Sean87:matrix.org> Greeting all. I have a Pixel 2 XL with an unlocked bootloader, TWRP installed and the phone successfully connected to a Win10 machine. When going through the Web install, I get the there are no devices connected message when I click the "Download Release" button. I have tried this in Chrome, Brave, and Edge, all with the same message.
+13:58:45 <SkyFox[kdeorg][m>  * You should be using the default recovery, not TWRP
+14:00:12 <Sean87> OK, thank you for your reply.
+14:02:47 <mynacol[m]> <bn365[m] "my friend only have macOS catali"> If you stick to the web installer, you should be fine. Make sure to use an up-to-date browser.
+14:05:01 <SkyFox[kdeorg][m> <mynacol[m] "If you stick to the web installe"> A Chromium-based browser ^
+14:06:31 <bn365[m]> <SkyFox[kdeorg][m "A Chromium-based browser ^"> i use Brave, which is Chromium base. it did not work. my error is above
+14:06:50 <SkyFox[kdeorg][m> <bn365[m] "i use Brave, which is Chromium b"> I meant when you try on macOS
+14:07:11 <bn365[m]> <bn365[m] "my friend only have macOS catali"> i have try this OS just in case, it did not work. i cannot get past platform tool install.
+14:08:18 <SkyFox[kdeorg][m> <bn365[m] "i have try this OS just in case,"> Are you doing CLI or web?
+14:08:27 <bn365[m]> <SkyFox[kdeorg][m "Are you doing CLI or web?"> CLI
+14:08:50 <SkyFox[kdeorg][m> Try web, it doesn't list obtaining platform tools as one of the steps
+14:10:48 <bn365[m]> <SkyFox[kdeorg][m "Try web, it doesn't list obtaini"> Ok, i am on catalina OS and using chrome to try web install. i will report
+14:16:02 <bn365[m]> <bn365[m] "Ok, i am on catalina OS and usin"> it stop at same part: https://i.maga.host/tcvKs8s.png , phone stop at same part: https://youtu.be/oO0UFZjuotg?t=840 . previous try: Ubuntu 20.04. this try: catalina macOS . i have use 2 different usb A-C cable, and all possible usb port with no other usb item
+14:17:13 <mynacol[m]> bn365: May I ask from which brand the USB cables are? Do you think they are high quality?
+14:18:11 <bn365[m]> <mynacol[m] "bn365: May I ask from which bran"> one that come with phone. other one i buy from bestbuy is INSIGNIA brand and package says 'for data transfer'
+14:18:13 <mynacol[m]> Just to be sure: You are in fastboot mode?
+14:18:45 <mynacol[m]> <bn365[m] "one that come with phone. other "> The one that came with the phone should be fine...
+14:19:07 <bn365[m]> <mynacol[m] "Just to be sure: You are in fast"> i have follow the guide (CLI and web) exactly step by step. is there method to check if fastboot mode?
+14:20:32 * mynacol[m] uploaded an image: screenshot_2021-01-31_15-19-48.png (120KiB) < https://matrix.org/_matrix/media/r0/download/mynacol.xyz/CULUEttfovQSZiNWJABeELkt/screenshot_2021-01-31_15-19-48.png >
+14:21:17 <bn365[m]> <mynacol[m] "screenshot_2021-01-31_15-19-48.p"> yes. i stare at this screen 90% of time during install 🙂
+14:22:24 <mynacol[m]> And you were already able to unlock the bootloader?
+14:23:48 <SkyFox[kdeorg][m> bn365: Just to check, by "macOS" you mean a genuine MacBook right?
+14:24:21 <bn365[m]> <mynacol[m] "And you were already able to unl"> yes. bootloader is unlock. i can get all the way to .flash-all.sh command and this is always where it stop <Waiting for any device>
+14:24:29 <mynacol[m]> I am quite clueless. When @strcat:matrix.org is back, he might have an idea what's going on...
+14:24:32 <bn365[m]> <SkyFox[kdeorg][m "bn365: Just to check, by "macOS""> yes, 2014 macAir with catalina macOS
+14:26:26 <somenerd[m]> I think that it should be Big Sur
+14:26:29 <somenerd[m]> not Catalina
+14:26:48 <bn365[m]> i am new to this group, i am not sure how message work if offline. but i have no more time to try for now. it will be many hour before i try again. if i ask question later and it is answered i do apologize. thank you all for help with troubleshoot, i have tried some new things with your suggestions. i will keep trying and come back later if it is ok. thank you: mynacol, SkyFox, louipc, nscnt and if i miss someone.
+14:26:55 <bn365[m]> thank you again.
+14:28:08 <SkyFox[kdeorg][m> <bn365[m] "i am new to this group, i am not"> Sure, if you get mentioned here while you are gone, you can check the bell button at the top right of the Element window. There you'll see missed notifications
+14:28:42 <mynacol[m]> bn365: You also can always check the chat log here: https://freenode.logbot.info/grapheneos
+14:28:53 <SkyFox[kdeorg][m> Yeah, that too
+14:29:24 <mynacol[m]> bn365: Soory we could not help you better. Maybe next time 🙂3
+14:29:30 <mynacol[m]>  * bn365: Sorry we could not help you better. Maybe next time 🙂3
+14:29:38 <mynacol[m]>  * bn365: Sorry we could not help you better. Maybe next time 🙂
+15:44:28 <niulma8248[m]> <mynacol[m] "No, unless you want to lose most"> Thanks for your reply. Is there any other alternative app available?
+15:47:23 <SkyFox[kdeorg][m> <niulma8248[m] "Thanks for your reply. Is there "> Rooting itself is harmful to security
+15:49:50 <take_a_deep_brea> niulma8248:  you can join #grapheneos-offtopic:matrix.org  room and discuss further about apps . also i am curious about what is it that you wih to use in magisk ?
+15:50:21 <take_a_deep_brea> but please hold further conversations about non system apps in #grapheneos-offtopic:matrix.org
+15:50:25 <niulma8248[m]> <take_a_deep_brea "niulma8248:  you can join #graph"> Trying to install my bank app
+16:18:19 <illustratorius[m> Does Grapheme OS have a built in app for clearing memory?
+16:21:44 <take_a_deep_brea> i dont think an app would do that . it would be a low level system service . and may i ask under what circumstance would you want this featuhre ?
+16:27:46 <super_noob[m]> Hello everyone. I was here last week looking for help with the  last few steps on installing graphene on a Pixel 3XL. The general consensus  was  that the USB-C  port was not  up  to snuff. (I'm using the original USB-C/USB-C cable  that came with  the phone.)  It was suggested that I try a USB-C/USB-A cable.   Can anyone suggest a quality USB-C/USB-A cable I can buy?
+16:31:44 <madaidan[m]> <illustratorius[m "Does Grapheme OS have a built in"> Define "clearing memory". GrapheneOS overwrites freed memory with zeroes via init_on_free + hardened_malloc, therefore purging sensitive data if that's what you mean.
+16:32:52 <illustratorius[m> <madaidan[m] "Define "clearing memory". Graphe"> Clearing ram to increase response time of apps
+16:43:40 <take_a_deep_brea> super_noob: those made by Anker have been recommended in this room
+16:45:22 <take_a_deep_brea> illustrator I us: i am sure you can restrict background activity for most of the apps without losing muvh functionality
+17:13:11 <illustratorius[m> I'm using a Pixel 3 with Graphene and it works great. How much better is Graphene on a Pixel 4a?
+17:30:34 <somenerd[m]> more support time, mostly
+17:31:10 <somenerd[m]> and maybe faster spawning times? (heard that somewhere not sure where though)
+17:35:59 <jpds_> illustratorius[m: A lot, 4a has a proper SSD
+17:37:27 <illustratorius[m> <jpds_ "illustratorius: A lot, 4a has a "> Is it truly noticeable? ...The Pixel 3 is pretty snappy and I figured it has a better processor though less ram.
+17:37:56 <illustratorius[m> I may pick up a 4a
+18:15:42 <super_noob[m]> <take_a_deep_brea "super_noob: those made by Anker "> Thank you TADB
+18:15:54 <audrienne_c[m]> hi all, I am new to matrix so excuse me if I do something incorrect or post in a wrong channel (I currently only can see this one). Since a few days my pixel 3XL does not recognize my finger sensor hardware anymore at all (it is not even an option anymore in the settings). If I remember it correctly at one point it said something on the lock screen like "finger sensor hardware not available right now" and I tried
+18:15:54 <audrienne_c[m]> to solve it with a restart, which did not work. Now it is not even an option anymore in the settings under Security (also if I search for "finger" in settings nothing shows up). I have really good experience with grapheneOS, so my guess right now is the actual hardware malfunctioned, but I wanted to ask here anyway. Maybe somebody has an idea what the problem could be or it even actually is a software issue (which
+18:15:54 <audrienne_c[m]> would be great for me of course, but I do not want to make any claims at all). my build is RQ1A.210105.003.2021.01.23.03.
+18:41:05 <nullnode[m]> <audrienne_c[m] "hi all, I am new to matrix so ex"> If you check your system logs over adb does it show anything interesting?
+18:42:06 <nullnode[m]> If possible a simple debug tactic to confirm if it's indeed a hardware issue would be to flash back to stock to see if the lack of fingerprint sensor is hardware or software at it's root cause.
+18:56:49 <fll[m]> <jpds_ "illustratorius: A lot, 4a has a "> Pixel 3 also has proper storage. 3a's storage is slow.
+18:58:27 <scalpol[m]> Hello, I am not sure if this would be the right place to ask, but will appreciate any suggestion. Recently migrate to Graphene and it has worked perfectly, the only thing I have not found any replacement is USB Audio Player Pro. Do someone know an alternative?
+19:02:27 <kawaiipunk[m]1> Hi all. Just wondering if anyone could advise. I just lost my phone whilst out and about. It was a Pixel 3A with Graphene, encrypted and with a 10 digit passphrase.
+19:02:27 <kawaiipunk[m]1> Does anyone know what the security of Android is like in this scenario? As I understand it, data is encrypted at rest. Happy to chat in the offtopic room if folks think that more appropriate.
+19:03:24 <kawaiipunk[m]1> <scalpol[m] "Hello, I am not sure if this wou"> Are you just looking for an audio player scalpol, If so I recommend looking on the F-Droid store. Vinyl is really good.
+19:03:49 <kawaiipunk[m]1> <kawaiipunk[m]1 "Are you just looking for an audi"> https://f-droid.org/en/packages/com.poupa.vinylmusicplayer/
+19:04:31 <scalpol[m]> Yep, one with integration with streaming services
+19:05:05 <kawaiipunk[m]1> Sorry yeh don't really know. Checkout the F-droid app store and ask in their chat channel.
+19:06:02 <toby34534> Hello all!
+19:06:03 <toby34534> Everything is posting OK when flash the factory image except toward the end I receive this:
+19:06:03 <toby34534> Rebooting into
+19:06:04 <toby34534> fastboot   OKAY
+19:06:04 <toby34534> [  0.064s]
+19:06:05 <toby34534> < waiting
+19:06:05 <toby34534> for any device >
+19:06:06 <toby34534> Sending 'super'
+19:06:06 <toby34534> (4 KB)    FAILED
+19:06:07 <toby34534> (Write to device failed (Too many links))
+19:06:07 <toby34534> fastboot:
+19:06:08 <toby34534> error: Command failed
+19:06:08 <toby34534> Rebooting into
+19:06:09 <toby34534> bootloader    FAILED (Write to device failed (no link))
+19:06:09 <toby34534> fastboot:
+19:06:10 <toby34534> error: Command failed
+19:06:10 <toby34534> Press any key
+19:06:11 <toby34534> to exit...
+19:13:43 <toby3453410> hi
+19:15:09 <toby3453410> Can anyone help me with an issue I'm running into flashing the factory image?
+19:20:42 <squarmkt[m]> <bn365[m] "my friend only have macOS catali"> Just because its not officially supported doesnt mean that it won't won't work, it just means it hasn't been tested, and you'll be more on your own than if you used a supported method
+19:21:33 <squarmkt[m]> * Just because its not officially supported doesnt mean that it won't won't work, it just means it hasn't been tested, and you'll be more on your own than if you used a supported method (this is not a recommendation to use unofficial guides or anything, but if you don't have any other options you can give it a try
+19:21:44 <squarmkt[m]> * Just because its not officially supported doesnt mean that it won't won't work, it just means it hasn't been tested, and you'll be more on your own than if you used a supported method (this is not a recommendation to use unofficial guides or anything, but if you don't have any other options you can give it a try)
+19:26:52 <toby3453410> Everything is posting OK when flash the factory image except toward the end I receive Sending 'super' FAILED (Write to device failed (Too many links))
+19:27:04 <toby3453410> Any idea on how to resolve.
+19:31:32 <methodman[m]1> <toby3453410 "Any idea on how to resolve."> I am no pro but start from the basics, what phone are you flashing?
+19:31:42 <methodman[m]1> Are you using an OEM USB cable?
+19:31:48 <methodman[m]1> And what OS are you using to flash?
+19:37:02 <letest07[m]> Anyone know how to set the ringer, rather than media, as the default for volume adjustment?
+19:46:48 <toby3453410> I'm flashing a Pixel 4a (new as of a few days ago)
+19:47:47 <letest07[m]> toby3453410 enjoy
+19:48:22 <toby3453410> using OEM cable to Win
+19:48:32 <toby3453410> letest07[m]Thanks!
+19:48:51 <toby3453410> If I could get it to work
+19:49:21 <toby3453410> Sending 'super' FAILED (Write to device failed (Too many links))
+19:51:27 <letest07[m]> toby3453410 Windows up to date? Cable plugged in all thee way on both ends?
+19:51:41 <toby3453410> Yes and Yes.
+19:52:18 <methodman[m]1> Can you try a different OS?
+19:52:40 <methodman[m]1> I used arch and worked perfect for me after I used an OEM cabke
+19:53:57 <toby3453410> everything works on the flashes OK until the end I get this:
+19:54:07 <toby3453410> Rebooting into
+19:54:07 <toby3453410> fastboot                            OKAY
+19:54:08 <toby3453410> [  0.064s]
+19:54:08 <toby3453410> < waiting
+19:54:09 <toby3453410> for any device >
+19:54:09 <toby3453410> Sending 'super'
+19:54:10 <toby3453410> (4 KB)                             FAILED
+19:54:10 <toby3453410> (Write to device failed (Too many links))
+19:54:11 <toby3453410> fastboot:
+19:54:11 <toby3453410> error: Command failed
+19:54:12 <toby3453410> Rebooting into
+19:54:12 <toby3453410> bootloader
+19:54:13 <toby3453410> FAILED (Write to device failed (no link))
+19:54:13 <toby3453410> fastboot:
+19:54:14 <toby3453410> error: Command failed
+19:54:14 <toby3453410> Press any key
+19:54:15 <toby3453410> to exit...
+19:54:27 <toby3453410> I only have Win10
+20:03:35 <m2tu[m]> Ar u using usb.3.0 port ?
+20:04:21 <m2tu[m]> if so try change port to 2.0 , other prob can be cable try with other one.
+20:17:46 <m2tu[m]> is anyone experienced in building graphene os ?
+20:17:59 <m2tu[m]> i need help
+20:19:02 <strcat[m]> methodman: Windows 10 is a fully supported, they shouldn't use another OS, it just makes things more complicated
+20:19:24 <strcat[m]> m2tu: building or installing it
+20:19:37 <m2tu[m]> building
+20:20:05 <strcat[m]> toby3453410: are you following the official guide?
+20:20:23 <strcat[m]> toby3453410: consider using https://grapheneos.org/install/web rather than the CLI install since it's easier
+20:20:28 <strcat[m]> far less that you can screw up
+20:20:52 <m2tu[m]> yes i followed all and alls is fine. i can build it as it is.
+20:20:53 <strcat[m]> toby3453410: however, looks like you may not have a reliable USB connection
+20:21:24 <m2tu[m]> but the problem if i wnat to edit, forexaple add or remove apps... i dont know where to begin. and when to remove
+20:22:41 * m2tu[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/gJCvoVkVJqLtaGcuHGlzKFhv/message.txt >
+20:23:30 <m2tu[m]> those questions i cannt find nowhere and are stuck!
+20:24:07 <strcat[m]> don't remove the directories, just remove the apps from the list of included packages
+20:24:14 <strcat[m]> mostly in build/make
+20:26:45 <m2tu[m]> <strcat[m] "don't remove the directories, ju"> @strcat:matrix.org:  you mean the build.sh file ? hav the list ?
+20:27:26 <strcat[m]> nothing to do with build.sh for building the kernel
+20:27:54 <strcat[m]> remove the apps from the list of included packages in the relevant build/make file, clear out/ and rebuild
+20:28:20 <strcat[m]> if you just want to get rid of apps consider using the official releases and disabling them in the OS
+20:29:05 <m2tu[m]> ok i got that thanks :)))
+20:29:38 <m2tu[m]> well im alrde doing it, why i wnat to do is just becuase i wanna learn mor about android and how to modify it.
+20:30:07 <m2tu[m]> .. do you know anthing about vendor
+20:30:45 <m2tu[m]> can i delete files or edit some .xml there without corrupting the boot ?
+20:42:23 <toby3453410> Im using usb c to usb c
+20:43:58 <toby3453410> m2tu[m]: usb c to usb c
+21:19:41 <matt80> toby3453410 - What about the cable? Sorry, missed earlier part of conversation.
+21:20:41 <oldman_newuser> Hello .  When I click 'Settings--> System-->System update settings--> Check for updates' , Should there be a visual feedback that the update check has succeeded ?  Visually it appears to do nothing but I do see traffic  between the phone and releases.grapheneos.org .  I guess I was anticipating ' no updates are available at this time' or 'last
+21:20:42 <oldman_newuser> check for updates occured at $date .  thanks
+21:22:32 <m2tu[m]> which file shall i edit to remove apps from build ?
+21:32:06 <nscnt[m]> oldman_newuser: Yes, there's no feedback currently. It's a planned feature, though.
+21:32:41 <oldman_newuser> ty for the response.
+21:50:47 <pinguin74> is there an estimation how many devices with grapheneos are in use?
+21:51:21 <pinguin74> i guess the download numbers should tell
+21:52:14 <m2tu[m]> is there a way to make attestion work wthout having 2 devices ?
+22:00:15 <KE345> Hi. I just installed GrapheneOS on Pixel 3. I am new in using this system and have several questions. 1. What is a good email client (from F droid or Aurora store) to run office 365 and iCloud emails without too much privacy compromise? Some apps on Aurora have multiple trackers in permissions (Google, Facebook, etc. I understand that GrapheneOS
+22:00:15 <KE345> gets rid of Google services. How affective those trackers can still be? 3. Is the preloaded browser (Vanadium) has better privacy than DuckDuck go browser?
+22:02:15 <pinguin74> k-9 mail is a great, free email client without any spying. BUT, if it supports office 365 or iCloud, i dont know
+22:02:29 <pinguin74> k-9 mail is on f-droid
+22:03:27 <scalpol[m]> <KE345 "Hi. I just installed GrapheneOS "> I tried several options and finally stay with FairEmail, I recommend it. Yes, keep Vanadium over other web browsers, it has security improvements and also uses duckduckgo as web search, so no compromises there.
+22:04:40 <m2tu[m]> regarding to browsers, i would suggest using 2 of them. 1 browser for rutined surfs, and one browser if u search much nfo or whatever...
+22:04:56 <pinguin74> go to browserleaks.com using vanadium, then use firefox do the same. vanadium tells the website your exact device and OS. firefox does not.
+22:05:09 <oldman_newuser> I been using fairemail.  dont know about O365 or Icloud.  Can say that fairemail lets you go pro and allows reinstalls without using google services.  Just provide the email used to go pro and the payment source (paypal ) and my new installs are pro
+22:05:47 <pinguin74> best is, use several browsers for different purposes
+22:06:35 <m2tu[m]> nstall noroot firewall from aurora!
+22:07:32 <KE345> noroot firewall for more detailed permissions management?
+22:08:24 <m2tu[m]> You can see if an app request connection and block it
+22:08:38 <KE345> I see. Thank you.
+22:08:50 <m2tu[m]> also u can block lots of ip whenu open vandium and only accept the known ones.
+22:08:57 <pnrxa[m]> <pinguin74 "go to browserleaks.com using van"> This is interesting to me, which would be more effective in fingerprinting the user? Vanadium?
+22:11:23 <pinguin74> well... fighting fingerprinting is a battle you can almost not win, if you really want to be safe, you have to use tor-browser. i use vanadium and firefox, they both differ not much in fingerprinting i GUESS, firefox may have more bounds to google and mozilla
+22:13:00 <Raoul28394> Yo
+22:13:24 <pnrxa[m]> Interesting, thanks
+22:13:48 <lumpenqueer[m]> So I was looking at the CLI install instructions, and there seems to be an emphasis on high quality usb cables, and I remember there being a thing about USB 2.0 to USB c not working, is that still a thing?
+22:14:01 <Raoul28394> Use usbc
+22:14:33 <Raoul28394> Stock cable that came with your device
+22:14:48 <lumpenqueer[m]> My computer doesn't have the capability to do usbc-usbc connections
+22:15:03 <pinguin74> i installed graphene on a pixel 4a with a usb-c to usb 2.0 adapter, worked flawlessly. but connected directly to PC, no hub
+22:15:22 <lumpenqueer[m]> Its most recent port is a usb3 type a port
+22:15:24 <m2tu[m]> i use usb 2 works prfct
+22:15:44 <Raoul28394> Be cautious and don't skimp on the cable
+22:16:08 <Thatcher[m]> You're only as strong as your weakest link.
+22:16:26 <KE345> ok. thank you very much everybody.
+22:16:30 <Raoul28394> U might get ur phone stuck in a boot loop if u do USB 2.0 but its easy to fix
+22:17:18 <m2tu[m]> now the serous question!
+22:17:30 <m2tu[m]> does anyon have knowledge about builds ?
+22:17:48 <m2tu[m]> anyone here build grapheneos and edited?
+22:18:13 <pinguin74> why u want to build yourself?
+22:18:19 <Raoul28394> I updated graphene and the com android wallpaper picker shows the default wallpaper but when I pick it it's black
+22:18:36 <super_noob[m]> Hey folks. Where can I find he driver to install the  drive  for the pixel 3 XL into windows 10? I  plug in my  phone, and it doesn't  appear under device manager.
+22:19:07 <Thatcher[m]> <Raoul28394 "I updated graphene and the com a"> That's normal
+22:19:14 <Raoul28394> Cool
+22:19:32 <m2tu[m]> <pinguin74 "why u want to build yourself?"> i want to learn , how android works and how to build
+22:19:52 <m2tu[m]> i can build but im stuck on removing or adding apps
+22:20:37 <pinguin74> ok, but sounds like a hard lesson to learn. no easier way to start with android?
+22:20:49 <Raoul28394> Also I installed a third party app off the Aurora store called Twilight, I enabled permissions for it (no WiFi or location ofc) but it disabled the vibration when I touch on the home screen even when I switch it on and off in the settings
+22:20:56 <strcat[m]> pinguin74: Firefox does tell the site your device, just less directly, doesn't hide it though
+22:21:06 <strcat[m]> pinguin74: i.e. you're misleading yourself
+22:21:17 <strcat[m]> and by using an uncommon setup you're more, not less, fingerprintable
+22:21:19 <m2tu[m]> its not hard i have lots of background , editing cusotm rooms
+22:21:27 <strcat[m]> GrapheneOS only supports a few devices so device model is not a high entropy thing
+22:21:36 <strcat[m]> using a non-default user agent would be worse
+22:21:42 <m2tu[m]> but builds ar diffrrent
+22:22:00 <strcat[m]> pinguin74: you're free to enable the 'user agent freeze' feature which will hide that
+22:22:03 <strcat[m]> you will be less private
+22:22:11 <strcat[m]> but you'll feel better, which seems to be what matters to you, not privacy
+22:22:48 <strcat[m]> KE345: fine-grained / per-app network filtering beyond a toggle is fundamentally security theatre and cannot work
+22:23:07 <strcat[m]> KE345: simply being able to make DNS queries to the DNS server the OS is using is enough to send data to any party
+22:23:37 <strcat[m]> again, all you're doing is making yourself stand out and web sites can enumerate your filtering / blocking rules
+22:24:12 <strcat[m]> KE345: if an app or site can connect to anything, that implies having working DNS
+22:24:40 <strcat[m]> so, they can try to connect to data_to_exfiltrate.endpoint.their_domain.tld
+22:24:54 <strcat[m]> now, this has to look up the address for that domain
+22:25:15 <strcat[m]> which sends this query to the authoritative DNS server chosen by their_domain.tld via your configured DNS server
+22:25:25 <strcat[m]> sure, you don't connect directly, but it's not like that matters, they can throw an ID into it if they want
+22:25:31 <Raoul28394> Can u gain root access on graphene or is that disabled for security purposes
+22:25:37 <strcat[m]> data_to_exfiltrate.random_id_made_by_app.endpoint.their_domain.tld
+22:25:53 <strcat[m]> Raoul28394: it is not 'disabled' but rather is not part of how the OS security / privilege model works in the first place
+22:26:11 <strcat[m]> Raoul28394: a userdebug (development) build has root via adb shell, a production build doesn't
+22:26:20 <pinguin74> in theory you could root using Magisk, but i wouldnt do it
+22:26:24 <strcat[m]> root is only used for a few very core processes like init and vold, and even those are contained to some extend
+22:26:26 <strcat[m]> pinguin74: no, you cannot
+22:26:38 <strcat[m]> pinguin74: if you replace the boot image, you are not using GrapheneOS, as Auditor will let you know
+22:26:50 <strcat[m]> if you replace the core of the OS with something else, you aren't using GrapheneOS
+22:26:56 <strcat[m]> so, no, you can't
+22:27:02 <pinguin74> true. this is not lineageos here ;-)
+22:27:18 <strcat[m]> if the bootloader isn't locked, that's not a completed GrapheneOS install
+22:27:32 <strcat[m]> you can use Auditor to check if you're running GrapheneOS or not
+22:28:05 <r0tt0r[m]> is there anyway the vanadium session data is autocleared i close the browser?
+22:28:19 <strcat[m]> r0tt0r: use Incognito mode only
+22:28:22 <pinguin74> by the way, where do u get the auditor apk ? i guess a non-graphene device can be used as auditor device?
+22:28:35 <strcat[m]> pinguin74: Play Store or the Auditor GitHub releases page
+22:28:46 <r0tt0r[m]> <strcat[m] "r0tt0r: use Incognito mode only"> hmm indeed,.didnt think of that
+22:28:52 <r0tt0r[m]> thx
+22:29:39 <pinguin74> vanadium can disable jscript only globally, not per site?
+22:35:35 <Thatcher[m]> <pinguin74 "vanadium can disable jscript onl"> Correct. Otherwise you'd have a pop-up each time you visit a site asking if you want to browse without JS, which sounds like a royal pain in the buttocks.
+22:36:49 <pinguin74> Thatcher[m]: i use no-script with firefox, for some use cases this makes sense, e.g. you have a working web site and still can block many ads
+22:43:05 <strcat[m]> pinguin74: you can disable it globally then enable it for specific sites
+22:43:14 <strcat[m]> pinguin74: it's meaningless to enable it with more granularity than that
+22:44:18 <strcat[m]> our goals are privacy and security not making people feel better and giving them tools which hurt their privacy by making them unique
+22:44:55 <strcat[m]> privacy for browsing is provided through avoiding fingerprinting - which includes avoiding configuration and especially extensions with a bunch of unpartitioned state / configuration
+22:45:05 <strcat[m]> and also partitioning the state of each site
+22:45:11 <strcat[m]> and properly isolating each site in a separate process
+22:45:36 <strcat[m]> and those goals are largely aligned with what the upstream browser is already doing
+22:46:01 <Raoul28394> This makes me think of how tails includes ublock origin like is that really a good idea? Stock tor browser bundle doesn't use ublock
+22:46:03 <oldman_newuser> Hello.   Should Seedvault allow you to Restore your grapheneos from a Nextcloud backup.  Currently I can backup grapheneos thru Seedvault onto a nextcloud instance but can not restore from nextcloud.  I have been copying the backup to a thumbdrive and restoring that way.  The option for a nextcloud restore is there but it appears to do
+22:46:03 <oldman_newuser> nothing.  thanks
+22:46:13 <strcat[m]> we ship network isolation key partitioning by default, more of that will get enabled over time, and then what's remaining are cookies which can also be partitioned the same way
+22:46:35 <strcat[m]> Raoul28394: Tor Browser doesn't use content filtering because it makes it possible to fingerprint you - but anyway Tor Browser has really bad security and site isolation
+22:47:07 <strcat[m]> oldman_newuser: because Nextcloud isn't bundled in GrapheneOS
+22:47:24 <strcat[m]> so, yes, to restore you have to copy it from there and restore from a flash drive
+22:48:01 <pinguin74> tor browser has bad security by design or by default configuration?
+22:51:46 <oldman_newuser> --> because Nextcloud isn't bundled in GrapheneOS
+22:51:47 <oldman_newuser> Ty.  Should this information be mentioned somewhere or a issue opened to remove the option to restore from nextcloud.  I am willing to open an issue or a PR for some of the docs, if I understand what action if any you would like to take
+22:51:50 <strcat[m]> by design and implementation
+22:52:00 <strcat[m]> since it's based on an insecure browser and in particular the LTS branch of it
+22:52:22 <strcat[m]> oldman_newuser: Seedvault is a separate project
+22:52:32 <Raoul28394> I wonder what's gonna happen to tor if Firefox dies
+22:52:36 <strcat[m]> oldman_newuser: you're welcome to ask them to make it so the option is grayed out if nextcloud is unavailable
+22:52:53 <pinguin74> on a linux box you can confine tor browser and daemon using selinux/apparmor rules. better than nothing....
+22:52:57 <strcat[m]> Raoul28394: doesn't impact tor itself
+22:53:05 <oldman_newuser> ok  .thanks I understand now.
+22:53:17 <strcat[m]> pinguin74: no, you can't confine an application that way
+22:53:30 <strcat[m]> pinguin74: doesn't work, and no, security theater providing a false sense of security is worse than nothing
+22:54:02 <strcat[m]> application sandbox is not the same as a browser renderer sandbox isolating sites from each other meaningfully and some filesystem access control rules do not make an application sandbox anyway
+22:54:14 <strcat[m]> the code inside can get out via dbus, pulseaudio, X11, etc.
+22:54:19 <strcat[m]> it's not contained
+22:54:26 <Raoul28394> I meant the browser based on firefox not the network
+22:55:05 <pinguin74> you say you cant confine pulseaudio, dbus etc?
+22:55:21 <strcat[m]> they aren't designed for it
+22:56:06 <pinguin74> using tabbed browsing with tor browser is a bad habit anyway
+22:56:26 <strcat[m]> and beyond that there's a pretty big difference between isolated semantics (which that doesn't provide) and a proper sandbox
+22:56:40 <strcat[m]> since if you're just exposing the whole attack surface of the kernel within it that's not much of a sandbox
+22:57:24 <strcat[m]> the Chromium renderer sandbox is a much different thing than an application sandbox
+22:57:59 <strcat[m]> and when sites are set up securely it provides strong isolation semantics between them where they are guaranteed to be in separate sandboxes
+22:58:18 <strcat[m]> and if an attacker gets remote code execution, they don't get access to other site data, etc. without breaking out
+22:58:41 <strcat[m]> the weak link is generally the OS kernel - despite all the effort to reduce kernel attack surface to a minimum
+22:59:19 <pinguin74> in the end, the safes way seems to be using tails....
+22:59:35 <strcat[m]> don't really see how that alleviates any of this
+22:59:41 <strcat[m]> still a very insecure browser
+22:59:53 <strcat[m]> and if an attacker compromises it they can persistently compromise the computer
+23:00:05 <strcat[m]> very few laptops and desktops have any kind of real, meaningful verified boot
+23:00:17 <strcat[m]> the attacker can happily flash evil firmware onto the motherboard, SSD, GPU and other components
+23:00:29 <Raoul28394> Damn
+23:00:51 <strcat[m]> they can reprogram your USB devices if your USB devices weren't designed to be secure and avoid trusting the computer
+23:01:42 <strcat[m]> pinguin74: the OS not having persistent state doesn't mean there isn't a ton of unprotected persistent state on the computer / peripherals
+23:01:50 <strcat[m]> for an attacker to persist access
+23:02:13 <strcat[m]> pinguin74: and unless it's a read-only, secure drive you're booting they could overwrite the OS there
+23:02:21 <strcat[m]>  * pinguin74: and unless it's a read-only, secure drive you're booting from they could overwrite the OS there
+23:02:26 <strcat[m]> so it'd impact using it on another computer too
+23:02:29 <Raoul28394> What about vboot with coreboot
+23:02:35 <strcat[m]> Raoul28394: what about it?
+23:02:48 <strcat[m]> again most laptops / desktops fundamentally do not have support for meaningful verified boot
+23:03:00 <strcat[m]> you cannot add it after the fact, they don't have it
+23:03:30 <strcat[m]> they don't get firmware updates for long if at all either
+23:03:50 <pinguin74> there is one guy from the secure boot scene in linux who works creating what he calls measured boot, using e.g. the help of the tpm
+23:04:07 <strcat[m]> pinguin74: doesn't provide any meaningful value on most computers
+23:04:23 <strcat[m]> and is not actually usable / practical with the model it uses regardless
+23:04:47 <strcat[m]> TPM API is quite awful and the implementations are largely really bad just like other kinds of secure elements
+23:04:49 <pinguin74> at least secure boot makes sure you boot the right kernel....
+23:04:51 <Raoul28394> Gotta delete the management engine
+23:04:55 <strcat[m]> pinguin74: no, it doesn't
+23:05:07 <strcat[m]> pinguin74: again, most laptops and desktops do not provide a way to do meaningful verified boot
+23:05:21 <strcat[m]> pinguin74: you have been told by marketing/branding that they have that feature, but they don't
+23:06:02 <strcat[m]> if it's not a Chromebook or a Windows Secured Core laptop, I seriously doubt that it has anything close to what would be required
+23:06:29 <strcat[m]> Microsoft has a standard for computers with some semblance of security model for the firmware, etc. (Secured Core)
+23:06:44 <strcat[m]> still probably don't get much in the way of proper firmware updates for much time
+23:06:57 <pinguin74> wait, a windows secure core laptop still is standard x86 hardware, right? the same hardware you could use to run your linux box?
+23:07:21 <strcat[m]> yes
+23:07:39 <strcat[m]> the hardware having some semblance of support for doing it doesn't mean you have it though
+23:07:55 <pinguin74> so in other words, the hardware is very well there, with appropriate OS support you could get that level of security
+23:08:03 <strcat[m]> no, it's not really
+23:08:13 <strcat[m]> it's an early stage of support for having an actual security model for this with laptops
+23:08:44 <strcat[m]> and there isn't appropriate OS support
+23:08:55 <pinguin74> does MS favour certain brand for their approach?
+23:09:00 <strcat[m]> and many devices (SSDs, USB devices, etc.) are not designed securely
+23:09:07 <strcat[m]> pinguin74: https://www.microsoft.com/en-us/windowsforbusiness/windows10-secured-core-computers
+23:09:27 <strcat[m]> pinguin74: basically, they have a certification for "this computer doesn't have *completely* shit security"
+23:09:32 <oldman_newuser> I was testing out the new web based install and got this error
+23:09:32 <oldman_newuser> 'Error: Bootloader replied with FAIL: Requirement partition-exists=product failed, value = undefined'
+23:09:33 <oldman_newuser> the phone had just been reflashed with the latest google pixel firmware via their web installer
+23:09:50 <strcat[m]> oldman_newuser: which device
+23:10:07 <oldman_newuser> pixel3xl
+23:10:10 <Raoul28394> secured core seems neat for sure
+23:10:35 <strcat[m]> pinguin74: I don't want to overstate what it provides, it's not like it means it's comparable to what an iPhone or Pixel provide
+23:10:39 <strcat[m]> or even a Chromebook
+23:10:44 <strcat[m]> maybe some of them are close to a Chromebook
+23:10:52 <strcat[m]> pinguin74: it's a weaker certification than that
+23:11:05 <strcat[m]> it's worth getting a Secured Core laptop but... don't overestimate what it provides
+23:11:34 <strcat[m]> and if you're not using Windows, you're much further away from actually taking advantage of it
+23:11:52 <Raoul28394> So u have to contact a sales rep to buy one?
+23:11:55 <strcat[m]> since desktop Linux distributions are a lot less secure and have much less progress to verified boot, an application security model, exploit mitigations, etc.
+23:12:21 <strcat[m]> Raoul28394: pretty sure you can buy one
+23:12:35 <strcat[m]> this site is probably not the best place to figure out what you can buy
+23:12:44 <Raoul28394> Idk why a lot of ppl assume linux = secure
+23:12:57 <madaidan[m]> <strcat[m] "if it's not a Chromebook or a Wi"> Macbooks too
+23:13:18 <strcat[m]> yeah, Macbooks are now a lot further along
+23:16:24 <strcat[m]> Windows 10 Enterprise on a Secured Core computer has a lot of advantages, and some nice security features - still a huge amount of issues based on it being a traditional desktop OS evolving into a reasonably secure OS, it's not there yet
+23:16:44 <oldman_newuser> went to CLI install and it appears the install going to work just fine, just didnt work for me from the web installer.
+23:16:53 <Raoul28394> What about the telemetry
+23:17:07 <strcat[m]> Raoul28394: what about it?
+23:17:26 <Raoul28394> On the secured core would it compromise security
+23:17:32 <strcat[m]> no
+23:17:40 <strcat[m]> and I don't know why you think it's something specific to Windows
+23:18:00 <strcat[m]> do you think desktop Linux distributions don't have telemetry?
+23:18:03 <strcat[m]> you're wrong
+23:18:09 <Raoul28394> Ik other oses do it
+23:18:35 <Raoul28394> I'm still a noob to a lot of this stuff lol
+23:18:50 <strcat[m]> non-LTSC Windows 10 Enterprise on a Secured Core computer or an ARM Macbook
+23:18:58 <pinguin74> debian may have less telemetry than others....
+23:19:48 <strcat[m]> pinguin74: Debian has incredibly weak security and it's still got plenty of telemetry including various upstream implementations of it and their own
+23:19:51 <strcat[m]> so, don't know where you get that idea
+23:20:05 <Raoul28394> Sudo has many issues
+23:20:17 <Raoul28394> I've heard
+23:20:19 <TheJollyRoger> pinguin74: Debian's also full of old software that's heavily diverged from upstream and is often missing HUGE numbers of patches.
+23:20:20 <strcat[m]> that doesn't seem on-topic
+23:20:30 <madaidan[m]> <strcat[m] "non-LTSC Windows 10 Enterprise o"> Is there any detailed info on the security of ARM macbooks? Apple publishes barely anything.
+23:20:41 <strcat[m]> traditional Linux distributions are a bunch of fragmented packages developed by different upstreams with no overall source tree / development model
+23:20:45 <strcat[m]> no systemic privacy or security work
+23:20:47 <strcat[m]> it doesn't fit into it
+23:21:04 <strcat[m]> and then the distributions have a whole bunch of packagers doing weird stuff to the upstream projects with lack of familiarity with their code
+23:21:29 <strcat[m]> and with Debian you get packages frozen for ages and ages with very limited resources for doing maintenance for them
+23:21:39 <strcat[m]> most upstream security fixes don't get a CVE assignment
+23:21:49 <madaidan[m]> <Raoul28394 "Sudo has many issues"> Doesn't really make a difference with the broken security model of Linux. It's trivial to get your password for sudo either way.
+23:23:03 <strcat[m]> madaidan.: what it impacts is something that's (poorly) isolated such as say, an nginx web server running as a dedicated user/group, which can exploit a vulnerability in a suid binary (or the kernel)
+23:23:57 <strcat[m]> i.e. something that doesn't have permission to use it, but can still exploit it
+23:24:05 <strcat[m]> but generally nothing is confined even poorly like that
+23:24:11 <strcat[m]>  * but generally nothing substantial is confined even poorly like that
+23:24:13 <strcat[m]> on a desktop
+23:26:52 <strcat[m]> one of the most basic initial steps to making an OS sandbox with the Linux kernel is setting NO_NEW_PRIVS, and you have to set that to use seccomp-bpf as an unprivileged user, so you are already doing it based on the fact that you're using seccomp-bpf to massively reduce kernel attack surface
+23:26:56 <strcat[m]> it's a given that you're doing it
+23:27:04 <strcat[m]> and NO_NEW_PRIVS disables stuff like suid/sgid
+23:29:43 <TheJollyRoger> pinguin74: TAILS is mostly security theatre. Any process that gets an escalation attack via the MASSIVE amount of vulnerabilities in the ancient and outdated kernels it's shipping can simply edit the firewall rules and phone out over the clearnet, leak information via what you're doing... or make calls to System Management Mode for persistence if they want to. It makes power users or people who
+23:29:48 <TheJollyRoger> think they're power users feel good about themselves because  of the "hey look I'm doing work and putting in effort, I must be doing good then!" appeal.
+23:30:06 <strcat[m]> even if Android had some vulnerability in a suid binary it's not like an app could exploit it
+23:30:12 <madaidan[m]> <strcat[m] "madaidan.: what it impacts is so"> The ability to even execute sudo is usually restricted to a specific group through. Normally the sudo/wheel groups, depending on the distro.
+23:30:15 <strcat[m]> suid only allowed at all in userdebug for su anyways
+23:30:54 <strcat[m]> madaidan.: just checked on Debian
+23:30:56 <strcat[m]> it's not
+23:31:00 <strcat[m]> madaidan.: the binary is just
+23:31:05 <strcat[m]> -rwsr-xr-x 1 root root 163K Jan 26 13:34 /usr/bin/sudo
+23:31:11 <strcat[m]> nginx could execute it and exploit the vulnerability
+23:31:18 <strcat[m]> madaidan.: the vulnerability is BEFORE sudo checks which users are authorized
+23:31:35 <strcat[m]> anyway I dunno what people expect from a tool that exists basically to provide security theater
+23:31:37 <strcat[m]> it's a stupid tool
+23:31:47 <TheJollyRoger> A show and dance, probably.
+23:31:56 <madaidan[m]> TheJollyRoger: Tails actually allowed *unprivileged* attackers to easily leak the IP address via the unsafe browser for years. Only recently have they made it into a boot option.
+23:32:05 <strcat[m]> just log in as root as a virtual console, don't use su or sudo within another account, or it's just equivalent to root
+23:32:14 <TheJollyRoger> madaidan[m]: hohohoooly cow... worse than I thought.
+23:32:26 <strcat[m]> their focus is security theater / bikeshedding things like that in the tiny part of the OS they actually deal with
+23:32:45 <TheJollyRoger> I guess it makes the Power Users feel better...
+23:32:45 <strcat[m]> since really there's no systemic privacy or security work in a traditional Linux distribution
+23:32:47 * TheJollyRoger shrugs.
+23:32:59 <strcat[m]> they don't take ownership over the code they ship, each project has different approaches and there's a lack of coordination between them
+23:33:14 <strcat[m]> and any privacy or security stuff requiring a lot of coordinated and cross-project work that's done in sync just doesn't work out
+23:33:18 <strcat[m]> which is most stuff that's valuable
+23:34:01 <madaidan[m]> <strcat[m] "madaidan.: the vulnerability is "> Why do they not just place the check at the start? Before the majority of the code.
+23:34:05 <strcat[m]> you can't even really have seccomp-bpf policies for a sandbox within your app since that's broken due to not having control over what system calls are used by libc and any other libraries that might be loaded - and it's not like apps and libraries are being written to work within some sandbox
+23:34:17 <strcat[m]> madaidan.: because they're the kind of people to make a tool like sudo
+23:34:23 <strcat[m]> and who think that's a good idea
+23:34:35 <strcat[m]> just login as root at a virtual console
+23:34:46 <strcat[m]> and don't have any normal usage of the system require root, that's pretty bad
+23:35:00 <strcat[m]> users should be able to install packages that are specific to them etc
+23:35:14 <strcat[m]> there should be no fucking reason you need root as a local, physical user at the computer to use a USB device
+23:35:24 <strcat[m]> desktop Linux is just an entirely brain damaged thing with no actual security
+23:35:31 <strcat[m]> and just a bunch of security theater making your life hard that has no value
+23:35:55 <strcat[m]> the people who make these projects are clueless and it's not possible for security engineers to actually work on systemic privacy and security to even start turning it around
+23:36:12 <strcat[m]> https://grapheneos.org/install/web#flashing-as-non-root
+23:36:21 <strcat[m]> the fact that I need to have this section
+23:36:45 <strcat[m]> how does it make any sense that a user at a local, physical session cannot use a USB device without having root access?
+23:37:05 <strcat[m]> without installing a database of hard-wired vendor ids for each kind of USB device they want to use?
+23:37:13 <strcat[m]> and there's no ACTUAL security - every application, etc. can use USB
+23:37:20 <entry1[m]> I certainly don't want to go down a rabbit hole, but does verified boot prevent the ability for an outside attacker (not local as I wouldn't trust anyone with a device after it was in their hands) compromising the SSD/motherboard/components after a full restart, or could their theoretically still remain some persistence? If I am framing the question too vaguely without any utility to the topic, I will stop speaking
+23:37:20 <entry1[m]> about it.
+23:37:24 <strcat[m]> try our web installer on Android, the browser has to keep asking for permission from the OS / user to access the USB device
+23:37:46 <strcat[m]> i.e. an actual security check (applications can't access USB devices without user consent)
+23:37:58 <strcat[m]> vs. security theater (local user with a physical session not allowed to use USB devices without root)
+23:38:05 <strcat[m]> entirely different mindsets
+23:38:05 <entry1[m]> * I certainly don't want to go down a rabbit hole, but does verified boot prevent the ability for an outside attacker (not local as I wouldn't trust anyone with a device after it was in their hands) compromising the SSD/motherboard/components after a full restart, or could there theoretically still remain some persistence? If I am framing the question too vaguely without any utility to the topic, I will stop speaking
+23:38:05 <entry1[m]> about it.
+23:38:06 <strcat[m]> about security
+23:38:36 <strcat[m]> doing something valuable and having privacy and security as part of the development of the OS where the OS takes responsibility for the code within it and comes up with an overall approach to those things, and components are developed within that
+23:38:39 <strcat[m]> vs.
+23:38:44 <strcat[m]> useless security theater that harms users
+23:39:16 <strcat[m]> like sudo
+23:39:39 <strcat[m]> or not letting users with physical access that are logged in access USB devices or a printer without root
+23:39:46 <strcat[m]> they can go take the USB device and plug it into another computer
+23:39:57 <strcat[m]> or smash it with a hammer (or the whole computer, probably a good idea when it's that bad)
+23:40:52 <strcat[m]> entry1: verified boot on a Pixel or iPhone covers all firmware and the whole base OS, that's what a proper implementation does
+23:41:01 <SkyFox[kdeorg][m> <strcat[m] "just login as root at a virtual "> Can one do this over ssh?
+23:41:04 <strcat[m]> entry1: and ARM Chromebook implementations can be quite good too
+23:41:27 <strcat[m]> SkyFox [kde.org]: the place you are logging in from has equivalent to root access on that computer then
+23:41:32 <SkyFox[kdeorg][m> <SkyFox[kdeorg][m "Can one do this over ssh?"> Because everyone says to disable root login over ssh
+23:42:00 <strcat[m]> SkyFox [kde.org]: but sure it makes a whole lot more sense to have an authorized SSH key for root and to log in as root vs. logging in as some other user and using sudo for security theater that makes the system less secure
+23:42:05 <TheJollyRoger> entry1[m]: If you're worried about compromised hardware, realistically, there's nothing stopping someone from simply swapping out *your entire device* and replacing it with a counterfeit, but that's not in my threat model.
+23:42:06 <strcat[m]> SkyFox [kde.org]: that is just cargo cult security theater stuff
+23:42:13 <strcat[m]> disable SSH password login, only allow key-based login
+23:42:37 <strcat[m]> disable everything but ed25519 and modern ciphers if you want to reduce attack surface
+23:42:38 <SkyFox[kdeorg][m> Yeah was just about to ask if root login with keys is fine
+23:42:47 <strcat[m]> pin the host public key with SSHFP + DNSSEC and enable checking it in clients
+23:42:59 <strcat[m]> disabling root login... but still using root via sudo? you're just making things less secure, sudo is bad
+23:43:20 <strcat[m]> SkyFox [kde.org]: most 'privacy' and 'security' stuff is just cargo cult, harmful stuff
+23:43:26 <strcat[m]> SkyFox [kde.org]: makes you worse off
+23:44:43 <strcat[m]> SkyFox [kde.org]: and for some local machine, makes a whole lot more sense to login as root only at a virtual console (if at all, it really shouldn't be required for any regular usage)
+23:44:59 <strcat[m]> SkyFox [kde.org]: or just accept your account is equivalent to root
+23:45:10 <strcat[m]> on a single user machine, all your valuable stuff is probably in your user account anyway
+23:45:20 <strcat[m]> so the lack of any application security model whatsoever is what matters
+23:45:58 <SkyFox[kdeorg][m> <strcat[m] "SkyFox [kde.org]: and for some l"> Yeah, I think, NixOS is interesting in that it allows installing packages as a regular user which would be scoped to you
+23:46:12 <entry1[m]> It would be so interesting to be able to dock a GrapheneOS device and use it as a "desktop" like the Windows phone aimed to do. I know the program capability would be limited, but with most users simply wanting a web browsing machine that they can email, websurf, and do light document editing/printing. If they wanted to do other applications, they could use a Windows device that never connects to the internet.
+23:46:14 <strcat[m]> SkyFox [kde.org]: it benefits you to not have sudo installed so in rare cases like an nginx server where it is poorly isolated at least, it doesn't have that attack surface available
+23:46:49 <strcat[m]> SkyFox [kde.org]: but, mostly, it doesn't matter, because there isn't isolation, your data is in your user account, that's what matters
+23:47:08 <strcat[m]> SkyFox [kde.org]: and anything with even a basic sandbox is going to have NO_NEW_PRIVS set
+23:47:17 <strcat[m]> SkyFox [kde.org]: which prevents suid/sgid
+23:47:35 <strcat[m]> SkyFox [kde.org]: so basically you have no security in the first place, so it's not really worth worrying that much about it
+23:48:02 <strcat[m]> SkyFox [kde.org]: on a server, makes more sense to avoid having that nonsense and just login as root when you want to do stuff as root (via SSH)
+23:48:07 <strcat[m]> SkyFox [kde.org]: and btw pam is pretty bad
+23:48:10 <strcat[m]> polkit is horrible
+23:48:48 <SkyFox[kdeorg][m> <strcat[m] "SkyFox [kde.org]: so basically y"> Yeah, well, I am on Windows 10 mainly, so mostly concerned about Linux on servers 😅
+23:48:49 <strcat[m]> SkyFox [kde.org]: best not to think about it, the whole platform just needs to be tossed and replaced with something else + only used within isolated VMs
+23:49:28 <strcat[m]> SkyFox [kde.org]: yeah so on a Linux server: disable non-key-based login, disable everything but ed25519 keys (host and client) for simplicity, pin the ed25519 host key with SSHFP + DNSSEC, enable checking SSHFP in client config
+23:49:49 <strcat[m]> SkyFox [kde.org]: and just login directly as root for doing stuff as root, don't even have sudo, it's a stupid program
+23:49:53 <strcat[m]> been saying this for years
+23:49:55 <strcat[m]> will keep saying it
+23:49:56 * anupritaisno1[m] uploaded an image: IMG_20210201_051938_417.jpg (103KiB) < https://matrix.org/_matrix/media/r0/download/m.apex.to/xgikNUiwVlONChIWONWPzshw/IMG_20210201_051938_417.jpg >
+23:50:00 <anupritaisno1[m]> I'm just gonna dump this here
+23:50:40 <strcat[m]> SkyFox [kde.org]: don't really have to disable other key types it's just less attack surface if you do and it's nice to only have to add 1 DNS record for ed25519 host key, not 3
+23:50:54 <madaidan[m]> "Highly advanced techniques" on Linux is just another LD_PRELOAD rootkit off Github
+23:50:55 <rny> anupritaisno1[m]: haha
+23:52:05 <SkyFox[kdeorg][m> <anupritaisno1[m] "I'm just gonna dump this here"> I remember GitHub once had a talk about committing secrets... I, unfortunately, missed it :(
+23:52:41 <rny> git-secrets extension
+23:53:28 <SkyFox[kdeorg][m> <rny "git-secrets extension"> Iirc it was about what to do after you committed a secret
+23:54:13 <rny> there's bash oneliner to clean up the history by tracking a file then removing all commits that's related to the specific file
+23:55:19 <rny> https://stackoverflow.com/questions/43762338/how-to-remove-file-from-git-history

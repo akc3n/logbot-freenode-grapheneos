@@ -1,0 +1,509 @@
+00:00:44 <TheJollyRoger> keys15: Just as with regular android, apps on GrapheneOS are fully sandboxed, at all times. They only are allowed to see what data you give them permission to see.
+00:03:53 <TheJollyRoger> For example, if you don't want the app to steal your contact list, don't give it access to your contact list. If you don't want to give an app access to your location because you know that Facebook has an agreement with that app's backend to share data with Facebook, then don't give the app permission to your location.
+00:07:26 <keys15> TheJollyRoger : thanks for the reply. So the only potential data Facebook or Google could access would be data I explicitly share with the app?
+00:07:48 <TheJollyRoger> If you grant it permission to.
+00:08:21 <keys15> I guess my basic question boils down to this -- does downloading an app like Spotify, which includes facebook and google trackers, defeat the purpose of de-googling the phone in the first place?
+00:08:40 <TheJollyRoger> No.
+00:08:52 <TheJollyRoger> GrapheneOS is much more than just "de-googling" - that's selling GrapheneOS awfully short, in my opinion.
+00:09:09 <keys15> Touche.
+00:10:32 <TheJollyRoger> GrapheneOS is about making it more difficult to exploit and increase memory safety (a majority of exploits for the Linux Kernel that result in security vulnerabilities generally have to do with memory allocation and usage) of the Android Open Source Project, not just "get rid of google."
+00:10:53 <IPFreely> Hey guys. Suggestions for a messenger app that doesn't rape my privacy?
+00:11:06 <TheJollyRoger> Signal Private Messenger.
+00:11:19 <TheJollyRoger> Further discussions beyond that are not topical to GrapheneOS.
+00:12:09 <skwisgaar[m]> Calling GrapheneOS degoogled is quite strange, since AOSP doesn’t include google services, and GrapheneOS is based on AOSP.
+00:12:10 <TheJollyRoger> keys15: So, when you install apps on GrapheneOS, because GrapheneOS considers play services to be invasive, it does not bundle them. This means that apps that are hardcoded to depend on Google or depend on Google Play Services, will likely not run, unless their developers have written a fallback plan for them.
+00:12:16 <TheJollyRoger> skwisgaar[m]: Yarr!
+00:12:57 <skwisgaar[m]> Also calling another android OS based on AOSP with microg degoogled is even stranger, since microg is adding back google services lol
+00:13:08 <TheJollyRoger> Bwahaahahaha yes XD
+00:13:15 <TheJollyRoger> keys15: That said, there are still ways you can be tracked *regardless* of what operating system you run. Spotify has to know which songs you want to listen to, in order to stream that music to your device. This would apply regardless of what system you used to access spotify.
+00:13:59 <TheJollyRoger> So it's going to know what music you listen to, and what time you listened to it, and as well, Spotify has to know who's paid the bills.
+00:14:56 <TheJollyRoger> keys15: the question you should ask yourself is, are you OK with making that transaction, because issues like that are unrelated to whether you run GrapheneOS or not. Like I said, all apps on GrapheneOS are sandboxed individually, at all times.
+00:15:03 <asdasd100> strcat What do you mean with dont need to have it unlocked? How is my current profile (owner) not usable now?
+00:15:41 <TheJollyRoger> asdasd100: it means you have to log in to the Owner profile in order to use your phone. If you were to eject the cryptographic keys from Owner, you couldn't use your phone, because the Owner profile is required to unlock system settings that apply globally.
+00:15:49 <strcat[m]> asdasd100: don't know what you mean
+00:15:51 <keys15> Thanks TheJollyRoger . I am less concerned about identifying myself to these major services when I choose to. My main concern is with non-consensual surveillance
+00:15:56 <strcat[m]> asdasd100: recommend reading https://grapheneos.org/faq#encryption
+00:16:17 <keys15> I guess the concept that an app could do things in the background without me knowing, like microphone or keyboard access
+00:16:30 <strcat[m]> keys15: apps are sandboxed
+00:16:48 <strcat[m]> keys15: apps don't have access to permissions, files, etc. you haven't given them access to
+00:17:13 <strcat[m]> background camera, microphone or sensors access also isn't a thing that you can grant anyway
+00:17:21 <TheJollyRoger> keys15: Even on the factory android system, the data collected by Google is quite clearly explained in the terms of service, terms and conditions, and while the defaults do indeed favour Google, most of the more invasive elements can be switched off (the phone will pester you every fifteen seconds "PLAY IS DISABLED YOUR PHONE MAY NOT BE RUNNING PROPERLY TURN PLAY BACK ON!!!!111" but it's not
+00:17:24 <TheJollyRoger> doing what it's doing without consent or making that clear.
+00:17:42 <strcat[m]> keys15: so, I think you're confused about how the application model works
+00:17:45 <TheJollyRoger> keys15: No, that's not possible on Android. Android specifically forbits that.
+00:17:48 <strcat[m]> they can't just do whatever they want and access what they want
+00:17:50 <TheJollyRoger> *forbids
+00:17:59 <strcat[m]> there's no way to install an app that's not sandboxed
+00:18:29 <keys15> strcat[m] thanks. I'm just learning about this stuff. Recently learned about the sandbox model
+00:18:39 <asdasd100> strcat I read it ''Our recommendation for a high security setup is to use the owner profile only for managing other profiles. Using a secondary profile for regular usage allows you to make use of the device without decrypting the data in your regular usage profile.''  Because it says here recommended for high security setup i was curious how
+00:18:40 <asdasd100> exactly it improves security
+00:19:02 <TheJollyRoger> The apps are sandboxed individually and Android itself is actually written as a series of disparate, separate components that are only given the bare minimum of access they need to do their job, and *only* their job. Even important, privileged, system apps are sandboxed.
+00:19:29 <TheJollyRoger> asdasd100: This is because non-owner profiles can be closed when not in use, which ejects their keys from memory.
+00:19:45 <TheJollyRoger> asdasd100: so let's say you have a profile named "Owner" and a profile named "Alice" and a profile named "Bob."
+00:19:56 <strcat[m]> asdasd100: explained to you above
+00:19:59 <strcat[m]> asdasd100: and it's explained there
+00:20:08 <strcat[m]> asdasd100: not clear what you aren't understanding about it
+00:20:19 <strcat[m]> > Using a secondary profile for regular usage allows you to make use of the device without decrypting the data in your regular usage profile.
+00:20:22 <strcat[m]> that's what it says
+00:20:31 <TheJollyRoger> In Alice, you run an app called SecureChat, in Bob, you have an app called FastEats. Let's say you don't want people to get at Alice's SecureChat when you aren't using it.
+00:20:48 <strcat[m]> when you boot the device, you can't exactly use the phone until you've decrypted the owner profile
+00:20:54 <TheJollyRoger> So you can close Alice when she's not in use, and that means the keys for Alice's data which includes SecureChat, will no longer be present in the memory of your phone.
+00:21:04 <strcat[m]> so, there you go, that's the advantage of having a secondary profile as your main usage profile
+00:21:31 <strcat[m]> you can boot the device and decrypt the owner profile, without decrypting your secondary users
+00:21:42 <strcat[m]> and secondary users have 'end session' as explained there, rather than needing a reboot
+00:21:46 <strcat[m]> it's all there
+00:21:48 <TheJollyRoger> You must begin the session for Owner if you want to use the phone *at all* because Owner sets the phone's settings.
+00:22:05 <strcat[m]> it's not saying it's more secure for any reason beyond what it states in the next sentence
+00:23:55 <TheJollyRoger> If you make sure that nothing you value is in Owner, then this means if oh no, someone grabs your phone, places it in liquid nitrogen and starts prying it open with a puttyknife so they can make a cold boot attack on the memory, then even if they dump the memory of the phone, they can't pull the keys out for Alice and pull out the contents of SecureChat because *those keys were not in memory* -
+00:23:58 <TheJollyRoger> you end Alice's session when she is not in use.
+00:24:31 <asdasd100> TheJollyRoger thanks this was the noob explanation i needed
+00:24:46 <TheJollyRoger> Arr, ye be welcome!
+00:25:09 <anupritaisno1[m]> <TheJollyRoger "you end Alice's session when she"> Sounds rather self serving
+00:25:59 <asdasd100> Would something like malware be able to turn on my microphone or camera. For a high security setup would it be advised to remove the cameras and microphones?
+00:26:13 <strcat[m]> asdasd100: read what was stated above
+00:26:22 <strcat[m]> apps are sandboxed,
+00:26:24 <strcat[m]>  * apps are sandboxed
+00:27:21 <TheJollyRoger> asdasd100: Not necessary. If you got tricked into downloading an app, first up, apps *cannot* change their own permissions. Doing so would require breaking Linux. Secondly, apps cannot access the microphone or the cameras without being in foreground. Thirdly, they can only access the camera and microphone if you enable camera and microphone for them.
+00:27:52 <GrapheneOS-Teleg> <!X> It might be worth adding that a deleting a secondary user is an easy way of making all of its data inaccessible?
+00:28:11 <TheJollyRoger> Apps are *always* sandboxed. Permissions aren't limitations on an app that's otherwise given carte blanche; rather, the operating system must perform those actions on *behalf of* the app, and then give them the data they request.
+00:28:19 <strcat[m]> there is an easy way to delete secondary users
+00:28:37 <TheJollyRoger> @X - it's just two taps, tap on the user and click the trash bucket.
+00:28:44 <TheJollyRoger> Done.
+00:29:43 <GrapheneOS-Teleg> <!X> I meant that deleting the user is safely deleting the data. Since the original question was about advantages.
+00:29:46 <TheJollyRoger> asdasd100: there is no practical use in removing the microphone and cameras from your phone, it's largely theatrics because if a phone is compromised to the point where you believe that only physical excision can make it trustworthy, you have MUCH MUCH MUCH bigger problems.
+00:30:00 <strcat[m]> please read https://grapheneos.org/faq#encryption
+00:30:03 <strcat[m]> all covered there
+00:32:32 <entry1[m]> <TheJollyRoger "@X - it's just two taps, tap on "> That's accessed from the top right three dots correct?
+00:32:52 <asdasd100> TheJollyRoger would that kind of compromise be possible on graphene os?
+00:34:05 <TheJollyRoger> entry1[m]: tap the profile icon in the drop-down, then tap "more settings." You should see a list of all the user profiles you have on that phone. If you only have one, it will show "You (Owner)" and "Add guest" but the rest of the list will be empty.
+00:35:06 <entry1[m]> <TheJollyRoger "entry1: tap the profile icon in "> Perfect, that's how I've been doing it and then once in the more settings menu, the top right three dots has an option to delete users. Just making sure there wasn't another path, cool
+00:35:31 <TheJollyRoger> asdasd100: The question's a bit too broad, unfortunately.
+00:35:34 <TheJollyRoger> entry1[m]: Great!
+00:35:51 <TheJollyRoger> asdasd100: it's like asking me "what kind of accidents could you get into in life?"
+00:36:35 <asdasd100> TheJollyRoger yes offcourse would the Auditor app protect against such compromise
+00:36:44 <TheJollyRoger> I mean, then I have no idea if by accidents, you mean like an accident like falling off your bike, knocking over a glass, or losing control of a forty-foot semitrailer
+00:36:46 <asdasd100> if i regularly perform a local audit
+00:37:08 <strcat[m]> Auditor is for checking if something is wrong
+00:37:22 <strcat[m]> https://attestation.app/about
+00:37:27 <strcat[m]> it's not preventative, not the purpose of it
+00:37:28 <asdasd100> strcat would such a compromise not mean something is wrong?
+00:37:38 <strcat[m]> what it does is covered there
+00:37:43 <strcat[m]> and it shows what's providing in the results
+00:38:15 <TheJollyRoger> asdasd100: So, with respect to auditor, what it allows you to do, is to check if your system image has been modified, your attestation certificates or attestation keys have changed, or your verified boot keying is not genuine. It also allows you to check to see if you've got device administrators or debugging enabled (since those all offer up HUGE attack surface)
+00:38:24 <strcat[m]> if you want answers to broad questions with nuanced answers
+00:38:29 <strcat[m]> you're going to need to be willing to read them
+00:39:20 <TheJollyRoger> Yeah. Honestly, the existing documentation is probably the best answers you're going to get.
+00:39:33 <TheJollyRoger> It's not that much reading.
+00:39:53 <TheJollyRoger> And who knows, you may learn something you didn't expect to! P.-)
+00:43:27 <asdasd100> TheJollyRoger Yes i know, the english in those documentation can get a bit difficult, english is not my first language. Thanks for the simple explanation!
+00:44:10 <TheJollyRoger> asdasd100: well, I tell you what... give 'em a read, and then you can ask me to explain the parts that don't make sense to you. I might not be here all the time but generally I try to make time for explaining stuff in simple terms!
+00:44:12 <asdasd100> strcat You are right i am brushing up on my english but thanks for the patience
+00:44:33 <entry1[m]> <asdasd100 "TheJollyRoger Yes i know, the en"> You speak very well for it not being your first language
+00:44:50 <TheJollyRoger> Yes, indeed you do!
+00:46:52 <asdasd100> thanks i will read it and get back if i dont understand thanks for everything
+00:47:37 <TheJollyRoger> You're welcome, shipmate!
+01:21:10 <GrapheneOS-Teleg> !@panelcon has joined the Telegram Group!
+04:47:15 <GrapheneOS-Teleg> HC (@H​ashCrack) has joined the Telegram Group!
+04:57:18 <GrapheneOS-Teleg> <g​ochoingles> Not that people fluent in English know all of the words in the dictionary. My first language is Latin American Spanish.
+05:55:35 <Ted88> hi. If I installed Aurora would any apps that don't work now, work?
+05:57:59 <vata0[m]> I think some of the ones you prolly need use google pay services but I don't think you can install micro g
+05:58:27 <Ted88> There is a music playing app I really want to use and it wont launch. it gives a black screen
+05:58:36 <Ted88> and the web version is embarrassing
+05:59:31 <Ted88> plex
+06:50:47 <Halifax> test
+06:54:10 <LordOfPineapples> is it worth waiting for the pixel 5a?
+07:06:39 <GrapheneOS-Teleg> Marcin (@m​artig_pl) has joined the Telegram Group!
+07:15:35 <kamesjitt616[m]> <LordOfPineapples "is it worth waiting for the pixe"> Depends what you want from a phone
+07:15:42 <kamesjitt616[m]> Oh they left
+07:27:44 <tom-griffin[m]> My pixel 4 with graphene is starting to slow down it was never this slow when I first installed
+07:27:45 <tom-griffin[m]> Is there any fixes for this?
+07:28:44 <timetravelingman> > <@tom-griffin:matrix.org> My pixel 4 with graphene is starting to slow down it was never this slow when I first installed
+07:28:44 <timetravelingman> > Is there any fixes for this?
+07:28:44 <timetravelingman> Yeah just speed it back up using the hand crank
+07:29:11 <tom-griffin[m]> <timetravelingman "> <@tom-griffin:matrix.org> My p"> Why are you trolling? I'm asking a genuine quetion
+07:30:52 <timetravelingman> Buddy we don't know anything about your phone or what apps you have running on it or anything at all
+07:31:03 <timetravelingman> How would we know the state of your phone
+07:31:19 <tom-griffin[m]> How about asking me questions instead of being a dickhead?
+07:31:47 <timetravelingman> Okay, have you tested the speed of your phone or is it just a general feeling you have
+07:32:17 <timetravelingman> When did it start being slow
+07:32:31 <tom-griffin[m]> Its feeling more sluggish in general apps taking longer to open it takes longer to unlock my phone
+07:32:53 <tom-griffin[m]> It started about a week ago
+07:34:01 <timetravelingman> Well try a reinstall
+07:34:08 <timetravelingman> That would be the first step
+07:35:01 <lodtank> how much "disk space" is used/free?
+07:35:17 <lodtank> what apps are running when it's feeling slow?
+07:36:03 <tom-griffin[m]> <lodtank "how much "disk space" is used/fr"> I hardly have any apps so I have plenty of free space
+07:36:27 <tom-griffin[m]> <lodtank "what apps are running when it's "> I only have windscribe VPN, signal & shelter running in the background
+07:37:25 <timetravelingman> Have u restarted the phone
+07:37:33 <tom-griffin[m]> Yes
+07:39:25 <timetravelingman> Maybe the ssd is dying
+07:39:36 <timetravelingman> Maybe it's Maybelline
+07:39:44 <tom-griffin[m]> The phone is less than a year old
+07:40:00 <timetravelingman> Try a reinstall
+07:40:32 <timetravelingman> If it is still slow after a reinstall then go from there
+07:57:38 <Thatcher[m]> <timetravelingman "> <@tom-griffin:matrix.org> My p"> Thanks for the advice. My phone now tops out at 88 mph.
+09:32:49 <pizzaeater69[m]> Could there be ability in permissions to only allow internet access from app when in use
+09:34:03 <GrapheneOS-Teleg> <!Hulk> What is the point?
+09:37:09 <somenerd[m]> > Could there be ability in permissions to only allow internet access from app when in use
+09:37:09 <somenerd[m]> it probably won't work
+09:37:21 <somenerd[m]> apps could just exfiltrate data while they have the perm
+09:39:15 <GrapheneOS-Teleg> <!Hulk> Exactly
+09:40:12 <GrapheneOS-Teleg> <!Hulk> pizzaeater69 if you want to prevent background activity of an app, the best way is to isolate it in a separate user and 'end session' when not needed
+09:58:15 <pizzaeater69[m]> Right
+10:47:25 <GrapheneOS-Teleg> <H​andyberlin> I have a problem.  I installed the graphene version for the normal 4a on a Pixel 4a 5g.  Now the cell phone won't work ... What can I do?
+11:03:41 <GrapheneOS-Teleg> <!yume> Does it boot to bootloader or fastboot?
+11:11:08 <came2complain[m]> <GrapheneOS-Teleg "<Handyberlin> I have a problem. "> try to start the device while pushing power and volume up that should bring you to recovery mode
+11:11:28 <came2complain[m]> or volume down and then unlock the bootloader again and flash another image if that still works
+11:36:31 <GrapheneOS-Teleg> ThePrivacyStore (@T​hePrivacyStore) has joined the Telegram Group!
+11:37:30 <strcat[m]> @Handyberlin: you bricked it, this is one reason we strongly recommend using https://grapheneos.org/install/web and not following unofficial guides
+11:37:34 <strcat[m]> return it
+12:34:47 <iknowlessthanjon> strcat: can you please help me find the default device policy manager implementation that you mentioned? all I found so far is the enterprise api and selinux...
+12:35:55 <strcat[m]> it's a default implementation of a class
+12:36:00 <strcat[m]> you can see where we raise password length limit
+12:48:04 <GrapheneOS-Teleg> <N​ehilisticBluesman> hi, what is freezer, i saw it is enabled by default in grapheneos. Does "kill" apps in bg or something like that? here is commit  https://github.com/GrapheneOS/platform_frameworks_base/commit/d842693e62c2f87650851c3edf76dd8d1967f2ba
+12:48:07 <m2tu[m]> i have added a device admin app to options menu of grapheneos buld... i would like the device app to be activated automatic after build and flash .. is that possible ?
+12:49:25 * m2tu[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/jgaZAPqoimQZHGXOJNKHTlje/message.txt >
+13:03:29 <strcat> m2tu[m]: really not how you're supposed to do things
+13:03:33 <strcat> shouldn't be messing with data like that
+13:23:54 <fll[m]> strcat , is github still doubling my monthly donations? Or is it time to switch it to directly donating?
+13:24:13 <strcat[m]> no they only did that for the first $5000
+13:24:19 <strcat[m]> I got the full $5000 in doubled donations
+13:24:41 <strcat[m]>  * I got the full $5000 of matched donations
+13:25:10 <strcat[m]> fll: it was a limited time offer (first $5k, 1 year to use it) and I think it's gone for new people to the platform now
+13:25:18 <strcat[m]> it was a limited time thing they did to promote GitHub Sponsors
+13:25:36 <strcat[m]> I made sure to push people to use it to get the 5k
+13:27:10 <fll[m]> Did the year pass already? Cause I'm pretty sure I was in the first 5k
+13:28:22 <strcat[m]> yes this was a long time ago
+13:28:33 <strcat[m]> fll: you probably were
+13:28:39 <strcat[m]> I got the full 5k
+13:28:43 <strcat[m]> there was no way to get more from it
+13:29:12 <fll[m]> Ah ok....now I get it. 5k total, not monthly
+13:29:31 <fll[m]> I'll switch to direct donations then
+14:13:49 <dankovsky[m]> Hey guys, small question. Should I wait with upgrading to a pixel until the pixel 6 comes out? Would that be worth the wait or not?
+14:22:52 <dazinism> dankovsky: That is kind of  an unanswerable question.
+14:23:11 <dankovsky[m]> Ah sorry, I just don’t know what’s smart
+14:23:16 <dazinism> Nobody knows what it will be like
+14:23:53 <dazinism> Theres some chance there will be 5a first
+14:24:27 <dazinism> The a series Pixels are really good value for money
+14:24:42 <dankovsky[m]> Hmmm
+14:24:59 <dankovsky[m]> I might just get the 5 then once my contract ends… thanks for trying to answer me anyways
+14:25:27 <dazinism> 5a could be out in a couple of months
+14:26:00 <dazinism> Guess the latest phone is best from a longevity perspective.
+14:39:36 <dhsjwbbsjxndbs> and take ~3 months to port GOS to a new device
+14:40:00 <phone[m]> <dankovsky[m] "Hey guys, small question. Should"> pick up a used pixel 3axl/4/4a on swappa, craigslist, or ebay even that's carrier unlocked.  you'll spend less and get to test things out before you buy that shiny new device :-)
+14:42:57 <amrpx> Hi there, I currently try to install grapheneos on a Pixel 4a via the web-installer using Edge on Windows 10. I followed every step closely yet Edge does not find the pixel as a device to unlock the bootloader. I'd be happy to receive any help!
+14:47:51 <phone[m]> <amrpx "Hi there, I currently try to ins"> i'm not super familiar with edge, but have you tried another chrome-based browser or chrome native perhaps?
+14:54:41 <amrpx> I tried Chrome. Same problem. Sorry for not mentioning
+14:56:37 <void125[m]> Just went full on GrapheneOS.  For my use case I might be able to live with F-Droid but I'm curious what everyone else is doing to find apps.  I've used Aurora but with microG not so fun.
+14:57:03 <void125[m]> *without microG
+15:00:10 <GrapheneOS-Teleg> Udhaya (@l​ineageos_N7PRO) has joined the Telegram Group!
+15:00:50 <kamesjitt616[m]> <void125[m] "Just went full on GrapheneOS.  F"> You'll get used to it :)
+15:01:58 <void125[m]> <kamesjitt616[m] "You'll get used to it :)"> Not an unreasonable response👍
+15:02:10 <dazinism> void125:
+15:02:13 <dazinism> https://hub.libranet.de/wiki/and-priv-sec/wiki/apps
+15:04:13 <dazinism> I tend to use Foxy Droid and get apps from izzyondroid, main FDroid or other app specific repos
+15:04:54 <dazinism> Main thing is, wherever you get them from. Be careful about what you install.
+15:09:06 <void125[m]> Thank🙂
+15:19:25 <phone[m]> <void125[m] "Just went full on GrapheneOS.  F"> i've been content with f-droid as i don't use many apps besides note taking, chat, and the occasional game of chess.
+15:38:11 <GrapheneOS-Teleg> Angry (@A​ngry_Lasagna) has joined the Telegram Group!
+15:38:34 <GrapheneOS-Teleg> <A​ngry_Lasagna> How is unprivileged microg going?Whom can I pay to make it?
+15:40:49 <GrapheneOS-Teleg> !Foreman has joined the Telegram Group!
+15:41:41 <GrapheneOS-Teleg> <!Foreman> I can't seem to get Graphene to recognize my device to install. Any suggestions?
+15:42:40 <GrapheneOS-Teleg> <A​ngry_Lasagna> Mostly fdroid, some from source, some bins from author, some proprietary via Aurora. There are surprisingly few apps hard depending on playservices nowadays. Many can be binary patched to ignore the check and still work but update maintenance is pita. Its actually better on graphene than on lineage without google packet nor microg, less crashing things.
+15:42:58 <cherimo[m]> Hi there
+15:43:29 <cherimo[m]> Does somebody knows ho I can disable the doze mode entirely in Pixel 3+
+15:43:41 <cherimo[m]> I have been working on this for more than 5 intensive days, but to my frustration nothing works. I have found many topics related to this doze topic, the optimization for the app adjusted, send a ping every minute (StayAlive) to the server but all to no avail.
+15:43:41 <cherimo[m]> Trying to change the idle settings and disable Doze mode via ADB, but no luck.
+15:47:10 <GrapheneOS-Teleg> <A​ngry_Lasagna> There is a per app setting to allow it to stay unaffected by battery manager.
+15:49:54 <GrapheneOS-Teleg> <A​ngry_Lasagna> Works for me to keep some messengers active. Except Signal. Despite permanent notification still doesnt fetch messages in a reasonable time.
+15:54:54 <cherimo[m]> I have changed the app settings to dont optimize the app are there other settings?
+15:55:51 <cherimo[m]> I use it in a local environment, I have some Android pixel 3 devices(Android 11) that are connected with a web socket in the foreground service. This socket connection only listens for messages and pushes them to the push notification. Sometimes you may not receive messages for hours or sometimes days, so this needs to be really stable.
+15:56:52 <GrapheneOS-Teleg> <A​ngry_Lasagna> Same method as signal.I wonder what telegram uses.
+16:12:22 <fll[m]> <amrpx "Hi there, I currently try to ins"> If you didn't already, connect the phone and then run windows update to make sure the recommended drivers are installed.
+16:21:58 <dazinism> cherimo: sounds like the app (or server) isn't doing things well
+16:22:34 <dazinism> I've had conversations on my phone for years and, as far as I know, messages always get through quickly
+16:22:45 <dazinism> This is how they did it
+16:22:49 <dazinism> https://github.com/iNPUTmice/Conversations#how-do-xep-0357-push-notifications-work
+16:23:34 <GrapheneOS-Teleg> Mr. (@l​oyerx) has joined the Telegram Group!
+16:25:40 <dazinism> cherimo: sorry, that link isn't the most clear, talks a lot about Play
+16:25:45 <dazinism> Which isn't relevant
+16:27:42 <strcat[m]> cherimo: you need to have your foreground service listen for network change events with a broadcast listener (an active one, not a passive one in manifest, that's not allowed for those anymore)
+16:27:48 <strcat[m]> cherimo: and deal with the network changing
+16:28:04 <strcat[m]> cherimo: and then you also need to regularly ping the connection to deal with carriers killing connections against TCP spec
+16:28:23 <strcat[m]> cherimo: the best way to do that is to dynamically choose the ping interval based on what's working on the current network
+16:28:40 <strcat[m]> start at say once every 3 minutes, and scale it up for reliable networks (particularly IPv6)
+16:29:01 <strcat[m]> and cap it at some worst case amount you can tolerate like 1 hour if the connection silently drops
+16:29:18 <strcat[m]> if the connection is properly dropped (not silently) the application is informed about that
+16:29:30 <strcat[m]> the issue is carriers breaking TCP specification in a really obnoxious way
+16:29:35 <strcat[m]> CGNAT is the main reason
+16:29:42 <strcat[m]> i.e. not enough IPv4 addresses
+16:29:56 <strcat[m]> so you can use much more infrequent pings on IPv6
+16:29:58 <strcat[m]> generally
+16:30:43 <strcat[m]> if you never do pings then even on a reliable network, sometimes connection is going to drop, without you noticing
+16:30:58 <strcat[m]> and by pings I mean send a no-op message over the connection
+16:31:17 <strcat[m]> and if you want, reply to that, and check for the reply, but that's not really mandatory
+16:31:24 <strcat[m]>  * and if you want, reply to that from the server, and check for the reply, but that's not really mandatory
+16:32:00 <Gramps> Anyone here using GrapheneOS as a daily driver?
+16:32:04 <strcat[m]> many
+16:32:49 <Gramps> strcat[m] do you?
+16:33:03 <entry1[m]> <Gramps "Anyone here using GrapheneOS as "> Yes. Any questions? If it is directly relating to the OS (3rd party apps etc), you can ask in #grapheneos-offtopic:matrix.org
+16:33:13 <fll[m]> <Gramps "Anyone here using GrapheneOS as "> Yes, Graphene and predecessors for a couple of years now
+16:33:19 <strcat[m]> Gramps: much better to ask the question you want to ask
+16:33:22 <strcat[m]> and ask the room in general
+16:33:26 <entry1[m]> * Yes. Any questions? If it isn't directly relating to the OS (3rd party apps etc), you can ask in #grapheneos-offtopic:matrix.org
+16:41:21 <Gramps> Couple questions about implications of usage. I read that apps can detect that they are being run on Graphene due to the more restrictive environment. It that app has a Google tracker in it, doesn't that flag you as someone with something to hide? Maybe worse than just hiding in plain sight and just using regular OS? Wouldn't using graphene with a
+16:41:22 <Gramps> regular phone plan tied to one's name also have a similar effect?
+16:44:51 <TheJollyRoger> +
+16:44:54 <TheJollyRoger> Whoops.
+16:45:43 <TheJollyRoger> Gramps: Many people here are using GrapheneOS as a daily driver.
+16:46:09 <TheJollyRoger> The releases for GrapheneOS are full, production quality releases and are tested internally, then tested by beta testers prior to being marked as stable.
+16:48:02 <strcat[m]> Gramps: apps can always detect what OS they're running in similar to how a web site can trivially detect the browser even if it tries to avoid that
+16:48:08 <TheJollyRoger> With respect to "trackers", GrapheneOS is not simply "Android Less Google." That's selling the project short; GrapheneOS is about improving the security characteristics of the open source project on the handsets with the best security.
+16:48:15 <strcat[m]> Gramps: not clear what you mean by a 'tracker'
+16:48:21 <strcat[m]> Gramps: apps are all sandboxed
+16:48:49 <strcat[m]> they don't have access to permissions you haven't granted them or files outside their app sandbox you haven't explicitly granted access to, etc.
+16:50:15 <Gramps> By trackers, I'm referring to Facebook Analytics, Google Crashlytics, etc. Things Aurora Store flags
+16:53:28 <strcat[m]> those don't give an app any capabilities they don't have without them
+16:53:43 <strcat[m]> it's just more code in the app as a library it uses (which may be conditional)
+16:54:33 <strcat[m]> and I'm not really sure why you'd refer to any of those as trackers or what you're actually worried about based on apps having analytics for their usage, they can do that without third party libraries too, and often too
+16:56:58 <Gramps> I'd refer to them as trackers because they are tracking usage and behavior. Is there a better term?
+16:59:10 <TheJollyRoger> Libraries.
+17:00:28 <strcat[m]> Gramps: that's not what crash reporting does
+17:00:36 <strcat[m]> and apps choose how those libraries are used
+17:01:02 <strcat[m]> they may have opt-out, or opt-in, and they choose how they're configured/used
+17:01:16 <strcat[m]> and again, an app can do all those kinds of things without using specific third party libraries
+17:01:19 <strcat[m]> it's simply more code, that's it
+17:01:24 <Gramps> I'm not just talking about crash reporting
+17:01:36 <strcat[m]> does not give the app any additional capabilities, simply more code included in it
+17:01:44 <strcat[m]> can already do stuff with their own code
+17:01:58 <strcat[m]> Gramps: you mentioned https://firebase.google.com/docs/crashlytics
+17:02:20 <TheJollyRoger> Gramps: the apps choose how they use that code. Apps can be written to be invasive without them, and can be noninvasive with them, at their individual developers' discretion.
+17:02:43 <Gramps> Sure, makes sense.
+17:02:51 <TheJollyRoger> It's up to the people who develop those apps; simply that they include those libraries, does not necessarily mean they're going to be invasive. That depends on the application developers.
+17:02:57 <strcat[m]> most firebase stuff won't work at all without Play services in the OS anyway
+17:04:39 <strcat[m]> since it depends on it rather than shipping an implementation of everything needed with each app
+17:06:32 <pizzaeater69[m]> Can someone explain more on what it means to put profile at rest? Like what does it mean
+17:06:44 <pizzaeater69[m]> * Can someone explain more on what it means to put profile at rest?
+17:07:57 <TheJollyRoger> pizzaeater69[m]: When a user profile is put at rest, all of its processes are closed, and all of its cryptographic keys are ejected from memory.
+17:08:27 <pizzaeater69[m]> Riight thank you
+17:08:52 <TheJollyRoger> pizzaeater69[m]: The equivalent for the owner profile is switching the phone right off.
+17:09:30 <pizzaeater69[m]> Got it
+17:09:30 <pizzaeater69[m]> So should I put profiles at rest whenever im not using them?
+17:09:54 <TheJollyRoger> Ideally, yes.
+17:10:16 <pizzaeater69[m]> Thanks
+17:10:27 <TheJollyRoger> doing so closes the apps that were running in the background, and renders that data safe.
+17:10:31 <TheJollyRoger> *safely at rest.
+17:12:38 <pizzaeater69[m]> Coool
+17:12:38 <pizzaeater69[m]> And thanks TheJollyRoger for usually helping, you speak little less technical language so even I can understand it xd
+17:12:46 <TheJollyRoger> Heh. I try to! :)
+18:18:33 <cryptokid777> Hi, what can the carrier see from my grapheneos phone? Is it the same as with normale android or does graphene give me more protection from carrier
+18:24:52 <GrapheneOS-Teleg> <g​ochoingles> You can not really hide info from your carrier. You could, however, instead of using SMS and phone calls, use a reliable VPN, Signal/Element messages + voice/video calls, and the Tor Browser for Android for searching up something in DuckDuckGo or your preferred search engine.
+18:25:42 <cryptokid777> I didnt ask how to hide from carrier, i wamt to know what the carrier can see
+18:26:24 <akc3n[m]> <cryptokid777 "Hi, what can the carrier see fro"> Here is an interesting explanation about imei's, sims and carriers.
+18:26:47 <akc3n[m]> Ops sorry wrong link
+18:27:15 <akc3n[m]> cryptokid777:  https://freenode.logbot.info/grapheneos/20210322#c7356049
+18:27:28 <cryptokid777> Oke thank you
+18:31:55 <cryptokid777> Nowhere i can read the answer to my question , i am interested in what information the carrier always has, and does grapheneos has benefits from normal android or does the carrier see the same
+18:34:22 <ryanrambharose> can I install magisk on graphene?
+18:35:09 <akc3n[m]> <cryptokid777 "Nowhere i can read the answer to"> Anything that's not encrypted....? Wouldnt that be the correct, simple answer. There's a lot more intelligent people here then I, that would be able to answer this correctly and better.
+18:46:10 <GrapheneOS-Teleg> <!Hulk> Why would you do that? Please don't
+18:46:42 <GrapheneOS-Teleg> <P​engu_Gone_Complicated> Hello sarHow is your reply related to his message?
+18:49:08 <strcat[m]> cryptokid777: https://grapheneos.org/faq#cellular-tracking
+18:49:43 <strcat[m]> cryptokid777: avoid traditional carrier-based calls and texts, since those trust the carrier network
+18:49:49 <strcat[m]> use apps like Signal for those
+18:49:52 <GrapheneOS-Teleg> <!Hulk> Hi there! Not really related, but I think it should be in the required/highly recommended reading list for newcomers) Wouldn't you agree?)
+18:50:19 <strcat[m]> cryptokid777: when Airplane Mode is disabled, you're connected to the cellular network so they know your location
+18:50:26 <strcat[m]> that's an inherent property of using the cellular network
+18:50:30 <GrapheneOS-Teleg> <P​engu_Gone_Complicated> Oh OKYes, why not
+18:50:40 <strcat[m]> cryptokid777: not clear what you what to know
+18:50:46 <cryptokid777> Oke but what can the carrier see in my graphene phone? Apps i m using? My contacts? My pictures?
+18:51:13 <strcat[m]> ryanrambharose: no, you can't, replacing the core of the OS with something else would not be GrapheneOS
+18:51:27 <strcat[m]> ryanrambharose: and destroying the security model that way goes against the whole point of it, indicating you don't want GrapheneOS in the first place
+18:51:40 <strcat[m]> cryptokid777: none of that
+18:51:52 <strcat[m]> cryptokid777: they can't on the stock OS either so don't understand the question you're presenting above
+18:52:11 <cryptokid777> Can they see i am using grapheneos?
+18:52:12 <strcat[m]> cryptokid777: you're stating something untrue but posing it as a question
+18:52:19 <strcat[m]> the question is incorrect
+18:52:21 <strcat[m]> cryptokid777: covered in FAQ
+18:52:27 <strcat[m]> https://grapheneos.org/faq#default-connections
+18:54:07 <cryptokid777> And if i use end to end encryption can the carrier see who i am messaging? I understand they cannot read the message but can they see with who i am talking?
+18:54:12 <GrapheneOS-Teleg> <P​engu_Gone_Complicated> Anywaywhat is the problem if they see?Is using GrapheneOS comitting crime?
+18:54:37 <GrapheneOS-Teleg> <P​engu_Gone_Complicated> They can't
+18:54:42 <strcat[m]> cryptokid777: no, due to transport encryption, even if there isn't some form of E2E encryption hiding that from the server
+18:54:59 <strcat[m]> transport encryption is enough to hide that stuff from the carrier, including TLS connections to web sites, servers, etc.
+18:55:15 <strcat[m]> E2E encryption goes further by encrypting from client to client through the server rather than trusting it
+18:55:33 <cryptokid777> Niceee
+18:55:34 <strcat[m]> cryptokid777: all this applies to Wi-Fi networks, VPN providers, etc. as much as cellular
+18:55:55 <cryptokid777> I am hearing double things about vpn
+18:56:01 <strcat[m]> what the carrier gets from being your carrier is knowing where you are when you're connected to the network
+18:56:08 <strcat[m]> airplane mode can be used to prevent that
+18:56:09 <cryptokid777> Some say dont use it because you put your trust to vpn
+18:56:19 <cryptokid777> Other say its better to trust vpn than carrier
+18:56:34 <strcat[m]> cryptokid777: it tunnels your traffic to another provider
+18:56:44 <strcat[m]> the main purpose of it is having a shared IP so you blend in with other users more
+18:56:51 <strcat[m]> instead of being uniquely identified based on your IP by servers
+18:56:52 <phone[m]> <cryptokid777 "Some say dont use it because you"> it doesn't do a lot for you. but if you understand what it is and the limitations shouldn't be an issue to use one.
+18:57:04 <phone[m]> strcat sum'd it best above
+18:57:13 <strcat[m]> cryptokid777: either way, you should NOT be trusting networks, that's a dangerous anti-pattern
+18:57:26 <strcat[m]> don't use unencrypted stuff, or carrier-based calls/texts, except as a last resort
+18:57:41 <strcat[m]> most modern things at least have transport encryption
+18:57:46 <cryptokid777> Okey thanks for the explanation, i will use vpn with signal , thats the safest i guess
+18:58:11 <phone[m]> strcat: do you have a recommendation for an employer, bank, etc who insists on a sim-bound e164?
+18:58:14 <cryptokid777> Yess i am using 4g only mode, so no text en carrier calls
+18:58:32 <GrapheneOS-Teleg> <P​engu_Gone_Complicated> Use tor
+18:58:56 <cryptokid777> Tor can be detected by carrier so i will not blend in ?
+18:59:20 <GrapheneOS-Teleg> <P​engu_Gone_Complicated> You can use bridges
+19:02:08 <strcat[m]> cryptokid777: carrier-based calls and texts work fine in 4G only mode as long as the carrier supports modern standards for them
+19:02:13 <strcat[m]> cryptokid777: that's not a way of disabling those
+19:02:55 <cryptokid777> Okee my carrier doesnt support them, when i call my phone it s not responding, but i am not using them so that good
+19:03:09 <cryptokid777> And what grapheneos teleg says about tor
+19:03:27 <cryptokid777> Is that smart , because i tought it would not be blending when i use tor
+19:04:00 <cryptokid777> Carrier can see tor usage i read
+19:04:30 <phone[m]> carrier/isp can see your entry an ip address and if they have access to a bridge list then yes.
+19:04:55 <GrapheneOS-Teleg> <o​pheliadole> https://www.whonix.org/wiki/Hide_Tor_from_your_Internet_Service_Provider
+19:06:08 <phone[m]> many that i chat with moved to vpns to blend a bit better.  some build their own and use a transparent proxy to route everything through it.  looks like you're `connected to work` 24/7.
+19:08:18 <cryptokid777> strcat: if 4g is not a way to disable text and calls, does graphene provide a way to disable it? Of is just not using it the way?
+19:10:35 <strcat> for 4G and later calls and texts simply uses data
+19:10:52 <strcat> if your carrier doesn't support that then 4G only will break calls/texts but that's not the intention and any decent carrier should have that working now
+19:10:55 <strcat> some US carriers are problematic
+19:11:23 <strcat> we don't specifically add a toggle to disable them but there are ways to disable portions of that functionality
+19:11:26 <strcat> don't recommend doing it
+19:11:30 <strcat> I'm suggesting not using it
+19:11:40 <strcat> your carrier often sends you notices of service info via SMS, etc.
+19:12:53 <cryptokid777> Okee so simply not using them is enoufh, besause i reag sometimes carrier send sms with settings that can mess thinga up and give them acces to phone
+19:13:00 <cryptokid777> Dont know if it s thrue
+19:14:17 <cryptokid777> There is a lot misinformation on the web it s hard to understand whats true , for people like me
+19:17:58 <phone[m]> often times it takes doing your own research and taking time to understand the technology to really choose your adventure.  folks like strcat and others have been doing this a long time.  it's time
+19:32:31 <TheJollyRoger> cryptokid777: In the olden times, back when cellphones were simply dumb terminals, that was true, but that's decades out of date now. These days, Pixels fully isolate the cellular modem from the host via a memory management unit, and the modem does not save state.
+19:33:12 <cryptokid777> Oke thank you jollyroger
+19:34:00 <TheJollyRoger> So even if the modem was to turn bad, it can only read from or write to host memory that the driver in the phone specifically allows it to. There are no closed source drivers on the Pixels; they are all fully open source and compiled into the kernel. Since the modem does not save state and full verified boot is enforced while the bootloader is locked, if it ever did turn evil, you could simply
+19:34:02 <TheJollyRoger> reboot the phone to revert it to a known good configuration.
+19:34:26 <TheJollyRoger> *that the driver in the host's kernel on the phone specifically allows it to
+19:37:16 <TheJollyRoger> Much of the whole sentiment of "phones are evil, they are backdoored" dates back to 1999, back when it was assumed that phones were only simple dumb terminals that were managed by the cell service carrier. Those assumptions started to change in 2006, and by 2011, phones started showing up with their own memory management. Vendors have improved on that in the decade that followed immensely.
+19:38:20 <TheJollyRoger> Yep, hope this helps give some perspective. A lot of people aren't aware that these improvements have been made, because these types of improvements don't put on a song and dance for you, they're entirely automatic and transparent to the user; they function without manual intervention.
+19:38:55 <GrapheneOS-Teleg> B (@b​ytlo) has joined the Telegram Group!
+19:40:12 <strcat[m]> https://grapheneos.org/history/legacy-changelog
+19:40:24 <strcat[m]> archive of the historical GrapheneOS changes for Android 8 (Oreo) and below
+19:40:40 <TheJollyRoger> Oh cool!
+19:40:43 <strcat[m]> it only goes back to 2016.03.27.04.15.10 because release notes weren't written prior to that
+19:41:03 <TheJollyRoger> Wow, a historical archive!
+19:41:20 <cryptokid777> Jollyroger thank tou for the explaination, i am understanding it mich better, also rebooting the phone to put it in the right state , i didnt know that
+19:41:21 <strcat[m]> the project started in 2014 but I didn't start providing an overview of the changes beyond simply having the Git history until then
+19:41:58 <cryptokid777> Graphebeos telegeam group is that official?
+19:43:45 <TheJollyRoger> cryptokid777: you're welcome! Yep, around ~2012 (I forget exactly when), Android started experimenting with Verified Boot, which allowed the late-stage bootloader to verify the authenticity of the entire system image. By 2016, Verified boot had become mandatory by the Android specification. What it does, is it allows the bootloader of the phone to verify the authenticity of the entire system
+19:43:46 <TheJollyRoger> image, all at once, to make sure that it's authentic by means of a digital signature and the developer's certificates.
+19:45:32 <TheJollyRoger> Modern Pixels (3 and later) have verified boot which is assisted by the presence of the Pixel's secret weapon: its Titan M security chip, which acts as a secure element and hardware security module. The chip is small, isolated, and is designed specifically for these functions in a mobile phone.
+19:48:10 <TheJollyRoger> When you install GrapheneOS, the installer script or the web installer will give the secure element a copy of the developer's certificate. When locked, the phone will automatically check the digital signature of the entire system image against this certificate. While the bootloader is locked, the secure element will not allow these certificates to be rolled over or changed. If it detects
+19:48:11 <TheJollyRoger> tampering, the bootloader will try to revert the phone to the condition it will pass validation.
+19:48:52 <TheJollyRoger> But if it can't, then it will halt right there and not let your phone boot. This might be inconveniencing, but it's far better than letting you use a phone that's had its system image compromised.
+19:53:46 <cryptokid777> I dont know what you have studies but you talk like a bosss
+19:54:02 <cryptokid777> I love this, my pixel and graphene
+19:54:24 <TheJollyRoger> Hehehehe. Welcome aboard the ship, shipmate.
+19:54:50 <cryptokid777> Hope pixel wil bring a stronger device because the 5 feels like a downgrade comparing to the 4
+19:54:56 <TheJollyRoger> I just listen to s`trcat, mainly :P (name mangled to prevent inadvertent ping)
+19:55:03 <cryptokid777> Cant wait till the 6 comes
+19:55:52 <TheJollyRoger> Yeah. I do kind of like that the had this really nice premium feel to it since the sides are metal and the back is glass.
+19:56:39 <TheJollyRoger> The 5 does have a newer SoC, which should have newer mitigations and incrementally better security simply by virtue of being newer though.
+19:56:57 <TheJollyRoger> So we'll see what happens when it's time for the next upgrade for me.
+19:57:10 <cryptokid777> I am using the 4a now
+19:57:29 <cryptokid777> Everything worms fine only my outlook app is crashing, i cant login
+19:57:30 <GrapheneOS-Teleg> <g​ochoingles> You can reply people on the other side of the bridge by typing their username followed immediately by two dots and a space. Like so:examplename: Example reply
+19:57:32 <TheJollyRoger> The 4a is good.
+19:58:28 <TheJollyRoger> cryptokid777: it might be hardcoded to be dependent on Google Play Services. Some apps that are written to be dependent on Google Play services, if they don't implement their own fallback to function in the absence of Play tend to behave this way.
+19:59:01 <cryptokid777> It used to work on my pixel 4,/but since the last grapheneos update it crashed
+19:59:13 <cryptokid777> Not i swiched to the 4a and here it doesnt work also
+19:59:31 <cryptokid777> Dont kniw if it s update related or outlook changed something
+19:59:39 <TheJollyRoger> Ah, huh. I don't have an answer for you on that, unfortunately.
+20:00:23 <cryptokid777> Well it s not a big issue, i can read mail with vanadium also when needed, it will work again i think
+20:00:43 <TheJollyRoger> Great!
+20:00:45 <cryptokid777> Waiting for the uodate maybe it will fix the bug
+20:01:02 <cryptokid777> So is that telegram group official?
+20:01:08 <cryptokid777> From graphene ?
+20:01:18 <cryptokid777> Grapheneos-teleg?
+20:02:33 <strcat[m]> cryptokid777: there's no change in GrapheneOS which would be causing that
+20:02:36 <TheJollyRoger> From GrapheneOS-Teleg it is official, if I recall right.
+20:02:38 <strcat[m]> cryptokid777: you need to report app issues / bugs to app developers
+20:02:40 <GrapheneOS-Teleg> <g​ochoingles> cryptokid777: May recommend to use non-CorpFree apps only when needed. I only use my actual Google account for Classroom because teachers.
+20:02:47 <strcat[m]> perhaps their support for running without Play services regressed
+20:03:02 <mr-president[m]> Hey, I'm wondering what I need to do to ready my phone for flashing grapheneos
+20:03:03 <GrapheneOS-Teleg> <g​ochoingles> * only when absolutely and inevitably needed
+20:03:10 <cryptokid777> Is there other email client i can use for hotmail.com
+20:03:22 <TheJollyRoger> Hello mr-president[m], the first thing you want to do is *make sure you have nothing on that phone you don't mind losing*
+20:03:31 <TheJollyRoger> Because your phone will be reset, multiple times, during the process.
+20:03:36 <mr-president[m]> Ok, so backup
+20:03:49 <mr-president[m]> I'm assuming I remove my sim
+20:03:53 <TheJollyRoger> You can put your SIM card in, and keep it in, but anything like your 2FA tokens, your accounts, your photos, movies, videos... you want that all backed up.
+20:03:58 <TheJollyRoger> Nope, you can keep your SIM Card in.
+20:04:06 <mr-president[m]> Ok then
+20:04:26 <TheJollyRoger> However, if you have an eSIM, GrapheneOS doesn't have a frontend app to manage or configure it at this point.
+20:04:32 <TheJollyRoger> So use a physical SIM if you have one.
+20:04:35 <GrapheneOS-Teleg> <g​ochoingles> mr-president[m]: You must verify it can unlock bootloader. Finally, connect to the Internet, update the stock ROM and it will be ready for flashing. Remember to factory reset preferably from the settings, as you will have the chance of gracefully logging off of whatever Google account you had there.
+20:05:00 <TheJollyRoger> Hehe, you beat me to it, @gochoingles! :)
+20:05:39 <mr-president[m]> Well, I'm about to get a new phone
+20:05:42 <GrapheneOS-Teleg> <g​ochoingles> mr-president[m]: I have heard updating the Google Pixel allows for more stability while flashing.
+20:05:52 <mr-president[m]> So it'll be clean to begin with
+20:06:20 <TheJollyRoger> The next thing you're going to want to do is go look in the package your phone came with -- make sure you use the original, Google branded cable to do the installation with or buy an Aukey or Anker USB C to C cable. Most issues we see come from insufficiently traced cables which lack the wire Fastboot needs to access the bootloader on the phone, even though they will work for MTP and charging.
+20:06:32 <mr-president[m]> Would it be fine to flash using the WebUSB with chromium on manjaro?
+20:06:41 <mr-president[m]> Ok
+20:07:08 <TheJollyRoger> If they don't butcher the versioning from Arch, then it should be, although I've never used Manjaro before.
+20:07:19 <TheJollyRoger> So... important thing here:
+20:07:48 <TheJollyRoger> You'll want to buy a bootloader unlocked version. If your retailer can't tell you with a straight face it is OEM unlockable and you trust them, buy directly from the Google Store and select "Unlocked" when you check out.
+20:08:31 <TheJollyRoger> Since at a ton of retailers, the guys being paid seven bucks an hour to sling the phones don't know the difference and probably put them all in the same bin anyways.
+20:09:08 <TheJollyRoger> (A phone can be bootloader locked, but carrier unlocked, and the retailers won't know it.)
+20:09:16 <mr-president[m]> Well, I'm getting the unlocked 4a from Best Buy
+20:09:32 <mr-president[m]> So im assuming it would be a legal issure if it was locked
+20:09:38 <GrapheneOS-Teleg> <g​ochoingles> mr-president[m]: If you are a newcomer or do not want to waste money by accident, use the WebInstall along with Windows 10 + Microsoft Edge Chromium or Debian 10 + Chromium. Both OS and browser must be up to date.
+20:09:44 <GrapheneOS-Teleg> <g​ochoingles> While installing, make sure to ask questions to professionals such as Peter (TheJollyRoger) and Daniel (strcat) for every doubt you have during installation.
+20:09:57 <mr-president[m]> Ok
+20:10:10 <TheJollyRoger> I'm first-tier support, so generally ask me first.
+20:10:22 <mr-president[m]> So I should boot into my crusty Windows install
+20:10:31 <mr-president[m]> Finally, it has a reason to exist
+20:10:31 <TheJollyRoger> Yes. It's easiest to do it on Windows.
+20:10:52 <TheJollyRoger> Remember, read everything on the installation page at https://grapheneos.org/install/web before you begin.
+20:10:58 <mr-president[m]> Yes
+20:11:00 <mr-president[m]>  Thank you
+20:11:35 <TheJollyRoger> Now... if it hangs at the last step, flashing the OS, even after the rest of the steps go well, and you're using the Google Brand cable, that indicates a defective USB slot or bad USB firmware on your motherboards.
+20:12:00 <TheJollyRoger> This isn't your fault; it's because a lot of motherboard vendors are extremely sloppy about USB support and often only implement the barest minimum of features that most people will use day-to-day.
+20:12:38 <TheJollyRoger> (Make sure the ADB server is not running while you are on the installation page. If it is, it will report an error because ADB isrunning. THe simplest fix to this problem is to reboot your computer)
+20:12:43 <GrapheneOS-Teleg> <!Hulk> Thx, gonna try it next time)
+20:12:54 <mr-president[m]> Im using an acer aspire 5 laptop
+20:13:25 <TheJollyRoger> In some cases, if that happens, turning the USB plug 180 degrees upside down and plugging it back in, or trying a different USB slot may fix it, since the pins on USBC aren't actually reversible, they rely on software negotiation to figure out what to send to which.
+20:14:08 <TheJollyRoger> I know this sounds kind of dumb, but the vendors are terribly lackadaisical about this and often don't test their products for edge cases like device debugging.
+20:14:37 <TheJollyRoger> Yeah, I don't know which vendors are good and which ones are careless, it seems to be a mixed bag a lot of days.
+20:15:53 <polardroid> "can't write to device" is this "normal" ?
+20:16:19 <TheJollyRoger> Hello polardroid, what are you doing?
+20:16:41 <polardroid> thought I might try to add some audio files from my library
+20:17:01 <TheJollyRoger> Via MTP?
+20:17:25 <polardroid> hmm well via usb I guess ?
+20:17:45 <GrapheneOS-Teleg> <g​ochoingles> Almost the same thing.
+20:17:55 <polardroid> cool
+20:17:55 <TheJollyRoger> Check whether you've enabled USB transfer on the phone, pull it down from the top. You may need to hot plug (unplug, then re-plug in) your device.
+20:18:13 <polardroid> ok ty
+20:18:34 <TheJollyRoger> You should see it in the notification area, it will say "charging device - tap for more options" or something.
+20:20:02 <TheJollyRoger> Make sure there's enough space on the phone, as well.
+20:20:16 <TheJollyRoger> That caught me by surprise more than once. :embarassed:
+20:20:47 <polardroid> phone is virtually still "empty" so usb accessories setting?
+20:21:03 <polardroid> was set to deny
+20:21:21 <TheJollyRoger> Yeah, set to "File Transfer."
+20:22:06 <TheJollyRoger> I gotta run for a bit, I will return later!
+20:22:08 <polardroid> got it ty TheJolly Roger
+20:22:16 <TheJollyRoger> Great! P.-)
+21:11:28 <jim60> can i install grapeheneos replacing android 8.1 j7 prime
+21:46:09 <anne232> Is it possible to use USB-C to HDMi on grapheneos
+22:04:16 <entry1[m]> <anne232 "Is it possible to use USB-C to H"> Unfortunately no
+22:08:43 <entry1[m]> <jim60 "can i install grapeheneos replac"> GrapheneOS works on Pixel devices and is only recommended to be used on non-legacy Pixel devices. You can find out more on the website
+22:08:50 <entry1[m]> https://grapheneos.org/faq#supported-devices
+22:42:16 <AnonymitySystem1> Advice of how to sandbox Tor Browser for Linux Debian?
+22:42:18 <strcat[m]> they left already
+22:42:25 <strcat[m]> AnonymitySystem1: off-topic
+22:42:31 <strcat[m]> #grapheneos-offtopic:matrix.org
+22:42:43 <strcat[m]> probably not the best place to ask regardless?
+22:44:31 <AnonymitySystem1> any cool new security updates coming soon?
+22:56:41 <rhythm[m]> The pdf reader in Gos is always lagging (not smooth). And very painful if u have 100 pages pdf. It will be very helpful that u can scroll pages smoothly like Google pdf reader. Thank you
+22:57:51 <AnonymitySystem1> It would also be good if the PDF reader could be scaled to fit the size of the PDF pages
+22:58:02 <AnonymitySystem1> so 1 pdf page would take up the entire screen
+22:58:09 <AnonymitySystem1> PDf reader doesnt lag for me
+22:58:34 <AnonymitySystem1> PDF reader is probably lagging due to sandboxing
+22:58:51 <AnonymitySystem1> But it is fine for me, pages take 1 or 2 seconds to load then everything is visible
+23:03:34 <rhythm[m]> <AnonymitySystem1 "But it is fine for me, pages tak"> That next button is too small. Not useful.
+23:03:56 <AnonymitySystem1> I mean a standard finger can tap it

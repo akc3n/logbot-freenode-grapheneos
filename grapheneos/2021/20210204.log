@@ -1,0 +1,1132 @@
+00:07:07 <Thatcher[m]> <strcat[m] "eSIM is a SIM to let you connect"> Will there be any security, privacy or any other kind of advantage of using eSIM over SIM?
+00:07:21 <strcat[m]> no
+00:07:40 <strcat[m]> the advantage is you don't need a physical SIM
+00:07:50 <strcat[m]> it runs their secure element code in a dedicated eSIM secure element on the SoC
+00:08:09 <strcat[m]> it has no privacy, security or other advantages
+00:08:21 <Thatcher[m]> Thanks
+00:08:29 <strcat[m]> the secure element is to secure the carrier's network not the user
+00:08:39 <strcat[m]> and I mean, to secure it from free usage
+00:14:43 <b1101> are there checksums for the ota update zips?
+00:19:42 <strcat[m]> b1101: no, they're signed
+00:20:12 <strcat[m]> so, there's a cryptographic hash signed by the signing algorithm, sure
+00:20:36 <b1101> ok cool. so if ever the file is bad, it will know before it flashes
+00:20:51 <strcat[m]> the ota update zips are signed
+00:21:05 <strcat[m]> the update client and recovery perform signature verification and downgrade protectiobn
+00:21:08 <strcat[m]>  * the update client and recovery perform signature verification and downgrade protection
+00:21:15 <strcat[m]> this is covered in our site's docs
+00:21:21 <strcat[m]> https://grapheneos.org/usage#updates
+00:21:29 <strcat[m]> https://grapheneos.org/releases#about-the-releases
+00:22:00 <strcat[m]> there isn't a separate signature because it's part of the zip file format of updates
+00:22:10 <strcat[m]> it's built-in
+00:22:19 <strcat[m]> if you really want to verify it manually for some reason you can do that
+01:27:24 <thetranstocommie> hey so i need to use the Instagram web app for some stuff, but the 2 factor authentication text doesn't come through on graphene. other texts work, just not whatever that number is.
+01:30:48 <rny> thetranstocommie: this does not sound like a problem related to the os
+01:31:17 <thetranstocommie> it worked on calyxos earlier today on the same device
+01:31:49 <rny> try 2FA with other apps
+01:32:46 <thetranstocommie> 2fa via SMS worked with signal
+01:33:33 <rny> so the problem is with instagram?
+01:33:53 <rny> we dont do anything unusual w.r.t sms
+01:34:17 <rny> as an aside, 2fa via sms is insecure anyways
+01:34:26 <rny> you should use totp-2fa
+01:35:40 <thetranstocommie> ik but idrc about my Instagram
+01:35:41 <thetranstocommie> I've got like 2 ppl I need to use it with messaging for
+01:36:03 <thetranstocommie> and like I said, it worked on calyxos earlier today. had to get the text from them when I wanted to sign in on my computers browser.
+01:36:56 <thetranstocommie> figured it was maybe an automatic SMS filter or something I just didn't know how to disable
+01:37:15 <pnrxa[m]1> Slightly unrelated but there's an fdroid app called Barinsta which might be nicer than the web app. Won't help your 2fa SMS issue though. For Instagram messaging I use the Matrix bridge
+01:37:42 <thetranstocommie> problem with barinsta is it doesn't get DM push notifications
+01:38:00 <thetranstocommie> there's a matrix bridge o shit
+01:38:30 <M3> Is it possible to totally degoogle a phone's preinstalled rom, or is it necessary to wipe it and install a rom to the level of graphene that lacks any Google's presence to begin with?  All I've found is conflicting information on this.  It ranges from, all you have to do is just remove or disable anything clearly identifiable as Google and
+01:38:31 <M3> they're effectively purged, to it's impossible because Google is too deeply embedded in the ROM with parts that can't be truly disabled or through unsuspecting Google code.  To be fair, I saw a news article about how choose to disable Google doesn't always fully work.  For the average nobody whose bigger concern is privacy rather than security,
+01:38:31 <M3> is degoogling a phone's pre-bundled ROM sufficient to protect their privacy, or are ROMs on the level of graphene necessary to ensure it.
+01:40:29 <mike_of_earth> You can't degoogle the pre-installed OS completely to my knowledge.
+01:41:03 <thetranstocommie> you can get kinda close-ish, but its always gonna phone home at least a bit.
+01:41:28 <mike_of_earth> You basically have Graphene or CalyxOS
+01:41:59 <pnrxa[m]1> the trans to commie pipeline: matrix bridges are awesome but you have to host your own matrix server I think
+01:42:04 <mike_of_earth> Or there are other ROMs out there depending on your device. Lineage is AOSP to start with IIRC
+01:42:50 <pnrxa[m]1> the trans to commie pipeline: I use this for Facebook messages too
+01:42:54 <thetranstocommie> lemme throw my sim in my old phone. see if I get the text from insta
+01:43:15 <M3> Sorry if that was too much text for one post
+01:48:31 <TheJollyRoger> M3: no problem! I should make something clear before I go on:
+01:49:06 <M3> mike_of_earth from what I've read from strcat and else, ROMs such as lineage actually compromise privacy to a degree because they weaken sandboxing running in debug mode, among other things iirc.  Supposedly they're is still some Google bits left over as well, but idk if that's true.
+01:50:11 <thetranstocommie> OK yeah just confirmed my issue was just weird timing, my other phone didn't get the text either.
+01:50:17 <rny> M3: security s the problem with lineage
+01:50:26 <rny> and without security, you dont have privacy
+01:50:38 <TheJollyRoger> If by "ROM" you mean "read only memory" you mean the operating system, on the operating system it comes with, or "factory ROM", Play Services are deeply integrated with the operating system, and the entire operating system image is actually signed and verified, and restored, bitwise, to its previous state on each reboot when the operating system is locked.
+01:51:08 <TheJollyRoger> Without altering the system image, it's actually VERY possible to switch off or opt-out, of many of the more invasive elements of Google's data collection.
+01:51:16 <TheJollyRoger> At least, with respect to the handsets released by Google.
+01:51:37 <TheJollyRoger> I can't say the same with respect to the other third party vendors which will bundle their own third-party crapware, which often phones home to Google anyways or uses on relies on Play Services.
+01:52:03 <TheJollyRoger> The phone will nag, pester, and nag the crap out of you to switch it back on, of course.
+01:52:09 <thetranstocommie> <rny "and without security, you dont h"> in theory maybe, but like, in practice lineage os will still keep your data away from google. if anyone targets you you're screwed, but to just keep away from the tech giants its fine
+01:52:23 <TheJollyRoger> *if by ROM you don't mean "Read only memory" and mean the operating system,
+01:52:54 <rny> thetranstocommie: its **not** theory, depending on the level of sophistication from your adversary, you need security to maintain privacy.
+01:53:12 <M3> TheJollyRoger I meant factory rom.  Forgot the correct terminoly
+01:53:34 <rny> there's so many things that can go wrong in between you and your typical FAANG+ culprits
+01:53:55 <TheJollyRoger> M3: Got it. I use "system image." If someone says "ROM" to me, that means they're physically slicing open the chip with a laser in a cleanroom environment.
+01:54:04 <TheJollyRoger> Or at least, that's what I start thinking.
+01:54:06 <rny> what about your ISP? the cisco router you're relaying traffic over? T2 net providers? your DNS provider? etc etc.
+01:54:32 <m2tu[m]> Hi guys.. can anone hlp
+01:54:47 <rny> if anything, tech giants should be the least of your concerns when it comes do doing right by you besides the casual monetization of user data.
+01:54:53 <m2tu[m]> i was building perfect yeasterday
+01:55:06 <rny> at least they've got the money to hire the right people to do the right things
+01:55:10 <TheJollyRoger> Phones haven't loaded their operating systems from read-only memory in generations. Generally these days, the only stuff you'll find in true "Read Only Memory" are the hashes of the public keys, which are permanent e-fuses.
+01:55:17 <TheJollyRoger> rny: hear, hear!
+01:55:18 <m2tu[m]> today i begn m target commannds  and instad of blue line it came eng versoion.
+01:55:21 <m2tu[m]> now i get error build/make/core/product_config.mk:170: error: device/google/crosshatch/aosp_blueline.mk: malformed COPY_FILE "\".
+01:55:22 <m2tu[m]> 02:53:53 dumpvars failed with: exit status 1
+01:55:22 <m2tu[m]> ** Not a valid product: aosp_blueline
+01:55:52 <TheJollyRoger> m2tu[m]: it looks like you haven't set some of the environment variables. I forget which ones you need though.
+01:55:52 <thetranstocommie> <rny "if anything, tech giants should "> I think that causal monetization is what most people wanna avoid when they degoogle. the wackjobs like me who either are or will likely be the targets of individuals are the tiny minority imo
+01:56:13 <m2tu[m]> hmm
+01:56:22 <m2tu[m]> yeasterday all was working
+01:56:29 <m2tu[m]> i do blueline
+01:56:36 <rny> m2tu[m]: did you repo sync?
+01:56:52 <rny> reset the repositories
+01:56:58 <rny> do a clean checkout
+01:57:01 <m2tu[m]> but toda i run m target-files-package
+01:57:20 <m2tu[m]> and instead of blueline aosp_arm came
+01:57:24 <TheJollyRoger> thetranstocommie: the way I see it is security is a prerequisite to privacy. If you are chosing between the factory operating system image, or an OS that essentially has no security, you're choosing to essentially let big tech have it, or let the internet at large AND big tech have it.
+01:57:26 <m2tu[m]> in som how than faults !
+01:57:35 <m2tu[m]> hmm
+01:57:44 <m2tu[m]> how do i rest thm by repo init
+01:57:47 <rny> thetranstocommie: so in the process of de-googling, you are happy to have a bunch of shady providers exfiltrate data from your device? not even sure how that tradeoff pans out well
+01:57:49 <m2tu[m]> or repo sync
+01:58:56 <TheJollyRoger> The privacy community always amazes me at how they won't be like "EWW NO DON'T TRUST THE PIXEL HANDSETS!" nevermind that the Pixel handsets have had the greatest amount of transparency and owner controllability in a handset to this day, but then will go and run third party "Win10 Privacy" apps as the admin user on their main computer.
+01:59:21 <TheJollyRoger> Or go run some sketchy 3rd-party build by some anonymous forum poster on XDA.
+01:59:31 <thetranstocommie> I'm not trying to start an argument or anything. I think grapheneos is a fantastic project, I think its just overkill for most people who aren't likely to be the targets of attacks.
+01:59:59 <TheJollyRoger> thetranstocommie: Of course, I get you.
+02:00:08 <TheJollyRoger> But, there's an important thing that needs to be looked at:
+02:00:36 <TheJollyRoger> Going back in time, you guys remember what was it... Wannacrypt0r? WannaCry?
+02:00:41 <TheJollyRoger> I forget the exact name but it sounded like that.
+02:01:10 <thetranstocommie> yeah if you're degoogling while using windows you should probably leave that asap
+02:01:10 <m2tu[m]> do u know where to find buildnumber
+02:01:23 <m2tu[m]> m old on got changed ;/////
+02:01:34 <rny> thetranstocommie: why's that? windows is a good product
+02:01:37 <TheJollyRoger> No, forget windows for a moment. What I'm getting at is that the vulnerability it used started out as a weapon from the National Security Agency, which got leaked. Within less than a *month* scriptkiddies were using it.
+02:01:45 <TheJollyRoger> Software can be endlessly copied and reproduced.
+02:01:46 <TheJollyRoger> so can attacks.
+02:02:01 <TheJollyRoger> And they don't care who's running in them - whether that is a state sponsored adversary,
+02:02:04 <thetranstocommie> windows is closed source spyware I'd rather be running templeos as my daily driver than windows.
+02:02:20 <TheJollyRoger> or the kid next door that has too much time on his hands, wants to show off his l33tness, and has access to Da-da's credit card.
+02:02:21 <rny> 🤯
+02:02:31 <TheJollyRoger> thetranstocommie: that's toxic power user mentality speaking.
+02:03:07 <thetranstocommie> its not that I love Linux its just that I really hate windows lol
+02:03:34 <rny> figures.. it smelled like a deep hatred of big tech
+02:04:01 <TheJollyRoger> The point I'm trying to make with this, is that nowadays, in some cases the only difference between attacks coming from state sponsored adversaries, and the kid next door who wants to prove how much of an "elite hacker" he is, is as little as CTRL-C and CTRL-V.
+02:04:02 <thetranstocommie> well, windows is proprietary, and does some sketchy shit.
+02:04:09 <rny> putting emotions aside, big tech companies do build secure products and take security seriously.
+02:04:24 <skwisgaar[m]> the trans to commie pipeline: he is saying that running random untrusted code as administrator on a windows (or any) system is dangerous. Not that windows is bad.
+02:04:41 <thetranstocommie> *she
+02:04:53 <thetranstocommie> https://privacytools.io/operating-systems/#win10
+02:05:26 <rny> thetranstocommie: alot of the privacy stuff, you can harden against
+02:05:31 <rny> disable telemetry and stuff
+02:05:45 <skwisgaar[m]> Privacy tools has a ton of misinformation on their site
+02:06:15 <TheJollyRoger> We get this a lot. The telemetry in Windows isn't any different than the telemetry in the countless packages that comprise the various Linux distributions, and the more invasive stuff can be switched off. Of course, the FSF and many privacy communities would rather peddle FUD because it makes the lot of 'em feel better.
+02:06:58 <TheJollyRoger> Linux has rested on its laurels of that kind of thinking for far too long.
+02:07:33 <m2tu[m]> I have heard th simcards can now hold spywar whch can be actvated by gov requiremnt
+02:07:39 <thetranstocommie> the difference is the Foss applications collecting your data, if they do it at all, probably isn't doing anything too sketchy with it. when Microsoft is collecting it they're only ever gonna do something sketchy with it
+02:08:04 <thetranstocommie> my general advice is try Linux for a bit. if you can't switch, you can't switch. but if you can, awesome
+02:08:06 <m2tu[m]> simcards can hav softwar installed ?? can that be true
+02:08:10 <TheJollyRoger> And as a result, we've been in denial for about a decade at this point over Linux's lack of graphical isolation, exploit mitigations, lagging behind in sandboxing and containerization,
+02:08:27 <TheJollyRoger> m2tu[m]: if it's turing complete, it can be exploited.
+02:09:10 <m2tu[m]> probally binar encryptd
+02:09:24 <TheJollyRoger> When someone tells me to "run Linux" I wonder if what I say will come off as a "flex."
+02:09:42 <TheJollyRoger> *if what I say in response will come off as a "Flex".
+02:12:41 <TheJollyRoger> Which honestly isn't how I intend it to.
+02:12:51 <thetranstocommie> my question is why get involved in hardening your mobile phone, but then trusting a proprietary os with some privacy scripts to be good enough on desktop? BC as someone who's computer may get yoinked by a warrant someday soon, Id rather be using the OS that I know has no backdoors built into it.
+02:13:24 <rny> thetranstocommie: what are you even talking about
+02:13:33 <TheJollyRoger> thetranstocommie: these days, that's not how it works.
+02:13:56 <rny> how do you know an os has no backdoors built into it if you dont comb through every line yourself?
+02:14:12 <rny> you cant even vet the firmware code since they are closed source
+02:14:37 <anupritaisno1[m]> rny: reverse engineering
+02:14:42 <louipcm> you don't
+02:14:47 <TheJollyRoger> Those who have read or examined the Vault 7 or Shadowbrokers Dumps will notice that there's a conspicuous lack of a "golden key" built into every operating system or on the IPMI interfaces of every computer. Instead, they use small, low-hanging fruit and simple exploits which can work together in harmony.
+02:14:51 <thetranstocommie> yeah, open sourcing more things would be based
+02:15:00 <rny> anupritaisno1[m]: even with reverse engineering, you need to know where to look at
+02:15:11 <anupritaisno1[m]> I would be hardly surprised if Daniel claimed he could read and understand assembly
+02:15:19 <thetranstocommie> i WILL die on this hill 😤
+02:15:23 <anupritaisno1[m]> Because I too can do that, kind of
+02:15:41 <TheJollyRoger> That's how intelligence agencies operate: they rely on lack of humble exploit mitigations and basic security patches, because they know that those are the hardest to patch and it keeps their hands clean politically and avoids blow-back.
+02:15:48 <rny> weird flex, but ok.
+02:16:02 <TheJollyRoger> rny: nah, I decided not to drop it this time :p.
+02:16:04 <rny> 👏🏽
+02:16:12 <thetranstocommie> yeah i do all my coding in binary. kids these days relying on "programing languages" sm head
+02:16:22 <mike_of_earth> hahah
+02:16:35 <TheJollyRoger> I feel like one of those kiddies that say, unironically, "I run arch btw" every time I do it, hee hee.
+02:16:50 <anupritaisno1[m]> Assembly was the first thing I learned tbh
+02:17:12 <TheJollyRoger> o.O Holy shit.
+02:17:35 <mike_of_earth> ouch. I learned Turbo Pascal... I just missed the Cobal craze
+02:17:43 <rny> ok, this is going offtopic
+02:17:53 <rny> pls flex in #grapheneos-offtopic
+02:17:58 <mike_of_earth> hehe
+02:18:03 <rny> 💪
+02:18:10 <TheJollyRoger> Sure.
+02:18:26 <anupritaisno1[m]> <mike_of_earth "hehe"> https://youtu.be/SAvmUSsafac
+02:28:31 <m2tu[m]> is it possible to buypass screeen ?
+02:28:39 <m2tu[m]> example by sideloading a crafted zp?
+02:28:51 <m2tu[m]> zip wiht code screen lock rmoved?
+02:29:25 <thetranstocommie> I don't think so, especially if you have USB debugging off.
+02:30:21 <m2tu[m]> usbdebugging off or on wont help in boot mode ??
+02:30:21 <m2tu[m]> or does it ?  becuase  hav sideloaded wihtout debug on.
+02:31:28 <thetranstocommie> I don't really know for certain. I'm not a contributor or coder or anything, if someone else wants to field the question.
+02:33:16 <rny> m2tu[m]: what are you trying to do?
+02:33:36 <rny> screen needs to be unlocked for usb debugging
+02:33:41 <rny> ffs
+02:38:31 <M3> Had to step away for a moment, don't mean to derail
+02:39:52 * m2tu[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/MMCXQyRIdljJvUvssNMIKFac/message.txt >
+02:40:06 <m2tu[m]> dammn what can be wrong  have mad repo sync 2 times
+02:40:10 <m2tu[m]> and repo init
+02:40:12 <m2tu[m]> still same error
+02:42:16 <M3> TheJollyRoger people distrust the pixel line because of the whole open source vs closed source framing of the debste.  If it's fully open source then there's nothing to hide or flaws to miss, meanwhile if it's closed source it's relying on security by obscurity and may be backdoored and you wouldn't know.  Also big tech = evil so that doesn't
+02:42:16 <M3> help.
+02:42:56 <TheJollyRoger> M3: It's a bit of a pity, honestly, because Google's the only vendor that's allowed transparency and shown commitment towards open source there.
+02:47:31 <m2tu[m]> anone know what can be wrong here
+02:47:33 <m2tu[m]>  malformed COPY_FILE ""
+02:47:44 <m2tu[m]> when building blueline
+02:47:49 <louipcm> yea but i think pixels are just as open as any other phone.. probably moreso
+02:49:11 <M3> Also, the idea that closed source equals indefinite opaque black box is strongly reinforced.  Now I'm not pretending I have anything more than a shallow understanding of all this, but this is the mentality
+02:49:28 <M3> TheJollyRoger ^
+02:49:52 <TheJollyRoger> Yep, I know the mentality :(
+02:54:42 <neodyddlium[m]> Sprint's LTE network won't work on Graphene, correct?
+02:55:33 <twm14> hey! i'm using GrapheneOS on a pixel 4a. Just updated on android and was adding a contact and I got a prompt to sync contacts with google. I can't figure out how to reproduce, but why would I get a google prompt on Graphene?
+02:55:45 <zzxx1236> Sprint is still around ?
+02:56:25 <neodyddlium[m]> Only still as T-Mobile's stepchild.
+03:00:19 <neodyddlium[m]> I flashed GrapheneOS  to a pixel  4 and activated it at sprint, where I already had a line. My phone and SMS work fine, but it won't connect to LTE. I did a little searching, and apparently it is incompatible with sprint. Luckily I don't have a contract 🤷🏻‍♂️
+03:03:54 <M3> TheJollyRoger I had this mentality more strongly up until recently myself, but my fear of a false sense of privacy is too great not to double check what I read haha
+03:04:29 <bizanon[m]> hello
+03:05:11 <TheJollyRoger> M3 yeah, it's always good to continuously re-evaluate one's self and one's priorities!
+03:05:14 <TheJollyRoger> bizanon[m]: Ahoy!
+03:06:16 <bizanon[m]> can I ask a question about the camera function?
+03:06:40 <TheJollyRoger> Yarr, this be the place!
+03:07:00 <bizanon[m]> wondering if there is an EXIF footprint from images taken with the base camera app
+03:07:29 <TheJollyRoger> tw_1[m]: It's likely that the contact app has that as stub functionality. However, the contacts app functions offline, and even if it didn't, play services is offline.
+03:07:46 <TheJollyRoger> *play services can't be reached on GrapheneOS. Because we don't have play services.
+03:10:56 <rny> bizanon[m]: of course
+03:10:58 <TheJollyRoger> bizanon[m]: Just a mo'
+03:11:10 <TheJollyRoger> I'll try and get you what's in it.
+03:11:34 <rny> gps (if location switched on), camera vendor/model at least
+03:12:00 <rny> and date too
+03:12:23 <rny> iirc, opencamera has options to suppress
+03:12:31 <rny> otherwise, use a tool to sanitize them
+03:13:39 <TheJollyRoger> Let's see... yup, date and time, camera maker, camera model, F-stop, exposure time ISO speed, focal length, flash, white balance, EXIF version, yes it does have location. Interestingly enough, Title and Authors are blank.
+03:13:53 <TheJollyRoger> Obviously, resolution and dimensions, and bit depth.
+03:13:56 <bizanon[m]> did you have GPs off?
+03:14:14 <TheJollyRoger> No, I took a test photo with Location on and Location allowed so it'd show up.
+03:14:29 <bizanon[m]> gotcha
+03:14:41 <bizanon[m]> thank you rny and jollyroger
+03:15:22 <TheJollyRoger> Yeah. Camera maker and model will show up as "Google" and "Pixel 4" respectively.
+03:16:03 <rny> i rely on exif heavily to sort/manage on nextcloud
+03:16:14 <rny> 🙃
+03:20:41 * bizanon[m] uploaded an image: Screenshot_20210203-212013_Open Camera.jpg (100KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/OMzriWItVOBcGsbfDQaFXTBo/Screenshot_20210203-212013_Open Camera.jpg >
+03:20:44 <bizanon[m]> Is this what you are referring to? rny
+03:21:17 <thetranstocommie> hey, does vanadium have working notifications? no browser I've ever found on f droid has functioning notifications, even if they look like they do.
+03:21:27 <rny> bizanon[m]: no
+03:21:34 <rny> that stamp, prints onto the actual photo
+03:21:54 <rny> maybe i misremembered then
+03:28:10 <M3> TheJollyRoger what is your opinion on Sony Xperias?  They seem to provide a good amount of open device support and keep their factory roms pretty close to stock from what I've seen.
+03:31:22 <entry1[m]> <rny "that stamp, prints onto the actu"> Oh so even if the exif/metadata is deleted on the image file, it is still unnoticeably watermarked/stamped to be traced by to the device?
+03:31:42 <entry1[m]> * Oh so even if the exif/metadata is deleted on the image file, it is still unnoticeably watermarked/stamped to be traced back to the device?
+03:31:58 <somenerd[m]> also, I believe that AOSP camera had location tagging off by default, right?
+03:32:49 <bizanon[m]> <entry1[m] "Oh so even if the exif/metadata "> how can it be traced back if GPS is off?
+03:33:08 <somenerd[m]> <somenerd[m] "also, I believe that AOSP camera"> on GrapheneOS, that is
+03:34:14 <entry1[m]> <bizanon[m] "how can it be traced back if GPS"> I was asking, I wasn't aware of a physical metadata attribution other than the obvious metadata that corresponds with camera images
+03:34:40 <TheJollyRoger> M3: ah, sorry, I don't.
+03:39:26 <somenerd[m]> I think if you revoke the location permission, EXIF doesn't include it right?
+03:40:24 <bizanon[m]> I think so
+03:41:16 <bizanon[m]> I know GOS doesnt use microG. but I've been reading about unifiedNlp. can it expose my geolocation with WIFI alone? or mobile network needs to be on as well?
+03:41:46 <M3> TheJollyRoger you mean you don't have one of them right?  In any case it's alright since they only have 1 percent market share of smartphones haha
+03:42:42 <strcat[m]> bizanon: we don't use that either
+03:43:27 <strcat[m]> bizanon: the Location permission and global toggle for anything being able to use it controls access to multiple forms of location data, not just GPS
+03:44:02 <strcat[m]> GPS, Wi-Fi network scanning, Bluetooth device scanning, etc. is controlled by Location
+03:44:07 <strcat[m]> cell network scanning
+03:44:15 <strcat[m]> it means Location (like it says) not GPS
+03:44:43 <strcat[m]> Bluetooth scanning isn'
+03:44:53 <strcat[m]>  * Bluetooth scanning isn't a separate thing
+03:45:23 <strcat[m]> but rather low-level Bluetooth permission basically does nothing by itself - you either have to explicitly allow pairing with a device (where you choose it, etc.) or grant location access for scanning
+03:45:24 <bizanon[m]> if I were to use a phone that has unifiednlp but I never turn put a sim inside, only use wifi, can it expose my geolocation? Is what I'm trying to figure out. I know that GOs is pretty secure for that
+03:45:39 <somenerd[m]> well, now I know that random news articles on the internet aren't meant to be trusted
+03:45:40 <strcat[m]> bizanon: it's not clear what you're asking
+03:45:51 <strcat[m]> bizanon: the Location permission controls access to location
+03:46:04 <strcat[m]> there's a global toggle that controls whether the permission actually grants access to anything
+03:46:13 <somenerd[m]> the location permission stops unifiednlp
+03:46:26 <somenerd[m]> even on AOSP
+03:46:36 <bizanon[m]> ahh I see
+03:46:37 <strcat[m]> bizanon: if you grant an app access to Location and you have Location toggled on globally, then the app you granted it to can detect location, it doesn't need GPS
+03:46:39 <TheJollyRoger> M3: heh, yeah, I don't have one and haven't got any information on those, so I can't really say much more than that, unfortunately.
+03:47:30 <somenerd[m]> I've seen this described as a threat, but it's already been dealt with
+03:47:33 <bizanon[m]> lets say on AOSP, you grant app access to location
+03:47:33 <bizanon[m]> but you turn off GPS, and never put inside the Sim card. Never turn on bluetooth.
+03:47:33 <bizanon[m]> Can it still reveal geolocation?
+03:47:44 <strcat[m]> there is no such thing as turning off GPS only
+03:47:51 <strcat[m]> bizanon: there is a Location permission and a global Location toggle
+03:47:55 <strcat[m]> you seem confused about how this works
+03:48:01 <strcat[m]> there is no such thing as a GPS toggle
+03:48:17 <strcat[m]> if you turn off Location, the GPS can't be used, and neither can Wi-Fi scanning, cellular network scanning, etc.
+03:48:39 <strcat[m]> the OS has no GPS toggle, it doesn't have semantics that make sense, since there are other ways to get location
+03:48:42 <bizanon[m]> oh I see the error in my question
+03:48:47 <strcat[m]> it has a Location toggle and a Location permission
+03:48:54 <strcat[m]> there is no separate GPS one since it wouldn't make sense
+03:49:13 <bizanon[m]> so even on AOSP, location toggle is pretty damn secure even if you turn on wifi
+03:49:20 <strcat[m]> Location: GNSS (including GPS), Wi-Fi network scanning (when combined with low-level declaration of using that), cell network scanning (similar), Bluetooth scanning (similar)
+03:49:48 <strcat[m]> bizanon: the Location permission + Location toggle is a 2 layer check for any app request for location or those things I listed which leak it (and some other things)
+03:49:55 <strcat[m]> Location permission not granted to app: it can't do any of that
+03:50:01 <strcat[m]> Location toggle not on globally: no apps can do any of that
+03:50:09 <bizanon[m]> gotcha
+03:50:17 <bizanon[m]> makes perfect sense now that you explain it like that
+03:50:23 <strcat[m]> it's not really complicated, there is just no such thing as a separate GPS toggle, people wrongly interpret Location toggle as that
+03:50:28 <strcat[m]> it means Location detection, not GPS
+03:50:35 <strcat[m]> and there isn't just GPS, there's GLONASS and other things
+03:51:29 <mishmasher[m]> Hey I've been wondering something. What if you have malware on your device that is able to record your screen(I heard it exists and was used on Encrochat) would that malware also be able to look on your screen in different profile's?
+03:51:43 <strcat[m]> bizanon: it isn't perfect, there are things like ultrasonic audio beacons so audio recording can be used to detect nearby beacons (or audio playback to go the other way) but there is already a permission for audio recording, it only ever works in the foreground and it is a lot scarier than location detection alone anyway
+03:51:58 <strcat[m]> mishmasher: not clear what you're asking
+03:52:09 <strcat[m]> mishmasher: apps can't simply record the screen
+03:52:33 <strcat[m]> mishmasher: Encrochat had malicious updates pushed out via their servers
+03:52:57 <bizanon[m]> there is a global switch for audio recording no?
+03:53:01 <somenerd[m]> >but there is already a permission for audio recording, it only ever works in the foreground and it is a lot scarier than location detection alone anyway
+03:53:04 <somenerd[m]> the sensor permission
+03:53:10 <strcat[m]> no
+03:53:20 <somenerd[m]> even worse?
+03:53:26 <strcat[m]> I don't know what you're saying
+03:53:44 <somenerd[m]> I was referring to the permission you were talking about
+03:53:54 <strcat[m]> bizanon: audio recording is a per-app permission, like other permissions, you can browse by permission rather than by app in Settings
+03:54:01 <bizanon[m]> iirc, when im using textnow app,. it asks for audio permission. so I assume there is a global setting for that
+03:54:07 <strcat[m]> bizanon: it's a permission
+03:54:19 <strcat[m]> bizanon: it's not global, it's per-app
+03:54:25 <bizanon[m]> k
+03:54:36 <strcat[m]> bizanon: look in the Settings app at the permission manager
+03:54:52 <strcat[m]> there are standard user-facing permissions like audio recording, location, camera, etc.
+03:55:02 <strcat[m]> many of those are only possible to grant for foreground usage (camera, audio, etc.)
+03:55:50 <strcat[m]> bizanon: Location is special and has a global toggle which is an additional check, other stuff isn't like that, and the system would work fine if the global toggle didn't exist
+03:55:59 <mishmasher[m]> <strcat[m] "mishmasher: Encrochat had malici"> Yes I read that and the alphabet agencies were able to look at the users screen in real time, now let's say that happens to grapheneos update server would all profiles be compromised?
+03:56:13 <strcat[m]> mishmasher: no, read the info on the site
+03:56:20 <strcat[m]> https://grapheneos.org/usage#updates
+03:56:29 <strcat[m]> https://grapheneos.org/releases#about-the-releases
+03:56:29 <strcat[m]> read
+03:56:35 <mishmasher[m]> With profiles I mean users btw
+03:56:48 <somenerd[m]> no
+03:56:54 <strcat[m]> a compromise of the update server would not impact GrapheneOS users beyond wasted data
+03:56:54 <somenerd[m]> the server is distrusted
+03:56:56 <strcat[m]> covered on the site
+03:57:57 <strcat[m]> bizanon: Sensors permission is something we add - sensors can only ever be accessed in the foreground (same as AOSP) but we add a way to toggle them off there too
+03:58:01 <bizanon[m]> <mishmasher[m] "Yes I read that and the alphabet"> something like this? https://github.com/qH0sT/AndroSpy
+03:58:05 <strcat[m]> bizanon: Sensors means sensors not covered by an existing permission
+03:58:22 <strcat[m]> bizanon: it's not helpful
+03:58:25 <strcat[m]> they're already confused
+03:58:39 <strcat[m]> linking to something that requests a permission to do something and is able to do it if you grant it is not relevant
+03:59:38 <somenerd[m]> if you don't grant it?
+03:59:47 <somenerd[m]> oh
+04:00:12 <strcat[m]> there's a lot of info available on our site and the Android project site
+04:00:24 <strcat[m]> the developers site specifically
+04:00:47 <somenerd[m]> the source site seemed helpful for me
+04:01:09 <bizanon[m]> <strcat[m] "bizanon: Sensors permission is s"> that's great
+04:01:32 <strcat[m]> bizanon: the issue with those sensors (compass, gyroscope, accelerometers, etc.) is that they can be used to leak data about sensitive things
+04:01:38 <strcat[m]> Android limits polling them to 200Hz, etc.
+04:01:43 <strcat[m]> to mitigate this
+04:01:49 <strcat[m]> but they can still be used to leak data
+04:02:05 <rny> 200hz is quite substantial
+04:02:10 <strcat[m]> and that can be cleverly used to infer stuff about location or audio
+04:02:16 <strcat[m]> even though it doesn't provide much
+04:02:38 <rny> i can probably work out where you've been with stale gps and 200hz sampling
+04:03:01 <strcat[m]> it can be used to roughly track movement
+04:03:04 <strcat[m]> ofc as I said app has to be in the foreground
+04:03:18 <strcat[m]> and then a rough idea of movement could be matched to routes on a map
+04:03:22 <strcat[m]> to get location
+04:03:32 <strcat[m]> difficult but possible
+04:03:50 <strcat[m]> bizanon: anyway our added permissions are Network (direct and indirect network access) and Sensors
+04:03:56 <strcat[m]> and since we add them, apps don't know how to request them
+04:04:33 <rny> im surprised they need up to 200hz
+04:04:33 <strcat[m]> so they are enabled by default for compatibility - you can choose to disable them before launching an app though, and apps can't run before they are started once (at install time or after manually doing force stop)
+04:04:53 <rny> you can get a lot of stuff done with 50hz
+04:05:05 <strcat[m]> bizanon: rest of the permission model is basically the same now because AOSP got the background access restrictions added to in Android 9 / 10
+04:05:40 <strcat[m]> i.e. audio recording, camera, sensors only in foreground, clipboard read only by focused app and selected keyboard, location can be granted as foreground only when requested too
+04:05:55 <strcat[m]>  * i.e. audio recording, camera, sensors only in foreground, clipboard reading only by focused app and selected keyboard, location can be granted as foreground only when requested too
+04:06:48 <strcat[m]> we used to provide background access toggles ourselves - now it's just standard, and there is no way to even do it for audio/camera/sensors (clipboard is stricter - focused apps can read, foreground that aren't focused can't)
+04:07:08 <strcat[m]> difference is if an app is running a foreground service (which has to be started in the foreground, and then keeps it in the foreground) it still can't read clipboard
+04:07:24 <strcat[m]> a lot of this info is in our FAQ, etc.
+04:07:40 <strcat[m]>  * difference is if an app is running a foreground service (which keeps it in the foreground) it still can't read clipboard
+04:08:21 <mishmasher[m]> @strcat:matrix.org: must have read over the update security part but, I get it now thanks!
+04:08:58 <bizanon[m]> U talking about this right
+04:09:17 * bizanon[m] uploaded an image: Screenshot_20210203-220841_Chrome.jpg (76KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/DVkeeJVqrGHlFSSPwpIdXiFG/Screenshot_20210203-220841_Chrome.jpg >
+04:09:46 <strcat[m]> Vanadium disallows sites to access sensors by default
+04:09:54 <strcat[m]> most browsers allow it
+04:10:15 <bizanon[m]> other apps can get that info right
+04:10:26 <strcat[m]> you're making it more complicated by bringing up the second layer of the browser permission model
+04:10:26 <bizanon[m]> not just browser apps
+04:10:36 <somenerd[m]> > Vanadium disallows sites to access sensors by default
+04:10:36 <somenerd[m]> Bromite too
+04:10:37 <strcat[m]> bizanon: I explained above
+04:10:45 <strcat[m]> you're making it a lot more complicated by bringing browsers into it
+04:10:51 <strcat[m]> browsers are not somehow special apps
+04:10:56 <strcat[m]> the regular permission system applies to them
+04:11:13 <strcat[m]> they implement their own permission system for sites, it doesn't in any way bypass the OS one
+04:11:27 <strcat[m]> if you disallow the browser from using Sensors, then it can't use them as a whole
+04:11:40 <strcat[m]> and as I said, Vanadium disallows sites from using sensors by default
+04:12:00 <strcat[m]> you would have to go into the settings to enable that in site settings
+04:12:01 <somenerd[m]>  * > Vanadium disallows sites to access sensors by default
+04:12:01 <somenerd[m]> Bromite too (same patch)
+04:12:31 <bizanon[m]> im asking AOSP apps can request that data but not on GOS?
+04:12:44 <strcat[m]> don't understand the question
+04:12:49 <strcat[m]> I explained it all above
+04:13:00 <somenerd[m]> I mean, AOSP apps can access it
+04:13:02 <strcat[m]> repeating it probably isn't helpful
+04:13:08 <somenerd[m]> ok then
+04:13:18 <rny> check manifest when in doubyt
+04:13:38 <strcat[m]> bizanon: on Android, apps in the foreground can access miscellaneous sensors
+04:13:40 <rny> download the fkin app and look at the manifest
+04:13:55 <strcat[m]> bizanon: on GrapheneOS, there's a Sensors toggle for disallowing apps in the foreground from using them too
+04:14:14 <strcat[m]> bizanon: if you make it more complicated by bringing browsers into it (which have their own extra layer of permissions for sites), well, now you're changing the topic
+04:14:25 <rny> dont understand why people keep asking to do their homework
+04:14:34 <strcat[m]> the OS permissions apply to browsers like any other app
+04:14:34 <bizanon[m]> ok got it
+04:14:35 <bizanon[m]> thanks
+04:14:55 <strcat[m]> if you enable sensors access in Vanadium for sites
+04:14:58 <strcat[m]> but disable it for the app
+04:15:00 <strcat[m]> sites can't access it
+04:15:10 <strcat[m]> they can't access it by default though because it disallows that
+04:15:42 <strcat[m]> if you allow Camera all for Vanadium, that doesn't mean sites can access it, they have to request permission and have you grant it
+04:16:17 <strcat[m]> the browser permission model sits on top of the OS one, the browser doesn't have special privileges, it's an app
+04:16:30 <strcat[m]> if you take away the Camera permission after allowing a site to access it, now the browser can't access it, so the site can't despite you granting that
+04:17:13 <jonzlo[m]> <strcat[m] "if you take away the Camera perm"> You are the man.
+04:17:27 <bizanon[m]> is GOS the only OS that can disable sensor cause you guys wrote it?
+04:17:52 <somenerd[m]> probably not cause GrapheneOS wrote it
+04:18:01 <somenerd[m]>  * probably not "cause GrapheneOS wrote it"
+04:18:03 <strcat[m]> we made the Network and Sensors toggles, they aren't in AOSP
+04:18:23 <strcat[m]> Android operating systems aren't allowed to add runtime permissions like we do
+04:18:28 <bizanon[m]> it's a great addition
+04:18:32 <strcat[m]> the CDD forbids adding them
+04:18:46 <strcat[m]> but GrapheneOS isn't Android and doesn't care what the CDD says when it doesn't impact compatibility for real
+04:19:29 <bizanon[m]> does calyx have something similar or no
+04:19:48 <somenerd[m]> bit offtopic, but no for the sensor perm
+04:19:56 <somenerd[m]> and the firewall is weaker afaik
+04:20:03 <strcat[m]> bizanon: no, and they don't have a *working* equivalent to Network either
+04:20:20 <bizanon[m]> ahh gotcha
+04:20:20 <strcat[m]> bizanon: and I'd recommend looking at https://grapheneos.org/features
+04:20:21 <somenerd[m]> they could just implement the GrapheneOS ones
+04:20:25 <somenerd[m]> the code is there lol
+04:20:29 <strcat[m]> GrapheneOS is a hardened OS, it improves the fundamental privacy and security of the OS
+04:20:45 <jonzlo[m]> I work in a high threat environment conducting various shades of security for all kinds of crazy. You have been the ultimate in privacy and security up to this point. I thank you and commend you on your stoic pursuit. I'll be sure to donate again soon.
+04:21:12 <strcat[m]> somenerd: atm they aren't really welcome to take our code (legal != welcome to do it) based on the state of things
+04:21:33 <somenerd[m]> I meant before
+04:26:01 <jonzlo[m]> <strcat[m] "GrapheneOS is a hardened OS, it "> Could you provide a direct link for donations, sil vous plaís?
+04:26:17 <strcat[m]> https://grapheneos.org/donate
+04:26:19 <strcat[m]> you mean that?
+04:26:33 <strcat[m]> there are 4 ways to donate
+04:27:00 <jonzlo[m]> Absofuckinglutely.
+04:28:18 <Baloo> Anyone else with the Pixel 3a have their phone end up in a bootloop after the recent update?>
+04:28:42 <thetranstocommie> this is a really little thing, but thank y'all for having a sane default theme out of the box lol
+04:28:42 <faxing[m]> <Baloo "Anyone else with the Pixel 3a ha"> Nope
+04:28:57 <faxing[m]> <thetranstocommie "this is a really little thing, b"> ikr, nice and stock
+04:29:54 <jonzlo[m]> <strcat[m] "you mean that?"> $100 worth of BTC on the way.
+04:30:37 <somenerd[m]> dark theme/light theme out of the box?
+04:30:39 <faxing[m]> <Baloo "Anyone else with the Pixel 3a ha"> I know it seems like a small thing, but you had a stable internet connection throughout the whole update process, yes?
+04:30:52 <faxing[m]> <jonzlo[m] "$100 worth of BTC on the way."> That's awesome
+04:31:03 <Baloo> my phone half downloaded the update and it ceased to continue downloading. Attempted to check for updates, the status bar disappeared. Restarted the phone. The phone has come out of the booting mode thankfully, but I have no idea if the new update downloaded
+04:31:07 <Baloo> says I am updated to Android 11
+04:31:21 <faxing[m]> check the build number
+04:31:22 <Baloo> I was worried for a minute there because it took a long time to start up
+04:31:38 <strcat[m]> Baloo: if a new update fails to boot it rolls back
+04:31:45 <strcat[m]> (if it fails multiple times)
+04:31:52 <Baloo> strcat: Thanks for that info.
+04:32:08 <strcat[m]> Baloo: the bad news is that it's possible your flash memory is failing
+04:32:17 <strcat[m]> you should confirm it rolled back
+04:32:20 <strcat[m]> it'll try updating again
+04:32:35 <Baloo> let me check here
+04:32:38 <faxing[m]> <Baloo "says I am updated to Android 11"> Check build number.
+04:32:44 <DixieDean[m]> Is this a confirmed issue with the 3A because I'm about to update mine.
+04:32:51 <strcat[m]> Dixie Dean: no
+04:32:53 <strcat[m]> it works fine
+04:32:53 <DixieDean[m]> Or just a bad download/checksum
+04:32:56 <faxing[m]> I didn't get it
+04:32:56 <DixieDean[m]> Ah ok cool
+04:33:00 <strcat[m]> Dixie Dean: it's not possible to have a bad download
+04:33:08 <faxing[m]> I updated tonight and it's working flawless like always
+04:33:20 <strcat[m]> Dixie Dean: it verifies the signature when it's done
+04:33:31 <Baloo> RQ1A.210205.004.2021.02.02.09
+04:33:50 <faxing[m]> you updated
+04:33:59 <strcat[m]> Dixie Dean: it downloads via TLS and then checks the signature of the update, and after it writes it out, it checks the hash of each image, before activating it
+04:34:20 <strcat[m]> Baloo: was it actually boot looping or were you thinking it got frozen and forcing it off?
+04:34:29 <strcat[m]> Baloo: Pixel 3a storage is really slow
+04:34:31 <jonzlo[m]> <faxing[m] "I updated tonight and it's worki"> Same
+04:34:40 <strcat[m]> Baloo: cause, it didn't roll back after all
+04:35:16 <strcat[m]> Dixie Dean: and then if the update somehow fails to boot despite everyone having the same hardware + it being tested first, it rolls back and boots up the old version
+04:35:19 <DixieDean[m]> Also.  I have a broken glass on my 3A which is gonna cost me like $100 to replace the Glass/LCD because my local Chinese guy says it's a nightmare to do just the glass.     What's the current support roadmap for the 3A or should I just spend the extra $150 and get the 4A.
+04:35:32 <Baloo> I know for sure I didn't get a confirmation of the update ever finishing, got a half finished bar. Restarted the phone after I attempted to check for updates which caused the bar to disappear. It probably didn't bootloop but took longer than usual to start again. But looking at the build number it did update.
+04:35:44 <Baloo> so it probably was not a bootloop then.
+04:35:52 <strcat[m]> probably just get a 4a
+04:35:53 <strcat[m]> it's much better than a 3a and has over a year more of support
+04:36:16 <faxing[m]> 4a is faster and'll have an extra year plus of updates
+04:36:17 <strcat[m]> 3a has crappy eMMC storage
+04:36:17 <faxing[m]> bar anything happening to the project, of course
+04:36:17 <faxing[m]> yeah what strcat said
+04:36:21 <Baloo> Thanks yeah it is on my radar to get a new phone for sure.
+04:36:30 <strcat[m]> Baloo: it's probably just that the 3a storage gets slower over time and it's starting to take a long time to boot for most people (on stock or not)
+04:36:39 <jonzlo[m]> <DixieDean[m] "Also.  I have a broken glass on "> Roll with the 4. Longer support timeframe. And get it on the cheap through Swappa.com
+04:36:41 <Baloo> I've got about 70% of storage used on this phone, 19GB free.
+04:36:52 <Baloo> strcat: Got it, thanks for the insight.
+04:36:53 <somenerd[m]> I think that even the Pixel 2 series had better storage or something right?
+04:37:05 <strcat[m]> somenerd: Pixel 1 had much better storage than 3a
+04:37:09 <strcat[m]> Pixel 1 had UFS SSD
+04:37:16 <DixieDean[m]> Yeah I'm gonna grab one used.   This week I think.
+04:37:17 <somenerd[m]> while the eMMC was quite slow in terms of exec spawning
+04:37:18 <strcat[m]> Pixel 3a went back to eMMC like Nexus
+04:37:25 <somenerd[m]> <somenerd[m] "while the eMMC was quite slow in"> not quite
+04:37:28 <strcat[m]> 4a is proper SSD again
+04:37:37 <somenerd[m]> cool
+04:37:39 <strcat[m]> 4a is a really good device and a really good deal
+04:37:41 <somenerd[m]> wonder why they chose to do that
+04:37:53 <strcat[m]> the 4a 5G and 5 are fine but they aren't a good deal and 5G is pretty meh at this point
+04:38:03 <somenerd[m]> > <@lelmister101:matrix.org> while the eMMC was quite slow in terms of exec spawning
+04:38:04 <somenerd[m]>  * not *that* bad (like 100ms?)
+04:38:05 <strcat[m]> 5a will be more compelling
+04:38:20 <strcat[m]> 5G radio cost will have come down a lot
+04:38:21 <DixieDean[m]> My friend has the 5 5G
+04:38:35 <DixieDean[m]> It's a beautiful phone but not really any difference feature wise
+04:38:42 <somenerd[m]> I mean, glad that Google made their main phones the android reference devices
+04:38:50 <somenerd[m]> versus some obscure board or phone
+04:39:18 <strcat[m]> somenerd: they do have reference boards
+04:39:18 <DixieDean[m]> Wonder if they will ever drop a Pixel flagship
+04:39:29 <DixieDean[m]> Like a $1000 version
+04:39:38 <strcat[m]> somenerd: the AOSP reference boards aren't made by Google tho
+04:39:50 <DixieDean[m]> To go toe to toe with the iPhone/S20 etc
+04:40:03 <somenerd[m]> the normal Pixels?
+04:40:23 <DixieDean[m]> I would be interested in a pixel with say 16GB. Ram etc
+04:40:41 <strcat[m]> Dixie Dean: if we find a good hardware partner our initial device would likely be very high end
+04:40:59 <strcat[m]> because there's going to be a high cost per device for starting to do it
+04:41:03 <strcat[m]> so budget isn't an option
+04:41:04 <Baloo> Boy, a $200 premium just for 5g doesn't even seem worth it. I'll have to save and pick up a 4a when I can.
+04:41:09 <strcat[m]> and a lot of RAM would be really good for hardened_malloc
+04:41:23 <DixieDean[m]> I used to buy OnePlus guy, my last device was a 6T which I still use for normie stuff
+04:41:29 <DixieDean[m]> So I'm used to that ummph
+04:41:32 <somenerd[m]> and maybe future VM support
+04:41:39 <strcat[m]> Baloo: 4a 5G is a new gen device not just a 4a with 5G
+04:41:45 <strcat[m]> Baloo: we don't support 4a 5G yet tho
+04:41:53 <strcat[m]> and it seems Pixel 5 support will come before 4a 5G
+04:42:07 <strcat[m]> Baloo: the 4a 5G is a cheaper Pixel 5
+04:42:13 <strcat[m]> they didn't call it a 5a because that's coming later
+04:42:20 <strcat[m]> it's a badly named device
+04:42:33 <Baloo> Got it, I had noticed you saying that earlier in the chat and I had read Google almost called it the 5a.
+04:42:43 <DixieDean[m]> I would love to see generic arm 64 build for say the RPi
+04:42:53 <DixieDean[m]> Even with licensing
+04:42:59 <Baloo> odd naming, but I'
+04:43:01 <somenerd[m]> They should call it 4.5a or something lol
+04:43:15 <DixieDean[m]> Like the way you had to buy the codec keys on the old pi and enter it in a text file on /boot
+04:43:28 <Baloo> I'll only buy whatever phone is compatible with Graphene. I've rolled with it for two years about now and it has served all of my purposes.
+04:44:40 <DixieDean[m]> Same at this point.  I do think you need two devices in a lot of real world use cases.
+04:44:59 <DixieDean[m]> Like in my city it's impossible to use cash or travel without some form of app now
+04:45:29 <DixieDean[m]> So I keep the OPO 6T for all that stuff.
+04:45:41 <refraction[m]> Does GOS support physical keyboards by the way?
+04:45:45 <neodyddlium[m]> Can anyone confirm if T-Mobile works properly with Graphene?
+04:45:45 <strcat[m]> refraction: yes
+04:45:46 <strcat[m]> and mice
+04:45:52 <strcat[m]> like AOSP
+04:45:57 <strcat[m]> neodyddlium: yes works fine
+04:46:00 <faxing[m]> <neodyddlium[m] "Can anyone confirm if T-Mobile w"> Mint odes
+04:46:02 <faxing[m]> does*
+04:46:12 <faxing[m]> so I can only assume that T-Mobile would work just as well
+04:46:43 <refraction[m]> Weird. I tried connecting my keyboard through USB-C and it didn't work
+04:46:53 <neodyddlium[m]> <strcat[m] "neodyddlium: yes works fine"> Thank you.
+04:46:56 <refraction[m]> I'll try another cable and see then
+04:46:56 <strcat[m]> refraction: by default, USB devices connected while locked are ignored
+04:46:58 <strcat[m]> refraction: on GrapheneOS
+04:47:12 <strcat[m]>  * refraction: by default, USB peripherals connected while locked are ignored
+04:47:14 <refraction[m]> Oh. Let me try it again then.
+04:47:17 <refraction[m]> Thanks.
+04:47:23 <strcat[m]> so connect it while unlocked
+04:47:29 <strcat[m]> recommend leaving that setting as is
+04:47:40 <strcat[m]> refraction: keyboard / mouse work
+04:47:45 <strcat[m]> and there are keybinds for copy, paste, etc.
+04:47:57 <strcat[m]> not generally very practical but it works
+04:48:01 <strcat[m]> if you plug in a mouse there's a cursor
+04:48:12 <strcat[m]> apps have to support this stuff to work properly in ChromeOS
+04:48:18 <DixieDean[m]> <strcat[m] "refraction: by default, USB devi"> Is this to combat things like Cellebrite hardware?
+04:48:33 <strcat[m]> Dixie Dean: it's to reduce attack surface while locked
+04:48:50 <DixieDean[m]> How does GOS hold up to forensics
+04:49:00 <strcat[m]> https://grapheneos.org/faq#encryption
+04:49:25 <DixieDean[m]> Like in my threat model that's not an issue.  I just hate google lol
+04:49:29 <DixieDean[m]> But it's nice to know
+04:50:18 <refraction[m]> Huh. It works now. It was actually two faulty cables.
+04:50:33 <strcat[m]> refraction: most USB-C cables don't work right
+04:50:48 <strcat[m]> particularly A to C ones
+04:50:54 <strcat[m]> the device comes with a good A to C adapter
+04:51:06 <refraction[m]> I'm using a C to C one but it's old
+04:51:13 <refraction[m]> So it must have broke or something
+04:51:16 <strcat[m]> refraction: a lot of older C to C weren't made to spec
+04:51:33 <strcat[m]> I'd say 50%+ of current A to C ones are broken by design
+04:51:44 <strcat[m]> most C to C are fine.. unless older
+04:52:01 <strcat[m]> a lot of them are fire hazards tho
+04:52:09 <strcat[m]> by fine I mean they can transfer data successfully
+04:52:12 <strcat[m]> many may burn down your house
+04:52:14 <strcat[m]> but that's a separate issue
+04:52:19 <strcat[m]> don't cheap out on cables
+04:52:21 <refraction[m]> Yeah. I just used the stock Pixel cable and it works now
+04:52:48 <refraction[m]> Though I thought it's usually the adaptors that are the fire hazards though
+04:53:06 <DixieDean[m]> I have a Chromebook that I've converted to Linux.  Yet again great Google hardware.  Crap privacy lol
+04:53:16 <DixieDean[m]> But the USB C ports come in handy
+04:54:04 <DixieDean[m]> You can actually flash back to stock from Chrome OS now.  They released like a browser based tool for doing it.
+04:55:14 <strcat[m]> you can flash GrapheneOS from ChromeOS or another Android/GrapheneOS device with https://grapheneos.org/install/web
+04:55:27 <DixieDean[m]> Well holy sh1t.
+04:55:31 <DixieDean[m]> I didn't know that
+04:55:58 <refraction[m]> Oh? The web installer was actually finished?
+04:56:06 <refraction[m]> That's great!
+04:56:21 <strcat[m]> refraction: yes
+04:56:29 <strcat[m]> refraction: it's really good
+04:56:39 <somenerd[m]> that second use case (from a GrapheneOS device) seems very interesting
+04:56:43 <somenerd[m]> and it sure is amazing
+04:56:48 <strcat[m]> you can buy 2 Pixel 4a
+04:56:52 <strcat[m]> flash GrapheneOS on one from the other
+04:56:55 <refraction[m]> Reminds me of Tails
+04:56:57 <strcat[m]> then flash GrapheneOS on the other from GrapheneOS
+04:57:07 <DixieDean[m]> Wait.  I can flash another phone from my phone?
+04:57:12 <DixieDean[m]> Whoa
+04:57:15 <strcat[m]> Dixie Dean: yes via our web installer
+04:57:23 <DixieDean[m]> [mindblow]
+04:57:26 <thetranstocommie> that's insane
+04:57:31 <strcat[m]> WebUSB works fine on GrapheneOS, you can also use it to use a Trezor with GrapheneOS via Vanadium
+04:57:33 <strcat[m]> using Trezor Suite
+04:57:41 <strcat[m]> https://suite.trezor.io/web/
+04:57:44 <strcat[m]> can self-host it
+04:58:00 <DixieDean[m]> That is actually mental
+04:58:05 <DixieDean[m]> I've gotta try this
+04:58:06 <DixieDean[m]> Lol
+04:58:11 <strcat[m]> our web installer is worth trying
+04:58:14 <strcat[m]> it's really good
+04:58:33 <somenerd[m]> it's probably one of the best user facing features
+04:58:35 <somenerd[m]> imo
+04:58:39 <thetranstocommie> oh that reminds me! bug I found when installing. likely not the installers fault at all, but may be worth noting: the installer will NOT work when using a chromium flatpak. drove me crazy for a while before I realized it was a flatpak issue.
+04:58:42 <strcat[m]> on Android/GrapheneOS you have to press a reconnect button after each reboot during the install
+04:58:47 <strcat[m]> and confirm allowing access again
+04:58:51 <strcat[m]> so it's a bit more inconvenient
+04:58:56 <strcat[m]> due to the OS permission model for USB
+04:59:01 <strcat[m]> but it works
+04:59:51 <thetranstocommie> also, I just read the little roadmap section on the site and holy shit I didn't realize how ambitious this project was
+05:01:18 <bizanon[m]> grapheneos installs on chromebooks?
+05:01:22 <bizanon[m]> i didnt know that
+05:01:53 <strcat[m]> bizanon: no
+05:02:00 <strcat[m]> saying you can use ChromeOS to install GrapheneOS on a phone
+05:02:11 <bizanon[m]> oh ok
+05:03:18 <refraction[m]> strcat Not a feature request, but I'm just curious on your opinion of GOS on Blackberry Android devices (Since they tout around their security and all that)
+05:03:37 <DixieDean[m]> Yeah I would really like GrapheneOS on a laptop or SBC like a Pi4B
+05:03:55 <DixieDean[m]> I know I can build it with a generic target but I never attempted it
+05:03:57 <thetranstocommie> that sounds like it would be a hell of a project
+05:04:03 <strcat[m]> refraction: uh, they're garbage
+05:04:14 <strcat[m]> refraction: and Blackberry didn't make the recent Blackberry Android devices
+05:04:29 <strcat[m]> they leased their brand to TCL, which is the Chinese government (I mean that literally)
+05:04:30 <thetranstocommie> I think they look nice at least lol. that's about it for the positives.
+05:04:37 <DixieDean[m]> The worst thing RIM ever did was license it out
+05:04:40 <refraction[m]> Oh. That's a shame
+05:04:52 <DixieDean[m]> BES is still great
+05:04:57 <strcat[m]> refraction: the Chinese government made those phones
+05:04:58 <thetranstocommie> apparently there's a new blackberry licensed phone coming out this year tho
+05:05:10 <strcat[m]> anyway Blackberry's stuff has always been overrated
+05:05:16 <strcat[m]> their encryption has backdoors
+05:05:21 <strcat[m]> they let governments monitor it
+05:05:26 <refraction[m]> Even on the older devices?
+05:05:29 <strcat[m]> yes
+05:05:37 <strcat[m]> their own Android phone was trash
+05:05:41 <strcat[m]> the 'security' is largely just marketing
+05:05:47 <DixieDean[m]> Didn't they get threatened with removal from markets
+05:05:56 <DixieDean[m]> Mainly UAE, Russia and the UK
+05:05:56 <strcat[m]> refraction: it barely got any support also
+05:05:59 <refraction[m]> How about those without Android on it?
+05:05:59 <DixieDean[m]> And they folded
+05:06:15 <strcat[m]> refraction: https://en.wikipedia.org/wiki/BlackBerry_Priv
+05:06:21 <strcat[m]> it launched with Android 5.1 when Android 6 was out
+05:06:24 <strcat[m]> and only got an upgrade to Android 6
+05:07:06 <refraction[m]> Fair enough.
+05:07:18 <DixieDean[m]> I was a major fan of blackberry.  Owned a lot of them.  Even tried my hardest to like the Z10
+05:07:26 <thetranstocommie> I just looked it up tho: apparently even though they haven't released a phone running bb10 in 7 years, they'll still be giving out security updates through 2022.
+05:07:27 <DixieDean[m]> But it was just a terrible device
+05:07:35 <thetranstocommie> I respect the hell out of that commitment to updates
+05:09:36 <DixieDean[m]> So just thinking out loud here but I have this idea of basically using a GrapheneOS phone.  Self hosting a matrix service.  And hosting a Wireguard/VPN on the same box.  And only exposing the synapse instance to tun0
+05:09:46 <DixieDean[m]> So basically like a hacked together BES like setup
+05:10:38 <DixieDean[m]> And just having a VPS running with bridged to all other services
+05:11:00 <thetranstocommie> I respect that, but that almost sounds like a full time job maintaining something like that lol
+05:11:21 <DixieDean[m]> Oh it's just stroking my autism lol
+05:11:38 <DixieDean[m]> I just wanna know if i can do it  😂
+05:12:58 <DixieDean[m]> i'm forced to use Slack for work, and now that it works with matrix.  i would disable federation in the .yaml.  and just use it as a practice instance.
+05:13:11 <DixieDean[m]> * i'm forced to use Slack for work, and now that it works with matrix.  i would disable federation in the .yaml.  and just use it as a private instance.
+05:15:10 <DixieDean[m]> i've been messing around with my own Synapse server, setup the TURN server and connected my Nexus 7 and my Graphene Pixel and for some reason they just refuse to call eachother.   Don't know what i'm doing wrong.   But yeah this is off-topic lol
+05:15:11 <DixieDean[m]> i've been messing around with my own Synapse server, setup the TURN server and connected my Nexus 7 and my Graphene Pixel and for some reason they just refuse to call eachother.   Don't know what i'm doing wrong.   But yeah this is off-topic lol
+05:26:12 <g2gy8ac2rcqn[m]> My pixel 3 seems to have a problem with transfering data through usb, both external usb drives and connecting to pc seems to be not working. although charing works just fine. Could this be a software bug or is it definitly a hardware issue?
+05:27:03 <g2gy8ac2rcqn[m]> I'm afraid that i need to buy usb port replacement for this
+05:27:49 <Chicomsstolemylu> <g2gy8ac2rcqn[m] "My pixel 3 seems to have a probl"> Have you tried different usb ports on your computer?
+05:27:58 <Chicomsstolemylu> And different cables?
+05:30:05 <g2gy8ac2rcqn[m]> Windows says that it failed to connect
+05:30:51 <g2gy8ac2rcqn[m]> Can i tried different usb c dongles on external usb drives and they only show up in the notification center that it is charging the usb device
+05:31:13 <g2gy8ac2rcqn[m]> But doesn't show up in the files app
+05:31:55 <g2gy8ac2rcqn[m]> <g2gy8ac2rcqn[m] "Can i tried different usb c dong"> "Can" typo
+05:35:22 <g2gy8ac2rcqn[m]> Are water resistent phones vanulable with water damage on usb ports?
+05:40:34 <strcat[m]> g2gy8ac2rcqn: USB issues are usually due to using bad cables
+05:41:00 <strcat[m]> make sure to connect USB peripherals (drives, etc.) when the phone is unlocked or GrapheneOS ignores it
+05:41:24 <strcat[m]> when connecting to a computer, the device defaults to charge only, you have to manually enable it acting as a USB peripheral itself in the notification - same as standard Android
+05:44:38 <g2gy8ac2rcqn[m]> this is what it looks like when i try to connect usb drive (fat32)
+05:44:39 * g2gy8ac2rcqn[m] uploaded an image: Screenshot_20210204-144414.png (74KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/YzeOVvroLQytwBjiXeLwHOwc/Screenshot_20210204-144414.png >
+05:44:42 * g2gy8ac2rcqn[m] uploaded an image: Screenshot_20210204-144403.png (61KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/zXZXnOGrhPZpIeBrkIlPwtlw/Screenshot_20210204-144403.png >
+05:46:33 <g2gy8ac2rcqn[m]> Files app doesn't project my usb drive
+05:49:13 <strcat[m]> that menu isn't used for connected a peripheral
+05:49:18 <strcat[m]> that's for using the device as a peripheral
+05:49:25 <strcat[m]>  * that menu isn't used for connecting a peripheral
+05:49:32 <strcat[m]> same as AOSP / stock
+05:50:01 <strcat[m]> g2gy8ac2rcqn: and how are you connecting it? is it a USB C flash drive?
+05:50:24 <g2gy8ac2rcqn[m]> Flash drive using a usb c dongle
+05:50:30 <strcat[m]> which dongle
+05:50:34 <strcat[m]> the one that comes with the phone?
+05:51:05 <strcat[m]> most USB C <-> USB A cables don't work properly
+05:51:49 * g2gy8ac2rcqn[m] uploaded an image: IMG_20210204_145205.jpg (77KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/TJuHDwLhbEPBAkLronRcOChd/IMG_20210204_145205.jpg >
+05:52:11 <g2gy8ac2rcqn[m]> Yes i used the one that came with the phone
+05:52:46 <g2gy8ac2rcqn[m]> It seemed to work fine with different android devices..
+05:57:55 <strcat[m]> did you plug it in when the device was unlocked?
+05:58:03 <strcat[m]> and have you left the USB peripherals setting at the default?
+06:03:57 <g2gy8ac2rcqn[m]> If this is the default settings , yes
+06:03:58 * g2gy8ac2rcqn[m] uploaded an image: Screenshot_20210204-150327.png (69KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/YmvqppNTCEzrOpgdRZAihKgU/Screenshot_20210204-150327.png >
+06:07:57 <strcat[m]> g2gy8ac2rcqn: that's not the setting I'm talking about
+06:08:09 <strcat[m]> and as I explained above that has nothing to do with USB peripherals like connecting a flash drive
+06:08:11 <g2gy8ac2rcqn[m]> Changing 'usb controlled by' to this device doesnt work
+06:08:17 <strcat[m]> you're going to need to read through what I said above
+06:09:03 <strcat[m]> > did you plug it in when the device was unlocked?
+06:10:04 <g2gy8ac2rcqn[m]> Yes
+06:10:26 <strcat[m]> the default is to allow connecting USB peripherals when unlocked
+06:10:29 <strcat[m]> you may have changed that
+06:10:32 <strcat[m]> look in Settings -> Security
+06:10:37 <g2gy8ac2rcqn[m]>  Ah
+06:10:55 <g2gy8ac2rcqn[m]> I'm sure that is set to default
+06:11:01 <strcat[m]> connecting a USB peripheral and using the device as a USB peripheral is a separate thing
+06:11:14 <strcat[m]>  * connecting a USB peripheral and using the device as a USB peripheral are separate things
+06:11:23 * g2gy8ac2rcqn[m] uploaded an image: Screenshot_20210204-151156.png (95KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/EAbGPshawLBczJHgZlYBEOST/Screenshot_20210204-151156.png >
+06:12:06 <strcat[m]> so that should be fine
+06:12:23 <strcat[m]> I would try rebooting and maybe try another flash drive or another kind of USB peripheral like a keyboard / mouse
+06:12:53 <strcat[m]> and make sure to use a high quality cable to connect it to a computer
+06:12:57 <strcat[m]> ideally the cable the phone comes with
+06:13:03 <strcat[m]> otherwise a high quality USB A to USB C cable
+06:13:13 <strcat[m]> and turn on file transfer if that's the goal, after connecting it
+06:15:39 <g2gy8ac2rcqn[m]> The bundled usb c earphones do not work
+06:16:50 <g2gy8ac2rcqn[m]> I think this does make  things more clear
+06:16:58 <strcat[m]> yes probably broken hardware
+06:17:00 <strcat[m]> try a reboot though
+06:20:11 <g2gy8ac2rcqn[m]> Nothing.
+06:20:15 <g2gy8ac2rcqn[m]> https://www.repairsuniverse.com/products/google-pixel-3-charging-port-replacement?variant=15863500341311&currency=USD&utm_source=bing&utm_medium=cpc&utm_campaign=**LP%20-%20Shop%20-%20Parts%20-%20Google%20Device&utm_term=4583451668670455&utm_content=google-pixel-3-usb-c-charging-port-flex-cable%20%7C%20Google%20Pixel%203%20Charging%20Port%20Replacement%20%7C%20%245.99
+06:20:46 <g2gy8ac2rcqn[m]> Do you think this replacement part can fix the issue?
+06:24:24 <strcat[m]> don't know
+06:24:36 <g2gy8ac2rcqn[m]> I see..
+06:25:28 <strcat[m]> maybe it's just a loose connection inside
+06:26:10 <g2gy8ac2rcqn[m]> What should i do?
+06:26:56 <strcat[m]> shrug
+06:27:49 <g2gy8ac2rcqn[m]> Ok .Thank you for your effort. I probably wasted some of your valuable time...
+06:32:42 <DixieDean[m]> anyone ever replaced the screen on a 3A
+06:32:57 <DixieDean[m]> thinking about doing it myself lol for a learning experience
+06:33:30 <strcat[m]> well on the positive side your screen is already broken and that's the main risk of opening it
+06:37:44 <DixieDean[m]> Yeah, its the heating pad that looks a pain in the @ss  but aside form that its just 1 ribbon underneath
+06:43:02 <DixieDean[m]> screw it, i'm just going to let the china man fix it tomorrow and then wait for Pixel 5 GOS support and then make the upgrade.
+06:47:05 <Lee70> getSession.org last update is causing panic on GrapheneOS:  java.lang.UnsatisfiedLinkError: dlopen failed: library "libaesgcm.so" not found
+06:52:36 <strcat[m]> sounds like their app is broken
+06:52:43 <strcat[m]> ???
+06:52:47 <strcat[m]> alright then
+06:53:16 <TheJollyRoger> Someone forgot to bundle a dependency...?
+06:53:41 <TheJollyRoger> Or upstream?
+06:53:49 <TheJollyRoger> Oh, wait nvm.
+06:54:21 <TheJollyRoger> valldrac, what do you think?
+06:54:38 <strcat[m]> they left the channel
+06:54:41 <strcat[m]> no point discussing it
+06:54:48 <TheJollyRoger> Oh, whoop.
+06:54:54 <strcat[m]> app bugs should be reported to app developers
+06:55:02 <TheJollyRoger> Gotcha.
+06:55:20 <anupritaisno1[m]> Pixel 5 grapheneos support will eventually come
+06:55:30 <anupritaisno1[m]> But for now there's only unofficial builds being released by me
+06:55:44 <anupritaisno1[m]> I've already said second week of February for those builds earlier
+06:55:58 <TheJollyRoger> Thank you anupritaisno1[m]. Take what time you need.
+06:57:19 <valldrac> TheJollyRoger: sorry, about what?
+06:58:14 <TheJollyRoger> valldrac: oh, sorry, false alarm. I got confused between Session and Molly >_<.
+06:58:26 <valldrac> TheJollyRoger: XDD
+06:58:32 <TheJollyRoger> Sorry, false alarm :P.
+07:02:38 <somenerd[m]> lol
+07:27:53 <pnrxa[m]1> <anupritaisno1[m] "But for now there's only unoffic"> How will updates work for these?
+07:28:39 <anupritaisno1[m]> pnrxa: they won't
+07:28:41 <anupritaisno1[m]> Manual updates
+07:28:56 <pnrxa[m]1> Ah makes sense
+08:28:28 <take_a_deep_brea> when did we get 4a support ?
+08:32:12 <take_a_deep_brea> i mean does anyone remember the date?
+09:01:09 * creepingmenace[m sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/aXOaPcofcdCRHxaLTToDkCJS/message.txt >
+09:01:46 <creepingmenace[m> I am on Windows 10 By the way.
+09:01:55 <creepingmenace[m>  * I am on Windows 10 by the way.
+09:02:35 <Lex[m]2> I believe there's only a release for the pixel 4a but not the 4a 5G
+09:03:05 <fml128[m]> Yeah, they are completely different phones.
+09:04:18 * creepingmenace[m sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/ASEmqPvDfHulEgLnMDpIabMR/message.txt >
+09:07:01 <creepingmenace[m> Well I am fricced.
+09:07:02 <creepingmenace[m> Thank you for your time gents.
+09:08:21 <TheLoneWanderer[> Oh no
+09:08:27 <TheLoneWanderer[> OH NO
+09:09:20 <TheLoneWanderer[> On the bright side, you didn't hard brick the phone
+09:09:30 <TheLoneWanderer[> Since you said you double clicked it
+09:09:41 <creepingmenace[m> Nnothing happened.
+09:09:54 <TheLoneWanderer[> That's a good thing
+09:09:59 <creepingmenace[m> I plan on returning this I guess.
+09:10:10 <TheLoneWanderer[> Otherwise it would've permanently bricked your phone
+09:11:03 <somenerd[m]> shouldn't have followed those videos
+09:11:11 <somenerd[m]> they're recommended against here
+09:11:12 <TheLoneWanderer[> The phone still functions, right?
+09:11:17 <strcat[m]> creepingmenace: don't follow those unofficial guides, they're dangerous
+09:11:17 <creepingmenace[m> Yeah. This what I get for not following the videos.
+09:11:21 <strcat[m]> and don't flash 4a release on the 4a 5G
+09:12:45 <creepingmenace[m> The phone still works.
+09:12:52 <TheLoneWanderer[> Great
+09:13:14 <creepingmenace[m> It just restarted everything like it didn't happen.
+09:13:31 <TheLoneWanderer[> Believe it or not that's a very good outcome
+09:13:34 <strcat[m]> creepingmenace: it sounds like you unlocked it though?
+09:13:39 <TheLoneWanderer[> Else you'd have a brick
+09:13:59 <strcat[m]> anyway we don't support 4a 5G yet
+09:14:04 <TheLoneWanderer[> Good thing you double clicked the flash all bat file
+09:14:20 <TheLoneWanderer[> Instead of launching it in PS shell
+09:14:35 <TheLoneWanderer[> Likely failed because fastboot wasn't in the path
+09:14:36 <strcat[m]> we likely would support it by now if the project wasn't being attacked daily by an obsessed sociopath but it is what it is
+09:14:42 <creepingmenace[m> I should've looked through the website more.
+09:14:42 <creepingmenace[m> *facepalm*
+09:14:52 <strcat[m]> https://grapheneos.org/install/web
+09:14:57 <strcat[m]> is the installer
+09:14:59 <strcat[m]> https://grapheneos.org/install/cli
+09:15:01 <strcat[m]> is the cli guide
+09:15:08 <strcat[m]> shouldn't follow anything else, either one of those
+09:15:13 <strcat[m]> but we don't support 4a 5G yet
+09:15:15 <strcat[m]> 4a isn't the same thing
+09:15:22 <strcat[m]> https://grapheneos.org/faq#supported-devices
+09:17:02 <creepingmenace[m> <strcat[m] "anyway we don't support 4a 5G ye"> "Yet"
+09:19:17 <creepingmenace[m> Read it already. Should I keep my 4a 5G now for later or just return it?
+09:46:52 <pikaman[m]> I just want to drop in and say that I am very thankful for the GrapheneOS project, and I am glad that I made the switch a few weeks ago!
+09:59:52 <strcat[m]> creepingmenace: don't have a timeline for when it will be supported
+09:59:53 <strcat[m]> could be a while
+10:01:00 <fml128[m]> You could use calxy os in the meantime
+10:07:12 <creepingmenace[m> <fml128[m] "You could use calxy os in the me"> Thanks a bunch man. Had no idea that there was another privacy OS.
+10:23:38 <strcat[m]> fml128: they're not comparable projects and I would appreciate it if you didn't use our channel to advertise a project that has acted maliciously towards us
+10:23:48 <strcat[m]> thanks
+10:24:10 <strcat[m]> I recommend against using an OS from developers supporting harassment and spread misinformation about other projects
+10:24:20 <strcat[m]>  * I recommend against using an OS from developers supporting harassment and spreading misinformation about other projects
+10:25:24 <strcat[m]> it's a much different project not doing privacy or security hardening and depending heavily on Google services
+10:26:21 <strcat[m]> and I think it's pretty misleading to direct people there just because it's based on AOSP too
+10:47:37 <travankor> just curious, does grapheneos use ext4 of f2fs?
+10:47:58 <strcat[m]> travankor: depends on device
+10:48:02 <strcat[m]> we just use what AOSP does
+10:48:36 <strcat[m]> the high-level OS images are ext4
+10:48:41 <strcat[m]> userdata is either ext4 or f2fs
+10:59:30 <anupritaisno1[m]> travankor: f2fs is used on userdata
+10:59:38 <anupritaisno1[m]> There are reasons not to use it for the system partitions
+11:01:04 <anupritaisno1[m]> First f2fs has a bit of a mount delay, many of the optimizations f2fs has are not really meaningful on read-only partitions and also f2fs needs a lot of space (around 100mb for the filesystem) which would actually result in wasting space on system partitions
+11:01:31 <anupritaisno1[m]> It also doesn't play nicely with small partitions like metadata
+11:01:41 <anupritaisno1[m]> Which is why it only makes sense to use it for user data
+11:05:22 <anupritaisno1[m]> Also f2fs mount can timeout and return -EAGAIN sometimes
+11:05:43 <anupritaisno1[m]> This might mean it'd take several more seconds or even a minute before the system starts booting
+11:05:58 <anupritaisno1[m]> This will most likely not happen because the filesystem wouldn't be mutable
+11:07:53 <anupritaisno1[m]> Ext4 actually has a smaller space requirement for the filesystem itself and we use ext4 dedup in our builds so using ext4 actually writes less to your flash than f2fs would if you're concerned about that
+11:08:09 <travankor> thanks guys for the explanation
+11:08:40 <travankor> interesting that f2fs has so many caveats
+11:09:26 <anupritaisno1[m]> <travankor "interesting that f2fs has so man"> Not really
+11:09:35 <anupritaisno1[m]> It is a good filesystem for storing userdata
+11:10:15 <travankor> over ext4?
+11:11:28 <anupritaisno1[m]> Yeah
+11:11:40 <anupritaisno1[m]> Just not good for storing the base system itself
+11:12:26 <travankor> i got to say, though, ext4's fsck is really awesome it's saved me several times before
+11:13:51 <travankor> and i think you can metadata checksums on the latest kernels
+11:13:59 <travankor> use*
+11:15:20 <travankor> (makes me wonder why no one's tried to use btrfs)
+11:17:25 <anupritaisno1[m]> travankor: somebody did that
+11:17:46 <anupritaisno1[m]> Android does have support for mounting btrfs and even has selinux labels for it
+11:17:52 <anupritaisno1[m]> But it's really useless
+11:18:12 <anupritaisno1[m]> None of the fs options are user facing and you can't use checkpoints either
+11:18:45 <anupritaisno1[m]> F2fs does support checkpoints so we could do a "system restore" feature if we wanted to through that
+11:19:22 <anupritaisno1[m]> Do remember that doing such a thing will most likely result in data corruption if any user changes their password so we won't really implement this
+11:19:39 <anupritaisno1[m]> * Do remember that doing such a thing will most likely result in data corruption if any user changes their password and then does a rollback so we won't really implement this
+11:22:55 <travankor> I think it could work with subvolumes
+11:24:31 <travankor> but i guess it depends on aosp to add the required knobs
+11:25:26 <anupritaisno1[m]> travankor: it can't exactly
+11:25:43 <anupritaisno1[m]> It's way more complex than that
+11:35:16 <dakotah[m]> BTRFS android sounds dreadful
+13:38:44 <cankerwort[m]> Hey is anyone having trouble with Aurora Store? It's not allowing me to update any apps
+13:42:45 <nscnt[m]> cankerwort: #grapheneos-offtopic:matrix.org
+13:45:39 <cankerwort[m]> Ty
+14:29:10 <dez33> I'm having issues with my Pixel 3a on Graphene.   I'm not sure if they are related to Graphene or not but it hasn't auto updated since the 2020.12.12.03 version.   I enabled the "check for updates" and its been over 4 hours and nothing.  any advice appreciated
+14:38:07 <noname> Hello guys, anyone have latest release for Pixel 1? (sailfish-factory-2019.10.07.21.zip)
+14:41:11 <nscnt[m]> dez33: Are you using a VPN or have you set the restrictions for checking for updates in a way that your current connection type does not meet?
+14:43:03 <fomijafi[m]> noname everything prior to  Pixel 3 is obsolete. https://grapheneos.org/releases. Upstream security patches are no longer being made for obsolete devices
+14:43:36 <dez33> nscnt[m] no, I am not using VPN or have a set any other restrictions
+14:44:47 <nscnt[m]> dez33: Your permitted networks in the system update settings is "Any"?
+14:44:53 <dez33> yup
+14:47:56 <COVID-1984> friend asking me if GOS got security / code review by third party... got an article I can send them?
+14:48:05 <noname> fomijafi[m] yeah, i know it, but i have only pixel 1 at the moment, i don't care about upstream patches, because device will be often wiped, so, there's no any reason to deploy any exploits on my phone.
+14:48:47 <somenerd[m]> > friend asking me if GOS got security / code review by third party... got an article I can send them?
+14:48:47 <somenerd[m]> no, I don't believe so
+14:49:03 <COVID-1984> ah i found one: https://www.reddit.com/r/GrapheneOS/comments/c00a1h/why_should_one_trust_grapheneos_no_offense/
+14:49:09 <somenerd[m]> since it builds off of AOSP, I assume that the majority of code is AOSP
+14:49:11 <COVID-1984> that one suffices
+14:49:22 <somenerd[m]> don't think that that's an audit
+14:49:24 <somenerd[m]> but ok
+14:50:37 <nscnt[m]> dez33: Mh, I don't know. I'm afraid I can't help you.
+14:51:00 <fire_free[m]> Is it possible to share the sim data connection with a guest user?
+14:51:16 <somenerd[m]> I think it's best to wait before asking again
+14:51:23 <somenerd[m]> it's not that people aren't noticing
+14:51:31 <somenerd[m]> maybe it's because they don't know
+14:51:36 <somenerd[m]> and neither do I
+14:51:54 <dez33> nscnt[m]: if I do a side loader update will that affect any data that is currently on the device?
+14:52:36 <somenerd[m]> if you don't unlock the bootloader, it shouldn't
+14:52:57 <nscnt[m]> dez33: https://grapheneos.org/usage#updates-sideloading
+14:53:04 <somenerd[m]> https://grapheneos.org/usage#updates-sideloading
+14:53:12 <somenerd[m]> I was going to send that lol
+14:53:41 <dez33> haha thanks somenerd[m] & nscnt[m]
+14:53:45 <dez33> I'll give it a shot
+14:54:00 <somenerd[m]> check the link
+14:54:08 <somenerd[m]> (could/should help)
+14:54:30 <dez33> yep I've been reading that page
+14:55:19 <nscnt[m]> fire_free: Your question isn't very specifiy. Do you actually refer to a guest account or just a secondary profile? When do you want to "share" it? At the same time? Or do you just want to use your mobile data in the guest (secondary?) profile when you're using the profile?
+14:59:50 <fire_free[m]> nscnt: I would like to use the sim's lte data connection in a secondary profile. I read that using the "owner/principal" account as little as possible is the best thing to do for security. So I created a secondary account which is my personal and primary. The problem is that I'm just now realizing that I can't use the lte connection.
+15:02:10 <fire_free[m]> Secondary account*
+15:02:20 <nscnt[m]> You can use your mobile data
+15:28:48 <penners[m]> Tethering is only possible in the owner account, if that's what you're referring to
+15:31:35 <koodab[m]> How do i protect myself from an IMSI catcher (Everything Except from removing the SIM card because i still need to get Calls and Notifications on the Road)
+15:32:34 <Hodge88> My first attempts at installing GOS, I was following the YT videos - which don't work. Would it benefit the project for me to make a YT video doing it the CORRECT way, exactly as the website prescribes? Because I'm a noob, and not much of a techie, I'd think I could produce a video most anybody could follow. Believe it or not, the command line
+15:32:34 <Hodge88> installation procedure on the official installation page is rather overwhelming to the unitiated. My concern is, however, any video I make might become obsolete - and then become a distraction the same way the current vid's on YT are...
+15:33:16 <Hodge88> Thoughts?
+15:35:36 <StVM[m]> I am currently trying to follow the build guide, but got a little bit confuse. Is the tag name in repo init command is "RQ1A.210205.004.2021.02.02.09" or something like "bramble".
+15:37:55 <take_a_deep_brea> Hodge88: that's nice of you. but the problem with a video guide is that they are not friendly to changes in the installation instruction
+15:41:48 <TheLoneWanderer[> <Hodge88 "installation procedure on the of"> You should try the web install. It's painless
+15:43:41 <mintsauce[m]> i just read the web install page, wow, thats new! however it doesn't look like it will work. wondering if my browser extensions are blocking elements on the page
+15:44:04 <mintsauce[m]> so i dont need to run a linux laptop just for graphene installs any more, my Mac OSX can do it? that would be very cool
+15:48:19 <TheLoneWanderer[> It only requires a chromium based browser
+15:49:41 <nscnt[m]> <StVM[m] "I am currently trying to follow "> RQ1A.210205.004.2021.02.02.09 is the right thing
+15:53:22 <dez33> nscnt[m] trying to run the side loader update.    I'm in recovery mode and the ads sideload cmd works but it keeps failing  with E;Signature verification failed
+15:54:02 <StVM[m]> <nscnt[m] "RQ1A.210205.004.2021.02.02.09 is"> Thanks.
+15:55:00 <dez33> I do get this in my terminal so maybe it worked?
+15:55:07 <dez33> ``` adb sideload ../sargo-ota_update-2021.02.02.09.zip
+15:55:07 <dez33> serving: '../sargo-ota_update-2021.02.02.09.zip'  (~47%)    adb: failed to read command: Success
+15:55:08 <dez33> ```
+15:56:50 <nscnt[m]> dez33: I-I don't think it worked. I've never sideloaded myself, though, so I can't really comment on it.
+15:57:18 <faxing[m]> "Failed to read command" Doesn't seem like any glowing success to me lol
+15:57:29 <dez33> lol yeah agreed
+15:57:48 <faxing[m]> If you can't figure it out, use the web installer
+15:58:03 <dez33> this reddit seems to think its not an error
+15:58:04 <dez33> https://www.reddit.com/r/LineageOS/comments/dje3td/installing_lineage_on_google_pixel_sailfish/f44hoxd/?utm_source=share
+15:58:20 <faxing[m]> From what i've heard it's a good tool
+15:58:20 <nscnt[m]> He doesn't flash GrapheneOS. He's sideloading an update.
+15:58:26 <faxing[m]> also that's lineage
+15:58:51 <faxing[m]> i wouldn't listen to the people who got in a like 20 message argument with me saying that lineage is secure and graphene is state-sponsored
+15:59:08 <dez33> lol
+15:59:08 <dez33> ok
+15:59:13 <faxing[m]> both of which are  false
+15:59:15 <faxing[m]>  * both of which are  false to be clear
+15:59:18 <dez33> so just run the side loader again?
+15:59:35 <faxing[m]> try the web installer
+15:59:53 <dez33> what is the web installer?
+15:59:58 <faxing[m]> https://grapheneos.org/install/web
+16:00:01 <nscnt[m]> He's not flashing GrapheneOS
+16:00:13 <dez33> yeah I already have Graphene
+16:00:17 <nscnt[m]> He wants to sideload an update
+16:00:29 <dez33> I'm trying to update.  its not auto updating for some reason
+16:00:42 <faxing[m]> Ohhhh
+16:00:49 <dez33> and I'm having other issues with apps so trying to rule out issues with my older OS
+16:00:51 <faxing[m]> Okay sorry, misunderstood
+16:00:53 <faxing[m]> my bad
+16:00:55 <nscnt[m]> dez33: Have you verified your system with Auditor once?
+16:01:03 <faxing[m]> yeah verify if possible
+16:01:28 <faxing[m]> https://attestation.app/tutorial
+16:02:30 <dez33> I verified it back when I first flashed GrapheneOS on the device
+16:02:39 <dez33> that was 6 or 7 months ago
+16:02:48 <faxing[m]> try to verify once more now if possible
+16:02:58 <dez33> i'm still in recovery mode
+16:03:16 <faxing[m]> can't hurt and if it is a problem like that it can certainly figure it out quickly
+16:03:17 <dez33> And it says my device might fail to boot since the installation failed
+16:03:32 <faxing[m]> ah
+16:03:49 <faxing[m]> you could reflash or take your chances and try to boot
+16:03:52 <nscnt[m]> dez33: I don't think it should be an issue to boot your device.
+16:04:28 <dez33> nscnt[m] ok 🤞
+16:05:30 <hasnoname[m]> Hi, just wanted to understand if user profile end session switching to main profile is a change, since i don't find anything about it in changelog.
+16:05:53 <nscnt[m]> hasnoname: No, that's how it has been all the time.
+16:07:18 <dez33> ok rebooted ok
+16:07:38 <nscnt[m]> dez33: If you tap "Check for updates" it checks (virtually) immediately if you haven't set any constraints. You wouldn't need to wait 4 hours.
+16:08:24 <dez33> yeah there shouldn't be any constraints
+16:08:30 <dez33> i've tapped that button a few times
+16:12:30 <nscnt[m]> dez33: I can't figure out an answer as to why it might not work, sorry.
+16:15:13 <faxing[m]> What's your build number
+16:15:14 <dez33> nscnt[m] no worries.  thanks for trying
+16:15:44 <faxing[m]> Settings -> About Phone -> Scroll to the bottom
+16:16:11 <dez33> faxing[m] build number is  RQ1A.201205.003.2020.12.12.03
+16:16:26 <faxing[m]> Oh wow okay
+16:16:31 <faxing[m]> you're three updates behind
+16:16:54 <dez33> yeah not sure why it hasn't auto updated.  it had been off for a while
+16:17:04 <dez33> maybe that was a problem
+16:17:11 <faxing[m]> oh it had been off?
+16:17:28 <dez33> yeah it's a secondary device
+16:17:29 <faxing[m]> I mean I don't see why that would have effected it but I don't see another reason why
+16:17:39 <faxing[m]>  * I mean I don't see why that would have affected it but I don't see another reason why
+16:17:49 <nscnt[m]> Shouldn't be a problem. It get's (re-)scheduled when you tap "Check for update"
+16:17:54 <dez33> right.  still trying to verify the integrity
+16:18:14 <faxing[m]> just leave it on for a couple of hours
+16:18:18 <faxing[m]> oh also
+16:18:22 <faxing[m]> are you using NetGuard?
+16:18:41 <dez33> not using NetGuard or any VPN on the device
+16:18:48 <faxing[m]> Okay
+16:18:49 <faxing[m]> Good
+16:19:15 <faxing[m]> I was using NetGuard when I first got the phone and fucked my updates by unknowingly blocking the "Seamless Update Client"
+16:19:28 <faxing[m]> So figured it couldn't hurt to check
+16:19:44 <dez33> yeah worth checking
+16:20:32 <faxing[m]> I mean certainly not technical but I'd just leave it on for a few hours and make sure it has a stable connection whole way through.
+16:21:17 <dez33> yeah I left it overnight and nothing
+16:23:06 <faxing[m]> Graphene sometimes kills wifi for me if the phone is off for a few hours straight, do you know if that happened to you?
+16:23:12 <faxing[m]>  * Graphene sometimes kills wifi for me if the phone is off for a few hours straight, do you know if that could have happened to you?
+16:23:33 <faxing[m]> I mean, really starting to grasp at straws here but I figure it's worth checking
+16:23:38 <dez33> it could have but it still had connection when I checked this morning
+16:23:48 <dez33> no I appreciate the help trying to debug
+16:23:56 <faxing[m]> Hm alright
+16:24:07 <faxing[m]> I'm really not sure what else to suggest, I'm sorry
+16:24:18 <dez33> trying to boot up my other android device to verify
+16:24:26 <dez33> then going to try to side load again
+16:24:34 <faxing[m]> 👍️
+16:29:21 <Hodge88> When I attempted install with the web-based installer, none of the buttons worked. It would cause a popup window with a message "trying to connect" or something, but it would error-out. This was on Brave browser. Tried it with shields "up" and "down".
+16:32:47 <Anth> When I enter the command 'fastboot flashing unlock' it says < waiting for any device > but I'm not getting any prompt on my phone to unlock the bootloader
+16:33:50 <faxing[m]> <Hodge88 "When I attempted install with th"> Did you make sure to allow usb whatever it's called in brave's site settings?
+16:34:27 <faxing[m]> USB devices
+16:34:30 <faxing[m]> is what it's called
+16:35:44 <thetranstocommie> <Anth "When I enter the command 'fastbo"> run "fastboot devices," bc it sounds like you may not have fastboot installed 100
+16:36:03 <thetranstocommie> > <@freenode_Anth:matrix.org> When I enter the command 'fastboot flashing unlock' it says < waiting for any device > but I'm not getting any prompt on my phone to unlock the bootloader
+16:36:03 <thetranstocommie>  * run "fastboot devices," bc it sounds like you may not have fastboot installed 100% correctly
+16:40:19 <Anth> thetranstocommie Yeah it's not coming back with any device info
+16:42:27 <thetranstocommie> <Anth "the trans to commie pipeline Yea"> if you're on windows, this is probably a pretty easy fix.
+16:42:35 <thetranstocommie> >On Windows, you may need to install a driver for fastboot. You can
+16:42:35 <thetranstocommie> obtain this via the Windows Update optional updates if you don't already
+16:42:35 <thetranstocommie>  have it.
+16:48:27 <Anth> thetranstocommie I'm installing updates so I need to restart. I might be back but hopefully that's it. Thanks for the help.
+16:48:59 <thetranstocommie> <Anth "the trans to commie pipeline I'm"> no problem! best of luck!
+16:53:43 <kenkanaware[m]> Installed GrapheneOS for the first time. I fucking love it 😃
+16:55:12 <thetranstocommie> <kenkanaware[m] "Installed GrapheneOS for the fir"> i installed it last night. using the stock OS just makes me feel dirty now lol. ive been spoiled.
+17:04:29 <therealbadassmof> <Anth "When I enter the command 'fastbo"> Depending on your permissions, sometimes you gotta type sudo to see fastboot devices on linux
+17:21:03 <kenkanaware[m]> USB debugging had to be enabled when I installed it
+17:30:46 * sunfish[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/QsMfJsYloEemNHfzTbXGYFyv/message.txt >
+18:15:23 <dez33> @faxing[m] I can't get this thing verified or updated I think I'm going to just start with a fresh flash of GrapheneOS
+18:15:55 <dez33> any idea of the webinstall will work if I'm on macOS Mojave?  I see the web install page mentions Big Sur
+18:16:58 <deappledapple> <dez33 "any idea of the webinstall will "> Not sure, only way to know atm is to try it yourself
+18:17:33 <dez33> deappledapple lol roger that
+18:17:44 <dez33> guess I can always do cli install if it fails
+19:13:22 <faxing[m]> <dez33 "@faxing[m] I can't get this thin"> Weird, there shouldn't be any problem with verification if it's a good install -- maybe that diagnoses the problem lol.
+19:13:53 <faxing[m]> <dez33 "any idea of the webinstall will "> Theoretically speaking, there shouldn't be any obvious critical issue that would prevent it from flashing properly, but I don't use MacOS so don't quote me on it.
+19:13:58 <faxing[m]> Let me know how it goes.
+19:47:22 <dez33> faxing[m]  I'm back.  fresh flash things are working much better.  had to do CLI install web install would not work on Mojave.  I could never get it to recognize my device
+19:47:40 <dez33> on latest version for Pixel 3a and things seem to be working better
+19:50:20 <faxing[m]> Glad to hear it!
+19:50:35 <faxing[m]>  * Glad to hear that you got it flashed and everything seems sorted!
+19:51:51 <dez33> yeah.  only took almost a day to get it resolved but learned things.   I should probably focus on my actual work now LOL
+19:52:27 <TheMadOne[m]> I'll try to install tomorrow via webinstaller. Hopefully it'll work
+19:52:52 <DixieDean[m]> main issue i've had is the fastboot that ships with most distros is old
+19:53:02 <DixieDean[m]> especially the debian or ubuntu one.
+20:01:31 <majorasparagus0[> Dixie Dean: love the handle
+20:02:35 <faxing[m]> <DixieDean[m] "especially the debian or ubuntu "> right.
+20:03:26 <faxing[m]> When I used debian it was a nightmare -- like two and a half year old fastboot and well over a year old adb. I'd think they'd be the same age but apparently not)
+20:03:34 <faxing[m]>  * When I used debian it was a nightmare -- like two and a half year old fastboot and well over a year old adb. (I'd think they'd be the same age but apparently not)
+20:24:11 <thetranstocommie> hey so, turns out a really important app I need to use doesn't work without google play services. i remember seeing some talk of having an offline stub or something along those lines to spoof google play services. how far along is that?
+20:25:04 <thetranstocommie> the app itself launches and 90% works, but that 10% is crucial, and causes the app to crash.
+20:48:51 <nullnode[m]> <thetranstocommie "hey so, turns out a really impor"> what is the app?
+21:00:42 <DixieDean[m]> <majorasparagus0[ "Dixie Dean: love the handle"> You a fellow blue nose? lol
+21:03:52 <thetranstocommie> <nullnode[m] "what is the app?"> fuck it. I was trying to avoid it, but it'd be a pretty bad bug report if I didn't lol
+21:04:11 <thetranstocommie> https://play.google.com/store/apps/details?id=org.MyLVHN.MyLVHN
+21:04:43 <thetranstocommie> attempting to do a video call with a doctor crashes the app. wanted to know what the progress was on implementing any kind of stub
+21:05:06 <DixieDean[m]> <faxing[m] "When I used debian it was a nigh"> its fine for a server which is really why Ubuntu is awful.  Debian was never intended to be a desktop OS.     I run a mix of Debian, QubesOS and Manjaro at home.
+21:14:31 <nullnode[m]> <thetranstocommie "fuck it. I was trying to avoid i"> shit, ya sorry, probably not a good idea to post for location correlation reasons, I'm not sure what the best way around this would be, it most likely will not work fully without Google Play Services. The best route may be to reach out to the app developer or the organization and have notify them their apps implementation has restrictive accessibility issues when
+21:14:31 <nullnode[m]> using a non Google device.
+21:15:05 <nullnode[m]> If you check your system logs with adb you may be able to gain some more insight into what directly is failing to help the developer fix the app
+21:17:57 <pnrxa[m]1> Dixie Dean: I've found debian testing okay on a desktop
+21:19:33 <DixieDean[m]> <pnrxa[m]1 "Dixie Dean: I've found debian te"> Yeah testing isn't too bad.  And Ubuntu is still great for noobs
+21:20:04 <DixieDean[m]> Its actually good if you are in a production environment and don't want to worry about lib and dependencies etc
+21:22:39 <pnrxa[m]1> I've only ever used debian stable in production
+21:27:25 <Hodge88> Was recently told anysoftkeyboard was a FOSS keyboard with swipe/gesture typing capability. I've installed it, but can't find anywhere to enable the swipe feature. Anyone know anything about this? Keying in each individual character is a YUGE bummer for me!
+21:28:37 <pnrxa[m]1> <Hodge88 "Was recently told anysoftkeyboar"> Its there called gesture typing
+21:32:38 * pnrxa[m]1 uploaded an image: IMG_20210205_083151.jpg (104KiB) < https://matrix.org/_matrix/media/r0/download/matrix.pnrxa.com/WkJNZlTSwslBbVdHsWmhfEhW/IMG_20210205_083151.jpg >
+21:32:39 <pnrxa[m]1> Hodge88:
+21:35:41 <Hodge88> Was recently told anysoftkeyboard was a FOSS keyboard with swipe/gesture typing capability. I've installed it, but can't find anywhere to enable the swipe feature. Anyone know anything about this? Keying in each individual character is a YUGE bummer for me!
+21:36:02 <Hodge88> Sorry, connection timed out, so missed responses if there were any...
+21:36:19 <DixieDean[m]> i like the stock keyboard, also like HackersKeyboard if you do any ssh, terminal work on your phone.
+21:36:25 <DixieDean[m]> having ctrl, shift etc is a god send
+21:40:14 <b1101> I miss having a hardware keyboard.
+21:42:29 <DixieDean[m]> i'd love to see GrapheneOS on the Pro1-X
+21:42:48 <anupritaisno1[m]> Dixie Dean: no
+21:42:50 <anupritaisno1[m]> It's never happening
+21:42:56 <DixieDean[m]> LOL
+21:43:03 <anupritaisno1[m]> The pro1-x doesn't even pass CTS
+21:43:08 <anupritaisno1[m]> We will never even consider it
+21:43:26 <SkyFox[kdeorg][m> Is that the XDA phone?
+21:43:31 <anupritaisno1[m]> Yes
+21:43:40 <DixieDean[m]> Yeah i just like the format
+21:43:43 <anupritaisno1[m]> Phones that ship without gapps are bad news all the way
+21:43:59 <anupritaisno1[m]> They don't do the necessary stuff to pass CTS
+21:44:36 <rny> so they arent even android?
+21:44:36 <anupritaisno1[m]> Also it's really dated hardware
+21:44:38 <SkyFox[kdeorg][m> Isn't it also Snapdragon 835, does Qualcomm even support this?
+21:44:38 <rny> lulz
+21:45:03 <rny> android != gapps
+21:45:21 <anupritaisno1[m]> SkyFox [kde.org]: they support devices for 6 years or so
+21:45:21 <SkyFox[kdeorg][m> Wait...
+21:45:22 <anupritaisno1[m]> It just means they keep releasing tags for android 5 for the next 6 years
+21:45:23 <DixieDean[m]> man i miss Nokia N series lol
+21:45:24 <anupritaisno1[m]> Version upgrades stop in as little as 2 years
+21:45:47 <anupritaisno1[m]> rny: shipping those apps requires passing CTS, VTS and GTS
+21:45:50 <SkyFox[kdeorg][m> <anupritaisno1[m] "Version upgrades stop in as litt"> I see
+21:46:00 <anupritaisno1[m]> Realize what happens when you skip all that and release trash
+21:46:20 <anupritaisno1[m]> SkyFox [kde.org]: Google spends a lot of their own resources for a 3 year upgrade path
+21:46:28 <strcat[m]> Dixie Dean: recommend reading about our security requirements from devices
+21:46:31 <anupritaisno1[m]> * SkyFox [kde.org]: Google spends a lot of their own resources for a 3 year upgrade plan
+21:46:33 <DixieDean[m]> i've given the PinePhone some consideration over the months but its just not up to it yet to run a full linux device
+21:46:50 <strcat[m]> we won't support insecure devices
+21:46:50 <strcat[m]> sorry
+21:46:56 <strcat[m]> I think you're in the wrong place.
+21:47:01 <strcat[m]> and you've misunderstood this project
+21:47:12 <anupritaisno1[m]> @strcat:matrix.org: more like he's suggesting devices that don't even pass CTS
+21:47:21 <strcat[m]> and I'm going to ask you to stop promoting off-topic stuff here
+21:47:45 <strcat[m]> we have a separate off-topic channel for stuff not relevant to GrapheneOS
+22:00:49 <neodyddlium[m]> Incoming wall if text that I tried to post on Reddit but got botmoderated. Hope it helps someone.
+22:00:58 * neodyddlium[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/yLYGCPbetlPzVMQqsjPJhzvN/message.txt >
+22:22:26 <dirtygiraffe[m]> <TheJollyRoger "I hate to keep bringing this up "> Interesting paper.  Thanks for the drop
+22:22:40 <pnrxa[m]1> Hodge88: join off topic and I'll send you a screenshot
+22:23:52 <thetranstocommie> <pnrxa[m]1 "IMG_20210205_083151.jpg"> check that box at the top of the screen
+22:24:32 <Hodge88> pnrxa[m]1 how do I join off topic?
+22:28:25 <pnrxa[m]1> Hodge88 https://grapheneos.org/contact
+22:39:33 <entry1[m]> <Hodge88 "pnrxa how do I join off topic?"> #grapheneos-offtopic:matrix.org
+22:57:40 <koodab[m]> Is there a way to send a Photo or File anonymously via a Website just like Firefox send but that's dead
+23:00:39 <Mruser42> hello
+23:01:47 <Mruser42> Can somebody tell e which is the technical newest or best Phone that fully work with graphenOS
+23:02:12 <Mruser42> i want bye a ne with focus in that point
+23:02:16 <Mruser42> ?
+23:03:00 <Thatcher[m]> <Mruser42 "Can somebody tell e which is the"> Pixel 4a
+23:06:40 <Mruser42> A google Phone for use a googlefree Phone
+23:06:44 <Mruser42> desaster
+23:06:48 <Mruser42> XD
+23:07:47 <pnrxa[m]1> Troll?
+23:08:29 <Hodge88> In fairness, I think it is indeed at LEAST ironic that a google device is most suitable for de-googling
+23:09:00 <Hodge88> Plus, the fact the bootup splash screen still shows a google logo - shows there is googliness deeper in the system than the GOS can get to.
+23:09:06 <Hodge88> That raises my eyebrow
+23:10:23 <Hodge88> Donning my tinfoil hat: perhaps the NSA and CIA recruited google to create an attractive device for de-googling, to attract domestic terrorists and other bad actors to the device - but it has hidden back doors and software hooks to spy on its users more than even regular google!
+23:10:27 <Hodge88> :-)
+23:11:48 <SkyFox[kdeorg][m> <Hodge88 "Plus, the fact the bootup splash"> It's basically the same as the motherboard manufacturer logo on desktop at start up
+23:12:43 <Hodge88> Yes, I know. My point is Daniel M would have replaced that with a sweet GOS logo, if he could get to it.
+23:15:09 <neodyddlium[m]> <Thatcher[m] "Pixel 4a"> Of note, the 4 is water resistant, the 4a is not. The 855 chipset in the 4 is also a little better. Like new "open box" 128GB pixel 4s can be found for around 350 if you shop around.
+23:15:25 <Mruser42> can somebody tell me whats the main point of the beed between James Donaldson and Daniel Micay
+23:16:39 <Mruser42> thank for the answer
+23:16:46 <Mruser42> 4a is in my focus
+23:17:45 <Thatcher[m]> <Mruser42 "can somebody tell me whats the m"> That is off-topic and not an appropriate topic for this channel. Don't make Daniel waste his time explaining his life drama.
+23:20:27 <rny> Mruser42: use a search engine to aid your research.
+23:24:01 <Mruser42> ok sorry
+23:24:20 <Mruser42> sounds reasonable
+23:38:03 <strcat[m]> Mruser42: https://grapheneos.org/#history
+23:38:16 <strcat[m]> Mruser42: https://grapheneos.org/legal/Micay_%20Copperhead_%20Statement%20of%20Defendant%20and%20Counterclaim.pdf
+23:38:45 <strcat[m]> Mruser42: read the information that's available there and on the @GrapheneOS and @DanielMicay Twitter accounts
+23:39:05 <strcat[m]> if you read the available information and have a question about it, ask it in the offtopic channel
+23:39:14 <strcat[m]> if you haven't done that reading, please don't
+23:39:23 <Mruser42> thank you
+23:39:53 <Mruser42> i will do my homework
+23:48:45 <strcat[m]> Hodge88: yet it doesn't raise your eyebrow that there are 'private' / 'secure' phone companies based in the US producing devices with blatant insecurity and RCE vulnerabilities that they go out of the way to prevent fixing? hmm
+23:49:13 <strcat[m]> we're going to be banning concern trolls from the channel
+23:51:47 <strcat[m]> there is a concerted effort to make sockpuppet accounts to undermine the project in these channels
+23:51:53 <strcat[m]> please read https://rationalwiki.org/wiki/Concern_troll and be aware that it's being used on a daily basis through sockpuppet accounts to undermine the project and derail discussion here
+23:51:57 <strcat[m]> I'm not banning people for disagreeing with us, I'm banning suspicious sockpuppet accounts that are repeatedly 'concerned' about things, particularly stuff that we regularly talk about and have substantial documentation on
+23:52:27 <strcat> if they are not sockpuppets being used to concern troll they can reach out to me and talk about it
+23:52:51 <rny> who's ^
+23:53:08 <ted_lavender[m]> Are certain carriers better than others? Or does Graphene OS limit what information carriers can obtain from the device such that it doesn't matter?
+23:53:30 <rny> ted_lavender[m]: yes, some carriers are better than others. you need to do your own research
+23:53:57 <rny> some carriers dont do VoLTE and downgrades calls to 3g
+23:54:01 <rny> etc etc...
+23:55:41 <b1101> I've had issues accessing visual voicemail through the phone app on tmobile. it gets it, but I can't listen to it. get the error on top that says try again, or call voicemail
+23:56:28 <rny> b1101: iirc there's an issue related to that, please continue the discussion in that GH issue
+23:58:03 <rny> https://github.com/GrapheneOS/platform_packages_apps_Dialer/pull/1
+23:58:06 <rny> https://github.com/GrapheneOS/os_issue_tracker/issues/356
+23:58:08 <rny> b1101: ^

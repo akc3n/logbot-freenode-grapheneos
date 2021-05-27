@@ -1,0 +1,435 @@
+00:22:18 <thetranstocommie> so, what's the reason distributions like LineageOS don't re-lock the bootloader on Pixels? why is it only calyx and graphene that do it?
+00:23:18 <rny> they dont care about security.
+00:23:38 <thetranstocommie> my bad meant to send that in off topic
+00:24:05 <bethefriction[m]> Hello all, I am trying to download f-droid on a second user profile on the 4a but I keep getting a msg saying "app not installed" anyone experience that issue?
+00:25:02 <louipc> yea you need to install them on the main one first
+00:25:25 <bethefriction[m]> Yes I've done that
+00:25:44 <nscnt[m]> Nah, F-Droid provides a lower version apk on their main page
+00:25:50 <louipc> oh not sure
+00:26:15 <bethefriction[m]> So its because the versions don't match up?
+00:26:19 <nscnt[m]> You need to install the latest from the F-Droid app page
+00:26:43 <take_a_deep_brea> <nscnt[m] "Nah, F-Droid provides a lower ve"> true, lmao
+00:26:50 <thetranstocommie> <bethefriction[m] "Hello all, I am trying to downlo"> I was having issues with my package manager earlier too. could it be related?
+00:26:50 <nscnt[m]> bethefriction: yu
+00:26:56 <nscnt[m]> yup
+00:28:09 <nscnt[m]> Well, they don't need to match. You just can't downgrade.
+00:28:26 <nscnt[m]> Same version or higher
+00:28:30 <bethefriction[m]> OK thanks. So the app page is still at f-droid.org?
+00:29:00 <bethefriction[m]> I only saw the apk there but didn't explore extensively
+00:29:39 <sphinxcat[m]> bethefriction: https://f-droid.org/en/packages/org.fdroid.fdroid
+00:30:47 <bethefriction[m]> Thank you 😉
+00:31:10 <mr_hebi_san[m]> You have to explicitly go to the latest version's page. Its kinda frustrating that they do this
+01:23:12 <mr_hebi_san[m]> Question : is it a bug or is it expected behavior that adding a user account can wipe out biometric logins for the owner account?
+01:24:10 <mr_hebi_san[m]> I somehow lost my fingerprint on Owner after adding a user but I don't know what I did as user that might have caused that
+01:27:07 <mr_hebi_san[m]> I think it was after User added a lock screen pin
+01:31:20 <rny> are you sure? if so, please reproduce
+01:31:36 <rny> and then create an issue on GH with steps to re-produce
+01:34:22 <mr_hebi_san[m]> It was on the previous stable release.  I'll see if I can make it happen again, and if not on this phone I've got another on the way that I'll try
+02:06:42 <SwankyBarbecue4[> <anupritaisno1[m] "images.jpeg"> hahah is this hilarious
+02:43:03 <mr_hebi_san[m]> <rny "are you sure? if so, please repr"> I'm not reproducing in today's stable.  But I promise you that I didn't just randomly delete my original fingerprint biometrics or disable fingerprint reader.  Yet somehow the biometric data was completely gone.
+02:46:50 <rny> mr_hebi_san[m]: you'll need to be able to re-produce it and record the steps, otherwise we dont know how to trigger the bug you have encountered.
+02:47:15 <rny> sadly, that's how bug-fixing works
+02:48:08 <mr_hebi_san[m]> Yes, i'm well aware :)
+02:49:33 <mr_hebi_san[m]> It was with the first alternate user I created, and with this current phone I'm a little reluctant to factory reset after all the setup just to get a clean slate for reproduciton.  However, I should have a new phone to throw this onto in a few days and I'll make an effort to reproduce it there
+02:49:51 <mr_hebi_san[m]>  * It was with the first alternate user I created, and with this current phone I'm a little reluctant to factory reset after all the setup I've done just to get a clean slate for reproduciton.  However, I should have a new phone to throw this onto in a few days and I'll make an effort to reproduce it there
+02:51:52 <rny> if you can capture the logs also, that'll be great
+02:53:47 <mr_hebi_san[m]> Should I do this with logcat or do you have a log capturing utility built in besides logcat?
+02:53:47 <mr_hebi_san[m]> (I sincerely hope it's the former)
+02:59:12 <take_a_deep_brea> no , just logcat
+02:59:45 <mr_hebi_san[m]>  whew!
+03:07:37 <mr_hebi_san[m]> I don't know if this is directly GrapheneOS related, but I am curious how the GrapheneOS security model stands up in this specific case, especially given the security model of Vanadium.  Would this exploit effect it?  Would it effect other browsers besides Vanadium on the OS?  Is the exploit even exploitable on GrapheneOS?
+03:07:37 <mr_hebi_san[m]> https://arstechnica.com/information-technology/2021/02/android-barcode-scanner-with-10-million-downloads-infects-users/
+03:08:53 <mr_hebi_san[m]> Bearing in mind you'd need to dig into Aurora Store to even grab such an app, and also bearing in mind the question of whether you'd even want it in the first place before it was co-opted to the dark side, of course.
+03:14:14 <duck[m]> Don’t install random apps
+03:15:01 <mr_hebi_san[m]> Obviously the safest code is the code that never runs.  My curiosity though is about the exploit
+03:15:17 <strcat[m]> mr_hebi_san: what exploit? what does it have to do with Vanadium?
+03:15:32 <strcat[m]> the article you linked doesn't appear to have any relevance to what you just said
+03:16:22 <mr_hebi_san[m]> The app installed on the phone appears to have had the effect of causing users to experience ads pop up in, assumedly, their browsers.  Let me read again to make sure I understand
+03:16:24 <strcat[m]> no exploit there
+03:17:06 <green[m]> Is Vanadium & Bromite at feature parity? Is there any useful reason to use Bromite on GrapheneOS?
+03:17:20 <strcat[m]> covered in our docs
+03:20:41 <mr_hebi_san[m]> <strcat[m] "the article you linked doesn't a"> This was the line from the article that made me wonder what the app was actually doing and what it was exploiting in the Android phones :
+03:20:52 <strcat[m]> mr_hebi_san: an app developer selling their app to another party which adds phishing ads, etc. to it isn't an exploit
+03:21:08 <strcat[m]> mr_hebi_san: buying an app from a developer isn't an exploit
+03:21:20 <strcat[m]> it's not on-topic for the channel
+03:22:13 <green[m]> Ok just checking, since the docs mentioned Vanadium & Bromite would converge, wasn't sure if that happened yet
+03:22:31 <duck[m]> better fingerprinting protection
+03:22:54 <strcat[m]> mr_hebi_san: an app displaying malicious ads isn't an exploit
+03:26:13 <strcat[m]> there's no indication of any app or browser exploit in that article - don't really know what you're talking about
+03:26:14 <strcat[m]> they're talking about an app developer selling their app or including an SDK in it which serves malicious ads
+03:26:20 <strcat[m]> as they say there, adware
+03:28:20 <green[m]> Is Bromite's antifingerprinting features integration to Vanadium high or low priority for GrapheneOS?
+03:28:55 <strcat[m]> I think you're misunderstanding what needs to be done
+03:29:20 <strcat[m]> the features are often not implemented in a way that we would want
+03:29:31 <strcat[m]> or have issues we'd need to address, or are counterproductive
+03:29:50 <strcat[m]> it's not a task of copy-pasting stuff over
+03:30:30 <green[m]> Sounds like refactoring?
+03:30:42 <strcat[m]> no
+03:30:47 <strcat[m]> that's not what refactoring means
+03:31:28 <green[m]> Example of what issues need to be addressed in Bromite? To help me understand
+03:31:55 <hypokeimenon[m]> Off topic
+03:32:00 <hypokeimenon[m]> #grapheneos-offtopic:matrix.org
+03:32:16 <green[m]> I disagree
+03:32:20 <hypokeimenon[m]> You can actually read some of the Github issues to get a sense of these though.
+03:32:22 <strcat[m]> it's not off-topic I'm just not available to answer questions unless they plan on working on it
+03:33:02 <green[m]> OK fair enough
+03:33:33 <strcat[m]> Vanadium does have an issue tracker with information
+03:33:50 <strcat[m]> not available to provide details case-by-case for each thing
+03:34:28 <strcat[m]> we don't want all of the changes just a subset
+03:34:52 <strcat[m]> and as I said above some are counterproductive or need changes to fit our requirements
+03:35:06 <green[m]> 👍 will take a look at Vanadium's issue tracker
+03:35:22 <mr_hebi_san[m]> <strcat[m] "there's no indication of any app"> That's fair if you consider it off topic here.  No hard feelings
+03:35:54 <strcat[m]> mr_hebi_san: you're just bringing up adware
+03:36:05 <take_a_deep_brea> <strcat[m] "we don't want all of the changes"> even a subset would be work in terms of maintenance . and its not like relevant feature requests wont keep coming .
+03:36:10 <strcat[m]> mr_hebi_san: an app displaying malicious ads because someone paid for them to put that into it isn't an exploit
+03:36:31 <take_a_deep_brea> more like social engineering ?
+03:36:50 <somenerd[m]> it's just paying for malicious ads
+03:36:53 <mr_hebi_san[m]> Yeah I think that's a fair way to put it
+03:36:57 <somenerd[m]> no social engineering
+03:36:57 <strcat[m]> I don't think discussing the problem of apps/extensions being bought etc. is on-topic here
+03:37:04 <somenerd[m]> yeah I agree
+03:37:14 <somenerd[m]> isn't really offtopic
+03:37:21 <strcat[m]> since it's not a technical issue
+03:38:25 <somenerd[m]> true
+03:39:15 <mr_hebi_san[m]> That makes sense.  Thanks for the clarification and I'll try to keep to the strictly technical in this channel
+03:40:40 <rny> i like using adware
+03:40:43 <rny> :O
+03:45:26 <zzxx123> your browser will always be  unique  enough to track
+03:46:04 <zzxx123> no matter what amount of anti fingerprinting are there
+03:47:22 <zzxx123> just use tor when you need any anonymity
+03:47:55 <take_a_deep_brea> zzxx123: off-topic . nothing wrong if you wanna discuss it in some length in the other room though . that way you dont run the risk of being cut in the middle by someone else .
+04:04:47 <strcat[m]> zzxx123: that statement is self-contradictory
+04:05:14 <strcat[m]> but the issue is that deviating more from others makes the fingerprint more unique
+04:13:59 <strcat[m]> so that makes it unclear what Vanadium should do in that regard right now
+04:14:08 <strcat[m]> and it just isn't particularly relevant until we have a lot more users
+04:14:38 <zzxx123> It's only useful if the set of anti fingerpriting are used about enough people
+04:15:06 <zzxx123> used by enough people
+04:15:07 <strcat[m]> that's why it's not really relevant atm
+04:15:36 <strcat[m]> there's not much point in Vanadium deviating from Chromium with anti-fingerprinting stuff that makes it very clear it's a specific other browser
+04:15:42 <strcat[m]> we don't have enough users
+04:17:51 <hypokeimenon[m]> Crowd cover
+04:19:06 <zzxx123> and implenting them will probably do more harm for now
+04:19:26 <zzxx123> as it will give users a false sense of safety
+04:21:18 <zzxx123> implementing*
+04:21:21 <take_a_deep_brea> true
+04:22:09 <somenerd[m]> There are a few nice mitigations though
+04:22:28 <somenerd[m]> ex: battery level API being stubbed, sensors access removed
+04:22:47 <somenerd[m]> here's a few of them: https://github.com/GrapheneOS/Vanadium/tree/11/patches
+07:00:28 <grabba[m]> A read only browser would be nice for this
+07:00:31 <grabba[m]> https://github.com/jonasstrehle/supercookie
+07:01:15 <grabba[m]> Supercookies persist on vanadium I believe and are the images less than 1mb after wiping browser data
+07:12:36 <happy-1[m]> So for the developers what is the future for graphene os would it be possible to have a phone built from the ground up to run your software and sell these or will it always be the pixal devices only
+07:13:23 <somenerd[m]> https://grapheneos.org/faq#roadmap
+07:13:26 <somenerd[m]> this is the roadmap
+07:13:45 <somenerd[m]> custom hardware is also planned afaict
+07:15:11 <hypokeimenon[m]> <happy-1[m] "So for the developers what is th"> If you're interested in something like this happening, then try to raise awareness about the project.
+07:15:28 <somenerd[m]> I think that they're just asking
+07:15:43 <TheLoneWanderer[> <grabba[m] "Supercookies persist on vanadium"> Tried it on bromite. Got different ID after wiping everything
+07:19:15 <hasnoname[m]> Read somewhere a while ago that even when network access to an app is disabled, they can simply sent intent to other apps. Is it still the same? If I install gboard/Swiftkey and disable its network, can they still send/receive data through other apps?
+07:19:48 <somenerd[m]> they can send an intent
+07:19:57 <somenerd[m]> but the other app also has to consent
+07:20:42 <somenerd[m]> so it's a matter of if you trust the other apps with network access
+07:20:46 <take_a_deep_brea> hasnoname:  network permission toggle is specific to graphene and is intended to mitigate accessto network via intents too , if i remember correctly .
+07:20:54 <AppAraat[m]> Anyone here using Syncthing? Are you also getting a lot of "Operation not permitted" errors on files?
+07:20:57 <somenerd[m]> don't think it does
+07:21:01 <somenerd[m]> > Anyone here using Syncthing? Are you also getting a lot of "Operation not permitted" errors on files?
+07:21:01 <somenerd[m]> bit offtopic
+07:21:07 <somenerd[m]> #grapheneos-offtopic:matrix.org
+07:21:27 <hasnoname[m]> <hasnoname[m] "Read somewhere a while ago that "> Could not understand what indirect access meant in the graphene faq
+07:22:23 <somenerd[m]> >Revoking the permission denies indirect access via OS components and apps enforcing the INTERNET permission, such as DownloadManager. Direct access is denied by blocking low-level network socket access.
+07:23:12 <somenerd[m]> IPC still works afaict
+07:23:22 <somenerd[m]> but it needs mutual consent from the other app
+07:23:58 <somenerd[m]> there's an issue on this afaik
+07:25:42 <somenerd[m]> https://github.com/GrapheneOS/os_issue_tracker/issues/156
+07:41:46 <Yesha> Hello, i do have a problem with the dialer app. 2 words are not correctly translated to german. First of all the Contacts Button and furthermore the Call History Menu Button next to the settings. I have found the matching strings on github but they seem to be correctly translated. I hoped they would be wrong so that i can propose a file change and
+07:41:46 <Yesha> create a pull request.
+07:42:26 <Yesha> Me and my wife do use a pixel 4a.
+07:47:14 <take_a_deep_brea> nice
+09:24:42 <AppAraat[m]> Wait. Is the colon character (`:`) not allowed for filenames?
+09:26:45 <AppAraat[m]> If so, is this a recent change?
+09:30:05 <take_a_deep_brea> AppAraat:  https://cs.android.com/android/platform/superproject/+/master:frameworks/base/core/java/android/os/FileUtils.java;l=972?q=isValidFatFilenameChar
+09:30:11 <take_a_deep_brea> hope that helps
+09:31:46 <take_a_deep_brea> the highlighted part is the function which approves of characters in a file name
+09:35:37 <asd> Hey. Do anybody know how to backup with seed vault different user profiles?
+09:37:02 <mynacol[m]> asd: If I understood it correctly, one profile cannot back up data from another profile. But each profile can set up their own backups individually
+09:38:22 <amjjma> mynacol[m]: Seedvault works only in the owner profile. If I switch the profile, seed vault won't work.
+09:42:19 <AppAraat[m]> <take_a_deep_brea "AppAraat:  https://cs.android.co"> Interesting. Thanks. For some reason I don't recall colon chars causing any issues in filenames. Must be my wonky memory heh.
+09:48:40 <take_a_deep_brea> no problem .
+09:48:56 <take_a_deep_brea> got that link from stack overflow
+09:51:28 <dazinism> asd: amjjma it is possible to enable seedvault backups for secondary user profiles https://hub.libranet.de/wiki/graphene-os/wiki/Backups
+09:52:09 <dazinism> Safest way to enter the adb commands is from another GrapheneOS phone
+09:52:44 <dazinism> https://github.com/KhunHtetzNaing/ADB-OTG
+09:53:54 <dazinism> Restoring backups to a secondary profile will take extra 'tricks'
+09:54:33 <dazinism> Oh yeah. I've not tried taking backup from secondary profile yet... should really test that.
+09:55:03 <dazinism> I'll add info about restoring to a secondary profile to the wiki.
+09:56:42 <dazinism> Acrually, I think, that if the seedvault backup is available when you install an app, which is in the backup, seedvault should install your backup data at the same time.
+09:57:01 <amjjma> dazinism Thank you for your help.
+09:57:05 <dazinism> Same as happens in main user profile
+09:57:11 <take_a_deep_brea> dazinism:  interesting app that one .
+09:59:46 <dazinism> take_a_deep_breath: yeah, somewhat helps against the security hole that is opened up by using adb
+10:00:35 <dazinism> Guess the best security advice would still be to avoid using adb if at all possible.
+10:01:52 <take_a_deep_brea> yeah , its after all a debug bridge , and the understanding is that you want to hear all the chatter
+10:02:58 <somenerd[m]> > got that link from stack overflow
+10:02:58 <somenerd[m]> https://cs.android.com is actually pretty cool for searching through code
+10:03:11 <take_a_deep_brea> yeahh
+10:03:32 <take_a_deep_brea> i just discovered it ...
+10:03:36 <somenerd[m]> Google's rather friendly to devs
+10:03:57 <take_a_deep_brea> i mean i knew it was there for chromium , but android one i just found out
+10:04:33 <dazinism> take_a_deep_breath: its not so much the chatter, more the huge trust that has to be placed in the device that you are granting adb access
+10:05:07 <dazinism> adb can do *so much* stuff to your phone
+10:05:42 <take_a_deep_brea> yeah , but i thought the chatter would contain compromising info too ...
+10:06:33 <somenerd[m]> > i mean i knew it was there for chromium , but android one i just found out
+10:06:33 <somenerd[m]> chromium too? cool
+10:07:06 <somenerd[m]> oh wow found it
+12:13:21 <Curunr[m]> I'm having trouble flashing GrapheneOS to my Pixel4a. I'm on Windows 10, phone is factory new. the install script fails when extracting system.img to disk, the error I get is "
+12:13:21 <Curunr[m]> Sending sparse 'system_a' 3/4 (262140 KB)          FAILED (Error reading sparse file)"
+12:23:57 <take_a_deep_brea> Curunír: please try the web installer : https://grapheneos.org/install/web
+12:27:31 <Curunr[m]> Thank you. I searched this chat for what others have done and I tried using another USB cable that was USB-A to USB-C instead of the included google one, and this worked better
+12:28:15 <take_a_deep_brea> Curunír:  what do you mean by better ? you mean the installation worked ?
+12:28:57 <Curunr[m]> yes, exactly. I suppose my computer has a bad USB-C port, then. Never really used it for anything before.
+12:29:21 <take_a_deep_brea> great ! welcome aboard !
+12:30:53 <Curunr[m]> thanks! 🙂
+12:32:15 <take_a_deep_brea> also if you are not aware there is the off-topic channel #grapheneos-offtopic:matrix.org  where you can ask about app compatiblity for other apps that you may have used before and want to use on graphene
+12:35:04 <Curunr[m]> nice, thanks! I'll keep it in mind. Is there some other FAQ resource other than the website and Matrix? My initial question was quite redundant but finding the info I required was difficult as chats are unstructured
+13:01:05 <somenerd[m]> you can use logbot to search the chats
+13:01:06 <somenerd[m]> https://freenode.logbot.info/grapheneos/
+13:01:44 <somenerd[m]> hopefully the offtopic will get logged as well
+13:02:04 <somenerd[m]> there are quite a few good conversations occuring there
+13:02:30 <take_a_deep_brea> yes
+13:06:20 <Curunr[m]> OK! Thanks! 😀
+13:13:02 <ztychr> Hello there - I can enter the "Home settings" from the home screen and enable grid options, but I can't figure out how to change layout. 3x4 for example. Is this supported?
+13:22:50 <m2tu[m]> hi guys
+13:23:13 <m2tu[m]> where do i find the debugging output img afte build ?
+14:49:41 <r0tt0r[m]> so i tried seedvault backup to usb otg attached storage, it does not work. the device control says the attached device controls it, when i want to switch it to "this device" to enable data transfer it says it couldnt change
+14:50:56 <Maxattax> I don't need google play services for apps I've *bought* via aurora, but it's just the in-app purchases that are a problem?
+15:23:37 <akrugosei[m]> <Maxattax "I don't need google play service"> Is GrapheneOS your daily driver?
+15:23:58 <Maxattax> akrugosei[m]: not yet, I'm trying to migrate off Google's teat lol
+15:25:13 <Maxattax> Samsung S8 with stock firmware -> Pixel 4a with Graphene is my hope... been de-googling gradually, have a tablet I tried LineageOS on with fdroid and Gapps
+15:30:19 <akrugosei[m]> Good, same here except I managed to get the pixel while still having a separate android.
+15:30:43 <akrugosei[m]> best of both worlds
+15:31:00 <akrugosei[m]> two different use cases
+15:44:31 <r0tt0r[m]> <r0tt0r[m] "so i tried seedvault backup to u"> ok solved, i had under security set to deny new usb peripherals
+15:49:30 <Rentapest> Hi. I am hoping someone might be able to help unlock the bootloader on my Pixel 3XL so I can install Graphene OS, please. I've hit a wall it seems
+15:59:24 <somenerd[m]> you can use the web install (unless you want to verify the signature)
+15:59:35 <somenerd[m]> https://grapheneos.org/install/web
+16:13:36 <manjusri[m]> I've asked this question on the Off Topic channel but I guess it is GrapheneOS related so hopefully me posting the question here is ok. Here goes
+16:13:37 <manjusri[m]> hey guys, I've installed GrapheneOS on my Pixel 3 yesterday and am quite happy with it, I do have one application left which I kinda need to have working and it seems it's requiring Google Play Services. I'm sure this has been asked a few times, though from my search I did not find any answer neither here nor on the GrapheneOS channel. What are my options?
+16:14:27 <somenerd[m]> trying an alternative may help
+16:14:29 <somenerd[m]> also it
+16:14:39 <somenerd[m]>  * also it's tangentially related, so it is offtopic
+16:15:11 <manjusri[m]> ok sorry, I'll remove it then.
+16:15:18 <somenerd[m]> no need
+16:16:14 <take_a_deep_brea> manjusri:  maybe there is a web version of the app ? some kind of cloud service ? bank app >?
+16:17:51 <faxing[m]> <manjusri[m] "hey guys, I've installed Graphen"> Try to find an alternative or use the PWA
+16:17:53 <manjusri[m]> that seems like a logical option to have but it's for a banking service specific to my country and they don't offer any alternatives
+16:17:54 <faxing[m]> if neither of those are an option, it might be worth looking into sacrificing some security and going with CalyxOS
+16:18:14 <faxing[m]> Calyx allows for MicroG but I don't think I can go into any more detaul than that in this room
+16:18:18 <faxing[m]>  * Calyx allows for MicroG but I don't think I can go into any more detail than that in this room
+16:18:21 <take_a_deep_brea> faxing:  please do not promote calyx OS here
+16:18:23 <somenerd[m]> CalyxOS isn't exactly recommended here
+16:18:38 <faxing[m]> Wasnt promoting it in any way
+16:18:44 <somenerd[m]> due to the projects not being friendly to each other
+16:18:57 <faxing[m]> I said if you're fine with sacrificing security - I use graphene daily
+16:19:02 <take_a_deep_brea> i see'
+16:19:09 <somenerd[m]> yeah I see what you mean
+16:19:19 <manjusri[m]> I've tried the other options and am sticking with Graphene, kudos to the team!
+16:19:25 <faxing[m]> how are they not friendly with each other? I thought c/////head was the only real problem?
+16:19:34 <take_a_deep_brea> sorry if i made a wrong implication
+16:19:55 <somenerd[m]> a lot of problems
+16:19:56 <faxing[m]> <take_a_deep_brea "sorry if i made a wrong implicat"> No all good, I worded it poorly
+16:20:05 <somenerd[m]> relating to techlore
+16:20:09 <somenerd[m]> and a few other things
+16:20:21 <faxing[m]> Oh?
+16:20:30 <faxing[m]> Is there anywhere where I could learn about the situation or?
+16:20:41 <somenerd[m]> not sure, it's a mess in general
+16:20:50 <somenerd[m]> search logbot maybe?
+16:22:54 <faxing[m]> I'll try to find something out, thanks.
+16:23:01 <somenerd[m]> strcat's talked a bit about the situation before in this room (or maybe even the offtopic)
+16:23:12 <take_a_deep_brea> faxing: its not just some security . calyx does not really have any of grapheneOS hardening , either that  or they are bent on keeping their security work a secret
+16:23:15 <hypokeimenon[m]> this doesn't seem pertinent to techincal discussions about the OS
+16:23:35 <take_a_deep_brea> hypokeimenon🖤‍❤️🏳️‍🌈: good point
+16:23:36 <take_a_deep_brea> sorry
+16:23:38 <somenerd[m]> true
+16:23:46 <take_a_deep_brea> sometimes one just gets carried away
+16:23:56 <faxing[m]> <take_a_deep_brea "faxing: its not just some securi"> I thought Calyx maintained the security model of AOSP while stripping out the gatbage telemetry, which Graphene greatly improved upon the privacy and security model of AOSP
+16:23:58 <faxing[m]> is that false?
+16:24:06 <faxing[m]> <hypokeimenon[m] "this doesn't seem pertinent to t"> You're right, sorry.
+16:24:13 <somenerd[m]> no need to strip out anything in AOSP
+16:24:18 <somenerd[m]> since it's already degoogled
+16:24:49 <take_a_deep_brea> faxing:  aosp does not have any telemetry . as far as i know
+16:25:26 <m2tu[m]> anyone can help me with some questions regarding to build from aosp
+16:25:43 <somenerd[m]> bit offtopic
+16:25:46 <motovate[m]> can someone please let me know where to get apps from - other than fdroid? I downloaded Signal from signal.org. Is that the best way to install Signal? tia
+16:25:54 <faxing[m]> Yes
+16:26:03 <m2tu[m]> Aurora store download from f-droid
+16:26:11 <m2tu[m]> or if u want forked signal
+16:26:15 <somenerd[m]> #grapheneos-offtopic:matrix.org for offtopic discussions
+16:26:16 <m2tu[m]> use mollyim
+16:26:16 <motovate[m]> thank you
+16:26:18 <faxing[m]> Sign the APK from Signal's site, get everything else from F-Droid
+16:26:36 <motovate[m]> <faxing[m] "Sign the APK from Signal's site,"> thanks
+16:26:36 <somenerd[m]> *get the signed APK
+16:26:37 <m2tu[m]> u can set specific password to delete db
+16:26:52 <faxing[m]> Molly is against ToS and not necessarily proven to be as trustworthy
+16:26:52 <somenerd[m]> not sign the APK
+16:26:55 <faxing[m]> I'd hold out
+16:27:14 <faxing[m]> <somenerd[m] "not sign the APK "> Yeah sorry, trying to multitask here lol
+16:27:35 <somenerd[m]> think that Signal was ok with Molly using the servers
+16:27:39 <somenerd[m]> don't have a source though
+16:27:42 <m2tu[m]> anyone have build aosp?
+16:27:43 <faxing[m]> > <@lelmister101:matrix.org> not sign the APK
+16:27:44 <faxing[m]>  * Yeah sorry, trying to multitask and it's not working out well lol
+16:27:51 <somenerd[m]> very offtopic though
+16:28:17 <faxing[m]> Signal hasn't taken down Molly yet, though they have publicly shown a disliking to other clients "leeching" off of their servers.
+16:28:25 <faxing[m]> <somenerd[m] "very offtopic though"> Yes, you're right
+16:28:30 <m2tu[m]> i try to build debug for debugging but when all build finish i cant find any output file from it ?
+16:28:45 <somenerd[m]> this is offtopic
+16:28:54 <somenerd[m]> don't think that people have built AOSP here
+16:29:03 <somenerd[m]> (maybe so though, idrk)
+16:29:16 <m2tu[m]> ok ahve to wait for admisn than
+16:30:25 <manjusri[m]> <motovate[m] "can someone please let me know w"> in f-droid you will find Aurora Store, which will allow you to anonymously download from the Google Play store. I've only discovered it yesterday so cannot say if this is a safe solution or not but it does seem to be
+16:30:47 <m2tu[m]> #### build completed successfully (02:03:46 (hh:mm:ss)) ####
+16:31:01 <m2tu[m]> 🙂
+16:31:07 <motovate[m]> <manjusri[m] "in f-droid you will find Aurora "> thank you
+16:33:12 <faxing[m]> Aurora is safe but I'd stick to F-Droid if you can
+16:33:26 <somenerd[m]> again very offtopic
+16:33:30 <faxing[m]> Just because you download an app anonymously doesn't mean that it doesn't contain tracking code from big tech companies. Also Graphene (and Android in general) has worse privacy from apps, remember
+16:33:40 <somenerd[m]> please go to #grapheneos-offtopic:matrix.org to continue
+16:34:14 <faxing[m]> <somenerd[m] "again very offtopic "> Just don't want people to have incorrect information and overconfidence on applications, I'll move to offtopic though, you're right.
+16:34:20 <m2tu[m]> ill sugest people to also downlaod apkstudio  or apktool
+16:34:36 <m2tu[m]> to decompile suspect apk and see their manifests and configs
+16:34:43 <faxing[m]> <m2tu[m] "ill sugest people to also downla"> #grapheneos-offtopic:matrix.org
+16:34:50 <faxing[m]> We all should be there lol
+16:35:06 <faxing[m]> also those websites are shady as anything
+16:35:36 <faxing[m]>  * also the websites for those apps look shady as anything
+18:41:01 <strcat> faxing[m]: it's not sacrificing 'some security', it's sacrificing *substantial* privacy and security from losing all of the GrapheneOS hardening
+18:41:15 <strcat> faxing[m]: read https://grapheneos.org/features and please don't give recommendations like that to people in the channel
+18:41:47 <faxing[m]> I already apologized for recommending it
+18:41:52 <faxing[m]> I'm aware of the downsides.
+18:42:00 <faxing[m]>  * I'm aware of the downsides and degredations.
+18:42:14 <faxing[m]>  * I'm aware of the downsides and substantial tradeoffs..
+18:42:16 <faxing[m]>  * I'm aware of the downsides and substantial tradeoffs.
+18:42:18 <strcat[m]> you didn't say that though
+18:44:18 <faxing[m]> I already said that I wasn't recommending or promoting it in any way, that it was only to be used if you're fine sacrificing your security, that I was unaware of the situation, and that I worded the original comment poorly.
+18:44:25 <faxing[m]> I mean I'm really not sure what else I can say
+18:45:37 <strcat[m]> you said sacrificing 'some security'
+18:45:41 <strcat[m]> when it's substantial security and privacy
+18:45:52 <strcat[m]> and what you were doing is pushing one of the talking points that people use to spread misinformation and promote it
+18:46:00 <faxing[m]> <faxing[m] "I said if you're fine with sacri">
+18:46:07 <faxing[m]> I very clearly followed up
+18:46:29 <strcat[m]> substantial security and privacy
+18:46:36 <strcat[m]> https://grapheneos.org/features
+18:46:56 <faxing[m]> Then I said "No all good (I was responding to someone else), I worded it poorly"
+18:49:28 <faxing[m]> I even said later "Yeah sorry, trying to multitask and it's not working out well lol"
+18:51:07 <faxing[m]> It was just an oversight, once again I apologize, I wasn't trying to fuck over the project or anything like that or cause an argument - I was just trying to help somebody out who was clearly having a really rough time with the lack of app compatibility and Calyx happened to be one of my two recommendations.
+18:51:16 <faxing[m]> Have a nice rest of your day
+19:16:17 <m2tu[m]> I have tryed to uplaod spyware apk intentionally and accepted everything .
+19:16:50 <m2tu[m]> all i could do was see my installed apps and pictures loaded on phne..
+19:17:40 <m2tu[m]> not keylogg, no webdata, no remote foto taking, no microphone...  do you know if this is graphene security enforcment or adnroid 11  it self?
+19:18:48 <strcat> you said you granted it access to everything
+19:18:58 <strcat> if you grant an app access to something, then it has access to that, you chose to grant it
+19:19:12 <strcat> so... if you grant it access to a file, or a directory, it has access to those
+19:19:21 <strcat> if you grant it access to the camera, it has access to that in the foreground
+19:19:48 <strcat> sensors, camera, microphone access can only be granted for access in the foreground
+19:20:11 <strcat> there isn't a way for apps to request to use it in the background, they have to run a foreground service that's visible to you if they want to use it when not being directly used
+19:21:24 <m2tu[m]> Yes... i did it intentionally ... but i got impressed how little i could get
+19:22:21 <m2tu[m]> with antoher os installed i can put mic on, take fotos and even capture signal messages
+19:23:19 <m2tu[m]> im very happy with graphene seems to be very harden
+19:25:49 <ry`an> does anyone here happen to know good suppliers for wholesale pixel phones?
+19:26:03 <ry`an> don't need to be brand new
+19:26:18 <ry`an> ideally 4xl
+19:27:45 <strcat[m]> m2tu: I mean, if you grant access to stuff on GrapheneOS, it does work
+19:27:57 <strcat[m]> m2tu:  if you go into Settings and grant something access to notifications management, it can do that
+19:28:05 <strcat[m]> we don't stop you doing the same things as AOSP
+19:28:11 <strcat[m]> it's your choice to do that
+19:28:24 <strcat[m]> the Settings permission manager makes it easy to browse through that stuff to review it
+19:34:47 <m2tu[m]> Yes i got you... but what i mean is even i granted acess, to gps, mic, camera and device admin... the spy soft could not get acess to mic and loc, just see installed fotos and which apps i had installed...
+19:35:32 <strcat[m]> m2tu: it can access the stuff you granted it access to
+19:35:32 <m2tu[m]> i see this  is very secure os
+19:35:44 <strcat[m]> it's just not possible to access it in the foreground because you can't grant access to that
+19:35:50 <strcat[m]> this has nothing to do with OS security
+19:35:55 <strcat[m]> you granted it access to those things
+19:35:58 <strcat[m]> so it has access to those things
+19:37:05 <strcat[m]> you're misinterpreting what's happening
+19:37:18 <strcat[m]> there is no magic to know when an app is malicious or not and that fundamentally cannot be implemented
+19:37:32 <strcat[m]> and anyway you specifically wanted to do this
+19:37:44 <strcat[m]> so it would be incorrect to call it malicious
+19:38:00 <strcat[m]> you explicitly wanted to install an app for monitoring those things and allowed it
+19:38:06 <strcat[m]> and it was allowed, because you allowed it
+19:38:32 <strcat[m]> sounds like the app wasn't updated to use a foreground service as required since Android 9 / 10
+19:38:38 <strcat[m]> to access those things when access has been granted
+19:39:11 <m2tu[m]> now im trying to make iptables to put direct in build forbidd all incommig trafic... but not that will help
+19:39:47 <m2tu[m]> think i must also deny out and just let what i know i will use.
+19:40:14 <strcat[m]> the OS already has a firewall and already filters traffic
+19:40:25 <strcat[m]> apps without INTERNET don't have direct or indirect access to the network
+19:40:38 <strcat[m]> it's not possible to do fine-grained filtering in a correct way
+19:40:43 <strcat[m]>  * it's not possible to do finer-grained filtering in a correct way
+19:41:10 <strcat[m]> m2tu: https://twitter.com/GrapheneOS/status/1356400290640125952
+19:41:17 <strcat[m]> suggest reading this thread (the thread, not the 1 tweet alone)
+19:42:14 <m2tu[m]> ouchh
+21:14:17 <ryan[m]4> Is it recommended to use the vanilla android messaging app?
+21:15:19 <strcat> ryan[m]4: it's recommended to avoid carrier-based calls and texts whenever possible
+21:15:37 <strcat> ryan[m]4: using the standard messaging app for carrier-based texts makes sense but you should avoid carrier-based texts
+21:15:45 <strcat> you shouldn't be using them enough that you want a fancier app
+21:15:55 <strcat> get your contacts to install Signal
+21:17:12 <tidria[m]> there was a scrolling bug with signal that was making it a hard sell for groups but I believe they fixed it in the update a few days ago
+21:17:59 <ryan[m]4> I'm using smsMatrix to route my messages through to element and i generally avoid carrier texts, i just wanted to be able to disable notifications for my Messages app but its not letting me
+21:18:15 <mr_hebi_san[m]> If only it were easier.  Most recent objection I hit from a friend is "but if I use apps like those then I just look suspicious and if they weren't looking at me they definitely will start"
+21:18:16 <ryan[m]4>  * @strcat I'm using smsMatrix to route my messages through to element and i generally avoid carrier texts, i just wanted to be able to disable notifications for my Messages app but its not letting me
+21:18:31 <ryan[m]4>  *  I'm using smsMatrix to route my messages through to element and i generally avoid carrier texts, i just wanted to be able to disable notifications for my Messages app but its not letting me
+21:18:41 <strcat> ryan[m]4: there are standard notification settings
+21:19:16 <strcat> open the messaging app and open up settings
+21:19:17 <strcat> there's a toggle
+21:19:50 <strcat[m]> the way those work is special
+21:20:12 <ryan[m]4> @strcat:matrix.org: it's greyed out
+21:20:29 <ryan[m]4> Can I post images in here?
+21:20:35 <strcat[m]> ryan: open the messaging app
+21:20:37 <strcat[m]> go to settings
+21:20:50 <strcat[m]> you're looking at the OS notification settings
+21:21:11 <ryan[m]4> Duh thanks. Was going through the app settings
+21:21:26 <strcat[m]> the way these notifications work is special
+21:21:27 <strcat[m]> for SMS
+21:35:22 <thetranstocommie> hey so, when I turn on "enable grid options" in the stock launcher, how do I actually change that grid
+22:16:35 <ztychr> thetranstocommie: asked that earlier today - might have been missed. not sure if it's supported
+22:17:11 <grabba[m]> <ryan[m]4 "I'm using smsMatrix to route my "> Do you text carrier numbers with that?
+22:22:35 <ryan[m]4> yep
+22:23:14 <ryan[m]4> grabba: yes it works as a 2 way proxy if you will.
+22:23:59 <ryan[m]4> grabba: the app routes messages from and to my element app, and also sets the name of the username in element based off what i have in my contacts
+22:24:33 <ryan[m]4> i love it
+22:24:51 <ryan[m]4> i love it as i'm able to text from any platform i want
+22:25:15 <wrt[m]> ryan:how did you install the bridge?
+22:26:28 <ryan[m]4> the bridge runs in the smsMatrix application, you create a user account in matrix for the bot, and after that it works pretty seamlessly for me.
+22:31:01 <wrt[m]> <ryan[m]4 "the bridge runs in the smsMatrix"> plse could you share a link to the app
+22:31:15 * ryan[m]4 uploaded an image: Capture.PNG (41KiB) < https://matrix.org/_matrix/media/r0/download/matrix.hagen.tech/CpgrgpcLwUPhFxueOnQPhstF/Capture.PNG >
+22:31:26 <ryan[m]4> https://github.com/tijder/SmsMatrix
+22:31:53 <wrt[m]> cheers
+22:33:22 <ryan[m]4> beware if you dont have your own matrix homeserver. I don't know how secure this would be if you're going to use a public homesever.
+22:33:47 <wrt[m]> noted
+22:42:55 <wrt[m]> so presumably if one had an old droid, one could keep the main sim at home running the bridge (is there similar for voice calls?), then use a data only sim for your Pixel.
+22:43:08 <ryan[m]4> yep
+22:43:42 <wrt[m]> pretty good solution for overseas travel
+22:43:54 <ryan[m]4> only caveat is you'd need to run your own matrix homeserver, as E2E is not supported
+22:44:14 <wrt[m]> ahhh the room can't be encrypted?
+22:44:23 <duck[m]> last commit was 14 months ago
+22:45:57 <ryan[m]4> <wrt[m] "ahhh the room can't be encrypted"> nope
+22:46:14 <wrt[m]> beyond https...
+22:46:36 <ryan[m]4> it is open source though, yes your data-in-transit is https
+22:47:20 <ryan[m]4> you could get a dedicated hosted homeserver from element its looking pretty cheap https://element.io/plans-and-pricing/pro
+22:47:22 <wrt[m]> https://gitlab.com/nova/mautrix-amp
+22:47:32 <ryan[m]4> or build your own in aws or something
+22:47:33 <ryan[m]4> or host at your home
+22:49:29 <wrt[m]> already with the ems.host you linked to...
+22:49:56 <ryan[m]4> you're good then, if you trust ems with your texts
+22:51:21 <wrt[m]> cheers!   fwiw - just seen that beeperhq have shared all their bridges https://gitlab.com/nova
+22:51:35 <duck[m]> use signal
+22:52:00 <wrt[m]> as default sms client?
+22:52:32 <duck[m]> sms is insecure
+22:52:40 <wrt[m]> ...
+22:53:00 <wrt[m]> it's not a channel of choice.
+22:54:03 <ryan[m]4> signal doesn't route your sms messages, so if you want to respond to an sms, you need your phone
+22:54:48 <ryan[m]4>  * signal doesn't route your sms messages, so if you want to respond/read an sms, you need your phone
+22:55:29 <ryan[m]4> i tried getting my mom to swtich to signal, that was a disaster
+22:56:06 <wrt[m]> HA! same
+23:12:52 <m2tu[m]> why does the build not reconize when i edit something on Android.mk file ?
+23:13:05 <m2tu[m]> once it did but second edit not
+23:14:51 <newbiegraphie> Its been about a year since I put grapheneos on my phone.  I did it today using the web installer.... really smooth experience.  Nice work to those involved

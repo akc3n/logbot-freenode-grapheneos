@@ -1,0 +1,605 @@
+00:12:23 <strcat[m]> https://git.launchpad.net/~chromium-team/chromium-browser/+git/snap-from-source/commit/?id=ed3b4b0217ee0959aed1dd4492ea889f63e0a598
+00:12:32 <strcat[m]> it sounds like they tried to fix their Chromium package at one point
+00:12:41 <strcat[m]> please file a new bug with them
+00:12:55 <strcat[m]> and I really mean it, please go file a bug with them about it
+00:13:30 <strcat[m]> they're likely to fix whatever is wrong with it since they want to promote snaps
+00:15:15 <GrapheneOS-Teleg> !Dominik shared a photo on Telegram with caption: ''
+00:15:45 <GrapheneOS-Teleg> <!Dominik> Anyone know why, ans how to avoid, it comes up when writing system,
+00:19:41 <GrapheneOS-Teleg> <!Dominik> Probably someone had the same issue
+00:29:05 <bauershades[m]> Lil bug: if I try to trim a video in the gallery app the video keeps stuttering
+00:32:28 <strcat[m]> gallery app is an AOSP app
+00:32:31 <strcat[m]> not something we develop
+00:32:37 <strcat[m]> and I'd recommend just using something better
+00:40:32 <bauershades[m]> <strcat[m] "and I'd recommend just using som"> Used signal 🙏
+00:45:07 <luberlufte[m]> Is the USB web installer mentioned on the grsphene docs available somewhere?
+00:45:26 <luberlufte[m]> Is it like the one on the Calyx site?
+00:45:39 <flawedworld[m]> <strcat[m] "they're likely to fix whatever i"> ```sudo snap connect chromium:raw-usb```
+00:46:50 <flawedworld[m]> strcat: its not broken, but it seems they just intend for you to manually give it access when needed
+00:47:19 <flawedworld[m]> might be worth adding to docs
+00:48:01 <strcat[m]> flawedworld: it needs root? seems pretty bad
+00:48:16 <strcat[m]> there should be a way to grant it access to a specific USB device and it should be able to just request it and have a dialog
+00:48:20 <strcat[m]> that's how it works on Android...
+00:48:46 <flawedworld[m]> agree, snap isnt exactly the best way to confine things...
+00:48:54 <strcat[m]> I'll just tell people to avoid Chromium on Ubuntu, running a CLI command isn't an acceptable part of the guide
+00:49:06 <strcat[m]> or I'll drop Ubuntu as officially supported for the web installer
+00:49:44 <flawedworld[m]> understood
+00:50:32 <strcat[m]> https://bugs.launchpad.net/ubuntu/+source/chromium-browser/+bug/1905457
+00:50:37 <strcat[m]> it's just broken
+00:50:46 <strcat[m]> it permits all kinds of arbitrary things that are not based on filesystem access
+00:51:14 <GrapheneOS-Teleg> <!Moof> Canonisoft strikes again
+00:51:35 <strcat[m]> flawedworld: so their regular Chromium package is a Snap now?
+00:51:43 <strcat[m]> I'll just tell people to avoid it, the workaround is unacceptable
+00:52:31 <strcat[m]> flawedworld: can you check that for me?
+00:52:40 <strcat[m]> I'll just say that Chromium is only supported on Debian and Arch Linux
+00:52:43 <strcat[m]> and explicitly not Ubuntu
+00:52:45 <GrapheneOS-Teleg> <!Moof> Yes this is why I don't advise people to use Ubuntu anymore. They just shove snap down your throat
+00:52:51 <flawedworld[m]> I'm looking into it rn for you strcat
+00:53:07 <strcat[m]> thanks
+00:53:28 <hypokeimenon[m]> Oofbuntu
+00:54:34 <madaidan[m]> Uwubuntu
+00:54:51 <flawedworld[m]> strcat: they seem to have fully moved to snapd for 20.04 and newer
+00:54:56 <sjsndnjdejd> <strcat[m] "flawedworld: so their regular Ch"> Yes
+00:55:09 <flawedworld[m]> 18.04 packages traditional chromium still
+00:56:07 <bauershades[m]> <strcat[m] "gallery app is an AOSP app"> Doesn't that make the os vulnerable if you download a random video or something? Or does the sandboxing take care of that 🤔
+00:56:42 <flawedworld[m]> <bauershades[m] "Doesn't that make the os vulnera"> Don't get what you mean. Nothing inherently vulnerable about it being an AOSP app.
+00:56:56 <sjsndnjdejd> Almost Linux Mint dropped chromium package entirely because of this
+00:57:05 <strcat[m]> bauershades: I don't understand how you jump to that kind of weird conclusion
+00:57:17 <hypokeimenon[m]> Try not to download stuff from shady sources anyway
+00:57:29 <sjsndnjdejd> * Linux Mint dropped chromium package entirely because of this
+00:57:33 <strcat[m]> https://github.com/GrapheneOS/grapheneos.org/commit/9c0ee77d2904446c1db1905ac6d229c691b95a97
+00:57:56 <hypokeimenon[m]> <sjsndnjdejd "Almost Linux Mint dropped chromi"> Oh yeah.
+00:59:11 <bauershades[m]> <strcat[m] "bauershades: I don't understand "> I'm just learning. So don't blame me if i ask stupid questions 🙏 i will learn in the long run
+00:59:38 <flawedworld[m]> btw strcat nexus launcher has android.permission.WRITE_SECURE_SETTINGS on stock which currently I am guessing is what is being used to grant notification permissions. I don't see where they are doing notification access explicitly.
+00:59:59 * flawedworld[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/YcIQxjbKuSTDLLSjEOuLqCeY/message.txt >
+01:00:05 <flawedworld[m]> unsure tho tbh
+01:01:06 <hypokeimenon[m]> * Oh yeah. https://blog.linuxmint.com/?p=3906
+01:01:59 <GrapheneOS-Teleg> <i​mabug> does anyone know any way to get notified of lives on youtube? since they stopped sending emails, I have not found an alternative to it
+01:03:14 <strcat[m]> flawedworld: privileged permission whitelists don't do what you think
+01:03:25 <strcat[m]> flawedworld: they just allow the app to have the permission it declares in the manifest if it's a `privileged` permission
+01:03:46 <strcat[m]> flawedworld: doesn't do anything for non-`privileged` permissions and it only does something for a `priv-app` which it isn't
+01:04:22 <strcat[m]> flawedworld: the sole purpose is to require that a `priv-app` has `privileged` permissions whitelisted in a central place rather than being able to obtain any via the fact that they are `priv-app` and declare it in their manifest
+01:05:13 <strcat[m]> flawedworld: the reason for it is because the OS supports out-of-band updates for app components and a vendor may bundle third party apps as priv-apps, but they shouldn't be able to get more privileged permissions through app updates
+01:06:06 <strcat[m]> flawedworld: if it's not a permission marked `privileged` that's obtained through being a priv-app then it just doesn't do anything, it's not a way to grant default permissions or other kinds
+01:09:49 <flawedworld[m]> Ahh I see. This certainly clears up things for me, will be putting that in my notes straight away. Thank you for the explanation strcat
+01:31:33 <sjsndnjdejd> <Gui_Do "hi guys, are graphene developers"> You can tell by looking at the fonts on his screenshots btw
+02:22:55 <strcat> sjsndnjdejd: I use Windows-style font rendering on Linux so it doesn't look that much different
+02:23:54 <strcat> same monitor (2x) for both which is ~161dpi (4k, 27 inch)
+02:24:59 <strcat> Windows style font rendering isn't going to look good in a screenshot since it's doing subpixel hinting, etc.
+02:25:21 <strcat> if I had 300dpi monitors then I'd probably turn that stuff off
+02:25:40 <strcat> like how Android renders for high dpi screens
+02:25:55 <strcat> (or macOS/iOS)
+02:28:11 <GrapheneOS-Teleg> <!Gabe> hi m8, your photo didnt come thru on matrix, are you using  a pixel 2 device by any chance? For reference to anyone on matrix, WebUSB installer timed out after 10000ms in the screenshot on telegram.
+03:10:17 <GrapheneOS-Teleg> aks3n (@a​kc3n) has joined the Telegram Group!
+04:23:42 <GrapheneOS-Teleg> Justice (@J​usLaw) has joined the Telegram Group!
+04:29:35 <bard66> Trying to install graphene, but having issues with the flashing step. I have the latest platform/img/etc. The bat just opens and instantly closes. No error/messages or anything. Any ideas? (windows 10os)
+04:32:50 <manjaroborker> Anyone in here right now?
+04:33:23 <manjaroborker> Had a few questions about graphene OS
+04:34:46 <manjaroborker> What is the best U.S Tmobile 4G phone that I can use with Graphene OS? Most of them seem to have a locked bootloader.
+04:35:10 <manjaroborker> Also does Graphene come with F-Droid already installed?
+04:38:26 <TheJollyRoger> bard66: What's happening there is you're not following the instructions. You'll want to go to https://grapheneos.org/install/web if you can't use the commandline.
+04:39:12 <TheJollyRoger> We recommend the web install method as a harm reduction strategy: too many people have disregarded the official instructions, or followed incorrect, hinky, and outdated third-party installation guides and ended up with bricked/unbootable devices.
+04:40:47 <TheJollyRoger> manjaroborker: The best phone for running GrapheneOS is the 5, carrier unlocked, and purchased directly from the Google Store, or if you are on a budget and money is tight, the 4a. If T-Mobile does not require privileged management drivers to be installed from your carrier, or T-Mobile allows Bring-Your-Own Devices, it should work. We don't recommend resellers since many of them sell you locked
+04:40:49 <TheJollyRoger> devices and don't tell you until it's too late.
+04:41:27 <TheJollyRoger> manjaroborker: GrapheneOS does not come with an application store. If you want F-Droid, you'll have to download and install it yourself, and add it to the "install other apps" permissions whitelist.
+04:43:30 <TheJollyRoger> bard66: If you want to install via the commandline, you must follow the official instructions, or risk a brick. The commandline installation method is now only intended for reverse compatibility with users who have preexisting setups. You get no advantage from using it except for the warm fuzzy feeling of feeling like a Linux nerd. It is faster, easier, and safer for you to simply use the Web
+04:43:32 <TheJollyRoger> Installer.
+04:43:36 <bard66> your web version gives me the error "Error: Failed to construct 'Worker': Access to the script at 'https://grapheneos.org/js/fastboot/dist/vendor/z-worker-pako.js' is denied by the document's Content Security Policy."
+04:43:51 <bard66> when trying to flash
+04:44:06 <strcat[m]> bard66: sounds like you have broken extensions / antivirus software
+04:44:16 <strcat[m]> bard66: open up the web console there and see what the error is
+04:44:19 <strcat[m]> copy paste it here
+04:44:28 <strcat[m]> try again, copy-paste the few lines of context with the error
+04:44:53 <strcat[m]> bard66: the official CLI guide is https://grapheneos.org/install/cli and you shouldn't expect that incorrect unofficial guides will work
+04:44:54 <TheJollyRoger> bard66: If it gives you more than three lines, don't copy paste the entire error message or you may trip Freenode's antispam protection system.
+04:45:31 <bard66> lol yes I'm following directly from the website .-.
+04:45:33 <TheJollyRoger> If it does, you may want to use a paste service, to avoid being klined from freenode by the automated anti-spam bot.
+04:45:55 <TheJollyRoger> bard66: the official instructions tell you you will need to use powershell, not to click on the flash all script.
+04:45:59 <strcat[m]> bard66: you said you were opening the bat file which isn't what the instructions say to do
+04:46:25 <strcat[m]> bard66: use web console to get a more detailed error for us from the web installer
+04:46:31 <strcat[m]> as I said, you have broken extensions and/or antivirus software
+04:46:53 <strcat[m]> they're injecting code into the site and breaking it since they incorrectly modify the Content-Security-Policy header
+04:47:53 <bard66> I used powershell and got errors as well:)  I will try turning off my av and using turning off extensions
+04:48:25 <strcat[m]> bard66: you didn't provide that here though, what you said earlier was that doing something not in the guide which can't work (opening the script) wasn't working
+04:48:30 <strcat[m]> the CLI install guide works when followed
+04:48:39 <strcat[m]> if you improvise or use unofficial guides, it won't work
+04:49:30 <bard66> Tried the install guide, and powershell wouldn't flash, tried to follow a recent guide from youtube to see if I was messing up something, didnt work, so came here:)  Will turn stuff off and come back
+04:49:33 <bard66> Thanks
+04:49:46 <strcat[m]> YouTube guides are nearly all wrong and often dangerous
+04:50:06 <strcat[m]> you probably missed a step or something like that with the official guide
+04:50:06 <TheJollyRoger> bard66: The youtube guides will usually end you up with a bricked device. You dodged a bullet.
+04:50:11 <strcat[m]> would need to see the error to know
+04:51:06 <bard66> Unless grapheneos is insanely different install process than any other OS, I was just doing the general steps (following the guide and comparing to google)
+04:51:27 <TheJollyRoger> Most of them also tell you to download a shady thirdparty "minimal adb" or installing shady third party drivers. Don't know what they contain, and they also ask you to run the installer as administrator.
+04:51:54 <bard66> yeah don't trust random links .-.
+04:51:54 <TheJollyRoger> This minimal adb usually won't support autodetection. In some cases it might work, in most others, it usually just flashes the wrong slot and leaves the device unbootable.
+04:52:02 <strcat[m]> bard66: it's important to precisely follow the install guide
+04:52:11 <strcat[m]> bard66: it's not different from installing the stock OS
+04:52:27 <strcat[m]> following the general steps and skipping stuff isn't going to work though
+04:52:39 <TheJollyRoger> bard66: you'll want to disregard any other advice anywhere else, and just rely on the official guide. Read it carefully before you begin, in its entirety.
+04:52:41 <strcat[m]> you probably missed something like adding the platform-tools directory to `PATH`
+04:53:01 <TheJollyRoger> The devil is in the details, and they're all carefully explained there.
+04:54:44 <TheJollyRoger> Got to go for a bit.
+05:07:16 <bard66> Error: Failed to construct 'Worker': Access to the script at 'https://grapheneos.org/js/fastboot/dist/vendor/z-worker-pako.js' is denied by the document's Content Security Policy.
+05:07:26 <bard66> Disabled AV, disabled all extensions, any other ideas?
+05:07:49 <bard66> oh yeah error code
+05:08:49 <strcat[m]> bard66: open web console
+05:08:53 <strcat[m]> show what it outputs there
+05:08:58 <strcat[m]> more context
+05:09:09 <strcat[m]> it shows the policy that got violated
+05:27:04 <bard67> zzz got disconnected, not sure if you responded or not
+05:29:55 <sphinx[m]> bard67: https://freenode.logbot.info/grapheneos/20210311#c7212322
+05:30:29 <bard67> Oh you didnt see my msg?
+05:31:34 <bard67> hmmm switched to brave and seems to be working
+05:36:13 <bard67> Yup, worked like a charm....
+06:20:33 <manjaroborker> TheJollyRoger: Sorry I'm back now, had to go eat. Now when you say the best phone is the "5", I take it you mean the Google Nexus 5? That's the only 5 I've really heard of before
+06:21:56 <manjaroborker> Next question - Is there a supported list of phones somewhere? Looking around on the site, I don't see one readily available. (i assume any phone on such a list would be known to have an unlocked bootloader)
+06:24:04 <sphinx[m]> https://grapheneos.org/faq#device-support
+06:24:49 <mr_hebi_san[m]> https://grapheneos.org/faq#recommended-devices
+06:29:16 <manjaroborker> So no qualms with using a google product? The OS is hardened and more secure, but what about the phone's hardware? Seems like google would be happy to make the entire hardware one big spy machine. Like intel's management engine built into the CPU's.
+06:30:44 <manjaroborker> There's also the issues with using 5G. Knowing what I know about it, I want to stay with 4G as long as humanly possible because 5G just makes it super easy for them to invade your privacy.
+06:33:28 <strcat[m]> manjaroborker: I suggest reading the information on the siter
+06:33:31 <strcat[m]>  * manjaroborker: I suggest reading the information on the site
+06:33:35 <strcat[m]> we choose the most private and secure available hardware
+06:33:48 <strcat[m]> I'm not sure how you think 5G reduces privacy
+06:34:17 <strcat[m]> I suggest finding reliable, trustworthy sources of information
+06:36:13 <strcat> https://grapheneos.org/usage#lte-only-mode exists for attack surface reduction
+06:43:18 <manjaroborker> strcat: Do you know much about 5G? It's much easier to determine your exact location within about 3 feet. Often times, you'll be the only one making use of a particular beam. Meaning they know where you are, and when.
+06:43:57 <strcat> not at all something specific to 5G
+06:44:08 <strcat> and again you can use either LTE and below or LTE only
+06:46:07 <nonie689[m]> How can I support grapheneos strcat
+06:46:18 <nonie689[m]> Pls pm
+06:47:03 <nonie689[m]> I have found some security holed
+06:47:10 <nonie689[m]> Holes
+06:47:52 <zzxx123_> Tf
+06:48:01 <nonie689[m]> Tf?
+06:48:41 <zzxx123_> That was some low effort trolling
+06:48:53 <nonie689[m]> Hö
+06:49:20 <nonie689[m]> Doent unterstand
+06:51:41 <strcat[m]> nonie689: you've already broken channel rules before, suggest not starting again
+06:52:44 <strcat[m]> https://freenode.logbot.info/grapheneos/20210303#c7114670
+06:52:48 <strcat[m]> is it just trolling or what?
+06:52:59 <nonie689[m]> I just want to help
+06:53:04 <nonie689[m]> Ne
+06:53:05 <nonie689[m]> No
+06:53:21 <nonie689[m]> How can i report bugs
+06:53:32 <strcat[m]> https://github.com/GrapheneOS/os_issue_tracker
+06:54:46 <Guest_GrapheneOS> hey
+06:54:59 <Guest_GrapheneOS> I'm a grapheneOS user
+06:55:14 <Guest_GrapheneOS> some really nasty things are being said
+06:55:17 <Guest_GrapheneOS> https://lemmy.ml/post/34228
+07:00:27 <nonie689[m]> Have report some bugs
+07:04:29 <strcat[m]> nonie689: please search for existing issues first
+07:04:36 <strcat[m]> https://github.com/GrapheneOS/os_issue_tracker/issues
+07:04:39 <strcat[m]> really isn't helpful
+07:09:25 <strcat[m]> nonie689: all you've really done is make it so I need to spend 15 minutes closing these
+07:13:58 <pizzaeater69[m]> :D
+07:14:49 <megan-riley> strcat do you know of any good texting apps for grahene, since the one which comes installed is dated? I was lookng for one besides Signal because there is a large group of elderly folks that I text, and I can't get them to load Signal.
+07:15:17 <strcat[m]> doesn't really need to be addressed to me
+07:15:36 <megan-riley> k
+07:18:09 <akc3n[m]> <megan-riley "strcat do you know of any good t"> #grapheneos-offtopic is available too, just an FYI.
+07:20:10 <pizzaeater69[m]> Signal is the most easy and secure tho
+07:20:30 <strcat[m]> nonie689: we're not really looking for feature requests, there's a lot planned already
+07:20:46 <strcat[m]> nonie689: I reworded https://github.com/GrapheneOS/os_issue_tracker/issues/488 and left it open but I don't really think we want that so it'll probably be closed
+07:20:49 <megan-riley> akc3n[m] Thanks. Yes, I noticed that after I had already posted. I'm a n00b, so a little leeway by all would be much appreciated by me.
+07:20:55 <strcat[m]> the Bluetooth auto-turn off feature is already planned but has to be cleaned up
+07:21:11 <strcat[m]> the rest I think doesn't make sense or isn't wanted
+07:21:28 <strcat[m]> what we need are developers to help with implementing the features, including doing projects that we can fund
+07:22:39 <pizzaeater69[m]> Im studying software engineering.. I hope im able to help in 1-3 years in actual developing and not just helping people in here
+07:25:16 <akc3n[m]> <megan-riley "akc3n Thanks. Yes, I noticed tha"> If you do by chance end up joining the offtopic channel on your irc client, I maybe able to help contribute with answering your question about text messaging. I don't want to clutter up this main channel IMHO with different app suggestions or discussions.
+07:57:04 <battlepad[m]> Just flashed GrapheneOS to my new pixel, thanks Daniel and the team for making it so easy via the web installer!
+07:57:04 <battlepad[m]> As this is my first custom ROM, I have a few questions to ask
+07:57:20 <TheJollyRoger> Ahoy battlepad[m]! What do ye wish to know?
+07:57:31 <TheJollyRoger> Welcome aboard the good ship GrapheneOS!
+07:57:57 <rhythm[m]> when we will get system wide dark mode like stock????
+07:58:38 <TheJollyRoger> rhythm[m]: Pull Requests and code submissions are open for that, they'll happen when someone adds the functionality to the remaining apps that don't respect dark mode, such as dialer and the contacts app.
+07:58:50 <nscnt[m]> rhythm: What do you mean? The system has a dark theme and apps are responsible for themselves.
+07:59:09 <TheJollyRoger> Yeah, what nscnt[m] said.
+07:59:14 <rhythm[m]> <TheJollyRoger "rhythm: Pull Requests and code s"> calculator
+07:59:52 * battlepad[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/QHpNYPGoToWHWNYSQxYSLNBb/message.txt >
+08:00:04 <rhythm[m]> <nscnt[m] "rhythm: What do you mean? The sy"> pitch black like stock
+08:00:19 <TheJollyRoger> battlepad[m], I'll answer yer questions in order!
+08:00:42 <strcat> rhythm[m]: there is a system wide dark mode
+08:00:53 <strcat> toggle in the same place
+08:01:20 <TheJollyRoger> 1: Yarr, it be perfectly normal for your phone, when running GrapheneOS, to say it be loading a different operating system. THis should happen every time you boot, as long as you are running GrapheneOS. What the phone is telling you, is that it has keys in the secure element that are verifying the authenticity of the system image, but the keys, rather than belong to Google's, belong to someone
+08:01:22 <TheJollyRoger> else, in this case, they belong to Daniel Micay.
+08:01:42 <battlepad[m]> ahh i see
+08:02:13 <TheJollyRoger> You can verify that they are indeed Daniel Micay's keys, by either using Auditor's remote attestation, or local validation if you have another phone that's Android 7.0 or later and can obtain the app from Google App Store, or sideload from Github.
+08:02:18 <TheJollyRoger> As for 2:
+08:02:21 <battlepad[m]> to add on for question 2 regarding the auditor app, are there any possible alternate solutions for me?
+08:02:26 <TheJollyRoger> Yes there are!
+08:02:36 <TheJollyRoger> GrapheneOS runs its own in-house attestation server that can do remote pairing.
+08:03:01 <TheJollyRoger> In this arrangement, rather than be done over a QR code and a camera, your phone will be instead paired, remotely, via the internet.
+08:03:11 <battlepad[m]> Oh so even without a phone that supports the auditor app, I can just use the attenstation server to scan my phone?
+08:03:28 <TheJollyRoger> You'll need to use a QR code to set up the initial pairing, along with a username, a password, and an E-mail address that supports server to server TLS.
+08:03:29 <TheJollyRoger> Yep!
+08:03:50 <battlepad[m]> Cool, for an email that supports server to server TLS would protonmail suffice?
+08:03:54 <TheJollyRoger> Yes.
+08:04:40 <TheJollyRoger> What will happen is that the Attestation Server will expect your phone to contact it periodically to respond to a challenge that it sends. If the phone fails to check in, or it checks in and the responses it gives to the challenges are incorrect, it will dispatch an E-mail to your E-mail address to let you know the phone is failing attestation.
+08:05:24 <TheJollyRoger> This allows you to self-monitor your device to ensure that there's no funny business involved: nobody's switched the keys on you, your phone's system image hasn't been altered or compromised by malware, etc.
+08:05:43 <nscnt[m]> rhythm: The system dark theme is pitch black
+08:06:09 <TheJollyRoger> With the Attestation Server, no news is good news.
+08:06:13 <nscnt[m]> If you run the latest release
+08:06:36 <TheJollyRoger> You can then log in with your username and password to view your attestation/audit history.
+08:06:59 <TheJollyRoger> When the device was asked to attest to the authenticity of its operating system, and what information it returned.
+08:07:29 <TheJollyRoger> battlepad[m]: One more thing I forgot to mention with respect to your first question:
+08:07:32 <nscnt[m]> rhythm: The dark theme should be the same as stock OS at this point
+08:08:45 <TheJollyRoger> It's only if that warning screen turns orange and gives you an ominous "Software integrity is not guaranteed" warning do you have to worry. That means that the bootloader's unlocked and all the bootloader security features have been disabled. If you want to take an extra safeguard to prevent that from happening, what you can do is you can go back into developer options, and slide "OEM Unlock"
+08:08:46 <TheJollyRoger> back to "Off", then switch off developer options, and reboot the phone.
+08:09:34 <TheJollyRoger> This will ensure that if someone wants to unlock your bootloader, if they don't have your password, they will have to factory reset your phone by rebooting to recovery and doing the factory reset from recovery before they can get at that switch again.
+08:10:12 <rhythm[m]> i dont have extra phone. how to get auditor server link
+08:10:19 <TheJollyRoger> This does add some protection, so it's highly advisable to take that extra step even if it means one extra reboot. No data will be lost in this process.
+08:10:34 <TheJollyRoger> rhythm[m]: You'll have to go to https://attestation.app/tutorial and scroll to the part about remote attestation.
+08:10:52 <rhythm[m]> <TheJollyRoger "rhythm: You'll have to go to htt"> thnks
+08:11:10 <TheJollyRoger> You'll need an E-mail address and a password to talk to the attestion server, and for it to talk to you.
+08:11:14 <TheJollyRoger> Don't lose the password, we can't reset it.
+08:11:32 <TheJollyRoger> *Don't lose the password, you can't reset it.
+08:12:21 <TheJollyRoger> Rrrrgh, come on Freenode Tor Gateway...
+08:14:28 <TheJollyRoger> battlepad[m]: I don't think the default GrapheneOS Keyboard height is adjustable at this point in time. Unfortunately, we don't have many options there, and we recommend that you simply use the GrapheneOS keyboard that the operating system comes with. Other keyboards may not be nearly as trustworthy, and the keyboard sits in an extremely privileged position, given that it handles your passwords
+08:14:30 <TheJollyRoger> and personal information.
+08:14:44 <TheJollyRoger> battlepad[m]: do you have any other questions?
+08:15:20 <battlepad[m]> noted
+08:15:34 <battlepad[m]> that's all my questions for now, thanks for the prompt replies!
+08:15:41 <TheJollyRoger> Yarr! Ye be welcome!
+08:16:14 <TheJollyRoger> Welcome aboard the ship, if ye find GrapheneOS helpful, please consider donating at https://grapheneos.org/donate - donations keep this ship sailing on its voyage to a more secure and a more private tomorrow!
+08:22:20 <battlepad[m]> oh yeah, for the remote verification i made an account, and added an alert email. Then, using the auditor app i used enable remote verification and scanned the QR code on screen
+08:22:34 <battlepad[m]> is that all? or did i miss any steps
+08:22:43 <battlepad[m]>  * oh yeah, for the remote verification i made an account, and added an alert email and clicked Set configuration. Then, using the auditor app i used enable remote verification and scanned the QR code on screen
+08:24:12 <TheJollyRoger> battlepad[m]: nope, that's about it. Your device data should appear in your account in attestation.app.
+08:24:24 <TheJollyRoger> You can log in and then go and check it out.
+08:25:14 <battlepad[m]> ah, i refreshed the page and scrolled down, saw all the device info
+08:25:18 <battlepad[m]> nice
+08:25:19 <TheJollyRoger> It will show you a series of things such as "Verified Device Information" which includes your device, the operating system, the operating system version and patch level, the vendor patch level, and boot patch level.
+08:25:21 <TheJollyRoger> Yep!
+08:25:40 <TheJollyRoger> Now - verified boot hash will change from time to time. Each time the operating system is updated, that will be different.
+08:26:51 <TheJollyRoger> "Security Level" will tell you how secure the attestation is: on Pixels, they use the Strongbox keymaster API, and all the cryptographic operations take place within a physically isolated, secure coprocessor, the Titan M Hardware Security Module.
+08:27:42 <TheJollyRoger> Auditor and Attestation Server can audit other devices, but depending on the OEM, some OEMs don't use the same measures. Some use the ARM TrustZone, or other ways of storing the keys.
+08:28:16 <strcat[m]> we also haven't been adding other devices lately
+08:28:35 <strcat[m]> hardly anyone was using the support we added for more devices
+08:28:46 <strcat[m]> doesn't make much sense to invest substantial effort into it while getting nothing back
+08:28:50 <TheJollyRoger> Finally, it'll also tell you a bit about the operating system status -- a few things like whether or not you have device administrators, or have debugging features active, since those can have a *big* impact on security.
+08:28:53 <strcat[m]> (auditing stock OS on broader range of devices)
+08:29:30 <TheJollyRoger> Oh, I see :(
+08:30:49 <battlepad[m]> <TheJollyRoger "Finally, it'll also tell you a b"> Yup, I find these info fields quite useful
+08:31:25 <TheJollyRoger> Excellent!
+08:32:18 <strcat[m]> the reason it has those is so you have a reliable way of fetching them not requiring trusting the UI on the phone
+08:32:22 <strcat[m]> we plan to add more of that
+08:41:10 <battlepad[m]> sounds great, looking forward to it
+08:41:46 <battlepad[m]> although a small feedback i can add to the remote verification is maybe send an email saying "you've successfully added your device" might be a nice touch
+08:42:50 <TheJollyRoger> Sure. If I recall right, we've got an issue for that open, hopefully we'll be able to get some headway on that soon, since that's a good UI thing to have.
+08:43:39 <battlepad[m]> yup, also on the website the wording regarding remote verification was a little unclear so had to ask here
+08:43:47 <TheJollyRoger> Got it.
+08:44:53 <battlepad[m]> perhaps rephrase it to "If you don't have access to another phone that officially supports the auditor app, you can remotely verify your phone from our remote verification service"
+08:45:01 <rhythm[m]> fdroid or aurora or foxy - which one shld i use on graphene?
+08:45:08 <battlepad[m]> fdroid/aurora
+08:45:24 <TheJollyRoger> battlepad[m]: Sure, I'll see what rewording I can send in.
+08:45:26 <rhythm[m]> thnks
+08:45:35 <TheJollyRoger> I gotta head off for the night though, so I'll see you guys later. Sleep well, shipmates!
+08:45:56 <battlepad[m]> both are good. however from my experience aurora has some hiccups from time to time so go settings > network > enable custom tokenizer
+08:46:09 <battlepad[m]> thanks for all the help, good night TheJollyRoger
+08:50:34 <rhythm[m]> <battlepad[m] "both are good. however from my e"> what everythng fine fr me. just use nightly
+09:03:35 <pizzaeater69[m]> It works most of the time but somethimes have to enable custom tokenizer to get it working
+11:58:45 <GrapheneOS-Teleg> Владимир (@v​ovaputin1488) has joined the Telegram Group!
+11:59:07 <GrapheneOS-Teleg> <v​ovaputin1488> Hey there, have some troubles with web install, is there anyone can help?
+12:00:15 <GrapheneOS-Teleg> <v​ovaputin1488> I've downloaded the release, flashed it. but see the bootloader screen
+12:00:51 <GrapheneOS-Teleg> <v​ovaputin1488> I can run the GrapheneOS only on UNLOCKED bootloader, when I lock it — getting android can't find valid operating system
+12:01:24 <GrapheneOS-Teleg> <v​ovaputin1488> Here are the latest logsResponse: INFO Flashing partition hyp_acommon.js:5 Response: INFO Flashing partition abl_acommon.js:5 Response: INFO Flashing partition keymaster_acommon.js:5 Response: INFO Flashing partition cmnlib_acommon.js:5 Response: INFO Flashing partition cmnlib64_acommon.js:5 Response: INFO Flashing partition devcfg_acommon.js:5 Response: INFO Flashing partition qupfw_acommon.js:5 Response: INFO Flashi
+12:06:18 <GrapheneOS-Teleg> <v​ovaputin1488> Yeah, I think faced same problem. Restarted installation but it is still on Restarting device state
+12:14:55 <strcat[m]> doesn't sound like you're completing flashing
+12:15:06 <strcat[m]> you have to complete flashing before you can lock
+12:16:37 <GrapheneOS-Teleg> <v​ovaputin1488> I think the problem could in in brave, because after I've locked it — stupid async promises were resolved and error appeared. Will try the edge now
+12:17:30 <strcat[m]> doubt it was a browser issue
+12:17:40 <strcat[m]> probably either have a broken USB cable / port
+12:17:46 <strcat[m]> or you interrupted the installation process
+12:18:22 <GrapheneOS-Teleg> <v​ovaputin1488> It was stuck on ` Restarting device ...` state
+12:18:33 <GrapheneOS-Teleg> <v​ovaputin1488> And just nothing happened
+12:20:33 <GrapheneOS-Teleg> <v​ovaputin1488> Maybe someone have already installed via web-install and faced same things?
+12:20:45 <strcat[m]> the web installer works fine
+12:20:50 <strcat[m]> you interrupted the installation
+12:21:01 <strcat[m]> it was only just started and needed to finish
+12:21:07 <GrapheneOS-Teleg> <v​ovaputin1488> so the Restarting device is good state?
+12:21:08 <strcat[m]> you can't lock before it finishes
+12:21:16 <GrapheneOS-Teleg> <v​ovaputin1488> It was stucked for 20 mins
+12:21:19 <strcat[m]> it's supposed to restart the device
+12:21:23 <strcat[m]> it only takes a few seconds
+12:21:26 <strcat[m]> as I said earlier
+12:21:31 <strcat[m]> you probably have a faulty USB cable/port
+12:21:35 <strcat[m]> it's covered in the guide
+12:21:46 <strcat[m]> if you're not using the cable that came with the phone that's very likely the problem
+12:22:15 <donkykong[m]> It got stuck for me one time also I refreshed the page and then it loaded
+12:22:22 <strcat[m]> there's no reason you need to wait more than 5 seconds without progress
+12:22:29 <GrapheneOS-Teleg> <v​ovaputin1488> I'm using the original cable with the USB-C port
+12:22:35 <GrapheneOS-Teleg> <v​ovaputin1488> Ok, thanks, will try smth
+12:22:38 <donkykong[m]> Other then that web install has been flawless
+12:22:39 <strcat[m]> the port is probably broken then
+12:22:47 <strcat[m]> donkykong: again sounds like a USB issue
+12:22:54 <strcat[m]> if the USB connection drops it will stall unless it recovers
+12:23:24 <GrapheneOS-Teleg> <v​ovaputin1488> so in the edge case I can try to replug the usb?
+12:23:27 <strcat[m]> the guides cover the importance of having a reliable USB connection and the fact that this is a common (the most common) source of issues
+12:23:30 <GrapheneOS-Teleg> <v​ovaputin1488> Or it will broke the installation
+12:23:52 <strcat[m]> unlikely you can do that
+12:23:58 <strcat[m]> you need a reliable USB connection
+12:24:08 <strcat[m]> I suggest using a non-broken computer, or at least using a different port
+12:24:14 <strcat[m]> read the section it has in prerequisites on USB
+12:24:17 <strcat[m]> it's important
+12:25:28 <strcat[m]> > Many widely distributed USB cables and hubs are broken and are the most common source of issues for installing GrapheneOS.
+12:25:33 <strcat[m]> this applies to USB ports on computers too
+12:25:41 <GrapheneOS-Teleg> <v​ovaputin1488> Ok thanks, I'll try. Couldn't it be the problem with drivers also? I have installed official once from google developers
+12:25:55 <strcat[m]> often laptops will have some more native USB ports and some that go via a broken hub
+12:26:13 <strcat[m]> it's a USB cable/port issue
+12:26:25 <strcat[m]> the USB connection is dropping
+12:26:40 <strcat[m]> I'd recommend rebooting the computer, booting the phone back to bootloader interface
+12:26:43 <strcat[m]> use a better USB port
+12:30:45 <GrapheneOS-Teleg> | Test | (@Z​1fX4DYhtGBmPVPUcHFh) has joined the Telegram Group!
+12:40:24 <battlepad[m]> make sure the  laptop port is the USB 3.0 (blue one) and working. Before starting I always check if ADB can see my device first just in case
+12:41:08 <GrapheneOS-Teleg> <v​ovaputin1488> Ofc it see it as Google Pixel 4a on device connect
+13:13:05 <M647509735485097> Is there anyway to quickly disable biometrics?
+13:14:02 <M647509735485097> iPhone had the option and I believe Google implemented something as well. Can't seem to figure it out
+13:15:03 <M647509735485097> I use a pin for unlocking but like using biometrics to sign I to individual apps once my phone is unlocked
+13:17:22 <DHFuchsiaOSwhen> <M647509735485097 "I use a pin for unlocking but li"> Lockdown?
+13:17:56 <DHFuchsiaOSwhen> Display > Lockscreen > Show lockdown option
+13:19:29 <M647509735485097> Scrolled right past it....... Thanks for the help friend
+13:52:16 <d3nm6ugnffwftn2j> can anybody please educate me why my pixel always get stuck at transferring some particular files using usb cable via android file transfer? it's stuck and then tells me my phone gets disconnected even the file transfer mode is always on on the phone. the files are just a folder containing multiple m4a songs with each less than 150MB
+13:52:42 <GrapheneOS-Teleg> <g​ochoingles> Blasphemy. Why would they do that?
+13:56:27 <GrapheneOS-Teleg> <g​ochoingles> What about the people that prefer not using it?
+13:57:23 <GrapheneOS-Teleg> <g​ochoingles> Nobody I know wants to use Signal.
+14:01:37 <d3nm6ugnffwftn2j> <d3nm6ugnffwftn2j "can anybody please educate me wh"> never mind. i figured it out. it was because the files name contain some unsupported punctuations. thanks anyways!
+14:17:41 <hitchhooker[m]> > <g​ochoingles> Nobody I know wants to use Signal.
+14:17:42 <hitchhooker[m]> you got any idea how riddiculous that sounds written using telegram that downloads all your personal data and uploads it encrypted to telegram servers, company that is for profit but nobody knows how the profit is generated :D
+14:19:29 <Vlacid> hello
+14:22:52 <battlepad[m]> greetings
+14:24:03 <Vlacid> i have recently got a pixel 5 for graphene.. so far so good but i can't get location services to work in any app or website. any idea where I should look to fix this?
+14:25:19 <entry1[m]> You have location permissions granted for the apps and have it enabled in settings? You can pin it to be on the drop down
+14:25:33 <entry1[m]> Vlacid
+14:26:29 <entry1[m]> Certain apps take a little while for it to recognize once you install. May have to let it load or reboot. If you use GPS apos, I would recommend downloading the maps
+14:27:14 <DHFuchsiaOSwhen> <Vlacid "i have recently got a pixel 5 fo"> https://freenode.logbot.info/grapheneos/20210310#c7195386
+14:27:38 <Vlacid> yes I have it enabled. can't 'allow all the time' but I have 'allowed while in use' . I have rebooted and turned location off as someone suggested but that didn't solve it.
+14:28:13 <DHFuchsiaOSwhen> Need a clear view on the sky to get a GPS lock
+14:28:58 <DHFuchsiaOSwhen> <DHFuchsiaOSwhen "https://freenode.logbot.info/gra"> Also, it's a series of message explaining why it takes a while to get your location
+14:33:16 <battlepad[m]> Hey lads, for GrapheneOS what is the default DNS server it uses?
+14:33:33 <Vlacid> woah that seemed to work! simple but efficient, thanks DHFuchsiaOSwhen
+14:34:09 <DHFuchsiaOSwhen> <battlepad[m] "Hey lads, for GrapheneOS what is"> https://grapheneos.org/faq#default-dns
+14:35:34 <DHFuchsiaOSwhen> <DHFuchsiaOSwhen "https://grapheneos.org/faq#defau"> It uses your network-provided (ISP/VPN) DNS with Cloudfare DNS fallback
+14:38:00 <battlepad[m]> thanks
+14:38:10 <GrapheneOS-Teleg> <!Dominik> Hey, thanks for your help, I used a Pixel 5, after the fourth try it worked out without any problems. But the updated Chromium Browser in updated Ubuntu 20.04 LST, did not work out, with chrome in same ubuntu it went well. Thank you for your work and help, great ROM you have there, I just bought a Pixel 5 for being able using your ROM. Still after the problems i had yesterday, I really apreciate your work. I had already an ot
+14:44:52 <GrapheneOS-Teleg> <!Gabe> Glad to see you got it working
+15:22:45 <GrapheneOS-Teleg> Felipe (@F​elipecconde) has joined the Telegram Group!
+15:23:25 <GrapheneOS-Teleg> <F​elipecconde> hi
+15:23:35 <GrapheneOS-Teleg> <F​elipecconde> is there a grapheneos rom for motorola one fusion?
+15:25:16 <DHFuchsiaOSwhen> <GrapheneOS-Teleg "<Felipecconde> is there a graphe"> https://grapheneos.org/faq#supported-devices
+15:36:19 <GrapheneOS-Teleg> <F​elipecconde> only pixel?
+15:36:20 <GrapheneOS-Teleg> <F​elipecconde> wtf
+15:39:17 <GrapheneOS-Teleg> <K​ileXt> yes
+15:39:21 <GrapheneOS-Teleg> <K​ileXt> For now
+15:39:59 <GrapheneOS-Teleg> <K​ileXt> If one day another OEM make devices as secure as Pixel phones then it will most likely be added
+15:41:25 <trudeaussocks> Good morning, I have a question that may be a little foolish or uniformed of me.  Is there something about GrapheneOS that restricts the chat bubble feature?
+15:43:34 <trudeaussocks>  /msg NickServ identify 12345
+15:47:51 <trudeaussocks> Good morning, I have a question that may be a little foolish or uniformed of me.  Is there something about GrapheneOS that restricts the chat bubble feature?
+15:49:24 <madaidan[m]> No
+15:53:25 <trudeaussocks> madaidan[m]: Could there be something I am doing that is preventing it from working then?  Such as using a secondary account?  I have messed with so many settings and it doesn't seem to function at all when I get messages.
+15:56:43 <ulmirdin[m]> trudeaussocks: turn on notification for grapheneos launcher
+16:00:11 <nscnt[m]> trudeaussocks: The application itself must support chat bubbles
+16:02:28 <GrapheneOS-Teleg> <g​ochoingles> I would suggest JollyRoger to use the Telegram group under Tor or VPN in order to not trigger Freenode, but somebody in this group mocked me for using Telegram.
+16:02:55 <GrapheneOS-Teleg> <g​ochoingles> *in order to not trigger Freenode when using VPN/Tor
+16:10:46 <mr_hebi_san[m]> Which specific APIs in Graphene fall under the Sensors permission?  Gyroscope?  Magnetometer? Compass?  Barometer?  Or is it biometric like pedometer?
+16:11:11 <mr_hebi_san[m]> Accelerometer?
+16:12:13 <mynacol[m]> mr_hebi_san: Anything not covered by an existing permission, e.g. camera, microphone, location
+16:12:39 <mynacol[m]> And obviously being some sort of sensor, so everything you named.
+16:17:05 <mr_hebi_san[m]> Hmm... Then how is it that the Angulo and Tri-Angulo apps are able to work with Sensor permission turned off?
+16:17:06 <sdk-free-os[m]> Hello
+16:17:20 <sdk-free-os[m]> I am new to Graphene
+16:17:41 <sdk-free-os[m]> I understand it is only supported by google pixel phones?
+16:19:27 <TheJollyRoger> sdk-free-os[m]: https://grapheneos.org/faq#supported-devices At this moment, until better hardware can be found.
+16:20:04 <TheJollyRoger> Other vendors do not provide adequate support for, or even cripple device security features for operating systems that are not their own.
+16:21:47 <sdk-free-os[m]> I see
+16:21:49 <TheJollyRoger> @gochoingles - I prefer IRC.
+16:22:08 <sdk-free-os[m]> would it be possible to remove some non essential hardware from the pixel phone?
+16:22:52 <nscnt[m]> Why would you put unessential hardware in a phone?
+16:23:10 <TheJollyRoger> sdk-free-os[m]: You'll be on your own for that.
+16:23:30 <sdk-free-os[m]> No one already tried?
+16:23:35 <mr_hebi_san[m]> To be more clear, Anglo and Tri-angulo are apps that entirely rely on sensors to function.  They determine orientation in space.  I don't recall revoking their permissions but their permissions to Sensors are denied...  Yet they both still function and both can access all Sensors
+16:24:17 <mr_hebi_san[m]> At least to my knowledge they are accessing them
+16:24:23 <TheJollyRoger> sdk-free-os[m]: I assume you're talking about the microphones and cameras, and if you're considering that, you're on your own.
+16:24:39 <hasnoname[m]> Is there a way to automatically reboot the phone at a specific time?
+16:25:09 <TheJollyRoger> sdk-free-os[m]: If you're talking about stuff like the GPS and radio processors, you would need to delid the SoC to laser cut the pipelines on it.
+16:25:21 <TheJollyRoger> sdk-free-os[m]: one of these machines would likely cost you several million dollars.
+16:25:33 <TheJollyRoger> *to laser cut the pipelines on it, then reseal the chip.
+16:25:42 <TheJollyRoger> After which, the chip is likely not going to run for longer than a couple seconds at best.
+16:25:44 <sdk-free-os[m]> i think that won't be feasible
+16:26:18 <sdk-free-os[m]> does grapheneOS hide hardware identifiers?
+16:26:25 <TheJollyRoger> sdk-free-os[m]: The devices however, are isolated from host memory via SMMU, meaning they're only capable of accessing host memory that the driver in the kernel allows.
+16:26:36 <TheJollyRoger> sdk-free-os[m]: Please read the FAQ, your question is answered here:
+16:26:46 <TheJollyRoger> https://grapheneos.org/faq#hardware-identifiers
+16:26:55 <TheJollyRoger> TLDR: hardware identifiers are not accessible to apps.
+16:27:04 <sdk-free-os[m]> thanks i'll read that
+16:27:04 <nscnt[m]> hasnoname: No there isn't. It's a system app privilege and we don't have an app that schedules automatic reboots other than the Updater when the device is idle (which is at no specific time).
+16:27:16 <nscnt[m]>  * hasnoname: No there isn't. It's a system app privilege that is needed and we don't have an app that schedules automatic reboots other than the Updater when the device is idle (which is at no specific time).
+16:27:47 <TheJollyRoger> sdk-free-os[m]: the FAQ in its entirely is required to participate in this community, I highly recommend it. It's your best source for high-quality answers on GrapheneOS.
+16:28:12 <nscnt[m]> I mean... Yes there's a way... Hold down the power button everyday at the same time and tap reboot lol
+16:28:37 <DHFuchsiaOSwhen> <nscnt[m] "hasnoname: No there isn't. It's "> And that app does not even use READ_PRIVILEGED_PHONE_STATE
+16:28:42 <ModernSlave> Well if you dont mind giving system privilege to an automation app its possible
+16:28:44 <DHFuchsiaOSwhen> besides that the source code rejects any serial code targeted updates in general
+16:28:58 <GrapheneOS-Teleg> <I​ickhitterextraordinaire> Turn off the brave shield, that worked for me
+16:29:36 <TheJollyRoger> sdk-free-os[m]: with respect to removing items like the camera and microphone from your phone, the threat model for that tends to be extremely niche, more niche, and far more narrow than you realize, since removing the microphones doesn't actually prevent the phone from recording audio via reversing polarity on its speakers, or by the phone's sensors. If your phone is compromised that badly,
+16:29:38 <TheJollyRoger> then you have bigger problems and shouldn't be using the device at all.
+16:30:27 <sdk-free-os[m]> you are right
+16:30:48 <TheJollyRoger> sdk-free-os[m]: so as a result, it might win "Reddit Nerd Credit" or "Opsec Nerd Points" but it's largely performative, theatrical, and gives you no real-world benefit... in addition to *severely* gimping the usability of your device and very likely risking permanently damaging the phone.
+16:32:20 <TheJollyRoger> Hardware Kill Switches or disconnectable peripherals are nice, but without an adequate threat model, or the assurance that a compromised device won't simply resume its functionality or for denial of networking capabilities exfiltrate data when you switch them back on.
+16:35:03 <TheJollyRoger> Given the choice between scoring Reddit Snowden Credit and Opsec Nerd Points, and having a usable device that I can expect all the functionality of a modern device on, I'll take the latter anyday. Besides, most of the Reddit Snowdens are more concerned about /looking/ secure and showing that off to others, rather than actually /being/ secure, if you catch my drift.
+16:37:27 <TheJollyRoger> With respect to hardware identifiers, bit of trivia: Modern apps compiled for modern versions of Android that request the IMEI, your SIM card serial, handset serial, or other hardware identifiers get a "SecurityException" error in response. Apps compiled for older versions of Android simply get a bunch of zeroes. This has been the case ever since Android 10, on all Android handsets.
+16:38:12 <sdk-free-os[m]> that is good to know, thank you for helping me out
+16:38:25 <sdk-free-os[m]> I just saw it in the FAQ
+16:38:31 <TheJollyRoger> Only *legitimate system components* used to negotiate with your cell service carrier have access to those, on a strictly "need-to-know, need-to-function" basis.
+16:38:34 <nscnt[m]> TheJollyRoger: "null", not zeros
+16:38:46 <nscnt[m]> or well, some placeholder data
+16:39:17 <TheJollyRoger> nscnt[m]: are you sure? I thought that that was done for reverse compatibility, for older versions of the API only to prevent the apps from simply crashing or throwing an exception.
+16:39:53 <TheJollyRoger> sdk-free-os[m]: yarr, ye be welcome.
+16:39:59 <nscnt[m]> https://developer.android.com/about/versions/10/privacy/changes#non-resettable-device-ids
+16:40:02 <TheJollyRoger> AH!
+16:41:01 <TheJollyRoger> Oh, I see, yeah, you're right, it's null or placeholder data.
+16:42:41 <TheJollyRoger> thanks nscnt[m]
+16:43:00 <nscnt[m]> ^^
+16:54:06 <GrapheneOS-Teleg> <g​ochoingles> I wonder if Matrix does not suffer from this.
+17:05:19 <kkm6761[m]> <TheJollyRoger "Given the choice between scoring"> gos already falls into that category. so I don't get the point of mocking redditors.
+17:06:38 <DHFuchsiaOSwhen> <kkm6761[m] "gos already falls into that cate"> Not really, GrapheneOS don't do security and privacy theater.
+17:07:10 <DHFuchsiaOSwhen> Removing some hardware parts is not related to what OS was flashed there
+17:08:40 <TheJollyRoger> kkm6761[m]: GrapheneOS avoids frills and theatrics, and each mitigation has a specific threat model. What I'm talking about, are people who cannot threat model, and simply do things based on "but it sounded cool" factor, which, our guest had asked about.
+17:09:38 * sjsndnjdejd  < https://matrix.org/_matrix/media/r0/download/matrix.org/jUOCJDExWOyZdXxrTxYPEcQm/message.txt >
+17:19:39 <kkm6761[m]> <TheJollyRoger "kkm6761: GrapheneOS avoids frill"> it true. but i personally having read all gos pages, still have not understood gos threat model. "privacy" and "security" are too generally described. and unfortunately the advantages of gos over ios are not significantly demonstrated. well i stop here, it goes off topic.
+17:20:13 <mynacol[m]> kkm6761: For this we have #grapheneos-offtopic:matrix.org
+17:22:07 <sjsndnjdejd> A tool doesn’t determine a threat mode for you. You determine your own and evaluate if the tool does the job.
+17:31:03 <kkm6761[m]> how to quote a to offtopic?
+17:31:16 <kkm6761[m]> * how to quote a post to offtopic?
+17:35:04 <DHFuchsiaOSwhen> Just copy the message directly, or link from logbot
+17:39:59 <hypokeimenon[m]> <kkm6761[m] "gos already falls into that cate"> Snowden didn't advocate just using Graphene OS. They also suggested desoldering the microphone and cameras to be fair.
+17:52:46 <M647509735485097> Any recommendations for efficient ad-blocking while browsing (Vanadium)
+17:57:03 <timetravelingman> Adguard DNS
+18:10:38 <M647509735485097> <timetravelingman "Adguard DNS"> Considered it but was put off by the lack of updates. F-droid has it as being updated 11 months ago. Was the project abandoned?
+18:11:56 <GrapheneOS-Teleg> <g​ochoingles> Hey, quick question. Before flashing GOS, should I avoid updating the factory OS?
+18:12:27 <usernumber33[m]> <M647509735485097 "Considered it but was put off by"> You can just set your DNS to DNS.adguard.com
+18:13:07 <M647509735485097> AdGuard has up to date apk directly on their site! But may consider this option to avoid unnecessary installations. Thanks for the help
+18:16:24 <GrapheneOS-Teleg> <g​ochoingles> Does updating the Google Pixel 4a 5G's factory OS disable bootloader unlock?
+18:16:41 <GrapheneOS-Teleg> <K​ileXt> Did unlock it ?
+18:17:27 <borges[m]> Vanadium is not showing up in System > Backup as an app that's backed up, and I'm not seeing it in the seedvault backup. Is this expected behavior? And/or how can I get a backup of Vanadium?
+18:17:50 <GrapheneOS-Teleg> <g​ochoingles> Not yet. I still have to buy it, I just want to know if I should avoid factory OS updates, because Android uses mobile data to update when you have a SIM card inserted.
+18:17:52 <borges[m]>  * Vanadium is not showing up in System > Backup as an app that's backed up (not even listed), and I'm not seeing it in the seedvault backup. Is this expected behavior? And/or how can I get a backup of Vanadium?
+18:19:58 <GrapheneOS-Teleg> <g​ochoingles> Not yet. I still have to buy it, I just want to know if I should avoid factory OS updates, because Android uses mobile data to update when you have a SIM card inserted.Sorry. I forgot to reply to you.
+18:25:03 <GrapheneOS-Teleg> <J​usLaw> Hey guys,Has anyone successfully installed Graphene on a Google Pixel 4A, non 5G model?
+18:26:04 <lodtank> GrapheneOS-Teleg: i have graphene running on a pixel 4a, had no problems
+18:28:01 <timetravelingman> <GrapheneOS-Teleg "<JusLaw> Hey guys,Has anyone suc"> No, no one here has ever installed GrapheneOS on that device.
+18:34:32 <GrapheneOS-Teleg> <K​ileXt> It doesn't matter, you should update for a better stability during flahing
+18:35:17 <GrapheneOS-Teleg> <J​usLaw> Thanks for the swift reply 👍
+18:36:26 <sjsndnjdejd> <strcat "warmjuice: I use Windows-style f"> I assumed you are using chromium based. You are using a very common Linux font, that looks very different to Chrome on Windows
+18:37:54 <sjsndnjdejd> This is Chrome on Windows
+18:37:57 * sjsndnjdejd uploaded an image: (41KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/LFIxIYXnDtCFgznyMzSECnzx/image.png >
+18:38:15 <sjsndnjdejd> This is you
+18:38:19 * sjsndnjdejd uploaded an image: (223KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/plzpGyYkYgBPjmwfLmYfjlAh/image.png >
+18:42:58 <jimbo101aa[m]> My threat model is govt baseband attack via cell provider. Can grapheneos help?
+18:44:05 <anupritaisno1[m]> jimbo101aa: you can prevent that attack even on the stock rom
+18:44:13 <anupritaisno1[m]> pixel phones have a proper iommu for the radio
+18:44:50 <madaidan[m]> What does "baseband attack" even mean
+18:45:07 <madaidan[m]> You mean exploiting the code on the baseband? Cell tower triangulation?
+18:45:41 <jimbo101aa[m]> I think I mean the former
+18:46:31 <madaidan[m]> Pixel devices have decent hardening and an IOMMU to isolate it.
+18:46:46 <dazinism> borges: vanadium and other chromium forks don't allow backups.
+18:46:58 <jimbo101aa[m]> At least, I am given to understand that cell providers can push code to a mobile device radio
+18:47:04 <dazinism> Google uses their own services to backup and sync data between Chrome on different devices
+18:47:25 <madaidan[m]> <jimbo101aa[m] "At least, I am given to understa"> Not true.
+18:47:56 <dazinism> Sorting out backups for Vanadium is something thats desired, but will take some work.
+18:48:16 <dazinism> You can use another app to keep bookmarks
+18:48:45 <dazinism> Save links and back that up instead
+18:49:01 <jimbo101aa[m]> Thx for replies
+18:49:51 <dazinism> Some US carriers can push code to stock Android devices, but that stuff isn't included in GrapheneOS
+18:51:01 <dazinism> Why sprint doesn't (didn't?  Think they are due to drop this requirement ) work on GrapheneOS
+18:51:26 <dazinism> They required you to have this software included on the phone
+18:51:30 <dazinism> https://en.m.wikipedia.org/wiki/OMA_Device_Management
+18:52:26 <jimbo101aa[m]> Interesting thanks!
+18:53:02 <xx> < madaidan[m]> Pixel devices have decent hardening and an IOMMU to isolate it. " thats on pixel 3 and newer?
+18:55:08 <dazinism> Older devices also. Pixel 3 got the Titan which is a step up to previous devices
+18:55:46 <dazinism> *was the main step up from previous devices
+18:58:47 <ManwithArrow[m]> <ManwithArrow[m] "> <@man-with-arrow:matrix.org> A"> Bump? Don't want to be spammy, further discussion would be much appreciated :-)
+19:02:19 <dazinism> Man with Arrow: I'd imagine it is likely to be to do with the carrier configurations. There was work done recently to GrapheneOS which would have got this kind of stuff working on many devices
+19:02:34 <dazinism> Gave me VoLTE and wificalling
+19:03:15 <dazinism> Trouble is theres loads of carriers and, as I understand it, they all set stuff up in different ways
+19:03:29 <ManwithArrow[m]> It's a mess, that's for sure.
+19:04:44 <ManwithArrow[m]> I've done quite a bit of reading and testing, and this is how I figure it works:
+19:04:44 <ManwithArrow[m]> Assuming the carrier's infastructure supports IMS, and your device supports it, *and* your account (i.e.) SIM is flagged as IMS-enabled - it comes down to carrier config.
+19:05:04 <dazinism> Think its likely to need someone using that carrier to put the work in to make changes and test
+19:06:32 <ManwithArrow[m]> <dazinism "Think its likely to need someone"> The problem is the carrier doesn't support IMS on non-iPhones / Samsung flagships at all. That doesn't mean it doesn't work - I've forcefully enabled (see here: https://gist.github.com/chenshaoju/ec18f2081cb12f85752f4c8259b54b9a) the settings toggles on a Oneplus 3T and it works perfectly.
+19:06:39 <dazinism> Then submit a pull request. Either that or keep you fingers crossed that your carriers configs get changed in stock and it starts working for you
+19:07:17 <dazinism> (That wasn't a direct reply, but me continuing )
+19:07:50 <dazinism> Ideally you'd make your own build with the changes and test
+19:10:10 <ManwithArrow[m]> <dazinism "Ideally you'd make your own buil"> Oh definitely, I figured I'd ask here before I did that (it's my main device). Also not sure if it's something the project leads would care for (having the toggles always present in the settings)... It would be a solution, just kinda hacky
+19:13:21 <dazinism> Man with Arrow: ah yeah, not sure about the toggle. Guess a change to just enable it for your carrier  may be best.
+19:14:18 <dazinism> Think opening an issue to discuss may be the best way to proceed
+19:14:35 <ManwithArrow[m]> Much appreciated, I'll do that. Thanks!
+19:16:57 <bizanon[m]> My WiFi was literally just fine one minute. And then I swapped profile back to owner.. Then it just stops connecting to my AP. It just hangs there. My laptop can connect to this AP just fine.
+19:16:57 <bizanon[m]> The phone can connect to other APs... Just not mine. What could be causing this?m
+19:17:14 * bizanon[m] uploaded a video: (6172KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/CYYHYDmPoMNUTFlnLjaepkUw/screen-20210311-123216.mp4 >
+19:41:10 <AlmostAdam176391> hi what should I set 'vanadium safe browsing setting' too?
+19:45:05 <AlmostAdam176391> also is SMS app sandboxed?
+19:50:13 <bizanon[m]> I factory reset my AP.. Seems to have fixed it.
+19:53:54 <pizzaeater69[m]> <AlmostAdam176391 "also is SMS app sandboxed?"> All apps are sandboxed
+19:58:11 <GrapheneOS-Teleg> <g​ochoingles> Oh. OK.
+20:01:22 <GrapheneOS-Teleg> <g​ochoingles> Should I update the Google Pixel after or before unlocking the bootloader?
+20:02:14 <pizzaeater69[m]> Update device first before trying to flash Graphene
+20:02:53 <GrapheneOS-Teleg> <g​ochoingles> So updating will not disable bootloader unlock?
+20:05:37 <GrapheneOS-Teleg> <K​ileXt> No
+20:06:01 <GrapheneOS-Teleg> <g​ochoingles> Thanks!
+20:06:20 <GrapheneOS-Teleg> <K​ileXt> It wouldhave been written in big red letter on the guide if it was that way
+20:09:57 <GrapheneOS-Teleg> <g​ochoingles> Hm. We do not have Windows 10.Is it OK to flash GOS on with a Windows 7 computer?
+20:12:25 <pizzaeater69[m]> It is not officially supported so not sure
+20:29:41 <GrapheneOS-Teleg> <g​ochoingles> What to do...
+20:30:59 <interesting[m]> can anyone share graphene telegram?
+20:32:49 <madd_hatter[m]> GrapheneOS-Teleg: should work as long as you load the current browser.  Only way to know for sure is try it.  You can always reset and try again using the cmd line tools being sure the needed sw is up to date.
+20:33:46 <anupritaisno1[m]> timetravelingman: stop spreading misinformation
+20:33:54 <anupritaisno1[m]> We have full support for the pixel 4a
+20:34:25 <anupritaisno1[m]> Good thing I have telegram now, I can easily go through the scrollback
+20:35:12 <GrapheneOS-Teleg> <c​lannad> Yes it works fine
+20:35:29 <GrapheneOS-Teleg> <c​lannad> Just use the web installer and it will install for the pixel 4a
+20:36:03 <zzxx123_> interesting[m] it's public group,  just search grapheneos on telegram
+20:37:57 <anupritaisno1[m]> <AlmostAdam176391 "also is SMS app sandboxed?"> All apps are sandboxed on android. There are no exceptions. We make the sandbox even stronger for system apps on grapheneos
+20:57:25 <interesting[m]> <anupritaisno1[m] "All apps are sandboxed on androi"> are you a dev anupritaisno?
+20:57:35 <interesting[m]> graphene dev I mean
+21:27:46 <Nicole273549> Hi
+21:28:05 <Nicole273549> Can I setup my hotaspot to route internet through a vpb
+21:28:08 <Nicole273549> hotapot
+21:28:12 <Nicole273549> hotspot
+21:28:26 <Nicole273549> so all connected devices route through a vpn
+21:34:18 <Rusty[m]> Guys, what do you think about hypatia? The antimalware from DivestOS developers
+21:37:17 <anupritaisno1[m]> <Rusty[m] "Guys, what do you think about hy"> Just a scam
+21:37:33 <anupritaisno1[m]> All antivirus software is basically just that
+21:39:34 <Rusty[m]> <anupritaisno1[m] "All antivirus software is basica"> I know it's just a cat and mouse game with antivirus, and could be trivial to bypass it, still for known malware I though it could be useful
+21:41:24 <anupritaisno1[m]> Rusty: I don't think malware is possible on grapheneos
+21:41:31 <anupritaisno1[m]> Or android even
+21:46:32 <Rusty[m]> <anupritaisno1[m] "Or android even "> Mmm, idk about graphene, but I remember some shit happened with stock android, like apps pretend to be other apps, clickjacker and such... but maybe those could be possible only on old android versions
+22:03:39 <anupritaisno1[m]> Rusty: that's just users being stupid and granting dangerous permissions to any app
+22:16:50 <borges[m]> <anupritaisno1[m] "Rusty: I don't think malware is "> Of course malware is possible on GOS... that GOS makes it a lot harder doesn't make that less true. Otherwise, you're saying that Vanadium and the Linux kernel are exploit free?
+22:17:50 <anupritaisno1[m]> advise seeing the chat rules
+22:18:11 <anupritaisno1[m]> 99% of "malware" is the user wilfully pressing install and then granting permissions
+22:19:18 <anupritaisno1[m]> we do tell users that they should use separate profiles
+22:20:10 <anupritaisno1[m]> also do you really think antimalware is going to be able to fix such problems especially if dangerous permissions like accessibility are granted
+22:20:26 <anupritaisno1[m]> i could just draw over the antimalware app
+22:20:31 <anupritaisno1[m]> cat and mouse bs
+22:21:36 <borges[m]> Nope, I don't. And I think GOS has the right approach. Just because Antimalware isn't the right approach, doesn't mean that malware is not possible on GOS
+22:22:11 <anupritaisno1[m]> advise seeing the rules
+22:22:25 <anupritaisno1[m]> not going to participate in more bikeshedding
+22:24:22 <anupritaisno1[m]> dictionary definition: computer software such as a virus that the user does not know about or want and is designed to damage how a computer or computer network works
+22:24:50 <anupritaisno1[m]> pretty sure users consenting to permissions automatically makes it not malware
+22:24:53 <anupritaisno1[m]> but w/e
+22:27:52 <rny> do people enjoy wasting time at a bikeshed?
+22:28:02 <strcat[m]> <Rusty[m] "Guys, what do you think about hy"> it doesn't make sense and it does really weird things like looking at OS images despite verified boot existing
+22:29:28 <strcat[m]> it really doesn't make sense
+22:29:46 <TheJollyRoger> I think it's "Manager Logic." They think they're adding value.
+22:29:48 <strcat[m]> what good does it do when it just matches stuff against things that have been seen and classified as bad?
+22:30:04 <strcat[m]> I'm not going to get into why it doesn't make any sense to enumerate file hashes as bad
+22:30:19 <strcat[m]> you realize they can just use different files every time?
+22:30:44 <anupritaisno1[m]> TheJollyRoger: grapheneos av when?
+22:30:57 <anupritaisno1[m]>  * TheJollyRoger: grapheneos av when? /s
+22:31:22 <rny> whats grapheneos av?
+22:31:34 <rny> antivirus?
+22:31:38 <TheJollyRoger> anupritaisno1[m]: I think my answer would be a bottle of 62% ABV rum labelled "GrapheneOS AV."
+22:33:58 <TheJollyRoger> It kills viruses, and if you pour it on a phone that lacks a water resistance rating, that phone won't get compromised in the future.
+22:34:09 <TheJollyRoger> It might not be usable afterward but bah, details.
+22:34:50 <TheJollyRoger> (It may also result in fire, fire, and MORE FIRE but that's just the secure deletion utility at work)
+22:38:03 <rny> could sell a UV sterilizer on https://merchandise.grapheneos.org and put a gos sticker on it /s
+22:38:24 * TheJollyRoger cracks up.
+22:38:30 <rny> sterilizes the phone surface against SARS-COV-2
+22:38:54 <rny> would fill up the project's coffers too to fund more meaningful security features.
+22:39:02 * rny approves.
+22:39:46 <TheJollyRoger> GrapheneOS branded phone sterilizers and GrapheneOS branded hand sanitizer which doubles as rum and firestarter. YES we are doing this now!
+22:46:51 <sjsndnjdejd> <GrapheneOS-Teleg "<gochoingles> Hm. We do not have"> If there’s a proper USB driver available on Windows 7 it should work
+22:48:08 <blacklight447[m]> <anupritaisno1[m] "All apps are sandboxed on androi"> Question, if system apps are inherently privileged, why would you sandbox those more then other apps
+22:48:33 <blacklight447[m]> Or let me prase this differently, why only the system apps
+22:49:07 <ulmirdin[m]> <TheJollyRoger "It kills viruses, and if you pou"> I like your thought process.
+22:51:50 <madaidan[m]> <blacklight447[m] "Question, if system apps are inh"> They aren't "inherently privileged"; they are still subject to the security model. Work is being done on strengthening the app sandbox / permission model for both system apps and non-system apps.
+22:52:26 <rny> blacklight447[m]: ^ there are plans to also have sandboxing scrutiny for non-system apps
+22:52:43 <rny> but turning up the knob can lead to apps breaking
+22:53:22 <rny> we have a clearer picture of what sepolicies that are required by systems apps since the project builds and ships them
+22:53:32 <rny> so it is possible to turn up the knob for these apps
+22:59:32 <anupritaisno1[m]> blacklight447: we'd break cts if we did that for user apps
+22:59:46 <anupritaisno1[m]> besides it would break apps that rely on this behaviour
+23:33:08 <bizanon[m]> <rny "could sell a UV sterilizer on ht"> Thought that was real 🤣
+23:42:01 <GrapheneOS-Teleg> g​ochoingles shared a photo on Telegram with caption: 'Huh.'
+23:44:50 <borges[m]> Is Vanadium the only way to install apk on secondary user accounts when the account has just been created?
+23:48:54 <borges[m]> nm, --user works, just not documented in my adb help
+23:53:40 <ulmirdin[m]> borges: You can transfer an apk file through USB

@@ -1,0 +1,362 @@
+00:03:44 <P-G> This seems suspiscious: https://github.com/GrapheneOS/platform_packages_apps_Settings/blob/9421b8fce2575b2c31adb2b77956cc55cb926f3d/tests/robotests/src/com/android/settings/network/telephony/EnabledNetworkModePreferenceControllerTest.java#L120
+00:11:34 <jegbehgpe[m]> I'll come back later and try to catch strcat. Thanks, TJR.
+00:21:21 <P-G> I'm going to guess this is where the magic happens: https://github.com/GrapheneOS/platform_packages_apps_Settings/blob/9421b8fce2575b2c31adb2b77956cc55cb926f3d/src/com/android/settings/network/telephony/PreferredNetworkModePreferenceController.java#L49
+00:46:56 <P-G> Or maybe I'm completely wrong. That's the best I can come up with for now.
+01:09:31 <P-G> This seems likely too: https://github.com/GrapheneOS/platform_packages_apps_Settings/blob/11/src/com/android/settings/network/telephony/EnabledNetworkModePreferenceController.java#L227
+02:21:40 <christhepanda[m]> how do I get the pixel to trust my computer? it does not show up as a usb device when connected.
+02:22:26 <christhepanda[m]> usb debugging is on
+02:26:21 <strcat[m]> christhepanda: turn off usb debugging
+02:26:26 <strcat[m]> don't use that on a production device
+02:26:28 <christhepanda[m]>  ok
+02:26:30 <strcat[m]> don't use developer options
+02:26:47 <christhepanda[m]> oem unlocking?
+02:27:00 <christhepanda[m]> trying to install grapheneos
+02:27:14 <strcat[m]> christhepanda: follow https://grapheneos.org/install/web
+02:27:18 <strcat[m]> don't follow an unofficial guide
+02:27:25 <christhepanda[m]> yeah, I get it.
+02:27:30 <strcat[m]> USB debugging is not used for the installation process
+02:27:31 <christhepanda[m]> going here for support
+02:27:42 <christhepanda[m]> becaus it is not working as explained in the guide.
+02:27:47 <strcat[m]> I thought you meant you wanted to do file transfer to/from GrapheneOS but either way USB debugging is not used
+02:27:56 <strcat[m]> christhepanda: stick to the guide regardless, don't start following other stuff
+02:28:04 <strcat[m]> did you boot into bootloader mode on the phone?
+02:28:13 <christhepanda[m]> yes.
+02:28:35 <strcat[m]> https://grapheneos.org/install/web#enabling-oem-unlocking
+02:28:47 <strcat[m]> go over those sections leading up to flashing
+02:29:04 <christhepanda[m]> the phone says no command, and clicking the unlock bootloader says no compatible devices found
+02:31:43 <christhepanda[m]> actually, after booting, it recognises my computer as a device. will try booting into bootloader again..
+02:32:28 <strcat[m]> that's not the bootloader mode
+02:32:31 <strcat[m]> that's recovery mode
+02:32:35 <christhepanda[m]> yeah
+02:33:43 <christhepanda[m]> oh
+02:33:48 <christhepanda[m]> it's volume down
+02:33:50 <christhepanda[m]> hang on
+02:34:43 <christhepanda[m]> works!
+02:34:59 <christhepanda[m]> bootloader unlocked!
+02:35:32 <christhepanda[m]> funny how following instructions works.
+02:36:19 <christhepanda[m]> suggestion, can we please highlight or italicise the word 'down' in reference to unlocking bootlader?
+02:36:28 <jjstopperl[m]> Just started using Grapheneos a couple days ago. Love it
+02:38:55 <TheJollyRoger> christhepanda[m]: sure, I'll go send a PR.
+02:39:41 <christhepanda[m]> k, well anyways, will be on graphene in a couple minutes thaks for the help guys.
+02:39:46 <TheJollyRoger> Great!
+02:40:23 <TheJollyRoger> If you can unlock bootloader, you're getting close to the halfway point.
+02:49:43 <christhepanda[m]> so, woul it be a good idea to install microg for google camera?
+02:51:39 <TheJollyRoger> christhepanda[m]: while you can download and sideload APKs, MicroG generally has to be integrated into the operating system to work as it must poke holes in the Android security model to function (namely doing things like allowing apps to pretend that they're other apps and lie to the OS). So I doubt it's going to work that way.
+02:52:06 <christhepanda[m]> k
+02:52:37 <TheJollyRoger> You could try giving OpenCamera a try.
+02:52:58 <dnull> Or obscura
+02:53:20 <christhepanda[m]> yup. open camera it is. should be done installing in about 30 mins, my internet seems to be slow today.
+02:53:28 <TheJollyRoger> Got it.
+02:53:35 <TheJollyRoger> Welcome aboard, christhepanda[m].
+02:53:36 <christhepanda[m]>  * yup. open camera it is. should be done installing in about 20 mins, my internet seems to be slow today.
+03:02:31 <troypatrick[m]> Anyone having problems getting notifications on element on graphene
+03:02:46 <christhepanda[m]> that's google services
+03:02:59 <troypatrick[m]> Any way to get around that
+03:03:21 <christhepanda[m]> microg, but that is a bit of a security hole.
+03:03:40 <christhepanda[m]> the team is working on a way to solve that issue without it
+03:03:44 <troypatrick[m]> Ah damn 🕳️
+03:04:06 <troypatrick[m]> That's cool it's being worked on thanks for the heads up
+03:04:10 <TheJollyRoger> Well, sorta; this is because most apps are developed to be dependent on Google Services. A more detailed writeup is on tha FAQ,
+03:04:14 <TheJollyRoger> OK, so...
+03:04:17 <TheJollyRoger> With respect to it being worked on,
+03:04:29 <christhepanda[m]> 'worked on'
+03:04:32 <TheJollyRoger> GrapheneOS wants to stub out the play services API to return a 502 error when apps request Play Services,
+03:04:37 <TheJollyRoger> Not emulate play services.
+03:04:53 <TheJollyRoger> Play Services are considered invasive, and we don't want to simply emulate them.
+03:05:23 <TheJollyRoger> Ideally, the best solution in this, would be to ask the application publishers to implement their own push, or to implement an open standard for push notifications.
+03:05:37 <TheJollyRoger> But first, the application developers are going to have to start writing their apps to not be dependent on Google.
+03:05:56 <christhepanda[m]> which is what I meant by 'worked on'
+03:06:10 <christhepanda[m]> probs not gonna happen whing the next few years.
+03:06:13 <TheJollyRoger> Alright, great! I just didn't want to give anyone the wrong impression.
+03:06:21 <christhepanda[m]> more people need to use graphene first.
+03:28:44 <christhepanda[m]>  need help with connecting the phone to the computer, is there a specific order to doing this? after restarting, the device will not come up as a usb device, what exactly do I need to do now?
+03:29:04 <TheJollyRoger> Hi christhepanda[m], are you on fastboot or in the host?
+03:29:10 <christhepanda[m]> fastboot
+03:29:48 <TheJollyRoger> Ok, can you see if "LeMobile Android Bootloader Interface" is enumerated in Device Manager?
+03:30:24 <TheJollyRoger> Note that sometimes if something has gone wrong with flashing you may need to hotplug the device /once the computer is no longer using it./
+03:30:58 <christhepanda[m]> nothing is connected in device manager
+03:31:23 <TheJollyRoger> Ok, head on over to Windows update and check for any optional updates.
+03:31:42 <TheJollyRoger> Not sure why it'd stop detecting now after you've unlocked the bootloader successfully.
+03:31:57 <christhepanda[m]> on arch
+03:32:06 <christhepanda[m]> updated to latest systeam.
+03:32:22 <christhepanda[m]> run an update again just in case.
+03:32:30 <TheJollyRoger> Are you running any commands?
+03:32:41 <TheJollyRoger> You've also got the correct udev rules?
+03:32:44 <christhepanda[m]> just sudo pacman -Syu
+03:32:57 <TheJollyRoger> And you reloaded those rules or restarted?
+03:33:11 <christhepanda[m]> please explain?
+03:33:17 <christhepanda[m]> not sure I understand.
+03:33:31 <TheJollyRoger> Did you obtain the udev rules for device access through udev?
+03:33:40 <strcat[m]> christhepanda: https://grapheneos.org/install/web#flashing-as-non-root
+03:33:46 <strcat[m]> make sure you have done everything in these sections
+03:33:51 <strcat[m]> don't do stuff not in the instructions
+03:33:51 <christhepanda[m]> androin-udev package is installed.
+03:34:05 <TheJollyRoger> Did you reboot after installing the android-udev package?
+03:34:10 <christhepanda[m]> not using web, following cli as the web installer refused to download a file.
+03:34:15 <christhepanda[m]> no.
+03:34:20 <christhepanda[m]> will reboot now then.
+03:34:29 <strcat[m]> you don't need to reboot after installing that
+03:34:36 <christhepanda[m]> ok.
+03:34:38 <strcat[m]> christhepanda: the web installer will work if you follow the instructions there
+03:34:45 <strcat[m]> the issue is you keep skipping stuff or doing stuff not in there
+03:34:48 <strcat[m]> or changing your approach
+03:34:53 <strcat[m]> you really need to start over following exactly what it says
+03:35:02 <strcat[m]> it will not work if you do your own thing without knowing what to do
+03:35:05 <christhepanda[m]> yes, the download was not working, so I did it following the cli install guide instead.
+03:35:22 <strcat[m]> what was not working?
+03:35:34 <christhepanda[m]> download factory  image
+03:35:37 <strcat[m]> you need to be clear about what didn't work and the error message
+03:35:53 <christhepanda[m]> Error: undefined
+03:36:01 <christhepanda[m]> that's all I know.
+03:36:09 <strcat[m]> sounds like the device wasn't connected
+03:36:22 <TheJollyRoger> christhepanda[m]: are you in incognito mode when in Chromium/Chrome?
+03:36:23 <christhepanda[m]> that is my exact problem
+03:36:32 <christhepanda[m]> no
+03:36:38 <strcat[m]> please just start the web install at the top
+03:36:41 <strcat[m]> reboot your computer
+03:36:43 <strcat[m]> reboot the phone
+03:36:45 <strcat[m]> no deviating from it
+03:36:50 <christhepanda[m]> ok.
+03:36:56 <strcat[m]> if something doesn't work, say so, and clearly explain what happened
+03:37:04 <strcat[m]> and make sure to follow the instructions it has about USB or it's not going to work
+03:37:17 <strcat[m]> i.e. you must use a reliable, spec compliant USB cable
+03:37:23 <strcat[m]> most USB A to USB C cables are NOT and will not work
+03:37:32 <christhepanda[m]> yup.
+03:39:14 <strcat[m]> TheJollyRoger: made the change you wanted with different wording
+03:39:35 <TheJollyRoger> Okay! Thank you for the merge strcat.
+03:40:07 <TheJollyRoger> Oh. Ah... I see it, got it.
+04:02:40 <sphinx[m]> <troypatrick[m] "Anyone having problems getting n"> try the F-Droid version
+04:08:23 <GrapheneOS-Teleg> David Allan Coe (@r​iffdealer) has joined the Telegram Group!
+04:15:15 <strcat[m]> make sure to lock before using it since locking has to wipe
+07:24:41 <tkennedy365[m]> Hello everyone!
+07:25:40 <heinrich1337[m]> <tkennedy365[m] "Hello everyone!"> greetings
+07:26:33 <tkennedy365[m]> New grapheneOS user here. Anyone know a way to reduce video file sizes?
+07:27:14 <tkennedy365[m]> basically everything in the OS is working perfectly for me, except video sizes are huge for some reason... is this just me or is this a known issue?
+07:29:15 <rny> what does video file sizes got anything to do with the OS?
+07:29:20 <tkennedy365[m]> also, installation process was so easy
+07:29:24 <strcat[m]> you mean videos recorded with camera?
+07:29:30 <strcat[m]> or screen recording?
+07:29:41 <tkennedy365[m]> camera videos
+07:30:29 <tkennedy365[m]> <rny "what does video file sizes got a"> I just figured someone here might have some suggestions
+07:31:16 <strcat[m]> it's 4k video by default
+07:31:20 <strcat[m]> you can lower the quality if you want
+07:31:24 <strcat[m]> depends on device though
+07:31:32 <strcat[m]> I'm assuming you mean one of the newer gen ones
+07:31:37 <tkennedy365[m]> oh okay, im on the pixel 4a
+07:31:42 <tkennedy365[m]> yeah
+07:31:43 <rny> yeap drop it to 1080p lol
+07:32:15 <tkennedy365[m]> okay so it is resolution, that makes sense I dont need 4k haha
+07:32:24 <tkennedy365[m]> is there a way to do that without another camera app?
+07:32:28 <tkennedy365[m]> I like the default one
+07:34:53 <rny> isnt the default one really crappy?
+07:35:13 <tkennedy365[m]> I actually like it
+07:35:34 <tkennedy365[m]> or at least I like it more than the other ones ive tried
+07:35:38 <mUncheR> Press camera or video and a cog appears on right bottom corner.
+07:36:09 <mUncheR> Then you van change res. But Opencamera is better IMO.
+07:36:22 <tkennedy365[m]> I tried two other apps and one of them was broken and the other seemed a little too advanced for my use case
+07:36:35 <strcat[m]> drag from left to right
+07:36:40 <strcat[m]> to open the side thing
+07:36:42 <tkennedy365[m]> <mUncheR "Press camera or video and a cog "> thank you!
+07:36:54 <mUncheR> Yeah do what stfaycat said.
+07:37:22 <mUncheR> Swipe it is the proper way.
+07:38:13 <tkennedy365[m]> just got it
+07:39:08 <tkennedy365[m]> is 120MB normal for a 30 second video? :/ still seems pretty large
+07:41:36 <strcat[m]> probably normal since it's not doing intense compression
+07:41:37 <tkennedy365[m]> okay 720p is way smaller
+07:41:45 <tkennedy365[m]> <strcat[m] "probably normal since it's not d"> oh alright
+07:42:41 <GrapheneOS-Teleg> <!Linus> 30 vs 60 fps recordings are usually a lot bigger as well
+07:43:54 <tkennedy365[m]> <strcat[m] "probably normal since it's not d"> Is there an app you guys recommend for doing more compression? Also if I do more compression will the video still be viewable if I say... send it over signal or SMS
+07:44:21 <tkennedy365[m]> I dont even use the camera much just need to take one video a week and send it over text
+07:44:49 <tkennedy365[m]> <GrapheneOS-Teleg "<!Linus> 30 vs 60 fps recordings"> looking at how to do that now
+07:48:11 <christhepanda[m]> What do you guys use for reddit?
+07:48:23 <helloworldkk87[m> Kinda off topic
+07:48:32 <helloworldkk87[m> #grapheneos-offtopic:matrix.org
+07:48:36 <tkennedy365[m]> <GrapheneOS-Teleg "<!Linus> 30 vs 60 fps recordings"> cant figure it out 😅
+07:49:59 <tkennedy365[m]> Ah maybe its best I take it over to the off topic channel as well
+07:50:12 <tkennedy365[m]> thank you guys! reducing resolution already helped a lot
+07:50:40 <tkennedy365[m]> and massive kudos to the devs!
+07:50:41 <strcat[m]> I'd suggest seeing if Open Camera offers more configuration
+07:50:43 <strcat[m]> probably does
+07:51:58 <tkennedy365[m]> <strcat[m] "I'd suggest seeing if Open Camer"> thank you, may have to use that for videos
+09:10:27 <neverfinished[m]> Y
+09:26:06 <rny[m]> Gcam does hevc now iirc
+09:57:15 <jacktheclipper[m> <christhepanda[m] "What do you guys use for reddit?"> Slide for Reddit from F-Droid
+10:50:53 * vdge[m] uploaded an image: (158KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/VJQVoSGYhictueGcxbAWcZmm/SS1.png >
+10:50:54 <vdge[m]> Is it safe to grant these permissions through adb ?
+10:50:54 <vdge[m]> It's 'Better battery stats' app and  I blocked network access to it. Using these permissions, can it modify the system in a persistent way? I need this app for some detailed battery stats to iron out any battery drain.
+11:01:08 <strcat[m]> vdge: you do not need to grant usage stats via adb
+11:04:12 <vdge[m]> <strcat[m] "vdge: you do not need to grant u"> I already granted usage stats via UI but that app needs battery_stats and dump permissions for more accurate stats.
+11:04:45 <strcat[m]> I recommend against using adb on a production device
+11:05:02 <strcat[m]> it greatly reduces the security of your phone by heavily trusting whatever computer you use it with
+11:05:17 <strcat[m]> I suggest not doing this and using the tools provided by the OS
+11:05:34 <strcat[m]> you wanted advice, and that's the advice I have
+11:08:41 <vdge[m]> Yeah, I get it. Let's not get into additional security risks posed by desktop with adb access. I agree with it but my question is can this specific app cause any harm if those requested permissions are granted ?
+11:08:55 <vdge[m]> * Yeah, I get it. Let's not get into additional security risks posed by desktop with adb access. I agree with it but my question is- can this specific app cause any harm if those requested permissions are granted ?
+11:13:17 <strcat[m]> yes
+16:30:43 * itsokiwantogohom  < https://matrix.org/_matrix/media/r0/download/matrix.org/LEQlnqggQqPhULDlaZkDoADm/message.txt >
+16:31:22 * itsokiwantogohom  < https://matrix.org/_matrix/media/r0/download/matrix.org/jQdGtMbJGEgfSZxGJBdxVRmM/message.txt >
+16:32:55 * itsokiwantogohom  < https://matrix.org/_matrix/media/r0/download/matrix.org/emjRFzXYqOzWGpLdtunWcjXr/message.txt >
+16:38:19 <TheJollyRoger> Ahoy itsokiwantogohom , check your default apps under Settings -> Apps -> Default Apps, make sure dialer is selected. Make sure the AOSP dialer is not disabled under "See All Apps."
+16:46:02 <itsokiwantogohom> <TheJollyRoger "Ahoy itsokiwantogohomenow , chec"> I don't understand exactly what happened but here is what I did: I searched for the package name com.android.dialer in the settings search box. It did not appear. I used the app App Manager from F-Droid to see a full list of all system apps. And lo and behold there was the Phone app with the package name com.android.dialer. From App Manager on I was able to "open
+16:46:02 <itsokiwantogohom> in settings" and enable it again.
+16:46:32 <TheJollyRoger> itsokiwantogohom: You got it back? Glad to hear.
+16:47:43 <itsokiwantogohom> <TheJollyRoger "itsokiwantogohomenow: You got it"> Yeah, I got it back.
+16:48:34 <TheJollyRoger> Great!
+17:02:42 <chile09[m]> Is this compatibel with f-droid?
+17:03:18 <somenerd[m]> GrapheneOS? Yeah, I believe that F-droid works on GrapheneOS
+17:09:26 <chile09[m]> what's a recommended messenger?
+17:09:30 <chrismachine[m]> yes it is
+17:10:34 <helloworldkk87[m> F-Droid is not recommended due to F-Droid having accumulated large numbers of apps that are now unmaintained and target much older versions of the Android API all the way back to before Android 6, and not warning the user that the apps are written and compiled for older versions of Android
+17:11:14 <chrismachine[m]> what would you recommend? Just installing apks directly?
+17:11:58 <helloworldkk87[m> Yes or Aurora Store
+17:12:53 <chrismachine[m]> fair, would be nice to have a dedicated open source "store" that could stay up to date
+17:13:06 <chrismachine[m]> or really, I meant free
+17:13:07 <helloworldkk87[m> Yeah that would be nice
+17:13:39 <chile09[m]> what is Aurora Store?
+17:14:02 <chrismachine[m]> It's an anonymous way to install gplaystore apps
+17:14:21 <chrismachine[m]> can get it on fdroid lol
+17:14:28 <helloworldkk87[m> :D
+17:14:33 <chrismachine[m]> or just the apk
+17:14:55 <helloworldkk87[m> Im not hating fdroid I use Foxy Droid myself but its just not recommended
+17:15:13 <chile09[m]> why
+17:15:23 <helloworldkk87[m> <helloworldkk87[m "F-Droid is not recommended due t"> .
+17:15:27 <chrismachine[m]> I literally just learned about fdroid and everything yesterday lol
+17:16:01 <chrismachine[m]> I'm an Apple refugee
+17:16:24 <chile09[m]> so you're recommending Google Play Store apps instead?
+17:16:38 <chrismachine[m]> no
+17:16:41 <chrismachine[m]> kinda
+17:17:16 <helloworldkk87[m> <chile09[m] "so you're recommending Google Pl"> Aurora Store gets the apk's from the playstore
+17:17:41 <chile09[m]> but the Play store apps are not FOSS
+17:17:55 <chrismachine[m]> many are not
+17:18:16 <chrismachine[m]> also, look at the privacy section to check for trackers
+17:18:39 <helloworldkk87[m> <chile09[m] "but the Play store apps are not "> FOSS isnt always private and secure, look at Linux, its security model is really broken
+17:19:11 <helloworldkk87[m> <chrismachine[m] "also, look at the privacy sectio"> Most of them wont work on GrapheneOS anyways as they need googleplayservices
+17:19:47 <chrismachine[m]> I've gotten things like signal, element, brave, and most of my crypto apps working just fine
+17:20:26 <chrismachine[m]> I actually like newpipe better than the youtube app
+17:20:41 <chrismachine[m]> and twidere works good as well
+17:20:47 <helloworldkk87[m> <chrismachine[m] "I actually like newpipe better t"> Yeah its like YouTube premium for free
+17:21:03 <chrismachine[m]> yup and no tracking, idk what I was doing on ios
+17:21:49 <helloworldkk87[m> Also just an fyi there is #grapheneos-offtopic:matrix.org where we talk about this kinda stuff, I dont mind it but the mods dont like people talking on the main channel about stuff like this
+17:22:04 <chrismachine[m]> gotcha thanks
+17:38:52 <bingusite[m]> so I'm new to all these terms. Flashing by default also includes rooting? So if I flash grapheneos it'll also root the phone?
+17:39:11 <helloworldkk87[m> No.
+17:41:18 <bingusite[m]> ah kk, so is it not recommended to root grapheneos?
+17:41:59 <helloworldkk87[m> Yeah dont root. If you want you can read more about why in here: https://madaidans-insecurities.github.io/android.html#rooting
+17:43:32 <bingusite[m]> I see, thx
+17:47:35 <itsokiwantogohom> <helloworldkk87[m "."> Well a good practice using f-droid is to check, when the apps have been last updated. I do not install apps that haven't been touched in a year or longer.
+17:48:52 <helloworldkk87[m> That is a good point
+17:51:15 <bingusite[m]> Also my PC has still not been able to see the device while it's in fastboot, I'm pretty sure it's not to do with the USB either because I'm using the same one that's been used by others here
+17:55:00 <helloworldkk87[m> The cable that came with your device?
+17:55:30 <bingusite[m]> my PC doesn't have a USB C port so I got a USB A to C 3.1 cable
+17:56:32 <helloworldkk87[m> Hmm
+18:00:35 <bingusite[m]> <plisk "https://www.amazon.com/gp/produc"> > I couldnt get the web based install go complete with any of the different google provided cables I have in my collection. A to C or C to C. I had this particular Anker cable that allowed it to run successfully on a Pixel 5 just now
+18:02:13 <helloworldkk87[m> Will have to wait for experts to come as they can help better
+18:02:22 <bingusite[m]> 👍️
+18:03:24 <chile09[m]> would it be possible to run GrapheneOS on QEMU?
+18:09:51 <nscnt[m]> bingusite: From what operating system do you try to flash?
+18:50:17 <airinghouse[m]> just did a fresh install of graphene os on my pixel 2. having an issue with sending texts. i can receive sms, can make/receive phone calls, and APNs look correct but i cannot send texts. anyone have any ideas?
+19:01:34 <CrowmacMcCarthy[> <airinghouse[m] "just did a fresh install of grap"> Pixel 2 is not a supported device
+19:01:45 <CrowmacMcCarthy[> ¯\_(ツ)_/¯
+19:02:09 <airinghouse[m]> ahh understood
+19:03:46 <GrapheneOS-Teleg> !Jeremy has joined the Telegram Group!
+19:08:41 <TheJollyRoger> The Pixel 2 is EOL. GrapheneOS may, at its discretion and contingent upon availability of surplus developer time, backport security fixes from upstream as a harm reduction strategy to give people marooned on these old devices more time to upgrade to a device that's supported, but the handsets have been abandoned by Qualcomm and Google, who are no longer issuing security updates to the SoC,
+19:08:43 <TheJollyRoger> modem, and firmware because the time they agreed to support the handset has ended. Without their support, no operating system can continue to secure what essentially is now insecure hardware in a meaningful way.
+19:10:09 <TheJollyRoger> This is why to remain honest and transparent about the state of the handsets, the developers have elected to display security patch levels at the last date that the handsets were officially supported from the vendor and from upstream. It's no longer recommended to go with insecure devices that have been abandoned by the vendors.
+19:10:12 <TheJollyRoger> Never was.
+19:22:09 <chile09[m]> is it possible to run GrapheneOS on QEMU?
+19:29:39 <princemachiavell> You can compile it for x86 and run it in emulation like you would for any standard android build.
+19:46:59 <chile09[m]> QEMU can't emulate ARMv8-A CPU?
+20:18:25 <exceptiion> hey there
+20:18:54 <exceptiion> i was wondering which pixel out of all of them is the most secure with GrapheneOS?
+20:19:03 <exceptiion> Esp to LE
+20:19:04 <GrapheneOS-Teleg> <!Hulk> Pixel 5
+20:19:13 <exceptiion> Alright bet
+20:19:16 <exceptiion> thats what ima cop
+20:19:30 <exceptiion> got this oneplus 7 pro atm
+20:19:36 <exceptiion> and feds got into it in a breeze lmao
+20:20:39 <GrapheneOS-Teleg> <!Hulk> here is the official info btw https://grapheneos.org/faq#recommended-devices
+20:21:28 <exceptiion> and is it any less secure if i use the the fp reader in addition to a 16 digit pin?
+20:21:48 <PNK[m]> my pixel 3 suddenly has stopped charging.
+20:21:48 <PNK[m]>  what do?
+20:22:11 <exceptiion> when everything goes smooth ima donate you some of my coins
+20:26:56 <GrapheneOS-Teleg> <!Hulk> you can learn about it here https://grapheneos.org/faq#encryption
+20:27:20 <GrapheneOS-Teleg> <!Hulk> PNK[m]: hi, are you using the official charger and official cable?
+20:40:17 <bingusite[m]> <nscnt[m] "bingusite: From what operating s"> Nvm, I managed to flash it in the end
+21:27:23 <TheJollyRoger> PNK[m]: If your pixel 3 has stopped charging, the first thing to do is check the USB. Test it with the official charger and official cable, and then see if it will still charge via wireless charging. The Pixel 3s have an unfortunate tendency to have the USB slot "wear out" if heavily used or if any water gets into the prongs and then they stop working entirely - I know this from experience.
+21:59:19 <christhepanda[m]> also, grab some isopropyl alcohol to clean out both the cable and the port in case it is a problem of some dirt.
+22:06:27 <infinitetittys1> Graphene OS is awesome!
+22:06:29 <infinitetittys1> :-)
+22:06:36 <infinitetittys1> Donate to Graphene OS! :-)
+22:06:40 <christhepanda[m]> yup
+22:06:51 <infinitetittys1> Rate my anonymity setup if u want
+22:06:58 <anupritaisno1[m]> infinitetittys1: yes, we are aware
+22:07:08 <anupritaisno1[m]> <infinitetittys1 "Rate my anonymity setup if u wan"> #grapheneos-offtopic:matrix.org
+22:07:19 <christhepanda[m]> I already donate $20 a month.
+22:07:22 <christhepanda[m]> so yeah
+22:07:27 <infinitetittys1> Nice!
+22:09:00 <emilsp> since fido/u2f seems to rely on google services, and now that us courts have recognized that APIs are copyable, would it be reasonable to reimplement the fido/u2f service as a standalone thing so that apps could still use u2f/fido stuff?
+22:11:28 <infinitetittys1> Sure
+22:53:17 <jasldi> Hi I would like to do a backup using SeedVault on a 128GB SanDisk from by Pixel 4a 5g. When I plug the USB into the phone using the USB-C to USB-A adapter that came with the phone, I cannot switch on file transfer, as the connection cannot be switched to be controlled by the phone.
+22:53:17 <jasldi> The USB-Drive is currently formatted as FA
+22:53:28 <jasldi> as FAT, is this format compatible?
+23:01:14 <vdge[m]> <jasldi "Hi I would like to do a backup u"> I don't think you need to select file transfer as you essentially connected OTG to your phone if I correctly understand. Did you check the file manager app? The connected otg pen drive should be visible there.
+23:03:56 <jasldi> Thanks for your help. No, I cannot see the thumb drive in my file browser, and the option to save the backup on the flash drive is greyed out
+23:04:42 <jasldi> Yes, I plugged the flash drive directly into the phone using the adapter. Is this not how you do a backup on a flash drive?
+23:07:10 <vdge[m]> I never tried the seedvault backup but can't you just back up in the internal storage and transfer it over to your PC or thumb drive +
+23:07:23 <vdge[m]> * I never tried the seedvault backup but can't you just back up in the internal storage and transfer it over to your PC or thumb drive?
+23:07:53 <vdge[m]> <jasldi "Thanks for your help. No, I cann"> That's weird, may be try a different format.
+23:08:16 <jasldi> Yes, I could probably do that as long as there is enough space on the internal storage for the backup. As soon as this is no longer possible, I'd need to find another solution, though, I suppose
+23:11:28 <jasldi> I selected the internal storage experimentally, but now it doesn't let me select anything else. Does anyone know how to switch storage location?
+23:12:06 <jasldi> Nvmtd I found the option to change storage location
+23:15:55 <vdge[m]> On the other note, can the trackers in any app with blocked network access can communicate to the outside world in any way? Is there something I need to be worried about? None of the permissions are given btw.
+23:23:12 <vdge[m]> I searched through the chat and didn't find any contradicting statements. Looks like android does a damn good job in this case. 👏👏
+23:27:51 <vdge[m]> I searched through the chat and didn't find any contradicting statements. Looks like android does a damn good job in this case. 👏👏
+23:27:51 <vdge[m]> Edit - Just realized that it was asked too many times. Should have just searched. Sorry!
+23:29:55 <vdge[m]>  * I searched through the chat and didn't find any contradicting statements. Looks like android does a damn good job in this case. 👏👏
+23:29:56 <vdge[m]> Edit - Looks like it was asked was many time lol. Should have just searched. Sorry!
+23:30:09 <vdge[m]>  * I searched through the chat and didn't find any contradicting statements. Looks like android does a damn good job in this case. 👏👏
+23:30:10 <vdge[m]> Edit - Looks like it was asked times lol. Should have just searched. Sorry!
+23:30:22 <vdge[m]>  * I searched through the chat and didn't find any contradicting statements. Looks like android does a damn good job in this case. 👏👏
+23:30:22 <vdge[m]> Edit - Looks like it was asked many times lol. Should have just searched. Sorry!
+23:42:57 * gos-network-sign  < https://matrix.org/_matrix/media/r0/download/matrix.org/iVaNGXuklHUirQQWxtKdahpP/message.txt >
+23:45:26 <strcat[m]> gos-network-signal-linphone: I asked you to check if you have a device manager or accessibility service
+23:45:37 <strcat[m]> and to undo removed permissions for system apps which is likely the problem
+23:45:55 <strcat[m]> other than that you should reinstall Signal after doing that since you probably removed Permission Controller permissions which broke it
+23:46:09 <strcat[m]> I'm aware that users can break Permission Controller by disabling usage stats
+23:46:24 <strcat[m]> Settings app does not try to prevent you from doing everything that could break things atm
+23:46:49 <strcat[m]> in general, good idea to leave the base system alone
+23:46:55 <gos-network-sign> <strcat[m] "gos-network-signal-linphone: I a"> How can I check if I have a device manager or accessibility service? (Still don't know what those are)
+23:47:22 <gos-network-sign> <strcat[m] "and to undo removed permissions "> I don't remember messing with system apps permissions.
+23:48:24 <gos-network-sign> NB: I have the same kind of problem with Linphone (dunno if/how this is relevant for troubleshooting)
+23:48:33 <strcat[m]> whether you remember or not it's the way you probably created the issue
+23:49:11 <strcat[m]> if you've made changes with Settings you don't remember such as disabling perms for system apps like Permission Controller then the best solution is probably a factory reset
+23:49:17 <strcat[m]> rather than trying to figure out what you might have done
+23:49:40 <gos-network-sign> <strcat[m] "whether you remember or not it's"> OK. Do I have to re-install the whole GOS from scratch then? Because I won't be able to undo what I don't remember to have done! :-)
+23:49:53 <strcat[m]> gos-network-signal-linphone: do a factory reset then
+23:50:01 <strcat[m]> same result as a fresh install
+23:50:17 <strcat[m]> or you could figure out what you have done but I don't really have the patience atm to go through every possible thing and figure it out
+23:50:24 <strcat[m]> gos-network-signal-linphone: as an earlier less drastic step
+23:50:24 <gos-network-sign> Wow. And reinstall everything from start. That will take a lot of time. :-((
+23:50:32 <strcat[m]> use the app settings reset
+23:50:41 <gos-network-sign> <strcat[m] "or you could figure out what you"> Yes, sure!!
+23:51:00 <strcat[m]> Settings -> System -> Advanced -> Reset options
+23:51:06 <strcat[m]> Reset app preferences
+23:51:17 <strcat[m]> will undo all changes you've made to permissions and similar app preferences
+23:51:54 <gos-network-sign> <strcat[m] "Reset app preferences"> In my secondary user profile, right?
+23:52:09 <strcat[m]> probably in both
+23:52:11 <gos-network-sign> not in the owner. That's not a factory reset, then?
+23:52:22 <strcat[m]> reset app preferences in both
+23:52:27 <strcat[m]> don't do a factory reset at this point
+23:52:47 <gos-network-sign> What's the difference?
+23:52:48 <strcat[m]> reset app prefs in owner first
+23:52:56 <strcat[m]> gos-network-signal-linphone: this is just resetting app preferences
+23:53:01 <strcat[m]> as I described above
+23:53:04 <strcat[m]> please just do that
+23:53:45 <gos-network-sign> <strcat[m] "gos-network-signal-linphone: thi"> meaning I will keep my data? (Like my Signal conversations). Or do I have to backup first?
+23:55:31 <strcat[m]> you won't lose data
+23:55:36 <strcat[m]> as I said above, reset app references
+23:56:01 <strcat[m]> and check if you have a device manager / accessibility service in both profiles, Auditor will tell you
+23:56:03 <gos-network-sign> <strcat[m] "you won't lose data"> Woups, sorry, I've just read it: "You will not lose any app data".
+23:58:22 * gos-network-sign uploaded an image: (85KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/QQNgTKtABTakfvvBkhmAlfSC/signal-2021-04-12-013415.jpeg >
+23:58:24 * gos-network-sign uploaded an image: (91KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/JzxjMxpAmGqvDYFHAFnCBsLg/signal-2021-04-12-013514.jpeg >
+23:59:30 <gos-network-sign> <strcat[m] "and check if you have a device m"> I don't see anything about "device manager" or "accessibility service" in the auditor report.

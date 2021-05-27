@@ -1,0 +1,626 @@
+01:38:47 <Callahan> Hi,
+01:38:48 <Callahan> Just bought a Pixel 4XL. Am following the instructions here:
+01:38:48 <Callahan> https://grapheneos.org/install#install
+01:38:49 <Callahan> I am up to here: https://grapheneos.org/install#unlocking-the-bootloader
+01:38:49 <Callahan> I've booted the phone into the boot loader. The Device state shows as locked. However, I'm not seeing anything past the "Waiting for device". Looking in the Device Manager, I see that it's showing the Pixel 4XL as an unknown device. If I boot the Pixel, the Pixel is recognised in Windows.
+01:38:50 <Callahan> I have installed all the SDK and the Google USB drive through the Android Studio app.
+01:38:50 <Callahan> I have enabled USB Debugging as well as followed every step to the letter in the linked instructions above.
+01:38:51 <Callahan> I've tried multiple USB cables and 3 different copies of Windows 10 devices.
+01:38:51 <Callahan> Running "adb devices" through the platform tools while the phone is at the Fastboot menu also results in no devices being listed.
+01:38:52 <Callahan> I'm at a bit of a loss now as I've think I've installed the correct driver (although as evidenced, it appears not). What I don't understand is that if Windows recognises the phone when it's booted, why does it not recognise it when it's in Fastboot.
+01:38:52 <Callahan> Any pointers as to what I might be missing?
+01:42:21 <TheJollyRoger> Hello Callahan, you may need to update the driver in device manager.
+01:42:48 <dar_gomml[m]> you should boot to fastboot, not the Boot loser
+01:43:14 <dar_gomml[m]> * you should boot to fastboot, not the bootloader
+01:43:47 <Callahan> Hi TheJollyRoger - I've tried - but Windows finds no suitable drive even when I try to update it by pointing it at the Google USB driver I have downloaded
+01:44:27 <TheJollyRoger> Callahan: adb devices when the phone is in fastboot shouldn't return any devices, since that talks to the operating system when Android is running. Fastboot will talk to the phone when the phone is at Fastboot, they're different tools. The fastboot equivalent is "fastboot --devices"
+01:44:29 <Callahan> Hi dar_gomml[m] - I meant that I had booted to Fastboot Mode, apologies.
+01:44:37 <TheJollyRoger> Sorry,
+01:44:39 <TheJollyRoger> "fastboot devices"
+01:44:51 <dar_gomml[m]> <TheJollyRoger "Hello Callahan, you may need to "> is this mentioned in the install guide? if not, i'd be nice to have it..
+01:45:31 <TheJollyRoger> Don't think so. I'll go see what I need to fix, I haven't had any issues with autodetection strangely. >_<.
+01:46:11 <Callahan> TheJollyRoger - fastboot devices also shows no devices
+01:46:33 <TheJollyRoger> Alright, I'm out of ideas... hopefully someone else here might be able to chime in.
+01:47:05 <Callahan> Just to confirm, the driver for the Pixel 4 XL is the Google USB driver that comes with the Android Studio correct?
+01:48:55 <TheJollyRoger> I'm unsure. I used platform tools, rather than the full Android Studio.
+01:49:04 <TheJollyRoger> *I used the official release of Platform Tools.
+01:49:18 <Callahan> Gah! user error! Dammit
+01:49:22 <Callahan> Embarressing
+01:49:38 <Callahan> Embarrassing*
+01:49:59 <TheJollyRoger> No worries at all! Fingers crossed.
+01:50:03 <Callahan> I was pointing the update driver at the amd64 folder in the driver package
+01:50:05 <Callahan> Idiot!
+01:50:08 <Callahan> Sorry
+01:50:10 <TheJollyRoger> Oh, XP.
+01:50:16 <TheJollyRoger> Hey no prob! Let's hope this does it!
+02:14:54 <Callahan> TheJollyRoger - Staying with the theme of stupid questions, I'll throw one more in there. The coral_ota_update I assume is to manually update your device from an earlier release. Does Graphene auto update itself over the air once installed?
+02:36:52 <TheJollyRoger> Hey Callahan, yes, GrapheneOS will automatically update.
+02:37:16 <TheJollyRoger> *will automatically self-update, once installed.
+02:37:32 <TheJollyRoger> No stupid questions, anything else I might be able to help you with?
+02:38:24 <TheJollyRoger> GrapheneOS uses delta updates, so it only downloads the necessary differences to update the system image. Usually these aren't much more than a couple megabytes unless you've fallen REALLY REALLY far behind, but if you're roaming or you have very little data available you can set the update client to only download on unmetered networks.
+03:10:39 <citypw> https://indianexpress.com/article/technology/social/signal-app-is-down-not-working-7148052/
+03:21:40 <TheJollyRoger> @ Callahan, I missed you earlier, so I'll repost:
+03:21:54 <TheJollyRoger> GrapheneOS uses delta updates, so it only downloads the necessary differences to update the system image. Usually these aren't much more than a couple megabytes unless you've fallen REALLY REALLY far behind, but if you're roaming or you have very little data available you can set the update client to only download on unmetered networks.
+03:23:07 <TheJollyRoger> So, yes, your assumption is correct, GrapheneOS will automatically self-update once the installation is complete. The update server isn't a trusted third party, since the updates are signed and verified end-to-end, and the authenticity of the images are checked on the phone itself.
+03:25:06 <TheJollyRoger> Pixels do A/B updates, so should an update be botched or corrupted, if it tries a few times to boot a slot and fails to, the handset will fall back to the previous image in order to attempt the update a second time.
+03:25:14 <TheJollyRoger> Hope this answers your question.
+03:25:20 <TheJollyRoger> Anything else?
+03:25:26 <TheJollyRoger> (I'm a tad bit high latency at the moment)
+03:25:37 <TheJollyRoger> If you like the software, please don't forget to donate to keep GrapheneOS going!
+04:34:07 <tmoney> this is the error im getting when trying to flash graphene os on my pixel 4 XL ./flash-all.bat : The term './flash-all.bat' is not recognized as the name of a cmdlet, function, script file, or
+04:34:08 <tmoney> operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try
+04:34:08 <tmoney> again.
+04:34:09 <tmoney> At line:1 char:1
+04:34:09 <tmoney> + ./flash-all.bat
+04:34:10 <tmoney> + ~~~~~~~~~~~~~~~
+04:34:10 <tmoney>     + CategoryInfo          : ObjectNotFound: (./flash-all.bat:String) [], CommandNotFoundException
+04:34:11 <tmoney>     + FullyQualifiedErrorId : CommandNotFoundException
+04:34:36 <tmoney> does anyone know what I can do to correct this?
+04:43:11 <deappledapple> Verify first if this step is done correctly: https://grapheneos.org/install#standalone-platform-tools
+04:49:32 <TheJollyRoger> Hello tmoney, you will need to start over and ensure fastboot is added to your command path in PowerShell and returns version 30 or greater.
+04:50:15 <TheJollyRoger> the way to test this to see if it works is "fastboot --version". It will tell you where it is installed (although you'll already know that) and what version you have.
+04:50:54 <TheJollyRoger> Take note that versions below 29, or versions that have weird names to them can cause the infamous "no operating system found" error.
+04:51:01 <TheJollyRoger> (ie: softbrick)
+05:05:51 <ecksit[m]> Hi I'm trying to install on pixel 3a, does the stock ROM need to be android 10? It came with android 11
+05:06:33 <ecksit[m]> If it does, I'm going to need to figure out a way to downgrade before flashing graphene
+05:07:37 <take_a_deep_brea> ecksit:  it has to have the latest , up to date firmware so it should be android 11
+05:07:59 <take_a_deep_brea> you might face issues if you try and downgrade
+05:08:50 <ecksit[m]> Hmm I couldn't get the bootloader flashed, I waited two hours and the flash script just hanged
+05:09:48 <ecksit[m]> I was using arch Linux laptop will try from windows next
+05:10:15 <ecksit[m]> Or it could possibly be smithing with my USB cable
+05:15:37 <take_a_deep_brea> ecksit: i am sorry but ive got some other work . if you  stick around someone will help you
+05:16:01 <AppleBaumTorProj> Hello, Donate to Graphene OS
+05:17:13 <ecksit[m]> Np I will prob try out different things tmrw thanks
+05:20:20 <TheJollyRoger> Hello ecksit[m], you'll want to lock the bootloader and let the stock operating system fully update, so it updates to the latest bootloader. Old versions of the bootloader may not work properly.
+05:25:23 <TheJollyRoger> AppleBaumTorProj/Adam I appreciate encouraging to donate, but please decide on a consistent nickname.
+05:28:59 <b1101> can anyone confirm that the chase mobile app doesn't work in graphene?
+05:29:41 <AppleBaumTorProj> Probably requires google services ,just guessing
+05:29:49 <b1101> that's what I think as well.
+05:30:09 <AppleBaumTorProj> Just try to login to mobile banking using the web browser
+05:30:30 <b1101> ya, that will work, but if I want to deposit a check I'm outta luck
+05:37:04 <AppleBaumTorProj> Right
+05:37:15 <AppleBaumTorProj> I need ALIEN DNA
+05:37:25 <AppleBaumTorProj> Im ready to be abducted by ALIENS
+05:37:29 <AppleBaumTorProj> IM SUMMONING THE ALIENS
+05:37:36 <AppleBaumTorProj> The ALIENS TOLD ME TO USE GRAPHENE OS
+05:37:48 <AppleBaumTorProj> I can make a cool advertisement for Graphene
+05:38:12 <AppleBaumTorProj> A Green Alien holding a Graphene OS Pixel 4a "Graphene OS Used by Aliens, secure as the mothership"
+05:46:56 <deappledapple> Lmao
+05:47:25 <AppleBaumTorProj> *Puts Anonymous Mask on over Green Ali3n head*
+05:47:36 <AppleBaumTorProj> The humans will think I'm one of them
+05:49:46 <TheJollyRoger> AppleBaumTorProj: acknowledge.
+05:50:12 <TheJollyRoger> AppleBaumTorProj: Please find a nickname you like and stick with it.
+05:50:27 <AppleBaumTorProj> I-I *Switches Tor circuit*
+05:50:47 * TheJollyRoger smirks.
+05:50:59 <TheJollyRoger> It's OK. Just find a nickname you like and stick with it, alright?
+05:51:09 <AppleBaumTorProj> alright friend *puts on second anonymous mask*
+05:53:23 <TheJollyRoger> It's a matter of respect.
+05:54:10 <AppleBaumTorProj> My typical modus aparandi is to rotate random usernames from the cyberpunk community
+05:55:37 <TheJollyRoger> AppleBaumTorProj: Just find a nickname you prefer and stick with it. If you like, I can help you set up with Nickserv.
+05:56:27 <AppleBaumTorProj> I can register now i Just have to think for 1000 years to decide upon a goo dname
+05:56:30 <AppleBaumTorProj> good name
+05:58:52 <AppleBaumTorProj> What is the future for Graphene OS
+05:58:53 <TheJollyRoger> I have an idea: Anonydam - a portmanteau of your original name and the pursuit you're looking for.
+05:59:06 <AppleBaumTorProj> and, will the Pixel Battery last 3 years?
+05:59:16 <AppleBaumTorProj> Anonydam, Adam + Anonymous, AnonymousAdam
+05:59:18 <AppleBaumTorProj> Perfect
+05:59:25 <TheJollyRoger> There you go.
+05:59:27 <AppleBaumTorProj> Great job mate *tosses you cold beer*
+05:59:33 * TheJollyRoger one-hand catches!
+05:59:40 <TheJollyRoger> Well, as a bit of a check...
+06:00:13 <AppleBaumTorProj> TJR, whats the most secure laptop these days?
+06:00:24 <TheJollyRoger> My old Pixel 1 is in a drawer somewhere. It only runs in airplane mode now so it's essentially a cheap device used as an improvised mp3 player and as a pop tart. The battery still works great,
+06:00:26 <AppleBaumTorProj> Im currently using a Libreboot Laptop
+06:00:37 <AppleBaumTorProj> great, how did you charge it?
+06:00:47 <AppleBaumTorProj> Should I charge only 1 time per day, to 100% every day?
+06:01:14 <AppleBaumTorProj> Once the battery is at 100%, should I let it *Lil Jon Voice* Get Low, then charge up to 100%?
+06:01:34 <TheJollyRoger> and once I accidentally forgot to turn it off after I charged it, left it on the shelf, and then was surprised when five days later (remember, it's in Airplane mode permanently and has no wifi nor wireless) it gave a "low battery, 15%" warning tone.
+06:02:03 <TheJollyRoger> So with respect to battery health, the batteries DEFINITELY are capable of lasting the lifespan of the unit.
+06:02:28 <TheJollyRoger> With respect to Libreboot and secure laptops, that's not only offtopic, but we've had this coversation before. My answer has not changed.
+06:02:50 <AppleBaumTorProj> How do I disable the IntelME/AMD SPS chip
+06:02:57 <TheJollyRoger> with a hammer.
+06:02:57 <AppleBaumTorProj> Im concerned its a remote-access backdoor
+06:03:10 <AppleBaumTorProj> Yes, but to boot, the IntelME has to be 'on' for the bootup
+06:03:10 <TheJollyRoger> Again, my answer has not changed and that's offtopic here.
+06:03:19 <TheJollyRoger> As above, my answer has not changed and that's offtopic here.
+06:03:48 <TheJollyRoger> If you'd like to maximize the amount of battery life...
+06:03:51 <TheJollyRoger> Remember a few things:
+06:03:57 <AppleBaumTorProj> :)
+06:04:27 <TheJollyRoger> A) Lithium batteries aren't like the previous generation NiMH batteries; don't deep cycle them, or that actually reduces their life.
+06:04:46 <AppleBaumTorProj> Alright, so whats the opimal/best practive charging usage?
+06:04:54 <TheJollyRoger> So try not to keep them from going below 20%. Outside of that, you're going to want to let the phone's firmware do the rest.
+06:05:19 <TheJollyRoger> Phones have gotten VERY good at determining the best charging curve for the battery so that you don't have to resort to hinky charging practices or "battery hygiene" to maximize their life.
+06:05:23 <TuxKruger[m]> Charging till 80%-ish is ok for lithium batteries
+06:05:37 <TheJollyRoger> So you want to let the phone do that for you.
+06:06:09 <TheJollyRoger> But deep cycling or exposure to a lot of heat for long periods of time are extremely bad for your battery.
+06:06:15 <TuxKruger[m]> Suggested range is 40%-70% by an experiment (I will share if I find it again), but it is hard to keep up with it
+06:06:36 <AppleBaumTorProj> So is 1 full charge to 100% daily, just fine?
+06:06:55 <TheJollyRoger> TuxKruger[m]: If I recall correctly, the vendors actually recognize this. The circuits in the battery will try to take this into account as the battery ages.
+06:07:20 <TheJollyRoger> AppleBaumTorProj: just plug your phone in and let it charge back to 100% before the battery hits below 20%, and you should be fine.
+06:07:46 <AppleBaumTorProj> ok so I should wait for it to reach 20%.. ok
+06:07:54 <AppleBaumTorProj> I was hoping 1 full charge per day would be ok
+06:07:55 <TheJollyRoger> No, no no, there's no need for that.
+06:08:13 <TheJollyRoger> You can just do what I do, and put it on a charge plate, or plug it in when it's not in use.
+06:08:36 <TheJollyRoger> Just don't deep cycle it.
+06:08:38 <AppleBaumTorProj> so if I charge the phone to 100%, then it gets to 90% and I charge up to 100% again, is that bad for it?
+06:08:43 <AppleBaumTorProj> Alright =)
+06:08:44 <TheJollyRoger> Nope, not at all.
+06:09:03 <TuxKruger[m]> Charging once till 100 in a day is somewhat ok, but many people tend to go for another round
+06:09:03 <AppleBaumTorProj> I was thinking the battery was like gasoline
+06:09:04 <TheJollyRoger> The vendors realized that many users would be doing that, so the firmware in the battery is actually capable of adjusting for it, if I recall right.
+06:09:19 <AppleBaumTorProj> The 'Old charge' from 1 day ago needs to be used before I add more charge/gas
+06:09:54 <AppleBaumTorProj> Does letting battery get to 0% have any benefit to let the battery discharge then recharge
+06:09:58 <AppleBaumTorProj> is that occasionally good for it
+06:10:02 <AppleBaumTorProj> at some electrostatic level
+06:10:09 <AppleBaumTorProj> :}
+06:10:14 <TheJollyRoger> It's not like that anymore, it's more like spending money out of a secured line of credit: so long as you use it and keep it topped up you're fine, it's when you try to *overdraw* that you run into issues.
+06:10:21 <TuxKruger[m]> <TheJollyRoger "TuxKruger: If I recall correctly"> Xiaomi users like me can't be sure :insert_harold_emote_here:
+06:10:27 <TheJollyRoger> Or when you use up a lot of it all at once.
+06:10:46 <TheJollyRoger> (If nobody here has obtained a secured line of credit, I apologize for the analogy breakdown preemptively)
+06:11:00 <AppleBaumTorProj> ok
+06:11:38 <TheJollyRoger> The gasoline metaphor *used* to be that way, but those were for older generation NiMH and Ni-Cad batteries.
+06:11:43 <TheJollyRoger> Those aren't really used in phones anymore.
+06:11:54 <AppleBaumTorProj> ok
+06:12:03 <TheJollyRoger> Very different technology. Nickel Cadmium batteries are now obsolete, they have been mostly phased out.
+06:12:03 <AppleBaumTorProj> I was thinking the 'old charge' needed to be used before a new charge was used
+06:13:38 <AppleBaumTorProj> Jolly, do you have a time machiene?
+06:13:51 <TheJollyRoger> Yeah; that's if you have Nickel Cadmium (NiCad) batteries, or Nickel Metal Hydride (NiMH) Batteries. But those types of batteries are largely obsolete now except for a few niche applications like interchangeable off the shelf consumer batteries (AA, AAA, C, D batteries, etc), and with very few exceptions Nickel Cadmium batteries I think were phased out around a decade ago.
+06:14:02 <AppleBaumTorProj> ok good
+06:14:29 <TheJollyRoger> Those you *do* need to deep cycle, so if you have any old gadgets or old flashlights from the 1990's, you do have to manage battery health manually.
+06:14:42 <AppleBaumTorProj> Thats whre the advice comes from, thanks
+06:14:47 <TheJollyRoger> Yep!
+06:14:54 <TheJollyRoger> I don't have a time machine, I just read a lot :P.
+06:14:58 <AppleBaumTorProj> Alright
+06:15:03 <AppleBaumTorProj> back in 2009
+06:15:10 <AppleBaumTorProj> A bitcoin talk user smoketoomuch
+06:15:16 <AppleBaumTorProj> had 10,000 BTC for $50
+06:15:30 <louipx> for 2 pizzas
+06:15:35 <AppleBaumTorProj> a 5 minute buy of the 10k BTC for $50 would today be worth over $300 million
+06:15:40 <AppleBaumTorProj> That was a second user
+06:16:38 <louipx> also please join #grapheneos-offtopic for general chat
+06:17:53 <AppleBaumTorProj> So  5 minutes of time, and $50 , would now be worth $300 million
+06:17:56 <AppleBaumTorProj> makes a 4 year degree with 100k debt a laughable investment
+06:18:00 <AppleBaumTorProj> 5 minutes, $50 = $300Mill or 4 years, $100k, and may not get hired
+06:18:02 <AppleBaumTorProj> Such a perfect opportunity
+06:18:08 <AppleBaumTorProj> Mining bitcoin "Yes i got rich by leaving my computer mine BTC for 2 years" It took 5 minutes of checking to make sure the software was running per day and the CPU did the rest."
+06:18:10 <AppleBaumTorProj> *sips mango martini*
+06:18:12 <AppleBaumTorProj> Some people made that life
+06:18:13 <TheJollyRoger> AppleBaumTorProj/Anonydam, you'll be better served talking about Bitcoin in the Offtopic channel.
+06:18:22 <AppleBaumTorProj> ok
+07:14:34 <bobi> Hi everyone, i have been lurking here for a month and I just received my pixel4a. I intend to install graphene today but first I was wondering what do you meant by good USB cable ? My computer does not have a USB c port so I plan to use a cable USB a to micro USB from a Samsung galaxy and an adapter micro USB to USB c. Is this a good setup to
+07:14:34 <bobi> install graphene ?
+07:16:01 <deappledapple>  need a good quality usb A to C cable
+07:17:00 <bobi> My usb a to micro usb and the adapter come from the box of a galaxy
+07:17:05 <AppleBaumTorProj> Yes USB A to USB C, get a standards certified high quality one
+07:17:14 <deappledapple> <bobi "My usb a to micro usb and the ad">
+07:18:00 <deappledapple> Haven't tested it myself, but no guarantees it'll work even when grapheneos.org/install is followed
+07:18:27 <bobi> It won't break anything ? The only drawback may be the failure of the installation?
+07:18:45 <deappledapple> <bobi "My usb a to micro usb and the ad"> Say ./flash-all.sh failed, you can try plugging usb A on other ports, near the motherboard preferably
+07:19:00 <deappledapple> <bobi "It won't break anything ? The on"> Yeah
+07:19:10 <deappledapple> Failure to flash-all more or less
+07:21:50 <AppleBaumTorProj> It may brick the phone
+07:21:59 <AppleBaumTorProj> Just get a standard certified cable
+07:26:15 <deappledapple> Not recommended officially, but a small usb C female to usb A male adaptor may work (have tried this myself with Pixel usb cable and flashing worked that time, on a usb A port)
+08:07:31 <linxu> Hi there, does gos come with a tts engine?
+08:16:44 <deappledapple> Not really?
+08:22:45 <sim23> Hello everyone
+08:28:53 <sim23> I just finished flashing my Pixel 4a. When I power off/on my phone I get the following message: Your device is loading a different operating system. I then see the Google splash screen followed by the GrapheneOS screen. Is this how it's suppose to load?
+08:37:48 <ziq> sim23 yes
+08:38:20 <sim23> I was curious because I wasn't expecting to see the Google splash screen.
+10:11:58 <bobi> hi, it's me again. I found a USB C to USB A cable without adaptator from a box of a Galaxy S20. Does this cable qualify as a "high quality USB-C to USB-A cable". If not, what kind of USB certification do i look for ? Is a USB-IF certified cable considered as a good USB cable ? Sorry to insist but i am not qualified enough on this...
+10:23:35 <mynacol[m]> bobi: You should be safe by just trying it. AFAIK you cannot really destroy your phone, but you may need another cable and time to fix it (if something breaks at the wrong time)
+10:24:28 <mynacol[m]> Read the installation instructions carefully, then follow it step-by-step. We are here if something's not working
+10:24:28 <banjo[m]> bobi the one that come in the box and brand name ones like anker are generally OK. the problem is with cheap Chinese ones that often come with other stuff and people gave laying around or old and worn out ones. sometimes one  USB port is finicky and another one work great.
+10:24:53 <banjo[m]> what pixel do you have?
+10:25:13 <banjo[m]> * bobi the one that come in the box and brand name ones like anker are generally OK. the problem is with cheap Chinese ones that often come with other stuff and people have laying around or old and worn out ones. sometimes one  USB port is finicky and another one work great.
+10:26:07 <banjo[m]> * bobi the one that come in the box and brand name ones like anker are generally OK. the problem is with cheap Chinese ones that often come with other stuff and people have laying around or old and worn out ones. sometimes one  USB port is finicky and another one work great.
+10:26:18 <banjo[m]> * the one that come in the box and brand name ones like anker are generally OK. the problem is with cheap Chinese ones that often come with other stuff and people have laying around or old and worn out ones. sometimes one  USB port is finicky and another one work great.
+10:30:22 <banjo[m]> better not be 4a5g
+10:31:25 <nonyadb[m]> Will the 4a5G ever be supported by GrapheneOS?
+10:31:59 <yaaqob[m]> Same on pixel3axl. Not sure it can be prevented without deep surgery.
+10:33:20 <banjo[m]> yaaqob: what about 3a xl?
+10:33:44 <banjo[m]> nonyadb: testing is set to begin soon
+10:34:17 <bobi> Thanks, ill try then. I have the pixel 4A.
+10:34:29 <nonyadb[m]> banjo: Excellent. I already have it on a 4a and would love ot have it on my 4a5g as well.
+10:35:23 <banjo[m]> nonyadb: how com you bought both?
+10:35:45 <banjo[m]> * nonyadb: how come you bought both?
+10:36:18 <yaaqob[m]> <banjo[m] "yaaqob: what about 3a xl?"> Was comment back to sim,23 not realizing it was not the last message :-(
+10:36:58 <nonyadb[m]> banjo: Because I can.  The 4a is clean and has nothing tied to my real identity (not even the SIM card). The 4a5G is for regular use.
+10:39:55 <banjo[m]> depends on who you hiding from. there's quite a long discussion on #grapheneos-offtopic:matrix.org about this topic
+10:42:41 <nonyadb[m]> I'm not "hiding" from anyone.  I just like keeping my options open.  And being former military I subscribe to the rule of "one is none, two is one, three is two", i.e. always have a backup plan.
+10:45:34 <banjo[m]> that's a good motto even for a minimalist
+10:47:03 <banjo[m]> two is one and one is none
+11:54:30 <tempest2478[m]> Just got grapheneos on my pixel 4xl. I have apps I just downloaded from both f-droid and web apk (signal, osmand, etc) when I opened the aurora store I was seeing it had updates for those apps I got from apks and fdroid. Will updating apps like signal through aurora replace the apps with the Google play store versions and cause them to not work the same? Why does the aurora store have a newer version than the
+11:54:30 <tempest2478[m]> website and f-droid?
+11:59:27 <take_a_deep_brea> tempest2478: afaik the aurora store is a play store client so it is likely that apps updated this way may grow a play store dependenxy
+12:00:55 <take_a_deep_brea> f droid is not well known for timely updates as , as the apps are built by fdroid rather than the build being pushed by the devs as in playstore(this is my understanding)
+12:01:29 <tempest2478[m]> Gotcha. That's what I assumed too but I wasn't sure. Also, is it safe to download any app from aurora store? Is there any security/privacy concerns with that? or does the OS just block all communications with Google? Like do I need to be selective with what apps I get from aurora or am I safe to experiment?
+12:03:15 <take_a_deep_brea> tempest2478: aurora has the exodus app built in so you can get to know wether an app has any trackers built in
+12:04:23 <take_a_deep_brea> aurora is a just a client afaik soyou need to be careful anyways about the typeof apps you.install
+12:04:37 <take_a_deep_brea> it does/not implement any kind of filtering of apps
+12:06:21 <tempest2478[m]> Okay. So the OS itself will communicate with Google servers if I allow it by downloading an app?
+12:06:45 <tempest2478[m]> I mean tohe os will allow the app to communicate with Google
+12:09:29 <tempest2478[m]> So basically if I need to use an app from the aurora store,  I'd be better off using calyx and microg to spoof the communications with Google right? Since Graphene doesn't support microg, then the communications would be exposing my data. Do I understand that right?
+12:22:51 <take_a_deep_brea> well thats upto you. a form of microg will eventually get implemented in grapheneOS.
+12:27:59 <tempest2478[m]> My plan is to live without using any gapps. Since I'm just getting started I am working on setup for the daily driver and need to make sure I set it up properly. Thanks for the info. I will avoid the aurora store at all costs. Have you heard of, or used aurora droid? It's the aurora version of f-droid. Supposed to be all open source but looks way cleaner. Is this good to use on graphene security/privacy wise? Also,
+12:27:59 <tempest2478[m]> are respiratories safe to use or do I need to be careful about those?
+12:31:31 <mishmasher[m]> Orbot still stops working after few hours not touching my phone... I already disabled battery optimization on it. Is there something else someone could recommend?
+12:31:57 <nscnt[m]> tempest2478: You have a couple of misconceptions.
+12:32:06 <nscnt[m]> Aurora Store and F-Droid is a reasonable way to obtain apps.
+12:33:11 <take_a_deep_brea> mishmasher: orbot is the only recommended way to access tor nwtwork other than tor browser and onion sharing .as far as i know.
+12:33:12 <take_a_deep_brea> it has its flaws.
+12:34:32 <tempest2478[m]> <mishmasher[m] "Orbot still stops working after "> Do you have a battery saver turned on in the settings? Maybe try to uninstall and reinstall, power cycle.  If not then I am not sure you may just have to restart every few hours
+12:34:55 <take_a_deep_brea> * mishmasher: orbot is the only recommended way to access tor nwtwork other than tor browser and onion share . as far as i know.
+12:35:25 <mishmasher[m]> I use it as full device vpn. Also enabled the thing that there is no internet unless its through orbot thus making this problem extra annoying haha.
+12:36:32 <JonnyHardCash> Hello Everyone, I am new to grapheneos, I am concerned about privacy from bigtech, and I wonder if it is possible to install it on my new samsung A71
+12:36:38 <mishmasher[m]> <tempest2478[m] "Do you have a battery saver turn"> Nope also have battery optimization disabled for orbot
+12:36:59 <nscnt[m]> JonnyHardCash: No, you can't. https://grapheneos.org/faq#device-support
+12:37:20 <JonnyHardCash> Thanks!
+12:38:47 <mishmasher[m]> This orbot problem didn't happen on my previous phones which were non graphene, so I'm guessing it has something to do with graphene settings. Not sure tho.
+12:39:00 <tempest2478[m]> <nscnt[m] "Aurora Store and F-Droid is a re"> Can I download any app from aurora store and not have to worry about privacy/security? Or are there precautions I need to take on top of the OS to make sure apps don't communicate with Google servers?
+12:40:28 <tempest2478[m]> <mishmasher[m] "This orbot problem didn't happen"> Maybe try to turn off the "always on vpn" setting. Maybe that could be forcing a connection and causing an error. Try having that off and just leaving orbot running manually
+12:40:29 <mishmasher[m]> <tempest2478[m] "Can I download any app from auro"> No, that's like asking if you can screw any female just because she isn't a hoe. Lol. Still chance of getting an std😋😋
+12:41:01 <mishmasher[m]> Although the chance is smaller
+12:41:15 <iknowurmom[m]> Hey guess  I'm just getting into privacy and security since a couple months I got rid of all my google/apple stuff so no apple or google phone for me im using a degoogled pixel 4a and GraphenOs with a throw away sim card barely use tho mobile data. Now i m searching a secure and private messenger to only use with my close friends who have a pixel with GraphenOs.How secure and private Is Matrix I heard a lot good
+12:41:15 <iknowurmom[m]> things about it some people say matrix some people say conversation.im so I'm not sure what to use. As a daily I use signal but I'm looking for something private which can't get hacked from a 3 letter agency or any Government or whatsoever.So what would u guyz recommend me?
+12:41:29 <tempest2478[m]> But the OS is like a condom in this context 😆
+12:41:49 <mishmasher[m]> <tempest2478[m] "Maybe try to turn off the "alway"> Noted will try that. Thank you!
+12:41:55 <nscnt[m]> tempest2478: And you're the needle
+12:42:18 <tempest2478[m]> Lol
+12:42:36 <mishmasher[m]> Lmao
+12:46:00 <tempest2478[m]> <iknowurmom[m] "Hey guess  I'm just getting into"> I've been using signal. Due to it requiring a number, I've been looking at threema. Looks promising. Signal is more popular now though so those are my two recommendations
+12:46:06 <nscnt[m]> tempest2478: You'll always think about what you do. With every app you add attack surface. If you want to be secure, think about what you do. The OS tries to minimize every opportunity for an app to do malicious stuff, but it is no magical thing.
+12:46:49 <nscnt[m]> If you choose to download an app that communicates with Google, it simply will communicate with Google.
+12:46:59 <tempest2478[m]> <nscnt[m] "tempest2478: You'll always think"> Fair enough just making sure I am not missing anything. Thanks for helping
+12:47:51 <iknowurmom[m]> <tempest2478[m] "I've been using signal. Due to i"> Yeah I also use signal as a daily also I also considerd threema but I also read a lot of bad things about it solo not to sure what to use
+12:48:41 <tempest2478[m]> I saw a comparison chart the other day let me see if I can find it
+12:49:16 <iknowurmom[m]> <tempest2478[m] "I saw a comparison chart the oth"> https://inteltechniques.com/messaging.html
+12:49:26 <iknowurmom[m]> U mean this one ? 😅
+12:50:41 <nscnt[m]> Friendly reminder, that #grapheneos-offtopic:matrix.org (Matrix) / #grapheneos-offtopic (irc, freenode) exists
+12:53:34 <tempest2478[m]> It was similar, slightly different but yeah same concept
+12:54:15 <iknowurmom[m]> <nscnt[m] "Friendly reminder, that #graphen"> Good for u my friend I'm here ATM is this a problem for u ?
+12:55:13 * anupritaisno1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/xosvNoYPdXzAGCRjTCaHGCrM/message.txt >
+12:55:29 <tempest2478[m]> https://madaidans-insecurities.github.io/messengers.html found this while searching
+12:55:40 <tempest2478[m]> Good info
+12:56:25 <iknowurmom[m]> <tempest2478[m] "It was similar, slightly differe"> Yeah pretty much all the same but their is somuch to consider I thought there might be someone who also uses graphenOs and also wants the best secure messaging app
+12:58:08 <tempest2478[m]> That security guy basically just says signal is the way to go
+12:58:15 <iknowurmom[m]> <tempest2478[m] "https://madaidans-insecurities.g"> Yeah also been there 😂😂😂 but pretty much doesn't really answer my question 95% of the answer are Signal but signal still wants ur number and people
+12:58:41 <iknowurmom[m]> * Yeah also been there 😂😂😂 but pretty much doesn't really answer my question 95% of the answer are Signal but signal still wants ur number
+12:59:11 <tempest2478[m]> Thats why I was suggesting threema.  It's the most comparable messenger in almost every way but you can remain anonymous
+12:59:57 <iknowurmom[m]> But can u really remain anonymous? I heard there where some huge issues with metadata
+13:01:13 <nscnt[m]> You aren't talking about GrapheneOS. Please move your convo over to the offtopic channel
+13:01:16 <tempest2478[m]> Yes you can. As far as Metadata I'm not sure. Depends on what Metadata is leaked.... and if you can work around it with a vpn or Metadata remover from pictures, etc
+13:02:19 <tempest2478[m]> <nscnt[m] "You aren't talking about Graphen"> Noted
+13:07:03 <iknowurmom[m]> tempest2478: wanna join the convo in offtopic?
+13:35:59 * anupritaisno1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/AUJeOnCqveTcVXzrgCKGgTaM/message.txt >
+13:53:02 <genericblue[m]> tempest2478: https://inteltechniques.com/messaging.html
+14:30:46 <theOne[m]> Hi
+14:31:31 <theOne[m]> Can i decrypt the files in the seedvault backup?
+14:42:15 <jose57> hello guys, i am getting a pixel 4 with signal. but i want to use mobile data and a VPN. am i protected? thank you.
+14:44:05 <stencil[m]> <theOne[m] "Can i decrypt the files in the s"> Yes
+14:46:14 <stencil[m]> <jose57 "hello guys, i am getting a pixel"> If it was about mobile's internal data then yes. If you are talking about network data, then I recommend against VPN in most cases, mobile network can triangulate your location but that's mostly out of grapheneOS control. But other than that it is secure with GrapheneOS
+14:48:07 <theOne[m]> How do i view the backup files in my Files app unencrypte
+14:53:21 <jose57> test message
+14:55:03 <jose57> stencil thanks for getting back, i will be using the pixel 4 on signal only. i will have nordvpn and signal installed, nothing else, this is a secondary phone. i will be communicating with people outside so i will have to use mobile data, but i will only use signal messenger over mobile data, through a vpn. i will not be doing the normal calling
+14:55:03 <jose57> and messaging, can it still be tracked? what are the other ways to go about this?
+14:55:31 <jose57> by the way, when i say "signal", i am talking about signal messenger
+15:06:50 <shardiame[m]> jose57: Your mobile carrier will, obviously know where that phone is.  The VPN provider knows your IP and can see your (encrypted)/traffic.  I don't think using a VPN gives you much if you are exposing your SIM phone number on the other end of the VPN.
+15:06:50 <shardiame[m]> If you use a different / burner number for signal (different from the SIM) number, and only use that with Signal and through the VPN, you would make it much harder for someone finding you on Signal to find you and your phone.  Not impossible.  If you are looking for privacy from an Ex, or for fun, this is probably good enough.  From LE/feds, probable not.
+15:06:50 <shardiame[m]> This is probably a better conversation for another channel, or DM me if you like.
+15:13:26 <linxu> Can a seedvault backup made on different os and device be restored on g os? Thnx
+15:14:34 <strcat[m]> linxu: you could but it's not supported
+15:15:02 <strcat[m]> linxu: it won't restore data from a different build of an app
+15:15:11 <strcat[m]> so it won't transfer everything
+15:15:20 <strcat[m]> it restores data for an app signed with the same key
+15:15:27 <linxu> My idea was to migrate apps to graphene via seedvault
+15:17:51 <strcat[m]> you can do that
+15:18:03 <strcat[m]> but it's not going to work when going to different app builds
+15:20:25 <Yohai[m]> I wonder how GrapheneOS deals with processes running in the background draining the battery (because they were either autostarted with the device or kept running after the user navigated out of the app activity). I am about to install GrapheneOS on a new phone, and was wondering if I should install the Greenify app that I've been using for years to manage these apps.
+15:20:25 <Yohai[m]> I assume that this is still an issue for new Android versions but please excuse if I'm wrong about that. I'm migrating from LineageOS 15.1 (Android 8.1-based) and my mindset is still in KitKat mode.
+15:22:41 <strcat[m]> running in the background is already heavily restricted in AOSP
+15:23:10 <strcat[m]> apps have to use a foreground service (visible persistent notification) to bypass that
+15:23:20 <strcat[m]> you can stop them from doing that if you don't want it
+15:23:28 <strcat[m]> and you can enable further restrictions
+15:23:32 <strcat[m]> none of it is relevant to what GrapheneOS changes
+15:23:43 <strcat[m]> and you really don't need anything beyond what is already there anyway
+15:23:54 <strcat[m]> https://developer.android.com/topic/performance/power/power-details
+15:23:57 <strcat[m]> suggest reading the upstream docs
+15:26:38 <jose57> shardiame, i want to DM you, but its asking to register
+15:31:41 <Yohai[m]> <strcat[m] "running in the background is alr"> Thanks!
+15:32:46 <jose57> how do you mention someone on here...
+15:33:37 <stencil[m]> Using name is good enough
+15:34:06 <mhnoyes> jose57: Tab completion will work too.
+15:34:54 <stencil[m]> Also IMO mullvad has been the only VPN with good reputation and cheap prices. But regardless don't use nordvpn it has been caught logging before
+15:44:17 <stewil102[m]> I need help recovering my pixel 3a xl
+15:44:35 <stewil102[m]> I tried flashing grapheneos and I'm stuck in Fastboot Mode
+15:44:44 <stewil102[m]> I can also get into recovery
+15:44:57 <stewil102[m]> please help...I heard I could find help here
+15:45:20 <stewil102[m]> I'm on Windows 10 computer. Pixel 3a XL phone.
+15:45:40 <mrxx_0[m]> stewil102: hello, did you follow the official instructions on grapheneos' website ?
+15:46:21 <stewil102[m]> Tried to, yes
+15:47:01 <mrxx_0[m]> stewil102: what is displayed on your computer screen ?
+15:47:28 <mrxx_0[m]> in your powershell prompt
+15:47:39 <stewil102[m]> I don't even have it open right now
+15:48:19 <mrxx_0[m]> You are supposed to have a powershell prompt when flashing from Windows 10
+15:48:35 <stewil102[m]> I tried going back to stock rom. I found, where the Grapheneos zip file had the flash-all files, the OTA stock zip file only basically has a payload.bin file
+15:48:47 <stewil102[m]> I tried flashing last night
+15:48:56 <stewil102[m]> Hence, don't have powershell window open
+15:49:00 <stewil102[m]> Hold on I'll open
+15:49:04 <mrxx_0[m]> Did you download the pixel stock rom ?
+15:49:11 <stewil102[m]> yes
+15:49:18 <mrxx_0[m]> https://developers.google.com/android/images
+15:49:51 <stewil102[m]> Yep, I have hte pixel 3a xl zip file, unzipped to a folder
+15:50:21 <stewil102[m]> It has a subfolder and 3 files, the primary of which is the payload.bin file
+15:52:07 <stewil102[m]> I mean I could try re-flashing the grapheneos (which has the flash-all batch file), and it appears to go thru the process...but I end up back same spot
+15:54:17 <mrxx_0[m]> You have to follow the instruction from Graphene but using the zip from Google
+15:54:40 <mrxx_0[m]> start from here : https://grapheneos.org/install#opening-terminal
+15:54:52 <mrxx_0[m]> open a powershell prompt
+15:56:12 <mrxx_0[m]> and instead of downloading with Curl the GrapheneOS image, you download WITH Curl the google image : https://developers.google.com/android/images#bonito
+15:56:12 <stewil102[m]> k I have powershell open
+15:56:32 <jose57> stencil test
+15:56:42 <jose57> did the mention go through?
+15:57:00 <mrxx_0[m]> stewil102: PM
+15:58:53 <jose57> stewil102: test
+15:59:11 <jose57> am i doing it right? only putting the nick?.......
+16:01:07 <jose57> @shardiame:nitro.chat test
+16:01:37 <ecksit[m]> Generally, how long would it take to flash the bootloader on pixel 3a? Less than one hour? Two hours? I am not sure if fastboot flash is stuck or just taking a while to flash it
+16:03:00 <tencarsb[m]> 3Minutes, at the most
+16:03:56 <dar_gomml[m]> <ecksit[m] "Generally, how long would it tak"> less than a minute. probably a usb software/cable..
+16:04:12 <dar_gomml[m]> issue
+16:04:16 <ecksit[m]> OK thanks
+16:05:56 <stencil[m]> jose57: yeah it works
+16:06:08 * stencil[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/DsIYcPnYRMPFndUHDmjJMcyN/message.txt >
+16:06:31 <ecksit[m]> I don't need to have USB debugging enabled do i? I didn't see it in the install instructions
+16:07:50 <dar_gomml[m]> <ecksit[m] "I don't need to have USB debuggi"> correct.
+16:33:55 <lumpenqueer[m]> Is there a way to move files securely between user profiles on gos?
+16:35:02 <Albakham[m]> You can put them on a usb key and move them back on the other user
+16:35:21 <Albakham[m]> Or on your computer
+16:35:34 <lumpenqueer[m]> Thnx
+16:39:39 <cereal_eater[m]> The default wallpaper is black now, but only on my second profile. On my first profile I can't remove my own wallpaper. How can I remove my wallpaper to have the default?
+16:42:53 <sierocharlie[m]> "Our recommendation for a high security setup is to use the owner profile only for managing other profiles. Using a secondary profile for regular usage allows you to make use of the device without decrypting the data in your regular usage profile." https://grapheneos.org/faq#encryption
+16:42:54 <sierocharlie[m]> Wouldn't your "regular usage" profile be unencrypted as that's the profile you're using regularly? My grasp of Android encryption is that it is unencrypted if the device is turned on and logged in. Not sure If I am understanding this correctly.
+16:47:22 <majorasparagus0[> +1
+16:51:59 * majorasparagus0[ sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/LqngcBHefHmAUwCnHDlecGKe/message.txt >
+16:52:18 <sierocharlie[m]> F-Droid.
+16:53:25 <majorasparagus0[> Inadvertently @ ed you but thanks for replying!
+16:53:35 <sierocharlie[m]> No worries!
+16:56:14 <banjo[m]> @sierocharlie: lol that computer generated chubby girl looks like my ex boss
+16:56:22 <sierocharlie[m]> <banjo[m] "@sierocharlie: lol that computer"> LMFAO
+17:05:38 <Elementoshi[m]> Do Google Pixel phones have replaceable batteries?
+17:08:25 <elvis1cat[m]> copenhagen_bram:  not easily replaceable
+17:08:49 <bearded1[m]> <anupritaisno1[m] "Please join https://matrix.to/#/"> Is this room still available?
+17:08:51 <elvis1cat[m]> * @copenhagen_bram not easily replaceable
+17:09:19 <sierocharlie[m]> Click on it and find out!
+17:10:02 * bearded1[m] uploaded an image: Screenshot_20210116-120939_Element_(Riot.im).png (173KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/IHpozNQjDKecsGVWdHfFvyII/Screenshot_20210116-120939_Element_(Riot.im).png >
+17:10:30 <bearded1[m]> Understood. Perhaps a poorly worded question. Do I need to do something other than click the link to join?
+17:10:32 <sierocharlie[m]> RIght, then it's not.
+17:10:44 <sierocharlie[m]> <bearded1[m] "Understood. Perhaps a poorly wor"> Send anupritaisno1
+17:10:54 <sierocharlie[m]> > <@bearded1:matrix.org> Understood. Perhaps a poorly worded question. Do I need to do something other than click the link to join?
+17:10:54 <sierocharlie[m]>  * Send anupritaisno1 a DM, you'll get an invite.
+17:11:15 <bearded1[m]> Will do. Thnaks.
+17:39:10 <Callahan> So I've had Graphene up and running for a day. Looks good. Got a list of apps that won't run but if I'm being honest, it's far, far less than I thought it would be. 2 questions. I'm getting the pop up with some apps saying they won't run without Google Play services, Rumble for example, yet they seem to run just fine. So questions:
+17:39:10 <Callahan> 1. Do we know why they complain but seem to work anyway?
+17:39:11 <Callahan> 2. Is there a way to disable this warning on apps that seem to work regardless?
+17:39:11 <Callahan> 3. I know the "default" answer to this next question is that it shouldn't be installed because it's too tightly tied to Google and that defeats the object of what you're trying to achieve but what are people's thoughts on microG. I'm finding the lack of alerts to be a real issue. I need to know when I get email or other alerts, especially with
+17:39:12 <Callahan> work, system alerts, etc. Is microG the only viable solution here?
+17:39:34 <Callahan> Thats 3 questions, I'm being greedy.....
+17:49:09 <banjo[m]> I don't think you can disable the missing g services error unless it's displayed as a notification.
+17:49:25 <standingby[m]> My guess on 1 is that it uses play services for notifications but not to actually run the app
+17:50:01 <standingby[m]> I don't think you can use microG with graphene
+17:50:32 <banjo[m]> notifications work fine for apps that are built to work without g services like signal, wire, session and the like
+17:50:49 <standingby[m]> So for example with protonmail I don't get notifications but it's not really a big deal I just check it every so often
+17:50:56 <elvis1cat[m]> I'm not thinking I'm going to miss my iphone very much.  GrapheneOS is secure and the 4a is amazing.  I wish there was a 4a XL with an SD card slot.... oh well.
+17:51:53 <standingby[m]> Yeah I thought low stare capacity would be an issue but I haven't nearly had any problems yet
+17:51:55 <banjo[m]> 4a 5g has 128gb
+18:01:02 <jose57> test
+18:01:23 <jose57> im trying to verify my account, but its saying that i should login...? confused. i am logged in? :/
+18:03:50 <catfish[m]> Searched in gos settings for volte and it has an option but click on it and it's not there. If it's available from my carrier should it just work?
+18:03:57 <banjo[m]> yes
+18:13:04 <banjo[m]> catfish: that depends of the carrier's network config and coverage available in your area. you can force LTE by disabling 3g in the settings but I found myself without internet as soon as I entered a poor coverage area.
+18:14:41 <banjo[m]> perhaps call them and find out what they have to say about that
+18:26:49 * anupritaisno1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/teZcbwiRXSWbSEsXtqhBaJPL/message.txt >
+18:27:00 <anupritaisno1[m]> Please pm me if you'd like to help against misinformation
+18:29:53 <Elementoshi[m]> <elvis1cat[m] "copenhagen_bram:  not easily rep"> Well that sucks. I believe in the right to repair. Maybe ifixit will have instructions on how to replace its battery.
+18:30:02 <anupritaisno1[m]> Sorry if the post looks a little weird. It was written by a non English language speaker and I tried to correct most of it but there may be mistakes
+18:34:13 <majorasparagus0[> Are people generally comfortable that installing Aurora (with all the requires permissions) doesn't defeat the purpose of using Graphene in the first place?
+18:54:42 <bobi> hi, how do you know that you are on the latest version of android ?
+18:58:20 <banjo[m]> settings/ about phone/ android version
+18:59:05 <bobi> and aside from 11 you dont need anything else ?
+18:59:36 <bobi> also how do you know the device is in the bootloader interface ?
+19:02:03 <bobi> well i didn't press the buttons long enough i am now in bootloader mode
+19:02:37 <bobi> except that i did the "fastboot flashing unlock" before being in bootloader mode
+19:03:22 <bobi> so PS is saying waiting for any device
+19:03:52 <bobi> do i have to press start (power button) on the pixel ?
+19:04:16 <banjo[m]> well if you plan on starting the install process you should fist update your pixel to the latest version
+19:04:33 <Alexandre[m]1> i am on android 11
+19:04:45 <Alexandre[m]1> and security update of january 5
+19:04:53 <banjo[m]> settings/ system / advanced/ update
+19:04:53 <Alexandre[m]1> is it ok ?
+19:05:10 <banjo[m]> yes
+19:05:35 <banjo[m]> check once more for new updates just to be sure tho
+19:06:28 <banjo[m]> then you should follow the tutorial
+19:06:44 <banjo[m]> https://grapheneos.org/install
+19:06:52 <Alexandre[m]1> ok it says up to date
+19:07:25 <Alexandre[m]1> yes that is what i am following
+19:07:46 <banjo[m]> also make sure that the cable is original or  at least something quality
+19:07:54 <banjo[m]> and the USB port is ok
+19:08:11 <Alexandre[m]1> i dont have a usb c on my computer
+19:08:47 <Alexandre[m]1> so i plugged a USB C to USB A from the box of a galaxy S20 to the MOB of my PC
+19:08:53 <banjo[m]> cheap USB cables can creat e issues
+19:09:08 <banjo[m]> that should be ok
+19:09:11 <Alexandre[m]1> but what do you mean by cheap ?
+19:09:14 <Alexandre[m]1> okk
+19:10:11 <Alexandre[m]1> well it is still "waiting on any devices
+19:10:28 <Alexandre[m]1> i pressed start on the boot loader
+19:10:29 <banjo[m]> bottom of the barrel no name stuff
+19:11:04 <banjo[m]> just follow the steps on the tutorial
+19:11:19 <banjo[m]> what pixel do you have?
+19:11:24 <Alexandre[m]1> 4a
+19:11:41 <banjo[m]> not 5g?
+19:11:56 <Alexandre[m]1> no
+19:12:14 <banjo[m]> ok
+19:12:57 <banjo[m]> quite a few people bricked their 4a 5g trying to flash 4a builds
+19:17:35 <Alexandre[m]1> "The command needs to be confirmed on the device and will wipe all data. Use one of the volume buttons to switch the selection to accepting it and the power button to confirm."
+19:18:16 <sierocharlie[m]> <banjo[m] "quite a few people bricked their"> How does it brick it? I'm unfamiliar with how bricking works.
+19:18:44 <Alexandre[m]1> Accepting what ? The options are "Start" , "Power off",  BarCode, rescuemode recovery mode restart bootloader.
+19:20:18 <banjo[m]> Alexandre start I guess. follow along
+19:21:32 <banjo[m]> @sierocharlie: bricking means your device is now a brick. literally
+19:22:02 <sierocharlie[m]> <banjo[m] "@sierocharlie: bricking means yo"> I know what bricking means. Just not familiar with how it works.
+19:22:50 <banjo[m]> like technically in detail
+19:22:54 <banjo[m]> ?
+19:23:26 <banjo[m]> that's a bit above my pay grade
+19:27:16 <lodtank> well, i think the most common way is to install a broken software into the device so it doesn't boot anymore
+19:27:45 <lodtank> you can't just take the flash memory out of  your phone, stick it into your reader and write it from your pc
+19:32:10 <chickacat> question - is e-sim supported?
+19:34:38 <banjo[m]> it works if you activate it before you flash grapheneos
+19:34:45 <mynacol[m]> chickacat: Yes and no. A configured one will work, but you cannot provision/deprovision one
+19:35:13 <chickacat> Gotcha
+19:35:15 <chickacat> thanks
+19:57:22 <Alexandre[m]1> banjo: thx !
+19:57:47 <Alexandre[m]1> 🎉🎉🎉 GrapheneOS here i come !
+20:04:18 * stranded[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/YMQwkCcqhaqqJGWfKYNlBZBe/message.txt >
+20:19:41 <pichtron> i need a google pixel 3 XL at a good price
+20:21:29 <banjo[m]> my 3 xl had crap battery life even on grapheneos
+20:21:46 <banjo[m]> 3a xl is much better
+20:22:18 <banjo[m]> or save up an get a 4a
+20:22:28 <sierocharlie[m]> My Pixel 4a is coming tommorow
+20:23:02 <banjo[m]> good luck with the flashing
+20:23:30 <sierocharlie[m]> Can someone confirm if I understand this correctly: For a high security set-up it is recommeded that you use the owner profile to manage other profile. Such as a regular use profile. If I understand correctly, the regular use profile will be encrypted even though active?
+20:23:44 <sierocharlie[m]> <banjo[m] "good luck with the flashing"> Thanks, won't expect any problems there though.
+20:23:50 <banjo[m]> my 4a 5g came a month ago lol
+20:23:58 <banjo[m]> @sierocharlie: yes
+20:24:08 <sierocharlie[m]> Whyd you go for the 5G if it isn't supported?
+20:24:17 <sierocharlie[m]> What device do you use for gOS?
+20:25:24 <bentley> sierocharlie[m]: the point of having a second profile is that you can hit "end session" to logout of the profile without turning off the phone
+20:25:57 <bentley> and when you start the phone, the second profile isn't active until you choose to start it
+20:26:17 <bentley> which has some security benefits
+20:28:39 <banjo[m]> @sierocharlie 3a xl with a cracked screen.i like big screens so it was this or the 4 xl. i figured i better wait a bit as 4xl was plagued by some issues and also had a lower battery life with the powerful CPU and fast screen
+20:30:06 <chickacat> another question - do I need usb debugging enabled before flashing?
+20:31:06 <chickacat> also, there's a Signify port for OSX that might interest devs - https://github.com/jpouellet/signify-osx
+20:31:23 <banjo[m]> follow along
+20:31:25 <banjo[m]> https://grapheneos.org/install
+20:33:17 <chickacat> osx port of signify works well
+21:04:07 <djPvelli> Hey
+21:04:25 <djPvelli> Anyone can answer a question for me?
+21:10:52 <banjo[m]> ?
+21:13:11 <sierocharlie[m]> <bentley "@sierocharlie: the point of havi"> Right. But as soon as you have it opened (as in the first time you enter your password until you end session) all the data within that profile is decrypted and an adversary will be able to access it? For example, going through airport security you would end the regular use session which only leaves the empty owner profile decrypted.
+21:13:20 <sierocharlie[m]> <sierocharlie[m] "Right. But as soon as you have i"> Is this correct?
+21:14:02 <sierocharlie[m]> <banjo[m] "@sierocharlie 3a xl with a crack"> Cool. How are you liking the 4a 5G?
+21:17:35 <sierocharlie[m]> Furthermore, while logged into a profile the profile is unencrypted.
+21:17:44 <sierocharlie[m]>  * Furthermore, while logged into a profile the profile is unencrypted?
+21:20:25 <bentley> sierocharlie[m]: even when the profile is active, the screenlock should provide enough protection from law enforcement (i think). but it's true that a logged in profile is decrypted, and ending the session improves security. airports are my primary usecase for multiple profiles.
+21:21:08 <bentley> domestic airports. for foreign travel i would favor a burner phone.
+21:21:54 <sierocharlie[m]> <bentley "@sierocharlie: even when the pro"> Right. So you log-out of your regular use profile / whatever profile you don't want accessed and keep it in owner when passing through?
+21:22:44 <sierocharlie[m]> <bentley "@sierocharlie: even when the pro"> I travel foreign few times a year, prefer to keep the phone with me.
+21:23:02 <bentley> i have three profiles. owner (locked), "real" profile (locked/logged out), unpriv (no lock)
+21:23:30 <bentley> the unprivileged profile is so i can browse web, view boarding pass, etc in the airport.
+21:24:20 <djPvelli> I just found out about degoogling being plausible recently and then about grapheneos. I really want to do it asap, but looking at the phones graphene recomnds
+21:24:28 <banjo[m]> @sierocharlie: it's still in the box till I can replace the preinstalled spyware with something decent lol
+21:24:47 <djPvelli> I have doubts, i feel like its too good to be true. Wouldn't pixel phones have their own tracking hardware?
+21:24:48 <bentley> as a citizen, us gov cannot prevent me from entering the usa, nor can it force me to decrypt my devices. but foreign governments can prevent me from entering or possibly detain me for refusing to decrypt. that's why i would use a burner outside my home country.
+21:25:01 <sierocharlie[m]> <banjo[m] "@sierocharlie: it's still in the"> lol
+21:25:46 <banjo[m]> djPvelli: not more than any other phone
+21:26:01 <bentley> djPvelli: anyone can imagine a hardware backdoor that is undetectable and tracks everything. without evidence it can't be protected against and it doesn't lead to productive discussions on this channel
+21:26:03 <sierocharlie[m]> <bentley "i have three profiles. owner (lo"> Gotcha. That's smart. Thinking of this. A cool feature to have would be having something like a hidden encrypted partition with veracrypt. So you would have 2 profiles. One with the real data and one that is unused. LE can never tell which one is which
+21:26:41 <sierocharlie[m]> <bentley "as a citizen, us gov cannot prev"> Right, I luckily never travel to foreign countries that have such laws in place.
+21:26:42 <djPvelli> bentley: I simply am asking questions as a new comer..
+21:27:14 <sierocharlie[m]> <djPvelli "I have doubts, i feel like its t"> Right. Everyone here gets paid by Google, you caught us!
+21:27:36 <bentley> djPvelli: i'm not telling you off or anything. just heading off a topic that usually derails conversation.
+21:27:59 <joltman[m]> Get one of those Chinese phones and install LineageOS instead. Totally safe.
+21:28:02 <sierocharlie[m]> On a serious note. You can build GrapheneOS yourself, and customize it for the phone of your liking. I have no clue how to do that myself but it involves significant programming to get it fully supported.
+21:28:10 <sierocharlie[m]> <joltman[m] "Get one of those Chinese phones "> lol
+21:28:49 <djPvelli> i understand, all i had to tell me is "we dont know". I was looking to see if someone opened the phone and checked, if this is somethiing that was addressed previously
+21:28:58 <banjo[m]> @sierocharlie: or better yet backup your stuff on an encrypted microsd, erase phone, hide the card, go through customs, restore everything
+21:30:14 <sierocharlie[m]> <banjo[m] "@sierocharlie: or better yet bac"> Yup, but that would be quite a lot of trouble to go through. Considering apps and everything will be deleted and have to be configured again.
+21:30:16 <djPvelli> sierocharlie: bro what...I m asking common sense questions from a perspective of a person who doesnt know hardware and isnt a super fckn developer
+21:30:56 <sierocharlie[m]> <djPvelli "sierocharlie: bro what...I m ask"> Look honestly. There's always a possibility of the hardware being compromised. You can't really know.
+21:31:06 <djPvelli> thats all you had to say
+21:31:23 <sierocharlie[m]> Even if one of us looked "inside". It is a possibility your phone gets intercepted while being shipped and malicious hardware put in. You can't know.
+21:31:37 <sierocharlie[m]> Evil maid's a bitch
+21:31:45 <banjo[m]> djPvelli: the one thing in plus is the titan security cip which is well documented. you can find plenty of teardowns on YouTube. other than that is like any other phone
+21:32:09 <djPvelli> i see, thank you
+21:33:26 <sierocharlie[m]> https://veracrypt.eu/en/docs/hidden-volume/ This is what I ment. Would be quite cool if profiles can't be discovered (except owner) and use a username + password. This way you can, when forced to log in swear that this is the profile
+21:34:05 <sierocharlie[m]> Btw, not asking for a feature here. The thought just crossed my mind.
+21:34:09 <banjo[m]> djPvelli until a fully open source hardware phone exists pixel + grapheneos is the next best thing
+21:34:38 <banjo[m]> djPvelli: https://grapheneos.org/faq
+21:36:42 <djPvelli> Anyone know if there is way to track all outgoing requests on it?
+21:37:09 <bentley> if you're concerned, do it at the router
+21:37:44 <sierocharlie[m]> @bentley Thank you for answer my questions. Cleared up some confusion
+21:37:50 <banjo[m]> @sierocharlie: this comes to mind
+21:38:05 * banjo[m] uploaded an image: xkcd-security.png.pagespeed.ce.N3qgdHo0gh.png (28KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/WAwyPMnTUZFGLpCrfSzGfbWB/xkcd-security.png.pagespeed.ce.N3qgdHo0gh.png >
+21:41:30 <sierocharlie[m]> <banjo[m] "xkcd-security.png.pagespeed.ce.N"> Right. That's why a "hidden" profile will help prevent this. They don't know the profile is there, that it even exists.
+21:45:12 <banjo[m]> if you are on some kind of short list they already have quite a db of info on you and a hidden profile is the least of your worries.
+21:46:07 <sierocharlie[m]> <banjo[m] "if you are on some kind of short"> True. But I can easily maintain that the profile I logged them into is THE profile and that there's no other profile. Rather than being abused in some way until I tell the password.
+21:46:35 <banjo[m]> risky stuff is better handled on a different device at a different location and you main one keept at home
+21:48:02 <banjo[m]> this is a topic for #grapheneos-offtopic:matrix.org
+21:48:24 <sierocharlie[m]> <banjo[m] "risky stuff is better handled on"> Fair enough.
+21:48:32 <banjo[m]> this place is mainly for tech support
+21:51:35 <djPvelli> Do you guys know if pixel 5a will have support soon?
+21:51:50 <djPvelli> or i guess its just pixel 5
+21:57:22 <nonyadb[m]> <djPvelli "Anyone know if there is way to t"> A GrapheneOS phone configured to use your own NextDNS account for DNS-over-HTTPS will show you *exactly* all the outbound DNS requests the phone is making.  GrapheneOS + NextDNS is a good combo to use.
+22:00:20 <banjo[m]> djPvelli  5a is rumored to be launched in may so by autumn it should probably be supported
+22:01:28 <thematrix5000[m]> yes I hope its supported for 5 because the battery is so bad on my 3
+22:01:54 <djPvelli> nonyadb[m] sweeet, thanks. Also thank you banjo and siero and bentley
+22:01:56 <sierocharlie[m]> Is there a rumored price as well?
+22:02:53 <sierocharlie[m]> Found a few but they seem a tad cheap
+22:06:59 <TheJollyRoger> No price rumours yet, but it looks like what Google is attempting to do with the 5 series is attempt to try to capture the mid-range market. The 4 and 4XL was their attempt to court the "high end" market, which at this moment is mainly dominated by Samsung and Apple, and the 5's departure from that seems to be a quiet admission that Google doesn't feel that going for the high-end pricepoint is
+22:07:00 <TheJollyRoger> worthwhile for them at this point in time.
+22:07:42 <TheJollyRoger> I'm not a market analyst but I wouldn't be surprised if they followed the pattern for pricing with their previous "a" series phones.
+22:07:44 <sierocharlie[m]> <TheJollyRoger "No price rumours yet, but it loo"> Interesting.
+22:07:53 <nonyadb[m]> A Google Pixel 4a is $350, GrapheneOS is free, NextDNS is $20/year (and worth it).  So for less than $400 you can have a phone that big tech/government knows exists but can't really keep track of what you're doing on it very well provided you've done your part on the configuration end.
+22:08:32 <TheJollyRoger> Yep. The 4 and 4XL were both $1000+ devices, and seemed to be Google's attempt to court the iDevice crowd.
+22:08:49 <sierocharlie[m]> <nonyadb[m] "A Google Pixel 4a is $350, Graph"> Is NextDNS worth it? I have Mullvad VPN already, although it doesn't block ads.
+22:09:05 <TheJollyRoger> It looks like with the 5, Google decided to try to shave about $200 off the price and try to pack more value within a smaller package.
+22:09:16 <nonyadb[m]> NextDNS isn't a VPN.  It's more of a cloud-based Pi-Hole.
+22:09:36 <nonyadb[m]> My VPN needs are handled via my ProtonMail account.
+22:10:06 <sierocharlie[m]> Right, I use Mullvad's DNS servers right now.
+22:10:18 <sierocharlie[m]> <nonyadb[m] "My VPN needs are handled via my "> I use Protonmail, not their VPN service though.
+22:11:44 <sierocharlie[m]> I think it's better to scatter the services I use. Mullvad is really decent, honest pricing and has a good track record.
+22:12:53 <banjo[m]> @sierocharlie: mullvad is great. I ditched their app and use wireguard
+22:13:00 <banjo[m]> instead
+22:13:21 <sierocharlie[m]> <banjo[m] "@sierocharlie: mullvad is great."> The problem with wireguard is that it doesn't like when you are accessing from another IP
+22:14:00 <banjo[m]> how's that?
+22:14:41 <banjo[m]> works just like their app
+22:15:06 <sierocharlie[m]> No clue. I have that issue on my Android device where my key expires in the app once I try to connect from another IP. Searched it up a while ago and someone that was the issue.
+22:15:32 <sierocharlie[m]> But I'll try it tomorow with Graphene
+22:16:58 <banjo[m]> works great for me.
+22:17:14 <sierocharlie[m]> What's your reasoning behind ditching the app?
+22:17:41 <sierocharlie[m]> And using the wireguard app instead
+22:23:02 <banjo[m]> I don't like the permanent notification
+22:23:36 <sierocharlie[m]> <banjo[m] "I don't like the permanent notif"> Yeah that's something I dislike too. I guess I'll go with the Wireguard app. Thanks!
+22:23:42 <banjo[m]> and wireguard works with other VPN providers
+22:45:22 <lumpenqueer[m]> Does anybody know the projected end of support for the pixel 3 series of devices?
+22:48:01 <TheJollyRoger> Hello lumpenqueer[m], Blueline and Crosshatch are set to go EOL in approximately ten months. October 2021.
+22:48:05 <TheJollyRoger> (If I recall correctly)
+22:50:56 <lumpenqueer[m]> Tysm
+22:52:02 <lumpenqueer[m]> Any idea for bonito?
+22:52:15 <TheJollyRoger> Yep, anytime. Google *may or may not* ship a couple last security patches and bugfixes for it, circumstances depending, but at that date, Qualcomm will essentially cut off the firmware updates and force Google's hand.
+22:53:26 <TheJollyRoger> For Bonito, my guess is May 2022.
+22:53:50 <TheJollyRoger> lumpenqueer[m]: Google pledges to keep security updates coming for 3 years from the day that they are released on the Google Store.
+22:54:12 <TheJollyRoger> So the easy way, is to look at the release month and year, add three years, and that's your answer.
+22:54:45 <TheJollyRoger> There are rumours that the next generation Google may slap on one extra year of support, but I need to find a source on that so don't take me at my word there.
+22:55:14 <lumpenqueer[m]> Ty
+22:56:23 <TheJollyRoger> lumpenqueer[m]: there are generally three things that determine how long an Android Handset lasts: vendor support, upstream support, and kernel support.
+22:57:50 <TheJollyRoger> Vendor support from Qualcomm is the most fundamental. Qualcomm ship precompiled firmware updates, which are loaded and initialized by the operating system when the operating system boots (this allows us to maintain control over firmware initialization). They also ship a lot of out-of-tree code for the drivers.
+22:58:21 <lumpenqueer[m]> Yeah that makes sense
+22:58:37 <TheJollyRoger> Upstream support from Google also plays into this, which is why it becomes difficult to continue to backport security fixes once upstream abandons it.
+22:59:07 <lumpenqueer[m]> Any advice where to find devices with unlocked bootloaders?
+22:59:58 <TheJollyRoger> The last factor, which actually plays into the first is kernel support. Linux does not have a stable driver API - that's been one of its big things from day one. So that means that the SoC can only run one type of kernel release. As a result, this means that the vendor must update the drivers and maintain the out of tree code.
+23:00:25 <TheJollyRoger> lumpenqueer[m]: buying directly from Google is your safest bet.
+23:00:28 <TheJollyRoger> As strange as it may be.
+23:00:44 <TheJollyRoger> The irony of buying Google to escape from Google hasn't been lost on us, but it's honestly your best bet.
+23:01:01 <sierocharlie[m]> <TheJollyRoger "lumpenqueer: buying directly fro"> Too bad in a mix of countries the Google store doesn't offer Pixels :(
+23:01:16 <TheJollyRoger> sierocharlie[m]: yikes, that makes things difficult indeed!
+23:01:22 <sierocharlie[m]> I payed more than 430 euros on my pixel 4a lmao
+23:01:35 <TheJollyRoger> Yiiiiiiikes
+23:01:55 <sierocharlie[m]> Importing it through a middle man ended up being as expensive as actually buying it in my own country. With the benefit of it arriving the next day rather than taking weeks.
+23:02:02 <TheJollyRoger> That's like >$700 of our money!
+23:03:04 <TheJollyRoger> Gotta run for a bit.
+23:03:25 <sierocharlie[m]> Yeah it's nuts how cheap it is everywhere else. But on the other side of things, it's probably an economic thing. Whereas people in the US earn less, things are cheaper than where I live, but I earn  more as well I guess.
+23:12:26 <sierocharlie[m]> https://i.imgur.com/2tAOXn8.png Is it possible to renable this later on?
+23:17:06 <strcat[m]> yes it's just the global location toggle
+23:17:26 <strcat[m]> in order for an app to use location, the Location permission has to be granted and the global location toggle has to be on
+23:17:41 <strcat[m]> and normally you grant only foreground location access
+23:17:49 <strcat[m]> granting background access requires specifically doing that
+23:17:55 <strcat[m]>  * and normally you grant only foreground location access via the permission
+23:19:31 <sierocharlie[m]> Gotcha thanks.

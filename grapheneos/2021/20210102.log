@@ -1,0 +1,901 @@
+00:00:01 <guest67> I'll give it a go, but I have installed multiple different OS's onto multiple different phones. Not my first rodeo, but that doesn't mean I couldn't have missed something
+00:00:02 <guest67> thanks
+00:00:27 <strcat[m]> it's not that hard if you follow the guide exactly as it's stated there
+00:00:37 <strcat[m]> I helped someone do it yesterday who couldn't figure out how to open PowerShell and they succeeded
+00:00:46 <strcat[m]> just by following the commands and not changing anything
+00:00:58 <guest67> Yeah I mean LineageOS is a lot less straight forward than GrapheneOS it seems
+00:01:07 <guest67> but it just doesn't want to work with me for some reason today haha
+00:01:22 <strcat[m]> open 1 non-admin PowerShell, do everything from top to bottom in there
+00:01:28 <strcat[m]> don't close it or add any commands
+00:02:08 <guest67> okay, and to be clear, where should the OS image folder go, does it matter?
+00:02:19 <guest67> I had it in the platform-tools folder
+00:02:34 <guest67> I don't think it says directly in the install guide where to put it
+00:05:10 <strcat> guest67: you're not supposed to do that
+00:05:18 <strcat> guest67: you're supposed to run exactly the commands that are there
+00:05:24 <strcat> in which case it's next to platform-tools
+00:05:31 <strcat> it never says to go into the platform-tools directory
+00:05:42 <strcat> it has you add it to PATH so that the commands work from anywhere which is important
+00:05:59 <strcat> which means you actually have to extract it in the current directory as it says, then add that to PATH
+00:06:16 <guest67> I did that, thanks
+00:06:31 <guest67> appreciate the hlep
+00:06:34 <guest67> *help
+00:06:35 <strcat> you can copy-paste all the commands as is with only device name changed and it works on Windows and the 3 supported Linux distros
+00:06:44 <strcat> I don't test macOS but I assume that works too or people would complain
+00:06:50 <guest67> makes sense
+00:06:59 <guest67> thanks again I'll give it a go tomorrow
+00:34:56 <User78> Hello, trying to do an initial installation on 4a. When running flash-all it returns fastboot too old download from this link, but that is the location that I got the platform tools from anyway. I tried a fix  that removes part of the flash-all script, and it runs, but after locking the bootloader and hitting start it doesn't load the OS
+00:39:17 <TheJollyRoger> User78: you removed the safety check.
+00:39:44 <TheJollyRoger> Likely what happened is you have multiple versions of fastboot installed on your system, one of which precedes the one you downloaded.
+00:40:18 <TheJollyRoger> Likely that ended up doing the installation, and the third party/unofficial version of fastboot was set in your path which took precedence over the official one.
+00:40:45 <User78> That would make sense, I tried a tutorial that uses minimal adb. Poor decision.
+00:40:49 <TheJollyRoger> Yup.
+00:41:22 <TheJollyRoger> Your device isn't bricked. We can fix it, but first, you're going to have to remove all traces of any third-party fastboot from your system.
+00:41:54 <buffmuffin[m]> I on linux
+00:41:54 <buffmuffin[m]> I had to remove "fastboot" and keep the package said on graphene install page
+00:42:18 <User78> Super! I'm on w10
+00:42:28 <TheJollyRoger> Yup. That safety check there is to prevent this from happening - you're lucky. In most cases, so long as the bootloader is still working, we can recover the device.
+00:42:48 <User78> I have locked and unlocked it a few times since
+00:42:52 <TheJollyRoger> But first, you're going to need to remove *any and all* traces of that third party fastboot from your computer before we can do anything to it.
+00:43:24 <buffmuffin[m]> android-sdk-platform-tools-common
+00:43:54 <buffmuffin[m]> Pretty sure i used this package
+00:44:10 <User78> Roger!
+00:44:15 <TheJollyRoger> buffmuffin[m]: that package in any Debian or Ubuntu will cause a brick.
+00:44:40 <TheJollyRoger> buffmuffin[m]: you likely got lucky by prepending the proper path to your command path so the computer selected the correct one instead.
+00:45:02 <TheJollyRoger> *any debian or ubuntu based operating system
+00:46:08 <TheJollyRoger> User78: I can help you out, but I have a strict policy for walkthroughs: I'm going to be essentially flying blind because I'm not hovering over your shoulder, so if you decide to skip a step, take an extra step that I don't tell you to, or take "liberties" or "shortcuts" then you're going to be on your own.
+00:46:42 <User78> I'll do my absolute best,  been at this forever and need it done
+00:46:55 <User78> Uninstalled minimal adb, deleted the portable version
+00:47:19 <TheJollyRoger> Great. Open up Windows PowerShell for me. We're going to do some quick sanity checks.
+00:47:33 <User78> Open!
+00:47:33 <TheJollyRoger> I want you to enter, as typed,
+00:47:36 <TheJollyRoger> fastboot --version
+00:47:43 <TheJollyRoger> Hopefully, it should return a "command not found"
+00:47:53 <User78> Yes
+00:48:00 <buffmuffin[m]> I might have used a standalone platform tool
+00:48:00 <buffmuffin[m]> Whatever i used
+00:48:00 <buffmuffin[m]> It was an updated version of fastboot
+00:48:43 <TheJollyRoger> User78: great, you can confirm it's returning an error and not finding any fastboot?
+00:48:47 <User78> fastboot : The term 'fastboot' is not recognized... etc
+00:48:50 <TheJollyRoger> Great!
+00:49:19 <TheJollyRoger> That's what we want. Alright, I want you to type in step two:
+00:49:21 <TheJollyRoger> cd ~
+00:49:30 <TheJollyRoger> This command should return you to your home directory.
+00:49:51 <User78> Done
+00:50:42 <TheJollyRoger> Alright. Step Three, we retrieve platform tools. Enter this in the commandline:
+00:50:51 <TheJollyRoger> curl.exe -O https://dl.google.com/android/repository/platform-tools_r30.0.5-windows.zip
+00:51:05 <TheJollyRoger> Don't download it via the browser, or it'll download it to a different location, and I don't know what options you have set.
+00:51:11 <TheJollyRoger> Just enter the entire command as it is.
+00:52:15 <User78> Done. Returned some stats on download
+00:52:28 <TheJollyRoger> OK. Step Four, we're going to verify it. Enter this in the commandline:
+00:52:36 <TheJollyRoger> (Get-FileHash platform-tools_r30.0.5-windows.zip).hash -eq "549ba2bdc31f335eb8a504f005f77606a479cc216d6b64a3e8b64c780003661f"
+00:52:49 <TheJollyRoger> If it replies "True" we move to Step Five.
+00:52:56 <User78> True
+00:53:43 <TheJollyRoger> Ok, Step Five, we're going to unzip it. This is going to produce a lot of scrollback, but we know that the archive is good now, so enter:
+00:53:47 <TheJollyRoger> tar xvf platform-tools_r30.0.5-windows.zip
+00:54:11 <User78> Done
+00:54:28 <TheJollyRoger> Great. Alright the next step is we're going to set your command path to the correct location.
+00:54:33 <TheJollyRoger> Step six, I want you to enter:
+00:54:41 <TheJollyRoger> $env:Path = "$pwd\platform-tools;$env:Path"
+00:54:57 <TheJollyRoger> This command will return no output, if it returns nothing, we'll go onto the next step.
+00:55:03 <User78> Nothing
+00:55:15 <TheJollyRoger> Great. We'll check if it worked now. I want you to enter:
+00:55:17 <TheJollyRoger> fastboot --version
+00:55:20 <TheJollyRoger> Tell me what you get.
+00:55:34 <User78> fastboot version 30.0.5-6877874
+00:55:36 <TheJollyRoger> (Note that it's only set temporarily, so you *must not* close the Powershell window.
+00:55:41 <TheJollyRoger> Great. That's the right one, so we know it worked.
+00:56:07 <TheJollyRoger> Alright. Let's take a quick break for a moment -- which phone do you have? is it a 4, 4XL, or 4a?
+00:56:13 <User78> 4a
+00:56:23 <TheJollyRoger> Great!
+00:56:30 <TheJollyRoger> a 4a, NOT a 4a5G, right?
+00:56:42 <User78> I have everything done to the point of the bootloader being unlocked
+00:56:50 <User78> It is a 4a, not 4a 5g
+00:57:01 <TheJollyRoger> Great, whew. The 4a 5G may look like a 4a, but underneath that plastic shell, it's an entirely different device.
+00:57:09 <User78> Interesting!
+00:57:48 <TheJollyRoger> Ok, so, now we download the image for your phone. Step Seven:
+00:57:56 <TheJollyRoger> curl.exe -O https://releases.grapheneos.org/sunfish-factory-2020.12.12.03.zip
+00:58:29 <TheJollyRoger> Even if you've done it before, I need it to be in your home directory because I don't know your system and it's just faster this way.
+00:58:51 <User78> That's fine its almost done
+00:59:10 <User78> Done
+00:59:34 <TheJollyRoger> Great. Go get your phone and turn it onto Fastboot with the key combination.
+00:59:50 <User78> Done, it is also unlocked
+01:00:01 <TheJollyRoger> Great.
+01:00:32 <TheJollyRoger> Ok, now that the download's done, we're going to unzip the file. Step Eight:
+01:00:42 <TheJollyRoger> tar xvf sunfish-factory-2020.12.12.03.zip
+01:00:57 <User78> Done
+01:01:05 <TheJollyRoger> Step nine, we move to the directory:
+01:01:11 <TheJollyRoger> cd sunfish-factory-2020.12.12.03
+01:01:22 <User78> Done
+01:01:52 <TheJollyRoger> I'm going to pause at step ten: make sure that phone is resting flat on the surface of your desk where it won't fall and it's plugged in snugly to the computer and the phone.
+01:02:01 <User78> Check
+01:02:23 <TheJollyRoger> Once we start the process we should let it run completely, and we must not disturb the process until fastboot reports it to be finished.
+01:02:38 <TheJollyRoger> Since it must write to the bootloader of the device.
+01:03:04 <TheJollyRoger> Great. If it looks good let's make sure fastboot can see it:
+01:03:07 <TheJollyRoger> fastboot devices
+01:03:16 <TheJollyRoger> That command should print the unique serial number code of your device.
+01:03:25 <User78> Its showing
+01:03:30 <TheJollyRoger> As long as it tells you that it's connected, you're good to go to Step Eleven-- ok, GREAT!
+01:03:38 <TheJollyRoger> Take a deep breath: Step Eleven:
+01:03:42 <TheJollyRoger> ./flash-all.bat
+01:03:54 <TheJollyRoger> This will start the process.
+01:05:04 <COVID-1984> How do you unzip a file in the file browser?
+01:05:28 <TheJollyRoger> COVID-1984: I prefer to just do it through the commandline. On Linux and BSD and the like, graphical environments may vary.
+01:05:52 <COVID-1984> you connect your phone to your desktop to be able to?
+01:06:11 <User78> Press any key to exit...
+01:06:19 <COVID-1984> or you're saying you installed an F-DROID app with a cmd line? TheJollyRoger
+01:06:21 <TheJollyRoger> COVID-1984: Oh, OHHH on the phone, not on the desktop, sorry, ah I forget.
+01:06:28 <COVID-1984> hahaa
+01:06:34 <COVID-1984> GOS runs on desktop?
+01:06:41 <COVID-1984> (in a VM, sure)
+01:06:43 <TheJollyRoger> COVID-1984: sorry, I misread, I'll be right with you
+01:06:51 <TheJollyRoger> User78: Great. Hit return and return to the commandline.
+01:07:05 <TheJollyRoger> Step 12:
+01:07:09 <TheJollyRoger> fastboot flashing lock
+01:07:13 <TheJollyRoger> You'll need to confirm this on your phone.
+01:07:40 <User78> Locked
+01:08:08 <TheJollyRoger> Great, once Fastboot tells you that it's locked, unplug your phone and you're OK to start it.
+01:08:23 <TheJollyRoger> *once the Fastboot screen on the phone tells you
+01:08:34 <User78> Your device is loading a different operating system...
+01:08:46 <User78> Back to the fastboot screen
+01:09:45 <TheJollyRoger> Hmm. Really hope that the minimal fastboot/adb didn't corrupt both slots...
+01:10:05 <User78> Hit start again?
+01:10:19 <TheJollyRoger> Yeah, let's see if it detects the other slot.
+01:10:29 <TheJollyRoger> User78: You may need to revert back to stock fully using Google's flash tool.
+01:10:34 <TheJollyRoger> If this doesn't work.
+01:11:00 <User78> It brought up that different operating system warning again but now I see grapheneOS
+01:11:06 <TheJollyRoger> Ok, great.
+01:11:10 <TheJollyRoger> Welcome aboard the ship.
+01:11:14 <User78> Woowww!
+01:11:25 <TheJollyRoger> User78: That "Your device is loading a different operating system" warning is normal, and it's a good sign.
+01:11:32 <User78> Ahhh okay!
+01:11:43 <TheJollyRoger> If it isn't displayed, then you're running the google operating system, or your device's verified boot has been switched off.
+01:12:01 <TheJollyRoger> So the yellow warning is a GOOD sign. You only need to worry if it turns orange and says something like "SOFTWARE INTEGRITY IS NOT GUARANTEED!!"
+01:12:11 <User78> Ahh I see
+01:12:24 <TheJollyRoger> If it turns orange and gives you "Software integrity not guaranteed" then that means that the bootloader has been unlocked.
+01:13:14 <TheJollyRoger> Yep, welcome aboard the good ship GrapheneOS! You can start setting up once you're through the launcher and have your WiFi and SIM card in place.
+01:13:46 <TheJollyRoger> If you find the software useful, please send in a donation, at https://grapheneos.org/donate - it keeps the project going!
+01:14:07 <User78> Whoops I skipped through all that
+01:14:14 <TheJollyRoger> COVID-1984: I actually forget if File Browser in GrapheneOS has a zip extractor. I'm not sure what the app for that is, :P.
+01:14:16 <User78> I was so good with the directions until then
+01:15:12 <COVID-1984> TheJollyRoger: I'll try again tomorrow... I couldn't find one in the file explorer or on FDROID or another file explorer on F-DROID yet.
+01:15:21 <COVID-1984> (Sorry for bringing up FDROID in GOS channel)
+01:15:31 <TheJollyRoger> You can always add the SIM card and WiFi at your leisure, the phone isn't too picky when it comes to when the SIM is installed!
+01:15:40 <TheJollyRoger> COVID-1984: ah, no worries.
+01:15:59 <TheJollyRoger> User78: if you want to disable bootloader unlocking again, you can open up the developer tools and switch it back off.
+01:16:24 <User78> Yep I am going to do that
+01:16:28 <TheJollyRoger> Great!
+01:16:37 <User78> I don't ever have to flash this again right, the updates are done client side?
+01:16:59 <TheJollyRoger> Nope, won't have to repeat the process for this device unless you want to revert to Google's operating system.
+01:17:06 <User78> Hah!
+01:17:29 <TheJollyRoger> GrapheneOS will update itself over the air via incremental updates (it only downloads the files it needs to update to the next release)
+01:17:48 <User78> Terrific!
+01:17:49 <TheJollyRoger> The update server is not a trusted third party, future updates are signed and verified with the keys that installed at flash time.
+01:17:52 <TheJollyRoger> Speaking of which...
+01:18:06 <TheJollyRoger> Since you're on Windows we had to skip signify. However, we can still verify that your computer is not playing tricks on you.
+01:18:36 <TheJollyRoger> The best place to do that is via the project's own attestation server, which is at https://attestation.app/tutorial
+01:19:32 <User78> I will work through that on my next session with this phone :)
+01:20:16 <TheJollyRoger> GrapheneOS has its own installation of Auditor included with the operating system as a system app. Attestation Server can ping it via Android remote attestation to get the verified boot hash. The initial pairing is signed by a key which is signed by a key from your vendor, which is signed by a key from Google, which signs itself but is publicly known, after which, Attestation Server will pin
+01:20:18 <TheJollyRoger> the certificate until you tell it not to.
+01:20:45 <TheJollyRoger> Sure. Don't forget to donate, so GrapheneOS can continue!
+01:21:29 <User78> That sounds like magic haha
+01:21:50 <User78> Thank you so much. I've been wanting to get on this forever. Will make a donation on your behalf. Cheers!
+01:21:54 <TheJollyRoger> Auditor is capable of doing some extremely cool things like telling you if your system partition has been modified or if the keys change, and it can even detect the presence of software that tries to implement root-like functionality.
+01:22:02 <TheJollyRoger> Arr, thank'ee :).
+01:22:22 <TheJollyRoger> Well, if you've got a moment I can tell you a bit more about it, but if you're in a hurry, that can wait!
+01:23:02 <User78> I will check in again because I am really interested to learn about this stuff but am a total noob. I've been working on this for hours tho and gotta check out!
+01:23:14 <TheJollyRoger> Sure. Rest up!
+01:23:16 <User78> Have a great one!
+01:23:25 <TheJollyRoger> You too, Happy New Year!
+01:23:30 <User78> Happy new year!
+01:24:17 <JerrynDev[m]>  Happy New Year
+01:25:47 <dally[m]1> <TheJollyRoger "Sure. Rest up!"> thank you from me too!! i hope to acquire 4a soon , have saved this GOS install howto for later use myself.  graciasUser78:
+01:29:33 <TheJollyRoger> Hey JerrynDev[m], hehe, Happy New Year to you too!
+01:29:45 <TheJollyRoger> dally[m]1: Hey shipmate, glad it will become of help!
+01:33:42 <TheJollyRoger> It's really just the installation guide broken down, the instructions are the same, I just condense it a little bit.
+01:34:36 <TheJollyRoger> So ideally that's the place to go to, referring to the official instructions on the https://grapheneneos.org/install page
+01:48:08 <mulbr[m]> TheJollyRoger smooth
+01:50:31 <dally[m]1> <TheJollyRoger "So ideally that's the place to g"> :)
+02:33:50 <thematrix5000[m]> Is there a way to remove the bottom navigation bar and turn it into one that uses slide instead of press. The back home and forward buttons on the bottom of the web page on vanadium is what I'm talking about
+02:38:30 <boejiden45> How do I install apps from google play store onto the GrapheneOS
+02:39:17 <squarmkt[m]> Aurora store
+02:40:10 <squarmkt[m]> * Aurora store (can get it through fdroid, maybe able to download on its own, I can't remember)
+02:42:44 <squarmkt[m]> * Aurora store (can get it through fdroid, maybe able to download on its own, I can't remember) https://auroraoss.com/downloads.php
+02:59:47 <boejiden45>  was sent here by Adam Curry of the No Agenda Show, Greatest Podcast in the Universe
+03:01:07 <ayaen_t[m]> thematrix5000: try  Settings > System > System Navigation > Gesture Navigation
+03:02:38 <ayaen_t[m]> boejiden45:  just keep in mind while installing apps from aurora store that they are essentially being sourced from google play and ao may have a hard sependency on googlw play services
+03:02:51 <ayaen_t[m]> and so might not work out of the box
+03:06:11 <boejiden45> Thanks. I am trying to add my gmail account with Settings -> Accounts -> Add Account but the button is unresponsive
+03:06:41 <strcat[m]> use Gmail via an IMAP client like FairEmail
+03:07:17 <strcat[m]>  * use Gmail via an IMAP/SMTP client with background push via IMAP IDLE like FairEmail
+03:07:25 <strcat[m]>  * use an IMAP/SMTP client with background push via IMAP IDLE like FairEmail
+03:13:29 <ayaen_t[m]> well thanks strcat  . i was looking for that too.
+03:13:32 <dxrwzy9y[m]> Is it normal that the QR code of an added repo in F-Droid doesn't match the one on the repo's website? The URL and fingerprint match but the QR code doesn't.
+03:14:41 <boejiden45> so then what is the Accounts setting for that I am seeing?
+03:15:58 <strcat[m]> boejiden45: that's for adding accounts via apps supporting it and you haven't installed one yet
+03:16:09 <strcat[m]> boejiden45: there aren't built-in apps with support for email accounts, etc.
+03:16:22 <strcat[m]> https://grapheneos.org/faq#bundled-apps
+03:16:28 <strcat[m]> we leave it up to users to install their apps of choice
+03:18:04 <boejiden45> I understand. Thanks.
+03:32:22 <ayaen_t[m]> <strcat[m] "we leave it up to users to insta"> a concept lost on some device manufacturers and android vendors using custom skins
+03:34:06 <strcat[m]> the main issue is we don't want to pick a good messaging app (as an example) and end up stuck with it even if they make changes that are counter to our goals
+03:34:12 <strcat[m]> or perhaps better alternatives show up
+03:34:24 <strcat[m]> but we'd be stuck continuing to bundle that one for existing supported devices
+03:34:50 <strcat[m]> bundling our first party apps is a bit different since they're developed as part of the project based on the needs of the project
+03:35:00 <strcat[m]> we control their future direction
+04:01:27 <boejiden45> when using the fairemail wizard, I am prompted for my name but the 'Grant' Button is grayed out and disabled as well as the 'Select Account' button
+04:02:04 <boejiden45> now that I have installed Fair email, I am given the option to install 'NextCloud' in my settings.
+04:02:43 <boejiden45> I tried setting up a nextcloud account but encountered errors
+04:17:10 <TheJollyRoger> boejiden45, ah, crud, sorry to hear you're encountering difficulties with it. You might have to take that up with your NextCloud provider, unfortunately.
+04:17:21 <TheJollyRoger> *NextCloud service provider
+04:22:04 <boejiden45> NextCloud was bogus, just had to create an app password in my google account to then manually connect my gmail account to fairemail
+04:27:04 <boejiden45> any suggestion for an through which to import google contacts?
+04:27:14 <boejiden45> an app through which to import*
+04:28:19 <TheJollyRoger> Hi boejiden45, you actually won't need a separate app for that!
+04:28:32 <TheJollyRoger> The easiest way to do this, is to export your contacts from GMail to a vcf file.
+04:28:56 <TheJollyRoger> Then copy that .vcf file to your phone, and under Contacts, use "Import Contacts" in the menu to import it.
+04:29:20 <TheJollyRoger> If you want, you can edit the .vcf file in a text editor, just make sure you follow the Virtual Card File format properly or the entries might not come out the way you expect.
+04:30:01 <TheJollyRoger> You can do it in reverse from the contacts app; I do this to back up the contact list, since Seedvault does not actually back up your contact list.
+04:40:23 <jandroid[m]> dentwireless doesn't recognize eSIM on my pixel 3a.  It is one of the supported devices: https://www.dentwireless.com/esim-smartphones-support
+04:42:27 <blackencross-167> In order for Graphene OS to work, I need a pixel phone?
+04:43:13 <jandroid[m]> I think so: https://grapheneos.org/faq#supported-devices
+04:50:45 <strcat[m]> blackencross-167: unless you port it to something else
+05:10:29 <boejiden45> well, I just finished setup of mission critical systems and I gotta say, this OS is pretty sweet. Great job to the developers!
+05:13:28 <blackencross-167> <boejiden45 "well, I just finished setup of m"> How good is it?
+05:40:09 <lovestory[m]> Anyone from Australia here
+05:42:57 <lovestory[m]> I'm thinking of sending my pixel to ncryptcellular over in Sydney to install grapheneos for me. Do they pay any $ back to the developers when they charge for such services?
+05:45:33 <ayaen_t[m]> theOne:  i dont see why youd need to do that .
+05:46:14 <ayaen_t[m]> if you have some time a computer running ubunti debian or winsows or a mac with catalina we will help you install it
+05:46:40 <ayaen_t[m]> * if you have some time a computer running ubuntu debian or windows or a macOS catalina we will help you install it
+05:47:21 <ayaen_t[m]> and you can donate yourself too .i feel stupid telling you all this
+05:47:32 <ayaen_t[m]> any reasons yoive got?
+05:49:12 <lovestory[m]> I can do it however, I have malware/root kit which has been persistent no matter what.
+05:49:38 <lovestory[m]> I don't want trust my laptop to do the job properly
+05:50:43 <ayaen_t[m]> theOne:  you can use your system to install and then authenticate the install with the auditor app
+05:52:11 <ayaen_t[m]> in case the auditor app saya the installation is not genuine and has been tampered then you have better grounds to go ahead withyour original plan
+05:53:02 <ayaen_t[m]> a rootkiton your system can only disrupt your workflow on your system nothong can happen to your pixel device that you connect
+05:53:21 <lovestory[m]> That's not the only issue though.
+05:53:38 <ayaen_t[m]> kay what else is thwre?
+05:53:47 <lovestory[m]> I live in an environment where we share the WiFi. The landlords router has been compromised.
+05:54:05 <ayaen_t[m]> theOne:  which OS do you use ?
+05:54:13 <lovestory[m]> This is actually my 2nd pixel
+05:54:31 <ayaen_t[m]> no which OS on laptop
+05:54:36 <lovestory[m]> I have had a Chromebox, Ubuntu desktop and windows 8 & 10 desktops
+05:54:46 <strcat> ayaen_t[m]: Auditor is primarily based on Trust On First Use, the initial verification isn't as strong as detecting compromise after that point
+05:54:48 <lovestory[m]> I lost all those devices
+05:54:54 <strcat> lost?
+05:55:07 <lovestory[m]> Yep, I've tried everything
+05:55:34 <strcat> ayaen_t[m]: so, Auditor does enable catching that the computer used to flash was compromised but it's not really a good idea to rely on that
+05:55:51 <strcat> lovestory[m]: what do you mean by lost?
+05:55:59 <strcat> the whole thing is sounding very strange
+05:56:08 <ayaen_t[m]> my point is is it better to rely on people you dont know doing the install for you ?
+05:56:20 <strcat> also not sure about the relevance of a router supposedly being compromised - it doesn't matter
+05:56:22 <lovestory[m]> Its just because its been something that's dragged on for over a year
+05:56:28 <strcat> what has?
+05:56:39 <lovestory[m]> And explaining it just takes forever
+05:56:58 <lovestory[m]> My final attempt to eud myself of all this crap is to remove Google from my life
+05:57:29 <ayaen_t[m]> theOne:  my point is i dont see you helping the situation by giving your phone to someone else to install grapheneOS for you
+05:57:54 <lovestory[m]> Which is why I'm asking the channel if they know of this group
+05:58:23 <strcat> ncryptsecurity is supporting GrapheneOS
+05:59:04 <lovestory[m]> That at least makes me feel better
+05:59:07 <strcat> so yes we know of them, they're a company in Australia that has supported the project since before it was called GrapheneOS
+05:59:34 <lovestory[m]> Ohhhh
+06:00:00 <strcat> unfortunately Australian laws are getting really bad so it's not entirely clear if they will be able to keep going there
+06:00:02 <lovestory[m]> They are expensive, so I was concerned whether developers get anything
+06:00:17 <lovestory[m]> You're right
+06:02:00 <ayaen_t[m]> strcat:  so what do we do incase we have reasons to believe weve got some malware in  the system ? anny ideas ?
+06:02:09 <ayaen_t[m]> live usb?
+06:02:24 <strcat[m]> Auditor
+06:02:43 <lovestory[m]> The thing for me is
+06:02:44 <strcat[m]> buy a new Macbook and use that?
+06:02:56 <lovestory[m]> It was messing with my downloads from grapheneos site
+06:03:07 <ayaen_t[m]> ohh boy, you do have a sense of humour, lol!
+06:03:36 <lovestory[m]> If I download a factory ota zip,  it would come to me with something else in the zip.
+06:03:47 <strcat> lovestory[m]: not possible for a router to do that
+06:03:53 <lovestory[m]> No
+06:03:53 <ayaen_t[m]> yes
+06:04:03 <strcat> the download is from a first party server over HTTPS
+06:04:04 <ayaen_t[m]> not possible imeant
+06:04:09 <strcat> a router can't do that
+06:04:19 <strcat> trusting networks is not required
+06:04:25 <lovestory[m]> I'm not saying the router did that
+06:04:34 <lovestory[m]> The malware on the device was
+06:04:36 <strcat> you're saying your laptop/desktop did that?
+06:04:40 <ayaen_t[m]> some malware on system
+06:04:50 <strcat> what 'extra' thing was in the zip?
+06:04:51 <ayaen_t[m]> thats what he is implying
+06:05:40 <ayaen_t[m]> i think a live usb might help here . certainly less hassle than having to send your pixel over to somebody
+06:05:44 <dally[m]1> goodness me, what system? Laptop ,CPU, , OS, uname -a ??
+06:06:10 <lovestory[m]> I ended up using a live CD
+06:06:10 <ayaen_t[m]> and not that difficult to setup
+06:06:23 <ayaen_t[m]> <lovestory[m] "I ended up using a live CD "> and ?
+06:07:46 <strcat> what I'm curious about is how they 'lost' a dozen computers
+06:07:57 <thematrix5000[m]> Okay it worked thanks
+06:08:19 <lovestory[m]> Well the laptops were old
+06:08:24 <lovestory[m]> Chromebox was new
+06:08:42 <lovestory[m]> I first tried by using pixel repair tool using chrome
+06:08:52 <lovestory[m]> With my device in rescue mode
+06:09:15 <strcat> so it's your phone that broke?
+06:09:23 <lovestory[m]> If anything, my device ended up infecting the Chromebox
+06:09:36 <dally[m]1> <lovestory[m] "Well the laptops were old"> maate! you gotta bet more specific.. else how expect help?
+06:09:47 <dally[m]1> get
+06:09:57 <lovestory[m]> I know I don't make sense but ive been trying to say from the start
+06:10:11 <lovestory[m]> Im not trying to flash it myself at this point
+06:10:21 <strcat> lovestory[m]: I don't think buying an expensive new phone is going to help you because I don't think it's a technical problem
+06:10:25 <lovestory[m]> I just want to have a secure working device free from google
+06:10:42 <lovestory[m]> Ncrypt confirmed they can flash my existing pixel
+06:10:46 <lovestory[m]> And remove the malware
+06:11:04 <dally[m]1> just start with: tell us what computer you have NOW that you would like to use for doing install.
+06:11:10 <strcat> how did you get malware on it in the first place?
+06:11:48 <dally[m]1> WINDOWS 10 running  on a 486PC?? lol/
+06:12:06 <lovestory[m]> Its sad. Lol
+06:12:37 <lovestory[m]> I have a much better desktop that my ex gf won't give back to me when I moved out.
+06:13:00 <lovestory[m]> So I've been trying to make it all work with the old junk I had lying around
+06:13:08 <dally[m]1> FFS !!  what DO you have ?
+06:13:42 <lovestory[m]> Right now all I have is an old Asus f540L laptop
+06:13:58 <lovestory[m]> With windows 10 on it
+06:14:10 <dally[m]1> OK, thanks now we start get somewhere ....
+06:14:14 <lovestory[m]> I've managed to flash grapheneos onto my phone already
+06:14:20 <jandroid[m]> owner
+06:14:23 <dally[m]1> what hard disk in it?
+06:14:26 <lovestory[m]> But I don't tknow if auditor will be accurate
+06:14:33 <lovestory[m]> 128gb ssd
+06:14:47 <dally[m]1> Can you afford a new HDD?
+06:15:03 <dally[m]1> Sorry, can u afford new SSD?
+06:15:06 <lovestory[m]> I have 8 here
+06:15:25 <dally[m]1> any virgins?
+06:16:30 <strcat> lovestory[m]: so you were using GrapheneOS already?
+06:16:37 <strcat> the whole thing is unclear
+06:17:02 <strcat> what were you using on your phone and what happened with it?
+06:17:08 <lovestory[m]> But each time I connect another one. I think it becomes infected and the hard drives firmware somehow is being reconfigured with new values taking away a small amount of space
+06:17:23 <lovestory[m]> My current drive only appears as 119gb
+06:17:23 <strcat> look, I don't think what you're experiencing is a technical problem
+06:17:30 <strcat> and I don't think we're going to be able to help you with it
+06:17:35 <dally[m]1> <lovestory[m] "I have 8 here "> I mean any of them clean, unused so malware free?
+06:17:51 <strcat> I don't think you're going to solve anything through spending money on new hardware / software
+06:17:52 <lovestory[m]> Not anymore
+06:18:05 <lovestory[m]> I'm not spending money on anything new guys
+06:18:08 <lovestory[m]> Ive been saying
+06:18:26 <lovestory[m]> Ncryptcellular will flash my existing handset for me
+06:18:30 <lovestory[m]> And fix it
+06:18:45 <strcat> and when you think it's compromised again, what then?
+06:19:10 <lovestory[m]> I don't intend on connecting to anything previously
+06:19:21 <lovestory[m]> Even have my own mobile broadband connection waiting
+06:19:32 <lovestory[m]> I'm throwing the rest out
+06:19:49 <lovestory[m]> Not even using the same accounts.
+06:20:08 <strcat> you haven't answered if you were already using GrapheneOS or the stock OS, or clarified what happened
+06:20:21 <strcat> you're just stating things that bring up more questions
+06:20:24 <lovestory[m]> I'm on grapheneos now
+06:20:37 <lovestory[m]> I managed to follow all the steps in the install page
+06:20:45 <strcat> so why do you need anything else?
+06:20:50 <strcat> what's the problem?
+06:21:00 <ayaen_t[m]> do you have another device running stock OS?
+06:21:04 <lovestory[m]> Because  I'm not fully confident
+06:21:09 <lovestory[m]> Nope
+06:21:24 <strcat> lovestory[m]: have someone you know install Auditor from Play Store on their phone
+06:21:28 <strcat> and use that to verify yours
+06:21:46 <ayaen_t[m]> exactly
+06:21:55 <dally[m]1> How about find a local Linux Users Group, join it and seek a menter there?
+06:22:01 <lovestory[m]> Yeah it will maybe be a few days. New years just passed and everyone I know just had a big night
+06:22:03 <dally[m]1> mentor
+06:22:27 <lovestory[m]> How come?
+06:22:43 <ayaen_t[m]> i dont see how having your phone  sent somewhere and getting it back improves your confidence
+06:25:04 <lovestory[m]> It doesn't but maybe having them use auditor from a clean device would
+06:25:15 <ayaen_t[m]> what strcat suggests is the least expensive way of doing it without making any compromise trust wise
+06:25:37 <strcat[m]> boot up bootloader mode via key combination
+06:25:40 <strcat[m]> go to recovery from there
+06:25:44 <strcat[m]> wipe data
+06:26:04 <strcat[m]> then verify with Auditor from another device - ideally you'd have had Auditor already paired earlier with the site or another device
+06:26:13 <lovestory[m]> I still have issues on this phone
+06:26:30 <lovestory[m]> I know that much
+06:26:45 <ayaen_t[m]> what issues are you facing?
+06:26:50 <lovestory[m]> Vanadium
+06:26:59 <ayaen_t[m]> ok go on.
+06:27:00 <dally[m]1> <lovestory[m] "Because  I'm not fully confident"> knowledge => power => confidence.  Sending device away will not  boost  any.
+06:27:12 <lovestory[m]> So when I visit certain sites
+06:27:18 <lovestory[m]> Such as google.com
+06:27:31 <ayaen_t[m]> yes....
+06:28:50 <lovestory[m]> Cookies and settings are being set into my browser
+06:29:17 <lovestory[m]> Which directs me to some sort of cached content
+06:29:21 <strcat[m]> I mean, when you visit a site, it can set cookies
+06:29:28 <lovestory[m]> I know this
+06:29:35 <lovestory[m]> But these aren't the normal
+06:29:37 <strcat[m]> and 'site settings' refers to misc state including zoom level
+06:29:53 <strcat[m]> what isn't normal?
+06:31:34 <lovestory[m]> Its provably gonna save me a lot of frustration and time if you just experienced it
+06:32:22 <strcat[m]> k nvm then I recommend booting into bootloader menu, going to recovery from there and wiping the device to start fresh
+06:32:27 <strcat[m]> and use Auditor when you can
+06:32:35 <jandroid[m]> might be the DNS settings on the router is messed up?
+06:32:39 <strcat[m]> as long as the initial installation was fine
+06:32:52 <lovestory[m]> I haven't been on the WiFi router
+06:32:55 <strcat[m]> then verified boot will still be verifying it based on the root of trust flashed to the security chip then
+06:32:56 <lovestory[m]> I've been using mobile data
+06:33:03 <lovestory[m]> Its all happening from my own phone
+06:33:19 <lovestory[m]> I downloaded a crosshatch zip file
+06:33:41 <lovestory[m]> And when I inspected the contents all I saw was a META folder and some files like payload.bin
+06:33:57 <strcat[m]> that's an OTA zip
+06:33:57 <lovestory[m]> I know what I should be seeing as well as verifying the hash
+06:34:02 <strcat[m]> that's what is supposed to be in it
+06:35:13 <strcat[m]> you're not meant to extract the OTA zip
+06:35:33 <strcat[m]> and it's signed itself rather than having a separate signature like the factory images
+06:35:43 <ayaen_t[m]> just sideload it via adb , i beleive ?
+06:36:30 <lovestory[m]> I did that first
+06:37:01 <lovestory[m]> But the sideload wasn't completing without errors
+06:37:10 <lovestory[m]> Didn't pass verification
+06:37:54 <strcat[m]> probably the wrong zip
+06:37:59 <strcat[m]> which device do you have?
+06:38:08 <strcat[m]> or it could just be a bad USB connection
+06:38:12 <lovestory[m]> Crosshatch pixel 3 XL
+06:38:14 <dally[m]1> <lovestory[m] "Didn't pass verification "> ASIO'd OTA.zip? lol
+06:39:53 <dally[m]1> sorry...
+06:40:08 <lovestory[m]> Whatever dude
+06:40:40 <dally[m]1> dudess
+06:43:04 <ayaen_t[m]> humor is always appreciated
+06:43:30 <dally[m]1> might this help?
+06:43:30 <dally[m]1> https://www.reddit.com/r/GrapheneOS/comments/erligs/installing_grapheneos_on_pixel_3xl/
+06:43:30 <dally[m]1> https://www.reddit.com/r/GrapheneOS/comments/dtu1rt/build_and_install_grapheneos_help_from_linux/f6z6l6b/
+06:43:41 <strcat> no
+06:44:07 <ayaen_t[m]> only the official installation guide is supported here .
+06:44:25 <strcat[m]> they're not trying to install
+06:44:26 <dally[m]1> uh, yes. my bad.
+06:48:45 <lovestory[m]> My only question was
+06:48:53 <lovestory[m]> If developers were getting money
+06:49:15 <lovestory[m]> As I would at least feel better if it supported them with the amount Im paying
+06:52:19 <lovestory[m]> Strcat do you work on the project directly also?
+07:12:45 <lovestory[m]> Where'd everyone go
+09:07:20 <pumpkineater69[m> There ignoring you
+09:29:58 <strcat[m]> theOne: busy with other things
+09:34:10 <lovestory[m]> You didn't answer the question
+09:35:21 <Dylanger[m]> What's your Q?
+09:41:45 <messytaco05[m]> Hi all I'm trying to install os on a new 4a from Windows. I've unlocked the bootloader without any issues. But when I click the flash-all bat file, nothing happens. Any ideas?
+09:44:02 <louipc> please carefully read the install instructions
+09:44:28 <Asmodaeus> Please first start the cmd, change the dir to the grapheneos and than start the flash.bat with the cmd
+09:44:41 <louipc> no cmd
+09:44:52 <louipc> please carefully read the install instructions
+09:48:09 <Asmodaeus> Why should he not use the command line (cmd) to execute the commands in the install instruction? Without it, he can not see any error message...
+09:48:45 <ayaen_t[m]> Asmodaeus:  supposed to use powershell not legacy cmd
+09:49:15 <louipc> Asmodaeus: check the instructions dude
+09:50:58 <Asmodaeus> Thx ayaen_t[m]
+09:51:00 <ayaen_t[m]> messytaco05:  please follow the supported guide https://grapheneos.org/install which does not involve clicking anything
+09:51:30 <messytaco05[m]> <ayaen_t[m] "messytaco05:  please follow the "> Thanks will do
+09:51:47 <ayaen_t[m]> more specifically here https://grapheneos.org/install#flashing-factory-images
+09:52:03 <ayaen_t[m]> how to use the flashall.bat
+09:53:40 <ayaen_t[m]> <ayaen_t[m] "messytaco05:  please follow the "> this way if something goes wrong its easier to troubleshoot
+09:54:16 <louipc> but really you need to read top to bottom
+09:54:47 <louipc> don't just start in the middle
+09:57:29 <ayaen_t[m]> louipc: yes ofcourse .a lapse on my part.
+10:17:45 <COVID-1984> How do you unzip files in GOS file explorer?
+10:22:04 <ayaen_t[m]> click on the zip file
+10:22:13 <ayaen_t[m]> you will be shown its contents
+10:23:07 <ayaen_t[m]> then long press on that to select the file in the .zip archive
+10:23:16 <ayaen_t[m]> and then
+10:24:07 <ayaen_t[m]>  open the menu for which i have no name ....the one with three dots
+10:24:18 <ayaen_t[m]> there you should see extract to
+10:29:07 <ayaen_t[m]> mind you this only works on .zip files.
+10:30:12 <ayaen_t[m]> you could use some app like Zarchiver
+10:30:28 <ayaen_t[m]> or termux and whatever un* command
+10:30:45 <ayaen_t[m]> to extract other kinds of archives
+12:13:42 <COVID-1984> ayaen_t[m]: thanks!
+12:17:02 <ayaen_t[m]> no problem.
+13:20:51 <nscnt> I can confirm that the installation of GrapheneOS works on the latest macOS Big Sur 11.1 with the official installation guide without any issues
+13:21:00 <nscnt> bsdtar 3.3.2 is currently used for tar
+13:21:34 <nscnt> Nice to know: The default shell is zsh now, but only for newly created user accounts. bash is still standard for old user accounts and you may switch to zsh.
+13:21:43 <nscnt> Official Apple documentation for it: https://support.apple.com/kb/HT208050
+13:21:55 <nscnt> The bash script works with zsh configured; even without explicitly running it as a bash script as the flashing script has a shebang line.
+13:28:12 <ayaen_t[m]> nice
+13:29:47 <ayaen_t[m]> oh boy i actually did the install on zsh not bash .i usually switch to zsh immediately after installation.and didnt even realise.....
+13:30:05 <aeonii> Hi all. Quick question, just like to confirm that WhatsApp works on GrapheneOS, as I am forced to use it due to family stuff. I read on Reddit that it did, but as I said, just like to confirm
+13:32:30 <ayaen_t[m]> whatsapp works on lineageos without microg googleplay or any sort of workaround forthat matter  so im 99percent sure it shouldnt have any trouble with grapheneos
+13:33:19 <ayaen_t[m]> or make it 100 percent
+13:33:23 <aeonii> I did know it did on MicroG, didn't know it did without it. If so, I agree it will
+13:33:35 <aeonii> Thanks ayaen_t[m]
+13:33:47 <ayaen_t[m]> aeonii: no problems.
+14:14:40 <thematrix5000[m]> What is the best way to preserve the life of the battery in the phone? Do you think it is bad to sleep with your phone on the charger so it keeps charging at 100%?
+14:16:33 <nscnt> thematrix5000[m]: https://support.google.com/pixelphone/answer/10011133?hl=en
+14:23:10 <thematrix5000[m]> Some people say the best way is to always keep it at 50% to preserve the lifespan or it will degrade faster for future charges
+14:27:17 <User78> I thought lithium batteries generally are always best to keep charged and not run it down low
+14:30:40 <nscnt> #grapheneos is the wrong place to talk about it (in detail), I guess
+14:32:28 <TinusKikker> Hi im having issues installing GrapheneOS. Im no coding expert so i might be doing some abvious things wrong. Having said that is have been doing all the steps on the graphene website installation guide. I get as far as the flashing step. When i doubleclick the flash-all.bat a cmd window appears for a second and then disapears again. Then i went to
+14:32:28 <TinusKikker> put the code in the cmd window but it keeps telling me two things: powershell is not recognized as an internal or external command, AND bootloader is too old. Whell my version of the bootloader is 30.0.5-6877874 so it must be up to date... But i do not get why it is not working. Has anyone any idea?? I am doing this on windows 10 and pixel 3a. .
+14:34:20 <nscnt> TinusKikker: You inital issue is probably, that you're not running PowerShell. You should use it instead of legacy cmd
+14:36:29 <nscnt> TinusKikker: Use PowerShell. You should probably start from the beginning as I don't know whether the first steps were successfull as they should
+14:37:49 <nscnt> Follow the guide closely
+14:37:59 <User78> What nscnt said, also I had this problem yesterday and I had an outdated version of fastboot on my system which is why the flash-all script did not pass its check and shuts off just like what is happening to you. DO NOT modify the flash-all script as some 'fixes' suggest
+14:38:09 <nscnt> It isn't mentioned to double click on the flash script
+14:41:03 <TinusKikker> @nscnt Thanks i will try using powershell again and follow the guide closely.
+14:45:25 <justanotherlurke> <aeonii "Hi all. Quick question, just lik"> Are you going to transfer your existing chats and media to your new GOS-phone?
+14:46:08 <nscnt> justanotherlurke: He's gone
+14:49:37 <TinusKikker> So i did follow the guide closely and executed it with powershell. I got as far as the flashing step again with no troubles. Then i put in ./flash-all.bat and got this message: 'PowerShell' is not recognized as an internal or external command, operable program or batch file. fastboot too old; please download the latest version at
+14:49:37 <TinusKikker> https://developer.android.com/studio/releases/platform-tools.html
+14:50:46 <User78> Even if you followed the steps correctly and have the latest version of fastboot the presence of an older version can cause this
+14:56:59 <TinusKikker> Allright... thnx! i think i will try the whole process on another pc to be shure it's not that. Then the old version should be out of the question.
+14:57:15 <nscnt> TinusKikker: What's your output with: fastboot --version
+14:57:22 <ctrl> hello,
+14:58:26 <ctrl> is there is any way i could get rid of phone boot up message:  your device is loaded different operating system on my pixel 3? has anyone tried to edit bootloader or somehow remove this message and google logo?
+15:00:27 <nscnt> ctrl: Removing the logo is not possible. It's a hardware thing. The bootloader warning message is part of the bootloader security and expected. All this could only be changed if GrapheneOS partners with a hardware manufacturer
+15:01:38 <nscnt> All in all: No. There's nothing to try.
+15:01:50 <ctrl> this message will appear in all supported phones?
+15:01:56 <nscnt> Yes
+15:03:34 <User78> I was actually wondering about that earlier so thanks for the question ctrl
+15:03:50 <User78> And the answer nscnt
+15:10:20 <strcat[m]> if you follow the steps correctly, the platform-tools you downloaded will be first in PATH
+15:17:31 <nscnt> macOS Big Sur is now part of the officially supported operating systems to install GrapheneOS from
+15:19:02 <technerd[m]> Anyone have issues with trying to attach their phone to Linux to do a file transfer? Attempting to do with my GrapheneOS Pixel 4a and QubesOS.  Keep getting "Unable to open MTP device"
+15:20:06 <technerd[m]> Using a Debian qube within QubesOS.
+15:20:51 <hello88o[m]> Is USB debugging enabled in phones settings
+15:28:51 <hello88o[m]> Does being in airplane mode and only using wifi bring any security or privacy benefits?
+15:31:31 <Liakdeuser[m]> https://grapheneos.org/faq#cellular-tracking
+15:31:31 <Liakdeuser[m]> https://grapheneos.org/faq#wifi-privacy
+15:33:59 <ctrl> does grapheneos changes imei after every phone boot like google does?
+15:40:41 <hello88o[m]> > <@leeya:kde.org> https://grapheneos.org/faq#cellular-tracking
+15:40:42 <hello88o[m]> > https://grapheneos.org/faq#wifi-privacy
+15:40:42 <hello88o[m]> Thank you Lia
+15:41:30 <hello88o[m]> Thank you Lia
+15:41:36 <TinusKikker31> Hi. i started te installation proces on a new computer and did the whole guide with no problems in windows 10 powershell till i needed to enter the flashing code: ./flash-all.bat. I did and i got this message, does anyone know what i can do? ./flash-all.bat : The term './flash-all.bat' is not recognized as the name of a cmdlet, function, script
+15:41:37 <TinusKikker31> file, or opera
+15:43:06 <hello88o[m]> Pretty much everyone has problems with the flash-all script...
+15:49:18 <TinusKikker31> Damn! any ideas or advice??
+15:50:13 <hello88o[m]> Well you can edit the script and delete the first part of it and it should work but that is against the official guide so I really dont know
+15:50:40 <Make42> Hello, I am trying to install Graphene OS on my new Pixel 4 XL. I have questions regarding the install process. Am I right here?
+15:51:07 <thematrix5000[m]> Yes they helped me
+15:51:14 <hello88o[m]> The experts are not here right now but yeah
+15:53:21 <Make42> Ok, so I am trying to install Graphene OS on my new Pixel 4 XL. The bootloader is already unlocked: When I start the phone it says "The bootloader is unlocked and software integrity cannot be guaranteed. Any data stored on the device may be available to attackers. Do not store any sensitive data on the device." At
+15:53:21 <Make42> https://grapheneos.org/install#prerequisites it says "It's best practice to update the stock OS on the device to make sure it's running the latest firmware before proceeding with these instructions. This avoids running into bugs, missing features or other differences in older firmware versions. You can either update the device via over-the-air
+15:53:22 <Make42> updates or sideload a full update, which for Pixel phones can be obtained from the full update package page." I would like to avoid to set up the device again. But I am not sure how to do the over-the-air updates. Just going to https://developers.google.com/android/ota did not provide much information.
+15:55:56 <TinusKikker31> hello88o[m] editting the script is out of my comfort zone, i cant try that. I shouldnt have to right? Thanks for your help! Is there any other way to contact the experts.
+15:56:40 <hello88o[m]> <TinusKikker31 "hello88o editting the script is "> The experts are on coffee break and should be back soon
+15:56:54 <hello88o[m]> Lia (kde user): Lia we got job for you
+15:57:32 <Make42> soo... can someone help me here?
+15:58:25 <hello88o[m]> <Make42 "soo... can someone help me here?"> Boot the device on stock android to update system
+15:58:51 <Kurai> TinusKikker31: are you sure you did everything according to https://grapheneos.org/install?
+16:08:31 <ayaen_t[m]> hello people its the nature of this platform tbat sometimez people get delaywd responses
+16:08:53 <ayaen_t[m]> so if you stick around for ten minutes then i can help you
+16:09:23 <ayaen_t[m]> its/just bad luck that no one was here when you guys came
+16:09:59 <ayaen_t[m]> meanwhile if you run into any issues dont apply any third party fixes that you may found on web searches
+16:10:21 <ayaen_t[m]> please follow official installation guide
+16:10:22 <ayaen_t[m]> https://grapheneos.org/install?
+16:10:30 <TinusKikker31> @kurai i just did the whole guide again and i did miss one step. now i didnt have any errors. The only thing is when i pressed enter after entering ./flash-all.bat i just got a message < waiting for any devide >
+16:11:40 <Make42> ayaen_t[m] I can stick around for 10 min. Should I wait here?
+16:14:03 <nscnt> TinusKikker31: Check for updates at Windows Update. There will be an optional driver update now, probably
+16:15:37 <Kurai> Make42: sorry but what is your problem exactly?
+16:16:40 <nscnt> Make42: The easiest may be: Lock the bootloader again with: fastboot flashing lock
+16:16:48 <nscnt> Boot up the phone normally
+16:16:53 <nscnt> and update the phone
+16:17:39 <nscnt> When putting in the command, you need to verify it on the phone
+16:18:06 <Make42> nscnt: is that easier than side-loading on the phone? Do I not have to go through the entire setup on the phone again?
+16:18:52 <nscnt> Make42: Yes it's easier
+16:20:18 <nscnt> The phone settings shouldn't change, but you could just take a quick check after you're ready to flash it again
+16:22:49 <Make42> nscnt: What do you mean by "settings shouldn't change" and how should I check this? is it relavant for the savety of the installing procedure? (for context: I have bought the phone without using it so far, nothing on the phone needs to be backup-ed)
+16:24:25 <nscnt> Make42: You only unlocked the bootloader, right? But now you first want to make sure that your stock Android is up to date, it this it?
+16:24:36 <nscnt> *is this
+16:25:44 <nscnt> tinuskikker: Are you still stuck with the <wating for device> message?
+16:25:58 <Make42> nscnt: That is right. Particularily, I want to follow the step in the instructions which says "It's best practice to update the stock OS on the device to make sure it's running the latest firmware before proceeding with these instructions."
+16:26:44 <Make42> nscnt: Now I am already in the middle of booting up the phone (currently at the step "Copy Apps and Data")
+16:26:49 <Make42> Should I proceed?
+16:26:53 <tinuskikker> so i checked my windows updates and on my device and they are all up to date. i did the installation proces again and got stuck again at ./flash-all.bat command. same message:< waiting for any device >
+16:27:41 <nscnt> tnias[m]: There should be a little link "optional updates" at Windows Update. There's nothing?
+16:27:48 <nscnt> Make42: Is your bootloader locked again?
+16:28:34 <Make42> nscnt: I do not know. As I said: I am at "Copy Apps and Data" and I am not yet in the OS, if you will.
+16:29:05 <Make42> nscnt: I do not know at which point the bootloader get locked.
+16:29:20 <Make42> I also do not know whether I need this update in the first place.
+16:29:23 <nscnt> Make42: In the bootloader interface. Just like when you unlock it
+16:29:46 <Make42> nscnt: Should I power down and check?
+16:29:56 <nscnt> Make42: Yes, that would be best
+16:30:57 <Make42> nscnt: Ok, I pressed the power-button and said "reboot". Now I am back to the screen that says "The bootloader is unlocked and software integrity cannot be guaranteed. Any data stored on the device may be available to attackers. Do not store any sensitive data on the device."
+16:31:01 <nscnt> Yea, well... GrapheneOS should ship the necessary firmware etc. it's just best practice to have everything (phone, computer) up to date before doing anything
+16:31:28 <nscnt> Make42: Boot into the bootloader interface with Power button + Volume down
+16:31:51 <tinuskikker> nscnt so i checked my windows updates and on my device and they are all up to date. i did the installation proces again and got stuck again at ./flash-all.bat command. same message:< waiting for any device >
+16:32:39 <nscnt> Make42: Turn it off and boot into the bootloader interface with Power button + Volume down. Don't "restart"
+16:32:44 <Make42> nscnt: I pressed the power button and the volum down button. Now I am back at where I should enter the SIM-PIN.
+16:32:58 <User3421> tinuskikker try running as administrator, I have to use sudo on linux as well
+16:33:05 <User3421> Hello! I ran into an issue installing on my Pixel 4a. After running the ./flash-all.sh command it does its thing, but ends on "fastboot: error: Failed to boot into userspace fastboot; one or more components might be unbootable".
+16:33:19 <nscnt> He's on Windows
+16:33:29 <nscnt> isn't he?
+16:33:34 <User3421> I know
+16:33:38 <nscnt> Do not run anything as admin on Windows
+16:34:20 <Make42> nscnt: Ok. I shut it down. Then I pressed Power button + volume down button. Now I am in a screen that says "Fastboot Mode, Product revision: coral..." and so on. It also says "Device state: unlocked" further down.
+16:34:24 <ayaen_t[m]> User3421:  direct message me will you?
+16:34:34 <tinuskikker> nscnt yes im on windows
+16:34:37 <ayaen_t[m]> there are just too many at the moment
+16:35:17 <User3421> ayaen_t[m], You must log in with services to message this user - see https://freenode.net/kb/answer/registration
+16:35:34 <nscnt> Make42: What operating sytem is your computer running on?
+16:35:39 <User3421> Can't dm you it seems
+16:35:48 <Make42> nscnt: Kubuntu 20.04 LTS
+16:35:52 <tinuskikker> nscnt is there anything else i can do? i got some visitors just now so ill pick it up again tomorrow is there is anything else i can try
+16:35:53 <ayaen_t[m]> wait a sec
+16:35:59 <User3421> Sure
+16:36:07 <nscnt> Make42: Fastboot is still configured?
+16:37:34 <Make42> nscnt: I do not understand the question: Currently nothing is done by nobody (neither phone nor notebook). I downloaded fastboot according to https://grapheneos.org/install#standalone-platform-tools and used the export-PATH command.
+16:37:52 <nscnt> Make42: So you get an output running: fastboot --version
+16:38:24 <Make42> $ fastboot --versionfastboot version 30.0.5-6877874Installed as /PhoenixData/Programme/sdk/platform-tools/fastboot
+16:38:39 <Make42> nscnt: That is what I get:
+16:38:44 <nscnt> Make42: Good. You should be able to lock the bootloader with: fastboot flashing lock
+16:38:53 <nscnt> And confirm it on the phone
+16:39:26 <Make42> nscnt: I do not understand: I have not yet installed Graphene OS. Why should I unlock the phone now?
+16:39:39 <Make42> Sorry, meant: I have not yet installed Graphene OS. Why should I lock the phone now?
+16:40:01 <nscnt> Make42: I know. We want to ensure software integritiy before you install updates on stock Android
+16:40:25 <Make42> nscnt: Ok, so first I should connect my phone with my notebook, right?
+16:40:37 <nscnt> Make42: Yes
+16:41:22 <Make42> nscnt: I connected the two. Can I check if there is a connection? My phone still shows the screen "Fastboot Mode"
+16:42:21 <nscnt> Make42: You could just type in the command
+16:43:41 <Make42> nscnt: Do you mean "fastboot flashing lock"?
+16:43:46 <nscnt> Make42: Yes
+16:44:12 <Make42> nscnt: It says <waiting for any device >
+16:44:20 <Make42> nothing happens
+16:45:27 <tinuskikker> nscnt any ideas which i can try tomorrow?? i am stick in WAITING FOR ANY DEVICE after ./flash-all.bat command. all updates are up to date. any idea is welcome right now.
+16:47:11 <nscnt> tinuskikker: Yes, there's a connectivity issue. Make sure not just Windows updates are up to date, but also the optional updates for the driver. Otherwise it might be a bad cable or something
+16:47:29 <nscnt> Make42: I've sent you a private message
+16:48:57 <tinuskikker> nscnt thanks! ill pick it up tomorrow.
+16:50:17 <shuten[m]1> <technerd[m] "Anyone have issues with trying t"> i know qubes has some issues to attach phone devices. try to use sys-usb qube if you have it installed or ask a qubes community/their support
+17:53:08 <technerd[m]> <shuten[m]1 "i know qubes has some issues to "> Yeah. Using sys-usb, but still have issues. Will post the question to QubesOS forum too.  Thanks.
+18:00:59 <new> approximately how long will it take for pixel 5 to be compatible?
+18:11:34 <Liakdeuser[m]> depends on the availability of a maintainer
+18:34:14 <malicoye[m]> Guys how do I revert to stock OS with a broken USBC port. I need to claim warranty
+18:34:30 <malicoye[m]> Warranty is void if unofficial OS is installed
+18:41:29 <joehandcockandja> You can't
+18:41:55 <joehandcockandja> 👍
+18:42:35 <MysticalOwl> unless u root grapheneos perhaps
+18:51:49 <malicoye[m]> Bad news. Broken port is farewell to warranty then
+18:53:07 <nscnt> malicoye[m]: As long as you do what what the Pixel enables you to do, the warranty won't be voided as far as I know. Installing another OS is part of it
+18:54:05 <malicoye[m]> Wrong. Were I am it's against warranty to run non-stock OS
+18:54:36 <malicoye[m]> This yellow notification at boot is all they need to reject me
+18:54:48 <nscnt> Not on Pixel if you're claiming at directly at Google
+18:55:23 <malicoye[m]> We do not have Google here. We claim to the merchant
+18:55:56 <ayaen_t[m]> hey guys .anyone got stuck on fastbootd while doing flash-all ?
+18:56:06 <malicoye[m]> Warranty with pixels outside US/UK is another downside against apples
+18:56:29 <nscnt> That's unfortunate. They are probably unqualified and just think "It's modified so it must be out of warranty"
+18:58:44 <ayaen_t[m]> anyone ever got stuck on fastbootd menu while flash-all script is running?
+18:59:41 <nscnt> malicoye[m]: Better contact Google directly. Maybe they can forward you to a proper address that can handle your problem
+19:01:10 <Make42> My last phone had Copperhead OS on it. For some reason I forgot my swipe password. My data is lost, but also the phone, because I am not able to reinstall any OS. Should this happen to my new phone (where I am installing Graphene OS right now), I would like to avoid that I am not able to reinstall a new OS (of course data will still be lost). How
+19:01:11 <Make42> should I approach? Am I right to still lock the bootloader with "fastboot flashing lock", but then I should keep OEM unlocking enabled in Graphene OS? Is that the way to go?
+19:02:06 <nscnt> Make42: You'll be able to reset your phone. Your data will be lost, but you'll have a working phone again.
+19:02:43 <Make42> nscnt: You mean if I 1) fastboot flashing lock, and 2) keep OEM unlocking enabled?
+19:02:49 <nscnt> ayaen_t[m]: I don't remember exactly. Yes, you'll be on fastbootd menu some time. Your phone restarts and doing its thing until the flashing is done
+19:02:57 <Make42> nscnt: Is this still a save phone then?
+19:03:08 <Make42> (I mean secure, not save.)
+19:03:20 <ayaen_t[m]> nscnt: thats coreect
+19:03:27 <nscnt> Make42: Follow the guide. Lock the bootloader and disable "Enable OEM unlocking"
+19:03:48 <ayaen_t[m]> we had a person here for whom it got stuck ther
+19:04:23 <Make42> nscnt: Ok, but if I Disabling OEM unlocking, how do I reinstall a new OS if I forget my Password again?
+19:04:40 <ayaen_t[m]> and the script ececution paused  and was waiting foe devices
+19:05:05 <nscnt> Make42: You don't reinstall a new operating system. You can do a factory reset. After that you may install another operating system.
+19:05:22 <nscnt> Factory reset wipes all data
+19:05:33 <nscnt> This way you can set up your phone again
+19:06:04 <nscnt> And--if you want to--modify your system in another way
+19:06:48 <Make42> nscnt: So why was I not able to do a factory reset on Copperhead OS?
+19:06:49 <nscnt> Make42: If you just forget your password, but if you still want to use GrapheneOS, all you need to do is doing a factory reset
+19:07:27 <nscnt> Make42: I don't know
+19:08:05 <Make42> nscnt: How do I do the factory reset in Graphene OS?
+19:08:21 <ayaen_t[m]> Make42:  we do not deal with copperheafOS
+19:08:43 <Make42> ayaen_t[m]: Sure, but I am allowed to ask, right?
+19:08:46 <ayaen_t[m]> of your intention is to install grapheneOS thensure we can help
+19:08:55 <ayaen_t[m]> sure
+19:09:06 <ayaen_t[m]> you can ask
+19:09:31 <ayaen_t[m]> i am just saying what we do here
+19:11:11 <Make42> How do I do the factory reset in Graphene OS?
+19:11:46 <ayaen_t[m]> you poweroff the device
+19:12:05 <ayaen_t[m]> then press power button and vol down
+19:12:23 <ayaen_t[m]> then selwlect reboot to recovery
+19:13:34 <ayaen_t[m]> thwre you should see option to factory reset or somwthing to thay effect
+19:13:40 <Make42> thanks!
+19:14:18 <ayaen_t[m]> if you try it on the other device ithink it should  be the same
+19:14:24 <Make42> ok, I am ready to say "flash-all.sh" - will it warn me, if I got something wrong so far (like downloading the wrong ZIP file or such)?
+19:14:39 <ayaen_t[m]> no
+19:15:04 <Make42> Do I brick my device if I get it wrong?
+19:15:20 <ayaen_t[m]> why dont you fo through the install instructikns here
+19:15:20 <ayaen_t[m]> https://grapheneos.org/install
+19:15:29 <Make42> I do - I am just nervous...
+19:15:52 <nscnt> Make42: No, it's hard to really brick it
+19:15:58 <Make42> thanks!
+19:16:10 <ayaen_t[m]> <Make42 "Do I brick my device if I get it"> no . pixels are hard to brick.
+19:17:05 <Make42> So I downloaded "coral-factory-2020.12.12.03" - just for checking: It says in "Fastboot Mode" that I have "Product revision: coral MP1.0(NA)" - so is "coral" indicating that I got it right?
+19:17:36 <ayaen_t[m]> nscnt:  sorry but just asking again any idea how device xould get stuck on fastbootd menu?
+19:17:46 <trismous[m]> <ayaen_t[m] "no . pixels are hard to brick. "> I was never able to brick any Android phone I had. Only once I have totally deleted the OS lol.
+19:18:31 <Make42> trismous[m]: Well, as I said earlier: I bricked my Nexus 6P with Copperhead OS. It does not give me the "factory reset" option.
+19:19:04 <ayaen_t[m]> <ayaen_t[m] "nscnt:  sorry but just asking ag"> and the flash-all script keeps waiting for device
+19:19:18 <Make42> No password, no factory reset, OEM unlocking disabled... bricked device.
+19:19:32 <Make42> nscnt: So I downloaded "coral-factory-2020.12.12.03" - just for checking: It says in "Fastboot Mode" that I have "Product revision: coral MP1.0(NA)" - so is "coral" indicating that I got it right?
+19:19:57 <ayaen_t[m]> sure
+19:20:21 <Make42> ayaen_t[m]: is that directed towards me?
+19:20:35 <ayaen_t[m]> yes
+19:20:41 <Make42> ok, thanks
+19:21:04 <ayaen_t[m]> you have which pixel device
+19:33:07 <aeonii> @ayaen_t[m] Hiya, I have just successfully installed GrapheneOS! But there has to be something wrong with the latest version, because I installed an older version without the issues we just saw on the recent version
+19:35:34 <aeonii> Why doesn't @ ping a user?
+19:42:37 <tinuskikker> hi im working on installing grapheneOS on me pixel 3a for 6 hours now and i got to the point that ./flash-all.bat started working (first time). It did run but hasnt been able to install it propperly. If i send the powershell information could someone have a look at it to see whats the problem?
+19:43:14 <aeonii> I have just been dealing with a similar issue
+19:45:53 <nscnt> tinuskikker: Yes. If you're about to send a longer log, better use a paste service
+19:48:36 <tinuskikker> nscnt allright. what paste service should i use?
+19:49:38 <nscnt> Doesn't matter. pastebin or something
+19:51:42 <tinuskikker> nscnt here you go: https://pastebin.com/1STcLuRW
+19:53:41 <nscnt> tinuskikker: You forgot to unlock the bootloader, didn't you?
+19:54:39 <tinuskikker> nscnt yes it was already unlocked
+19:57:11 <nscnt> tinuskikker: You're flashing sunfish
+19:57:18 <nscnt> instead of sargo
+19:58:14 <nscnt> You curled sargo, but extracted a (probably formerly curled) sunfish and flashed that
+19:59:15 <hello88o[m]> Yeah the installing guide has example that says to download the sunfish version so I feel like everyone makes that mistake
+19:59:15 <hello88o[m]> Read it closely..
+19:59:15 <tinuskikker> nscnt i see! The example for the pixel 4a is also in the latter part of the installation guide. now i see. my bad! thanks a lot! going to see if that works
+20:00:01 <tinuskikker> hello88o[m] yep! I tought is was fot that part only but i need to adjust al the other parts after that aswell
+20:01:23 <hello88o[m]> I feel like the install guide should be remade a little bit more clear..just my opinion based on the fact that so many people are having trouble on it
+20:03:23 <nscnt> Yes, you're not wrong
+20:04:00 <luca-simpletech> But what's their/your problem with the installation? 99% of problems seem to appear because they do not read, am I wrong?
+20:04:26 <luca-simpletech> Different tutorials for different OS's?
+20:04:39 <hello88o[m]> <luca-simpletech "But what's their/your problem wi"> Yeah because they are normal humans
+20:05:00 <nscnt> It's a mutual problem. Most 'flashers' don't care about a lot of information and skip information. Though, if they would try to understand what they do instead of just following blindly, it make much more sense
+20:05:43 <hello88o[m]> True
+20:05:47 <nscnt> It's a well made documentation, but it's up to the user how they use it
+20:06:04 <luca-simpletech> Yes, of cause they are humans but what's your point. Humans do »wrongs« not without reason :)
+20:06:15 <luca-simpletech> yep
+20:06:29 <nscnt> And if we want to acknowledge user's laziness, there could be some changes in some way
+20:07:11 <aeonii> hello88o[m]: would be easier if one could select model at the top and all commands would be tailored to their device
+20:07:23 <tinuskikker> For me the notice to adjust the code on what type of phone you are using was under the title: Obtaining factory images. The next title in my 'normal ape mind' has the standard rules of all the above which was just copy it. but yes. if i had read the code carefully i could have noticed a reseblence.
+20:07:27 <luca-simpletech> Shorter and more »to the point«?
+20:08:00 <hello88o[m]> Yeah sorry for even starting do what you wanna do
+20:08:13 <hello88o[m]> Feel like Graphene is failing because of this dicky community
+20:08:14 <nscnt> aeonii: That's more complex under the hood. Javascript would be needed I guess. Then we run into users "Nothing changes" because they are blocking Javascript
+20:08:30 <aeonii> Could be done with css...
+20:08:41 <aeonii> Or a per phone page
+20:08:55 <luca-simpletech> Wait, what? I just asked about what you mean exactly. :) I'm really sorry :/ :( Have a nice day! :)
+20:08:59 <aeonii> People don't read, the copy paste
+20:09:02 <luca-simpletech> I get what you mean
+20:09:27 <aeonii> *they
+20:13:42 <tinuskikker> people who are not famillair with coding do not read the copy paste that is very very true. Just to be clear i really like what you are doing and have nog regret putting 6 hours in to have it set up. it would be nice to have it be 30 minutes but he. thats life, if things are important enough you put the time in.  and this is really tough to
+20:13:42 <tinuskikker> understand for someone like me. but... i want to end on a positive note! I HAVE INSTALLED GRAPHENE SUCCESFULLY
+20:14:55 <tinuskikker> Thank you guys! And especcialy nscnt for you patience and help. Your kind en helpfull texts made me want to keep trying and i learned aswell. Thank you!
+20:15:17 <nscnt> No problem. Glad it worked c:
+20:23:22 <nscnt> Often it's just not that easy, especially when you want to please everyone. There will be changes, no doubt. But it also requires empathy from the community
+20:27:59 <nscnt> ^Re: Changes to e.g. the installation guide
+20:30:55 <brockin042[m]> I've been running grapheneOS for 7 months now. Google is phasing out using google pay without the app in early 2021. As of right now you can just use a browser. Any hack or workaround to get google pay to work? I use Gpay for business so this kinda sucks that they're forcing you to use the app.
+20:34:56 <grapheneos_user_> You could use microg and see if it works, but that decreases security
+20:36:19 <grapheneos_user_> If you need utmost security on your phone, best bet is to get a cheap android phone specifically for G Pay and other google essential stuff
+20:40:52 <brockin042[m]> Thanks, I didn't think of that. A second phone, with one of those cheap $30 dollars a month plan like cricket.
+20:44:42 <brockin042[m]> Just thinking about flashing stock rom on my pixel made me cringe.
+20:48:05 <alexschrank[m]> Speaking of flashing stock rom, I see that the January Android security patch fixes some security vulnerabilities in closed-source Qualcomm components. Will grapheneOS be getting these fixes as well? It wouldn’t be necessary to flash stock rom, update, and then reinstall grapheneOS to get their full benefit, would it?
+21:04:24 <Make42> I just installed Graphene OS on my new Pixel 4 XL. Now it asks me if I have backup "If you have from your last LineageOS phone, you can restore it here." What's up with that? What has Graphene OS to do with Lineage SO?
+21:04:53 <nscnt> Make42: GrapheneOS uses the SetupWizard from LineageOS. The string hasn't been changed
+21:05:35 <Make42> nscnt: That is... unfortunate. Not the best UX design.
+21:06:19 <Make42> what kind of backup can I use?
+21:06:41 <nscnt> Make42: A Seedvault backup
+21:07:33 <Make42> I have an intermediate Xiamomi... does it make sense to create a backup there and put it on the Graphene OS (which shall be my main phone from now on)?
+21:09:59 <nscnt> I haven't used such backups yet, so I can't say much about it
+21:11:55 <nscnt> I like fresh starts. Just backing up regular data (no application data or whatever)
+21:17:17 <Make42> What disadvantage do I have if I let OEM unlocking enabled?
+21:19:04 <Make42> Also: How important is https://grapheneos.org/install#verifying-installation ? It looks pretty dificult.
+21:19:45 <nscnt> Make42: There's a simple tutorial at https://attestation.app/tutorial
+21:20:16 <LinusSexTips[m]> <Make42 "What disadvantage do I have if I"> what would be the benefits?
+21:22:04 <Make42> LinusSexTips[m]: Not sure either.
+21:22:45 <nscnt> Make42: The device's bootloader can be unlocked if OEM unlocking is enabled
+21:23:18 <nscnt> Disable it
+21:25:08 <Make42> nscnt: Why would that be a problem?
+21:25:33 <Make42> If one unlocks my phone all data is gone. But since anyone can do a factory reset an atacker can do that anyway.
+21:25:52 <Make42> So how is that a security feature?
+21:26:47 <Make42> Also: I did the audit thing. Now I have some text on the auditor... how does that help? What do I do with that infomration?
+21:30:45 <nscnt> Make42: https://attestation.app/about
+21:33:17 <Make42> nscnt: I read the page. Not sure how this answers my question.
+21:34:29 <Make42> I mean: I see some text there, some numbers etc. but except that some stuff does somewhat make sense (like that I am using Graphene OS), I don't see how e.g. the hash is helping me in any way.
+21:38:28 <nscnt> I can't tell you anything new because everything is explained on the website
+21:38:55 <nscnt> There's an inital verification. It shows you whether it's an unmodified offical release
+21:40:17 <nscnt> If you add remote verification, you'll be verified if your system has been tampered
+21:40:44 <nscnt> as remote verification has a scheduled verification
+21:41:44 <nscnt> Otherwise you may use another phone to verify, that your initially verified device still isn't tampered and may be trusted (as you've trusted it when initial verification i.e. Trust On First Use)
+21:45:35 <nscnt> Maybe read the page another time again. It's not easy to understand if you've never dealt with something like this before
+21:48:48 <nscnt> If you add remote verification, you'll be *notified [...]
+21:54:07 <Pratyush[m]> <Make42 "What disadvantage do I have if I"> There is some but it is related to physical access to device there is no advantage of keeping a security hole like OEM unlocking  open so turning it of is better option and that's why it is recommended.
+21:57:38 <Make42> nscnt: So, I did the verification thing also with the website https://attestation.app where I set up an account. Still not sure what to do now.
+21:57:52 <Make42> I wrote down my email...
+21:58:33 <Make42> ... in the website. But I did not receive a mail.
+21:58:43 <joehandcockandja> Read the directions
+22:00:43 <Make42> joehandcockandja: I did. It says now "refresh https://attestation.app/ to view the initial attestation result"...
+22:00:53 <Make42> so I am looking at it...
+22:01:21 <Make42> so? now?
+22:01:31 <Make42> (maybe I am too tired for this tonight)
+22:05:50 <joehandcockandja> So that is it
+22:06:00 <joehandcockandja> You're done
+22:06:12 <joehandcockandja> What did you expect to happen
+22:08:36 <TheJollyRoger> Make42: No news is good news. The long story short is, it'll warn you if the device fails attestation and doesn't check in after around a day and a half.
+22:10:14 <joehandcockandja> Woah I did the attestation and I just got a package in the mail from one T. Kaszynski
+22:10:38 <joehandcockandja> I wonder what it could be
+22:10:52 <Make42> joehandcockandja: I expected a message - anywhere that says that all is well.
+22:11:05 <Make42> (again another UX miss-design)
+22:12:01 <Make42> "Woah I did the attestation and I just got a package in the mail from one T. Kaszynski" - :-D
+22:12:13 <joehandcockandja> The absolute state of this man
+22:12:18 <joehandcockandja> Lmao
+22:12:34 <joehandcockandja> How is it a UX miss design
+22:13:00 <joehandcockandja> We should just start banning people that say stuff like this
+22:14:24 <Make42> joehandcockandja: Well, because as a user I expect an answer how the state is: whether there is an issue or not. "Not an answer is an answer" does not work for me as a non-specialist. "Communication, communication, communication"
+22:15:12 <joehandcockandja> Everyone else seems to be happy with it
+22:15:20 <Make42> Unless you says that the installation should only be done by experts...
+22:15:24 <joehandcockandja> Maybe just get better reading comprehension instead of complaining about a free service
+22:15:41 <Make42> forget I said anything
+22:16:04 <Make42> I am guessing in your work life you don't deal with customers, right?
+22:16:34 <joehandcockandja> You're not a customer
+22:16:47 <Make42> ok, "users"
+22:17:01 <joehandcockandja> It is free and heavily documented
+22:17:27 <joehandcockandja> You're being kind of entitled my man
+22:18:53 <aeonius> Be happy people offer something like this for free. It's incredible when you think about it. Where else do you get something like that?
+22:21:13 <Make42> I work half the day without pay on things that people can use for free. I do get critique much harsher than the one I gave here. And I say "thanks for the feedback, I will do better" - just to clarify where I am coming from
+22:22:08 <aeonius> Well good on you for offering something to people for free.
+22:24:48 <joltman[m]> I'd also add that this is a higher quality and more useful product than most other free products that don't track you or sell your info.
+22:25:28 * aeonius would like to point a finger to any Linux distro
+22:26:18 <joltman[m]> Yes, same category. Complaining about Linux would be similar.
+22:26:29 <aeonius> Agreed
+22:26:43 <aeonius> Though that happens a LOT
+22:26:59 <joltman[m]> Everyone's a critic, it seems.
+22:27:02 <nscnt> Make42: Just a reminder that this is an open source project. You may contribute if you want to introduce a change! c:
+22:27:37 <jftn[m]> <alexschrank[m] "Speaking of flashing stock rom, "> You will be getting the januari monthlies - including firmware - on GrapheneOS yes.
+22:47:49 <Make42> Also: Maybe my "UX miss-design" comment sounded harsher than it was intended.
+22:48:27 <Make42> I also appreciate the free work that has been done here - as I appreciate the free work I benefit from in other places.
+22:48:58 <Make42> While I am also hopeing that others benefit from the work I do for free.
+22:50:23 <Make42> But I think it is still good to remember that user - bascially never - are experts in the thing the creator is working in. The same goes for my stuff: Reviewers / Feedback-givers and so on also say that this or that was not 100% clear and I try to improve on the respective points.
+22:52:23 <Make42> One mentor of mine once said that your stuff should be clear to s.o. who is sitting there on a weekend day drinking a glass wine (so bascially being half drunk) and should still get it. Another one said that if you can spend a couple of hours to make the improve by a couple of minutes you have to obligation to do so. So, writing down a message
+22:52:24 <Make42> "everything is okay" does not take a couple of hours (I am guessing though).
+22:53:16 <Make42> In my case, for some HALF-sentences I need a couple of DAYS to improve.
+22:53:29 <Make42> But now I am starting to rant.
+22:53:32 <Make42> :-D
+22:53:42 <aeonius> Don't sweat it, I don't thank anyone will hold a grudge ;)
+22:53:49 <aeonius> think*
+22:54:09 <Make42> nscnt: I am happy to -  but I don't know anything about Android / mobile development.
+22:54:53 <Make42> I can only give feedback ;-)
+22:56:42 <Make42> aeonius: Well, joehandcockandja said I am being entitled - so maybe he did ;-)
+22:58:41 <aeonius> One thing I learned is never take the internet people too serious and hope they don't take themselves too serious.
+22:59:08 <Albakham[m]> Is it possible to have auto-installation of f-droid apk on grapheneos?
+23:00:56 <thematrix5000[m]> What apps are you guys using on graphene
+23:01:17 <thematrix5000[m]> What are 10 that are good to have
+23:02:08 <Make42> aeonius: "Subscribe a device to regularly submitting attestations to this account by pressing 'Enable remote verification' in the Auditor app menu and scanning the QR code for this account:" - am I supposed to do this testing regularily?
+23:02:21 <aeonius> f-droid, keepass2android, adguard, davx5, olauncher
+23:02:53 <jftn[m]> <thematrix5000[m] "What are 10 that are good to hav"> Personally: F-Droid, Molly, Nextcloud, FairEmail, Davx5, KeePassDX
+23:03:07 <aeonius> make42, I honestly won't
+23:03:33 <jftn[m]> * Personally: F-Droid, Molly, Nextcloud, FairEmail, Davx5, KeePassDX and Aegis Authenticator
+23:03:58 <Make42> ok, so that is it? I am not doing anything else? Once I paired my new device with my old device and once the new device with the website (on my laptop). And then that is it?
+23:05:00 <Make42> aeonius: Am I supposed to compare any of the content displayed on the old device and the website?
+23:05:13 <Make42> I am not exactly seeing that these are connected in any way
+23:05:53 <aeonius> make42 I think the idea is to check the validity of the install. I'd do that once if at all, honestly
+23:06:27 <Make42> aeonius: Ok... not sure where the validation is happing though.
+23:06:52 <aeonius> GOnna level with you here, I just installed the os myself ;)
+23:08:51 <Make42> aeonius: :-D  So you are not sure yourself?
+23:08:54 <Make42> Fair enough.
+23:09:34 <Make42> Another question: How do I install anything on the phone? It does not even have F-Droid, right?
+23:09:37 <aeonius> Basing everything I say on a decade of ROM installation experience
+23:09:53 <aeonius> F-droid can be downloaded from f-droid.org
+23:10:21 <aeonius> And on f-droid you can download Aurora store, to download google play apps annonimously
+23:11:41 <aeonius> I should say apps from the playstore, not google play apps
+23:11:50 <aeonius> Any apart from paid ones, obviously
+23:12:08 <aeonius> And not all will work
+23:13:18 <Make42> it says F-Droid was developed for an older version of android and might not work right anymore. I am supposed to contact the develpers... what is up with that?
+23:13:42 <aeonius> Said so on mine as well, works fne regardless
+23:16:15 <aeonius> Android 11 is very new, and many apps are not up to that point yet. They, and especially fdroid, will be eventually
+23:17:42 <Make42> Is there a way to customize the design of my android? I am using KDE on my Linux OS, so I am used to a lot of customizing the look and feel.
+23:18:18 <aeonius> Sure, download a different launcher
+23:18:39 <aeonius> The look and feel of the OS itself will be either normal or dark mode though
+23:19:19 <dazinism> I find the f-droid app can be a bit buggy. Foxy Droid however works pretty flawlessly
+23:19:36 <aeonius> Never used it, is it on fdroid?
+23:19:47 <dazinism> Yeah
+23:20:12 <dazinism> Theres some info about apps in the wiki
+23:20:16 <dazinism> https://hub.libranet.de/wiki/graphene-os/wiki/Apps
+23:20:30 <aeonius> I'll look into that,thanks dazinism
+23:20:41 <Make42> jftn[m]: Could not find "Molly" - what is it?
+23:21:10 <dazinism> If you follow the link in considerations section theres a load more info about sourcing apps
+23:21:59 <dazinism> Molly is a fork of Signal with some changes
+23:22:59 <dazinism> Some security improvements
+23:23:55 <dazinism> https://molly.im
+23:24:44 <aeonius> Makes more sense than the top "Molly" I found https://apkpure.com/molly-of-denali-learn-about-nature-and-community/org.pbskids.mollyofdenali
+23:25:19 <aeonius> Thanks for that, Startpage.com
+23:25:52 <dazinism> Make42: can use a different launcher, which will change things a fair bit
+23:26:09 <Make42> aeonius: Are you sure that this makes more sense? Think about it...! ;-)  (joking)
+23:26:21 <aeonius> Haha fair point
+23:26:32 <dazinism> Many alternative launchers either have, or request a lot of permissions
+23:27:00 <aeonius> Again, I use olauncher, it's the leanest most simple one I have found to date
+23:27:08 <aeonius> Love it a lot
+23:27:16 <dazinism> Or special privileges.  Which creates significant security implications
+23:27:18 <Make42> Does this also have a dark theme or something like that
+23:27:20 <Make42> ?
+23:27:31 <aeonius> Android does
+23:27:41 <Make42> ah ok.
+23:28:08 <Make42> well it is getting pretty late, gotta go to bed. I will check it out in the next days. Bye.
+23:28:22 <aeonius> Have a good one
+23:28:34 <dazinism> Read the link in the considerations section of the wiki I posted
+23:28:54 <dazinism> Has stuff to look out for when selecting apps
+23:29:09 <dazinism> (Which includes launchers )
+23:36:27 <thematrix5000[m]> What happens if you out someone connect to your hotspot on graphene
+23:36:45 <thematrix5000[m]> Is it invasive to your device?
+23:52:29 <brenneke[m]> <dazinism "Many alternative launchers eithe"> But you don't have to give it to them.

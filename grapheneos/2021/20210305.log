@@ -1,0 +1,735 @@
+00:01:16 <idkrn[m]1> <strcat[m] "and then you can use something e"> something wrong with signal?
+00:02:14 <jay46> Since i started playing with a phone again.. I have only used shelter with a work profile. I made a 2nd user lastnight and it auto loaded up connected to a wifi i used once. I just ran ipleak in that user just to double check and with the vpn only installed on admin it did not work for user ..  I just thought it was at least a possibility that
+00:02:14 <jay46> graphene would make it so a vpn setup in admin could be universal across all users.
+00:04:59 <strcat[m]> jay46: it is possible to do that
+00:05:03 <strcat[m]> but by default they are per-user
+00:05:21 <strcat[m]> it's possibly to use a device policy manager to force all users to use a certain vpn basically
+00:05:25 <jay46> Okay.. I am reading the links you sent right now.
+00:05:32 <strcat[m]> for personal use
+00:05:39 <strcat[m]> I would recommend just setting up some VPN app in each
+00:05:46 <strcat[m]> make it always on + block connections not through it
+00:05:56 <strcat[m]> and then when you're on that user, you have the UI to switch the server endpoint etc
+00:06:01 <jay46> setting up the vpn app in each isnt really that big a deal also.
+00:06:04 <strcat[m]> similar to Wi-Fi etc
+00:06:29 <strcat[m]> we fixed always-on to work properly across profiles / when switching profiles and then got upstream to fix it
+00:06:33 <strcat[m]> so it works right in AOSP now
+00:06:37 <strcat[m]> jay46: basically it's just flexible
+00:06:41 <strcat[m]> it's not really a problem
+00:07:01 <pinkylittlecat[m> i'm here because i'm pissed with my bank, they rely on google play services to run their app. i've read in a few places that there's a development going regarding using a microG-like approach to do a signature spoofing specifically to only google play services (if i understood it right, because enabling signature spoofing globally is absolutely terrible in a security-wise view)
+00:07:01 <pinkylittlecat[m> is this right?
+00:07:23 <strcat[m]> pinkylittlecat: https://grapheneos.org/#never-google-services explains our plans
+00:07:43 <strcat[m]> pinkylittlecat: we want to make a GrapheneOS 'Play services' app which appears to be signed with Google's key instead of our GrapheneOS Play services signing key
+00:07:49 <strcat[m]> but it would not actually implement Google services
+00:07:56 <strcat[m]> and we don't have plans to do anything with microG anymore
+00:08:10 <strcat[m]> it would just exist to make apps work that are capable of running without Google services being available but require Play services
+00:08:21 <strcat[m]> our 'Play services' would just report that nothing is available / nothing works
+00:08:26 <strcat[m]> all servers down
+00:08:34 <strcat[m]> Google was wiped off the face of the planet, sorry app
+00:08:51 <strcat[m]> pinkylittlecat: so a lot of apps would start working with that, but without functionality that depends on Play
+00:08:57 <strcat[m]> if they require Play just for login etc. then it won't work
+00:09:17 <strcat[m]> pretty good chance your banking app won't work even with actual Play services if it uses SafetyNet to enforce using stock OS
+00:09:49 <jay46> I just thought, when I first startup a fresh user, its at least to some extent a fresh entity, but if it instantly has net access without going thru a vpn, theres a bit of a link between the system and the net without the vpn, which allows for some lessening of a fresh entity. ..  if I wrote that to make sense. Though the idea is that your OS isnt
+00:09:49 <jay46> instantly trying to do anything anyways right when I create a new user.
+00:09:54 <strcat[m]> pinkylittlecat: I'd recommend just using their site and use desktop mode in the browser to bypass them trying to force you to use their app if they do that
+00:10:09 <strcat[m]> that's also how I recommend using YouTube
+00:10:11 <strcat[m]> etc.
+00:10:17 <strcat[m]> use desktop mode browser for YouTube
+00:10:19 <strcat[m]> plays HD video just fine
+00:10:37 <strcat[m]> mobile browser gets crippled 360p or w/e
+00:10:40 <strcat[m]> to force you to use the app
+00:10:56 <strcat[m]> and they purposely don't support the API that allows background media playback in the browser
+00:11:04 <strcat[m]> and don't support it in their app either
+00:11:09 <strcat[m]> unless you pay for premium service
+00:11:15 <strcat[m]> just standard stuff companies do shrug
+00:11:18 <strcat[m]> Reddit is similar
+00:12:00 <strcat[m]> jay46: you can flip on airplane mode b4 creating a user if you care
+00:12:14 <strcat[m]> jay46: this is an area likely to improve in AOSP each major release
+00:12:31 <strcat[m]> jay46: user profiles are getting better too, upstream, and we plan to add some extra frills for them
+00:14:56 <justinhsa[m]> Hello, is it recommended to run Auditor in owner profile? Currently I am using a secondary profile as my main, and running remote attestation service from there. But I'm wondering if I should run it in my owner profile instead.
+00:15:17 <jay46> How about a way to backup the entire phone. I know I brought this up yesterday but it just, to me, seems like a good thing to be able to setup the entire phone, multiple users/profiles/purposes, all the apps, accounts whatever it is I want setup, then backup the entire Phone/Data/Users/Setup and after using the phone for awhile, I can always wipe
+00:15:17 <jay46> it and go back to that original fresh install. Just feels like giving the phone a wash, in case random stuff is there, or just if it gets taken unlocked somehow, less data leakage in phone.
+00:19:49 <pinkylittlecat[m>  * i'm here because i'm pissed with my bank agency, they rely on google play services to run their app. i've read (ie. grapheneOS's official website) that there's a development going on regarding using a microG-like approach to do a signature spoofing specifically to only google play services (if i understood it right, because enabling signature spoofing globally is absolutely terrible in a security-wise view)
+00:19:49 <pinkylittlecat[m> is this right?
+00:19:54 <zzxx123> <jay46 "How about a way to backup the en"> No good way to do it
+00:21:45 <zzxx123> SeedVault is just adb backup front end which won’t backup apps that don’t allow backup
+00:22:55 <jay46> I wish there was. 7 years ago when I was tweaking around with a phone. Id easily back it up to a microsd card and can go back to a past version if I went to far in tweaks I made to my setup..  it was a lot time ago but I remember it being easy.
+00:26:43 <strcat[m]> jay46: seedvault just needs to be improved
+00:27:36 <strcat[m]> people are welcome to contribute to seedvault
+00:27:45 * CrowmacMcCarthy[ sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/AVOyfxiwKSjJSNOJtrAMNoQj/message.txt >
+00:27:45 <dazinism> jay46: wrote up a wiki page about backups on GrapheneOS
+00:28:11 <dazinism> https://hub.libranet.de/wiki/graphene-os/wiki/Backups
+00:28:31 <jay46> Another thing that would be useful, as opposed to anyone who got a hold of a phone unlocked, they can go to switch and see one list, and yes they might not get passwords, or say you are forced to unlock for them, or just can because thats not where your most sensitive stuff is.  .. Because some other sequence leads to a list of hidden users you
+00:28:31 <jay46> can switch to but you cant get to that spot to switch to those users unless you knew where they were hidden.
+00:28:59 <CrowmacMcCarthy[> * Surely you can find a bank with an app that doesn't absolutely rely on Google play services - my bank app works fine without it
+00:29:13 <strcat[m]> that kind of thing isn't what we do
+00:29:21 <strcat[m]> we don't implement features which only work if you don't know they exist
+00:29:36 <jay46> I am just getting back on my feet after spending seven years in prison for cannabis. But I am a geek for tech privacy, not just for my own interests, but the idea that human rights activists and journalists all over the world need safe private technology.
+00:29:50 <jay46> but id like to contribute funds towards projects like graphene in near future
+00:30:01 <strcat[m]> we wouldn't want to make any privacy or security feature which doesn't actually work
+00:30:09 <strcat[m]> and only gives users a false sense of privacy/security
+00:31:13 <dazinism> With main user unlocked you can enable adb and get full lists of everything through that. Even if you could hide stuff in the UI
+00:31:16 <jay46> People in some countries might be forced to unlock phones under threat of violence. So if you can unlock phone, unlock users, but there is a hidden user somewhere with the most sensitive profile in it, they could appear to cooperate while maintaining their most sensitive user profile locked hidden away... something like that
+00:32:01 <strcat[m]> we won't implement a feature that doesn't work if the attacker knows the feature exists
+00:32:05 <strcat[m]> and that kind of thing puts users at risk
+00:32:07 <strcat[m]> we don't do that, sorry
+00:32:08 <jay46> You guys are smarter about this stuff than I am.. And I apologize for my rookieness.. I am putting grapheneos on my pixel 5 no later than saturday and I will continue to read and study and hopefully get a better grip on thigs.
+00:33:43 <jay46> Other than in the past being a cannabis farmer.. I am a jeweler.. not a coder. But I am a geek for tech privacy and believe it is important
+00:35:43 <entry1[m]> <jay46 "People in some countries might b"> If you are fearful for this practice occurring, your main goal should be practicing data minimization and keeping as much as possible off your device by using encrypted cloud storage.
+00:36:17 <entry1[m]> No saved logins, suspicious apps, etc
+00:47:10 <jay46> Thanks for answering some questions.... im out for now..
+00:51:12 <marsgoals[m]> GrapheneOS rocks!
+01:00:51 <CrowmacMcCarthy[> <jay46 "People in some countries might b"> Plausible deniability is unlikely to work if you live in a jurisdiction where torture is acceptable...
+01:03:04 <CrowmacMcCarthy[> If the interrogator knows that plausible deniability is a feature of the system, that would actually make it worse for you
+01:03:42 <CrowmacMcCarthy[> Cos then, even if you really didn't have any hidden profile, they'd assume you are lying and torture you for it
+01:05:16 <CrowmacMcCarthy[> If you're THAT concerned, you're probably better off moving to a country with good privacy laws
+02:02:52 <cyborgninjaneer[> It's essentially just proprietary VoIP isn't it?
+02:08:43 <bizanon[m]> I just screenshotted ur imei dude 🤣
+02:08:53 <bizanon[m]> Kidding
+02:24:07 * Preload[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/rFmYkDSVOgwnZrzsuPZXfSnO/message.txt >
+02:26:12 <Preload[m]> Well, shit. Just checked the logbot and found out that the bridge is messing up, again.
+02:26:32 <Preload[m]> The Matrix room is lagging again.
+02:30:22 <Preload[m]> Ignore the last few messages I sent. They're redundant and potentially inaccurate.
+02:41:30 <zzxx123> Well I got disconnected from all IRC channels on Matrix
+02:41:44 <zzxx123> (you can use IRC on Matrix)
+03:05:11 <dnull> Lots of people did
+03:05:20 <dnull> The bridge crashec
+03:12:01 <chi00[m]> does graphene randomize serial number?
+03:12:46 <rny> chi00[m]: what serial number
+03:12:57 <chi00[m]> device
+03:14:24 <rny> chi00[m]: pls read -- https://grapheneos.org/faq#hardware-identifiers
+03:14:41 <rny> and https://grapheneos.org/faq#non-hardware-identifiers
+03:15:19 <rny> then come back with a better idea of what ID you're asking about
+03:16:05 <chi00[m]> i don't mean apps nvm
+03:16:41 <chi00[m]> device serial number when you plug into pc - carriers still ee the imie ans imsi?
+03:17:35 <rny> chi00[m]: yes carriers do see them
+03:18:01 <rny> the OS does not randomize those values
+03:18:06 <strcat[m]> chi00: the carrier has to see IMSI, that's how the service works
+03:18:15 <strcat[m]> your SIM card authenticates you, that's what a SIM card does
+03:18:19 <rny> lol
+03:18:21 <strcat[m]> it's a secure element authenticating you to the network
+03:18:38 <strcat[m]> if you don't want that, you can avoid using cellular
+03:19:02 <rny> chi00[m]: we randomize mac addresses
+03:19:03 <rny> :P
+03:19:27 <rny> grapehenos would be perfect on a wifi-only tablet device
+03:19:34 <rny> for the privacy-paranoid
+03:20:16 <strcat[m]> you can already use a phone as one
+03:22:00 <rny> cant stop paranoid people from suggesting/doubting that baseband exfiltrates data without user-consense
+03:22:05 <rny> *consent
+03:22:21 <rny> 🤯
+03:22:27 <strcat[m]> and why that component among all others?
+03:22:34 <strcat[m]> same manufacturer / designer as the CPU, GPU, etc.
+03:23:22 <strcat[m]> Wi-Fi and Bluetooth are implemented by the same baseband (each is just in separate sandboxes) and are not substantially different things
+03:23:42 <strcat[m]> think the topic isn't suited to this channel and can end here
+03:27:20 <strcat[m]> #grapheneos-offtopic:matrix.org
+03:49:50 <chi00[m]> can i self host my cell tower?
+03:50:34 <rny> chi00[m]: #grapheneos-offtopic
+03:51:01 <stencil[m]> #grapheneos-offtopic:matrix.org
+03:51:19 <chi00[m]> lol  ok it was a joke
+04:09:33 <zzxx123_> .
+04:12:31 <xXDark_StormXx> How are you all
+04:12:43 <xXDark_StormXx> I hope everything is going well
+05:35:30 <chi00[m]> VOIP providers only get the same details as "apps" since they work exclusively over wifi or data?
+07:08:08 <GrapheneOS-Teleg> <c​lannad> Test
+07:27:53 <jay46> Hi, Trying to install graphene right now on a pixel 5. Using the web install. A the part where I boot into the bootloader interface. I restart phone, hold volume down key and it turns on into the fastboot mode, but when I hit the "Unlock Bootloader" button the web install it gives me this Error: The device must be opened first.
+07:34:50 <lodtank> did you unlock the device in the current running android?
+07:35:01 <lodtank> afair by clicking on the build number?
+07:35:54 <jay46> ya, opened developer mode and enabled oem unlocking
+07:37:31 <jay46> the udev rules comment about having to have it enabled is something I am unfamiliar with and trying to read about... the step before the unlock the bootloader says "On Linux, you'll need to do this again if you didn't have the udev rules set up when you connected it."
+07:45:58 <jay46> no one else around for advice... i have tried repeating the steps repeatly and get the same "Error: The device must be opened first."
+08:03:32 <jay46> can anyone help with this issue... trying to install graphene right now on a pixel 5. i turned on developer options and the oem and ive restarted into fastboot but when I hit the web install button to unlock the bootloader I get this error ...  Error: The device must be opened first.
+08:15:53 <pizzaeater69[m]> Weird.. Hold on for devs or experts to come, they can help
+08:17:23 <pizzaeater69[m]> * Weird.. Hold on for devs or experts to come, they can help. Also Dont repeat the question
+08:20:07 <pizzaeater69[m]> <jay46 "can anyone help with this issue."> "use the high quality standards compliant USB-C cable packaged with the device. If your computer doesn't have any USB-C ports, you'll need a high quality USB-C to USB-A cable. You should avoid using a USB hub such as the front panel on a desktop computer case. Connect directly to a rear port on a desktop or the ports on a laptop. Many widely distributed USB cables and
+08:20:07 <pizzaeater69[m]> hubs are broken and are the most common source of issues for installing GrapheneOS."
+08:24:15 <jay46> I am using an old computer .. no usb c ports, but using a usb a to usb c cord it does recognize the pixel 5 but gives me that error about the device must be opened..
+08:27:36 <StVM[m]> Have you already clicked a connect to pixel 5 button that popped up?
+08:29:04 <dontdisturbme[m]> After creating a secondary user profile, I'm unable to install FDroid or other apps that are present in main profile. Is this a standard limitation for multiprofile?
+08:29:44 <jay46> ya, thats when that error message pops up. So if I refresh the web install page, get that little window to popup to connect the pixel 5, click on the phone, hit connect, right in that part of the install, that error message pops up in red lettering
+08:30:05 <pizzaeater69[m]> <dontdisturbme[m] "After creating a secondary user "> You can install like Foxydroid from dfroid to your main profile and than delete fdroid. and then fdroid to the secondary profile
+08:30:11 <rny> jay46: have you tried unplugging and plugging back in?
+08:30:21 <rny> and then restarting the process
+08:30:25 <jay46> i have tried it like 10 ish times.
+08:31:00 <StVM[m]> What is your operating system.
+08:31:33 <jay46> any variation i could think of. I even downloaded fastboot, got that to unlock the bootloader and went to the next part of the web install, the download release, which also pulls up that little window to connect to the phone, and in that part of web installer page i get the same exact red lettering error message popping up
+08:31:41 <jay46> Ubuntu 20.04
+08:33:18 <jay46> i was able to use fastboot to unlock and relock the bootloader. but i cant get functionality with the web installer for graphene.
+08:33:26 <pizzaeater69[m]> <dontdisturbme[m] "After creating a secondary user "> Also read: https://www.reddit.com/r/GrapheneOS/comments/c5szco/on_new_user_profile_cant_install_fdroid/
+08:34:13 <StVM[m]> <jay46 "Ubuntu 20.04"> You also already installed this right? android-sdk-platform-tools-common
+08:34:23 <jay46> yes
+08:34:34 <jay46> installed and current
+08:39:14 <StVM[m]> Sorry :(. Maybe you need to wait for an expert then. I suspect that maybe you need to change your cable.
+08:40:56 <jay46> it literally could be the cable. i have a shit cable.the good cord that came with the phone is usb c to usb c and this laptop has no usb c in..  tho.. i did get the bootloader to unlock with fastboot..
+08:40:57 <braxtono[m]> Its because;
+08:41:08 <jay46> thank you though..
+08:41:14 <braxtono[m]> Fdroid on main is newer than website
+08:41:33 <braxtono[m]> So try a more recent source or auroradroid
+08:51:05 <dontdisturbme[m]> <pizzaeater69[m] "You can install like Foxydroid f"> Thing is I'm using foxydroid on my main profile also which I also downloaded as standalone and unable to install. I can remove FDroid on main profile but the apps I install (aurora droid) will end up and clash
+08:52:59 <dontdisturbme[m]> <pizzaeater69[m] "Also read: https://www.reddit.co"> Actually my takeaway from that thread is that we should not install the same apps as installed in main profile. That's Abit of dilemma for my use case. I will think carefully on if I should.prpceed with secondary profile
+09:07:40 <pizzaeater69[m]> Graphenes takeaway on profiles is
+09:07:40 <pizzaeater69[m]> Our recommendation for a high security setup is to use the owner profile only for managing other profiles. Using a secondary profile for regular usage allows you to make use of the device without decrypting the data in your regular usage profile. It also allows putting it at rest without rebooting the device. 
+09:07:49 <pizzaeater69[m]> * Grapheneos takeaway on profiles is
+09:07:49 <pizzaeater69[m]> Our recommendation for a high security setup is to use the owner profile only for managing other profiles. Using a secondary profile for regular usage allows you to make use of the device without decrypting the data in your regular usage profile. It also allows putting it at rest without rebooting the device. 
+09:10:06 <GrapheneOS-Teleg> Xabier (@X​a_bi) has joined the Telegram Group!
+09:18:21 <strcat[m]> pizzaeater69: it's just one aspect of it
+09:27:37 <pizzaeater69[m]> Right
+09:29:22 <GrapheneOS-Teleg> <Moof> <Moof> strcat[m]: pinkylittlecat: For youtube there is Newpipe and for Reddit there is either 'Infinity for Reddit' or you could use 'Untrackme' to transform reddit links to teddit or other front ends that don't use javascript
+09:47:32 * dontdisturbme[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/eteusMJfMfJlFPJStgruIKFa/message.txt >
+11:35:53 <dontdisturbme[m]> Qns: Since it's not possible to use the same app across profiles, how to use password manager across all of them? Not possible right? And how to use any kind of apps store across all of them? Only via standalone apk and manual updating them?
+11:38:06 <mtcw[m]> jay46: .
+11:41:27 <dazinism> dontdisturbme: you have to somehow install the app in each user, but once they are installed doing an update in any user updates it for all users
+11:42:10 <dazinism> Have to be careful when installing an app to use the same version or newer if its installed elsewhere
+11:43:41 <dazinism> Also has to have the same signature (eg. Not the same app from FDroid and Play - which would have different sigs)
+12:23:33 <dontdisturbme[m]> <dazinism "Have to be careful when installi"> Not sure how that is possible since the apps are supposed to be isolated from each profile yet it doesn't allow the same app to be installed in each profile. I earlier tested uninstall FDroid from main profile and was able to successfully install to a secondary profile. Installing a second copy with older version doesn't work either.
+13:01:24 <dazinism> dontdisturbme: think you are a bit confused. It is a bit confusing
+13:01:30 <dazinism> Maybe this will help
+13:01:33 <dazinism> https://hub.libranet.de/wiki/and-priv-sec/wiki/user-profiles
+13:02:12 <dazinism> There are ways to share/sync a password manager file across user profiles
+13:02:45 <dazinism> Using network
+13:03:38 <dazinism> Think Nextcloud may work well for that.
+13:04:47 <dazinism> The way I operate user profiles I don't want/need access to the same passwords in different user profiles
+13:05:31 <dazinism> Different profiles can have their own password manager with the passwords used in that profile
+13:06:48 <dazinism> dontdisturbme: it is completely possible to duplicate apps in different user profiles.
+13:08:00 <braxtono[m]> Different versions aren't allowed as downgrade protection
+13:33:20 <GrapheneOS-Teleg> <Le marchand de rêves> Is there any particular reason for the night light maximal intensity to be so low?Would it be possible to increase its maximal intensity available in some future release?
+13:35:36 <GrapheneOS-Teleg> <Le marchand de rêves> I don't know if I'm the only one to find it quite low but in a dark room, with the lowest brightness level and the highest night light intensity I still find it hard for my eyes
+13:35:54 <GrapheneOS-Teleg> <c​lannad> We don't really change such stuff on GrapheneOS
+13:36:06 <GrapheneOS-Teleg> <c​lannad> Because it's quite hard to maintain such additional customisation
+13:36:27 <GrapheneOS-Teleg> <c​lannad> Unless someone is willing to submit the change and also is ready to maintain it
+13:36:39 <GrapheneOS-Teleg> <c​lannad> It isn't really likely
+13:37:32 <GrapheneOS-Teleg> <Le marchand de rêves> Thank you for your quick answer, I understand of course. So it's the default AOSP night light settings?
+13:37:44 <GrapheneOS-Teleg> <c​lannad> Yes
+13:38:01 <GrapheneOS-Teleg> <c​lannad> Anyway if somebody actually wants to help getting this done we won't turn them away from it
+13:38:29 <GrapheneOS-Teleg> <c​lannad> Just that we focus more on privacy and security improvements
+13:38:55 <GrapheneOS-Teleg> <c​lannad> It'd also need to be tested on every device and we'd need to know that we aren't breaking anything
+13:39:13 <GrapheneOS-Teleg> <Le marchand de rêves> Of course I understand and I bet we all appreciate that here!
+13:41:14 <GrapheneOS-Teleg> <Le marchand de rêves> Yeah so the best would be for them to improve it directly in AOSP. Let's hope they come up with that in a future android release
+13:52:26 <GrapheneOS-Teleg> Pawel (@S​k00n123) has joined the Telegram Group!
+14:47:00 <GrapheneOS-Teleg> Degoogled, Hardened FuchsiaOS when? has joined the Telegram Group!
+14:47:31 <DHFuchsiaOSwhen> <GrapheneOS-Teleg "Degoogled, Hardened FuchsiaOS wh"> Finally got that working, nice
+14:58:31 <GrapheneOS-Teleg> <J​xoec> Why for browser with advanced privacy settings won't start on graphene?
+14:59:50 <DHFuchsiaOSwhen> @Jxoec not sure what you mean
+15:00:02 <DHFuchsiaOSwhen> Never encountered that issue, not that I know of
+15:00:11 <Rin[m]> Don't know why but I have a hard time convincing myself to switch from stock. I barely use google apps aside from maps. But the times I do use it, it's super useful/helpful
+15:00:40 <DHFuchsiaOSwhen> You can use it on a browswr
+15:01:01 <Rin[m]> Also had all tracking setting disable in my google account as well as ad profiling disabled for over a year
+15:03:01 <DHFuchsiaOSwhen> <Rin[m] "Don't know why but I have a hard"> That's because you'd miss out GrapheneOS features that enchances Android (AOSP) baseline privacy, security
+15:10:27 <GrapheneOS-Teleg> <J​xoec> Are there any steps taken to achieve imei randomizing?
+15:14:06 <GrapheneOS-Teleg> <N​orwegianFrost> Apps can't get you IMEI
+15:14:21 <GrapheneOS-Teleg> <J​xoec> I know, ISP can
+15:15:01 <GrapheneOS-Teleg> <N​orwegianFrost> if that's your thread Modell, don't use sim cards
+15:16:19 <chris42[m]> Is there a way to deactivate the fingerprint reader when the screen is off? I too often turn the phone on in my pocket, by accidently touching the reader.
+15:17:39 <GrapheneOS-Teleg> <J​xoec> I didn't ask you an advise on that
+15:17:53 <GrapheneOS-Teleg> <N​orwegianFrost> lel ok
+15:21:00 <entry1[m]> <GrapheneOS-Teleg "<Jxoec> I didn't ask you an advi"> IMEI is hardware based
+15:21:50 <rhinobaer666[m]> hi friends, my browser doesnt recognize the device for downloading the gos factory image. but i also havent unlocked bootloader yet. i thought to download the image beforehand. do i need to unlock bootloader first, and after that download the image?
+15:22:54 <entry1[m]> Jxoec - It is tied to your phone's motherboard
+15:23:29 <GrapheneOS-Teleg> <J​xoec> Same as MAC address
+15:23:36 <GrapheneOS-Teleg> <J​xoec> But you can change that
+15:25:06 <rhinobaer666[m]> <rhinobaer666[m] "hi friends, my browser doesnt re"> anyone? shouldnt the device be detected also before unlocking bl?
+15:26:10 <usernumber33[m]> Do you have the device booted to fastboot or OS?
+15:26:40 <rhinobaer666[m]> had booted it to bl interface
+15:27:38 <entry1[m]> <GrapheneOS-Teleg "<Jxoec> But you can change that"> Because it is a built-in feature to AOSP and has nothing to do with connecting to a cell network. Spoofing an IMEI would mean using someone else's as they are all registered to a device. Mac addresses can be spoofed to anything within the parameters.
+15:27:48 <entry1[m]> IMEI's are listed and checked by all carriers
+15:28:07 <rhinobaer666[m]> so fastboot
+15:28:53 <usernumber33[m]> <rhinobaer666[m] "had booted it to bl interface"> What desktop is are you using? If windows check windows update if there is an optional update for device drivers
+15:33:30 <rhinobaer666[m]> <usernumber33[m] "What desktop is are you using? I"> very fine and thx that was it. im behaving myself a bit retarded right now, cause im excited
+15:33:47 <mynacol[m]> Nice
+15:40:03 <Alpha162783> hi
+15:40:10 <Alpha162783> How do I enable Wifi direct
+15:40:23 <Alpha162783> the option is grayed out in wifi settings, ecen with wifi on
+15:40:31 <Alpha162783> *even
+15:43:22 <Alpha1627837> [7:40:02 AM] <Alpha162783> hi
+15:43:23 <Alpha1627837> [7:40:09 AM] <Alpha162783> How do I enable Wifi direct
+15:43:23 <Alpha1627837> [7:40:22 AM] <Alpha162783> the option is grayed out in wifi settings, ecen with wifi on
+15:43:24 <Alpha1627837> [7:40:31 AM] <Alpha162783> *even
+16:20:24 <Alex163739725> how do i enable wifi direct
+16:20:36 <Alex163739725> the settings arw grayed out
+16:23:32 <jj1013> Can GrapheneOS encrypt the NAND with fingerprint auth or a pattern?
+16:34:22 <Gui_Do> hi guys, has anyone high battery drain? for me it is 1 to 1.5 percent per hour
+16:35:33 <zzxx123_> Do you apps running in the background?
+16:36:03 <Gui_Do> only signal app.
+16:36:56 <zzxx123_> That’s why
+16:37:46 <Gui_Do> there is wakeup time 2 per minute, but deep sleep mostly 97 percent...
+16:38:17 <usernumber33[m]> <jj1013 "Can GrapheneOS encrypt the NAND "> https://grapheneos.org/faq#encryption
+16:38:26 <Gui_Do> means signal 2/min, phone deepsleep 97
+17:14:30 <jay46> I am trying to load graphene onto my Pixel 5 using the web installer. I followed the steps up to the unlock bootloader. I click on that unlock bootloader button and the little windown pops up, I plug in my Pixel 5 and it shows up, I pick it, and hit the Connect button, .... then on the webpage of the web installer at the bottom of the sub section
+17:14:31 <jay46> for unlocking the bootloader, an error message shows up in all red letters saying "Error: The device must be opened first."   I have tried repeating steps multiple times and get same error. Would appreciate some help. Thank you.
+17:16:25 <faxing[m]> Your device is unlocked when you run that step, yes?
+17:17:01 <jay46> yes. opened developer options, enabled oem, restarted the phone into fastboot mode
+17:19:36 <strcat[m]> jay46: make sure you don't have something like adb running in the background
+17:19:43 <strcat[m]> make sure you have a single instance of the web installer open
+17:20:02 <strcat[m]> I suggest rebooting both your computer and the phone in case you've done something to screw this up
+17:20:41 <jay46> single instance of web installer for sure, how do I make sure I dont have adb running in background?
+17:21:19 <jay46> phones even been reset since I unlocked bootloader and relocked it with fastboot... i guess i actually never rebooted the laptop so I will try that in a second
+17:22:33 <jay46> seems simple enough to know how to make sure adb is not running but i dont, but well, i dont . ;)  im on ubuntu too
+17:25:24 <jay46> i hit ps aux and didnt see anything that looked like adb but not 1000 percent certain.. ill restart my computer and see what happens this time
+17:34:45 <sjsndnjdejd> <jay46 "single instance of web installer"> adb kill-server
+17:35:50 <jay46> in terminal i typed      adb kill-server  and it gave me -- cannot connect to daemon at tcp:5037: Connection refused
+17:37:14 <zzxx123_> This means adb is not running
+17:37:26 <jay46> restarted computer and went into web installer and go the same error when picked pixel 5 in the small unlock bootloader window it gave me in red text Error: The device must be opened first.
+17:37:34 <jay46> ok
+17:38:24 <Rin[m]> jay46 tried "adb devices"
+17:39:14 <Rin[m]> Also, might wanna enable usb debugging in developer options
+17:39:22 <jay46> i am nervous to try following the instructions on the command line installation instructions instead, even though I got fastboot to unlock and relock the bootloader last night..  a touch nervous since having this error with web installer ill have some other issue following the command line install and some slight posibility i get a bricked phone
+17:40:10 <jay46> i actually tried that lastnight but ill try it again.. since i reset phone to factory settings by unlocking and relockign bootloater with fastboot i havent tried it so i will agan but last night when i was going through this that didt work
+17:40:11 <Rin[m]> Does your phone show up when you do : ad devices in console/cmd
+17:40:25 <Rin[m]> adb devices*
+17:40:36 <Rin[m]> * Does your phone show up when you do : adb devices in console/cmd
+17:42:05 <jay46> just type into terminal "adb devices" and get response list of devices attached and then a blank line and command prompt again
+17:42:32 <jay46> so nothing there.. but it shows it in the little window in web installer and lets me pick the pixel 5 but gives hat error when i hit connect
+17:42:52 <jay46> unless i am not doing that adb devices into command prompt thing you asked me to try right
+17:43:59 <jay46> fuck me.. this web installer seemed like it was going to be smooth... been making sure i had everything on my phone backed up and ready to do this... and then shit just has to be difficult for me
+17:44:31 <strcat[m]> you are not supposed to use adb
+17:44:44 <strcat[m]> jay46: please stop what you're doing
+17:45:07 <strcat[m]> jay46: you aren't following the official guide, this is your problem
+17:45:20 <jay46> thats not true.. what are you talking about i read every single word like 10 times
+17:45:26 <jay46> followed every single instruction
+17:45:36 <strcat[m]> you shouldn't be using adb
+17:45:42 <jay46> the only adb anything i did is what someone just asked me to try.. on this help forum
+17:45:56 <strcat[m]> not everything people say here is correct or advisable
+17:46:07 <strcat[m]> you need to start by rebooting your computer and the phone
+17:46:23 <strcat[m]> remove whatever adb / fastboot stuff you installed and make sure it's not running
+17:46:24 <jay46> everythings been rebooted ... phone more times that i can remember.. laptop i just did
+17:46:27 <strcat[m]> that's likely your issue
+17:46:49 <strcat[m]> jay46: use the web installer
+17:48:40 <jay46> how do i remove adb ..... i havent used linux a ton.. i know its on there but i dont know the simple command to remove adb
+17:48:58 <jay46> or fastboot...
+17:49:39 <strcat[m]> how did you get them?
+17:50:00 <strcat[m]> do you have macOS or Windows?
+17:50:06 <jay46> command line install.. i ubuntu
+17:51:19 <strcat[m]> the CLI install isn't going to resolve any issues for you
+17:51:33 <strcat[m]> you'll hit whatever problem you're hitting via the web install
+17:51:46 <strcat[m]> and it doesn't sound like you're familiar with CLI so you're making things harder
+17:52:15 <strcat[m]> I recommend using the web installer and making sure to follow everything it says
+17:52:29 <strcat[m]> you haven't made it clear if you've done that
+17:52:39 <strcat[m]> did you deal with this? https://grapheneos.org/install/web#flashing-as-non-root
+17:52:51 <strcat[m]> did you read the info about USB here? https://grapheneos.org/install/web#prerequisites
+17:53:04 <strcat[m]> use web installer + provide more info that's needed to help
+17:53:08 <strcat[m]> need to say what you've done
+17:53:13 <jay46> I promise you i have followed every single word and step of that install... its not that complicated
+17:54:43 <jay46> computer has prerequisites... i have adk tools package.. i set OEM in developer tools ... everything
+17:54:55 <strcat> jay46: so can you please clarify that? do you have the udev rules? how are you connecting it with USB?
+17:56:13 <jay46> android-sdk-platform-tools-common is already the newest version (27.0.0+12).
+17:56:27 <jay46> is making sure that is there... same as making sure i have the udev rules?
+17:56:46 <strcat[m]> okay so how are you connecting it with USB
+17:56:47 <strcat[m]> ?
+17:56:56 <strcat[m]> what kind of computer is it, what kind of USB cable are you using, what kind of port are you using?
+17:56:59 <strcat[m]> that's necessary info
+17:57:01 <jay46> I have a cable usb-c to usb-a that says right on a package I still have USB DATA CABLE Fast Transmission
+17:57:09 <strcat[m]> okay so that's probably the issue
+17:57:26 <strcat[m]> if possible use the USB-C to USB-C cable that comes with the phone
+17:57:32 <GrapheneOS-Teleg> <f​lyingduckall> I just procured two cheap second hand pixels to convert for a friend and myself this weekend,  here to give a shout-out to strcat saying thank you for obvious reasons. That's all, happy secure android weekend y'all.
+17:57:38 <strcat[m]> otherwise you need to have a high end, made to spec USB-A to USB-C cable
+17:57:47 <GrapheneOS-Teleg> Granville (@G​ranvilleGutkowski) has joined the Telegram Group!
+17:57:51 <strcat[m]> most USB-A to USB-C cables do not actually work properly
+17:57:57 <jay46> fuck me.. my computer has no Usb C input
+17:57:57 <strcat[m]> so that's probably your issue
+17:58:04 <GrapheneOS-Teleg> <G​ranvilleGutkowski> is this official now?
+17:58:09 <strcat[m]> you need a proper USB-A to USB-C cable then
+17:58:15 <strcat[m]> Telegram is semi-official right now
+17:58:33 <GrapheneOS-Teleg> <G​ranvilleGutkowski> what does that mean?
+17:58:37 <jay46> even if the phone will let me use fastboot to unlock the bootloader...  ???  that doesnt mean anything as for the cable working?
+17:59:23 <GrapheneOS-Teleg> <G​ranvilleGutkowski> i saw daniel's tweet about the telegram group
+17:59:56 <GJMFS> Anyone know of a recent issue with Signal notifications not working since the most recent patch yesterday? Rebooted to apply the update and Signal notifications have not worked since.
+18:00:34 <strcat[m]> there's no issue with it
+18:01:01 <strcat[m]> sounds more like you have notifications disabled for Signal or via DnD
+18:01:58 <jay46> ill try someone elses computer that has a usb-c cable ... think i can do that in the next little while and hopefully it works... thanks for time..
+18:07:40 <jj1013> usernumber33[m]: So I can not set the password -- the OS does it by itself.
+18:08:42 <jj1013> No, wait.
+18:10:12 <jj1013> "The OS derives a password token from the profile's lock method credential using scrypt."
+18:19:24 <strcat[m]> jj1013: https://grapheneos.org/faq#encryption covers encryption really well, reading that is the right thing to do to get information on it
+18:19:44 <strcat[m]> will be adding a section covering the hardware keystores specifically too
+18:19:47 <strcat[m]> at some point
+18:29:13 <marsgoals[m]> Hello all, I've done plenty of research on using a VPN w GrapheneOS and I still have not landed on a best solution. I know that it is recommended to enter the credentials from my VPN provider (mine is ProtonVPN) into the settings on the phone. I know that I should turn on 'always on VPN & 'Block connections not using VPN'. Doesn't that solution make it difficult to switch between servers if the server gets bogged
+18:29:13 <marsgoals[m]> down? How do I see if it is bogged down? Should I enter multiple addresses from my VPN provider into the phone settings so I can easily switch? Do I have to do the same type of setup for every user on my phone? Or, should I setup 'Orbot: Tor for Android' for each user and just leave it at that? Thanks :)
+18:31:28 <GrapheneOS-Teleg> <J​xoec> Allow data transfer via usb
+18:32:07 <usernumber33[m]> <jj1013 "usernumber33: So I can not set t"> So the user doesn't "set" the encryption key for file encryption. It derived by the OS.
+18:33:32 <strcat[m]> marsgoals: if you want to switch between servers use their app and enable always on + block connections
+18:44:45 <marsgoals[m]> Thanks strcat. I'm trying to set phones up for some friends also. I know that you don't like to recommend specific providers, I get that, but I'd like to have a standard format that I can use to set up phones for others who may not have a paid VPN provider as I do. I'd also like to assure others that I've done everything possible to give them the absolute best setup. There seem to be so many options that people are
+18:44:45 <marsgoals[m]> using here; IVPN, OpenVPN, Orbot, using the phone VPN settings, the list ends at infinitum. lol. What is the best solution??? Thanks
+18:45:29 <bizanon[m]> Someone posted freezer music app here. Just wanted to say thank you for that. Its an awesome app
+18:46:46 <strcat[m]> marsgoals: it's off-topic for this channel, VPN provider recommendations don't belong here
+18:46:55 <strcat[m]> and I won't give you a VPN provider recommendation
+18:47:22 <strcat[m]> or ipsec (with a provider properly supporting it in a secure way) or wireguard
+18:47:28 <strcat[m]> won't recommend a provider
+18:50:58 <chris42[m]> Is there a way to deactivate the fingerprint sensor when the display is off? I too often turn the phone on by mistake
+18:51:02 <marsgoals[m]> OK. So the only recommendation is to use the VPN in he phone settings? Thanks :)
+18:52:07 <marsgoals[m]> Adn what channel should I be using for questions? What specifically is this channel for?
+18:53:27 <alex-resist> There is #grapheneos-offtopic
+18:53:29 <strcat[m]> marsgoals: use ipsec (built-in) with a provider that uses it securely, or use the wireguard app
+18:53:57 <strcat[m]> marsgoals: or use a high quality VPN provider app presumably using wireguard if you want more configuration
+18:53:57 <strcat[m]> and yeah
+18:54:01 <strcat[m]> off-topic as stated earlier
+18:54:14 <strcat[m]> marsgoals: you won't get VPN recommendations from the GrapheneOS project
+18:54:30 <strcat[m]>  * marsgoals: you won't get VPN provider recommendations from the GrapheneOS project
+18:54:55 <strcat[m]> marsgoals: #grapheneos-offtopic:matrix.org
+18:59:55 <catfish[m]> <chris42[m] "Is there a way to deactivate the"> Settings > Display > Lock Screen > Show Lockdown Option
+19:01:38 <jay46> think i just broke my phone trying to install grapheneos
+19:01:49 <strcat[m]> jay46: doubt it
+19:01:57 <jay46> it had an error during install
+19:02:04 <strcat[m]> alright, doubt you broke the phone
+19:02:08 <strcat[m]> no reason to think that you did
+19:02:24 <strcat[m]> jay46: as I said earlier, use https://grapheneos.org/install/web
+19:02:28 <strcat[m]> please read the information there on USB
+19:02:29 <jay46> i tried and tried to install it but during writing system ext it had an error: timeout exceeded 2500ms
+19:02:34 <braxtono[m]> Has anyone managed to break a graphene phone yet?
+19:02:38 <jay46> but this is where i fucked up
+19:02:42 <jay46> i mean bricked it
+19:02:43 <strcat[m]> > You need a USB cable for attaching the device to a laptop or desktop. Whenever possible, use the high quality standards compliant USB-C cable packaged with the device. If your computer doesn't have any USB-C ports, you'll need a high quality USB-C to USB-A cable. You should avoid using a USB hub such as the front panel on a desktop computer case. Connect directly to a rear port on a desktop or the ports on a laptop.
+19:02:43 <strcat[m]> Many widely distributed USB cables and hubs are broken and are the most common source of issues for installing GrapheneOS.
+19:02:50 <strcat[m]> jay46: it's not bricked
+19:03:02 <strcat[m]> jay46: go back to the bootloader interface, complete the install with a proper USB cable
+19:03:07 <jay46> i used someone elses computer...  and cord worked usb c to usc b
+19:03:16 <jay46> a new macbook pro
+19:03:33 <jay46> but after having that error multiple times this is where i did the dumbest thing
+19:03:54 <jay46> i thought i cant just keep boring this guys computer he has to work... it looks maybe like it could of actually installed.. so i locked bootloader
+19:04:08 <jay46> and now it says no operating system wont boot and wont be recognized by computer any more
+19:04:19 <strcat[m]> jay46: it's not bricked
+19:04:34 <jay46> thank god if you are right and please help me.. and I am sorry
+19:04:35 <strcat[m]> jay46: follow https://grapheneos.org/install/web again
+19:04:46 <strcat[m]> jay46: nothing extra we can tell you here that's not in the guide
+19:04:55 <braxtono[m]> One thing I noticed, if flash fails halfway it needs the same os to refinish ie if I started Linux and it failed to reconnect after resetting during flash I was stuck in fastboot menu and couldn't use windows to finish ; was unrecognizable so I needed another Linux (or Ubuntu) to finish . dunno if that's a difference between fastboot versions
+19:05:00 <strcat[m]> jay46: you need to start at the beginning again since you locked, so you need to unlock again
+19:05:01 <chris42[m]> <catfish[m] "Settings > Display > Lock Screen"> Thx. I activated that toggle. But it does nothing? Text says it will enable an BB option. Where is it then?😳
+19:05:12 <strcat[m]> braxtono: that's definitely not accurate
+19:05:22 <strcat[m]> braxtono: you didn't follow the guide properly on Windows
+19:05:28 <strcat[m]> following the guide correctly is how you install
+19:05:33 <strcat[m]> you cannot skip sections or important info
+19:05:47 <jay46> Wont leave a black screen which says cant find a valid operating system.  It will not bring up the bootloader screen at all. Will not boot the phpne.
+19:05:56 <strcat[m]> you skipped installing the driver on Windows and didn't have automatic optional updates enabled
+19:06:01 <strcat[m]> so, yeah, it didn't work
+19:06:06 <strcat[m]> totally expected, and covered there
+19:06:22 <strcat[m]> jay46: it's not bricked, you're just not booting it into the bootloader interface
+19:06:29 <strcat[m]> jay46: stop panicking, stop deviating from the guide
+19:06:32 <jay46> sorry.. i freaked.
+19:06:36 <usernumber33[m]> <chris42[m] "Thx. I activated that toggle. Bu"> Hold down the power button for a few seconds
+19:06:39 <strcat[m]> jay46: okay, follow the guide
+19:06:54 <jay46> i am sorry. i got the fastboot screen back up with the volume down.. i just figured the worst could happen to me if it happens!
+19:07:01 <strcat[m]> jay46: would almost certainly have worked properly from a macbook with the cable that comes with the phone
+19:07:02 <jay46> going to go back and just try again...
+19:07:11 <strcat[m]> jay46: which phone model is it
+19:07:20 <jay46> should of but three times with i went to the install part it did that timeout error .. Pixel 5
+19:08:01 <strcat[m]> were you interrupting the install by doing something with the menu on the phone?
+19:08:09 <jay46> Writing System . does that for a bit then ERROR: Timeout 2500 ms exceeded       -- and it just stops. I can repush that level of instal, did 3 times, same error
+19:08:13 <strcat[m]> make sure to leave the browser tab with the installer open and active
+19:08:27 <jay46> didnt touch phone and made sure even the computers screen wouldnt go to black
+19:09:07 <jay46> did that too.. doing nothing at all on the computer but watching it
+19:09:20 <jay46> one graphene install page watching progresss
+19:09:23 <jay46> on
+19:09:55 <strcat[m]> plug it into a different USB port
+19:10:06 <strcat[m]> reboot the phone to the bootloader interface, reboot the computer
+19:10:10 <strcat[m]> use one of the supported browsers
+19:10:35 <mr_hebi_san[m]> Don't use incognito mode
+19:10:52 <jay46> I can go in there one more time, reboot the computer, okay, ill go one more time at it and come back hopefully with good news... sorry for freakout..
+19:11:03 <jay46> be back soon hopefully only good news
+19:11:15 <Rin[m]> Disable any plugins that might cause issue as well
+19:13:22 <chris42[m]> <usernumber33[m] "Hold down the power button for a"> Turn off screen now has a lock option and three dots, which will show screenshot. But no additional options
+19:15:37 <catfish[m]> chris42 should have Lockdown option which turns off fingerprint sensor
+19:17:55 <marsgoals[m]> Thank you :)
+19:20:24 <interesting[m]> are there tutorial on how the backup works? on graphene website.
+19:20:24 <interesting[m]> there's this backup with 12 words passphrase, but i'm afraid to proceed before I read tutorial on how to do it or something
+19:20:49 <strcat[m]> interesting: it's an app called Seedvault
+19:20:58 <strcat[m]> which is integrating as the backup service in the OS
+19:20:59 <chris42[m]> <catfish[m] "chris42 should have Lockdown opt"> Nope, I have emergency, lock, on/off and three dots that offer screenshot
+19:21:09 <interesting[m]> can i read up on it somewhere
+19:21:15 <strcat[m]> it backs up OS and app data for the main profile, you have to back up your user files yourself
+19:21:33 <interesting[m]> <strcat[m] "it backs up OS and app data for "> I see. so it's encrypted with this passphrase?
+19:21:53 <strcat[m]> interesting: yes that's a BIP39 seed phrase, which provides a 128-bit entropy seed to make the keys
+19:22:02 <interesting[m]> very cool
+19:22:04 <strcat[m]> you write that down and it's used to decrypt when restoring
+19:22:11 <interesting[m]> I see
+19:22:21 <strcat[m]> I proposed doing it this way and someone in our community made the initial implementation of it
+19:22:22 <interesting[m]> but i still need to save the backup file?
+19:22:27 <strcat[m]> which has now evolved into Seedvault
+19:22:34 <strcat[m]> interesting: yes, you would generally plug in a USB flash drive
+19:22:34 <interesting[m]> I see
+19:22:35 <strcat[m]> and back up to there
+19:22:42 <interesting[m]> thanks
+19:22:46 <strcat[m]> or use a cloud provider it supports like nextcloud
+19:23:04 <strcat[m]> and then to restore, copy it from there to a USB flash drive, which you use when setting up the phone again (in SetupWizard)
+19:23:18 <strcat[m]> it supports backing up to app-based storage providers
+19:23:21 <strcat[m]> like nextcloud
+19:23:26 <interesting[m]> can I restore it on another phone? or only same model
+19:23:30 <strcat[m]> so you can have automatic encrypted backups of OS/app data to there
+19:23:36 <strcat[m]> interesting: can restore on another phone, the backups are portable
+19:23:41 <interesting[m]> wow
+19:23:46 <interesting[m]> very nice
+19:23:57 <strcat[m]> just keep in mind it only does OS data and also app data for the main profile atm
+19:24:20 <interesting[m]> i see
+19:24:20 <strcat[m]> you have to back up your home directory (user files you see in the file manager) yourself
+19:24:20 <strcat[m]> or with an app that supports it
+19:24:54 <strcat[m]> it should eventually gain support for backing that up too
+19:24:58 <strcat[m]> and for backing up other profiles
+19:25:05 <strcat[m]> it's a very actively developed app
+19:25:14 <interesting[m]> I see
+19:25:22 <strcat[m]> you'd have to set it up in each user profile you want backed up
+19:25:28 <strcat[m]> atm it only supports the main profile
+19:25:36 <strcat[m]> but I mean, in the future
+19:25:47 <interesting[m]> main profile is fine
+19:30:17 <catfish[m]> <chris42[m] "Nope, I have emergency, lock, on"> Can't help more bud, works here
+19:31:04 <Rin[m]> Btw People, how do you feel graphene is vs stock in terms of performance? I've heard it's a bit slower but less battery drain as well
+19:31:23 <chris42[m]> <catfish[m] "Can't help more bud, works here"> No worries, thx. Is it device specific? I am on a Pixel 5
+19:32:11 <dannyknoll3[m]> Rin: No noticeable lag on, well, anything, and the days of battery would make me CHOOSE some lag even if there was.
+19:40:05 <strcat[m]> Rin: https://grapheneos.org/usage#exec-spawning
+19:40:27 <strcat[m]> we use a secure application spawning model resulting in apps needing a bit more time to start in order for each app to be better isolated
+19:40:38 <strcat[m]> but that only adds a bit of time to cold start
+19:40:44 <strcat[m]> once it's started/cached, doesn't have a performance impact
+19:41:15 <strcat[m]> memory usage per app is significantly higher due to security features requiring memory usage (memory quarantines) so not as many things can be cached, the phones have so much memory now though
+19:41:50 <strcat[m]> and C and C++ code that is heavily bounded by malloc (vast majority of code is not) is slowed down as part of hardening against memory corruption
+19:41:51 <strcat[m]> some other features have a minor cost too
+19:41:53 <strcat[m]> anyway that's the point of GrapheneOS
+19:41:58 <strcat[m]> suggest reading https://grapheneos.org/features
+19:42:10 <strcat[m]> if you don't want privacy and security enhancements like these, probably not the OS for you
+19:43:12 <strcat[m]> the standard application spawning model is faster because it takes a shortcut leaking sensitive info to apps
+19:44:17 <strcat[m]> the 3 major initial GrapheneOS features when it was first started as a project in 2014 were the secure application spawning model, OpenBSD malloc (now replaced with our superior in-house malloc implementation) and PaX kernel hardening
+20:03:38 <strcat[m]> going to be making a new release soon with the new Vanadium and other changes
+20:18:35 <jay46> Got GrapheneOS Installed !!
+20:19:42 <strcat[m]> nice
+20:19:44 <jay46> On the macbook pro I used, it has two left side usbc ports, and it just took switching to the one furthest back to get the writing sys ext timeout error to stop
+20:21:16 <jay46> When i was previously getting that error, over and again, I was bothering someone for their comptuer when they needed to work, so i locked the bootloader and hoped it would load or even to stock, and when it didnt, it seemed like I bricked the phone for a moment because it wasnt on fastboot any more.. freaked out like you saw, then just did the
+20:21:17 <jay46> volume down button thing and got it back...
+20:22:21 <blacklight447[m]> <strcat[m] "going to be making a new release"> Oh what of changes do you have in mind?
+20:22:35 <blacklight447[m]> The only i thing i personally miss one vanadium is an always private browsing mode
+20:22:47 <jay46> thanks for your help.
+20:22:51 <blacklight447[m]> Tldr if i close the browser or tab, the data saved locally is gone
+20:22:57 <strcat[m]> blacklight447: that's wanted and just hasn't been implemented yet
+20:23:16 <strcat[m]> blacklight447: always incognito is different than a clear on exit feature btw
+20:24:38 <bill_in_mtl[m]> <strcat[m] "blacklight447: always incognito "> Clear on exit would be good
+20:25:56 <mcrabble> First time user, just opened the calendar app and...  literally don't know how to use it.  It's a calendar app, what am I missing?
+20:26:52 <strcat[m]> mcrabble: it's not meant to be used
+20:27:02 <strcat[m]> we're hiding the launcher icon in the next release to avoid confusion
+20:27:14 <strcat[m]> install the calendar app of your choice like Etar and use that
+20:27:22 <skagreek[m]> strcat: Hi. Curious if the new Vanadium might get a bookmark import? Would love to ditch Brave. Thanks.
+20:27:28 <strcat[m]> skagreek: no
+20:27:35 <skagreek[m]> OK thanks.
+20:27:35 <strcat[m]> you can see what changes I was talking about
+20:27:48 <strcat[m]> there isn't some major list of arbitrary changes
+20:27:53 <strcat[m]> no need to ask what changed you can look
+20:28:18 <skagreek[m]> Will do.
+20:29:26 <mcrabble> strcat[m]: cool, thanks.  Also just as an aside, the documentation on the website is great, kudos
+20:30:07 <mr_hebi_san[m]> mcrabble almost every app on Graphene is the AOSP default version.  Reading up on the default AOSP apps would be illuminating.
+20:30:39 <strcat[m]> skagreek: https://github.com/GrapheneOS/grapheneos.org/blob/ac72936ed10ca7aced7e3a0e7d34eaf50b5fd00b/static/releases.html#L435-L445
+20:30:45 <strcat[m]> you can also look at the pending changes for the next release
+20:30:54 <strcat[m]> since they're added to that repo as they're landed in the main branch
+20:31:19 <skagreek[m]> Awesome, was looking for it in the element search. Appreciate it.
+20:36:01 <strcat[m]> skagreek: you can look at https://github.com/GrapheneOS/grapheneos.org/blob/master/static/releases.html (most recent revision) at the part where changelogs are added
+20:36:05 <strcat[m]> and the pending one is there
+20:37:34 <strcat[m]> recently we've been heavily focused on defending against the attacks on the project and on infrastructure stuff
+20:37:44 <strcat[m]> so not much actually happening with privacy/security work on the OS lately
+20:37:45 <strcat[m]> unfortunately
+20:37:47 <strcat[m]> but that will change
+20:50:06 <Lestat[m]> So im here about hardened_malloc
+20:52:36 <Lestat[m]> im working on void linux security and i wanted to use hardened_malloc (before you say its offtopic Daniel has shown interest in helping with building musl and glibc with hardened_malloc). The best way to do that would be to build musl with hardened_malloc. Sadly when i tried doing that it wouldnt compile and give errors about stuff like stdatomic.h not existing (didnt happen when i built it alone) so i decided to seek
+20:52:37 <Lestat[m]> some help here
+20:53:48 <Lestat[m]> I personally currently work on a hardened kernel but i would gladly add musl with hardened_malloc to the list
+20:56:03 <madaidan[m]> There's an off topic channel.
+20:57:02 <dannyknoll3[m]> #grapheneos-offtopic:matrix.org
+20:57:20 <dannyknoll3[m]> (Sorry, I should have pointed you here in the first place, Lestat )
+20:57:30 <dannyknoll3[m]> * (Sorry, I should have pointed you ^here in the first place, Lestat )
+20:57:51 <Lestat[m]> Ok
+21:00:16 <kevinpigar> Hi
+21:00:16 <Lestat[m]> Sorry!
+21:00:44 <kevinpigar> Im new with pixel (pixel5) I have just installed GrapheneOS and when I try to verify it says my device is not locked but in fact it is
+21:13:18 <strcat[m]> well unfortunately they left prematurely
+21:13:24 <strcat[m]> can't help people if they don't give time to respond
+21:13:53 <strcat[m]> if Auditor says the device isn't locked it presumably isn't locked
+21:14:03 <rinkamin[m]> Man our country online ID for banking and other stuff warned it would work withoutnplau services, clicked away the warning and it worked anyway.
+21:14:07 <strcat[m]> maybe a mistake during the installation process where they thought they locked it but didn't
+21:14:19 <strcat[m]> rinkamin: that's pretty common
+21:14:19 <rinkamin[m]> The warning starts every time you boot the app but still worka
+21:14:27 <rinkamin[m]> * The warning starts every time you boot the app but still works
+21:14:33 <strcat[m]> rinkamin: there's a standard warning boilerplate apps reuse
+21:14:35 <strcat[m]> copy paste
+21:14:52 <rinkamin[m]> I wouldn't have been able to stay on graphene without it working
+21:14:53 <pinkylittlecat[m> none of my bank apps work, what a great world we live in -_-
+21:14:54 <strcat[m]> they probably don't actually have a hard dependency on the functionality but rather just certain features do
+21:14:54 <rinkamin[m]> Xd
+21:16:09 <pinkylittlecat[m> how do you guys get around this? i wanted to centralize all my personal things into a grapheneOS phone, i suppose i am not supposed to use bank apps then? or maybe i just like in a very shitty place without decent banks
+21:16:20 <rinkamin[m]> Here its extremely common to use an app called swish. As long as two users have the app, they can send money to each other, without fee, instant transaction, just by knowing each others phone nr
+21:16:26 <rinkamin[m]> Dunno
+21:16:37 <rinkamin[m]> Maybe use them in browser?
+21:19:40 <rinkamin[m]> Or a secondary, really cheap phone for banking appa
+21:19:47 <rinkamin[m]> * Or a secondary, really cheap phone for banking apps
+21:19:56 <rinkamin[m]> Like one of those 50$ once
+21:23:38 <dannyknoll3[m]> <rinkamin[m] "Maybe use them in browser?"> If your bank doesn't have a webapp at this stage, or their app has Google Services hard dependency, I'd be concerned and switch.
+21:26:06 <rinkamin[m]> The issue in my case would have been if the app used for authorization (basically your ID card in your phone) wouldn't have worked. I would have to carry around
+21:26:27 * rinkamin[m] uploaded an image: 20210305_222609_6620093314791915655.jpg (67KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/ZmkABPQrcxNGDxCFbluztiTM/20210305_222609_6620093314791915655.jpg >
+21:29:53 <rinkamin[m]> Kinda baffles me protonmail and  bitwarden complains about no play services as well
+21:30:05 <rinkamin[m]> And signal
+21:33:48 <fomijafi[m]> <rinkamin[m] "And signal "> Get the apk directly from their site. No play services needed.
+21:34:13 <CrowmacMcCarthy[> <pinkylittlecat[m "how do you guys get around this?"> Probably the second
+21:34:17 <CrowmacMcCarthy[> Mine work fine
+21:34:25 <CrowmacMcCarthy[> * Mine works fine
+21:36:24 <rinkamin[m]> <fomijafi[m] "Get the apk directly from their "> I did. But it complained in app about it and had me turn off power saver for it
+21:39:22 <rinkamin[m]> What browser do you all use except the included one and for?
+21:39:34 <rinkamin[m]> * What browser do you all use except the included one and tor?
+21:39:51 <Lestat[m]> Bromite
+21:42:23 <GrapheneOS-Teleg> <K​ileXt> Duckduckgo browser
+21:42:51 <GrapheneOS-Teleg> <K​ileXt> I like its easy clean up option
+21:43:56 <fomijafi[m]> <rinkamin[m] "I did. But it complained in app "> Yes if you want notifications to work, you turn off battery optimization. Works fine
+21:45:32 <rinkamin[m]> What about a good keyboard?
+21:50:03 <entry1[m]> <rinkamin[m] "What about a good keyboard?"> Stock
+21:50:30 <CrowmacMcCarthy[> <rinkamin[m] "What about a good keyboard?"> Don't install too much crap - youth increasing the attack surface
+21:50:38 <CrowmacMcCarthy[> * Don't install too much crap - your increasing the attack surface
+21:50:44 <CrowmacMcCarthy[> * Don't install too much crap - you're increasing the attack surface
+21:50:49 <jay46> theres no getting rid of that notification that signal has Background Notification Enabled ... ?
+21:51:33 <dannyknoll3[m]> jay46: #grapheneos-offtopic:matrix.org
+21:51:44 <usernumber33[m]> <jay46 "theres no getting rid of that no"> Yes in notification settings turn off other
+21:52:17 <mr_hebi_san[m]> Stock doesn't support all languages though, so you may still need to find a 3rd party keyboard app in some cases.
+21:53:16 <rinkamin[m]> Its support my language layout but no spell checking/dictionary
+21:57:57 <Thatcher[m]> Can system updates be applied in Secondary User profiles, or do I have to switch back to owner profile?
+22:00:32 <HowardR> What does it mean and what can I do if my Pixel5 redfin build output looks like this https://i.imgur.com/ObFE9hO.png
+22:08:45 <fast1[m]> <jay46 "theres no getting rid of that no"> Just disable it
+22:10:39 <sjsndnjdejd> <HowardR "What does it mean and what can I"> mean you probably built the wrong target
+22:20:20 <nscnt[m]> Thatcher: It'll work if you're in a secondary user. You won't get any feedback while being in the secondary profile, though.
+22:20:24 <bbhead[m]> How/Where do I report issues for beta on 4a?
+22:21:24 <nscnt[m]> bbhead: https://github.com/GrapheneOS/os_issue_tracker/issues
+22:22:33 <bill_in_mtl[m]> bbhead: I was told to go here https://github.com/GrapheneOS/os_issue_tracker
+22:23:39 <bbhead[m]> Thanks
+22:23:56 <HowardR> @sjsndnjdejd : https://pastebin.com/4Pijp8PY
+22:33:18 <rinkamin[m]> Kinda wish some of the stock apps like phone/clock etc wasn't 10 years ols
+22:33:23 <rinkamin[m]> * Kinda wish some of the stock apps like phone/clock etc wasn't 10 years old
+22:38:50 <Thatcher[m]> <rinkamin[m] "Kinda wish some of the stock app"> Those apps may be old, but they served a great purpose during George Washington's presidency.
+22:52:05 <strcat[m]> kitbanza: those are both actively maintained in AOSP so don't know what you mean by that
+22:52:59 <strcat[m]> bbhead: https://github.com/GrapheneOS/os_issue_tracker/issues/478 could be a symptom of us removing the workaround for the audio ordering bug which we thought must have been solved upstream
+22:53:09 <strcat[m]> we've repeatedly asked for feedback on whether everything is working fine
+22:53:15 <strcat[m]> bbhead: how long has this not been working for you?
+22:53:26 <strcat[m]> we barely get feedback from people so it's very hard to know if us dropping that workaround was fine
+22:53:47 <strcat[m]> https://grapheneos.org/releases#2021.02.23.15
+22:53:55 <strcat[m]> it was 2021.02.23.15 where we dropped the workaround
+22:54:09 <strcat[m]> we added back the Pixel 3 and 3 XL camera one, but not the audio ordering one, because we had no reports of issues
+22:54:26 <strcat[m]> the problem is now, it has been a significant time since that release, so now it's pretty hard to know what caused it
+22:54:29 <strcat[m]> that's why we need quick feedback
+22:54:41 <strcat[m]> can't really do much to address it now beyond starting over with the debugging process
+22:54:47 <strcat[m]> even though it could simply be the same issue as before
+23:08:29 <strcat[m]> @room we need feedback on whether external audio devices are working properly for people since the 2021.02.23.15 release particularly using assorted Bluetooth devices, headphones, etc.
+23:08:54 <strcat[m]> @room we aren't getting the feedback necessary and I need people to report whether they are having problems with their Bluetooth audio devices or whether it is working fine
+23:09:46 <Elmo[m]> <strcat[m] "and you won't be able to use tha"> My Airpods have been working perfectly.
+23:10:00 <AppAraat[m]> strcat: I did have trouble making an external DAC work through a microUSB <-> USB-C adapter, though I'm unsure whether it's even supposed to work.
+23:10:10 <codebam> I'll grab my wireless headphones and test right now
+23:10:26 <Elmo[m]> My Airpods have been working perfectly.
+23:10:26 <isavotoast[m]> ^
+23:10:40 <Stephen[m]> <strcat[m] "@room we aren't getting the feed"> All typical bluetooth devices for me are working
+23:10:41 <strcat[m]> AppAraat: that sounds like something non-standard / broken, either the adapter or DAC is broken, also make sure to plug it when unlocked
+23:10:41 <cyberparty> Charging my headset now
+23:10:48 <GrapheneOS-Teleg> <K​ileXt> Whats the best way to give you feedback ?
+23:10:58 <strcat[m]> AppAraat: it's more likely that's a USB issue or the device is broken
+23:10:59 <tidria[m]> I've tested two different USB C DACs and one BT Speaker without issue. I have a BT headset with a mic I can test tonight
+23:11:07 <strcat[m]> AppAraat: just because USB is so screwed up
+23:11:17 <Stephen[m]> USB DAC working ok for me
+23:11:18 <strcat[m]> AppAraat: i.e. if it's not actually a USB-C digital audio DAC I wouldn't expect it to work anyway
+23:11:28 <GrapheneOS-Teleg> <K​ileXt> Same
+23:11:40 <strcat[m]> also keep in mind USB devices need to be plugged in when unlocked (or currently, at boot) on GrapheneOS
+23:11:46 <AppAraat[m]> strcat: device itself works when connecting to laptop, but yeah the way I understood is that external DACs under Android is a hit or miss game.
+23:11:51 <codebam> working fine with my sony bluetooth headphones
+23:12:04 <codebam> pixel 5
+23:12:04 <AppAraat[m]> oh, I haven't tried plugging it in at boot, hmm...
+23:12:09 <strcat[m]> AppAraat: well it deliberately focuses on standard USB-C digital audio rather than non-standard stuff requiring drivers
+23:12:15 <strcat[m]> AppAraat: no you don't need to plug it in at boot
+23:12:34 <strcat[m]> AppAraat: I'm saying you need to plug it in when *unlocked* by default, with the *exception* that it will also work if already plugged in at boot
+23:12:46 <AppAraat[m]> oh I see
+23:13:08 <strcat[m]> because the threat model for that feature is defending the device after profiles are unlocked / made active post-boot
+23:13:08 <AppAraat[m]> Stephen: which one do you have?
+23:13:24 <Stephen[m]> <AppAraat[m] "Stephen: which one do you have?"> 3xl
+23:13:27 <falkensmaze[m]> Airpods 2nd gen (2019) work just fine on Pixel 4a
+23:13:50 <AppAraat[m]> <Stephen[m] "3xl"> Hmm, I have a Chord Mojo. Does yours work in class compliant mode?
+23:14:05 <strcat[m]> does anyone use Bluetooth car audio, does that work fine since 2021.02.23.15?
+23:14:17 <strcat[m]> it seems to me that if we still needed that workaround more people would be having issues than just 1 report so far
+23:14:26 <chris42[m]> USB headset is working for me on Pixel 5. Mic and audio. Remote functions like volume as well
+23:14:38 <strcat[m]> because back when we added the workaround, a lot of people had problems with external audio, maybe primarily bluetooth audio
+23:14:47 <chris42[m]> For Bluetooth I need to check tomorrow
+23:14:50 <strcat[m]> the issue people used to have was audio playing out of wrong speakers primarily
+23:15:07 <strcat[m]> also btw
+23:15:16 <strcat[m]> please test after rebooting, and then again after rebooting, etc.
+23:15:18 <strcat[m]> as many times as you can
+23:15:37 <strcat[m]> the issue that used to happen is the AOSP audio system had an ordering bug where it depended on malloc address order
+23:15:54 <strcat[m]> so hardened_malloc fine-grained randomization would randomly break it and it'd play out of wrong speakers
+23:16:06 <strcat[m]> need to know if anyone is having that issue again since 2021.02.23.15 (or similar issues)
+23:16:27 <dannyknoll3[m]> <strcat[m] "does anyone use Bluetooth car au"> I do not, but will temporarily on my partner's car, to test ASAP.
+23:16:27 <strcat[m]> it seems like no, so far, and that this new bug report (may not be a bug) is unrelated
+23:16:36 <strcat[m]> but remains to be seen really
+23:16:39 <donkykong[m]> I've got the latest update and both the USB hands hands free and audio jack hands free is working good😁
+23:16:46 <Stephen[m]> <AppAraat[m] "Hmm, I have a Chord Mojo. Does y"> I just have the default pixel USB DAC that comes with the phone
+23:16:57 <strcat[m]> oh and most important thing to test would probably be phone calls while using Bluetooth audio
+23:17:07 <strcat[m]> that seems to be the main thing people used to have issues with
+23:17:18 <Stephen[m]> strcat will test tonight
+23:17:33 <cyberparty> My Sony Bluetooth headphones appear to be fine.
+23:17:38 <AppAraat[m]> <strcat[m] "the issue people used to have wa"> Oh! This reminds me of a bug with Element Android. If I'd enable audio via speakerphone, it would stay stuck that way until reboot. I always thought it was an Element client bug.
+23:17:47 <cyberparty> (Pixel 4a, latest build)
+23:17:58 <cyberparty> Will test bluetooth phonecall
+23:18:04 <strcat[m]> AppAraat: that's probably an Element bug
+23:18:23 <strcat[m]> AppAraat: this prior issue was it'd play out of USB instead of phone speakers, or vice versa, or similar with Bluetooth
+23:18:41 <strcat[m]> I don't think speaker phone type stuff was impacted since that's more of an application thing not an OS audio thing
+23:18:42 <DC[m]> No problems with Bluetooth on latest stable on Pixel 4.
+23:19:27 <AppAraat[m]> strcat: but it would also affect stuff like normal phone calls.
+23:19:28 <strcat[m]> well it does sound like it's working for most people and I'd expect it'd be broken for more people if the old issue was back
+23:19:44 <strcat[m]> AppAraat: yeah but what I mean is the old issue was an issue with external audio devices
+23:19:51 <strcat[m]> Element is really buggy and that just sounds like an application issue
+23:20:23 <AppAraat[m]> oh ok, hmm. I'll try to find some BT audio devices and test those then.
+23:21:11 <strcat[m]> AppAraat: so basically issue was there was a list of audio devices
+23:21:17 <strcat[m]> AppAraat: and the active one is supposed to be 1st
+23:21:29 <strcat[m]> it's supposed to be ordered a certain way
+23:21:33 <isavotoast[m]> Blue tooth earbuds work just fine for thorium ,the peer tube client
+23:21:35 <strcat[m]> and it expects that order to be reliable
+23:21:48 <strcat[m]> and if it isn't, then it'd play audio (or record audio) out of the wrong device
+23:22:02 <strcat[m]> and I mean device like phone, USB headset, bluetooth headset, bluetooth speakers, etc.
+23:22:15 <strcat[m]> if the device has multiple mics/speakers, there wasn't an issue with choosing the right ones
+23:22:17 <donkykong[m]> <strcat[m] "oh and most important thing to t"> Yea blue tooth calls works good also 4a latest build
+23:22:19 <isavotoast[m]> Could try with my blue tooth Bose and Milwaukee speakers if y'all want
+23:22:19 <strcat[m]> the issue was with using right device
+23:22:25 <strcat[m]> so we applied a workaround
+23:22:27 <strcat[m]> kept it for a long time
+23:22:28 <isavotoast[m]> Or another app
+23:22:32 <strcat[m]> and recently last month removed the workaround
+23:22:38 <strcat[m]> just trying to figure out if it was correct to remove the workaround
+23:22:48 <cyberparty> Just tested phone call on my sony bluetooth speakers on Pixel 4a on latest build. Everything works fine, including microphone and speakers.
+23:22:51 <strcat[m]> I think it seems that it isn't causing issues for most people
+23:22:59 <strcat[m]> so the bug is probably fixed as we thought
+23:23:13 <strcat[m]> the new bug report may not actually be a bug, may be just Bluetooth sucking
+23:23:17 <isavotoast[m]> This is via pixel 5. Someone ping me if you want
+23:23:28 <strcat[m]>  * the new bug report may not actually be a bug, may be just Bluetooth devices suck
+23:23:39 <strcat[m]> isavotoast: yeah it'd be good to test
+23:24:42 <GrapheneOS-Teleg> <Moof> Would using a hardware key for stuff like OTP using an OTG cable work on android aswell or should I ask that in offtopic?
+23:25:13 <bill_in_mtl[m]> I use my Bluetooth ear pods everyday - no issues to report
+23:25:14 <AppAraat[m]> Unrelated: My P3a was still on RQ1A.210105.002 - Only now did it show me there was an update after manually going to system updates and checking.
+23:25:31 <bill_in_mtl[m]> * I use my Bluetooth ear pods everyday - no issues to report - pixel 4a
+23:25:41 <strcat[m]> AppAraat: the new release is fairly new
+23:25:51 <strcat[m]> AppAraat: the Updater automatically checks for updates every 4 hours unless you force stopped it
+23:25:58 <strcat[m]> so you should have gotten it by now, that's kinda weird
+23:26:03 <strcat[m]> maybe you force stopped it?
+23:26:24 <strcat[m]> AppAraat: is it possible it did the update and you just weren't on the owner profile to see the notification? *shrug*
+23:26:44 <strcat[m]> AppAraat: release you're talking about is quite old... that's January
+23:26:56 <AppAraat[m]> Did not force stop it. Also only have 1 profile. Could the update process be battery optimized?
+23:27:06 <SkyKing> f droid refuses to attempt to download/install nextcloud
+23:27:12 <strcat[m]> AppAraat: it has battery optimizations disabled
+23:27:17 <strcat[m]> SkyKing: refresh F-Droid repositories
+23:27:22 <AppAraat[m]> Hmm, that's pretty weird then.
+23:27:25 <fomijafi[m]> <strcat[m] "@room we aren't getting the feed"> Bluetooth audio in my vehicle working fine on Pixel 3. Haven't tested a phone call tho
+23:27:27 <strcat[m]> AppAraat: did you have battery saver mode on? it's possible that would cause it
+23:27:39 <SkyKing> good idea didn't know you had to manually do that. let me check.
+23:27:40 <skwisgaar[m]> No issues with bluetooth headphones on 3 XL
+23:27:55 <AppAraat[m]> I did not switch it on, but I do remember it automatically switching on after low battery (but that was ages ago)
+23:28:22 <strcat[m]> AppAraat: it just sounds like you must have force stopped it
+23:28:24 <strcat[m]> at some point
+23:28:50 <strcat[m]> AppAraat: force stop unregisters scheduled jobs (which it re-registers after each reboot)
+23:29:10 <strcat[m]> AppAraat: and I mean 2 months ago
+23:29:17 <strcat[m]> and then not rebooted since then?
+23:29:27 <AppAraat[m]> I also rebooted my phone multiple times during these 2 months.
+23:29:48 <strcat[m]> well that's pretty strange can't explain why the automatic check every 4 hours wouldn't be working
+23:30:31 <AppAraat[m]> What is the automatic updater process called?
+23:30:44 <dannyknoll3[m]> Any options used in Permitted Networks/ disabling on metered connections used, AppAraat ?
+23:31:36 <AppAraat[m]> Permitted networks: Any
+23:32:20 <strcat[m]> the permitted networks thing applies to 'check for updates' too
+23:32:26 <strcat[m]> check for updates just schedules a job to run ASAP
+23:32:45 <strcat[m]> it already has a job scheduled to run every ~4 hours (when conditions for it are acceptable)
+23:34:30 <AppAraat[m]> ok so, Seamless Update Client has all necessary permissions and is not battery optimized, but Dynamic System Updates is battery optimized. Is this expected?
+23:35:16 <strcat[m]> DSU isn't a thing we use
+23:35:44 <strcat[m]> we plan to further disable it beyond just not using it + removing the trusted keys for it (which we already did since it was introduced)
+23:35:58 <strcat[m]> low priority
+23:37:13 <AppAraat[m]> ok, so system updates happen over Seamless Update Client then? If that's the case, then I'll be monitoring it closely over the coming days.
+23:52:16 <strcat[m]> AppAraat: yes, it registers a periodic job at boot, every ~4 hours, with the constraints you have configured
+23:52:25 <strcat[m]> if you change constraints, it registers it again
+23:52:57 <strcat[m]> AppAraat: I guess it's possible you updated and missed/dismissed the notification
+23:53:04 <strcat[m]> AppAraat: and just didn't reboot but...
+23:53:12 <strcat[m]> you did say you rebooted a couple times since then
+23:53:14 <strcat[m]> so, doesn't make sense

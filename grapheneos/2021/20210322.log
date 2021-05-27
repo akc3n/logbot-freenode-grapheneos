@@ -1,0 +1,876 @@
+00:02:21 <ulmirdin[m]> I believe this is an AOSP issue, not GrapheneOS.
+00:10:24 <akc3n[m]> <Jgem[m] "Sorry if this is just not consid"> I believe this is an upstream bug issue.
+00:12:50 <akc3n[m]> <klarkkable[m] "who's the contact point for join"> TheJollyRoger has a testing chat channel setup for this.
+00:32:20 <uhsa> hello, i received an update a couple hours ago and now signal keeps displaying a notification: ''Background connection enabled''  is there a way to delete it?
+00:33:11 <ulmirdin[m]> Long press -> Turn off notification
+00:34:01 <uhsa> ulmirdin[m] Does this turn off all of signals notification or just this one?
+00:34:40 <ulmirdin[m]> You can toggle individual notifications in the settings for the app.
+00:34:51 <uhsa> I see it now i toffled off only other notifications
+00:34:55 <uhsa> toggled*
+00:40:06 <uhsa> I know adding add-ons to vanadium makes it more identyfiable, but how about security if i add noscript or ublock for example does it add to the security of vanadium?
+00:51:28 <grapheneos_user_> <uhsa "I know adding add-ons to vanadiu"> Ublock no, noscript, you can already disable javascript
+00:52:24 <grapheneos_user_> I think
+00:53:41 <grapheneos_user_> Disabling JavaScript makes mobile web almost unusable anyway
+00:53:47 <Preload[m]> <grapheneos_user_ "I think"> Yeah, JavaScript can be disabled by default (at least in bromite).
+00:54:24 <uhsa> Yes thats why my question with the noscript addon you can toggle wich scripts to allow for some functionality
+00:54:52 <grapheneos_user_> <uhsa "Yes thats why my question with t"> Can already make exceptions to disabling JavaScript
+00:55:15 <Preload[m]> Then JS can be manually turned on on a case by case basis for each website.
+00:56:02 <grapheneos_user_> If a site is malicious, any of its scripts could be malicious
+00:56:40 <grapheneos_user_> So not very useful to enable script by script
+00:59:26 <uhsa> grapheneos_user_  would a malicious script be able to leave the sandbox?
+01:00:40 <Preload[m]> <uhsa "grapheneos_user_pi  would a mali"> Script from the browser?
+01:02:10 <uhsa> Preload[m] Is it the same as in vanadium where you have to go to Settings -> Site settings -> Javascript to add an exception? or is it more accesible like noscript in the add on menu
+01:02:17 <uhsa> Yes from the browser
+01:03:30 <Preload[m]> Highly unlikely for a secure and hardened sandbox. However, there are sandbox escapes from the browser before on both iOS and Android in general, so not impossible. Correct me if I'm wrong.
+01:04:55 <grapheneos_user_> <uhsa "grapheneos_user_pi  would a mali"> If there is a sandbox escape vulnerability, yes
+01:06:04 <strcat> uhsa: Signal always has that notification, that's part of it running a foreground service to reliably remain active in the background
+01:06:09 <strcat> nothing to do with an update
+01:06:41 <uhsa> strcat i didnt until today i have been using signal for a couple days now
+01:06:55 <strcat> you didn't notice, but it always does that
+01:07:00 <strcat> it's a silent low priority notification
+01:07:07 <strcat> it doesn't appear unless you expand it at the bottom of the tray
+01:07:13 <strcat> doesn't show up on lockscreen, in status bar, etc.
+01:07:17 <strcat> since it's low prio + silent
+01:07:32 <strcat> but it would have been there
+01:07:44 <Preload[m]> <uhsa "Preload Is it the same as in van"> Yes, that's the page.
+01:09:46 <uhsa> strcat[m]  No really it wasnt there i would have noticed right now i disabled the ''other'' notifications in the signal notifications now it doesnt show it anymore, would you happen to now what else falls under that category of ''other'' notifications?
+01:10:39 <uhsa> And this time it did show up on the lockscreen thats why i disabled it
+01:13:52 <Preload[m]> I think you can tap on the info icon from the menu to access per site permissions. I can't be sure as I don't use Vanadium, unfortunately. I think Bromide has a patch that presents an option for JavaScript on the permissions page for each website, allowing for easier access.
+01:14:56 <Preload[m]> So, I'm afraid that's the only way to access that setting.
+01:15:02 <GrapheneOS-Teleg> <c​lannad> Added jj1013 again
+01:15:09 <strcat[m]> uhsa: disabling it may have consequences
+01:15:18 <strcat[m]> uhsa: and it was there, and isn't something tied to the update...
+01:15:26 <strcat[m]> uhsa: it's there for everyone using Signal without Play services
+01:15:31 <anupritaisno1[m]> strcat: pm
+01:15:32 <strcat[m]> uhsa: it's how it runs in the background
+01:16:39 <strcat[m]> uhsa: it isn't meant to be very noticeable, no icon in status bar, nothing on lockscreen, only visible as a folded notification at the bottom
+01:16:48 <strcat[m]> unless you pressed it to expand it, wouldn't have been shown like a normal notification
+01:19:59 <GrapheneOS-Teleg> <c​lannad> Btw doing a cleanup rn
+01:20:14 <Preload[m]> <strcat[m] "uhsa: it's there for everyone us"> Yup, uhsa , that notification keeps Signal alive to receive notifications. You can prevent it from appearing on the lock screen by adjusting its settings. It is essential for background notifications on a phone without Google Play Services.
+01:20:51 <uhsa> strcat[m]  no really it did i just tried again enabled the ''other'' notifications and rebooted my phone and there it was again in the status bar and also on the lock screen now without me pressing on it
+01:21:29 <uhsa> Doesnt it appear on the lock screen for you?
+01:22:06 <uhsa> could it be that i have those silent notifications enabled where could i find that?
+01:22:29 <ulmirdin[m]> <Preload[m] "Yup, uhsa , that notification ke"> Does the notification itself keep it running in the background? I wouldn't think turning off a notification would terminate background connection.
+01:22:34 <strcat[m]> uhsa: it's silent by default unless you changed it
+01:22:57 <strcat[m]> uhsa: you must have changed the notification channel settings
+01:23:01 <Preload[m]> It is meant to be as unobtrusive as possible by using Gentle Notifications. However, at least from my phone, sometimes it shows on the lock screen.
+01:24:17 <uhsa> The notifications on lock screen setting for me is at:  Show conversations, default, and silent
+01:24:59 <strcat[m]> I'm not talking about settings for the lock screen but rather the notification settings for the Signal notification channel
+01:25:25 <strcat[m]> it always has that notification when Play services isn't present, it's not a normal notification but rather a persistent one for the foreground service
+01:25:34 <strcat[m]> it's not new and has nothing to do with an update to GrapheneOS
+01:25:56 <strcat[m]> it's an Android thing, and a Signal thing
+01:26:08 <strcat[m]> foreground services are a common way to do stuff in the background
+01:26:38 <strcat[m]> and Signal has to keep a service running to maintain the connection to their server, which they use to push notices of new messages being available to the app
+01:26:51 <strcat[m]> it would be possible for it to be smarter about how it does it but this is what they do
+01:27:47 <uhsa> strcat[m] I know what you mean it is needed for signal to run without play services, however for me as does for Preload it does show up in status bar and on the lockscreen. Thats why i wanted to turn it off and i found by turning off the ''other'' signal notifications it dissapeared. But all i would like to know is what kind of ''other''
+01:27:47 <uhsa> notifications does signal mean it doesnt specify?
+01:28:27 <Preload[m]> * It is meant to be as unobtrusive as possible by using Gentle Notifications. However, at least on my phone, sometimes it shows on the lock screen.
+01:28:44 <strcat[m]> uhsa: Signal names those channels
+01:28:47 <strcat[m]> (the app names them)
+01:28:50 <ulmirdin[m]> Other is the background connection notification only, I haven't gotten anything different.
+01:28:51 <strcat[m]> so that's what they chose to call it
+01:29:04 <Preload[m]> https://developer.android.com/about/versions/oreo/background
+01:29:21 <uhsa> Would i miss something important or could i leave it off as to not see the notification, wich i promise you shows up i am not hallucinating:P
+01:29:41 <Preload[m]> https://developer.android.com/guide/components/foreground-services
+01:29:47 <uhsa> ulmirdin[m] so you experienced the same issue?
+01:30:05 <ulmirdin[m]> uhsa: it's not an issue, rather it's just how it works
+01:30:25 <uhsa> yes excuse me that is what i meant
+01:30:45 <ulmirdin[m]> It's the same for everyone.
+01:30:49 <strcat[m]> the only issue would be if you changed it from silent, etc.
+01:31:40 <Preload[m]> https://developer.android.com/about/versions/oreo/background#services
+01:33:35 <uhsa> strcat[m]  I dont think i changed it where would it be? Is it the Hide silent notifications in the status bar in the notification settings that is turned off for me
+01:34:46 <strcat[m]> it's set to the lowest possible priority already
+01:34:47 <ulmirdin[m]> Wanna continue the conversation at #grapheneos-offtopic:matrix.org ? I don't think it's relevant to GrapheneOS
+01:34:48 <strcat[m]> by Signal
+01:34:57 <strcat[m]> but you can change that, and it sounds like you might have
+01:35:06 <uhsa> Settings -> Apps&Notifications -> Notifications -> Advanced -> Hide silent notifications in status bar is off
+01:36:16 <uhsa> Is the setting disabled for you too?
+01:37:11 <ulmirdin[m]> It's disabled by default.
+01:57:26 <accelerate[m]> This will be a dumb question but I'm wondering where the code for the OS is located. More specifically, I found an issue in https://github.com/GrapheneOS/os_issue_tracker/issues that I would like to love but I can't find the repo where the code is 🙃
+01:57:50 <accelerate[m]> * This will be a dumb question but I'm wondering where the code for the OS is located. More specifically, I found an issue in https://github.com/GrapheneOS/os_issue_tracker/issues that I would like to solve but I can't find the repo where the code is 🙃
+02:15:07 <motoyama> Hello!
+02:32:58 <Thatcher[m]> set GrapheneOS launcher as a default notification listener on fresh installs so that the default enabled notification integration is permitted by default like the stock OS (existing users still need to manually enable the permission for the built-in launcher)
+02:32:58 <Thatcher[m]> How do I enable that permission for the Graphene launcher?
+02:37:05 <sphinx[m]> Thatcher: https://freenode.logbot.info/grapheneos/20210321#c7343799
+02:46:40 <Thatcher[m]> I still can't figure it out. No permission shows up that I can see
+02:47:57 <Thatcher[m]> I'm dumb. I found it!
+02:50:42 <rubberducky> !nick rd101101
+02:57:32 <chi00[m]> us there a way to make a default non-owner profile?
+02:57:46 <chi00[m]> I don't want to boot up to owner everytime i restart
+02:58:24 <ulmirdin[m]> You need to sign in to your Owner profile before you could use user profiles.
+02:58:37 <chi00[m]> oh
+02:59:56 <ulmirdin[m]> "...owner profile is special and is used to store sensitive system-wide operating system data. This is why the owner profile needs to be logged in after a reboot before other user profiles can be used."
+03:02:23 * Thatcher[m] uploaded an image: (43KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/wOVcvhFFGHyBeaHDpvodxFdY/Screenshot_20210321-195856.png >
+03:02:38 <Thatcher[m]> Is this the correct screen for the launcher permission?
+04:35:52 <timetravelingman> No
+05:04:31 <GrapheneOS-Teleg> <D​4v1dH> It is only notification access
+05:10:27 <Thatcher[m]> I can't find the launcher permission. I guess I am dumb afterall
+05:11:56 <Thatcher[m]> Followed Sphinx and strcat directions and still fail to find it
+05:19:21 * Thatcher[m] uploaded an image: (82KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/mZZMScBuFjrpCTbwJVtpdMNW/Screenshot_20210321-221812.png >
+05:49:12 <dar_gomml[m]> anyone had the issue, that charging a pixel 3a only was possible when turned off beforehand? it appeared like a week ago and disappeared with the latest update again. however mass storage and other devices where recognized correctly all time and usabl. (of course i tried with multiple cables/chargers/powerbanks)
+06:03:24 <pako> What is the auditor app?
+06:03:46 <pako> Grapheneos is compatible for xiaomi mi 9?
+06:03:52 <rny> no
+06:04:06 <rny> pako: https://attestation.app/tutorial
+06:04:15 <rny> https://attestation.app/about
+06:04:49 <sphinx[m]> pako: https://grapheneos.org/faq#supported-devices
+06:06:37 <pako> But the trial version could not be installed on xiaomi mi 9 either, right? moment only in pixel?
+06:07:15 <rny> what trial version?
+06:07:22 <rny> pako: we have no helpdesk either
+06:07:23 <rny> :(
+06:07:37 <rny> and of course no moneyback guarantee
+06:07:41 <rny> :P
+06:08:09 <pako> If the police or a person tries to extract data from the phone without unlocking, would it be impossible?
+06:08:30 <rny> it'd be really difficult 🙄
+06:08:40 <pako> Thanks bro
+06:09:25 <rny> really difficult would be an understatement.
+06:10:18 <battlepad[m]> <pako "If the police or a person tries "> Ok to clarify: it would be difficult but no impossible
+06:10:25 <battlepad[m]> not* impossible
+06:36:04 <somenerd[m]> > and of course no moneyback guarantee
+06:36:04 <somenerd[m]> Don't think that GrapheneOS charges money lol
+06:38:54 <GrapheneOS-Teleg> <K​ileXt> Attestation is there to verify that your graphene os install hasn't been tampered. Different device can do this verification. I dont think Graphene will ever run on xiaomi due to hardware requirements, custom verifiedboot support and so on
+06:39:56 <sphinx[m]> they left
+06:40:57 <HarveyPhil85> How long did it take from the release of the Pixel 4a to a launched working version of GrapheneOS for it
+06:41:47 <HarveyPhil85> The question is because I'm looking to get the next Pixel phone Google launches, Pixel 5A (obviously not confirmed but yeah)
+06:43:31 <HarveyPhil85> Not sure where to find the release date of the first build of GrapheneOS for Pixel 4? Just the date really.
+06:50:36 <nscnt[m]> Why do you that there is a correlation? It's not like a chemical reaction that finishes x months after a new device is released
+06:52:05 <somenerd[m]> it really depends on maintainers
+06:52:24 <futurenewsplz[m]> When I use my gps and youtube app they work fine for the first 10-15 minutes. During those 10-15 minutes I'll let the phone idle and when I return the apps they're unresponsive/frozen. They both were working a month ago but started having this shared problem back in late January early February so I think it might OS-related. Has anyone had a similar situation(s)?
+06:52:29 <GrapheneOS-Teleg> <K​ileXt> For the pixel 5 it took them 4 month
+06:53:24 <DHFuchsiaOSwhen> <Thatcher[m] "Screenshot_20210321-195856.png"> This is it iirc
+06:54:08 <HarveyPhil85> Ok interesting. So it can take 6-ish months or maybe longer to develop a version of Graphene for a new Pixel 5. I understand
+06:54:53 <somenerd[m]> I mean, if no maintainer steps up, there may not even be a version of Graphene
+06:55:05 <DHFuchsiaOSwhen> <dar_gomml[m] "anyone had the issue, that charg"> Nah
+06:55:15 <StevenDrozd> I was having some issues with the new update so I tried to sideload a fresh installation. Now it says warning previous installation has failed, and I’m getting errors when I try to sideload saying footer is wrong and signature verification failed. What should I do now?
+06:56:48 <StevenDrozd> I’m scared I’ll brick it if I reboot
+07:06:36 <KONCRETE[m]> I didn't know how much of a Gold Mine this chat is until I went to the Techlore Telegram group..
+07:11:12 <KONCRETE[m]> They are speaking on Protonmail, Brave, Whatsapp, Bitcoin and its supposed to be a "Privacy Channel"
+07:11:25 <KONCRETE[m]> Of course I'm not the Smartest but damn
+07:11:59 <kamesjitt616[m]> Different levels of privacy for different levels of threat models. No gatekeeping
+07:50:40 <Nikolai> What is the easiest way to reflash graphene once it's already on the phone?
+07:50:56 <rny> reflash is a clean install
+07:51:05 <Nikolai> Yes
+07:51:17 <rny> follow the web install steps
+07:51:37 <Nikolai> Ok
+07:56:33 * battlepad[m] uploaded an image: (424KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/atHWKrYkRIrLcPlbPZNOdYAf/Brave%20bottom%20toolbar.jpg >
+07:56:41 <battlepad[m]> Hey lads, is it possible to enable bottom toolbar in vanadium?
+07:56:49 <battlepad[m]> just like how brave has done it
+07:57:13 <battlepad[m]> due to my rather weird hand size, i just prefer to keep it below for ergonomics
+07:57:38 <whiskey86> No, i dont think so :/
+07:57:40 <battlepad[m]> iirc it was removed from upstream chromium around july 2020 with the #duet flag
+07:57:56 <battlepad[m]> rip
+07:59:04 <whiskey86> I have question too: Is it possible for you to lower the vibration Strength? On my phone there are only options to turn it on or off.
+08:09:48 <KONCRETE[m]> <battlepad[m] "Hey lads, is it possible to enab"> Its best to not modify anything in Vanadoium
+08:09:53 <KONCRETE[m]> And leave everything on Default
+08:10:26 <KONCRETE[m]> * Its best to not modify anything in Vanadium
+08:11:01 <Thatcher[m]> I modify everything in Vanadium
+08:11:13 <KONCRETE[m]> Well you shouldn't
+08:11:18 <Thatcher[m]> I set Site Settings to block everything
+08:11:34 <KONCRETE[m]> You are unique and stand out
+08:11:48 <battlepad[m]> rip, how can i "factory reset" vanadium?
+08:11:51 <Thatcher[m]> <KONCRETE[m] "You are unique and stand out"> Thanks. I enjoy compliments
+08:11:56 <battlepad[m]> I enabled a few other chrome flags like tab switcher and stuff
+08:14:11 <battlepad[m]> also i am just curious, why is "do not track" on by default in vanadium?
+08:14:19 <KONCRETE[m]> TheJollyRodger spoke on this before but you will need to find it
+08:14:22 <battlepad[m]> in stock google chrome its disabled by default
+08:14:27 <KONCRETE[m]> Everything should be left on default
+08:14:38 <KONCRETE[m]> That way everyone's fingerprint matches
+08:14:57 <battlepad[m]> ah well, ill just leave it alone then
+08:15:34 <KONCRETE[m]> Well everyone who has the same device model as you and leaves vanadium on default will have the same fingerprint
+08:15:41 <KONCRETE[m]> And the same applies to bromite
+08:15:51 <KONCRETE[m]> Everything should be left on default
+08:16:17 <Thatcher[m]> I don't care about fingerprinting all that much. Custom site settings and content blocking = pleasant web experience
+08:17:10 <battlepad[m]> not really recommended but i guess personal preference man
+08:17:28 <battlepad[m]> usability depends on the individual
+08:17:38 <Thatcher[m]> Like I said, I don't give a flying fuck about fingerprinting
+08:17:51 <KONCRETE[m]> You should give a fuck
+08:18:02 <Thatcher[m]> I will start by blocking you
+08:18:06 <KONCRETE[m]> But anyways it up to you
+08:18:11 <KONCRETE[m]> Block me bitch
+08:18:14 <battlepad[m]> if he wants to get fingerprinted let him lol
+08:18:18 <KONCRETE[m]> Idgf
+08:18:38 <KONCRETE[m]> Even the Devs agree to leave everything on default
+08:19:00 <KONCRETE[m]> Jolly advises from using Brave
+08:19:11 <whiskey0111[m]> Is it possible for you to lower the vibration Strength? On my phone there are only options to turn it on or off.
+08:20:12 <battlepad[m]> <whiskey0111[m] "Is it possible for you to lower "> I dont think that is possible
+08:20:23 <battlepad[m]> sadly
+08:20:30 <KONCRETE[m]> Madaidan: You can't just "randomize your fingerprint". That's not how it works. Brave randomizes some specific information that can be used for fingerprinting.
+08:20:30 <KONCRETE[m]> TheJollyRoger: Brave does a lot of extremely shady things with ad injection, has been extremely contemptuous toward implementing actual secure design decisions when our developers have reached out to them, and lags behind significantly in patches from upstream. They're more for frills and marketing and such than actual security, but this is enough to get most people convinced that
+08:20:53 <whiskey0111[m]> ok because one of the devs told me on Reddit that it should be possible :/
+08:21:01 <whiskey0111[m]> Thanks for the help anyway
+08:21:30 <battlepad[m]> Wholeheartedly agree KONCRETE thanks for quoting those
+08:22:43 <battlepad[m]>  * not really recommended but i guess personal preference man
+08:22:43 <battlepad[m]> Edit: the moron that gave a thumbs down might as well use stock chrome instead
+08:38:08 <doobry[m]> strcat: Thanks a lot for adding the microphone/camera indicators with latest release ❤️ That's super helpful to warn about spying apps that silently try to listen!
+08:39:01 <somenerd[m]> yeah, believe that it is enabled by default now(was already included in Android 12)
+08:39:11 <doobry[m]> I'm also excited to see that you lay the groundwork for text-to-speach support in GrapheneOS \o/
+08:47:46 <GrapheneOS-Teleg> <K​ileXt> I don't understand this criticism against protonmail, I see it popping up many times but I don't see much ground to it.
+08:54:50 <Eddy[m]> If u sign up to proton via tor, the signup actually goes thru the clearnet for example
+08:58:19 <GrapheneOS-Teleg> Ophelià (@o​pheliadole) has joined the Telegram Group!
+09:24:18 <doobry[m]> <GrapheneOS-Teleg "<KileXt> I don't understand this"> Protonmail allegedly cooperates with law enforcment.
+09:25:55 <sphinx[m]> #grapheneos-offtopic:matrix.org  / #grapheneos-offtopic
+10:07:12 <usernumber33[m]> <doobry[m] "Protonmail allegedly cooperates "> They will cooperate with any legal court order from a swiss court, their jurisdiction. Like any legal company would do.
+10:42:08 <GrapheneOS-Teleg> <K​ileXt> Yes, they are completely honest about it. You still need to be accused of something though.
+10:43:11 <GrapheneOS-Teleg> <K​ileXt> Sry
+11:12:50 <stubbornant[m]> Hello, if an app keeps crashing when I open it, aside from deleting storage, force stop uninstall and reinstall. What can I do? The same app worked before and it works on lineage
+11:17:45 <spudger> Would anyone tell me what error undefined usually indicates on the web installer?
+11:47:23 <Real[m]> Looks like I was banned for a while
+11:48:29 <GrapheneOS-Teleg> <K​ileXt> Does the app rely on google services ? Does it has the permissions it needs ?
+11:57:58 <philnthropic[m]> <Eddy[m] "If u sign up to proton via tor, "> Link supporting this contention?
+12:01:45 <philnthropic[m]> <usernumber33[m] "They will cooperate with any leg"> Signal also cooperates but since the info it captures is of little use to LE its effect is to nullify this cooperation.
+12:02:57 <philnthropic[m]> The same is true of so-called Cypherpunk VPNs like CryptoHippie.
+12:09:15 <stubbornant[m]> <GrapheneOS-Teleg "<KileXt> Does the app rely on go"> For notifications. Until yesterday it was working
+12:14:07 <tersculpgradhind> For a long time I wanted to try something new for you URL http://v.ht/2spiC0
+12:23:01 <snovak[m]> Hi Everyone.  I'm trying to flash a Pixel 4.  Anyone have similar issues?
+12:23:15 * snovak[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/sqcETdtPsYDLPhpJOJlZqHXK/message.txt >
+12:27:04 <spudger> I have gotten all the way to ./flash-all.sh but it says waiting for device.
+12:35:12 <snovak[m]> I think the <waiting for device> dialog means you're phone isn't in fastboot, or not connected via USB.
+12:44:41 <GrapheneOS-Teleg> <K​ileXt> Yesterday there was a graphene update thats probably it
+12:44:59 <GrapheneOS-Teleg> <K​ileXt> What app is it ? Unless you would rather not
+12:46:54 <dontdisturbme[m]> Anyone on P4XL or other Pixels experiencing hardlocks after the recent GOS update? No new app updates or new apps installed in-between the previous and latest update
+13:17:33 <bypassbobby[m]> Hello people how do I get graphene to detect a USB drive with the adapter?
+13:24:14 <dan-is-a-bloody-> hi guys
+13:24:30 <dan-is-a-bloody-> does anyone know of a contactless payment provider that works on our grapheneos phones?
+13:24:54 <dan-is-a-bloody-> by contactless payments i mean NFC
+13:25:17 <dan-is-a-bloody-> like google pay, where u link ur card and then u dont need to carry it around with u everywhere u go
+13:28:53 <bypassbobby[m]> It won't switch to data transfer
+13:34:42 <m2tu[m]> bypassbobby: do u get request on screen to choose file transfer ?
+13:35:14 <m2tu[m]> when u insert usb it shall popupp a message charnign only , which u change to file transfer
+13:35:21 <bypassbobby[m]> <m2tu[m] "bypassbobby: do u get request on"> Yes
+13:35:28 <bypassbobby[m]> It won't change to file transfer
+13:36:14 <m2tu[m]> did u recently had usb debugging on it ?
+13:36:26 <m2tu[m]> if so just try restart the phone
+13:36:29 <bypassbobby[m]> No not for a year maybe
+13:36:55 <m2tu[m]> hmm. than it seems something is in the cable or ur computer drivers
+13:37:53 <bypassbobby[m]> What format is best?
+13:38:09 <bypassbobby[m]> Maybe fresh reformat may help
+13:38:17 <m2tu[m]> usb dirve.. ntfs or fat32
+13:38:32 <m2tu[m]> if ext format it will promt u to format the drive
+13:39:06 <m2tu[m]> there is also and option in security settings USB pherials
+13:39:28 <m2tu[m]> maby u have set to not allow...
+13:40:06 <bypassbobby[m]> I had deny selected that must be the problem
+13:40:24 <m2tu[m]> yea that can be the prob
+13:40:54 <strcat> m2tu[m]: bypassbobby[m]: the file transfer mode is for giving a computer access to the phone
+13:41:03 <strcat> not using a USB peripheral like a flash drive
+13:41:06 <strcat> it's totally unrelated to that
+13:41:35 <strcat> bypassbobby[m]: you just connect the drive when the phone is locked and it works, GrapheneOS prevents attaching a USB peripheral when the device is locked by default (there's a configuration option for it)
+13:41:51 <strcat> giving a computer access to the phone is a different thing entirely from using a USB peripheral
+13:42:02 <strcat> in one case the phone is the peripheral, in the other it is using a peripheral
+13:42:05 <strcat> different things
+14:08:03 <bypassbobby[m]> I changed it to allow new peripherals and reformatted flash drive and it worked
+14:08:32 <strcat[m]> bypassbobby: allowing new peripherals while unlocked will work fine (the default)
+14:08:38 <strcat[m]> you just have to connect it when the device is unlocked already
+14:21:15 <interesting[m]> graphene os generates new mac address each time I connect to wi fi? I was trying to set up mac filtering on my home router, it means I'd have to whitelist graphene mac address each time?
+14:25:11 <strcat> interesting[m]: MAC filtering is useless security theater, don't do it
+14:25:27 <strcat> and yes, by default, it uses a new random MAC address each time, as everything should
+14:25:46 <strcat> AOSP / stock OS use a new random MAC for a new network and then keep using it until the DHCP lease expires
+14:26:02 <strcat> the normal configuration is still available, with 3 options instead of the standard 2
+14:26:11 <strcat> interesting[m]: https://grapheneos.org/usage#wifi-privacy
+14:26:31 <strcat> anyone can see which MACs are being used by connected devices and can just use one of those...
+14:26:49 <strcat> if you want authentication with a key, do authentication with a key
+14:26:56 <strcat> don't do security theater stuff harming you more than it helps
+14:37:41 <interesting[m]> strcat: thanks
+14:41:47 <zvl12[m]> In the new release I can't find how to do the following :
+14:41:57 <zvl12[m]>  * In the new release I can't find how to do the following : set GrapheneOS launcher as a default notification listener on fresh installs so that the default enabled notification integration is permitted by default like the stock OS (existing users still need to manually enable the permission for the built-in launcher)
+14:45:34 <strcat[m]> either go into Settings -> Apps & notifications -> Special access -> Notification access
+14:45:48 <strcat[m]> or use the shortcut via the launcher settings
+14:45:55 <strcat[m]> long press home screen -> Home settings
+14:53:30 <zvl12[m]> perfect, thanks, just did it. What is the difference if its stays "off" ?
+14:54:38 <ulmirdin[m]> I think it enables notification dots
+14:55:38 <zvl12[m]> i see it also needs to be done on every profile, and not only the admin
+14:56:01 <strcat[m]> it's optional
+14:56:16 <strcat[m]> it's needed for the launcher notification integration where it shows notification dots and the long press menu has a list of the notifications
+14:56:34 <strcat[m]> it's not a particularly important feature but it's meant to work by default
+14:56:42 <strcat[m]> we just fixed it so that on a fresh install, it works out of the box, like the stock OS
+15:25:06 <snovak[m]> <m2tu[m] "did u recently had usb debugging"> I think that was it!
+15:27:17 <alex-resist> Hi, is this the place where to download factory images from: https://developers.google.com/android/images#sargo ? Looks like it
+15:31:55 <damienrg[m]> Sharing phone calls and sms is a feature added by GOS or is in it AOSP?
+15:32:26 <damienrg[m]>  * Sharing phone calls and sms between users is a feature added by GOS or is in it AOSP?
+15:36:36 <strcat[m]> AOSP
+15:58:06 <alex-resist> Ok, successfully flashed stock on a 3a. The fact that this is not only supported by Google, but actually fairly straight-forward, is mind boggling
+15:58:20 <Maxattax> Is there a decent workaround for notifications? I've got apps like Slack for work, and I get that you need Google Services to make that notifications work, but if I open the app manually it refreshes the notifications. Can I do something where my phone opens up the apps while the screen is off to check for notifications periodically?
+16:14:24 <joeth[m]> <Maxattax "Is there a decent workaround for"> some apps work with microg (even without root/patches) for push notifications, although idk if that's recommended by grapheneos
+16:15:13 <strcat[m]> joeth: which apps? that doesn't sound accurate...
+16:15:22 <strcat[m]> notifications work fine without Play services
+16:15:37 <strcat[m]> many apps use FCM to wake themselves in the background when data is available from their server, etc.
+16:15:48 <strcat[m]> they do not need FCM to do that, and it works fine without it if they aren't implemented with it
+16:16:18 <strcat[m]> apps using FCM won't work on GrapheneOS because they use it via Play services and the library authenticates the Play services implementation to preserve the security model
+16:16:37 <strcat[m]> installing microG will not provide a working implementation of it for multiple reasons
+16:17:04 <strcat[m]> there's a big difference between notifications not working (they work fine) and apps not implementing an alternative way to wake themselves in the background via push
+16:17:10 <joeth[m]> <strcat[m] "they do not *need* FCM to do tha"> ah okay, i must be wrong. I was thinking of discord, whatsapp and duolingo
+16:17:37 <strcat[m]> WhatsApp certainly doesn't need FCM to do push, it has a toggle to keep open a background connection for push itself
+16:17:51 <strcat[m]> if you enable the toggle it has push without FCM, without needing to resort to polling
+16:18:05 <strcat[m]> need to give it a battery optimization exception too (don't think it asks for one itself)
+16:18:36 <strcat[m]> I suggest reporting issues to the app developers and not making the incorrect assumption that it won't work without testing and checking if the app has support for it
+16:18:41 <strcat[m]> WhatsApp has non-FCM push
+16:19:01 <strcat[m]> if they don't hear from users that people want push without FCM, they won't implement it
+16:19:13 <zzxx123[m]> Do yall know of any open source Background-video app recorder?
+16:19:14 <joeth[m]> but what about duolingo and discord? this was in work profile with Island btw
+16:19:19 <strcat[m]> so, if you aren't contacting them, it's on you that they don't implement it, because they don't think their users care
+16:19:32 <strcat[m]> they have to hear from many users that it's wanted
+16:19:36 <strcat[m]> and then it will be on their radar
+16:19:52 <strcat[m]> and many apps are willing to add a few hundred lines of code to their app/server for it
+16:19:54 <zzxx123[m]> <zzxx123[m] "Do yall know of any open source "> help/
+16:20:03 <zzxx123[m]> > <@zzxx123:matrix.org> Do yall know of any open source Background-video app recorder?
+16:20:03 <zzxx123[m]>  * help/
+16:20:07 <zzxx123[m]>  * help?
+16:26:38 <Maxattax> strcat[m]: Slack, Rocket.Chat, GroupMe, Discord, Amazon... Wire is supposed to work but they have a bug with backgrounding right now. I tried disabling battery optimization on all these apps, only tested Slack so far without success
+16:27:04 <strcat> disabling battery optimization won't accomplish anything unless the app knows how to take advantage of it
+16:27:10 <strcat> that's expected
+16:27:28 <strcat> they have to actually be doing either push or polling for that to accomplish something
+16:27:38 <strcat> and they have to make a correct implementation of course, using appropriate APIs
+16:27:45 <zzxx123[m]> 2room
+16:27:47 <zzxx123[m]> @room
+16:28:01 <strcat> non-moderators can't ping room and that's only meant for urgent stuff
+16:28:15 <KONCRETE[m]> Ping?
+16:28:35 <Maxattax> I'm not saying anything is broken with Graphene, I just want to find a way to make my push notifications useable without GSM
+16:28:56 <zzxx123[m]> Maxattax
+16:29:17 <strcat[m]> Maxattax: the app has to implement push (or polling) rather than only using FCM
+16:29:20 <Maxattax> I receive notifications if I sit with the app open and screen on, I would expect there to be a way to use the same connection to deliver me the notifications I'm seeking in some manner
+16:29:38 <strcat[m]> Maxattax: yes, so ask the app developers to support doing it in the background
+16:29:40 * zzxx123[m] uploaded an image: (8KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/yKKkLaOgqtUdUSvCkjNxgQUn/XRchD7E.jpg >
+16:29:43 <strcat[m]> Maxattax: they already do it in the foreground
+16:29:44 <zzxx123[m]> Maxattax: mr cat
+16:29:54 <zzxx123[m]> adress as well?
+16:30:02 <zzxx123[m]> Do you want it?
+16:30:05 <strcat[m]> ah zzxx123_ is just the troll coming here regularly
+16:30:12 <zzxx123[m]> "address"
+16:30:31 <Maxattax> but can't I find some way to just automatically open the app periodically and perform the existing check? Getting developers on board for 8 different apps is not a feasible solution
+16:31:16 <strcat[m]> Maxattax: the apps already implement it
+16:31:21 <strcat[m]> they just have to support doing it in the background
+16:31:30 <strcat[m]> instead of only relying on FCM to wake their app in the background
+16:31:42 <strcat[m]> literally all they have to do is keep open their usual push connection they use in the foreground in the background too
+16:31:47 <strcat[m]> that's what supporting this requires
+16:31:58 <strcat[m]> they already do push themselves in the foreground in nearly all cases
+16:32:24 <strcat[m]> they know how to maintain the connection, and do push through it, since they do it in the foreground
+16:32:28 <KONCRETE[m]> Is that guy is actually you?
+16:32:28 <strcat[m]> Maxattax: please raise it with the app developers
+16:32:44 <KONCRETE[m]> Wtf
+16:33:23 <strcat[m]> KONCRETE: no it's a random troll
+16:33:34 <strcat[m]> moderation stuff is off-topic for the channel
+16:33:45 <strcat[m]> please don't interact with trolls / people raiding the channel
+16:33:52 <strcat[m]> and don't discuss them
+16:39:57 <strcat[m]> KONCRETE: I think it's the same person associated with Copperhead who was previously impersonating people
+16:40:29 <strcat[m]> that wasn't zzxx123
+16:40:33 <strcat[m]> zzxx123 is someone on IRC
+16:40:38 <strcat[m]> that was someone impersonating them on Matrix
+16:41:15 <strcat[m]> unfortunate that the channel is being regularly raided by trolls including trying to make people in the community look bad, it's just a random member of the community, not someone involved in the project
+16:41:21 <strcat[m]> very strange and desperate stuff
+16:41:34 <strcat[m]> I don't know what they were trying to do
+16:41:41 <strcat[m]> impersonate someone and try to make them look annoying? very weird
+16:42:32 <snovak[m]> What do you guys use for navigation, like Maps?   I was thinking Waze, but looking around for apks for it, I don't see anything official.  I see APKPure.com, but not sure I dig it.
+16:46:54 <thestranger69> Hi, i am using a pixel 4 with grapheneos, but today 2 times when i restarted my phone, fastboot mode came instead of normal grapheneos. I could then press start and enter grapheneos, but it is strange never had this before
+16:47:19 <thestranger69> Is my phone maybe hacked? Also my outlook mail cannot delete anything and is throwing me out and crashing
+16:47:51 <strcat> thestranger69: you don't have a reason to start thinking your phone is compromised
+16:48:09 <strcat> thestranger69: it sounds like a hardware failure
+16:48:14 <strcat> storage I/O errors
+16:48:49 <thestranger69> Well i dont know here in my counrty the government is spying on everyone
+16:49:03 <thestranger69> How can i tell if it is comprimised?
+16:49:03 <strcat[m]> it's clearly nothing to do with the phone being compromised
+16:49:08 <strcat[m]> it doesn't make sense
+16:49:19 <thestranger69> When i scan auditor it is still green
+16:49:40 <strcat[m]> thestranger69: there is no reason to start thinking your phone is compromised
+16:50:24 <strcat[m]> you're likely getting I/O errors causing read failures from storage
+16:50:33 <thestranger69> Oke hardware failure you think? Do i need a new phone ?
+16:50:51 <strcat[m]> that would explain failing to boot and getting dropped into fastboot mode (probably not that?) or recovery (probably this is what happened)
+16:51:15 <thestranger69> I could just press the side button and startuo graphene
+16:51:19 <hypokeimenon[m]> snovak: #grapheneos-offtopic:matrix.org
+16:51:24 <thestranger69> And then it started normal
+16:51:54 <thestranger69> But is there a way to tell that the phone is comprimesed? A way to check that?
+16:52:35 <strcat[m]> what you're talking about has no relation to a potential compromise
+16:52:39 <strcat[m]> it isn't at all an indicator of that
+16:52:44 <strcat[m]> it isn't the kind of thing that would happen
+16:53:21 <strcat[m]> thestranger69: you're having a hardware failure resulting in read/write failures
+16:53:37 <thestranger69> Sorry for aksing too much but what would happen if it was comorimesed, so i know if it ever does
+16:53:43 <strcat[m]> thestranger69: ~1% of computer hardware of pretty much any kind can be expected to fail
+16:53:55 <strcat[m]> thestranger69: there isn't an answer to that and this isn't relevant to your issue
+16:54:05 <thestranger69> Okeyy thank you
+17:05:01 <princemachiavell> Does anyone have issues with the bottom microphone? During a phone call or direct mic record I can only get the microphone to register by tapping the phone. It's not picking up other sounds at all. Could be a hardware issue on my end but thought I'd check.
+17:05:53 <strcat[m]> hardware issue if you do
+17:06:15 <strcat[m]> sounds like a loose connection or damage from dropping / water damage (on the non water resistant phones particularly)
+17:06:41 <strcat[m]> microphones and cameras are some of the things that tend to fail after a phone has been dropped
+17:16:24 <Zadok0552> Just got Andriod 11 update autoinstalled from Google  Was going to install grapheneos but now don’t see the DEV option in settings for OEM unlock. Anyone have an idea what I can do? Pixel 4a
+17:16:58 <GrapheneOS-Teleg> <a​lpha0bit> For some reason I'm not able to use a USB device or connect to my phone to with my computer because it will either get charged by my computer or it charges the USB-Stick
+17:17:06 <strcat[m]> Zadok0552:  please follow our official guide
+17:17:21 <GrapheneOS-Teleg> <a​lpha0bit> Is there anything to fix this?
+17:17:46 <strcat[m]> @alpha0bit plugging in the phone to a computer and using it as a USB peripheral for the computer is a completely different thing from using a USB peripheral with the phone
+17:17:55 <strcat[m]> it doesn't sound like anything is broken
+17:18:18 <strcat[m]> when you plug in the phone to a computer, the only thing it does by default is charging the phone
+17:18:42 <strcat[m]> you have to manually enable more than that via the notification if you want to use the phone as a USB peripheral such as making the profile's home directory available to the computer
+17:18:48 <strcat[m]> 0 differences from AOSP / stock OS for that
+17:19:26 <strcat[m]> for USB peripherals, there's 1 minor difference: GrapheneOS disallows connecting them when the screen is locked by default (it's a setting, and the default is meant to be very usable, you just have to connect them when unlocked, or they have to be there at boot, since that doesn't compromise the threat model it uses)
+17:22:10 <gamrix> Thanks!
+17:22:19 <Zadok0552> @strcat[m] The offical guide is open and the instructions for OEM unlocking do not work. There is no developer option As in “Settings ➔ System ➔ Advanced ➔ Developer options and toggle on the 'Enable OEM unlocking' setting” — There is no dev option except for the camera settings.
+17:26:13 <entry1[m]> <Zadok0552 "@strcat[m] The offical guide is "> You did enable developer options correct? It is not accessible without getting access by continuously tapping the build number. If you did that, the option will be available in settings for OEM unlocking. It may be greyed out if you are not connected to WiFi or have a carrier locked variant of the phone.
+17:33:54 <strcat[m]> Zadok0552: it tells you how to enable developer options
+17:34:11 <strcat[m]> Zadok0552: https://grapheneos.org/install/web#enabling-oem-unlocking
+17:34:13 <strcat[m]> previous paragraph
+17:34:18 <strcat[m]> > Enable the developer options menu by going to Settings ➔ About phone and repeatedly pressing the build number menu entry until developer mode is enabled.
+17:34:25 <strcat[m]> have you done that? it will tell you when you've done it
+17:34:38 <GrapheneOS-Teleg> <a​lpha0bit> It doesn't even give me the option to switch between File Transfer or just Charging?
+17:35:25 <Zadok0552> strcat[m] Thanks. i had forgotten the build thing
+17:36:05 <strcat[m]> @alpha0bit: as stated above, connecting to a computer and connecting a USB peripheral to the phone are different things
+17:36:17 <strcat[m]> you'll need to be specific about which one you're doing and how you have it connected
+17:36:30 <strcat[m]> use the USB cable which comes with the device or a *high quality8 USB-A to USB-C cable if you must
+17:36:34 <strcat[m]>  * use the USB cable which comes with the device or a high quality USB-A to USB-C cable if you must
+17:37:10 <Zadok0552> Geez… It’s like a never rooted a phone before lol
+17:38:11 <strcat[m]> installing GrapheneOS doesn't involve 'rooting'
+17:38:33 <GrapheneOS-Teleg> <a​lpha0bit> Well in this case I try to transfer files to my USB Stick that was given in the package when I bought the Pixel
+17:38:52 <GrapheneOS-Teleg> <a​lpha0bit> I mean the adapter
+17:39:01 <GrapheneOS-Teleg> <a​lpha0bit> That came with the package
+17:40:54 <strcat[m]> so, if you're trying to connect a USB flash drive to the phone, that is a totally different thing from connecting to a computer
+17:41:02 <strcat[m]> there's no 'file transfer' mode to enable, it's a totally different thing
+17:41:08 <strcat[m]> you just open up the system file manager and move the files over
+17:41:19 <Zadok0552> Oh. nor rooting… It’s just you have to unlock the bootloader to do that too.
+17:41:20 <strcat[m]> read the previous response explaining that USB peripherals cannot be connected while locked by default
+17:44:30 <GrapheneOS-Teleg> <a​lpha0bit> Yeah I know that's a different thing I just meant by that, that both ways don't work (Can't transfer files to my USB or Transfer the files to my Computer with my Computer)
+17:45:00 <strcat[m]> they're different things, explained in detail above what needs to be done for both
+17:45:03 <strcat[m]> works well either way
+17:45:04 <GrapheneOS-Teleg> a​lpha0bit shared a photo on Telegram with caption: 'But for example it doesn't show any USB here'
+17:45:17 <strcat[m]> can't see pictures across the bridge
+17:45:30 <strcat[m]> if you plug in the USB flash drive, while the device is unlocked, it will show up in the file manager
+17:45:42 <strcat[m]> if you plug the phone into a computer, it will show a notification which can be used to enable file transfer
+17:45:44 <strcat[m]> different things
+17:47:18 <GrapheneOS-Teleg> <a​lpha0bit> Yeah the Problem is for me that it doesn't it just says in the Notification: "Charging connected device via USB"
+17:47:32 <strcat[m]> it's expected for it to say that
+17:47:36 <strcat[m]> part of it working
+17:47:45 <strcat[m]> when you plug in a USB peripheral to the phone it's responsible for powering it
+17:47:49 <strcat[m]> it considers that 'charging'
+17:48:00 <strcat[m]> it would say that for a mouse too
+17:48:03 <zvl12[m]> Someone solved the mystery why SMS messsages doesnt ring in a secondary profile (but only vibrates) ?
+17:48:19 <strcat[m]> as far as the phone knows, the peripheral has a battery being charged, by 'charged' it means it is the device supplying power rather than vice versa or not at all
+17:48:32 <strcat[m]> read it as 'supplying power' instead of 'charging' if that makes it clearer
+17:50:35 <GrapheneOS-Teleg> <a​lpha0bit> Oh okay, thanks
+17:55:47 <GrapheneOS-Teleg> <a​lpha0bit> But yeah the file manager still doesn't show the USB-Stick
+17:56:27 <strcat[m]> are you using the connector which came with the phone?
+17:56:43 <strcat[m]> and it is a proper certified OTG compatible USB device? should work regardless unless it's really broken though
+17:56:55 <GrapheneOS-Teleg> <a​lpha0bit> Yeah
+17:57:47 <GrapheneOS-Teleg> <a​lpha0bit> I've tried 2 USB Sticks from 2 different brands both won't work (If tried one before and it worked then)
+17:58:03 <GrapheneOS-Teleg> <a​lpha0bit> But now it won't?
+18:02:08 <strcat[m]> make sure to connect when the screen is unlocked, and check the USB accessories setting to make sure you didn'
+18:02:14 <strcat[m]>  * make sure to connect when the screen is unlocked, and check the USB accessories setting to make sure you didn't disable USB peripherals completely
+18:02:24 <strcat[m]> in Settings -> Securithy
+18:02:28 <strcat[m]>  * in Settings -> Security
+18:02:37 <strcat[m]> by default devices are permitted when the screen is unlocked, not when locked
+18:09:35 <damienrg[m]> <zvl12[m] "Someone solved the mystery why S"> If you find the issue, please PM me!
+18:13:16 <strcat[m]> there's an open issue on the tracker, it's an upstream AOSP quirk
+18:13:52 <damienrg[m]> <strcat[m] "there's an open issue on the tra"> Upstream or in GOS issue tracker?
+18:14:21 <strcat[m]> GrapheneOS
+18:14:30 <strcat[m]> which has various upstream issues filed
+18:14:43 <strcat[m]> it's most of what people report there
+18:22:05 <GrapheneOS-Teleg> <!Linus> Anyone else got signal running constantly?
+18:22:54 <strcat[m]> it's supposed to
+18:22:55 <GrapheneOS-Teleg> <!Linus> Is it forcing itself to be on at all times to have push notifications working?
+18:23:04 <strcat[m]> yes, it keeps open a connection
+18:23:15 <strcat[m]> it doesn't poll but rather uses push, with occasional pings to keep alive the connection
+18:23:20 <strcat[m]> it's far less optimized than it could be
+18:23:29 <strcat[m]> it doesn't try very hard to make the pings as infrequent as possible
+18:23:50 <GrapheneOS-Teleg> <!Linus> Meh
+18:23:51 <strcat[m]> anyways it's actual push, same implementation as what you get when the app is in the foreground
+18:23:53 <strcat[m]> same code
+18:24:36 <strcat[m]> it just keeps a foreground service running to continue keeping the server connection open in the background
+18:25:06 <strcat[m]> foreground service is not strictly required but is a really good idea to make sure the app keeps running to keep the connection open
+18:25:38 <strcat[m]> it's possible to do it with a while idle alarm without it, but sometimes the app will get killed and it won't respawn until the next alarm interval
+18:26:33 <strcat[m]> there's a very reliable / efficient way to do it, which is what FCM does, and other apps need a foreground service to match that properly
+18:29:18 <GrapheneOS-Teleg> <!Linus> FCM?
+18:30:06 <strcat> Firebase Cloud Messaging, the API apps use for push messages on the stock OS
+18:30:12 <strcat> part of Play services
+18:30:58 <strcat> apps can also implement the same thing themselves: keep open a connection, run a foreground service to stay alive, listen for network change events to deal with reconnecting, and occasionally ping the connection to make sure it didn't die + deal with stuff like CGNAT dropping idle connections against TCP spec
+18:31:34 <GrapheneOS-Teleg> <a​lpha0bit> I checked it already and tried the "Always" option which didn't help aswell
+18:32:38 <strcat> sounds like broken USB devices then
+18:34:16 <GrapheneOS-Teleg> <a​lpha0bit> I can use it without Problems on my Computer, format it, put files on it and so on
+18:34:25 <GrapheneOS-Teleg> <a​lpha0bit> It doesn't seem to be broken
+18:34:59 <GrapheneOS-Teleg> <!Linus> If I hide that notification, for examples make signals connection notification hidden/disabled; Will it still work
+18:38:17 <GrapheneOS-Teleg> <a​cegeorge> Anyone using White Sim??
+18:38:44 <GrapheneOS-Teleg> <a​lpha0bit> Probably another weird bug I got again while using GrapheneOS which can be solved by factory resetting my phone (I almost always get some type of bugs after some time while I used GrapheneOS for some reason (Something with the OS itself and not apps))
+18:53:36 <strcat> @a​lpha0bit seriously doubt it's a bug, and that sounds like a *you* problem not a GrapheneOS problem
+18:53:49 <strcat> suggest not messing with adb, not disabling system apps, not revoking internally used permissions, etc.
+18:54:38 <strcat> when you have a unique issue only happening for you, never for others, there's usually a reason for that
+18:55:03 <strcat> are those USB drives actually OTG compatible?
+18:55:13 <strcat> if not, you shouldn't really expect them to work
+18:55:20 <strcat> but nearly anything modern would be
+18:55:42 <nnm> https://www.kryptex.org/?ref=67f397d3
+18:56:20 <strcat> USB ecosystem being a mess is not a GrapheneOS issue
+19:00:58 * John111 https://www.kryptex.org/?ref=67f397d3
+19:28:43 <koppfika> I have a question and i dont know if im allowed to ask here but... i have pixel 3. i followed all steps in Web installer and everything worked just as the guide explains, i lock the bootloader after everything is complete without any error.  when i pres "start" after all complete it does not boot graphene os, only normal android. i tryed this 4
+19:28:44 <koppfika> times and same everythime.    i chck this video aswell, https://www.youtube.com/watch?v=gQkb0OAOXoc
+20:10:37 <skwisgaar[m]> @freenode_koppfika:matrix.org: I’m unable to help you with that installation issue, but do not follow that guide. You could very well end up bricking your device.
+20:10:59 <skwisgaar[m]> Nvm they left lol
+20:11:15 <skwisgaar[m]> That’s a shame
+20:14:18 <tgasdgasdhr45zd> Hey guys! Can you tell me the best way to get playstore functionality? MicroG or flash 3rd parity gapps like nikgapps? Thank you..
+20:14:47 <zzxx123_> strcat I'm a troll now? OK I'll leave
+20:15:24 <skwisgaar[m]> tgasdgasdhr45zd: You can’t install anything like that on graphene.
+20:15:30 <sphinx[m]> tgasdgasdhr45zd: You can use Aurora Store to download apps from Play Store.
+20:15:31 <zzxx123_> I don't know who the fuck is the zzxx123 on Matrix
+20:15:35 <skwisgaar[m]> zzxx123_: I think someone was impersonating you
+20:16:37 <fr488[m]> Nice chat
+20:17:41 <skwisgaar[m]> fr488: there are some scummy people who really hate this project.
+20:24:32 <jimmyneutrino[m]> any banks with apps that don't use safetynet? 🤔 tough question
+20:24:33 <tgasdgasdhr45zd> And many who love it and I do but sadly cannot live without my bought apps on playstore.. So is there a way cause GrapheneOS + gapps would be better than "anything else" + gapps right?
+20:24:57 <strcat[m]> zzxx123_: wasn't talking about you
+20:25:02 <strcat[m]> zzxx123_: someone stole your name, among other people
+20:25:17 <strcat[m]> zzxx123_: they've been harassing me with really stupid stuff and impersonating people
+20:25:24 <strcat[m]> it's a continuation of Copperhead's earlier raids on the channel
+20:25:33 <strcat[m]> those people are seriously screwed up
+20:26:00 <strcat[m]> I think it's quite possibility one of the same people from before especially considering that they're using the same impersonation tactic
+20:26:08 <strcat[m]> they abuse the Matrix display names
+20:26:33 <strcat[m]> since you can set your display name to anything and then Element distinguishes between 2 people with the same display name by showing (username@server) afterwards
+20:27:00 <strcat[m]> so what they do is set their name to someone else's with a fake (username@server) since Element doesn't distinguish between the trusted app UI for that and something someone set in their own display name
+20:27:15 <strcat[m]> I consider that a security vulnerability just as it is in other contexts where a UI is designed wrong and can be faked
+20:29:12 <strcat[m]> zzxx123_: someone on IRC left, the troll took their name, we banned them, then the person came back and we thought it was the troll (resolved that now)
+20:29:14 <strcat[m]> really annoying
+20:33:51 <visla[m]> It really is crazy and petty that they've been on this crusade to discredit an open source project for so long now. Just.. move on. There's a billion legislature causes to support and that's not one of them.
+20:33:56 <tgasdgasdhr45zd> Could this work with GrapheneOS (when rooted with magisk)?
+20:33:56 <tgasdgasdhr45zd> https://github.com/Magisk-Modules-Repo/microG_installer
+20:35:11 <visla[m]> * It really is crazy and petty that they've been on this crusade to discredit an open source project for so long now. Just.. move on. There's a billion legitamate causes to support and that's not one of them.
+20:35:32 <visla[m]> * It really is crazy and petty that they've been on this crusade to discredit an open source project for so long now. Just.. move on. There's a billion legitimate causes to support and that's not one of them.
+20:37:36 <GrapheneOS-Teleg> <a​lpha0bit> Then its not GrapheneOS anymore
+20:37:46 <skwisgaar[m]> tgasdgasdhr45zd: you can’t root GrapheneOS. https://grapheneos.org will probably answer many of your questions about the OS.
+20:48:02 <tgasdgasdhr45zd> skwisgaar[m] Sure? I'm thinking of patching the boot.img with magisk and then flash it back.. Also I read something about microg support from grapheneos but didn't understand..
+20:56:04 <ulmirdin[m]> By rooting and adding microg you significantly decrease the security of the device.
+20:56:31 <strcat> tgasdgasdhr45zd: there's no such thing as GrapheneOS with those things
+20:56:35 <strcat> it wouldn't be GrapheneOS
+20:56:54 <ulmirdin[m]> If most apps that you use don't work on Graphene—stick with stock.
+20:57:00 <strcat> if you replace the boot image with something else and totally destroy the security model across the OS, that's hardly anything like GrapheneOS
+20:57:23 <strcat> microG has significant security issues itself
+20:57:30 <strcat> it doesn't enforce security checks properly
+20:57:44 <GrapheneOS-Teleg> <a​cegeorge> guys in GrapheneOS
+20:58:00 <strcat> and then if you're going to totally wipe out a huge portion of the security model to use it... why are you interested in GrapheneOS at all then?
+20:58:08 <strcat> you'd be doing more damage than the improvements you get from GrapheneOS
+20:58:20 <GrapheneOS-Teleg> <a​cegeorge> the firewall on GrapheneOS can do: Automatic discovery of IMSI Catchers and rogue base stations,  Detection of attempts to track  ,user location via SS7 or silent SMS
+20:58:21 <GrapheneOS-Teleg> <a​cegeorge> ?
+20:59:36 <strcat> suggest reading the info in our FAQ
+21:00:00 <strcat> those aren't actual security features with any meaning, you're listing out fake security features in scam products
+21:00:07 <tgasdgasdhr45zd> Okay, understand.. So what is the point of using GrapheneOS when the things I want to secure (like my banking app) won't even work on it?
+21:00:19 <GrapheneOS-Teleg> <a​cegeorge> https://grapheneos.org/faq#cellular-tracking this u refering to?
+21:00:31 <strcat> yes please read that section
+21:00:40 <strcat> GrapheneOS won't include fake / non-working 'security' features
+21:00:49 <GrapheneOS-Teleg> <a​cegeorge> SS7 or silent sms is not security?
+21:00:51 <tgasdgasdhr45zd> I know, I should blame my bank for not providing a apk but which bank actually does?
+21:00:53 <strcat> also, LTE only mode is only there for attack surface reduction
+21:01:03 <strcat> @acegeorge: you're talking about fake security features
+21:01:07 <strcat> read the section
+21:01:18 <strcat> please read it fully and spend some time thinking about it
+21:01:27 <GrapheneOS-Teleg> <a​cegeorge> ok
+21:01:34 <GrapheneOS-Teleg> <a​cegeorge> reading as we talk now
+21:03:19 <strcat> a silent SMS is literally just an SMS with a flag set that says it's a no-op
+21:03:23 <strcat> i.e. no message content
+21:03:48 <strcat> it doesn't have privacy/security relevance in reality
+21:03:57 <strcat> and is little different from just receiving spam or anything else via SMS
+21:04:04 <strcat> SMS for LTE and beyond is simply data anyway...
+21:04:07 <strcat> as are calls
+21:04:41 <strcat> if you're using LTE only mode (which does not increase privacy or protect communications from interception in any meaningful way, not why it exists) then you only have data
+21:04:47 <GrapheneOS-Teleg> <a​cegeorge> "Receiving a silent SMS is not a good indicator of being targeted by your cell carrier, police or government because anyone on the cell network can send them including yourself. Cellular triangulation will happen regardless of whether or not SMS texts are being sent or received by the phone. Even if an SMS did serve a useful purpose for tracking, a silent SMS would be little different than receiving unsolicited spam. In f
+21:04:49 <strcat> calls and texts for LTE and above are data only
+21:04:56 <GrapheneOS-Teleg> <a​cegeorge> this is very generic and doesnt say what happens
+21:04:57 <strcat> I can't see your whole message
+21:05:00 <GrapheneOS-Teleg> <a​cegeorge> if u get targeted
+21:05:06 <strcat> again
+21:05:18 <strcat> a silent SMS is simply a normal SMS with a flag set that it has no content, etc. and doesn't need to be shown
+21:05:22 <strcat> anyone can send them, you can send them
+21:05:26 <strcat> it doesn't have a privacy impact
+21:05:38 <GrapheneOS-Teleg> <a​cegeorge> it reveals ur location
+21:05:41 <strcat> no
+21:05:53 <strcat> you're getting misinformation from charlatans
+21:06:03 <strcat> if you're connected to the cellular network, your location is known to the cellular network
+21:06:05 <GrapheneOS-Teleg> <a​cegeorge> Target phone should return its GPS coordinates and cell id and the estimated accuaracy.
+21:06:11 <strcat> no
+21:06:19 <strcat> not how things work
+21:06:27 <strcat> read the section and read what I wrote here
+21:06:36 <strcat> please don't spread misinformation
+21:06:55 <GrapheneOS-Teleg> <a​cegeorge> this is true yeah, so maybe a white sim is an added protection?
+21:07:03 <GrapheneOS-Teleg> <a​cegeorge> i dont spread, i ask !
+21:07:09 <strcat> if you're connected to the cellular network
+21:07:14 <strcat> it knows your IMEI and where you are
+21:07:25 <strcat> the only thing that stops that is using airplane mode (where you can still use wifi, etc.)
+21:07:30 <strcat> so, that's what we document
+21:07:37 <strcat> it's the reality of how cell phone networks work
+21:07:53 <strcat> using some random SIM gives you a different subscription, sure, but not a different IMEI which is per device
+21:08:10 <strcat> airplane mode is the only thing that stops your location being known to the cellular network
+21:08:14 <GrapheneOS-Teleg> <a​cegeorge> you cant hide your IMEI?
+21:08:21 <GrapheneOS-Teleg> <a​cegeorge> or fake it
+21:08:26 <strcat> you can't hide it, it's not supposed to be possible at all
+21:08:33 <strcat> and cellular radios are not supposed to permit it
+21:09:05 <GrapheneOS-Teleg> <a​cegeorge> so white sim is a good added measurement ?
+21:09:08 <strcat> the way it works is your IMEI identifies the radio uniquely
+21:09:36 <strcat> a SIM is a secure element that authenticates you with the carrier
+21:09:43 <strcat> to show you are a paying subscriber
+21:09:50 <strcat> changing your SIM just changes your subscription to another
+21:09:54 <strcat> they still see the radio id
+21:09:58 <GrapheneOS-Teleg> <a​cegeorge> noo
+21:10:01 <strcat> they know it's the same hardware phone
+21:10:02 <GrapheneOS-Teleg> <a​cegeorge> i dont mean this normal sim
+21:10:06 <GrapheneOS-Teleg> <a​cegeorge> sec
+21:10:09 <wish_i_was_real[> You can activate fly mode
+21:10:11 <strcat> I know what you mean
+21:10:19 <GrapheneOS-Teleg> <a​cegeorge> https://omertadigital.com/pages/omerta-security-sim-cards-what-are-they
+21:10:24 <strcat> a reprogrammable SIM is the same as swapping SIMs
+21:10:25 <wish_i_was_real[> I believe it will hide you but without any conexion
+21:10:28 <strcat> it doesn't hide your hardware id to the network
+21:10:39 <strcat> airplane mode is the only thing stopping cellular network from knowing where you are
+21:10:42 <GrapheneOS-Teleg> <a​cegeorge> it goes through their servers first
+21:11:11 <strcat> there's still an IMEI
+21:11:49 <GrapheneOS-Teleg> <a​cegeorge> So this will not help?
+21:12:16 <GrapheneOS-Teleg> <a​cegeorge> because they say that the encrypt ur data
+21:12:21 <GrapheneOS-Teleg> <a​cegeorge> ur normal voice call
+21:13:19 <GrapheneOS-Teleg> <a​cegeorge> Plus, governments for example now i just read they purchased some software & hardware that can spy on your Mobile, turn on ur mic, listen to your whatsapp,signal, viber etc...so they have to target u by ur phone number
+21:13:45 <jpds> A VPN and a Signal call would encrypt your data
+21:15:01 <GrapheneOS-Teleg> <a​cegeorge> look at this : https://www.reddit.com/r/signal/comments/j66c3m/greek_government_buys_tech_for_surveilling_signal/
+21:15:25 <GrapheneOS-Teleg> <a​cegeorge> this is from r/signal
+21:15:46 <strcat[m]> so, you're just getting your information from headlines on Reddit and other non-technical places?
+21:15:51 <jpds> acegeorge: Comment #1
+21:15:52 <strcat[m]> and then filling in the details with assumptions?
+21:16:12 <strcat[m]> acegeorge: it's just not production to go through this
+21:16:17 <strcat[m]> get your information from reliable, technical sources
+21:16:32 <strcat[m]> not people who don't know what they're talking about or companies selling products with dishonest marketing
+21:16:56 <GrapheneOS-Teleg> <a​cegeorge> What about Encrochat? they were E2EE
+21:16:59 <strcat[m]> you can't believe anything a company selling supposedly privacy / security enhancing products tells you because the industry as a whole is largely a bunch of scams
+21:17:03 <GrapheneOS-Teleg> <a​cegeorge> and everything was leaked
+21:17:04 <strcat[m]> what about it?
+21:17:17 <strcat[m]> and have you actually looked at what they provided, and what happened with it?
+21:17:19 <strcat[m]> doesn't seem that way
+21:17:34 <strcat[m]> carrier-based calls and texts are insecure and trust all the carriers, not even just your own
+21:17:52 <strcat[m]> if you care at all about privacy then you're obviously avoiding those
+21:17:53 <strcat[m]> as a given
+21:18:15 <strcat[m]> even transport security with a server you choose is better than those... but of course end-to-end encryption client to client avoiding trusting a server is a lot better
+21:18:30 <GrapheneOS-Teleg> <a​cegeorge> i see
+21:18:34 <strcat[m]> carrier-based calls/texts do not even give you the basics of meaningful transport security
+21:18:46 <strcat[m]> they're totally insecure
+21:18:54 <jpds> jpds | A VPN and a Signal call would encrypt your data
+21:18:56 <strcat[m]> avoiding those is a basic necessary step
+21:19:33 <GrapheneOS-Teleg> <a​cegeorge> so something like this: https://www.cryptophone.de/en/products/mobile/cp600g/
+21:19:43 <GrapheneOS-Teleg> <a​cegeorge> wont be more secure than a pixel + GrapheneOS?
+21:19:47 <blacklight447[m]> Pro tip: assume any network is untrusted and act accordingly
+21:20:11 <blacklight447[m]> Wifi networks, celluar networks, etc
+21:20:43 <strcat[m]> acegeorge: please read all the responses already given above
+21:20:55 <blacklight447[m]> Always try to opt to use atleast some form of encryption like a TLS session
+21:21:29 <blacklight447[m]> <GrapheneOS-Teleg "<acegeorge> wont be more secure "> Lol no
+21:21:31 <strcat[m]> acegeorge: read the FAQ section on cellular again
+21:21:32 <blacklight447[m]> Stay away from any of these speciliazed "cryptophones"
+21:22:07 <blacklight447[m]> Basically all of them are just scams to lure in dumb criminals which will pay big money to keep the feds out
+21:22:19 <strcat[m]> also, please avoid linking to or promoting products here, and avoid linking to non-technical / untrustworthy sources of information
+21:22:35 <strcat[m]> this is also the on-topic GrapheneOS channel
+21:22:40 <blacklight447[m]> They assume if they have to pay alot to use it, it must be good, even if something like signal would be way better
+21:23:17 <GrapheneOS-Teleg> <a​cegeorge> ok i deleted the product
+21:23:18 <blacklight447[m]> It very similar to what our friend JollyRoger calls toxic user mentality
+21:23:58 <blacklight447[m]> If they havent tweaked alot on something or paid a lot of money, then it cant be secure in their mind
+21:25:31 <strcat> the privacy and security industries are largely a scam
+21:25:39 <blacklight447[m]> One of the recent examples woild be skyECC, which claimed to be unbreakable and be the most secure platform, and surprise surprise, it was broken
+21:25:54 <strcat> paid products or not, most stuff claiming to give you privacy/security is at best usually useless
+21:25:56 <strcat> and often is harmful
+21:26:07 <blacklight447[m]> Stay away from them.
+21:26:28 <GrapheneOS-Teleg> !John has joined the Telegram Group!
+21:26:33 <strcat> the privacy/security industries sell products to different niches, they're about making money, not protecting people
+21:26:34 <GrapheneOS-Teleg> <!John> K
+21:26:54 <strcat> as a whole they're really bad
+21:27:15 <strcat> users don't actually evaluate what they're being given but rather it's all about branding/marketing
+21:27:41 <strcat> and hardly any journalists have a grasp of it, so they just churn out paraphrased press releases, repeated talking points, etc.
+21:27:57 <GrapheneOS-Teleg> <a​cegeorge> I see
+21:28:01 <strcat> and then there are all the communities of people based around various things that are just a bunch of the same nonsense
+21:28:03 <GrapheneOS-Teleg> <a​cegeorge> thanks for helping
+21:28:08 <kamesjitt616[m]> I use Edge to do my shopping because it says it's the best browser for online shopping
+21:28:11 <strcat> get your information from privacy / security researchers/engineers, etc.
+21:28:13 <GrapheneOS-Teleg> <a​cegeorge> Now question for GrapheneOS
+21:28:23 <GrapheneOS-Teleg> <a​cegeorge> does it matter which pixel i get?
+21:28:25 <strcat> people who are actually experts and write accurate, useful information
+21:28:51 <GrapheneOS-Teleg> <!John> The Techlore channel is Cancer
+21:28:52 <GrapheneOS-Teleg> <a​cegeorge> 4a , 4a 5G or 5? anything works better? more secure?
+21:29:01 <kamesjitt616[m]> <strcat "people who are actually experts "> They don't necessarily agree on all topics though
+21:29:09 <GrapheneOS-Teleg> <!John> These people are talking about how Modifying Bromite makes you less unique
+21:29:12 <strcat[m]> https://grapheneos.org/faq#recommended-devices
+21:29:15 <GrapheneOS-Teleg> <!John> I can't make it up
+21:29:20 <kamesjitt616[m]> <GrapheneOS-Teleg "<!John> The Techlore channel is "> It's not cancer, it's more mainstream
+21:29:37 <strcat[m]> kamesjitt616: there's consensus about a lot of things though
+21:30:02 <strcat[m]> kamesjitt616: it's a community spreading misinformation based around a narcissist who acts maliciously towards open source projects
+21:30:04 <ulmirdin[m]> 5 and 5G are a bit more secure than 4a, the older devices will not receive updates for long.
+21:30:39 <kamesjitt616[m]> <strcat[m] "kamesjitt616: there's consensus "> True but ask what you should do against fingerpinting and you get 7 opinions out of 5 people
+21:30:50 <strcat[m]> kamesjitt616: not really
+21:31:04 <kamesjitt616[m]> Why was my post removed saying techlore isn't cancer?
+21:31:18 <strcat[m]> not a permitted topic
+21:31:36 <kamesjitt616[m]> OK then also delete the posts stating it
+21:31:47 <kamesjitt616[m]> <strcat[m] "kamesjitt616: not really"> My experience though
+21:31:57 <strcat[m]> sounds like you're getting info from bad sources
+21:32:14 <strcat[m]> which are really pushing an agenda, ideology, etc. rather than spreading accurate information or trying to help people
+21:32:25 <GrapheneOS-Teleg> <a​cegeorge> guys 4a is 2020 model
+21:32:30 <GrapheneOS-Teleg> <a​cegeorge> its not that old
+21:32:36 <strcat[m]> I said above to get info from privacy/security researchers, engineers, etc. which does not mean from people pushing their products and so on
+21:32:46 <GrapheneOS-Teleg> <!John> You still have 4 years left
+21:32:55 <GrapheneOS-Teleg> <!John> Until its Obsolete
+21:33:11 <GrapheneOS-Teleg> <!John> Its a Good pick in my opinion
+21:33:14 <kamesjitt616[m]> I never pick my info right from the creators but I'm not technically savy to understand everything
+21:33:42 <kamesjitt616[m]> It's like the whole browser debate
+21:33:57 <GrapheneOS-Teleg> <!John> I get my Info from Jolly
+21:34:00 <GrapheneOS-Teleg> <!John> And Madidan
+21:34:00 <strcat[m]> kamesjitt616: again
+21:34:09 <strcat[m]> you're getting your information from people pushing their ideology, products, etc.
+21:34:14 <strcat[m]> and people promoting themselves as influencers
+21:34:19 <strcat[m]> that's not what I was saying
+21:34:32 <strcat[m]> I think this is off-topic and not productive
+21:34:37 <kamesjitt616[m]> True
+21:34:41 <ulmirdin[m]> kamesjitt616: Reading the GrapheneOS wiki and checking the log for this channel would be a good place to start.
+21:35:01 <ulmirdin[m]> There is already a ton information available just in this chat.
+21:35:15 <blacklight447[m]> Always remember to look at someones track record as well
+21:35:23 <skwisgaar[m]> As strcat said, get your info from security researchers and engineers. The reason there is so much confusion is because most people consider overconfident laypersons, power users who overstate their knowledge, software developers, etc. to be good sources for security info.
+21:35:34 <blacklight447[m]> For example, strcat gained my trust after the copperhead scam
+21:35:38 <skwisgaar[m]> Not the case
+21:35:38 <feedmeenergydrin> Hi again - I'm setting up a new GrapheneOS device with multiple profiles. I set up the first profile just fine, including installing f-droid on that profile. However, on my second profile, when I try to install f-droid it fails with the message "app not installed". Did I screw something up on the second profile, or is installing the same app on
+21:35:38 <feedmeenergydrin> different profiles not allowed?
+21:35:41 <GrapheneOS-Teleg> <a​cegeorge> pixel 5 vs pixel 4a 5G have the same protection and will be developed for the same period?
+21:35:50 <strcat[m]> yes
+21:35:54 <strcat[m]> they're basically the same device
+21:36:01 <GrapheneOS-Teleg> <a​cegeorge> oh
+21:36:10 <GrapheneOS-Teleg> <!John> I don't think you can install F-droid twice
+21:36:15 <GrapheneOS-Teleg> <a​cegeorge> strcat for VPN what u recommend?
+21:36:16 <strcat[m]> Pixel 5 has nicer externals (wireless charging, nicer screen, nicer build, dust/waterproofing, etc.)
+21:36:24 <GrapheneOS-Teleg> <!John> He dosent
+21:36:27 <GrapheneOS-Teleg> <c​lannad> We don't recommend vpn
+21:36:27 <strcat[m]> I don't give app or VPN recommendations
+21:36:33 <GrapheneOS-Teleg> <c​lannad> This is off topic
+21:36:35 <GrapheneOS-Teleg> <!John> He trusts his canadian ISP
+21:36:36 <blacklight447[m]> Seeing someone choose morality, when he could have easily made big money by selling oit like james wanted too, thats something i respect.
+21:36:44 <GrapheneOS-Teleg> <!John> Such as Jolly
+21:36:45 <strcat[m]> @John: please don't make stuff up
+21:36:46 <GrapheneOS-Teleg> <a​cegeorge> oh lol ok guys dont slap me lol
+21:37:02 <GrapheneOS-Teleg> <c​lannad> https://t.me/grapheneosofftopic
+21:37:03 <GrapheneOS-Teleg> <!John> Or maybe it was jolly who said it
+21:37:17 <GrapheneOS-Teleg> <a​cegeorge> thanks for link
+21:37:20 <GrapheneOS-Teleg> <!John> He said something he trusts his ISP more than some random vpn
+21:37:38 <feedmeenergydrin> Ok, so even if they're on different profiles, I can still only have one copy of the same app installed across the entire device?
+21:37:39 <blacklight447[m]> Same with edward snowden, guy had it all,  high paying job, luxury house on hawaii, girlfriend, brighr future, and he threw it away for what he thought was right
+21:38:50 <sphinx[m]> feedmeenergydrin: You can't install an older version of an app than you have in 1 profile.
+21:39:19 <feedmeenergydrin> Ahh, that makes sense then, thank you :D
+21:39:36 <GrapheneOS-Teleg> <a​cegeorge> after flashing GrapheneOS is there any good recommendation of Apps to install to harden it /protect even more?
+21:39:43 <GrapheneOS-Teleg> <a​cegeorge> other than Signal and VPN i mean
+21:39:58 <GrapheneOS-Teleg> <!John> I don't think so
+21:40:56 <GrapheneOS-Teleg> <!John> There is no hardening else to do with an app
+21:41:09 <sphinx[m]> feedmeenergydrin: You need to download the latest F-Droid version, not the outdated one they have as the main download.
+21:41:34 <GrapheneOS-Teleg> <a​cegeorge> also GrapheneOS updates OTA?
+21:41:41 <GrapheneOS-Teleg> <!John> Yes
+21:42:08 <GrapheneOS-Teleg> <a​cegeorge> oki
+21:42:32 <GrapheneOS-Teleg> <a​cegeorge> which phone u guys use?
+21:42:39 <GrapheneOS-Teleg> <!John> Pixels
+21:42:51 <GrapheneOS-Teleg> <a​cegeorge> yeah, which model i mean
+21:42:51 <GrapheneOS-Teleg> <!John> Well I can't speak for everyone in here
+21:43:00 <ulmirdin[m]> 4a
+21:43:55 <chris42[m]> Pixel 5
+21:43:58 <GrapheneOS-Teleg> <!John> Oh sh
+21:44:23 <GrapheneOS-Teleg> <!John> Ive been forgetting to Update it
+21:44:35 <GrapheneOS-Teleg> <!John> Mines really Outdated
+21:44:49 <GrapheneOS-Teleg> <a​cegeorge> F-Droid doesnt update automatically?
+21:46:20 <GrapheneOS-Teleg> <a​cegeorge> Also WhatsApp is a nono install on grapheneos right?
+21:46:33 <jpds> acegeorge: Works fine
+21:46:52 <GrapheneOS-Teleg> <a​cegeorge> in terms of privacy i mean
+21:46:54 <GrapheneOS-Teleg> <!John> Its all up to you if you want to use Whatsapp
+21:47:19 <jpds> acegeorge: You can install whatever you want
+21:47:22 <GrapheneOS-Teleg> <!John> But its owned by Facebook and Google so that's probably not good
+21:49:53 <GrapheneOS-Teleg> <a​cegeorge> yeah
+21:54:37 <GrapheneOS-Teleg> <a​cegeorge> grapheneos will also get updated to Android 11 too?
+21:55:00 <GrapheneOS-Teleg> <!John> It already is
+21:55:01 <jpds> acegeorge: Was ages ago
+21:55:26 <GrapheneOS-Teleg> <!John> Yep
+21:55:29 <GrapheneOS-Teleg> <a​cegeorge> sorry android 12 lol
+21:55:42 <GrapheneOS-Teleg> <a​cegeorge> im an iOS user i messed up the android versions
+21:55:43 <GrapheneOS-Teleg> <a​cegeorge> lol
+21:57:04 <jpds> acegeorge: Yes, cause all that comes from AOSP
+21:57:47 <GrapheneOS-Teleg> <a​cegeorge> nice 🙂
+21:57:53 <GrapheneOS-Teleg> <a​cegeorge> also F-Droid doesnt update itself?
+21:58:02 <ulmirdin[m]> Android 12 will launch after August this year
+21:58:28 <jpds> a​cegeorge: No
+21:58:32 <ulmirdin[m]> It is still being tested
+22:03:37 <anupritaisno1[m]> <ulmirdin[m] "Android 12 will launch after Aug"> Thanks for being so obvious
+22:03:46 <anupritaisno1[m]> Google always releases second week of September or so
+22:04:38 <Hasi123> Good Evening..
+22:04:48 <anupritaisno1[m]> Also discussions like these are off topic
+22:04:53 <anupritaisno1[m]> #grapheneos-offtopic:matrix.org
+22:05:21 <Hasi123> What is your oppinion on root access?
+22:06:24 <jpds> Hasi123: Don't
+22:06:53 <GrapheneOS-Teleg> <a​cegeorge> technically now, GrapheneOS vs Stock Android has a lot of difference in terms of security??
+22:07:10 <Hasi123> Okay, but on every Linux OS I can have root and it is not insecure..?
+22:07:12 <jpds> acegeorge: All covered on the website
+22:07:34 <jpds> Hasi123: -> #grapheneos-offtopic
+22:07:43 <anupritaisno1[m]> <Hasi123 "Okay, but on every Linux OS I ca"> Linux desktop is pretty insecure
+22:08:47 <GrapheneOS-Teleg> <a​cegeorge> ok
+22:09:00 <GrapheneOS-Teleg> <a​cegeorge> F-Droid is better than Aurora?
+22:10:03 <zzxx123_> These questions are getting spammy tbh
+22:10:44 <GrapheneOS-Teleg> <R​efaimufeer> F-Droid for open source apps which are unique for private reasons, on the other hand Aurora is for extracting the apps from Google Play store
+22:11:00 <GrapheneOS-Teleg> <a​cegeorge> ohh
+22:29:33 <Xcutioner[m]> Anyone had issues installing GrapheneOS on Pixel 4A 5G
+22:42:18 <GrapheneOS-Teleg> <a​cegeorge> What kind of issues?
+22:52:12 <GrapheneOS-Teleg> <a​cegeorge> guys VoLTE and VoWiFi should be turned on or off?
+22:59:31 <amicitia> Hello i see in orbot vpn setting the com.google android ac is this a part of graphene os
+22:59:59 <amicitia> Can not find it in the apps systeem
+23:00:43 <thestranger69> Hi, i am.using a pixel 4 and i bought a pixel 4a, how can i send all the pictures from 1 to another the east way ?
+23:00:55 <hypokeimenon[m]> https://sec.eff.org/articles/recommending-tools
+23:00:56 <thestranger69> Easy way
+23:05:30 <GrapheneOS-Teleg> <a​cegeorge> https://theintercept.com/2016/09/12/long-secret-stingray-manuals-detail-how-police-can-spy-on-phones/
+23:05:37 <GrapheneOS-Teleg> <a​cegeorge> does this work on grapheneos?
+23:08:09 <GrapheneOS-Teleg> <H​e_Is_HaZaRdOuS> with a computer?
+23:21:17 <thestranger69> Yeah would those stingrays also work on grapheneos, i would like to know that to. I think only strcat knows the answer to this
+23:23:53 <rny> thestranger69: this was covered numerous times, please search the logs. The discussion ends here.
+23:24:42 <thestranger69> How do i search the logs, i am using irc client revolution? I can only see my own history
+23:25:05 <rny> thestranger69: https://freenode.logbot.info/
+23:26:57 <rny> o_O a freenode staff got k-lined
+23:27:08 <strcat[m]> @acegeorge: you were linked to the relevant documentation and given extensive replies about it
+23:27:58 <thestranger69> Cant find no logs about the interception, maybe i m too noob
+23:28:07 <strcat[m]> okay
+23:28:09 <strcat[m]> read our documentation on the site
+23:28:20 <strcat[m]> https://grapheneos.org/faq#cellular-tracking
+23:28:32 <strcat[m]> carrier-based texts and calls are insecure, avoid them, nothing will make them secure
+23:28:46 <strcat[m]> trusting networks is a mistake and completely unnecessary
+23:29:12 <thestranger69> So when using encrypted communication like signal the interceptor from police is useless?
+23:29:17 <strcat[m]> you do realize that avoiding interception still leaves you trusting the cellular network as a whole, including your carrier and also other carriers?
+23:30:21 <strcat[m]> thestranger69: if everything at least has authenticated transport encryption, then they don't get data from it
+23:30:23 <thestranger69> Well if i want to use a mobile phone i kinda have to use the carriers network, there s no way around that
+23:30:30 <strcat[m]> Signal does better by having end-to-end encryption
+23:30:34 <strcat[m]> not just transport encryption
+23:30:46 <strcat[m]> thestranger69: it doesn't imply using their insecure calls/texts though
+23:31:17 <strcat[m]> thestranger69: don't really understand you're concerned about those being interception between you and the cell tower rather than the fact that your carrier and other carriers have access to it and can grant that access to others
+23:31:21 <strcat[m]> a ton of people have access
+23:31:22 <thestranger69> Well as far as i read, signal is the best app at this moment for secure communication
+23:31:50 <GrapheneOS-Teleg> <a​cegeorge> @strcat because i dont understand, "trusting networks is a mistake and completely unnecessary" does that mean that 5G/4G usage of Signal can be intercepted ???
+23:31:56 <strcat[m]> it's the most secure option for communicating with someone based on your phone number and theirs
+23:32:19 <strcat[m]> @acegeorge: I consider what you're doing concern trolling and you'll be banned if you continue
+23:32:44 <GrapheneOS-Teleg> <a​cegeorge> i am not trolling
+23:32:47 <GrapheneOS-Teleg> <a​cegeorge> -_-
+23:32:51 <strcat[m]> read what concern trolling is
+23:33:06 <rny> is this person ban-evading?
+23:33:31 <strcat[m]> not atm
+23:33:36 <thestranger69> And is there an app that is secure like signal that doesnt need a phone number? I trief threema but it is not all open source from my understanding
+23:33:38 <GrapheneOS-Teleg> <a​cegeorge> jesus christ lol
+23:34:13 <entry1[m]> <thestranger69 "And is there an app that is secu"> App suggestions by the community can be asked in #grapheneos-offtopic:matrix.org
+23:34:23 <strcat[m]> @a​cegeorge: look, no matter what the topic is, you keep raising these totally baseless and irrational assumptions of the worst and it derails the discussion + misinforms others
+23:35:27 <GrapheneOS-Teleg> <a​cegeorge> strcat, can i link you a video i am watching right now that made me just jump in to the discussion?
+23:35:42 <strcat[m]> don't want to see a video
+23:36:07 <GrapheneOS-Teleg> <a​cegeorge> aight
+23:36:15 <strcat[m]> I already said earlier to get better sources of information
+23:36:42 <strcat[m]> if you do research where you consume low quality content
+23:36:45 <strcat[m]> you aren't informing yourself
+23:36:49 <strcat[m]> you're misinforming yourself
+23:36:54 <GrapheneOS-Teleg> <a​cegeorge> you are right
+23:37:04 <GrapheneOS-Teleg> <a​cegeorge> but this is from a Security Engineer
+23:37:15 <GrapheneOS-Teleg> <a​cegeorge> (the video)
+23:37:16 <strcat[m]> carrier-based calls/texts are insecure and trust the carrier networks
+23:37:19 <strcat[m]> you don't want to do that
+23:37:26 <GrapheneOS-Teleg> <a​cegeorge> i get that
+23:37:28 <entry1[m]> <GrapheneOS-Teleg "<acegeorge> strcat, can i link y"> Please follow the website's instructions. Many videos are bad/outdated sources of information. We would be happy to help you with specific questions you have, but pinging the lead developer isnt necessary. A lot of other people could help you in #grapheneos-offtopic:matrix.org
+23:37:32 <strcat[m]> no interception required to get your calls/texts if you use carrier-based calls/texts
+23:37:42 <strcat[m]> they are simply insecure in a bunch of ways
+23:37:49 <strcat[m]> don't have any meaningful authentication or encryption
+23:38:13 <strcat[m]> your connection to the carrier network is also not meaningfully authenticated, and what would it really be authenticating? just that it's your carrier's network
+23:39:21 <strcat[m]> use transport encryption with forward secrecy at a bare minimum, and ideally end-to-end encryption with forward secrecy
+23:39:23 <thestranger69> Does that mean that when you are connecter to carrier you are always insecure? Even using encryption apps like signal and telegram?
+23:39:23 <GrapheneOS-Teleg> <a​cegeorge> just trying to find a way to communicate when i dont have a WiFI and im not able to turn on Airplane mode
+23:39:38 <strcat[m]> thestranger69: no, that's not what was said
+23:39:55 <strcat[m]> also really seems like there are certain people active here right now via multiple accounts
+23:40:17 <GrapheneOS-Teleg> <a​cegeorge> i hope u dont imply me ---
+23:40:39 <entry1[m]> It really seems like concern trolling, its non stop questions in the main channel.
+23:40:43 <thestranger69> I am not usong accounts, i am vudu strcat i am asking honest question because i want to understand
+23:41:08 <strcat[m]> well, I explained it above
+23:41:44 <thestranger69> Oke thanks, but i am not trying to troll or anything i come ofter here to learn, thats all
+23:43:00 <thestranger69> My english is not so great so sometimes it seems like you re talking to a dumb person, i ask question to understand better
+23:43:37 <thestranger69> Dont know what phone to trust anymore everything is being hacked lately
+23:44:47 <thestranger69> Even skyecc is hacked in belgium, those phone were 1500 euro i think
+23:57:52 <GrapheneOS-Teleg> <c​lannad> @acegeorge
+23:58:20 <GrapheneOS-Teleg> <c​lannad> You have been warned by a moderator and you still continue with said behaviour
+23:58:46 <GrapheneOS-Teleg> <c​lannad> Might I add that you're also wasting time by asking to ask
+23:59:14 <GrapheneOS-Teleg> <c​lannad> This

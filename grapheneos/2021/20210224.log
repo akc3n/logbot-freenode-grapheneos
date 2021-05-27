@@ -1,0 +1,793 @@
+00:09:15 <RoyValentine[m]> dazinism
+00:09:15 * RoyValentine[m] uploaded an image: Screenshot_20210223-160817.png (74KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/OMNyunXcBiSLNWHzsnBtiWmD/Screenshot_20210223-160817.png >
+00:09:28 <RoyValentine[m]> That is what I see currently.
+00:13:49 <dazinism> RoyValentine Maybe try force stop and then see if it works
+00:14:04 <dazinism> Also maybe restart the phone
+00:14:25 <RoyValentine[m]> Trying that now.
+00:18:21 <RoyValentine[m]> Still shows the same after that.
+00:25:25 <RoyValentine[m]> Not sure what I should be looking for in adb when navigating to the back up screen.
+00:27:27 * RoyValentine[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/GQfJFQbOeSmrBjFAacwXtyur/message.txt >
+00:27:55 <RoyValentine[m]>  * `02-23 16:24:48.775  6896  6920 W Role    : com.stevesoltys.seedvault not qualified for android.app.role.HOME due to missing RequiredComponent{mIntentFilterData=IntentFilterData{mAction='android.intent.action.MAIN', mCategories='[android.intent.category.HOME]', mDataScheme='null', mDataType='null'}, mPermission='null'}`
+00:28:06 <RoyValentine[m]> `02-23 16:26:03.452  1006  1513 E BackupManagerService: [UserID:0] Unable to get management intent from transport: Transport com.stevesoltys.seedvault.transport.ConfigurableBackupTransport not registered`
+00:28:12 <RoyValentine[m]> Among other similar things
+00:28:32 <RoyValentine[m]> `02-23 16:23:58.558  1006  4808 E BackupManagerService: [UserID:0] Unable to get management label from transport: Transport com.stevesoltys.seedvault.transport.ConfigurableBackupTransport not registered`
+00:28:41 <rny[m]> please file an issue on github
+00:28:56 <RoyValentine[m]> SeedVault or GrapheneOS?
+00:29:10 <rny[m]> this is an OS issue
+00:29:29 <rny[m]> the transport should have been registered
+00:29:33 <rny[m]> not sure what is going on
+00:31:34 <rny[m]> RoyValentine: when was the last time you updated?
+00:32:03 <dazinism> RoyValentine: may be able to register via adb - hang on....
+00:32:15 <dazinism> Let me find a link
+00:32:17 <rny[m]> hmm
+00:32:23 <rny[m]> we havent even pushed out that code change
+00:32:31 * RoyValentine[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/mafLkooiZDzFgJGfSiVvENFx/message.txt >
+00:32:51 * RoyValentine[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/ZCWpTOkHyEiVfEuIsXiZPcQv/message.txt >
+00:33:00 * RoyValentine[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/AIiuQaDIcjyZkHdIdlnZnixi/message.txt >
+00:33:10 * RoyValentine[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/oQDLnRkMJOVXoBHtrLAAJIPT/message.txt >
+00:33:29 <rny[m]> RoyValentine: did you do anything funny?
+00:33:47 <rny[m]> or this is flashing the grapheneos without any modifications?
+00:34:41 <RoyValentine[m]> I flashed this with graphene without modifications back in September or something. My last backup on SeedVault happened around 12/18/2020 or sometime mid December.
+00:35:23 <rny[m]> when was the last time you updated the OS?
+00:36:15 <nullnode[m]> when you first moved to Graphene did you import old content with SeedVault?
+00:36:16 <RoyValentine[m]> What do you mean? I run syncthing to backup the local seed vault to a local network and it shows it was last backed up mid December.
+00:36:37 <RoyValentine[m]> I haven't done anything since installing back in September and have updates on Stable OTA.
+00:36:43 <rny[m]> the OTA updates, do you let it update every month?
+00:36:46 <rny[m]> ok.
+00:36:53 <rny[m]> please create an issue on github
+00:36:59 <rny[m]> this is something that needs to be looked at
+00:37:02 <dazinism> RoyValentine: maybe see what happens using some of these https://github.com/seedvault-app/seedvault/issues/77#issuecomment-696752898
+00:37:48 <dazinism> Might help understand whats happening?
+00:38:03 <rny[m]> RoyValentine: do you use multi-user?
+00:38:17 <RoyValentine[m]> No I do not.
+00:40:35 <RoyValentine[m]> Should I try what that github comment is talking about?
+00:47:16 <dazinism> RoyValentine: actually, not sure its going to help
+00:47:22 <dazinism> Could try
+00:47:32 <dazinism> adb shell bmgr --user 00 list transports
+00:47:49 <dazinism> Sorry.... just one 0
+00:48:03 <dazinism> adb shell bmgr --user 0 list transports
+00:48:43 <dazinism> Expect it'll list seedvaul
+00:49:14 <RoyValentine[m]> ➜  ~ adb shell bmgr --user 0 list transports
+00:49:14 <RoyValentine[m]>     com.android.localtransport/.LocalTransport
+00:53:20 <RoyValentine[m]> Ran logcat again and saw a different fatal exception as well. Not sure if you want that info?
+00:53:21 <dazinism> RoyValentine: think it should list seedvault there
+00:54:13 <dazinism> adb shell bmgr --user 0 transport com.stevesoltys.seedvault.transport.ConfigurableBackupTransport
+00:54:38 <dazinism> Then try listing again
+00:55:59 * RoyValentine[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/jodivtsEeiLyXcBjYxHFADtY/message.txt >
+00:57:37 * RoyValentine[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/VWAkdRBBTQbBfoQrcNdvBnRN/message.txt >
+01:05:29 <dazinism> RoyValentine: yeah sorry, not sure. Looking at the logcat dumps in that github issue it looks like it should list seedvault as a transport.
+01:06:03 <dazinism> Yours isn't, but when you issued the set command it looks like it was already set.
+01:08:42 <dazinism> * Yours isn't, but when you issued the command to select the transport its saying it was already selected
+01:09:38 <dazinism> Guess best to open an issue on seedvaults github.
+01:13:22 <RoyValentine[m]> And not GrapheneOS? How much of the details here are applicable for a SeedVault github issue?
+01:18:18 <dazinism> RoyValentine: I could be wrong, but looks more like a seedvault issue, than GrapheneOS.
+01:18:49 <dazinism> I'd include the logs from before we did the adb commands
+01:27:34 <RoyValentine[m]> Alright. I know it is probably not great from a testing standpoint but at what point is it wrong for me to just backup and reflash my phone with the latest release and start over?
+01:27:34 <RoyValentine[m]> More from a typical cleaning house thing I personally do for computers as well.
+01:27:48 <RoyValentine[m]> Wait like a month of the ticket being open? Haha
+01:36:09 <RoyValentine[m]> @dazinism
+01:36:09 <RoyValentine[m]> Submitted an issue on SeedVault's Github: https://github.com/seedvault-app/seedvault/issues/213
+01:36:09 <RoyValentine[m]> If you believe this is too vague or unclear from your experience then let me know.
+01:36:35 <rny> pls also raise this in the OS
+01:36:40 <rny> so we can track it
+01:36:41 <RoyValentine[m]> * dazinism  an issue on SeedVault's Github: https://github.com/seedvault-app/seedvault/issues/213
+01:36:41 <RoyValentine[m]> If you believe this is too vague or unclear from your experience then let me know.
+01:39:30 <RoyValentine[m]> GrapheneOS issue submitted: https://github.com/GrapheneOS/os_issue_tracker/issues/463
+01:39:31 <RoyValentine[m]> Referencing the seedvault issue in the text as well.
+01:41:25 <rny> RoyValentine[m]: thx
+01:41:44 <rny> 🎉
+03:12:06 <strcat> they were spamming me via PMs on IRC
+03:12:11 <strcat> while I took a nap
+03:12:19 <rny>  /mode +R
+03:12:51 <rny> its a markov bot uni assignment gone wrong
+03:15:53 <strcat[m]> time for the reddit posts I promised
+03:15:57 <take_a_deep_brea> nice
+03:16:02 <take_a_deep_brea> lmao
+03:16:16 <rny> but its not them though, my other user that does not lurk this channel got spammed too
+03:19:31 <zzxx123> strcat You should make a central place to index all the evidences about CH attacks. Chat is extremely difficult for people to gather info, and for you to inform people. A dedicated site or github page is much easier for your users to reference or link to  when discussing with non-users, and people can also help you organize evidences through a
+03:19:31 <zzxx123> github page.
+03:29:31 <somenerd[m]> > time for the reddit posts I promised
+03:29:32 <somenerd[m]> lol
+04:06:09 * brenneke[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/UOTlrNmGShBJzeIBErvDoVwf/message.txt >
+04:27:48 <southwest[m]> brenneke might be this:
+04:27:49 <southwest[m]> https://github.com/GrapheneOS/os_issue_tracker/issues/435
+04:37:21 <brenneke[m]> K thanks but main problem is not getting keyboard when switching from owner to user profile.
+04:38:33 <southwest[m]> Have you tried waiting until the race condition is over? For me something like 25 seconds.
+04:39:02 <brenneke[m]> Race condition?
+04:39:43 <DFuchsiaOS_when> <brenneke[m] "K thanks but main problem is not"> Odd, only encountered the delay of keyboard pop up when ending session
+04:40:25 <DFuchsiaOS_when> Same to issue tracker
+04:40:27 <southwest[m]> Better explained in the issue tracker than be me. Something like the ending of one session and the beginning of another collide.
+04:45:24 <brenneke[m]> Just switched and let sit for about a minute, no keyboard, screen touches do not bring it up......the only way is to go into power button menu then back out, keyboard then pops up every time without fail.
+04:46:04 <southwest[m]> K not sure then. Others may have input.
+04:48:29 <brenneke[m]> When you switch user then hit Done you get keyboard just like that?
+04:50:53 <southwest[m]> Yes. However when I go from user to owner I occasionally get the race condition. The home screen pops under for a moment, then I can put in pin after about 25 seconds.
+05:09:58 <southwest[m]> Have to head out - one thing to check, under On-screen Keyboard its GrapheneOS keyboard.
+05:43:19 <June77> Can you root on graphene os ?
+05:43:39 <take_a_deep_brea> No .
+05:44:22 <take_a_deep_brea> Graphene OS has verified boot , so any modifications to the file system root are either rolled back on an update/reboot or the OS wont boot at all.
+05:44:27 <June77> does anybody know how to disable the proximity sensor?
+05:44:45 <take_a_deep_brea> You can toggle the sensors permission
+05:45:11 <June77> is that the one under developer options?
+05:45:20 <take_a_deep_brea> which should deny sensors access to app and so the app should not be able to process or transmit any sensor data
+05:45:32 <take_a_deep_brea> or even communicate with sensors
+05:45:48 <take_a_deep_brea> June77: There is a per app sensors permission
+05:45:58 <take_a_deep_brea> please use that
+05:46:41 <June77> ok
+05:46:59 <take_a_deep_brea> do not enable developer options as they are intended for app/system developers to test various OS conditions and how the app or OS service they are working on behaves in such conditions
+05:48:09 <anupritaisno1[m]> Where's sedbot?
+05:48:12 <anupritaisno1[m]> Need him rq
+05:48:16 <June77> does it affect the overall privacy?
+05:48:24 <take_a_deep_brea> what?
+05:48:27 <take_a_deep_brea> dev options?
+05:48:30 <June77> yeah
+05:48:51 <take_a_deep_brea> well , as i said they are for developers testing stuff
+05:48:58 <take_a_deep_brea> not for daily usage
+05:49:08 <June77> I see
+05:49:09 <somenerd[m]> it'll probably increase attack surface
+05:49:13 <anupritaisno1[m]> The disable sensors toggle in developer options is not a security or privacy feature
+05:49:20 <somenerd[m]> no real privacy benefit afaik
+05:49:26 <somenerd[m]> (or detriment)
+05:49:28 <anupritaisno1[m]> Please use the user facing toggle only
+05:50:29 <take_a_deep_brea> so yes you may end up doing something you have no idea about and that is not a good position to be in , unless you are a developer
+05:52:30 <anupritaisno1[m]> Even if you're a developer
+05:52:38 <anupritaisno1[m]> Don't assume we know everything
+05:54:42 <anupritaisno1[m]> people without a good idea of what they are doing will have no hesitation to do something even developers would hesitate to do
+05:57:29 <June77> so if you turn off dev options will it reset everything to the default ?
+05:57:34 <take_a_deep_brea> that is true for a lot of things , not just software usage
+05:58:02 <take_a_deep_brea> June77: some get reset , some are not i am not sure which
+06:31:11 <strcat[m]> https://www.reddit.com/r/GrapheneOS/comments/lr5s3p/log_of_someone_who_spent_hours_raiding_the/
+07:00:05 <nonie689[m]> https://github.com/PeterCxy/Shelter/issues/189
+07:00:05 <nonie689[m]> Can anybody help this project?
+07:00:46 <somenerd[m]> ?
+07:00:54 <somenerd[m]> why are you posting this here?
+07:01:18 <somenerd[m]> this is definetely off topic and not relevant to GrapheneOS
+07:01:49 <nonie689[m]> cause many people ask this in the faq
+07:02:04 <somenerd[m]> you mean that it's on the website?
+07:02:15 <somenerd[m]> yeah but it's still not relevant to GrapheneOS
+07:03:14 <nullnode[m]> FGS, fuck google services
+07:03:31 <nonie689[m]> In workprofile is it oki
+07:03:40 <take_a_deep_brea>  nullnode: no
+07:03:50 <somenerd[m]> again, it's not relevant to GrapheneOS
+07:04:01 <nonie689[m]> Faked google play service then?
+07:04:18 <nullnode[m]> Still not relevant.
+07:04:26 <take_a_deep_brea> why not just stop calling it names and let it be
+07:04:33 <nullnode[m]> Why even have a dependency?
+07:04:34 <take_a_deep_brea> this room is not for shitting on google
+07:04:49 <nonie689[m]> I need it for the vim pay app and the satilite. App (free call)
+07:04:53 <somenerd[m]> > Faked google play service then?
+07:04:54 <somenerd[m]> check the site
+07:05:07 <somenerd[m]> > I need it for the vim pay app and the satilite. App (free call)
+07:05:07 <somenerd[m]> again, Shelter is not included in GrapheneOS
+07:05:09 <nullnode[m]> <nonie689[m] "I need it for the vim pay app an"> Won't work.
+07:05:26 <nscnt[m]> <strcat[m] "https://www.reddit.com/r/Graphen"> I'd like to emphasize the downvoted comment. It *seems* to me that a lot of bad behavior is simply attributed to the "enemy" without any real substance, which feels like we are lowering ourselves to their level. But perhaps I don't have as much information as you do to lead you to that conclusion.
+07:05:35 <nonie689[m]> i know.. should i write to satelite app?
+07:05:56 <take_a_deep_brea> nullnode:  i am sorry if i was harsh or self-righteous but lets not just ... you know what i mean
+07:06:24 <nullnode[m]> <take_a_deep_brea "nullnode:  i am sorry if i was h"> I'm sorry, but the swear is universal
+07:06:26 <nonie689[m]> I just need the satilite app gor free internationall voip
+07:06:31 <somenerd[m]> > I'd like to emphasize the downvoted comment. It _seems_ to me that a lot of bad behavior is simply attributed to the "enemy" without any real substance, which feels like we are lowering ourselves to their level. But perhaps I don't have as much information as you do to lead you to that conclusion.
+07:06:31 <somenerd[m]> he's also talking about the attacks a while ago
+07:06:34 <nonie689[m]> For*
+07:06:46 <somenerd[m]> when the trolls decided to be active for 12 hours
+07:06:54 <strcat[m]> nscnt: it's very obvious what was happening
+07:06:55 <somenerd[m]> and kept coming
+07:07:03 <nullnode[m]> Writing to the app developer is the beat option nonie689
+07:07:03 <strcat[m]> nscnt: they spammed the channel for over 12 hours
+07:07:06 <jeff[m]5> Are there any moderation features that folks here think matrix should add?  I suppose this is actually an IRC gateway, so one would instead use moderation bots on IRC?
+07:07:11 <strcat[m]> nscnt: they kept posting Copperhead talking points
+07:07:18 <nonie689[m]> do somebody know an alternative app?
+07:07:22 <strcat[m]> nscnt: if people can't see that it's them, well, I don't know what to say
+07:07:40 <nullnode[m]> <nonie689[m] "do somebody know an alternative "> There are many for VoIP
+07:07:42 <strcat[m]> nscnt: and this happens directly in response to us making 5 posts about Copperhead's bad behavior
+07:07:46 <somenerd[m]> <nonie689[m] "do somebody know an alternative "> #grapheneos-offtopic:matrix.org
+07:07:50 <take_a_deep_brea> nscnt:  i downvoted it and intend to make a reply there.
+07:07:52 <nonie689[m]> I want a free one
+07:08:03 <strcat[m]> nscnt: using sockpuppets does not excuse them from what they're doing
+07:08:08 <strcat[m]> that is classic James tactics
+07:08:16 <nonie689[m]> What voip app do you know for international call
+07:08:23 <somenerd[m]> it's offtopic
+07:08:24 <jeff[m]5> If there is any moderation features on the matrix side, then the matrix people are usually pretty supportive, not fast but quite supportive, and some of the rest of us use matrix for work so we can have people place bounties on amtrix features and such.
+07:08:26 <nullnode[m]> <nonie689[m] "I want a free one"> Now the apps are usually free but service needs to be paid usually I believe for calling traditional phone numbers.
+07:08:30 <nonie689[m]> somenerd: Sorry
+07:08:32 <strcat[m]> nscnt: I can post logs from their channel where they coordinate raids and harassment too
+07:08:40 <somenerd[m]> it's been offtopic from the start
+07:08:48 <strcat[m]> nscnt: anyway I'm going to be making 5 posts on Reddit a day with evidence
+07:08:55 <strcat[m]> until they completely drop their attacks against us
+07:08:58 <nonie689[m]> I will ask know in offtopic channel
+07:09:05 <strcat[m]> on a day where they are not obsessively attacking us, I won't need to post
+07:09:23 <nullnode[m]> James is mad about the garbage video
+07:10:04 <nonie689[m]> Now*
+07:10:07 <nullnode[m]> Breaking his piggy bank on the social fodder campaign to compensate.
+07:12:10 <strcat[m]> nscnt: I have proof of them coordinating it
+07:12:28 <strcat[m]> nscnt: I am posting things 1 by 1 in separate Reddit posts and you can look at the overall posts instead of 1 by 1
+07:12:51 <somenerd[m]> yeah, he'll probably post the 12 hour raid as well
+07:13:01 <strcat[m]> I'm also going to start posting chat logs with James from before the split with Copperhead
+07:13:05 <strcat[m]> among other things
+07:13:41 <jeff[m]5> I'm sure you know this but https://matrix.org/docs/guides/moderation begins by explaining how to remove all recent messages by some user.
+07:13:44 <strcat[m]> have had enough of their attacks on the project and it isn't going to be tolerated any longer
+07:13:50 <strcat[m]> I know how to do that
+07:14:07 <strcat[m]> it doesn't help much when they put obscene stuff in their names/avatars and it doesn't address them repeatedly making new accounts
+07:14:18 <strcat[m]> removing all messages also causes massive lag
+07:14:29 <strcat[m]> and then I can't do anything for 2 minutes while it goes
+07:14:39 <jeff[m]5> <strcat[m] "removing all messages also cause"> this should probably be reported as a bug
+07:14:50 <strcat[m]> more concerned with other things
+07:15:04 <strcat[m]> like Matrix kicking people who don't post to the channel for 30 days
+07:15:43 <take_a_deep_brea> yeah
+07:16:04 <strcat[m]> I think I'll also make a post showing their totally desperate attempt at sweet talking @jack
+07:16:10 <strcat[m]> among other things
+07:16:25 <strcat[m]> here's the thing
+07:16:29 <strcat[m]> there is so much that I could post
+07:16:31 <strcat[m]> I will not run out
+07:16:53 <strcat[m]> and the stuff that hits hard I will keep talking about
+07:16:58 <strcat[m]> some stuff only needs to be mentioned once
+07:17:18 <strcat[m]> don't plan on making multiple posts about a given raid on our channel
+07:17:27 <strcat[m]> but when they raid our channel they can expect 1 post on both subreddits in response
+07:17:34 <strcat[m]> that is how things are going to work from now on
+07:17:53 <strcat[m]> every attack by them against us, we respond by talking about and showing what they are doing
+07:18:08 <strcat[m]> I said in the post title that people should judge what happened there for themselves
+07:18:30 <strcat[m]> what I didn't bother explaining is that this happens while they are active on Telegram, and as part of an escalation by them publicly
+07:18:42 <strcat[m]> which I can show based on lining up the timestamps on Telegram, Twitter and with stuff like this
+07:18:57 <strcat[m]> which demonstrates that they go through a phase of rapidly attacking us across multiple platforms in a coordinated way
+07:19:13 <strcat[m]> it is not an isolated incident
+07:19:17 <strcat[m]> it is 1 part of their overall attacks
+07:20:28 <strcat[m]> do not expect me to prove every little minor thing like by evidence against a specific sockpuppet in extreme detail rather than focusing on the important things
+07:20:44 <strcat[m]> and btw I have a script for fingerprinting their Matrix accounts so I know which ones are tied together
+07:20:52 <take_a_deep_brea> lmfao
+07:21:00 <strcat[m]> that is how I knew that was a concern troll and led them into a trap
+07:21:05 <strcat[m]> instead of taking it seriously
+07:21:11 <take_a_deep_brea> that's ingenious
+07:21:17 <somenerd[m]> > and btw I have a script for fingerprinting their Matrix accounts so I know which ones are tied together
+07:21:17 <somenerd[m]> wow that's cool
+07:21:49 <strcat[m]> it's not really as clever as it seems
+07:21:49 <strcat[m]> they are really dumb
+07:22:14 <somenerd[m]> also most people talking about "vulnerabilities" turn out to be trolling
+07:22:19 <somenerd[m]> especially here
+07:22:26 <strcat[m]> anyway you can see when James becomes active, along with others like Max
+07:22:36 <strcat[m]> and you can correlate activity across platforms
+07:23:15 <strcat[m]> it is a given that when there are 12 hours of raids on our channel
+07:23:19 <strcat[m]> we are going to have a response to it
+07:23:26 <strcat[m]> they wasted substantial moderator time and developer time
+07:23:39 <strcat[m]> and what people in this channel can do to prevent that happening again
+07:23:44 <strcat[m]> is to promote both of those posts on Reddit
+07:23:51 <strcat[m]> so that Copperhead decides that this is a bad idea and stops doing it
+07:24:08 <strcat[m]> just upvote both posts
+07:24:14 <strcat[m]> don't cross-post them, they aren't interesting enough for that
+07:24:17 <strcat[m]> https://www.reddit.com/r/GrapheneOS/comments/lr5s3p/log_of_someone_who_spent_hours_raiding_the/
+07:24:21 <strcat[m]> https://www.reddit.com/r/GrapheneOS/comments/lr6b9w/log_from_near_end_of_12_hours_of_copperhead/
+07:24:22 <nscnt[m]> How do Copperhead's attacks affect others? Are ordinary users more likely to be carried to Copperhead and against GrapheneOS? It feels more like it's just people hanging out with Copperhead who want it badly enough and less because they're being deceived.
+07:24:53 <somenerd[m]> since you're aware of the manipulation, you're more resistant
+07:25:00 <take_a_deep_brea> true
+07:25:09 <somenerd[m]> to the outside viewer though, they may not be as resistant
+07:25:23 <somenerd[m]> ex: people in non-privsec communities
+07:25:44 <take_a_deep_brea> nscnt:  the room has now become a place where we are holding this discussion about this , that should be enough damage in my opinion
+07:25:57 <somenerd[m]> yeah that in and of itself is damage
+07:26:12 <nscnt[m]> I'm just afraid of the low effectiveness-energy-ratio
+07:26:15 <somenerd[m]> and continuing it isn't a good idea
+07:26:15 <strcat[m]> nscnt: they spent 12 hours raiding this channel yesterday
+07:26:24 <strcat[m]> nscnt: they took substantial time from developers/moderators
+07:26:26 <somenerd[m]> they ruined every convo that happened then
+07:26:27 <strcat[m]> they shut down discussion here
+07:26:31 <strcat[m]> they stopped new people getting help
+07:26:44 <strcat[m]> nscnt: and yes they DO trick people with their misinformation especially when pretending to be GrapheneOS users
+07:26:49 <strcat[m]> nscnt: you have probably been tricked by them
+07:26:57 <strcat[m]> nscnt: when I'm not here people fall for their concern trolling BS
+07:27:01 <somenerd[m]> they're good at manipulation
+07:27:03 <nscnt[m]> No, I just don't care about them ^^
+07:27:07 <somenerd[m]> like good
+07:27:11 <somenerd[m]> <nscnt[m] "No, I just don't care about them"> you can't tell
+07:27:14 <strcat[m]> nscnt: yet I can probably find a log where you fell for their BS
+07:27:22 <somenerd[m]> they pretend like they're a good person
+07:27:25 <nscnt[m]> mh ok
+07:27:26 <somenerd[m]> and in good faith
+07:27:27 <strcat[m]> they join the channel
+07:27:31 <strcat[m]> pretend to be some concerned person
+07:27:34 <somenerd[m]> it's easy to fall for it
+07:27:34 <strcat[m]> derail discussion
+07:27:45 <strcat[m]> and then often they do something making it clear it's the same few people
+07:27:50 <somenerd[m]> unless you're quite cynical
+07:28:07 <somenerd[m]> > and then often they do something making it clear it's the same few people
+07:28:07 <somenerd[m]> yeah....
+07:28:13 <strcat[m]> nscnt: and now we have to be really strict to avoid the channel being derailed and used to spread FUD
+07:28:22 <strcat[m]> nscnt: that is because of them, not us
+07:28:28 <somenerd[m]> they come here and say that there's a vulnerability (even though it's unsubstantiated)
+07:28:38 <strcat[m]> nscnt: so even just from this IRC/Matrix nonsense within our channels
+07:28:43 <strcat[m]> I don't see how you can claim it has little impact
+07:28:56 <strcat[m]> nscnt: and that is hardly one of the major issues, you're misrepresenting this as if it is one of the main things being talked about
+07:29:05 <strcat[m]> nscnt: this is one of dozens of ways they find to cause harm to us
+07:29:09 <strcat[m]> it is not one of the major ways, sure
+07:29:11 <strcat[m]> it still has an impact
+07:29:16 <strcat[m]> and as I said, it is going to have a response
+07:29:24 <strcat[m]> no matter how much less serious it is than their other attacks
+07:29:54 <nullnode[m]> So does James spammers get paid per post?
+07:30:02 <strcat[m]> nscnt: leaving it without a response leads to them continuing
+07:30:09 <nullnode[m]> If we isolate them and have people talk to them can we drain him funds?
+07:30:19 <strcat[m]> nscnt: I think you will see that I have successfully stopped their spamming for the time being
+07:30:28 <strcat[m]> nscnt: James will tell them to stop, and it will stop
+07:30:50 <strcat[m]> nscnt: if you don't want it to stop then sure your plan of having me spend 12 hours a day dealing with it
+07:30:53 <strcat[m]> and being totally quiet about what is being done
+07:30:54 <strcat[m]> is fine
+07:31:07 <strcat[m]> not happening sorry
+07:31:20 <strcat[m]> if they waste even 10 minutes of my time with their BS
+07:31:23 <strcat[m]> it is worthy of a post on Reddit
+07:31:35 <nscnt[m]> <strcat[m] "and being totally quiet about wh"> No, not at all. That's why I was referring to the effectiveness-energy-ratio.
+07:31:50 <strcat[m]> nscnt: did you not see them raiding the channel for 12 hrs yesterday?
+07:31:57 <somenerd[m]> I think he was talking about why copperhead is doing this
+07:32:02 <somenerd[m]> but yeah, it wastes time
+07:32:05 <somenerd[m]> a LOT of time
+07:32:16 <strcat[m]> nscnt: they want to waste my time and energy but they will stop doing it if it causes tons of harm to them
+07:32:18 <somenerd[m]> and this conversation is basically proof of that
+07:32:27 <strcat[m]> yes
+07:32:32 <strcat[m]> this is more of my time and energy used
+07:32:39 <strcat[m]> dealing with people giving unwanted and uninformed advice on how to counter them
+07:32:46 <strcat[m]> rather than actually helping to counter what they are doing
+07:32:53 <somenerd[m]> talking about it here is not effective
+07:33:05 <strcat[m]> I want help
+07:33:06 <strcat[m]> not advice
+07:33:09 <nullnode[m]> Yes it is
+07:33:13 <strcat[m]> giving me advice helps Copperhead, not me
+07:33:16 <strcat[m]> you are just using my time
+07:33:21 <strcat[m]> you could be helping to counter what they are doing
+07:33:24 <nullnode[m]> <somenerd[m] "talking about it here is not eff"> Having public records is the most important
+07:33:25 <somenerd[m]> don't talk about it here
+07:33:28 <nullnode[m]> Identifying and documenting
+07:33:30 <somenerd[m]> <nullnode[m] "Having public records is the mos"> yes
+07:33:41 <somenerd[m]> but this isn't the correct place
+07:34:09 <somenerd[m]> talking about it here doesn't spread the news
+07:34:28 <somenerd[m]> since everyone who's read strcat's messages already know what's happening
+07:34:40 <somenerd[m]> or anyone who came here for the last few days
+07:34:51 <somenerd[m]> this isn't a productive conversation
+07:35:26 <somenerd[m]> they manipulate people by acting neutral and in good faith
+07:35:38 <somenerd[m]> I can see why people fall for their lies
+07:35:54 <somenerd[m]> this spam is to waste our time
+07:36:05 <somenerd[m]> nothing much more
+07:36:11 <nullnode[m]> This sounds like fed talk from somenerd.
+07:36:16 <nullnode[m]> Suppression of the issues.
+07:36:23 <somenerd[m]> > This sounds like fed talk from somenerd.
+07:36:24 <somenerd[m]> lol
+07:36:39 <somenerd[m]> > Suppression of the issues.
+07:36:39 <somenerd[m]> yeah I should stop as well
+07:36:55 <somenerd[m]> and move on to something actually on topic
+07:37:04 <nullnode[m]> Addressing the happenings is on topic as can be.
+07:37:27 <nullnode[m]> Until a new or existing user needs help.
+07:37:43 <somenerd[m]> preferably not this channel
+07:37:51 <somenerd[m]> it's still wasting time of des
+07:37:54 <nscnt[m]> Would you like a friend to waste his money/time/whatever doing stupid shit in general? I appreciate Daniel and just wanted to let (whoever) know what my thoughts on it are, especially because they probably aren't exclusive to me. That's why I was mentioning it. Even though I don't fully agree, I accept it. I don't know why we should stop mentioning it. You will always try to talk to your friend if he's about to do
+07:37:54 <nscnt[m]> something that you think bad or just not worth it.
+07:37:55 <somenerd[m]>  * it's still wasting time of devs
+07:38:35 <somenerd[m]> I'm not saying that you're harming the project
+07:38:41 <somenerd[m]> if we continue
+07:38:44 <nullnode[m]> Why are you all telling someone else what to do?
+07:38:47 <somenerd[m]> they've succeeded
+07:38:54 <nullnode[m]> HE'S ASKING OTHER PEOPLE TO DO STUFF
+07:38:54 <somenerd[m]> I'll stop
+07:38:57 <nullnode[m]> NOT TELL HIM WHAT TO DO
+07:39:03 <somenerd[m]> people stop
+07:39:04 <nullnode[m]> Just saying.
+07:39:05 <somenerd[m]> stop
+07:39:06 <strcat[m]> those are my first 2 posts
+07:39:09 <strcat[m]> I am making more
+07:39:50 <take_a_deep_brea> nullnode:  the happenings need to be addressed in the room when its happening here lol. its happening right now elsewhere . as strcat said , it does not help him if we as semi-strangers brainstorm the situation and neglect his call for help , him being an actual part of the problem at hand and has a lot more information to go on .
+07:40:15 <somenerd[m]> also, they're trying to waste our time
+07:40:18 <somenerd[m]> that was the point
+07:40:30 <somenerd[m]> continuing this means that they've achieved what they wanted to do
+07:40:36 <nullnode[m]> Him being an actual part of the problem? Go fuck yourself.
+07:40:44 <take_a_deep_brea> what ?
+07:40:51 <somenerd[m]> he didn't mean it like that
+07:41:03 <take_a_deep_brea> i meant he is one directly affected by the problem
+07:41:04 <somenerd[m]> he meant that he has more experience with the problem
+07:41:14 <somenerd[m]> than basically everyone else
+07:41:15 <nullnode[m]> Ya I'm fried for now
+07:41:21 <take_a_deep_brea> and i did not mean to imply anything about you
+07:41:33 <somenerd[m]> he didn't imply anything
+07:41:43 <somenerd[m]> again, unproductive convo
+07:42:28 <somenerd[m]> it'll lead to misunderstandings at some point
+07:42:38 <somenerd[m]> and not really help
+07:42:39 <take_a_deep_brea> <nullnode[m] "Him being an actual part of the "> ( sorry , i cant stop lol)  i dont bend that way
+08:02:20 <strcat[m]> https://www.reddit.com/r/GrapheneOS/comments/lr730c/copperhead_maliciously_registered_the/
+08:10:59 <strcat[m]> and if the community doesn't want me spending my time on this you're all welcome to help
+08:11:07 <strcat[m]> looking for actual help not advice
+08:11:23 <strcat[m]> I need this whole nonsense to be over ASAP
+08:11:30 <strcat[m]> so do your part and help make that happen
+08:11:32 <somenerd[m]> Ok
+08:11:47 <strcat[m]> 3/5 posts done now
+08:11:50 <strcat[m]> going to do 2 more
+08:11:58 <strcat[m]> and then it's done until they make another series of attacks on us
+08:12:05 <strcat[m]> that is how this is going to work
+08:18:20 <somenerd[m]> * Ok, cool
+08:43:05 <privacy> my installation went through, after i had more luck with the CLI method, apparently. but at the end of the installation i got the following messages:
+08:43:06 <privacy> archive does not contain 'vendor_dlkm.img'.
+08:43:06 <privacy> archive does not contain 'vendor_other.img'.
+08:43:07 <privacy> Erasing 'userdata' OKAY [ 5.433s]
+08:43:07 <privacy> Erase successful, but not automatically formatting.
+08:43:08 <privacy> File system type raw not supported.
+08:43:08 <privacy> Erasing 'metadata' OKAY [ 0.046s]
+08:43:54 <rny> use the web installer pls.
+08:44:18 <rny> and dont paste chunk of texts with irc
+08:44:45 <take_a_deep_brea> i was a bit worried too the first time
+08:45:26 <take_a_deep_brea> so much so that i did a reinstall and got the same kind of messages
+08:45:54 <strcat[m]> they left already
+08:46:04 <strcat[m]> doesn't sound like they locked
+08:46:05 <take_a_deep_brea> yeah
+08:46:11 <strcat[m]> oh well
+08:46:17 <lordkartoffel> my installation went through, after i had more luck with the CLI method, apparently. but at the end of the installation i got the following messages:
+08:46:17 <lordkartoffel> archive does not contain 'vendor_dlkm.img'.
+08:46:18 <lordkartoffel> archive does not contain 'vendor_other.img'.
+08:46:19 <lordkartoffel> Erasing 'userdata' OKAY [ 5.433s]
+08:46:19 <lordkartoffel> Erase successful, but not automatically formatting.
+08:46:19 <lordkartoffel> File system type raw not supported.
+08:46:20 <lordkartoffel> Erasing 'metadata' OKAY [ 0.046s]
+08:46:40 <take_a_deep_brea> wow i get it now what this is
+08:47:23 <sphinx[m]> dumb bot
+08:49:17 <strcat[m]> take_a_deep_breath|mare: part of why web installer is better
+08:49:25 <strcat[m]> anyway they have to actually stay in the channel if they expect a response
+08:49:36 <take_a_deep_brea> yeah
+08:49:51 <sphinx[m]> <strcat[m] "anyway they have to actually sta"> the bot kicked them
+08:50:15 <take_a_deep_brea> oh , well thats sad
+08:51:43 <somenerd[m]> Yeah, sometimes people join and don’t wait
+08:53:16 <hulahooop> need help
+08:53:22 <sphinx[m]> <Sigyn "** Warning: if there is any bot "> this one I think
+08:53:23 <take_a_deep_brea> yes
+08:54:48 <hulahooop> why do i get kicked here all the time when i post messages from the installation process?
+08:55:40 <strcat[m]> you don't
+08:55:41 <strcat[m]> you left
+08:55:50 <hulahooop> archive does not contain 'vendor_dlkm.img'
+08:55:50 <hulahooop> archive does not contain 'vendor_other.img'
+08:55:55 <hulahooop> File system type raw not supported.
+08:55:57 <strcat[m]> you probably triggered freenode's spam protection
+08:56:35 <hulahooop> my installation went through, after i had more luck with the CLI method, apparently.
+08:56:38 <strcat> 03:43:09          privacy | Erasing 'metadata' OKAY [ 0.046s]
+08:56:39 <strcat> 03:43:09              <-- | privacy (5aba6543⊙d01pvd) has quit (Killed (Sigyn (Spam is off topic on freenode.)))
+08:56:42 <strcat> 03:46:20    lordkartoffel | Erasing 'metadata' OKAY [ 0.046s]
+08:56:44 <strcat> 03:46:20              <-- | lordkartoffel (6dc98f74⊙1211) has quit (Killed (Sigyn (Spam is off topic on freenode.)))
+08:56:50 <strcat> hulahooop: freenode kicked you for spam 2x
+08:56:54 <hulahooop> yea
+08:56:59 <strcat> you can't post tons of messages on irc
+08:57:04 <strcat> you have to use a pastebin site
+08:57:16 <strcat> Matrix allows people to do it and makes a pastebin link for irc
+08:57:21 <hulahooop> dude i just want to install graphene
+08:57:28 <strcat> hulahooop: no one is kicking you
+08:57:33 <strcat> the server kicked you automatically
+08:57:57 <strcat> hulahooop: it doesn't sound like anything went wrong, you just need to lock
+08:58:02 <strcat> hulahooop: fastboot flashing lock
+08:58:13 <strcat> accept locking, verify is says locked on the status screen
+08:58:16 <strcat> hulahooop: then start it up
+08:58:18 <strcat> should be fine
+08:58:35 <strcat> hulahooop: the CLI flashing has verbose output by default
+08:58:57 <hulahooop> i am now in the grapheneOS, but had these messages mentioned. apparently it did not affect the system.
+08:59:06 <strcat> hulahooop: did you lock?
+08:59:09 <hulahooop> yea
+08:59:17 <hulahooop> and lock in developer setting
+08:59:19 <strcat> hulahooop: you can verify the installation with Auditor if you want to be extra sure it's fully valid
+08:59:20 <take_a_deep_brea> then you are done
+08:59:25 <hulahooop> wow
+08:59:28 <strcat> hulahooop: but it's already passing verified boot
+08:59:33 <hulahooop> (y)
+09:01:37 <hulahooop> strcat, the verification process ran cleanly during the installation, is that still necessary now?
+09:02:49 <strcat[m]> hulahooop: it's not necessary but it's useful to set up Auditor
+09:03:07 <strcat[m]> either local verification or remote (or both)
+09:15:26 <came2complain[m]> Hi there, I just tried to install an app on my pixel3a with the latest version of the OS - I received a message saying: You don't have applications that can handle the file type 'application/vnd.android.package-archive', please install one to continue.
+09:15:42 <came2complain[m]> I was able to install that apk on another device running android 10 without issues.
+09:16:24 <take_a_deep_brea>  came2complain:  which app ? mind telling us the website?
+09:17:15 <came2complain[m]> briar-debug.apk - a modified version of briar
+09:17:26 <came2complain[m]> in development
+09:21:26 <came2complain[m]> probably because it is not signed
+09:21:40 <take_a_deep_brea> maybe
+09:21:50 <came2complain[m]> let me check and give feedback
+09:22:33 <take_a_deep_brea> came2complain:  check this out https://medium.com/codespace69/how-to-install-an-android-app-without-the-google-play-store-using-apk-5497a32c78a0
+09:23:35 <take_a_deep_brea> i am not sure how relevant this is but i searched for "application/vnd.android.package-archive" over net and got this article as one of the results
+09:24:57 <came2complain[m]> ok
+09:25:02 <came2complain[m]> other apk's work just fine
+09:25:08 <came2complain[m]> I'm sure it's because it wasn't signed
+09:25:40 <take_a_deep_brea> aah yes , that maybe the case
+09:30:47 <octeep[m]> Hello, are there unofficial efforts into porting GrapheneOS onto Pocophone F1? I'm planning to do so but I'd like to know if anyone has attempted it before.
+09:31:25 <take_a_deep_brea> i dont think anyone has attempted that .
+09:32:04 <octeep[m]> Alright then. Thanks!
+09:32:48 <take_a_deep_brea> no problem .
+09:38:38 <came2complain[m]> very strange issue - wasn't because it was not signed
+09:39:29 <came2complain[m]> I had to use th efile explorer but even there I couldn't go via the shortcut "Downloads" or "recent" I had to choose the device first and then the Download folder
+09:39:34 <came2complain[m]> only from there I could open it
+09:49:34 <rishabhksingh[m]> Is it okay if I flash graphene on a phone that ALREADY has graphene on it? Or do I have to flash the stock ROM first? Thank you in advance ^^
+09:50:10 <anupritaisno1[m]> rishabhksingh: there is no need to do so
+09:51:13 <rishabhksingh[m]> So a factory reset would suffice?
+09:52:48 <take_a_deep_brea> yes
+09:55:01 <rishabhksingh[m]> Alright, thank you ^^
+09:55:19 <take_a_deep_brea> no problem .
+10:04:25 <donkykong[m]> Hi was there an update today?
+10:07:30 <nscnt[m]> donkykong: There was no release today, no, but maybe the update was just applied after a reboot for you. Do you have a following question regarding something?
+10:08:43 <nscnt[m]>  * donkykong: There was no release today, no, but maybe an older update was just applied after a reboot for you. Do you have a following question regarding something?
+10:09:51 <donkykong[m]> <nscnt[m] "donkykong: There was no release "> No no all good thanks was just wondering as it just rebooted
+10:11:40 <nscnt[m]> donkykong: Do you have automatic reboot enabled for system updates, or...?
+10:12:24 <hulahooop> guys, there are no wallpapers right?
+10:13:34 <sonic_the_hedgeh> its all black like the element graphene for me.
+10:14:07 <hulahooop> yea
+10:16:05 <donkykong[m]> <nscnt[m] "donkykong: Do you have automatic"> No auto rebot is off I did click reboot but I never clicked the update
+10:17:13 <nscnt[m]> donkykong: It automatically checks for updates, yes. Maybe it couldn't check for updates for a while and you just got it now.
+10:17:41 <donkykong[m]> <nscnt[m] "donkykong: It automatically chec"> Ah OK thx
+10:19:37 <hulahooop> grapheneos --> <3
+10:19:39 <nscnt[m]> And if you use multi-user: The notification only shows up in the primary (i.e. owner) user.
+10:20:30 <hulahooop> Will donate
+10:20:40 <hulahooop> bye guys
+10:21:08 <donkykong[m]> <nscnt[m] "And if you use multi-user: The n"> Yea that's why I prob just got it now 😁
+11:45:15 <brenneke[m]> <southwest[m] "Have to head out - one thing to "> Confirmed I am set this way and no other keyboard installed.
+13:09:21 <zvl12[m]> <donkykong[m] "Yea that's why I prob just got i"> same things with text messages : only rings in owner profile
+13:33:07 <dazinism> zvl12: can get SMS to work in secondary profiles. Need to be using an SMS app in the main profile that supports this.
+13:34:12 <dazinism> Only one I know of is Messaging, that comes bundled with GrapheneOS
+13:35:11 <dazinism> Think you can use any SMS app in the secondary profile (havent tested many)
+13:36:38 <dazinism> And throw the toggle for a given secondary user to get SMS and calls in the multiple user settings
+13:36:48 <dazinism> *and need to
+13:37:43 <zvl12[m]> Using original Messaging : only vibrating in secondary profile...can't get it to work properly as in main profile
+13:38:18 <dazinism> Think it did for me, although it was six months ago
+13:38:24 <tedlancer> where do i go to ask question about grapheneos
+13:38:34 <dazinism> Here
+13:38:41 <tedlancer> oh ok lol thank u
+13:38:52 <tedlancer> i was able to install grapheneos just fine
+13:39:31 <dazinism> . ..It was six months ago and a quick test.
+13:40:02 <tedlancer> my question - is there a way to toggle sound vibrate mute from notification instead of using volume button - i have a hard case that makes it very hard on pixel 4
+13:42:37 <dazinism> tedlancer: can add a shortcut to the homescreen
+13:43:32 <dazinism> Longpress on homescreen > widget > settings (drag it onto screen) > sound
+13:45:14 <tedlancer> ok gotcha
+13:45:25 <tedlancer> i have two more short question
+13:46:36 <tedlancer> is there a way to lock the phone w tap anywhere on homescreen - again trying to not use power button
+13:46:36 <tedlancer> i cant get audio instructions on my osmand - it says text to speech engine is disabled or something like that
+13:47:03 <tedlancer> i cant seem to find out where i can fix text to speech - i have looked at accessibility options
+13:47:47 <dazinism> Need to add a TTS engine app
+13:47:48 <dazinism> Theres rhvoice on fdroid
+13:48:16 <dazinism> Install then go into android settings and enable that as your TTS engine
+13:48:18 <dazinism> Oh yeah, have to download a voice in rhvoice
+13:49:10 <tedlancer[m]> sorry i m still here
+13:49:19 <tedlancer[m]> i m using a different thing
+13:50:01 <tedlancer[m]> <dazinism "Theres rhvoice on fdroid"> ok let me try that
+13:56:42 <dazinism> tedlancer: theres a way to lock also
+14:01:06 <tedlancer[m]> <dazinism "tedlancer: theres a way to lock "> what is that
+14:03:04 <tedlancer[m]> i want to see if i can double tap somewhere in homescreen to lock it - dont want to use buttons since my case is heavy (i have to have that bcos i break phones easily)
+14:10:24 <tedlancer[m]> <dazinism "Install then go into android set"> how do i do this? i downloaded the voice from rhvoice - i m trying but cant seem to figure it out
+14:11:52 <dazinism> tedlancer: in the main android settings > accessibility
+14:12:13 <dazinism> For power off you can use
+14:12:19 <dazinism> https://github.com/butzist/ActivityLauncher
+14:12:39 <dazinism> Search for screen saver
+14:13:40 <tedlancer[m]> <dazinism "For power off you can use "> just want to lock it without power button not power off the phone
+14:13:47 <dazinism> Long press that and drag it onto the home screen
+14:14:09 <dazinism> Yeah sorry, thats what I mean
+14:14:53 <dazinism> That gives you a homescreen icon that allows you to start the screen saver
+14:15:09 <dazinism> By default the device locks 5 seconds later
+14:16:27 <dazinism> Can change that in settings > security > screen lock (tap the cog)
+14:21:52 <dazinism> What kind of monster case do you have???
+14:24:29 <UserNickolas> Hello, I was in the process of installing Grapheneos via WebUSB and encountered an error while flashing the factory images. Is this the right forum for asking advice?
+14:25:18 <dazinism> Yes
+14:26:26 <UserNickolas> Great thanks. I got the error message "Error: The requested file could not be read, typically due to permission problems that have occurred after a reference to a file was acquired."
+14:27:01 <strcat> UserNickolas: make sure not to use Incognito mode
+14:27:03 <strcat> if you're doing that
+14:27:08 <strcat> it doesn't allow it to have enough storage space
+14:27:39 <strcat> UserNickolas: Incognito uses in-memory storage based on a % of system memory and it isn't enough unless you have 128GB of memory or something like that
+14:28:10 <UserNickolas> It's not in incognito
+14:28:32 <UserNickolas> in chrome
+14:29:04 <strcat[m]> UserNickolas: which OS
+14:29:21 <UserNickolas> windows 10
+14:31:16 <UserNickolas> I checked everything should be up to date
+14:31:19 <strcat[m]> UserNickolas: recommend closing browser, opening again
+14:31:30 <strcat[m]> close unnecessary pages
+14:31:37 <strcat[m]> probably a memory or storage space issue
+14:32:04 <strcat[m]> run the download again and try again
+14:32:15 <strcat[m]> clear some storage space if you can
+14:32:50 <UserNickolas> ok, will the installation process start all over again pick up from where I left it?
+14:33:21 <UserNickolas> And what should I do with in the phone that's in fastbootd?
+14:34:29 <UserNickolas> *correction: ok, will the installation process start all over again OR pick up from where I left it?
+14:34:31 <tedlancer[m]> <dazinism "Install then go into android set"> im still not able to figure this out - osmand still says tts engine not working
+14:36:46 <strcat> UserNickolas: put it back to bootloader interface
+14:36:56 <strcat> UserNickolas: the web install process is smart enough to do it though
+14:37:06 <strcat> UserNickolas: just start over with download + flashing
+14:37:09 <strcat> it's smart enough to cope
+14:37:12 <strcat> it has to start over
+14:37:26 <strcat> UserNickolas: in all likelihood the page ran out of storage space
+14:37:41 <strcat> UserNickolas: don't know why but recommend closing as much stuff as you can (in browser and outside), freeing storage space, etc.
+14:40:37 <UserNickolas> Ok thanks, I'll try that 
+14:40:37 <UserNickolas> 👍
+14:40:56 <UserNickolas> guess i have to close this chat as well in the process
+15:37:20 <waterisblue7[m]> hey guys i have a quesiton - i have installed grapheneos but not sure how i can install nordvpn on my phone to shield from my phone carrier keeping tabs on the website i visit
+15:38:21 <freestar887> apparently you can download the apk from their site: https://nordvpn.com/download/android/
+15:38:35 <freestar887> however, I find them to be a very questionable service.
+15:38:43 <waterisblue7[m]> but what about all the trackers?
+15:39:01 <waterisblue7[m]> <freestar887 "however, I find them to be a ver"> what do u use instead?
+15:40:17 <freestar887> waterisblue7[m] Please see the section on web browsing. https://grapheneos.org/usage#web-browsing
+15:41:51 <waterisblue7[m]> <freestar887 "waterisblue7 Please see the sect"> yes i have gone thru that
+15:41:58 <waterisblue7[m]> i have bromite installed on my phone
+15:42:29 <waterisblue7[m]> but when i m using my carrier data, i want to stay anonymous
+15:42:47 <waterisblue7[m]> there are other things besides browser that can leak data, no?
+15:44:27 <strcat[m]> waterisblue7: just stop with the privacy theater stuff
+15:44:29 <strcat[m]> focus on real privacy
+15:44:32 <freestar887> well, just by using carrier data you're actually leaking your location.
+15:44:36 <strcat[m]> read the information available on our site and other good sources
+15:45:34 <strcat[m]> waterisblue7: enumerating badness is not a viable approach to achieving privacy or security and not how serious approaches address it
+15:46:14 <strcat[m]> also no particular reason you have to use an app from a VPN provider to use a VPN but if you don't trust their app why are you sending all your traffic through them anyway?
+15:46:32 <strcat[m]> not very logical
+15:55:30 <waterisblue7[m]> <freestar887 "well, just by using carrier data"> so how do i prevent that?  i still need to use gps on my phone, look up restaurants nearby, etc.
+15:56:22 <strcat> waterisblue7[m]: please read through https://grapheneos.org/faq and https://grapheneos.org/usage
+15:56:43 <strcat> waterisblue7[m]: also GPS has little to do with this stuff
+15:56:49 <strcat> GPS does not connect to a network
+15:56:51 <waterisblue7[m]> ok
+15:56:54 <strcat> it doesn't transmit anything
+15:57:00 <strcat> it receives location data from satelittes
+15:57:19 <strcat> waterisblue7[m]: please read about the app sandbox and permission model
+15:57:27 <strcat> if you have not given location access to an app, it doesn't have it
+15:57:38 <stencil[m]> <waterisblue7[m] "but when i m using my carrier da"> You are routing your traffic through  a provider with unsecured servers
+15:57:39 <strcat> location data is available in more ways than GPS and it's controlled by the location permission
+15:57:50 <strcat> please just read the FAQ
+15:57:59 <strcat> anything covered there should be information you get from there
+15:58:25 <waterisblue7[m]> ok i'll read them carefully
+15:58:26 <waterisblue7[m]> thank u
+15:59:05 <strcat[m]> GPS is receive only and there are other ways to get location such as nearby Wi-Fi networks, nearby cell towers, nearby Bluetooth devices and so on which is all controlled by the Location toggle
+15:59:28 <strcat[m]> which is a per-app permission toggle and you have to explicitly choose to grant background access rather than only foreground
+15:59:45 <strcat[m]> and then there's also a global toggle where when that's not enabled, even apps with the permission cannot access it
+16:00:12 <strcat[m]> plenty of control in your hands, no reason to be concerned about GPS specifically (which again is a receive only feature) rather than location data more generally
+16:00:29 <strcat[m]> you need to focus on choosing which data, permissions and other access to give apps
+16:00:35 <waterisblue7[m]> hmm
+16:00:38 <strcat[m]> if you don't give them it, they don't have it
+16:01:17 <waterisblue7[m]> yeah
+16:01:41 <waterisblue7[m]> ok i ll read thru the faq n usage more carefully n try to understand
+16:02:10 <waterisblue7[m]> thank u
+16:23:20 <strcat[m]> btw likely going to be adding another powerful releases server to deal with the influx of new users
+16:23:30 <strcat[m]> not enough bandwidth anymore
+16:23:44 <strcat[m]> still deciding some details on how to set it up
+16:40:40 <take_a_deep_brea> nice.
+16:52:08 <thetranstocommie> i couldn't find it on the faq, and i understand the tldr answer to this question is improved security, but is there any place i can read more about the specific security concerns that would come along with bundling microg or f-droid privileged?
+16:54:18 <strcat[m]> the trans to commie pipeline: they're different
+16:54:35 <strcat[m]> the trans to commie pipeline: F-Droid privileged extension trusts a specific F-Droid release with the ability to install apps without user consent in the background
+16:54:48 <strcat[m]> think it's quite obvious why that should only be given to a highly robust and trustworthy app that's not really buggy
+16:54:56 <strcat[m]> and it gives a bad user experience due to F-Droid bugs and limitations anyway
+16:55:12 <strcat[m]> it will happily close the app you are running and F-Droid has bugs like attempting to download/install multiple times
+16:55:28 <strcat[m]> the trans to commie pipeline: microG doesn't work from being bundled, it simply wouldn't work, that isn't enough
+16:56:06 <thetranstocommie> <strcat[m] "it will happily close the app yo"> yeah, that makes sense actually.
+16:56:06 <strcat[m]> the trans to commie pipeline: it requires that the system tricks apps into thinking it is Play services and the upstream way of doing that is a highly damaging patch destroying the security model of the OS and breaking verified boot
+16:56:16 <strcat[m]> the trans to commie pipeline: it can be done in a more scoped way
+16:56:58 <strcat[m]> the trans to commie pipeline: microG is a very incomplete reimplementation of Play services without security features like certificate pinning for services or apps
+16:56:59 <strcat[m]> it's insecure
+16:57:12 <strcat[m]> making apps trust it as Play services opens up major security holes
+16:57:31 <strcat[m]> and as should be obvious it's an implementation of those proprietary Google services
+16:57:35 <strcat[m]> so the same privacy issues, and so on
+16:57:54 <strcat[m]> the trans to commie pipeline: it is not suited to GrapheneOS at all, their approach is highly counter to ours
+16:58:02 <strcat[m]> the trans to commie pipeline: it's also never going to be robust or reliable
+16:58:07 <thetranstocommie> i know its insecure. anything that looks and feels so hacky so deeply integrated into the phone seems destined to have issues. I was just wondering if anyone knew a good article where i could read about those security and privacy concerns.
+16:58:09 <strcat[m]> it will always be playing catch up and perpetually being broken
+16:58:21 <strcat[m]> that's just inherent to what they are doing: reimplementing proprietary services without support from them
+16:58:29 <strcat[m]> they're implementing a small subset of the API
+16:58:36 <strcat[m]> apps will continue using more of the API, moving to newer APIs, etc.
+16:58:46 <strcat[m]> and each major release of Android it will completely break and be unavailable for months
+16:58:52 <strcat[m]> so how is that supposed to ever fit into GrapheneOS?
+16:59:03 <strcat[m]> we'd just end up dropping it each major release even if it wasn't unacceptable for other reasons
+16:59:09 <strcat[m]> so how can users depend on that?
+16:59:25 <strcat[m]> what users need is support for running without Play services from the apps which the apps are going to keep working
+16:59:34 <strcat[m]> not hacks to temporarily get stuff working which is going to break 2 months later
+16:59:44 <strcat[m]> how can you use a phone where the stuff you rely on keeps breaking unpredictably?
+16:59:54 <strcat[m]> that is a dead end and I don't know why people want it so badly
+17:00:09 <thetranstocommie> that makes perfect sense and i am definitely not arguing in favor of its inclusion. i was just curious if there was a good article or paper on the vulnerabilities is all
+17:00:19 <take_a_deep_brea> i dont think so
+17:00:34 <strcat[m]> I'm not really interested in making an article about stuff that's out-of-scope for inclusion in the OS for clear reasons
+17:00:44 <thetranstocommie> totally fair
+17:01:00 <strcat[m]> people would just take it as an attack and be spiteful towards us in return
+17:01:12 <take_a_deep_brea> thats true
+17:01:48 <strcat[m]> if people want stuff that's hacked together, inherently going to keep breaking over and over and involves hard-wiring proprietary services deep into the OS with special privileges and hacks... well
+17:01:57 <strcat[m]> I do not think they want GrapheneOS in the first place
+17:02:10 <take_a_deep_brea> the trans to commie pipeline:  I get the impression that while we talk about it frequently its not so popular and so i dont think any one has written much even listing its features
+17:02:12 <borosblount> hi, can anyone help me get continue installing grapheneOS on a pixel 4a? the bootloader is unlocked, the web interface buttons don't work but I was following a youtube guide- having trouble with flash-all.bat
+17:02:13 <strcat[m]> we looked into whether a subset of it could be usable and the answer is no
+17:02:27 <dan-is-a-bloody-> <strcat[m] "not hacks to temporarily get stu"> can't a privileged installer (like f-droid used to be) be used for the grapheneos google api caller updates?
+17:02:40 <strcat[m]> borosblount: you need to stop following third party guides and undo everything they have told you to do
+17:02:59 <strcat[m]> borosblount: you can't get support here until you stop following third party guides, undo everything they had you do and forget the misguided stuff they told you to do
+17:03:12 <strcat[m]> borosblount: there are 2 choices: https://grapheneos.org/install/web and https://grapheneos.org/install/cli
+17:03:17 <mr_hebi_san[m]> <borosblount "hi, can anyone help me get conti"> Were you using an incognito tab for the web installer?
+17:04:06 <take_a_deep_brea> borosblount:  break it up . You did not make much sense , please.
+17:04:07 <strcat[m]> borosblount: recommend the web installer
+17:04:09 <strcat[m]> borosblount: you need to use a supported browser
+17:04:10 <strcat[m]> borosblount: lists supported browsers on the page
+17:04:11 <take_a_deep_brea> you mentioned flash-all , web installer in the same sentence lol
+17:04:11 <strcat[m]> borosblount: use Microsoft Edge, since you already have itr
+17:04:39 <strcat[m]>  * borosblount: use Microsoft Edge, since you already have it
+17:04:51 <strcat[m]> borosblount: step 1: remove / uninstall anything third party guides told you to get and reboot your computer to try to make sure that stuff isn't running in the background breaking connecting to the device
+17:04:59 <borosblount> Absolutely- I was not using incognito. How can I undo what has been done? restart somewhere in this bootloader menu?
+17:05:10 <borosblount> firefox not edge
+17:05:17 <strcat[m]> borosblount: no I'm saying you need to undo what has been done on your computer
+17:05:23 <strcat[m]> borosblount: that's not a supported browser, Firefox doesn't have WebUSB
+17:05:28 <strcat[m]> use Edge
+17:05:41 <borosblount> I understand, thank you
+17:05:45 <strcat[m]> https://grapheneos.org/install/web#prerequisites
+17:06:02 <strcat[m]> borosblount: just delete anything you got from third party guides + uninstall anything you installed, and optionally reboot if you ran anything / installed anything from them
+17:06:10 <strcat[m]> borosblount: open up the web installer in Edge and follow it there
+17:06:17 <strcat[m]> borosblount: should be easy
+17:06:34 <borosblount> have opened it in edge, thank you very much
+17:06:35 <strcat[m]> alternative is https://grapheneos.org/install/cli but web install is easier
+17:06:50 <strcat[m]> third party guides are nearly all misguided/wrong and sometimes even dangerous
+17:07:05 <strcat[m]> if someone isn't familiar with CLI they should be using web install anyway
+17:07:26 <strcat[m]> we're aware the third party guides make it a lot harder for people to find the right info
+17:07:33 <hysaag77[m]> Pleace add always incognito mode to Vanadium...
+17:07:43 <nullnode[m]> @strcat congrats on capping out the release server! The movement grows like wildfire.
+17:07:44 <borosblount> i wouldn't say "familiar" with command line but have had to use it before
+17:07:54 <strcat[m]> hysaag77: adding features like that atm is a low priority
+17:07:57 <strcat[m]> for Vanadium
+17:08:14 <strcat[m]> focus is on the OS and for Vanadium on stuff that's relevant to both browser + WebView for now
+17:08:28 <strcat[m]> people are welcome to work on other things
+17:08:31 <strcat[m]> and submit patches for review
+17:08:43 <hysaag77[m]> Oh okey
+17:18:18 <borosblount> Thank you all so much for your help. It's now installed
+17:47:23 <dan-is-a-bloody-> <strcat[m] "what users need is support for r"> so r u sayin' u won't be making a tiny grapheneos google play services reimplementation to make my banking work?
+17:48:47 <strcat> dan-is-a-bloody-: I've made it clear we aren't going to be including any actual Play services reimplementation because it is unworkable / not viable for a production OS
+17:48:59 <strcat> dan-is-a-bloody-: you can read https://grapheneos.org/#never-google-services
+17:49:30 <strcat> if your banking app is able to work with a stub implementation of the APIs then perhaps it could work but no guarantee they continue allowing the app to work without being able to actually use Google services
+17:49:34 <strcat> dan-is-a-bloody-: info is all on our site
+17:49:47 <dan-is-a-bloody-> no but that's what i mean the stub implementation
+17:50:00 <dan-is-a-bloody-> cuz that's what u told me in PMs
+17:50:05 <dan-is-a-bloody-> i guess im confused
+17:52:29 <strcat[m]> dan-is-a-bloody-legend: suggest reading the section on the site
+17:53:07 <dan-is-a-bloody-> no i get the "no actual GPS" thing
+17:53:12 <dan-is-a-bloody-> i was just hoping for the stubs
+17:53:37 <strcat[m]> dan-is-a-bloody-legend: there isn't going to be any actual implementation of Google services or other APIs if that isn't clear
+17:53:47 <dan-is-a-bloody-> its clear
+17:53:53 <strcat[m]> it does not belong baked into the OS as something specifically privileged
+17:54:04 <dan-is-a-bloody-> yup
+17:54:10 <dan-is-a-bloody-> just the stubs pls
+17:54:15 <dan-is-a-bloody-> stubs when?
+17:55:21 <waterisblue7[m]> Wouldn't downloading ur banking app from aurora store work?
+17:55:21 <waterisblue7[m]> I do my banking on a browser but I'm just curious
+17:56:07 <dan-is-a-bloody-> ye my banking apps just refuse to work and adb debug is showing its cuz its trying to make a google play service call and fails, so a stub wud fix it
+17:56:26 <waterisblue7[m]> What's a stub
+17:56:55 <dan-is-a-bloody-> its like a fake door to gps
+17:57:15 <dan-is-a-bloody-> the app doesnt know the door is fake so it doesnt crash it just thinks there's no connection to gps
+17:57:20 <dan-is-a-bloody-> (google play services)
+17:57:27 <dan-is-a-bloody-> (not global positioning system)
+17:57:28 <waterisblue7[m]> Oh OK. Doesn't that defeat the purpose of having grapheneos in the first place?
+17:57:38 <dan-is-a-bloody-> no it doesnt cuz its just a fake door
+17:57:40 <strcat[m]> waterisblue7: not sure what you're talking about
+17:57:57 <strcat[m]> waterisblue7: and again you've really got the *wrong* idea of what GrapheneOS is and need to read https://grapheneos.org/features and https://grapheneos.org/
+17:58:06 <strcat[m]> you don't understand the primary purpose of the project
+17:58:13 <strcat[m]>  * you don't understand the primary purposes of the project
+17:58:42 <strcat[m]> waterisblue7: please read https://grapheneos.org/#never-google-services in particular after reading the features page to understand what the project is about
+17:59:02 <strcat[m]>  * waterisblue7: please read the features page to understand what the project is about and then read https://grapheneos.org/#never-google-services which covers this well
+17:59:26 <waterisblue7[m]> Oh ok
+18:48:35 <RoyValentine[m]> @dazin
+18:49:17 <RoyValentine[m]>  * dazinism Nothing really came from the seedvault issue: https://github.com/seedvault-app/seedvault/issues/213
+18:49:52 <RoyValentine[m]> Essentially there is nothing the logs could show and thus the solution was to completely reset SeedVault via deletion of app data. Oh well.
+19:12:08 <southwest[m]> <hysaag77[m] "Pleace add always incognito mode"> Long press on Vanadium Icon > you will see New incognito tab > drag it to your home screen. Voilà
+19:15:32 <nullnode[m]> <RoyValentine[m] "Essentially there is nothing the"> Damn, sorry it got in that state
+19:16:06 <nullnode[m]> Anything you can think that was abnormal happen before hand?
+19:23:58 <hysaag77[m]> <southwest[m] "Long press on Vanadium Icon > yo"> Ohh
+19:55:57 <bizanon[m]> is there a way to globally forward socks5 traffic? not thru vanadium or firefox
+19:56:55 <strcat> bizanon[m]: sure, use a VPN service supporting it
+19:57:21 <bizanon[m]> something like a proxifier for gos
+19:57:25 <bizanon[m]> not a vpn socks
+19:57:38 <strcat> you're misunderstanding what I'm saying
+19:57:54 <strcat> the way the OS supports rerouting traffic through an app is the VPN service feature
+19:58:00 <strcat> the app does not actually have to implement a 'VPN'
+19:58:14 <bizanon[m]> oh okay
+19:58:25 <bizanon[m]> any apps like that exist right now?
+19:58:36 <strcat> yes, don't have a list tho
+21:25:41 <strcat[m]> new releases.grapheneos.org server is live
+21:25:45 <strcat[m]> there are 2 servers now (DNS round robin)
+21:36:28 <raavann[m]> 🤘
+21:54:55 <anupritaisno1[m]> btw we are accepting more testers again
+21:55:13 <anupritaisno1[m]> all supported devices. pm if interested
+22:05:21 <tedlancer[m]> Hi people, I asked this question this morning re TTS. I installed RHVoice as recommended and downloaded one of the English languages.
+22:05:21 <tedlancer[m]> When I go to OSMAnd n put in navigation, it still says TTS engine off or something like that. Not sure if this is the right place to ask this question...
+22:05:47 <tedlancer[m]> I can't hear any navigation voice
+22:18:12 <strcat[m]> you have to enable it as the TTS engine
+22:18:13 <strcat[m]> not just install it
+22:19:02 <tedlancer[m]> Can u please guide me how I can do that
+22:19:19 <tedlancer[m]> I went into accessibility n thought I did enable it
+22:27:43 <p1trson[m]> Hello folks. Before I order my new Pixel 4a 5G, jsut wanted to verify whether the OS is now fully supporting it? ( so no beta or RC only?) I did read the FAQ and seen that it's recommended device. I've seen also that the os release for this model is marked as "Stable"
+22:29:12 <TheJollyRoger> Hello p1trson[m], yes, your 4a5G will be fully supported. Make sure you download the correct image for it, which is marked with the word "Bramble."
+22:29:43 <TheJollyRoger> If you attempt to flash "Sunfish" to it you will permanently damage the bootloader and wreck the phone, so make sure it says "Bramble."
+22:30:09 <p1trson[m]> cheers m8! going to order it just now ^^
+22:30:19 <TheJollyRoger> Welcome aboard the ship in advance, future shipmate :)
+22:34:59 <RoyValentine[m]> <nullnode[m] "Anything you can think that was "> Nothing really that I can think of. I've just been on stable OTA since last year. I do run a syncthing backup task on the folder that seedvault saves to but I don't know if that would cause any issue over time. It had been working fine until December of last year.
+23:00:23 <tedlancer[m]> Can someone please tell me how I can enable TTS
+23:31:39 <tedlancer[m]> i want to get the voice on the gps working in osmand
+23:31:46 <tedlancer[m]> i dont know what i am doing wrong
+23:31:53 <tedlancer[m]> i m sure it is a simple fix
+23:32:06 <tedlancer[m]> everytime i start the navigation it says TTS engine failed
+23:42:42 <nullnode[m]> I tested the TTS apps in F-droid and can't seem to get one working, getting to my workstation now to check the errors, but I'm guessing they are using older API versions
+23:43:12 <strcat[m]> RHVoice works fine
+23:43:21 <strcat[m]> tedlancer: did you select it as the active TTS or no
+23:46:24 <nullnode[m]> @strcat:matrix.org: I get errors with RHVoice, couldn't start TTS engine
+23:47:44 <strcat[m]> I have heard success stories with it though
+23:47:49 <strcat[m]> suggest reinstalling it
+23:48:08 <nullnode[m]> I'm using it with osmand, just downloaded them to test for tedlancer:
+23:48:27 <nullnode[m]> adb logs coming soon, almost home with the dog
+23:48:59 <nullnode[m]> F-Droid latest for the apps, and latest GrapheneOS build
+23:51:12 <infanta[m]> Just tried RHS, works fine for me. Make sure it is selected as preferred engine in text to speech output in system settings.

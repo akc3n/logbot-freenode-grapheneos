@@ -1,0 +1,671 @@
+00:01:10 <gqz5> I am in a critical state and this is important information for me now. Some statistics-information like for example 'last year there was one upstream android issue that was fixed' would help better understanding the risk-state i am in. I am not living in a country with working jurisdiction.
+00:01:47 <strcat[m]> the best available information is on the site, AOSP docs, etc.
+00:02:05 <strcat[m]> it's not clear what information you're trying to get here
+00:02:19 <TheJollyRoger> He's trying to ask what it would take to bypass the lockscreen.
+00:02:24 <strcat[m]> if the profile wasn't logged and has a strong profile then they aren't getting the data
+00:02:36 <strcat[m]> if the profile was logged in, but locked, then it depends on OS / firmware security
+00:02:55 <strcat[m]> assuming they just keep the device powered on indefinitely, the opportunity to one day exploit it doesn't go away
+00:03:25 <Railgun_Lover[m]> Right, data is already unencrypted
+00:03:31 <strcat[m]> no
+00:03:34 <strcat[m]> it's not unencrypted
+00:03:41 <strcat[m]> that's not how encryption works
+00:03:49 <strcat[m]> the data on the storage is always encrypted
+00:03:51 <Railgun_Lover[m]> Oh my bad sorry
+00:04:02 <strcat[m]> as I said earlier, the best information is on the site
+00:04:28 <strcat[m]> https://grapheneos.org/faq#encryption https://grapheneos.org/features and various AOSP docs, etc.
+00:04:53 <gqz5> yes, this situation with the keeping powered on is known. What was for example the number of exploits in 2020 for a logged in profile? One? Ten?
+00:04:55 <strcat[m]> you won't get better information (or even accurate, factual information) asking random people in chat channels
+00:05:12 <strcat[m]> gqz5: there isn't an answer to that
+00:05:50 <strcat[m]> you need to be a lot clearer about what you want to know and need to realize that kind of information isn't really readily available for AOSP (you would have to go through all the security bulletins and put substantial research into figuring out what would be reachable in this case)
+00:05:56 <strcat[m]> and the topic is not AOSP
+00:06:15 <strcat[m]> you're asking unanswerable things
+00:06:17 <strcat[m]> just not productive
+00:06:36 <strcat[m]> if the device is logged in, and locked, the encryption keys are available and usable by the OS
+00:06:49 <strcat[m]> the OS can access data not protected via another layer like the keystore
+00:06:52 <strcat[m]> that's all covered in our docs
+00:07:04 <strcat[m]> at https://grapheneos.org/faq#encryption
+00:07:51 <strcat[m]> so, they can keep the device powered on, keep it disconnected from networks, and one day maybe they have a firmware or OS exploit available, it's pretty doubtful they do off hand
+00:08:00 <strcat[m]> you aren't clear about who exactly has the device, etc.
+00:08:03 <strcat[m]> or which device it is
+00:08:12 <strcat[m]> anyway there's nothing more to say beyond that
+00:09:00 <strcat[m]> this channel doesn't have better info than the docs on topics that are covered well
+00:09:01 <gqz5> yes, i know that this state is the worst possible. I know about this state. The phone have the 'Titan M' chip inside
+00:09:40 <strcat[m]> Titan M is not particularly relevant other than it protecting data encrypted with the StrongBox keystore very well, since the (only) profile is logged in
+00:10:21 <strcat[m]> Titan M doesn't protect the application processor or OS, it protects the keystore and helps with encryption (how it does the latter is covered in the docs well)
+00:10:38 <TheJollyRoger> gqz5: If you want, you can use other profiles, and hit "End Session" to eject the keys from memory when they are not in use; this is the recommended course of action if you're worried about your phone being confiscated, kept switched on, and then exploited later.
+00:10:39 <strcat[m]>  * Titan M doesn't protect the application processor or OS, it implements the modern keystore and helps with encryption (how it does the latter is covered in the docs well)
+00:11:14 <strcat[m]> Titan M is part of verified boot enforcement but bypassing verified boot is pretty far from being the lowest hanging fruit
+00:11:37 <strcat[m]> verified boot is a lot harder to exploit than say, the Linux kernel via Wi-Fi
+00:11:41 <gqz5> TheJollyRoger, yes, i would do this next time like that when there is a next time
+00:12:33 <strcat[m]> attack surface is determined by what you had enabled (whether you had our USB peripheral setting at default, developer options / ADB should be disabled, Bluetooth and Wi-Fi are ideally disabled, etc.)
+00:13:01 <strcat[m]> phone model (newer ones are somewhat better, slightly more secure firmware and kernel)
+00:13:12 <strcat[m]> there is no answer to what you're asking though
+00:13:21 <duck[m]> hang onto the phone until someone posts an android vulnerability poc on their github
+00:13:58 <strcat[m]> it would usually need to be changed to deal with GrapheneOS
+00:14:39 <strcat[m]> an off-the-shelf memory corruption exploit is pretty unlikely to work without substantial effort (userspace) or at least modest changes (kernel) and that's the main thing that's relevant
+00:14:51 <strcat[m]> if it can work at all
+00:15:43 <strcat[m]> anyway the profile is logged in, the OS can access the data, so if they can successfully exploit the OS they can get the data, but if they caused a kernel panic or something then they lost their chance to get it
+00:15:50 <gqz5> is it known in practice that police open up phones to extract on the physical layer the encryption key from the memory?
+00:16:06 <strcat[m]> you haven't said the device model
+00:16:21 <gqz5> 3a
+00:17:02 <strcat[m]> https://source.android.com/security/encryption/file-based
+00:17:43 <strcat[m]> one of the minor advantages of newer devices is that the OS doesn't have access to the encryption keys directly when logged in but rather just uses them (they aren't in memory)
+00:17:45 <strcat[m]> I don't think 3a has that
+00:18:29 <strcat[m]> anyway not particularly relevant since if the OS was exploited while it's logged in they can access data not encrypted with keystore, etc. doesn't matter that it'd be really hard to obtain the key since it can be used
+00:18:40 <gqz5> When the simcard gets removed when the phone have locked screen, did the profile gets unloaded? Like for example Tails when the usb-drive is been removed.
+00:19:46 <strcat[m]> SIM card isn't relevant
+00:19:53 <strcat[m]> that's just how you authenticate with a mobile network
+00:20:58 <strcat[m]> it also sounds like a mistake if their procedures include removing a SIM rather than just putting it in a bag that blocks connections and only taking it out when they get to somewhere it won't have access (they probably aren't that competent but removing the SIM card or otherwise naively tampering with the device, etc. is just dumb)
+00:21:18 <gqz5> I know that from the technical point of view its not relevant. But from the practical point of view is important because they often check the IMEI by removing the SIMcard and looking on the simcard-tray
+00:21:36 <strcat[m]> I don't expect they're particularly competent but that would be the best approach, minimal tampering / messing with the device until they are ready to do something
+00:22:38 <strcat[m]> gqz5: sounds weird, they don't need to do that to get it
+00:22:42 <strcat[m]> and if it started being used as a trick they wouldn't do it
+00:22:58 <strcat[m]> anyway, it's not relevant, since it's not used as some kind of booby trap
+00:23:07 <strcat[m]> SIM card is just how you authenticate with the mobile network
+00:23:32 <gqz5> I know that they remove the simcard, write down the IMEI to a database and then put the phone in a bag and write down a individual number on this paperbag.
+00:24:13 <strcat[m]> sounds pretty strange
+00:24:14 <gqz5> The question here is: In the default setting, does GrapheneOS unload the profile when it detects that the simcard is been removed?
+00:24:23 <strcat[m]> they have to keep the phone charged or they're deciding they don't want the data
+00:24:30 <strcat[m]> gqz5: was already answered above
+00:25:05 <strcat[m]> and you can see from https://grapheneos.org/faq#encryption that end session is for secondary profiles, end session for the owner profile is 'reboot' due to how it encrypts system data used by other profiles, etc.
+00:26:21 <strcat[m]> technically it could soft reboot (kill everything and restart userspace) and clear the encryption keys in a similar way but that's basically a reboot
+00:26:36 <strcat[m]> better to just actually reboot considering it's not really more inconvenient than that
+00:27:14 <strcat[m]> gqz5: all relevant info is available in those docs (our site, AOSP site)
+00:28:11 <gqz5> I read twice what was written above. SIM card is not relevant = when the simcard is removed when phone have a locked screen and profile logged in, then the profile dont get unloaded?
+00:28:46 <strcat[m]> answered above
+00:28:48 <strcat[m]> it's not relevant
+00:29:11 <strcat[m]> also explained that there is no such thing as unloading the owner profile, just rebooting
+00:29:47 <strcat[m]> SIM card is really not relevant, the SIM card isn't in charge of anything and if it dies or whatever the phone won't sabotage itself
+00:29:58 <strcat[m]> SIM card is how you authenticate to the mobile network, that's it
+00:30:27 <strcat[m]> I said above it's not booby trapped and clearly if that started being a thing they would not do something stupid like that anymore (which you say they do, but it seems pretty stupid)
+00:30:38 <strcat[m]> don't know what you were saying about a paper bag or whatever
+00:31:27 <strcat[m]> the only relevant OS feature would be the planned idle reboot option
+00:31:36 <strcat[m]> people haven't been interested in doing it
+00:31:46 <strcat[m]> lack of interest -> doesn't get implemented, that's how open source works
+00:32:46 <strcat[m]> the planned feature is that after N hours of not unlocking any profile, the phone reboots (configurable, could be something like 48h by default)
+00:33:16 <strcat[m]> of course, that's inherently pretty easy to bypass
+00:33:32 <gqz5> yes, that would be a great functionality. Because the situation was known to last for 7 hours. Sadly inside those 7 hours they got the phone. If the timed reboot was there, i could have set it to 7 hours and feel now much much safer.
+00:35:15 <strcat[m]> it would depend on the main SoC timer(s) and those aren't tamper resistant, still useful though
+00:35:36 <strcat[m]> don't see most other things people tend to propose as useful though
+00:36:08 <strcat[m]> and keep in mind if any approach becomes common (which it could if it was genuinely a good idea and got implemented) they would know about
+00:36:14 <strcat[m]>  * and keep in mind if any approach becomes common (which it could if it was genuinely a good idea and got implemented) they would know about it
+00:39:54 <gqz5> I think also when they knew that the phone would shut off in N hours, they wont be able to do something in that short time. They send the phones to other police station for decoding and thats not done that fast.
+00:43:36 <strcat[m]> I do think it would be useful which is why it's planned
+00:43:39 <strcat[m]> not implemented though
+00:43:41 <strcat[m]> wouldn't be that hard
+00:44:37 <gqz5> Thanks for the nice talk. The informations have helped. I hope they do some error or when they try to exploit it reboots. It helped me personal to have some intelligent discussion after all that.
+00:47:18 <strcat[m]> chances are that if they fail to exploit a phone in that context it is going to reboot (kernel panic, etc.)
+00:47:31 <strcat[m]> doesn't do them any good to exploit one of the radios without exploiting the kernel from there
+00:48:28 <strcat[m]> anyway would not really expect they are capable of doing anything other than applying some third party tool they bought
+00:48:44 <strcat[m]> and that's extremely unlikely to work
+00:48:47 <strcat[m]> but they can just sit on it and wait
+00:48:50 <strcat[m]> keep it charged
+00:53:02 <gqz5> When for example they have got a GrapheneOS phone on 1.1.2020, would they had success until now because some known exploit was released since then? Of course noone know when the next exploit would be released, but it would be some information to know when the last known was there. Yes, this is partly a AOSP-question but there is chance someone
+00:53:02 <gqz5> could know that here.
+01:01:00 <gqz5> The timer for the wifi i am using now is nearly at 0. I have to go now. I would read any answerts in the irc log that is available on the website. Thanks and bye
+01:11:40 <strcat[m]> it's not really how vulnerabilities work
+01:11:55 <strcat[m]> just because an issue is fixed doesn't mean it was exposed, or that they have an exploit for it with AOSP, or that it would work with GrapheneOS due to the hardening
+01:12:26 <strcat[m]> but the longer they have it and keep it charged, the more likely it becomes they can do it
+02:49:05 <faxing[m]> The backups feature is 100% local, right?
+02:49:16 <faxing[m]> Nothing will be uploaded anywhere?
+02:49:57 <TheJollyRoger> faxing[m]: If you select either internal storage, or a USB drive, it's all local.
+02:50:43 <faxing[m]> Okay, thank you
+02:50:53 <TheJollyRoger> Regardless of whether or not you decide to upload the backups anywhere, it's all encrypted anyways. The only thing that's not encrypted are the .apk files themselves, which are generally assumed to be publicly available on the internet.
+02:52:06 <TheJollyRoger> The actual backup data, including your contact list, is encrypted using your 12-word recovery seed. It's as secure as your recovery seed is.
+03:01:43 <rny[m]> why does there seem to be so many problems with wifi
+03:01:49 <rny[m]> from users
+03:02:12 <faxing[m]> Wow that's great, I really appreciate the information
+03:02:20 <TheJollyRoger> Anytime!
+03:02:24 <TheJollyRoger> rny[m]: I... I have no idea.
+03:02:55 <rny[m]> i have a hard time understanding if its something wonky going on with the user's router/network or it is just difficult to use aosp wifi
+03:02:55 <faxing[m]> After you back up and everything, once you restore, do you get to choose what to restore? Or does everything automatically get restored nomatter what?
+03:02:55 <faxing[m]> (so sorry for the questions lol)
+03:04:41 <TheJollyRoger> faxing[m]: no problem! When you restore, it'll restore everything it was allowed to back up. This can in some cases include some things like system settings, this is why Seedvault is generally intended to be restored only once, and only from the launcher.
+03:05:29 <faxing[m]> Alright, that's good to know -- might not work out too well for my situation then, thank you so much again, you've been a huge help
+03:05:31 <TheJollyRoger> faxing[m]: it's important to note though that some (not all, but a great deal of) apps set a "Please do not back me up!" flag. Seedvault will respect this flag.
+03:05:44 <faxing[m]> <TheJollyRoger "faxing: it's important to note t"> Ah okay
+03:05:47 <faxing[m]> Thank you
+03:05:52 <TheJollyRoger> So if you take a backup, sometimes you will notice that some apps will report "No, this app is not allowed to back up."
+03:06:03 <TheJollyRoger> Of course!
+03:06:38 <TheJollyRoger> Yeah, Seedvault will back up the app data that apps allow it to, as well as your contact list and system settings, but it won't back up files on your shared storage space, such as your photos and movies; that's going to be up to you.
+03:06:54 <faxing[m]> I'm looking to do a factory reset but I didn't want to lose my photos or a couple of other choice things, seems like it might work out better to just attempt to back them up manually lol
+03:06:54 <TheJollyRoger> *and some of your system settings
+03:07:27 <TheJollyRoger> Yeah. Stuff on your shared storage, you'll need to back up yourself; I usually just plug it into my computer and dump everything onto a hard drive every so often.
+03:10:33 <TheJollyRoger> Afterwards I usually just erase everything I don't need on the phone anymore, since storage space on the phone is at a premium, but for the time being hard drive space is relatively inexpensive. (Let's hope it stays that way!)
+03:14:45 <TheJollyRoger> If I knew how to program, something I would like to build would be something like Tarsnap for Android, except something that would give the user the choice to back up their phone's shared storage to a computer on their own, local network, like a home network. The use case being, something that could be something you could easily "set and forget" so your phone backs up its files (encrypted) to
+03:14:47 <TheJollyRoger> your desktop at night while it's charging.
+03:15:17 <TheJollyRoger> Unfortunately, going to be a long way off, I'm still struggling to find my way around the Android SDK :P.
+03:17:50 <faxing[m]> That'd be amazing, though.  That's something that the open-source Android community is really missing -- especially something that would allow you to be more selective in what was backed up.  If you ever get around to it, or need any help, just shoot me a DM and I'll do what I can lol.
+03:21:15 <TheJollyRoger> Heh, well, I have to learn to program first, and get good. It's a classic yak-shaving problem
+03:58:57 <Wonderfall[m]> Last update is awesome. Thanks for your work as usual.
+04:01:52 <TheJollyRoger> Wonderfall[m]: yarr~
+05:16:45 <t22> is it just me or is attestation.app login+signup down?
+05:17:36 <rny[m]> t22: just you
+05:17:43 <rny[m]> :(
+05:18:47 <t22> i get 'incorrect password' for attestion.app
+05:18:56 <t22> weird, bc i never changed it
+05:19:04 <t22> and the 'create new account' button does nothing
+05:20:39 <strcat[m]> in which browser
+05:20:51 <strcat[m]> t22: some new security features were added
+05:20:56 <strcat[m]> maybe you have extensions breaking it
+05:23:53 <t22> i get 'incorrect password' when logging in to attestation.app - weird, because i never changed it
+05:24:14 <t22> furthermore, in chrome there is no 'login/create new account' button (but there is in safari and firefox)
+05:24:31 <t22> however, the create new account button doesn't actually seem to do anything
+05:24:43 <strcat[m]> t22: refresh page and try again
+05:25:02 <strcat[m]> Firefox seems to implement Origin header in a non-standard way
+05:25:04 <t22> thanks, strcat
+05:26:43 <t22> does attestation.app warn us if something is off with our phone, or does it just display relevant information and leave it up to us to verify whether everything is nominal?
+05:27:12 <strcat[m]> if you set an alert email it warns you if it doesn't submit valid attestations
+05:27:36 <strcat[m]> it relies on the device providing a valid attestation to authenticate it
+05:28:07 <t22> got it
+05:28:09 <strcat[m]> a sophisticated attacker able to deeply compromise the device is assumed to disable sending them, why would they allow reporting failure?
+05:28:47 <strcat[m]> plan is to add support for reporting failures where it can still identify the device properly but it's a low priority and the main way it reports issues is via alerts when no valid attestations are submitted
+05:28:59 <strcat[m]> and it provides useful hardware-based information like version, etc. to look at
+05:29:19 <strcat[m]> and the app retrieved info, which can't be faked by a malicious app without exploiting the OS each boot
+05:30:18 <t22> is there a list of, say, 'expected' boot hashes that ours are compared against?
+05:32:44 <t22> never mind, looks like i need to read the readme
+05:32:55 <strcat[m]> it verifies the verified boot key
+05:33:00 <strcat[m]> it automatically verifies all that
+05:33:13 <strcat[m]> verified boot hash refers to the hash of the entire OS
+05:33:18 <strcat[m]> the specific OS release
+05:34:15 <strcat[m]> the attestation.app issue is that Firefox applies Referrer-Policy to the Origin header too
+05:34:50 <strcat[m]> even though that's not what the standard says
+05:35:05 <strcat[m]> the only reason I added the Origin check at all is because only Chromium-based browsers have the fetch security headers
+05:36:04 <t22> understandable, thanks for the explanation. on another note, is it possible for third-party keyboards to steal the device unlock password upon entry?
+05:37:16 <strcat[m]> if that's what you're using to enter it, why not?
+05:37:35 <strcat[m]> a keyboard knows everything you enter through it and the content of text fields you edit with it
+05:39:06 <t22> hm, i was wondering if there was any hardening around that. for example, perhaps android could sandbox the keyboard during unlock, disallowing persistent storage/ipc/network communications? i am not familiar with this, just throwing ideas at the wall.
+05:39:38 <t22> i find it bizarre that some keyboards like swiftkey stop functioning after a while without network permissions
+05:39:59 <t22> obviously not grapheneos's fault
+05:42:04 <strcat[m]> t22: that doesn't really make sense
+05:42:12 <strcat[m]> if it's running it can save the data for later
+05:42:24 <strcat[m]> also why are you focusing only on unlock? you enter tons of sensitive data through it
+05:42:26 <strcat[m]> including other passwords
+05:42:33 <t22> true
+05:42:36 <strcat[m]> t22: don't use a keyboard you don't trust
+05:42:48 <strcat[m]> t22: it can not only see what you enter through it but enter things into text fields itself
+05:43:03 <strcat[m]> and your current keyboard is allowed to manage the clipboard (read it in background)
+05:43:44 <strcat[m]> should be fairly obvious it can obtain it via paste
+05:43:57 <strcat[m]> there's not much point in temporarily disallowing Network
+05:44:27 <strcat[m]> t22: what do you mean stop functioning after a while? I guess it retrieves assets and starts refusing to work if it can't
+05:44:46 <strcat[m]> anyway removing Network permission from keyboard hardly avoids trusting it
+05:45:06 <strcat[m]> it can just use a keybind to select address bar in browser, go to a site and enter your data there, then close the site, all in 200ms
+05:45:09 <t22> yeah. when i used swiftkey without network permissions after a few days it would crash whenever it would appear
+05:45:10 <strcat[m]> or countless other things
+05:45:17 <t22> wow, i didn't consider that. good point.
+05:45:50 <strcat[m]> the Network permission is also in general not as useful as you probably think
+05:45:56 <strcat[m]> for similar reasons
+05:46:06 <strcat[m]> it works fine in the OS
+05:46:22 <strcat[m]> but not all apps care to enforce it
+05:46:51 <strcat[m]> we'll be addressing that in Vanadium but we can't do anything about other browsers, etc.
+05:47:00 <t22> "not all apps care to enforce it" - what does this mean? an app can still communicate over the network even if the permission is denied?
+05:47:12 <strcat[m]> no
+05:47:38 <strcat[m]> the app can't use the network itself, because both direct (using network sockets) and indirect (using OS APIs like DownloadManager and others) access is denied
+05:47:58 <strcat[m]> but you have other apps in the same profile with the Network permission
+05:48:04 <strcat[m]> I'm talking about those apps not enforcing it for other apps
+05:48:17 <t22> ah, i see
+05:48:29 <strcat[m]> the OS enforces it properly
+05:48:34 <strcat[m]> we know for a fact that many apps do not
+05:48:43 <strcat[m]> it can apply to any permission or access
+05:48:45 <strcat[m]> not just this one
+05:48:55 <strcat[m]> but this one in particular is something apps don't really care about
+05:49:07 <strcat[m]> even though it's based on one of the low-level AOSP permissions
+05:49:27 <strcat[m]> it's not just something we added, we reused existing infrastructure and just made it dynamic, revokable and enforced better by the OS
+05:51:10 <t22> got it. how reliable is the always-on VPN setting in your perspective?
+05:58:07 <strcat[m]> no issues with it
+05:58:16 <DHFuchsiaOSwhen> <t22 "got it. how reliable is the alwa"> Combined with Block connections without VPN, it's reliable (no issues, at least not that I know of)
+05:58:26 <strcat[m]> just make sure you understand you need to enable the block all connections not via VPN toggle too to prevent leaks
+05:58:53 <strcat[m]> and also that the foreground profile controls network configuration (including VPN) for the system as a whole right now
+05:59:11 <t22> thanks for all the help, strcat
+05:59:33 <strcat[m]> so you should set up the VPN in each user and make it always on + block connections not through it (the built-in VPN support inherently works that way)
+05:59:40 <t22> yeah, makes sense
+06:19:18 <alphafox32[m]> Hi everyone, I have a question regarding GrapheneOS capabilities
+06:19:18 <alphafox32[m]> On my current (rooted) phone I can use afwall to decide on an APP level how the APP can use network, eg. APP1 goes out via VPN, APP2 goes out via TOR, APP3 may not use network at all, APP4 may only use local wifi.
+06:19:18 <alphafox32[m]> Is there anything similar built into GrapheneOS?
+06:24:42 <CaptainPicard[m]> No. Rooting substantially reduces the security of GrapheneOS, and Android generally. AFWall isn't doing what you think it does here. Apps within the same profile can communicate with each other if they have mutual consent. Even if you use AFWall to block network access for one app it can still send things out through something else, such as the download manager
+06:27:55 <alphafox32[m]> CaptainPicard: Let me rephrase: Using GrapheneOS, can I force APPs (or groups of APPs) through eg. TOR while having other APPs use the VPN / "normal network" ?
+06:28:14 <GrapheneOS-Teleg> !ソシオパス has joined the Telegram Group!
+06:29:03 <CaptainPicard[m]> <alphafox32[m] "CaptainPicard: Let me rephrase: "> Ah. In that case, I would run the apps you want to go through TOR in a separate profile and run all traffic for that profile through Orbot.
+06:30:12 <alphafox32[m]> <CaptainPicard[m] "Ah. In that case, I would run th"> Afaik, only one profile can be active at the same time on Android, right?
+06:30:45 <CaptainPicard[m]> Correct
+06:31:16 <CaptainPicard[m]> It is possible to select some apps to run through Orbot VPN mode, but I know there have been issues with leaks in the past. I don't know the current status of that
+06:34:57 <alphafox32[m]> Yeah, but the problem with that is that the VPN slot is often already occupied
+06:39:38 <Gomez77> Hi all
+06:39:55 <Gomez77> on the webinstaller i get this console error: Failed to load resource: net::ERR_FAILED
+06:40:06 <Gomez77> If i try to obtain the image
+06:40:19 <TheLoneWanderer[> <alphafox32[m] "Yeah, but the problem with that "> If the app supports using a proxy, you can use that instead
+06:40:55 <GrapheneOS-Teleg> <I​keer99> Instagram notification are avaible in grapheneos?
+06:40:57 <Gomez77> I am on chronimum. Any idea? The URL works, just not with the webinstall js.
+06:41:19 <Gomez77> Unlook bootloader works too
+06:41:55 <alphafox32[m]> <TheLoneWanderer[ "If the app supports using a prox"> yeah, but it would be to easy if APPs would just enable users, would it not? 🙂
+06:43:11 <GrapheneOS-Teleg> <I​keer99> What are the best mail app for grapheneos? Gmail not working
+06:43:31 <nscnt[m]> Gomez77: Are you in an incognito tab?
+06:45:55 <Gomez77> nscnt[m]: No. Should i try the real google chrome?
+06:46:17 <Gomez77> I am on debian 10.
+06:46:59 <Gomez77> lol
+06:47:04 <Gomez77> i am out of space.
+06:47:21 * akc3n[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/TVfFXDFKWoDPVBgcPwOvBgyV/message.txt >
+06:49:22 * akc3n[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/XerDbnQlVKckhuphbBjosYeJ/message.txt >
+06:52:09 <withinfire[m]> hello, i'm trying to web install on Ubuntu via Google Chrome. I am trying to obtain the factory image but it doesn't recognise the phone whilst it is connected? was i supposed to start the phone after unlocking the bootloader?
+06:56:40 <withinfire[m]> looks like I had to go into the bootloader interface again
+08:44:47 <janjaap[m]> Thank you very much to all contributors for the new system update!! Much appreciated.
+09:01:47 <strcat[m]> withinfire: sounds like you may not have a reliable USB connection
+09:01:53 <strcat[m]> which will be a problem if that's the case
+09:02:06 <strcat[m]> may work fine, not a problem if it doesn't
+09:02:10 <strcat[m]> just have to do it again
+09:02:25 <strcat[m]> may need to get a better cable or use a different port / computer if those are broken
+09:03:42 <withinfire[m]> thanks strcat yes possibly, when i want into the bootloader a second time i was able to download it and progress with all the instructions on the web installer. was pretty straight forward! :)
+09:03:53 <withinfire[m]>  * thanks strcat yes possibly, when i entered into the bootloader a second time i was able to download it and progress with all the instructions on the web installer. was pretty straight forward! :)
+10:04:13 <fantazma> hi
+10:04:19 <fantazma> i need help
+10:05:06 <fantazma> i erase fastboot erase avb_custom_key
+10:05:25 <fantazma> and now my phone dosent have valid operating system
+10:05:31 <fantazma> how i do to revert
+10:30:53 <akc3n[m]> <fantazma "how i do to revert"> https://grapheneos.org/install/cli#cli-install
+10:31:38 <akc3n[m]> fantazma: https://developers.google.com/android/images
+12:02:56 <motte_> hi, the faq mentions a google services compatibility layer being under development. is there a source code repository for this layer? how far along is it?
+12:07:14 <GrapheneOS-Teleg> <!Hulk> check the GitHub
+12:07:32 <GrapheneOS-Teleg> <!Hulk> "os_issues_tracker"
+12:34:27 <Tdawg> Yo im trying to install GrapheneOs right now on a google pixle 5, first time doing anything like that. I have a question: The device does not get recogniced from my pc when it is in the bootloader. Why?
+12:37:58 <whiskey0111[m]> did you try to use another cable?
+12:40:27 <Purefallen[m]> Depending on OS, you might have to install an additional driver
+12:41:04 <Purefallen[m]> I got my Pixel 4a 5G yesterday, it wouldnt get recognised by the official platform tools until i went into Windows Update, checked the "optional updates" and installed the fastboot driver there
+12:41:53 <anupritaisno1[m]> Purefallen: maybe he's just using Linux with broken udev rules
+12:42:36 <Purefallen[m]> True. Knowing what OS he uses would be a nice start
+12:49:48 <Tdawg> Windows D:
+12:51:33 <Tdawg> Its not the cable when the pixel is booted my pc gets it :D
+12:52:48 <DHFuchsiaOSwhen> fastboot protocol requires a good quality usb C cable for it to be detected (iirc)
+12:53:34 <Tdawg> Im using the Cabel from my nintendo switch :D
+12:53:36 <nscnt[m]> Tdawg: If you're on Windows 10 it's probably the missing driver. It's explained in the guide
+12:54:25 <Tdawg> Ill reeboot my pc and check
+12:54:28 <nscnt[m]> Cable/port could still be an issue. Fastboot expects a "flawless" connection
+12:54:49 <nscnt[m]> You'll notice it if you try to flash
+12:55:51 <Tdawg> Im gonna use some other cables maybe it will work
+12:56:04 <Tdawg> Ill come back if its still not working :D
+12:56:22 <Tdawg> thanks for now
+13:01:02 <nscnt[m]> Recognition of the device on Windows 10 is most likely the driver issue
+13:06:07 <SpaceDaddy[m]> Hi, I have been using GrapheneOS and own a Pixel 4XL. I saw Daniel on twitter a few days ago looking to test something so if you guys need me to do anything I would love to help. I don't have much programming skills, just the stuff they teach you for an online Bachelor's degree in IT but would love to learn.
+13:37:55 * junoslukan[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/ycbQpaUfpcOedHCSMUCjJJqa/message.txt >
+13:46:37 <nscnt[m]> It's already explained in the guide how to get it with Windows Updates
+13:50:22 <nscnt[m]> Just checking for updates once the device is in the bootloader interface and connected
+13:50:26 <GrapheneOS-Teleg> <S​alimium> Are there any plans to add Active Edge (squeeze assistant) to P3, P3a and P4? R.E source code available as Elmyraservice and working in AOSP based roms
+13:51:41 <GrapheneOS-Teleg> <S​alimium> Could be used as a stealth privacy input, like flight mode / sensors off? Would be a nice USP for a privacy focused ROM?
+13:57:25 <junoslukan[m]> > Just checking for updates once the device is in the bootloader interface and connected
+13:57:25 <junoslukan[m]> That did not work for me for some reason. I got a driver for some other device in this way, but I didn't note down what it was unfortunately. You are right though of course, it should always be the first thing to try.
+14:03:31 <SpaceDaddy[m]> <SpaceDaddy[m] "Hi, I have been using GrapheneOS"> Also, I know there's been an attack on the team so if you need to vet me I'll do what it takes.
+14:14:09 <rluch> I tried to install grapheneos on a Pixel 4a from linux cli according to guide yesterday. Running ./flash-all.sh in bootload state, gave me a few partitioning lines, then the screen went black, and cli said. <waiting for any device>. I gave it some time (30min+) without results before ctrl-c and disconnecting cable. Am now unable to get any response
+14:14:10 <rluch> from phone, and via fastboot tool when connected. Is it bricked? Any suggestions would be highly appreciated!
+14:31:33 <helloworldkk87[m> <SpaceDaddy[m] "Hi, I have been using GrapheneOS"> You should contact anupritaisno1 if you want to test beta builds
+14:39:38 <nscnt[m]> rluch: Which release did you flash, or what was the zip file called?
+14:42:47 <rluch[m]> nscnt: redfin, which I now realize is for pixel 5, and super stupid. Is there anything to be done?
+14:43:11 <nscnt[m]> rluch: Nope
+14:44:24 <nscnt[m]> rluch: Returning the device
+14:44:39 <mpurtngfluvhrn[m> <rluch[m] "nscnt: redfin, which I now reali"> i am currently starting my install and i almost made the same mistake.
+14:44:52 <nscnt[m]> That's what is written there
+14:45:20 <nscnt[m]> "For example, to download the 2021.04.05.20 release for the Pixel 5 (redfin):"
+14:46:29 <rluch[m]> > <@mpurtngfluvhrn:matrix.org> i am currently starting my install and i almost made the same mistake.
+14:46:29 <rluch[m]> > i think the tutorial should state more explicitely that the commands it tells you are for the pixel 5 only
+14:46:29 <rluch[m]> Glad my fuckup is of some use ;) and I do partly agree. While this is 100% written and entirely my fault, perhaps an incomplete download url would prompt more people to read more carefully
+14:46:32 <nscnt[m]> We (1.) recommend the WebUSB-based installation which can prevent this and (2.) you should read carefully
+14:46:45 <rluch[m]> nscnt:
+14:48:30 <rluch[m]>  * nscnt:agreed and thank you very much for your help. I can just hope warranty is eligible. Any suggestions on the wording? (suddenly went black during normal usage might work, despite perhaps not being entirely accurate)
+14:48:30 <mpurtngfluvhrn[m> yes, i saw and understood that. The guide is really good in fact.
+14:50:21 <mpurtngfluvhrn[m> All i wanted to say is that usually parts that can cause fuckups like this are flagged with warning signs. But GrapheneOS is not for the usual user
+14:53:25 <nscnt[m]> mpurtngfluvhrn: I understand where you are coming from. We will see. There are a few changes planned for the website
+14:54:32 <mpurtngfluvhrn[m> Thank you
+14:54:58 <rluch[m]> Yes. Ditto, and good luck mpurtngfluvhrn
+14:55:36 <mpurtngfluvhrn[m> I hope my install goes well, thank you
+14:57:19 <mpurtngfluvhrn[m> is it of any importance whether the factoryimages are in the same directory my bash is running in?
+14:59:55 <helloworldkk87[m> You should use the web-installer to avoid mistakes
+15:00:48 <SpaceDaddy[m]> wait, rluch .. Android has a web-installer as well. Maybe try that to unbrick it?
+15:01:00 <SpaceDaddy[m]> or is it really screwed
+15:01:11 <helloworldkk87[m> Im pretty sure its screwed
+15:01:35 <rluch[m]> <helloworldkk87[m "You should use the web-installer"> haha yes. So much for trying to be ultra incognito buying second hand, and then avoiding any server interaction :( I'll trust graphene more next time ;)
+15:02:26 <SpaceDaddy[m]> I see, completely black/bricked
+15:02:52 <helloworldkk87[m> <helloworldkk87[m "You should use the web-installer"> I said this to mpurtngfluvhrm when he asked about directorys
+15:03:21 <mpurtngfluvhrn[m> <helloworldkk87[m "You should use the web-installer"> but what browser can i use on Ubuntu 20.04? Chromium is excluded if i understand the guide correctly and firefox also
+15:03:38 <rluch[m]> <helloworldkk87[m "Im pretty sure its screwed"> Unfortunately seems like it. No response from phone, and nothing in either fastboot or adb when connected. I will attempt warranty, and probably buy a new one meanwhile, for a second, better prepared, attempt.
+15:04:22 <helloworldkk87[m> <mpurtngfluvhrn[m "but what browser can i use on Ub"> Well any cromium based browser is fine because they have proper web-usb support, unlike firefox
+15:04:25 <rluch[m]> <mpurtngfluvhrn[m "but what browser can i use on Ub"> This is why I picked the CLI method as well. It does however also say Google Chrome, so maybe that'll work in ubuntu
+15:04:41 <helloworldkk87[m> * Well any chromium based browser is fine because they have proper web-usb support, unlike firefox
+15:06:12 <mpurtngfluvhrn[m> i have a question regarding signify:
+15:06:12 <mpurtngfluvhrn[m> It first told me that it failed and then after retrying it said verified.
+15:06:12 <mpurtngfluvhrn[m> what should i believe?
+15:17:19 <Pratyush[m]> trun off internet in you pc reboot it and try again, if it still say verified and you trust your pc. you can install it (also use auditor to verify your installations).
+15:17:41 <Pratyush[m]> mpurtngfluvhrn:  /
+15:18:02 <mpurtngfluvhrn[m> Thank you
+15:19:45 <mpurtngfluvhrn[m> i just installed now, i will reboot later and check the signature. If it then fails, i will just again wipe my device and try again
+15:20:08 <mpurtngfluvhrn[m> but my cli install worked out!
+15:20:08 <mpurtngfluvhrn[m> I am now a proud user of graphene os
+15:22:21 <kol4pvp[m]> #proud
+15:22:58 <Pratyush[m]> mpurtngfluvhrn:  you can use "Auditor" app to verify no need to flash again. btw welcome to Graphene
+15:23:38 <rluch[m]> > <@mpurtngfluvhrn:matrix.org> but my cli install worked out!
+15:23:38 <rluch[m]> > I am now a proud user of graphene os
+15:23:38 <rluch[m]> Congrats. I will share your happiness by proxy ;) just ordered a new 4a, so I will hopefully join the club soon :)
+15:26:40 <mpurtngfluvhrn[m> is it a good idea to avoid the fingerprint scanner? I dont want to use it, but does it break any functionality?
+15:26:48 <GhostSplinterSix> Aww yeah! Welcome, friends!
+15:28:34 <Pratyush[m]> <mpurtngfluvhrn[m "is it a good idea to avoid the f"> does not break any functionality.
+15:44:10 <nscnt[m]> mpurtngfluvhrn: It's not a bad idea to use it, so...
+15:44:30 <mpurtngfluvhrn[m> <Pratyush[m] "mpurtngfluvhrn:  you can use "Au"> i bought a used pixel with a broken screen (just the class has some breaks). I think this makes it impossible for the auditor to scan the qr code on my pixel. Any workaround?
+15:45:25 <nscnt[m]> mpurtngfluvhrn: Have you tried it?
+15:45:58 <mpurtngfluvhrn[m> yes, i tried it a lot. The cracked screen is my idea for why its not working
+15:47:19 <nscnt[m]> doesn't sound like "some breaks" then ^^
+15:48:38 <mpurtngfluvhrn[m> well i dont personally dont care much about breaks, so in my subjective view its just some. :D but maybe you are right :D
+15:53:10 <nscnt[m]> mpurtngfluvhrn: You could take a screenshot and open the image with something else, without a broken screen
+15:53:33 <mpurtngfluvhrn[m> thats clever, thank you
+16:03:18 <nscnt[m]> mpurtngfluvhrn: You might also be interested in #grapheneos-offtopic / GrapheneOS Off Topic
+16:04:00 <nscnt[m]>  * mpurtngfluvhrn: You might also be interested in #grapheneos-offtopic / #grapheneos-offtopic:matrix.org
+16:09:58 <mpurtngfluvhrn[m> <nscnt[m] "mpurtngfluvhrn: You might also b"> :)
+16:21:13 <rluch[m]> <SpaceDaddy[m] "wait, rluch .. Android has a web"> Just to follow-up on great advise. No dice :( guess its pretty FUBAR. thanks for the suggestion
+16:33:12 <nscnt[m]> It wouldn't be called a brick if you could have fixed it
+16:33:56 <nscnt[m]> You said it yourself and I didn't correct your
+16:34:05 <nscnt[m]>  * You said it yourself and I didn't correct you
+16:36:15 <rluch[m]> <nscnt[m] "It wouldn't be called a brick if"> You're right, but I still had to try ;) This was one expensive messup. "luckily" my first bricked phone ever. Had to happen eventually, i guess
+16:58:28 <Ace86> Is whatsapp working on grapheneos?
+16:59:21 <Ace86> Dont kill me please boys i know ^
+17:00:26 <helloworldkk87[m> You can use whatever apps you want, they are sandboxed anyways. And yes Whatsapp does work on GrapheneOS
+17:01:04 <Ace86> Oh okay nice
+17:01:14 <alba[m]> sandboxed?
+17:01:52 <helloworldkk87[m> https://en.m.wikipedia.org/wiki/Sandbox_(computer_security)
+17:02:10 <helloworldkk87[m> https://source.android.com/security/app-sandbox
+17:02:26 <helloworldkk87[m> And with GrapheneOS the sandbox is fortified
+17:02:33 <alba[m]> so, why not always use sandboxed apps?
+17:02:47 <helloworldkk87[m> All apps are always sandboxed
+17:03:55 <alba[m]> ok
+17:03:56 <rluch[m]> Ace86: if you're looking for an alternative, I got whatsapp working on my Matrix Yunohost'ed server pretty easily.
+17:04:35 <alba[m]> let's get over to GraphenOS Off Topic
+17:05:44 <Ace86> I ll look into that, what camera would u use for the Pixel 5 ? Still Open Camera out of F-Droid or smthin else?
+17:21:41 <helloworldkk87[m> Open camera yes
+18:05:32 <bizanon[m]> how long does it take to build gos on my laptop? I got 10th Generation Intel® Core™ i7-10750H
+18:05:33 <bizanon[m]> 30gb ram and NVIDIA® GeForce® GTX 1650 Ti Max-Q 4GB
+18:06:04 <bizanon[m]>  * how long does it take to build gos on my laptop? I got 10th Generation Intel® Core™ i7-10750H
+18:06:05 <bizanon[m]> 30gb ram and
+18:06:05 <bizanon[m]> NVIDIA® GeForce® GTX 1650 Ti Max-Q 4GB
+18:09:34 <GrapheneOS-Teleg> <!user> Hey guys.  When going back to stock image from GOS am I using the web installer with the added step to remove nonstock key?
+18:17:32 <bizanon[m]> how big is the source code in terms of GB?
+18:25:53 <MrSenshi[m]> <Ace86 "I ll look into that, what camera"> If you're OK with proprietary, there are modified and improved versions of the much loved Google Camera that work on grapheneos
+18:30:16 <GrapheneOS-Teleg> <S​alimium> For the best camera:(I'm unaware of any security implications but it works into GOS) https://forum.xda-developers.com/t/gcam-camera-px-for-google-pixel-1-2-3-3a-4.3875663/+https://github.com/lukaspieper/Gcam-Services-Provider
+18:53:45 <DHFuchsiaOSwhen> <bizanon[m] "how big is the source code in te"> https://grapheneos.org/build#build-dependencies
+19:05:32 <GrapheneOS-Teleg> O (@p​otat_o) has joined the Telegram Group!
+19:27:22 <Guest80066> Hi there, I was wondering if anyone can help me with an installation issue
+19:41:26 <akc3n[m]> Guest80066: Hi! Ask your question please. And someone will help you out.
+19:44:08 <Guest80066> I'm attempting to install it on a Pixel 2 using Windows 10, but the device isn't recognized when I try to unlock the bootloader
+19:44:29 <Guest80066> Using CLI
+19:45:34 <Railgun_Lover[m]> Guest80066 you sure you want to use Pixel 2? It's unsupported and insecure
+19:46:04 <dig_nerds[m]> Hello
+19:46:04 <Railgun_Lover[m]> You should get a new device if you want security, not getting updates ruins the point of GrapheneOS
+19:46:08 <Guest80066> I don't, but it's unfortunately what I have for now and I'd prefer to use GrapheoneOS than stock
+19:46:12 <souvlaki[m]> not sure whether this question had been asked or not, but is huge battery drain with bluetooth on Graphene problem or is it common with Android 11 in general?
+19:46:18 <Railgun_Lover[m]> Guest80066: fair
+19:46:49 <Railgun_Lover[m]> Have you enabled allow OEM unlocking?
+19:46:52 <dig_nerds[m]> Hello, I am trying to LOCK my bootloader, but the option is greyed, what can I do?
+19:47:09 <Guest80066> Yes, and USB Debugging
+19:47:10 <dig_nerds[m]> I connected my phone I was trying to use our webinstaller
+19:47:23 <Railgun_Lover[m]> Guest80066: do you have adb running
+19:47:35 <Railgun_Lover[m]> That can interfere with installation
+19:47:37 <Guest80066> souvlaki[m] I have stock Android 11 and bluetooth does not drain my battery
+19:47:48 <dig_nerds[m]> But it says no device detected
+19:48:11 <dig_nerds[m]> By USB debugging is ON
+19:48:19 <dig_nerds[m]> And connected to adb
+19:48:21 <Guest80066> Railgun_Lover[m]It was listed when the phone was booted, but not when I'm in the bootloader
+19:48:30 <Railgun_Lover[m]> <dig_nerds[m] "And connected to adb"> That's the problem
+19:48:33 <souvlaki[m]> <Guest80066 "souvlaki I have stock Android 11"> guess it has something to do with Graphene then. maybe Daniel/other devs can clarify this a bit
+19:48:46 <Railgun_Lover[m]> kill adb, restart, make sure it isn't runningdig_nerds
+19:48:58 <Railgun_Lover[m]> It causes massive problems
+19:49:12 <Railgun_Lover[m]> Sounds like you followed an unofficial install guide which is a common problem
+19:49:51 <Railgun_Lover[m]> Guest80066: are you following specifically grapheneos.org/install/cli
+19:50:03 <Railgun_Lover[m]> Not unofficial guifes
+19:50:18 <Guest80066> Railgun_Lover[m]Yes, but I did type "adb devices" to see if it was connected when the phone was booted
+19:50:32 <nscnt[m]> Guest80066: adb is not used for the installation process
+19:50:32 <Railgun_Lover[m]> Guest80066: yup there you go
+19:50:35 <Railgun_Lover[m]> Adb
+19:50:38 <dig_nerds[m]> <Railgun_Lover[m] "kill adb, restart, make sure it "> Did it, but still connected automatically
+19:51:17 <Guest80066> Railgun_Lover[m]I only typed that after 2 or 3 tries without it though. Trying to unlock the bootloader results in PowerShell being stuck on "waiting for any device"
+19:51:18 <dig_nerds[m]> Should I disconnect adb with my phone to make sure it can link with web-installer?
+19:51:23 <Railgun_Lover[m]> Guest80066 It interferes with the install process, so kill adb, restart your phone and computer, make sure ADB is not running and redo installation
+19:51:31 <nscnt[m]> Guest80066: and adb devices will never show a device that is not booted. It's not made for that
+19:51:44 <Railgun_Lover[m]> Yeah ADB is for when it is bootrd
+19:52:10 <Railgun_Lover[m]> Adb talks to Android, fastboot talks to the bootloader
+19:52:37 <Guest80066> I'll try rebooting everything, restart the process, and report back. Thank you guys for your help!
+19:53:20 <Railgun_Lover[m]> Guest80066: sounds goid
+19:53:34 <Railgun_Lover[m]> * Guest80066: sounds good
+19:54:01 <Railgun_Lover[m]> dig_nerds: which step are you on, relocking the bootloader?
+19:54:12 <dig_nerds[m]> Yes
+19:54:43 <Railgun_Lover[m]> dig_nerds:  kill ADB and restart
+19:54:50 <Railgun_Lover[m]> Both computer and phone
+19:54:56 <dig_nerds[m]> The option is greyed on my phone, i am trying to relock it by web-installer
+19:55:02 <dig_nerds[m]> <Railgun_Lover[m] "Both computer and phone"> OK
+19:55:08 <dig_nerds[m]> See you later
+19:57:55 <dig_nerds[m]> No capable device founded
+19:58:34 <dig_nerds[m]> compatible*
+19:59:10 <dig_nerds[m]> Just want to disable OEM unlocking
+19:59:32 <Railgun_Lover[m]> Hm
+19:59:36 <Railgun_Lover[m]> Not sure
+20:00:02 <Railgun_Lover[m]> Because you got the other steps
+20:00:07 <Railgun_Lover[m]> So it can't be a faulty USB cable
+20:00:34 <dig_nerds[m]> can I go to bootloader and use fastboot flashing lock?
+20:00:56 <Railgun_Lover[m]> dig_nerds: that may work
+20:01:07 <Railgun_Lover[m]> But if that works, so should the web jnsta
+20:01:13 <Railgun_Lover[m]> Lol
+20:01:16 <Railgun_Lover[m]> Web installer
+20:01:40 <dig_nerds[m]> Let me give a try
+20:02:23 <Railgun_Lover[m]> Guest80086: did it work?
+20:02:30 <Guest80086> Railgun_Lover[m]Hey, it unfortunately did not
+20:02:51 <Guest80086> I'm not even sure if adb was ever on, I followed the official CLI installation guide and never turned it on
+20:03:18 <Railgun_Lover[m]> Guest80086: what was the error message
+20:03:19 <Guest80086> They only other thing I did was turn on USB Debugging as well as OEM Unlocking
+20:03:33 <Railgun_Lover[m]> That may be the issue, turn that off
+20:03:48 <Guest80086> When I type "fastboot flashing unlock", PowerShell hangs on < waiting for any device >, while my phone is connected on in the bootloader
+20:03:50 <dig_nerds[m]> FUCK
+20:03:55 <dig_nerds[m]> I locked it
+20:04:05 <dig_nerds[m]> Now it says
+20:04:13 <dig_nerds[m]> "cant find valid OS"
+20:04:19 <dig_nerds[m]> at bootloader page
+20:04:22 <Railgun_Lover[m]> Easy dude chill
+20:04:47 <Railgun_Lover[m]> If you've flashed the verified boot key
+20:05:11 <Railgun_Lover[m]> Then it will look for an OS signed by that
+20:05:17 <dig_nerds[m]> I don't remeber
+20:05:31 <dig_nerds[m]> I just did everything from web-installer
+20:05:40 <Railgun_Lover[m]> <Guest80086 "When I type "fastboot flashing u"> May be faulty cable
+20:05:41 <dig_nerds[m]> And skipped lock bootloader
+20:05:43 <Railgun_Lover[m]> Or port
+20:06:22 <Railgun_Lover[m]> <dig_nerds[m] "And skipped lock bootloader"> And you replaced that with fastboot flashing lock?
+20:07:14 <dig_nerds[m]> <Railgun_Lover[m] "And you replaced that with fastb"> Nope, after several days I am trying to lock it, by using "fastboot flashing lock"
+20:07:16 <dig_nerds[m]> OK
+20:07:21 <dig_nerds[m]> I re-unlocked it
+20:07:29 <dig_nerds[m]> And booted into the OS
+20:07:39 <Railgun_Lover[m]> Yay!
+20:07:40 <Guest80086> Railgun_Lover[m]Sorry to make you troubleshoot two people at once, but I tried 3 cables and all my ports and the script still hangs while trying to unlock bootloader
+20:07:45 <Railgun_Lover[m]> Not bricked
+20:07:53 <Railgun_Lover[m]> <Guest80086 "Railgun_Lover[m]Sorry to make yo"> Yeah that's a common issue
+20:07:56 <dig_nerds[m]> But it looks remanufactureed
+20:07:59 <Railgun_Lover[m]> Most USB firmware sucks
+20:08:03 <dig_nerds[m]> All my data is gone
+20:08:20 <Railgun_Lover[m]> dig_nerds: did you not back up beforehand?
+20:08:32 <Guest80086> Railgun_Lover[m]I think I have 1 more cable to try so I'll give that a shot lol
+20:08:33 <dig_nerds[m]> <Railgun_Lover[m] "dig_nerds: did you not back up b"> Nothing important.
+20:09:17 <Railgun_Lover[m]> dig_nerds: if there was any data on the phone, it is gone now, this is why you back up everything including non essential
+20:09:35 <Railgun_Lover[m]> Thought you had backed it up...
+20:09:57 <Railgun_Lover[m]> Guest80086: if that doesn't work then it's the USB port
+20:10:05 <nscnt[m]> Guest80086 (IRC): I'm pretty sure it's the driver issue. Check for updates for drivers now. It's explained in the 2nd paragraph at https://grapheneos.org/install/cli#connecting-phone
+20:10:28 <dig_nerds[m]> <Railgun_Lover[m] "Thought you had backed it up..."> Nothing important.
+20:10:42 <Railgun_Lover[m]> Ok so the data was not important
+20:10:56 <Railgun_Lover[m]> Gave me a massive scare, hehe
+20:10:58 <dig_nerds[m]> Not on that phone lol.
+20:11:19 <Railgun_Lover[m]> dig_nerds: so back to troubleshooting
+20:11:33 <Railgun_Lover[m]> What do you mean looks remanufactured?
+20:11:35 <dig_nerds[m]> <Railgun_Lover[m] "dig_nerds: so back to troublesho"> I will reflash the image and lock it up
+20:12:26 <dig_nerds[m]> I learned a lot of things learned during flashing things.
+20:13:08 <GrapheneOS-Teleg> <!user> Hey guys.  When going back to stock image from GOS am I using the web installer with the added step to remove nonstock key?
+20:13:39 <dig_nerds[m]> Error: The requested file could not be read, typically due to permission problems that have occurred after a reference to a file was acquired.
+20:13:48 <dig_nerds[m]> Can anyone help me?
+20:14:19 <dig_nerds[m]> Am I not suppose to run browser on Incognito mode
+20:14:20 <dig_nerds[m]> ?
+20:14:30 <Railgun_Lover[m]> dig_nerds: yup
+20:14:37 <Railgun_Lover[m]> if you're in incognito, it won't work
+20:14:56 <dig_nerds[m]> Make sense
+20:15:47 <Guest80086> nscnt[m]Hey, I checked for updates every time but it said I was up to date every time
+20:16:31 <Guest80086> Would one of the settings in O&OShutUp10 or WindowsSpyBlocker interfere with finding optional driver updates?
+20:17:54 <anupritaisno1[m]> <Guest80086 "Would one of the settings in O&O"> Yes it would and you should check chat history
+20:19:14 <GrapheneOS-Teleg> <!Hulk> hi, i can help you, dm me
+20:20:09 <Foxtrek_64[m]> Hi all, just tried flashing Graphene on my new Pixel 5. Got to the step where you re-lock the bootloader and boot into Graphene and I got an error saying there was no OS installed.
+20:20:09 <Foxtrek_64[m]> I tried restarting the process, downloading the images (which completed immediately) and flashing (which was a lot faster), but I still got the same error.
+20:20:09 <Foxtrek_64[m]> What are my next steps? If it helps I'm flashing from Windows using Iridium if that matters.
+20:21:04 <Railgun_Lover[m]> Foxtrek_64: use a supported browser
+20:21:25 <GrapheneOS-Teleg> <!Hulk> also, don't use incognito
+20:21:36 <Railgun_Lover[m]> Are you on windows 10?
+20:21:41 <Foxtrek_64[m]> Afaict this is supported. It says Chromium browsers are supported as long as you're not running Ubuntu.
+20:21:52 <Foxtrek_64[m]> It's also not incognito
+20:22:03 <Foxtrek_64[m]> <Railgun_Lover[m] "Are you on windows 10?"> Yes.
+20:22:14 <GrapheneOS-Teleg> <!Hulk> it wasn't tested on iridium afaik
+20:22:29 <Foxtrek_64[m]> I could try stock Chrome.
+20:22:30 <GrapheneOS-Teleg> <!Hulk> so use an officially supported browser
+20:22:31 <Railgun_Lover[m]> Foxtrek_64: use edge
+20:22:34 <GrapheneOS-Teleg> <!Hulk> edge for example
+20:22:37 <Railgun_Lover[m]> Or chrome yes
+20:23:32 <Foxtrek_64[m]> I'll try on edge so I don't have to download Chrome.
+20:23:50 <Foxtrek_64[m]> It's actually re-downloading the binaries this time instead of just completing immediately.
+20:24:21 <dig_nerds[m]> When webinstaller says "Flashed sargo-factory-2021.05.04.01.zip to device." that means flash is done right?
+20:26:16 <dig_nerds[m]> It says "Is booting from a different Operating System"
+20:26:18 <dig_nerds[m]> lol
+20:26:54 <GrapheneOS-Teleg> <!user> I'm using telegram.  Can I dm through that?
+20:27:00 <GrapheneOS-Teleg> <!Hulk> Yes
+20:28:36 <Guest80086> Hey all, just wondering if there's any other troubleshooting I can do. I've followed the CLI guide, checked for updates, checked multiple cables/ports, and the process still hangs when trying to unlook the bootloader
+20:29:58 <Railgun_Lover[m]> Guest80086: at that point you need to use a different computer
+20:30:15 <dig_nerds[m]> The negative thing of GOS keyboard is it has no Chinese support.
+20:30:36 <Guest80086> Damn, I'll try. I appreciate your help!
+20:30:50 <Railgun_Lover[m]> Guest80086 Many USB ports suck, they are more interested in HYPERSPEED 5 YB/S  than doing OS flashing
+20:31:12 <Railgun_Lover[m]> Surface, Macs have working USB
+20:31:19 <Railgun_Lover[m]> Not sure about others tho
+20:31:26 <Foxtrek_64[m]> Worked with Edge. Thanks guys.
+20:32:39 <Railgun_Lover[m]> <Foxtrek_64[m] "Worked with Edge. Thanks guys."> Yay!
+20:33:27 <dig_nerds[m]> Does anyone know how to transfer data from computer
+20:33:29 <dig_nerds[m]> ?
+20:33:44 <GrapheneOS-Teleg> <!Hulk> You will see a notification
+20:34:01 <GrapheneOS-Teleg> <!Hulk> Unlock your phone, tap the notification
+20:34:06 <dig_nerds[m]> I allowed file transfer from the phone
+20:34:29 <dig_nerds[m]> <GrapheneOS-Teleg "<!Hulk> Unlock your phone, tap t"> "USB file transfer is on"
+20:35:45 <Guest8008612> Railgun_Lover[m]lol it worked on a different computer
+20:35:52 <Guest8008612> No idea why, but that was super annoying lol
+20:35:58 <Guest8008612> Thanks again for your help!
+20:36:21 <dig_nerds[m]> Wait
+20:36:28 <dig_nerds[m]> Should I install mtpfs?
+20:37:36 <GrapheneOS-Teleg> <!Hulk> Which OS is your PC?
+20:37:52 <GrapheneOS-Teleg> <!Hulk> Windows should do everything automatically
+20:38:06 <dig_nerds[m]> Arch Linux
+20:39:19 <GrapheneOS-Teleg> <!Hulk> I'm not knowledgeable enough to help you in this case
+20:40:18 <dig_nerds[m]> <GrapheneOS-Teleg "<!Hulk> I'm not knowledgeable en"> Thank you anyway, can anyone else do me this favor?
+20:40:29 <GrapheneOS-Teleg> <!Hulk> Good job Railgun_Lover 👍
+21:05:43 <Railgun_Lover[m]> <Guest8008612 "Thanks again for your help!"> Welcome, good job installing
+21:11:09 <anupritaisno1[m]> strcat do accessibility services see content even with FLAG_SECURE?
+21:12:12 <strcat[m]> yes
+21:12:13 <strcat[m]> they have to
+21:12:14 <strcat[m]> to work
+21:12:29 <strcat[m]> I'd be tempted to disallow third party accessibility services now that we have talkback built-in...
+21:12:41 <strcat[m]> not for that reason specifically
+21:13:09 <strcat[m]> probably still can't do that
+21:13:31 <strcat[m]> iOS approach is they don't have user-granted permissions for these kinds of things
+21:13:49 <strcat[m]> instead they have a bunch of really dangerous low-level permissions ('entitlements') that Apple can hand out to whoever they please
+21:13:54 <souvlaki[m]> Daniel, why you're here - how is bluetooth battery drain problem  known?
+21:13:57 <souvlaki[m]> while*
+21:13:58 <strcat[m]> doesn't ask the user for permission it's just based on their review + signature
+21:14:05 <strcat[m]> souvlaki: don't know of any issue like that
+21:14:16 <Foxtrek_64[m]> Are there any built-in ways in Graphene to verify PGP signatures or will I just need to download the apk on my computer, verify there, and sideload?
+21:14:25 <strcat[m]> anyway in practice Apple doesn't approve many things with those capabilities which is their approach to that problem
+21:14:32 <strcat[m]> Foxtrek_64: apks aren't signed with PGP
+21:14:44 <souvlaki[m]> maybe it's pixel4a problem, but leaving bluetooth on drains battery like shit
+21:14:55 <strcat[m]> Foxtrek_64: PGP is a really bad way to verify an apk, the apk itself is signed and the OS package manager verifies it based on the pinned key(s) with downgrade protection for versions
+21:15:16 <strcat[m]> we plan to add displaying the key fingerprint(s) on initial install
+21:15:27 <strcat[m]> you probably don't have an out-of-band way to get key fingerprint(s) for most apps anyway
+21:15:38 <strcat[m]> no point after initial install b/c OS package manager already verifies via pinned key(s)
+21:15:47 <Foxtrek_64[m]> Oh, so it solves the problem for me. Cool.
+21:15:47 <Foxtrek_64[m]> I'm wanting to install f-droid and signal and f-droid provides a pgp key for verification in case you want it.
+21:15:57 <strcat[m]> apksigner is how you verify an app
+21:16:20 <strcat[m]> the OS package manager requires that apks are signed, pins their keys and does downgrade protection
+21:16:35 <strcat[m]> so the only time there is something you could check is verifying fingerprint(s) for initial install
+21:16:53 <strcat[m]> you don't really ever have a need to verify the signatures
+21:17:07 <strcat[m]> but rather it would be useful to display the key fingerprint(s) in the install initial screen (not upgrades)
+21:17:25 <strcat[m]>  * you don't really ever have a need to verify the signatures since it always does (initial install included)
+21:17:38 <Foxtrek_64[m]> I see. Good to know. The mobile world is still rather new to me, so I'm not sure what the security landscape looks like quite yet. I'm used to doing things in the pc world.
+21:17:51 <strcat[m]> but if you do want to verify apks by hand use apksigner
+21:18:27 <strcat[m]> within OS since OS already always verifies only useful thing would be checking which keys are used and making sure those are the proper keys out-of-band
+21:18:36 <strcat[m]> if you get the public keys / fingerprint from same source as the apk no point
+21:19:28 <strcat[m]> Foxtrek_64: an apk is a zip file with all metadata/content signed other than a specific area for metadata used to put the signatures and source information
+21:19:39 <strcat[m]> Foxtrek_64: the apk itself includes the public keys and the signature
+21:19:54 <strcat[m]> you can literally just unzip the public keys and check that they are correct, if you wanted
+21:20:01 <strcat[m]> apksigner is the utility for actually verifying the signatures
+21:20:10 <Foxtrek_64[m]> Ah, so similar to nuget packages in that regard.
+21:21:09 <strcat[m]> an apk is a zip file with a modern signing system including key rotation support and a manifest (part of what's signed, like zip structure and content) for listing contents/metadata, etc.
+21:21:36 <strcat[m]> and for apps, standard way of including high-level managed bytecode (for Java, Kotlin) along with native libraries, etc.
+21:21:39 <strcat[m]> and other resources
+21:22:12 <strcat[m]> apks leverage the ability for zips to store entries that are compressed and other entries that are not compressed
+21:22:38 <strcat[m]> and they use the trick of having a tool that aligns uncompressed entries so that they are aligned to page size and can be directly memory mapped
+21:22:39 <anupritaisno1[m]> strcat: what is the accessibility permission called?
+21:22:52 <strcat[m]> anupritaisno1: it's not a permission
+21:23:01 <strcat[m]> you have to go explicitly enable it
+21:23:07 <strcat[m]> it provides an accessibility service
+21:23:18 <strcat[m]> look at https://github.com/GrapheneOS/talkback
+21:23:44 <strcat[m]> https://github.com/GrapheneOS/talkback/blob/master/switchaccess/src/main/AndroidManifest.xml
+21:24:46 <strcat[m]> anupritaisno1: it defines a service handling the accessibility service intent and requires a permission that only the OS has (android.permission.BIND_ACCESSIBILITY_SERVICE) in order to use it (that prevents other apps from using it, it's not a permission the app needs)
+21:25:07 <strcat[m]> so the OS looks for which apps provide accessibility services and lists them out as possible options you can enable
+21:25:13 <strcat[m]> and you have to go to those settings and explicitly enable it
+21:26:00 <strcat[m]> anupritaisno1: just install rhvoice, set up language to work, set it as active TTS (it needs to be explicitly set even though it looks like it's already chosen) and then go enable talkback and see
+21:29:59 <adry8314[lp]> is 'Error: Timeout of 10000 ms exceeded' a cable issue?
+21:32:21 <GrapheneOS-Teleg> <!Hulk> Hello adry
+21:32:33 <adry8314[lp]> Hey
+21:32:45 <GrapheneOS-Teleg> <!Hulk> Let me try to help you, are you using the official web installer?
+21:32:52 <adry8314[lp]> Yes i am
+21:33:24 <Railgun_Lover[m]> <adry8314[lp] "is 'Error: Timeout of 10000 ms e"> Probably, yws
+21:33:35 <GrapheneOS-Teleg> <!Hulk> At which step are you getting the error?
+21:33:40 <Railgun_Lover[m]> Could also be usb firmware since that often sucks
+21:34:15 <adry8314[lp]> Am I safe to unplug to plug into a different port?
+21:34:29 <Railgun_Lover[m]> adry8314: make sure no data is transferred
+21:34:30 <GrapheneOS-Teleg> <!Hulk> Yes
+21:34:40 <Railgun_Lover[m]> <Railgun_Lover[m] "adry8314: make sure no data is t"> Er being transferred
+21:34:46 <adry8314[lp]> It's stuck on fastbootd screen
+21:34:59 <Railgun_Lover[m]> adry8314: just to be safe, I would restart installation
+21:35:22 <adry8314[lp]> So power off phone and boot back into bootloader?
+21:35:30 <Railgun_Lover[m]> adry8314: yes
+21:38:04 <adry8314[lp]> Ok.  Restarted the install now.
+21:38:10 <adry8314[lp]> Fingers crossed.
+21:39:06 <GrapheneOS-Teleg> <!Hulk> Are you using the cable that came with your phone? The original Google's cable
+21:42:09 <adry8314[lp]> No I don't have a USB port on PC.
+21:43:16 <GrapheneOS-Teleg> <!Hulk> USB c port? I recommend you to find a different computer, or an Android phone
+21:43:45 <GrapheneOS-Teleg> <!Hulk> If the one you're currently using fails to install
+21:45:43 <adry8314[lp]> let me try on my mac mini
+21:46:31 <GrapheneOS-Teleg> <!Hulk> Yes, if your Mac comes with USB C port, you're most likely to succeed while using it
+21:49:09 <Ashl3y4> hey I'm new to graphene and and custom roms
+21:49:22 <Ashl3y4> I tried lineage for my phone but no models were available
+21:49:42 <Ashl3y4> does this phone have a model?
+21:50:46 <GrapheneOS-Teleg> <!Hulk> Hello and welcome to GrapheneOS room
+21:50:51 <GrapheneOS-Teleg> <!Hulk> Please read the rules
+21:50:58 <Ashl3y4> ok I will sorry
+21:52:54 <Ashl3y4> oh so graphene supports only pixel these days?
+21:53:06 <GrapheneOS-Teleg> <!Hulk> Yes, that is correct
+21:54:16 <GrapheneOS-Teleg> <!Hulk> Only pixel models listed on the website
+21:54:43 <GrapheneOS-Teleg> <!Hulk> Older pixels are no longer supported
+22:04:05 <bt1[m]> Hi I just read this: https://grapheneos.org/history/
+22:04:05 <bt1[m]> I would to ask: are there some reliable sources that certify what you say?
+22:04:23 <bt1[m]> * Hi I just read this: https://grapheneos.org/history/
+22:04:23 <bt1[m]> I would to ask: are there some reliable sources that certify what it's written?
+22:09:28 <dnull> And your definition of reliable is?
+22:25:06 * Railgun_Lover[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/TDxhLMWrvGyzMGefjMqTvYAn/message.txt >
+22:25:19 <Railgun_Lover[m]> Reddit posts and histories
+22:25:27 <Railgun_Lover[m]> Gitlab repos with official materials
+22:25:41 <Railgun_Lover[m]> <Railgun_Lover[m] "Reddit posts and histories"> This is not official sources but they give evidence
+22:25:47 <bt1[m]> <dnull "And your definition of reliable "> Objective, independent and neutral source. Like for example a sentence if there were some legal things going on, or documents etc.
+22:25:57 <bt1[m]> * Objective, independent and neutral sources. Like for example a sentence if there were some legal things going on, or documents etc.
+22:26:45 <bt1[m]> <Railgun_Lover[m] "This is not official sources but"> Do you have some link?
+22:26:56 <bt1[m]> * Thank you! Do you have some link?
+22:27:15 <bt1[m]> * Thank you! Do you have any link?
+22:27:29 <bt1[m]> * Hi I just read this: https://grapheneos.org/history/
+22:27:29 <bt1[m]> I would to ask: are there any reliable sources that certify what it's written?
+22:36:17 <Railgun_Lover[m]> <bt1[m] "Do you have some link? "> ok
+22:36:20 <Railgun_Lover[m]> I do
+22:37:27 <Railgun_Lover[m]> https://teddit.net/r/privacy/comments/klbjhu/just_a_reminder_that_grapheneos_is_being_sued_by/
+22:37:33 <Railgun_Lover[m]> The author has written others as well
+23:04:36 <bt1[m]> <Railgun_Lover[m] "https://teddit.net/r/privacy/com"> Thank you!
+23:42:24 <Cliff[m]> <Railgun_Lover[m] "https://teddit.net/r/privacy/com"> Wtf... didn't know the harrasement was that bad, have seen the trolls here offcourse but damn
+23:51:12 <m1tr4[m]> <Cliff[m] "Wtf... didn't know the harraseme"> Its probably too secure and difficult to crack for their scriptkiddies
+23:52:04 <m1tr4[m]> In this age its risky to create good security products. Everybody is compromised
+23:58:21 <m1tr4[m]> Copperhead are bought by glowies

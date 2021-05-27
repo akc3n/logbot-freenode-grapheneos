@@ -1,0 +1,690 @@
+00:17:28 <strcat[m]> hitchhooker: got distracted
+00:17:30 <strcat[m]> working on it again
+00:33:11 * tintin_contre_rg  < https://matrix.org/_matrix/media/r0/download/matrix.org/nToeCJZjnExUhCsApTZipJAd/message.txt >
+00:36:38 * grapheneos_user_  < https://matrix.org/_matrix/media/r0/download/matrix.org/ihwMeVlZesDSSJbVkwwIcDih/message.txt >
+00:38:04 <tintin_contre_rg> yes
+00:38:04 <tintin_contre_rg> I wondered if i should have stressed this but yes i did
+00:38:09 <j-james[m]> Yeah, double-check you're running a supported browser and operating system
+00:38:20 <j-james[m]> Ah
+00:38:40 <grapheneos_user_> Seems you running flashall.sh too early, should unlock bootloader/do everything else first
+00:39:08 <grapheneos_user_> At least that's what it seemed like from "when the phone reboots" and mentioning the options
+00:40:22 <tintin_contre_rg> I have archlinux and i tested the WebInstall with chromium
+00:40:49 <tintin_contre_rg> and it is stuck here
+00:40:51 * tintin_contre_rg uploaded an image: (32KiB) < https://matrix.org/_matrix/media/r0/download/matrix.antopie.org/QVdFBEOgPaFbfmkMpVpIirDy/image.png >
+00:41:08 <grapheneos_user_> Huh
+00:41:13 <grapheneos_user_> Not sure
+00:42:32 <grapheneos_user_> I'm not knowledgeable enough to help you further, sorry
+00:42:52 <grapheneos_user_> Anyway your comic book taste is good
+00:46:09 <tintin_contre_rg> Thanks :D
+00:46:57 <strcat[m]> tintin_contre_rg: sounds like you either have 1) an unreliable USB connection from a bad cable or port, or 2) you have adb running in the background probably because you followed an unofficial guide with incorrect instructions
+00:47:04 <strcat[m]> tintin_contre_rg: if adb is running in the background, kill it
+00:47:06 <strcat[m]> or reboot
+00:47:26 <strcat[m]> the most common issue is an unreliable USB connection
+00:47:35 <strcat[m]> use the cable that comes with the device, without a hub / adapter
+00:47:48 <jj1013[m]> Wotcher cock, TheJollyRoger.
+00:47:48 <strcat[m]> if you cannot, use a high quality USB-A to USB-C cable from a brand like Apple, Anker, Google, etc.
+00:48:05 <strcat[m]> if you use some random one, it probably won't work, because many USB-A to USB-C cables are broken / non-spec-compliant
+00:48:15 <strcat[m]> you need a high quality cable
+00:48:22 <strcat[m]> many of them cut corners
+00:48:31 <strcat[m]> USB-C ecosystem is full of garbage that doesn't work
+00:59:59 <tintin_contre_rg> Thanks a lot 😊
+00:59:59 <tintin_contre_rg> You were right, i changed my cable and it worked perfectly
+01:00:46 <TheJollyRoger> tintin_contre_rg: welcome aboard!
+01:17:59 <dub_a> the ./flash-all.sh has been hanging for an hour now inside terminal. phone is at bootloader interface unlocked. Is this normal behavior?
+01:19:37 <dub_a> flashing pixel 4a with manjaro
+01:26:22 <TheJollyRoger> hi dub_a, your USB cable or USB slot is broken.
+01:27:38 <TheJollyRoger> If you've gotten this far and fastboot enumerates the device properly, you've been able to complete the rest of the installation instructions properly, and you're using a current and supported version of fastboot, then what this indicates is your motherboard's firmware support for USB, or your cable or the slot it's plugged into is missing one or more wires.
+01:28:53 <TheJollyRoger> Make sure you are using the Google branded cable, or one made by Anker, Aukey, or Apple; most other USB cables only implement the barest minimum of features they think that the average consumer will use and don't bother testing their cables or wiring them for doing debugging like what fastboot needs to do to do its good work. The same goes for lots of consumer-grade hardware, PC motherboards,
+01:28:55 <TheJollyRoger> and laptops.
+01:29:55 <TheJollyRoger> Make sure that the cable is plugged directly into the motherboard; no hubs, no splitters, no adapters.
+01:32:10 <TheJollyRoger> If you are using the Google Brand cable, if USB autonegotiation is failing at the host, unplug the cable and twist the connector 180 degrees, and plug it in upsde-down at the computer's side, or even try it on a different port with a different cable and repeat. If ./flash-all has hung, it's safe to halt it and try again.
+01:32:12 <TheJollyRoger> Hope this helps.
+01:41:06 <dub_a> Right, I feared the cable that was shipped with the phone wouldn't be sufficient. I'm unable to verify the exact brand of the cable currently in use so I'll just find a proper one and retry a bit later, thank you!
+01:57:57 <TheJollyRoger> dub_a: If you bought your phone new and in the box factory sealed, there should be a white cable with squared off ends that came with it. That's a Google branded cable which should work for the installation.
+01:58:55 <TheJollyRoger> If you are using the Google branded cable, then what you're likely looking at is a firmware problem on your motherboard not adequately and fully implementing all the features that fastboot needs to talk to the device bootloader, OR a physically broken USB slot.
+02:04:58 <strcat[m]> hitchhooker: see https://grapheneos.org/faq#notifications
+02:05:13 <hitchhooker[m]> cheers
+02:05:36 <TheJollyRoger> thanks, strcat[m].
+02:10:32 <strcat[m]> hitchhooker: it's push messaging, generically
+02:10:43 <strcat[m]> hitchhooker: push notifications are just one use case for it
+02:11:04 <strcat[m]> when you have Signal in the foreground, on either the stock OS or GrapheneOS, it has a connection to their server and is using push from their server
+02:11:16 <strcat[m]> when Signal goes into the background, then on GrapheneOS, it relies on the foreground service to continue doing it the same way
+02:11:24 <strcat[m]> for the stock OS, it switches to FCM to avoid the foreground service
+02:11:30 <strcat[m]> either way, the implementation is essentially the same
+02:11:58 <strcat[m]> it's just with FCM, Google Play services is keeping open the connection to Google's servers and Signal's server sends a message to Google servers which is delivered by FCM to the app on the user's device
+02:12:06 <strcat[m]> apps can easily do this themselves
+02:12:23 <strcat[m]> keep open connection for push, which they probably already do when in the foreground, and use a foreground service to keep themselves going
+02:12:30 <strcat[m]> ask for battery optimization exception to deal with device idle states
+02:12:42 <strcat[m]> all Signal had to do was add foreground service + ask for battery optimization exception, it was trivial code
+02:12:55 <strcat[m]> it would be nice if they optimized their push implementation significantly too
+02:13:06 <strcat[m]> hitchhooker: anyway explain all this in this new section
+02:17:02 <hitchhooker[m]> what I've understood moxie aint too interested to doing extra work for signal not be dependant on play services, so probably wont happen as long as there is some easy to implement alternative for fcm
+02:18:07 <strcat[m]> it's not that hard, all they have to do is detect if it's an IPv6 connection, and if so, throttle it more, and add stats on how well it's working, for throttling it dynamically
+02:18:23 <strcat[m]> it can start doing less frequent checks, and as long as that's working fine, keep making it less frequent, to a certain point
+02:18:28 <strcat[m]> and just don't bother with it on IPv4
+02:18:45 <strcat[m]> the issue is that each app has different kinds of connections/protocols
+02:18:56 <strcat[m]> and it needs to be optimized per app
+02:19:04 <strcat[m]> FCM is Google's brute force approach to enforcing using a good implementation
+02:19:05 <TheJollyRoger> hitchhooker[m]: I'm not sure what you mean, Moxie's already made Signal fully independent of Play Services, it uses them if they are present, but if they aren't, it has full and complete functionality without them.
+02:19:15 <strcat[m]> it makes sense, but it sucks having it centralized through Google servers
+02:19:20 <TheJollyRoger> Yeah...
+02:19:52 <TheJollyRoger> Whisper Systems even aggressively optimized Signal to reduce battery consumption as a foreground service. It used to be a *lot* hungrier before.
+02:19:56 <strcat[m]> it would be possible to have an open standard implementation
+02:19:58 <strcat[m]> where the app checks where the server should be sending push messages and sets it up with the server
+02:20:06 <strcat[m]> and then we could host a server for GrapheneOS users to receive push messages
+02:20:12 <TheJollyRoger> That would be really awesome!
+02:20:19 <strcat[m]> so, yes, in theory, it is possible for someone to implement this kind of library + service
+02:20:21 <strcat[m]> and we could host it
+02:20:36 <strcat[m]> but it does no good for apps that are not adopting it as an alternative to FCM when it's available
+02:20:43 <TheJollyRoger> Makes sense.
+02:23:03 <GrapheneOS-Teleg> CHRISL7 | Lavender/Surya 🇧🇷 (@C​HRISL7) has joined the Telegram Group!
+02:24:05 <dub_a> I purchased the pixel refurbished, the cable seemed sturdy and was packed in a way that lead me to believe that it may have been the original cable. Nonetheless, I picked up a anker cable to test out. If it is my current device's motherboard, I'll try on a secondary to confirm. Hopefully that won't be necessary
+02:26:01 <strcat[m]> dub_a: the devices only come with USB-C to USB-C cables
+02:26:03 <strcat[m]> no USB-C to USB-A
+02:26:18 <strcat[m]> there's only a USB-C to USB-A adapter for plugging in flash drives, etc.
+02:27:38 <hitchhooker[m]> anyways thanks for writing out clarification how push messaging works, was nice read.
+02:28:57 <TheJollyRoger> dub_a: Ah, yeah, it probably isn't the original then if it's secondhand.
+02:29:17 <TheJollyRoger> The Anker one, if it's USB 3.1 Gen 1 or later, should do it.
+02:30:49 <strcat[m]> hitchhooker: all the app has to do is keep open a TCP connection to their server and occasionally send a no-op message over it so it doesn't get dropped and so they get an error if it did get silently dropped
+02:31:13 <strcat[m]> a reliable network won't silently drop connections, it will give the app an exception to handle
+02:31:25 <strcat[m]> so mostly it just works from keeping open a connection, on a reliable network
+02:32:01 <strcat[m]> you do have to deal with it dropping, but you can throttle that, and then it can be very efficient
+02:32:10 <strcat[m]> Signal just doesn't bother with that logic beyond the basic part of it
+02:34:27 <anotherguy[m]> randomchar-dnsotls-ds.metric.gstatic.com
+02:34:52 <anotherguy[m]> <anotherguy[m] "randomchar-dnsotls-ds.metric.gst"> this alwys show up at my net logs
+02:36:01 <tor3nduser[m]> does the same thing apply to signal if you downloaded it directly from their website as opposed to any play store
+02:36:13 <anotherguy[m]> I assume google trying to look up at my DoT, am I correct ?
+02:37:01 <TheJollyRoger> tor3nduser[m]: If you check the signature on the manifest, they should be signed by the same keys. The only functional difference between the website release, and the Play Store release, is that the Play store release does not have the ability to keep itself updated.
+02:38:29 <TheJollyRoger> This is simply to comply with Google's policy of "don't encourage the users to give or normalize giving apps permission to install other apps"
+02:38:32 <tor3nduser[m]> ok so as far as the foreground/background functionality, it is the same as if you were to download signal on ,for example, aurora store instead
+02:38:49 <TheJollyRoger> tor3nduser[m]: It's exactly the same.
+02:38:53 <tor3nduser[m]> ok
+02:41:38 <TheJollyRoger> anotherguy[m]: That's not a default connection made by GrapheneOS, the only default connections a bare-bones stock install of GrapheneOS makes are documented at https://grapheneos.org/faq#default-connections
+02:41:57 <TheJollyRoger> I'm guessing it's one of your apps dialing out.
+02:47:26 <anotherguy[m]> <TheJollyRoger "anotherguy: That's not a default"> It's just happened since the first time I change Private DNS. I always found this traffic since on stock OS.
+02:49:28 <TheJollyRoger> Hmm.
+02:52:15 <tor3nduser[m]> you guys ever see your graphene phone make carrier related dns queries?
+02:55:17 <strcat[m]> tor3nduser: that's normal, texts and calls for LTE and beyond use data
+02:55:33 <strcat[m]> it's a good thing
+02:55:46 <tor3nduser[m]> <strcat[m] "tor3nduser: that's normal, texts"> ill give you an example. i want another opinion
+02:56:37 <tor3nduser[m]> A record for wo.vzwwo.com
+02:57:33 <tor3nduser[m]> verizon obviously but id like to know the purpose of it
+03:00:13 <grapheneos_user_> tor3nduser search the domain on google
+03:00:45 <tor3nduser[m]> i did a whois lookup and cant find shit lol
+03:03:02 <skwisgaar[m]> tor3nduser: looks like it’s related to verizon wifi calling
+03:03:56 <tor3nduser[m]> yea i figured it would be something related like that. im pretty sure i have wifi calling disabled 🤔
+03:05:12 <ShawnC> I did a factory data reset from within the recovery and when it was formatting there were a bunch of lines that said "E: can't send spi message: Try again". What is that about?
+03:05:12 <strcat[m]> as I said above
+03:05:18 <strcat[m]> texts and calls on LTE and beyond are via data
+03:05:36 <strcat[m]> you should see connections involving the carrier unless something is broken
+03:06:26 <tor3nduser[m]> i know i wasnt arguing with that. i just was wondering what specifically it was related to. ..
+03:06:39 <GrapheneOS-Teleg> !Ryan has joined the Telegram Group!
+03:07:26 <tor3nduser[m]> obviously its LTE related.  🙄
+03:19:18 <strcat[m]> tor3nduser: texts/calls use SIP for LTE and beyond
+03:19:24 <strcat[m]> IMS is the generic platform for it
+03:19:40 <strcat[m]> it's VOIP
+03:29:41 <strcat[m]> new release in stable channel now too
+03:48:22 <akc3n> Thanks strcat[m]
+03:58:58 <tor3nduser[m]> is it advised to not use private dns if youre routing all traffic through tor with orbot?
+04:17:45 <GrapheneOS-Teleg> <!yume> I dont believe private dns matters at that point if you are routing everything through orbot
+04:20:47 <GrapheneOS-Teleg> <!yume> Okay nevermind looks like dns leaks when private dns is set up
+05:10:59 <cyborgninjaneer[> I got the update. Thank you!
+05:11:14 <cyborgninjaneer[> Also the not kicked me again.
+05:11:18 <cyborgninjaneer[> Not*
+05:11:25 <cyborgninjaneer[> Bot*
+05:12:42 <testor> hello, can anyone clarify if upgrading an android device to android 11 (from 10) recommended before installing graphene os?
+05:13:18 <cyborgninjaneer[> Yeah, I would update to latest.
+05:15:43 <testor> im looking for some documentation confirmation that 11 is fine before starting
+05:16:18 <testor> found it
+05:16:40 <testor> ty cyborgninjaneer[
+05:28:40 <sjsndnjdejd> How about reading the installation guide
+05:34:19 <kamesjitt616[m]> <sjsndnjdejd "How about reading the installati"> Wow
+05:35:06 <iccedlemontea[m]> Hey lads, im a little worried. The recent update for my pixel4a  made it hang on the 'GrapheneOS' screen after the google logo
+05:35:34 <iccedlemontea[m]> Hanged for 5-10min. Decided to force restart
+05:36:01 <iccedlemontea[m]> Went back to google logo, black screened me then went back to the 'your device is loading a different operating system screen'
+05:36:13 <iccedlemontea[m]> Then suddenly managed to boot normally
+05:37:49 <iccedlemontea[m]> Atm the seamless update client is installing system update
+05:39:57 <iccedlemontea[m]> > Hey lads, im a little worried. The recent update for my pixel4a  made it hang on the 'GrapheneOS' screen after the google logo
+05:39:58 <iccedlemontea[m]> Anything i should be worried about?
+05:42:36 <skwisgaar[m]> iccedlemontea: there was a release on beta this morning which was then pushed to stable later today. If you haven’t installed it yet (since update client is running) then I don’t think the update would have caused your issue. Unless I’m misunderstanding you.
+05:43:37 <skwisgaar[m]> * iccedlemontea: there was a release on beta this morning which was then pushed to stable later today. If you haven’t installed it yet (since update client is running) then I don’t know how the update could have caused your issue. Unless I’m misunderstanding you.
+05:44:08 <iccedlemontea[m]> Im using the stable release channel, the most recent update
+05:44:34 <skwisgaar[m]> iccedlemontea: does the issue keep repeating?
+05:44:39 <skwisgaar[m]> If you restart
+05:49:51 <iccedlemontea[m]> Ok, it only happened to me exactly as described above
+05:50:07 <iccedlemontea[m]> Now the phone is on and working normally (for now)
+05:50:32 <iccedlemontea[m]> I dont dare  reboot or shut down the phone in case i get sent into another black screen / hang at boot screen
+05:52:28 <strcat[m]> iccedlemontea: update + reboot again? it purposely rolls back the update if it fails to boot
+05:55:57 <iccedlemontea[m]> Ok noted
+05:56:09 <iccedlemontea[m]> Ill try rebooting again just to be sure
+06:02:13 <iccedlemontea[m]> Just rebooted and it got stuck at the GrapheneOS logo
+06:02:19 <iccedlemontea[m]> For a solid 5mins
+06:02:32 <iccedlemontea[m]> Force restarted and now its back and working
+06:05:58 * iccedlemontea[m] uploaded an image: (17KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/zeaEeGvnSPbMpnASdTaMVghQ/Screenshot_20210407-140337_1.png >
+06:06:06 <iccedlemontea[m]> Now its showing this on the notifications (again?)
+06:06:10 <iccedlemontea[m]> strcat
+06:07:37 <iccedlemontea[m]> Phone is also heating up a lot during this process
+06:11:52 * iccedlemontea[m] uploaded an image: (27KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/VVZVCuyjKZDbDgvskVwzoXjr/Screenshot_20210407-140958_1.png >
+06:12:12 <iccedlemontea[m]> Ok now its here
+06:13:21 <nscnt[m]> iccedlemontea: Just try to give it more time to reboot
+06:14:36 <iccedlemontea[m]> Roughly how long
+06:14:41 <iccedlemontea[m]> 10-15min?
+06:15:38 <nscnt[m]> iccedlemontea: Should be enough, yes
+06:28:17 <iccedlemontea[m]> YES IT BOOTED
+06:28:22 <iccedlemontea[m]> Thanks for the help lads!
+06:30:44 <iccedlemontea[m]> Tip for anyone updating the system, keep a fan pointed at the phone during the update as it gets super hot
+06:33:08 <nscnt[m]> You did it twice in a row.... You can expect that
+06:34:54 <nscnt[m]> As soon as your phone was back on, it immediately tried to install the update again
+06:36:48 <nscnt[m]> Because you were back on the old version instead of giving the device time to fully complete the new update
+06:40:59 <nscnt[m]> Android uses A/B system updates. If an OTA fails to boot, the device reboots back to the old partition
+06:45:35 <itsokiwantogohom> <iccedlemontea[m] "For a solid 5mins"> Let it work. Mine came back after 6 minutes.
+08:39:27 <g405t[m]> whats up people, anybody here with some technical knowledge?
+08:43:36 <g405t[m]> I have a lot of people asking me to install graphene for them, so I figured instead of manually installing all apks on the devices I copy my image and flash it on everybody’s device.
+08:43:37 <g405t[m]> Is anything like that possible?
+08:47:01 <Thatcher[m]> g405t  How about just installing Graphene the default way and let your friends choose their own apps?
+08:47:48 <GrapheneOS-Teleg> <d​agoberttt> That’s a good question I can understand you
+08:48:16 <Damyst> Hi , i got a question here
+08:48:43 <g405t[m]> <Thatcher[m] "g405t  How about just installing"> well the thing is ; if you’re a complete newbie it’s not easy to figure out how to install apps without some knowledge
+08:49:12 <helloworldkk87[m> Cant you just teach them how to install fdroid
+08:49:35 <Thatcher[m]> Teach them to install F-droid and Aurora
+08:50:02 <helloworldkk87[m> Yeah
+08:50:19 <helloworldkk87[m> <Damyst "Hi , i got a question here"> Yes?
+08:50:52 <Damyst> i got a pixel 5
+08:51:03 <Damyst> i did all the step
+08:51:18 <Damyst> my device state is unlock
+08:51:22 <g405t[m]> Yeah well I just wanted to make it as easy as possible to introduce them to a google free device, but anyway nobody here is willing to help thats fine
+08:52:21 <Thatcher[m]> <g405t[m] "Yeah well I just wanted to make "> If you want to make it easy for them, link them the official web installation guide
+08:52:53 <Damyst> when i do flash all  its not going
+08:53:01 <Damyst> im on windows
+08:53:11 <helloworldkk87[m> Web install or CLI?
+08:53:15 <g405t[m]> <Thatcher[m] "If you want to make it easy for "> Yeah thanks for the help😏
+08:53:25 <Damyst> web
+08:53:33 <Damyst> im on windows
+08:58:11 <helloworldkk87[m> What exactly happens when you try to flash release
+08:58:33 <helloworldkk87[m> Or what do you mean by "Its not going"
+09:03:31 <Damyst> fastboot is not recognized
+09:03:37 <Damyst> when i try to flash
+09:03:59 <Damyst> with flash-all.bat
+09:07:57 <sphinx[m]> Damyst: use the web installer: https://grapheneos.org/install/web
+09:10:45 <caspar> Are there any issues with flashing grapheneos onto a phone provided by your carrier? As in one that has sim-lock?
+09:11:49 <Damyst> nah seem i cant attach the devices
+09:12:28 <Damyst> but i did the fastboot  flashing unlock
+09:16:06 <sphinx[m]> <Damyst "but i did the fastboot  flashing"> so you are following the command-line instructions (https://grapheneos.org/install/cli), not the recommended web installer (https://grapheneos.org/install/web)
+09:16:33 <helloworldkk87[m> Yeah im really confused wich one he uses..
+09:17:06 * somenerd[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/USRDyvPAfsIbffXDxjOsURJK/message.txt >
+09:17:15 <somenerd[m]>  * > I have a lot of people asking me to install graphene for them, so I figured instead of manually installing all apks on the devices I copy my image and flash it on everybody’s device.
+09:17:15 <somenerd[m]> Is anything like that possible?
+09:17:15 <somenerd[m]> that would require you to run your own builds
+09:22:10 <Damyst> find the problem guys
+09:22:17 <Damyst> my browser hahhahaha
+09:24:48 <Damyst> its working ;)
+09:25:02 <Damyst> got it im happyu
+09:25:07 <helloworldkk87[m> Nice
+09:36:12 <Damyst> is there somewhere i cant find recommand app
+09:45:04 <Thatcher[m]> <Damyst "is there somewhere i cant find r"> Which app?
+09:57:06 * g405t[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/QzKhNzlGQTcjnqIOUOkXZKIP/message.txt >
+09:58:16 <somenerd[m]> I believe that there are docs on how to build GrapheneOS on the site
+09:58:27 <somenerd[m]> https://grapheneos.org/build
+10:16:30 <nscnt[m]> g405t: It would be a self-built build. It wouldn't receive OTA updates from the GrapheneOS project etc. This isn't really the right approach for what you are trying to solve. Or do you want to start maintaining the OS for the others (providing updates of your own etc.)?
+10:17:36 * itsokiwantogohom uploaded an image: (1130KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/AxCrjOjnlQyHsWPqIVCjxIHg/IMG_20210407_121435_263.png >
+10:18:15 <itsokiwantogohom> Made this for personal use and thought some of you might lile it.
+10:18:26 <itsokiwantogohom> * Made this for personal use and thought some of you might like it.
+10:19:12 <itsokiwantogohom> Sorry, was meant for offtopic.
+10:42:55 <g405t[m]> <nscnt[m] "g405t: It would be a self-built "> no not at all just  a copy of my own phone (including all settings and apps) tried adb backup but the apps didnt come with the backup
+10:51:19 <nscnt[m]> g405t: To answer your initial question: No, you cannot copy your image and flash it on another device. You could backup with Seedvault to back up apps and app data of the owner user, install GrapheneOS on another device and restore the backup. There would be "issues" like apps can refuse to be backed up and so on. I wouldn't bother doing that.
+10:51:48 <somenerd[m]> I don't believe that apps can be restored (not sure about this though)
+10:52:52 <g405t[m]> Yeah tried it with adb was no success at all
+10:54:04 <g405t[m]> I guess ill just keep a map of apks and transfer them to every phone manually
+10:54:28 <somenerd[m]> providing a certain setup would probably require building GrapheneOS with those apps
+10:54:54 <somenerd[m]> > I guess ill just keep a map of apks and transfer them to every phone manually
+10:54:54 <somenerd[m]> yeah, probably a lot easier to do this
+10:56:04 * g405t[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/fGaRbuHYBWjSbqqtRREBHveD/message.txt >
+10:56:28 <somenerd[m]> yeah, and for OTA updates, there also needs to be an update server
+10:57:09 <g405t[m]> I know, not worth it at all
+10:58:38 <g405t[m]> thanks for the suggestions though guys, much appreciated 👌🏼
+12:06:49 <icebergfive> Any community consensus or official recommendations for 2FA and password manager apps for use with GrapheneOS?
+12:08:03 <KONCRETE[m]> Not official, But you can try aegis for your 2FA
+12:08:12 <KONCRETE[m]> Or a Yubikey
+12:08:36 <KONCRETE[m]> * Its not official, But you can try aegis for your 2FA
+12:08:53 <KONCRETE[m]> * Its not official, But you can try aegis for your 2FA or a YubiKey
+12:13:17 <GrapheneOS-Teleg> <!Hulk> icebergfive: https://madaidans-insecurities.github.io/security-privacy-advice.html#passwords-2fa
+12:13:44 <GrapheneOS-Teleg> <!Hulk> the whole website is recommended reading btw)
+12:17:33 <tintin_contre_rg> Hey, does someone have any idea why my pixel phone doesn't recognize my sim card ?
+12:19:17 <GrapheneOS-Teleg> <!Hulk> tintin_contre_rg: hi! which carrier?
+12:20:34 <GrapheneOS-Teleg> <B​astidVW> If the Pixel is Verizon branded and you try to use it on another carrier ....you're out of luck
+12:25:22 <GrapheneOS-Teleg> <!Hulk> if and only if it was carrier locked
+12:27:28 <tintin_contre_rg> <GrapheneOS-Teleg "<!Hulk> tintin_contre_rg: hi! wh"> SFR (i'm french)
+12:29:26 <wiegolf[m]> The sim is activated and works on another mobile?
+12:29:41 <GrapheneOS-Teleg> <!Hulk> welp, you might try to go directly to the office of your carrier to resolve this issue
+12:30:39 <wiegolf[m]> If you just activated you might have to wait 2-12 hours .... This is common for new activated sim cards
+12:31:15 <tintin_contre_rg> <wiegolf[m] "The sim is activated and works o"> Yes it worked with my previous phone. Ans in fact i receive one sms with this one and then it stopped working
+12:31:45 <wiegolf[m]> Reboot without sim reboot with sim...
+12:32:38 <wiegolf[m]> And clean the sim surface
+12:34:12 <wiegolf[m]> In settings there is an entry "status of sim card" ... does it show up there?
+12:35:08 <tintin_contre_rg> I did all of this
+12:35:43 <tintin_contre_rg> And the status tells it doesn't detect any sim card
+12:36:52 <GrapheneOS-Teleg> <!Hulk> in some countries there is an additional registration that needed to be done when switching sim cards from one phone to another. Stuff like sending your IMEI with a national ID number to the gov officials is common
+12:39:22 <tintin_contre_rg> OK, i never heard something like that before but i'll try to contact SFR thanks for your help
+12:46:54 <kskdj[m]> Is there an app I can use to change my imei regularly ?
+12:47:08 <kskdj[m]> Open source is preffered
+13:07:54 <GrapheneOS-Teleg> AB (@A​B_BTC) has joined the Telegram Group!
+13:11:38 <GrapheneOS-Teleg> <A​B_BTC> Hi everyone, just wondering if anyone has had any app compatibility issues since today's update?
+13:12:09 <GrapheneOS-Teleg> <A​B_BTC> Silent phone app was working fine up until newest update
+13:26:23 <altoid[m]> <kskdj[m] "Is there an app I can use to cha"> Someone Correct me if I'm wrong but I'm pretty sure you can't change your IMEI
+13:26:58 <altoid[m]> Its burned within your handset
+13:29:51 <tintin_contre_rg> <tintin_contre_rg "Hey, does someone have any idea "> I inserted it for the nth time ans it worked for like one minute then it disappeared. It looks like an hardware issue :/
+13:37:36 <akc3n[m]> <kskdj[m] "Is there an app I can use to cha"> When you're connected to the cellular network, it knows your IMEI. That's how a cell phone network works. Different sim cards give you a different subscriptions, but not a different IMEI. The way it works is your IMEI identifies the radio uniquely.
+13:39:15 <akc3n[m]> Also kskdj this may be of help as well:
+13:39:15 <akc3n[m]> https://grapheneos.org/faq#hardware-identifiers
+14:00:11 <GrapheneOS-Teleg> !J has joined the Telegram Group!
+14:31:10 <iccedlemontea[m]> Hey lads, whats the purpose of the (system tracing) com.android.traceur package?
+14:31:13 <iccedlemontea[m]> Am using shelter, and saw that in the list of work apps
+15:01:05 <akc3n> iccedlemontea[m], https://developer.android.com/topic/performance/tracing/on-device Data in a profile is owned by the service managing the profile. If you use shelter then what that means is a third party app gets to control that data.
+15:03:22 <akc3n> iccedlemontea[m], https://freenode.logbot.info/grapheneos/20210121#c6614099
+15:11:34 <minodesign> hallo
+15:12:03 <minodesign> I just visited and read the page https://grapheneos.org/build#build-targets
+15:12:49 <GrapheneOS-Teleg> <!Hulk> minodesign: hi!
+15:12:53 <minodesign> and I am wondering if is possible to build a sort of "generic Graphene OS" on a Gigaset android
+15:13:05 <skyecc[m]> What can I do. I forgot to update pixel 5 before flashing and now it seems bricked. It stopped process after partition
+15:13:33 <minodesign> or a sort of Graphene OS based os installed on a Gigaset GS260
+15:13:52 <GrapheneOS-Teleg> <!Hulk> skyecc[m]: pixel 5 should be fine without prior updating
+15:14:38 * skyecc[m] uploaded an image: (292KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/rkxfxuEqLMjaMJggMhYWchNr/20210407_181429_277032486446588067.jpg >
+15:14:41 <skyecc[m]> GrapheneOS-Teleg:
+15:14:45 <GrapheneOS-Teleg> <!Hulk> minodesign: I'm not qualified enough to help you, but I know that you can build GrapheneOS for a x86
+15:15:10 <GrapheneOS-Teleg> <!Hulk> skyecc[m]: why are you not using the web installer?
+15:15:12 <minodesign> yes I also not expert on building
+15:15:47 <minodesign> the Gigaset 260 is also the Volla Phone
+15:15:52 <skyecc[m]> GrapheneOS-Teleg: i have used this one before without problems
+15:16:25 <GrapheneOS-Teleg> <!Hulk> Are you following a YouTube video of some sort? That's very bad, the only proper installation is here https://grapheneos.org/install/
+15:16:51 <minodesign> they are adapting a Gigaset Android branch for their Volla OS
+15:17:05 <minodesign> (actually coming the 10 )
+15:17:18 <minodesign> hardening something
+15:17:21 <skyecc[m]> GrapheneOS-Teleg: no doing exactly what's in official webpage
+15:17:40 <skyecc[m]> Is there some way to reset device
+15:17:46 <GrapheneOS-Teleg> <!Hulk> skyecc[m]: which step are you on?
+15:18:17 <minodesign> I think they should start from Graphene OS, checking from Android 11 and then fix
+15:18:39 <skyecc[m]> Flash-all.bat
+15:19:37 <GrapheneOS-Teleg> <!Hulk> ok, so what kind error did you get?
+15:20:26 <skyecc[m]> Nothing it stopped after partition. Finished waiting for device. But process is longer.
+15:20:59 <skyecc[m]> Last one is rebooting to bootloader okay. Then nothing
+15:21:19 * skyecc[m] uploaded an image: (304KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/nrNwqKiOCdhJiYLnqrRWTUaZ/20210407_182109_3617296503323316711.jpg >
+15:21:31 <minodesign> Also, I will drop a mac os simple tutorial to flash graphene
+15:21:44 <minodesign> 8)
+15:23:31 <GrapheneOS-Teleg> <!Hulk> skyecc[m]: ok, if I were you, I would wait for someone trustworthy like devs/mods to help you with this one
+15:24:04 <GrapheneOS-Teleg> <!Hulk> Peter will be awake soon, he'll be happy to help)
+15:24:55 <GrapheneOS-Teleg> <!Hulk> Sorry, I don't want to take responsibility for bricking your brand new phone, so just stay where you are, and wait for help
+15:25:29 <skyecc[m]> GrapheneOS-Teleg: ok thanks. Who is dev or mod here?
+15:26:00 <skyecc[m]> Ok I'll wait. I think it's bricked already
+15:26:45 <GrapheneOS-Teleg> <!Hulk> you can see the mods in the participants list
+15:26:53 <tor3nduser[m]> <skyecc[m] "GrapheneOS-Teleg: ok thanks. Who"> how long was the process before it stopped responding?
+15:27:26 <tor3nduser[m]> also did you update the phone completely before starting this process
+15:28:02 <skyecc[m]> tor3nduser: no i didn't update that was mistake
+15:28:27 <skyecc[m]> Total Time 1.3sec just partitions that's it
+15:33:33 <wasbear[m]> hi
+15:33:41 <wasbear[m]> I have a question regarding pixel 5
+15:33:45 <wasbear[m]> Is it okay to ask here?
+15:35:02 <akc3n[m]> Hi wasbear just an fyi in case you're wondering... https://loui.ca/grapheneos.org/static/irc-rules.txt
+15:35:03 <GrapheneOS-Teleg> <!Hulk> wasbear[m]: hi! this chat is for GrapheneOS related topics
+15:35:06 <wasbear[m]> I installed grapheneos on my pixel 5 but should i also install a custom opensource recovery for more security
+15:35:19 <GrapheneOS-Teleg> <!Hulk> you shouldn't.
+15:35:25 <GrapheneOS-Teleg> <!Hulk> period.
+15:36:04 <wasbear[m]> Okay
+15:36:13 <wasbear[m]> I was just curious maybe a opensource or custom recovery would be better
+15:36:21 <wasbear[m]> Thanks
+15:37:16 <GrapheneOS-Teleg> <!Hulk> wasbear[m]: you seem new, welcome! here's some recommended learning material for you https://grapheneos.org/faq
+15:37:40 <akc3n[m]> wasbear: the community had an offtopic channel as well for anything unrelated if you're interested. Its #grapheneos-offtopic:matrix.org for matrix users.
+15:37:42 <GrapheneOS-Teleg> <!Hulk> pretty much the whole website is full of pre-requisite information
+15:39:26 <GrapheneOS-Teleg> <!Hulk> more recommended reading material https://madaidans-insecurities.github.io/
+15:39:57 <GrapheneOS-Teleg> <!Hulk> optional reading https://hub.libranet.de/wiki/graphene-os/wiki
+15:44:31 <GrapheneOS-Teleg> <m​adaidan> helo
+15:45:00 <GrapheneOS-Teleg> <!Hulk> 👋
+15:50:55 <user1182[m]> Hey guys, I installed GrapheneOS 03.19.14 about a week ago, shortly thereafter I received the push notification for an update. For the better part of the week that update has been stuck in the same place (about 1/4th of the way done) and trying 'check for updates' results in nothing. Should I try to install 4.05.20 manually and then hope that the automatic updates work from there on out?
+15:51:40 <GrapheneOS-Teleg> <!Hulk> user1182[m]: hi, and welcome
+15:51:44 <user1182[m]> ^release channel stable, permitted networks any, been on wifi the whole time but no cellular.
+15:51:47 <user1182[m]> Hello!
+15:51:48 <GrapheneOS-Teleg> <!Hulk> pls don't install anything
+15:52:06 <GrapheneOS-Teleg> <!Hulk> You're most likely updated already
+15:52:15 <GrapheneOS-Teleg> <!Hulk> Just check your build number
+15:52:37 <user1182[m]> forgot to say build number is still 03.19.14
+15:52:57 <GrapheneOS-Teleg> <!Hulk> "Seamless update" does indeed updates the system seamlessly
+15:53:33 <GrapheneOS-Teleg> <!Hulk> The "check for updates" button does not give any user feedback
+15:53:43 <GrapheneOS-Teleg> <!Hulk> That's just how it works :P
+15:55:04 <user1182[m]> Should I try to force stop the seamless update client and reboot the phone? I've rebooted a few times and the update progress hasn't moved
+15:55:09 <GrapheneOS-Teleg> <!Hulk> Oh sorry, just reread your messages
+15:56:09 <GrapheneOS-Teleg> <!Hulk> Hmm, what does your Auditor says?
+15:56:38 <user1182[m]> Oh, I haven't done the auditor, I did not have a compatible device to do it
+15:56:56 <GrapheneOS-Teleg> <!Hulk> Just do the remote attestation in this case
+15:57:25 <GrapheneOS-Teleg> Sam (@s​ameizad) has joined the Telegram Group!
+15:58:25 <user1182[m]> I will do that now and get back to you asap. Thank you
+15:58:56 <GrapheneOS-Teleg> <!Hulk> 👍👍
+16:00:51 <akc3n[m]> <user1182[m] "Oh, I haven't done the auditor, "> https://attestation.app/tutorial
+16:01:39 <user1182[m]> What is a good verification interval? Just the default of 4hrs?
+16:02:00 <GrapheneOS-Teleg> <!Hulk> Default is good👍
+16:02:49 <user1182[m]> thank you, successfully submitted remote attestation
+16:05:34 <GrapheneOS-Teleg> <!Hulk> so, what did the attestation say?
+16:07:21 <user1182[m]> What should I be looking for?
+16:08:01 <user1182[m]> os patch level is still 2021-03
+16:08:09 <user1182[m]> according to the attestation website
+16:08:42 <GrapheneOS-Teleg> <!Hulk> is your gos "clean"?
+16:11:20 <DHFuchsiaOSwhen> <user1182[m] "os patch level is still 2021-03"> Sounds about right, since monthly update still in Beta channel
+16:11:38 <user1182[m]> I'm not seeing anything mentioning "clean" on the attestation site, sorry
+16:12:29 <user1182[m]> <DHFuchsiaOSwhen "Sounds about right, since monthl"> I thought 4.05 is on the stable channel now?
+16:12:59 <GrapheneOS-Teleg> <!Hulk> patch level != Build number
+16:15:03 <DHFuchsiaOSwhen> <user1182[m] "I thought 4.05 is on the stable "> Is it? I haven't checked recently
+16:16:13 <DHFuchsiaOSwhen> <user1182[m] "I thought 4.05 is on the stable "> Oh yeah, it's possible that the seamless update that time downloaded the build before 04.05 as it's only pushed to stable recently (you're right)
+16:16:59 <DHFuchsiaOSwhen> Settings > System > Updates (last option after pressing Advanced) > Check for Updates
+16:17:55 <user1182[m]> I'm back to installing system updates and it's frozen again.
+16:17:57 <GrapheneOS-Teleg> <!Hulk> bro Fuchsia, read all his messages
+16:18:26 <GrapheneOS-Teleg> <!Hulk> that's strange that your installation freezes
+16:18:32 <Gladox114[m]> Where can I find the installation guide? Going to https://grapheneos.org/install/ just tells me that there are two methods but where can I find them
+16:18:52 <GrapheneOS-Teleg> <!Hulk> user1182[m]: is the bootloader locked?
+16:18:58 <DHFuchsiaOSwhen> <user1182[m] "I'm not seeing anything mentioni"> It's not exactly will mention "clean", it'll say " Successfully paired..." or something like that after two remote attestations
+16:18:59 <user1182[m]> <Gladox114[m] "Where can I find the installatio"> they're hyperlinked
+16:19:04 <user1182[m]> yes the bootloader is locked
+16:19:11 <GrapheneOS-Teleg> <!Hulk> Gladox114[m]: please use the web installation
+16:19:17 <user1182[m]> yeah I got the successful pairing
+16:19:25 <GrapheneOS-Teleg> <!Hulk> https://grapheneos.org/install/web
+16:20:29 <Gladox114[m]> <user1182[m] "they're hyperlinked"> Oh gosh ok for some reason the hyperlinks aren't marked blue because of dark reader probably
+16:21:03 <Gladox114[m]> <GrapheneOS-Teleg "<!Hulk> Gladox114: please use th"> Why the web version and not trying it on my PC with Manjaro?
+16:21:24 <Gladox114[m]> > <@user1182:matrix.org> they're hyperlinked
+16:21:24 <Gladox114[m]>  * Oh gosh ok for some reason the hyperlinks aren't marked blue because of dark reader
+16:21:36 <somenerd[m]> web version is easier
+16:21:48 <GrapheneOS-Teleg> <!Hulk> Gladox114[m]: please read, the installation manual before doing anything
+16:21:55 <somenerd[m]> and cli is only preferred if you want to verify the signatures
+16:22:08 <DHFuchsiaOSwhen> <Gladox114[m] "Why the web version and not tryi"> Manjaro is not an officially supported OS for installation either way iirc
+16:22:10 <somenerd[m]> https://grapheneos.org/install/
+16:22:14 <somenerd[m]> it's on the website
+16:22:32 <somenerd[m]> > Manjaro is not an officially supported OS for installation either way iirc
+16:22:32 <somenerd[m]> yeah, don't think it is
+16:22:44 <GrapheneOS-Teleg> <!Hulk> user1182[m]: my knowledge ends here, i do not know how to help you with your updates issue
+16:23:27 <Gladox114[m]> well on the page with cli it shows commads for arch linux which works on Manjaro. There isn't really a huge difference because Manjaro is based on arch
+16:23:32 <user1182[m]> <GrapheneOS-Teleg "<!Hulk> user1182: my knowledge e"> Thank you for trying, it's ok. Sorry I'm not more knowledgeable, learning alot though!
+16:24:29 <GrapheneOS-Teleg> <!Hulk> Gladox114[m]: the point is, if you use non-supported OS, no one will help you, you will be on your own
+16:25:07 <Gladox114[m]> But arch linux is Manjaro and where can I read what is supported as OS?
+16:25:08 <GrapheneOS-Teleg> <!Hulk> or i should have said, don't expect anyone to help you
+16:25:21 <Gladox114[m]>  * But Manjaro is arch linux  and where can I read what is supported as OS?
+16:25:21 <somenerd[m]> supported OSs are specifically tested on
+16:25:26 <GrapheneOS-Teleg> <!Hulk> again, just read the manual
+16:25:30 <GrapheneOS-Teleg> <!Hulk> https://grapheneos.org/install/web#prerequisites
+16:25:35 <Gladox114[m]> <somenerd[m] "supported OSs are specifically t"> ah ok
+16:25:43 <somenerd[m]> so there may be a few changes which cause problems on Manjaro
+16:25:50 <Gladox114[m]> ok now I found the supported ons
+16:25:52 <Gladox114[m]>  * ok now I found the supported ones
+16:26:06 <user1182[m]> Take it from someone who tried to do it through cmd, I had no idea what I was doing. Web install saved my ass lol
+16:27:43 <somenerd[m]> unless you want to distrust the server and verify images, you don't really want to use the cli install
+16:28:02 <somenerd[m]> (and you need to understand the instructions rather than blindly follow them)
+16:29:13 <Gladox114[m]> yeah I understand the commands but I probably will just use the web version
+16:29:32 <tor3nduser[m]> <Gladox114[m] "yeah I understand the commands b"> the cli install is very simple
+16:29:37 <tor3nduser[m]> just follow exactly what they say
+16:30:22 <Gladox114[m]> I know but there isn't much difference between the web version I think right? except trusting the web page
+16:30:32 <Gladox114[m]>  * I know but there isn't much difference between the web version I think right? except trusting the web page as webinstaller
+16:30:39 <tor3nduser[m]> im not sure. i didnt even open the web installer
+16:31:10 <skyecc[m]> Ah crap now i see what I did i flashed 4a image on 5
+16:31:35 <tor3nduser[m]> i guess my mindset was keeping it simple.  not relying on browser bugs or something being blocked from running.
+16:31:51 <tor3nduser[m]> * i guess my mindset was keeping it simple.  not relying on avoiding browser bugs or something being blocked from running.
+16:31:57 <skyecc[m]> Any way to undo this or is the phone wasted
+16:32:22 <DHFuchsiaOSwhen> <skyecc[m] "Ah crap now i see what I did i f"> If you can still reboot to bootloader interface (or you're still there), you can still reflash
+16:32:28 <tor3nduser[m]> <skyecc[m] "Any way to undo this or is the p"> you didnt tripple check that before starting? 🙄
+16:32:31 <somenerd[m]> > I know but there isn't much difference between the web version I think right? except trusting the web page as webinstaller
+16:32:31 <somenerd[m]> yeah, if you trust the server, then trusting the web install is fine
+16:32:58 <DHFuchsiaOSwhen> <tor3nduser[m] "you didnt tripple check that bef"> the web installer would have detected the image for you tbh
+16:33:17 <somenerd[m]> if you don't, and have signify packages (and good knowledge of cli), then doing the cli is suggested
+16:33:23 <tor3nduser[m]> <DHFuchsiaOSwhen "the web installer would have det"> why are you replying to me?  hes the one that installed wrong image lol
+16:33:29 <skyecc[m]> Yes didn't triple check and should have used web
+16:33:58 <skyecc[m]> But any ideas on recovery?
+16:34:08 <DHFuchsiaOSwhen> <tor3nduser[m] "why are you replying to me?  hes"> I mean, it was a message in general, my vad
+16:34:09 <DHFuchsiaOSwhen> bad*
+16:34:27 <skyecc[m]> No bootloader it does not detect device at all
+16:34:30 <tor3nduser[m]> ah ok lol
+16:34:44 <DHFuchsiaOSwhen> <skyecc[m] "No bootloader it does not detect"> Can you reboot to recovery, at least?
+16:35:00 <skyecc[m]> Nope
+16:35:25 <tor3nduser[m]> <skyecc[m] "No bootloader it does not detect"> unplig the phone and try booting into any bootloader on the phone locally. there has to be something still there
+16:35:40 <tor3nduser[m]> i think its power button and volume down
+16:35:54 <tor3nduser[m]> try to wipe everything.
+16:36:08 <skyecc[m]> I hear sound if it's connected to computer and i push volume down and power. That's it
+16:36:24 <skyecc[m]> After 10sec
+16:36:39 <tor3nduser[m]> DISCONNECT from pc
+16:36:44 <tor3nduser[m]> and power volume down
+16:36:56 <tor3nduser[m]> ypu should pay more attention to detail lol
+16:37:00 <GrapheneOS-Teleg> <!Hulk> skyecc[m]: huh, now it makes sense
+16:37:14 <GrapheneOS-Teleg> <!Hulk> check the logs of this chat
+16:37:25 <skyecc[m]> tor3nduser: nothing happens
+16:37:37 <GrapheneOS-Teleg> <!Hulk> If I remember right Daniel said that the device is irreversibly bricked
+16:37:48 <GrapheneOS-Teleg> <!Hulk> And you should return it
+16:37:52 <GrapheneOS-Teleg> <!Hulk> Check the logs
+16:38:06 <skyecc[m]> How do I check logs
+16:38:33 <GrapheneOS-Teleg> <!Hulk> https://freenode.logbot.info/grapheneos/
+16:38:37 <tor3nduser[m]> idk if it was me.. i would have used the correct image.  used a linux pc and installed from cli. lol
+16:38:55 <tor3nduser[m]> you might have learned a $700 mistake
+16:39:22 <skyecc[m]> GrapheneOS-Teleg: thanks
+16:40:27 <DHFuchsiaOSwhen> Something about Pixel 4/5 series are not preventing its bootloader to be flashed with wrong images?
+16:40:31 <GrapheneOS-Teleg> <!Hulk> skyecc[m]: found it for you
+16:40:32 <GrapheneOS-Teleg> <!Hulk> https://freenode.logbot.info/grapheneos/20210327#c7410901
+16:40:53 <GrapheneOS-Teleg> <!Hulk> someone installed 4a image on a 4a 5G
+16:41:10 <tor3nduser[m]> no he did 4a image on pixel 5
+16:41:21 <GrapheneOS-Teleg> <g​ochoingles> Oopsie.
+16:41:36 <GrapheneOS-Teleg> <!Hulk> yeah i know, tor3nduser[m]
+16:42:06 <tor3nduser[m]> <DHFuchsiaOSwhen "Something about Pixel 4/5 series"> i dont think so.  thats why they emphasize making sure you have the correct image in the instructions
+16:43:22 <tor3nduser[m]> the only other thing i can think of is (if usb debugging is allowed still in his case) plugging into a pc and using adb to fix it
+16:43:29 <DHFuchsiaOSwhen> <tor3nduser[m] "i dont think so.  thats why they"> Agreed
+16:47:14 <skyecc[m]> Mmtor3nduser how do u use as to fix it?
+16:48:48 <skyecc[m]> tor3nduser: i thought it only works after os is booted
+16:54:43 <GrapheneOS-Teleg> !Kademlia has joined the Telegram Group!
+16:55:20 <tor3nduser[m]> <skyecc[m] "Mmtor3nduser how do u use as to "> https://android.stackexchange.com/questions/161103/what-fastboot-erase-actually-does
+16:55:52 <tor3nduser[m]> the guy towards the bottom says it will remove all partitions and data.
+16:56:11 <tor3nduser[m]> which, if true, will let you flash an os to the devicre again
+16:56:51 <tor3nduser[m]> do more research though. dont just rely on that one page.
+17:16:47 <dazinism> user1182: could try going into settings > apps > show system > seamless update and delete the storage from the app. May sort out your issue. Not sure whats happening or why.
+17:18:40 <dazinism> Can't remember anyone else  having that issue.
+17:19:53 <dazinism> One possibility is you've changed something thats stopped the seamless updater app getting a network connection
+17:21:42 <dazinism> user1182 if thats the case you'll have to change things so it can connect again
+17:23:28 <dazinism> skyecc: you hear a noise from the phone or from the PC?
+17:23:43 <dazinism> Try holding volume up and power
+17:23:51 <dazinism> For a bit
+17:25:51 <bson989[m]>  Is anyone having problems with connecting to WiFi lately? My pixel 3 will go all day sometimes. Other devices don't have an issue.
+17:42:42 <dazinism> bson989: don't think there are any issues with GrapheneOS and WiFi.
+17:43:08 <dazinism> Think its much more likely to be a problem with the WiFi network
+17:43:39 <dazinism> Know experienced people spend hours trying to work out why some devices work and others not
+17:43:56 <bson989[m]> Okay thanks. It's just odd my device is the only one affected
+17:46:32 <dazinism> bson989: yeah, I've recently heard stories (not related to GrapheneOS) with WiFi networks working with some devices and others not.
+17:46:43 <dazinism> Depends how the WiFi network is set up
+17:47:23 <dazinism> Although I'm not clear on what the issues can be
+18:13:29 <tor3nduser[m]> <bson989[m] "Okay thanks. It's just odd my de"> is your SSID hidden or anything non standard about the configuration?
+18:14:12 <tor3nduser[m]> maybe a lot of networks nearby on the same channel.  could try switching from the standard channel 6 or 1 to maybe 11
+18:14:53 <tor3nduser[m]> if you say in router config you lice in japan you can utilies channel 14 which is against our fcc regs. but who gas.
+18:15:04 <tor3nduser[m]> * if you say in router config you live in japan you can utilies channel 14 which is against our fcc regs. but who gas.
+18:15:33 <tor3nduser[m]> * if you say in router config you live in japan you can utillize channel 14 which is against our fcc regs. but who gas.
+18:15:47 <tor3nduser[m]> * if you say in router config you live in japan you can utilize channel 14 which is against our fcc regs. but who gas.
+18:20:03 <nodenerd> hey all
+18:20:33 <nodenerd> anyone had any app compatibility issues from today's stable release update??
+18:40:02 * m4g3nt4[m] uploaded an image: (82KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/PcsEHkWyTzJosbGjxyksPTnR/20210407_203903_3550755093215113623.jpg >
+18:40:10 <m4g3nt4[m]> Why is that?
+18:40:27 <helloworldkk87[m> What
+18:41:08 <helloworldkk87[m> Do you mean why is it unlocked or what
+18:41:38 <TheJollyRoger> m4g3nt4[m]: if it says "no valid slot to boot" then the wrong partition has been flashed.
+18:42:24 <m4g3nt4[m]> How can the problem be solved?
+18:42:35 <TheJollyRoger> Generally, this problem is caused by using an incorrect, outdated, or third-party version of fastboot, or the installer erroring out. In which case, use the web installer and run the web installer again.
+18:43:01 <TheJollyRoger> m4g3nt4[m]: go to https://grapheneos.org/install/web and follow the instructions there.
+18:43:30 <jj1013[m]> <m4g3nt4[m] "20210407_203903_3550755093215113"> You must **NOT** show your serial number to anybody as far as I know.
+18:43:31 <TheJollyRoger> If it gives you "no valid slot to boot" after using the web installer, try to boot it and see if it returns to fastboot or it detects the correct slot.
+18:44:20 <TheJollyRoger> If it detects the correct slot, then return to fastboot and lock the bootloader so that it displays the "Your device is loading a different operating system" screen.
+18:44:37 <Gladox114[m]> Is it possible to run google stock Camera application? Would this be a bad idea because of maybe telemetry?
+18:46:16 <TheJollyRoger> Gladox114[m]: A few people here have figured out how to run an older release of Google Camera, but the general recommendation is not to do it, the exception in the security policy that allows it to run may be removed soon and it is likely that it will stop working in the future.
+18:49:36 <pinkylittlecat[m> you can find in xda a modified google camera version with no dependency on gms
+18:50:47 <pinkylittlecat[m> afaik it was not optimized for pixel 4a but it still works well, it does not use all the AI features of pixel 4a because it was not optimized for it
+18:51:12 <pinkylittlecat[m> better to talk about it in the offtopic channel btw
+18:51:22 <Gladox114[m]> ahright
+18:52:29 <apexibex[m]> there's a caveat for that modded gcam. the source is not available so you have to rely on faith that there's no malicious code
+18:53:14 <apexibex[m]> this is even mentioned by the guy who hosts the links
+18:54:01 <apexibex[m]> but AFAIK there hasn't been any known issues with the mod
+18:54:34 <apexibex[m]> not trying to spread FUD, but you should be aware
+18:56:46 <TheJollyRoger> Of course.
+19:08:42 <dar_gomml[m]> apexibex: which mod would that be?
+19:11:12 <GrapheneOS-Teleg> xQuantx (@I​tsAlex42) has joined the Telegram Group!
+19:14:55 <m4g3nt4[m]> <TheJollyRoger "m4g3nt4: go to https://grapheneo"> That unfortunately did not work
+19:16:38 <TheJollyRoger> m4g3nt4[m]: what is going on?
+19:17:52 <m4g3nt4[m]> The same problem
+19:18:29 <TheJollyRoger> m4g3nt4[m]: what happens when you select "start?"
+19:18:34 <TheJollyRoger> Does it return you to Fastboot?
+19:18:38 <skyecc[m]> tor3nduser: fastboot can't find device at all so can't send any commands.  It's just waiting for device
+19:18:59 <m4g3nt4[m]> <TheJollyRoger "m4g3nt4: what happens when you s"> Nothing
+19:19:34 <m4g3nt4[m]> <TheJollyRoger "Does it return you to Fastboot?"> Yes
+19:21:07 <TheJollyRoger> m4g3nt4[m]: Ok, can you back up and describe to me exactly how you got to this position? What commands did you run, what software have you used...?
+19:24:28 <nodenerd> Hi, so after doing some researching on the chat here, I see that it's not possible to 'rollback' to a previous version of the OS for security reasons. Would it be possible though to somehow flash an older version of the OS and then just disable system updates.. will the system allow me to install an older version at all?
+19:24:39 <m4g3nt4[m]> <TheJollyRoger "m4g3nt4: Ok, can you back up and"> I installed GrapheneOS with the CLI install
+19:25:20 <TheJollyRoger> m4g3nt4[m]: can you post the output of "fastboot --version" to me, please?
+19:25:24 <TheJollyRoger> I have an idea of what went wrong.
+19:25:30 <m4g3nt4[m]> Yes
+19:25:54 <TheJollyRoger> hi nodenerd, if you want to install an older version of the operating system, you must find an older release, then you must unlock the bootloader.
+19:26:29 <nodenerd> Hey TheJollyRoger yes I have a slightly older image here I could flash
+19:26:49 <nodenerd> But the phone already has the latest version (today's update) on it
+19:26:57 <nodenerd> So it would be a manual rollback
+19:27:18 <m4g3nt4[m]> <TheJollyRoger "I have an idea of what went wron"> fastboot version 31.0.0-android-tools
+19:29:12 <TheJollyRoger> nodenerd: yeah. You can unlock the bootloader and re flash but you'll need to unlock the bootloader. Everything on that phone will be lost in the process - all photos, files, apps, etc.
+19:29:37 <nodenerd> Yes ok that would be fine, I shall give that a try, great, thanks!
+19:29:57 <TheJollyRoger> m4g3nt4[m]: Hmm. Very strange if it's version 31 and it's doing that and failing autodetection. Stay posted in this channel, hopefully someone more knowledgeable than I can help you out.
+19:30:16 <TheJollyRoger> nodenerd: Good luck, it shouldn't take you long. Back everything up first, there is no recovering data that's been deleted after the phone changes keys.
+19:31:20 <nodenerd> Yep understood, thanks a lot for your help!
+19:32:45 <TheJollyRoger> Anytime!
+19:41:30 * m4g3nt4[m] uploaded an image: (119KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/otfspSGrEuvnZVGUjanGruuk/20210407_214107_4075715216130803242.jpg >
+19:43:04 <m4g3nt4[m]> Then it hangs on fastboot
+19:46:56 <TheJollyRoger> m4g3nt4[m]: Huh. Very, very strange... yeah, someone more knowledgeable than I is going to have to help you out on this, I'm unfortunately out of ideas.
+19:52:59 <GrapheneOS-Teleg> Luigi (@L​redsM) has joined the Telegram Group!
+19:55:34 <m4g3nt4[m]> <TheJollyRoger "m4g3nt4: Huh. Very, very strange"> Okay thanks anyway
+19:56:27 <TheJollyRoger> m4g3nt4[m]: stay posted. If worst comes to absolute worst, your phone is still good, and you can always revert it back to stock.
+19:56:54 <strcat[m]> m4g3nt4: reboot your computer
+19:56:56 <strcat[m]> make sure adb isn't running
+19:57:00 <strcat[m]> boot the phone back to bootloader mode
+19:57:10 <TheJollyRoger> Whew, strcat[m] to the rescue.
+19:57:10 <strcat[m]> use a high end USB cable, not some random one
+20:29:43 <m4g3nt4[m]> Does not work too :(
+20:31:28 * m4g3nt4[m] uploaded an image: (64KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/VzNfYllMUvIttZBbgnmtSAGH/20210407_223107_7436716312807277119.jpg >
+20:31:35 <m4g3nt4[m]> Even flash the stock ROM does not work
+20:57:55 <GrapheneOS-Teleg> !Nobody has joined the Telegram Group!
+21:04:23 <strcat[m]> m4g3nt4: broken USB cable, etc.
+21:04:25 <strcat[m]> USB port
+21:08:43 <murmr> hello, on the web installer, when clicking obtain factory image, im seeing an IDBOpenRequest error (user denied permissions). latest chromium, any idea how to fix this?
+21:09:49 <GrapheneOS-Teleg> <!Hulk> murmr: hi!
+21:09:56 <GrapheneOS-Teleg> <!Hulk> are you on private browsing?
+21:10:29 <GrapheneOS-Teleg> <!Hulk> you shall not use private browsing for GrapheneOS web installation
+21:10:39 <GrapheneOS-Teleg> <!Hulk> and your should allow cookies
+21:11:00 <murmr> thanks! looks like i forgot to grant cookie permissions
+21:11:33 <GrapheneOS-Teleg> <!Hulk> murmr: before you continue
+21:11:59 <GrapheneOS-Teleg> <!Hulk> it's highly recommended to read the whole page before following the instructions
+21:18:36 <murmr> is the flashing process ok to run multiple times? got a timeout error during flashing but it looks like fastboot is open on the phone
+21:19:05 <GrapheneOS-Teleg> <!Hulk> hmmmm
+21:19:24 <murmr> specifically: timeout of 10000ms exceeded
+21:19:29 <GrapheneOS-Teleg> <!Hulk> i didn't encounter such problem before
+21:19:51 <GrapheneOS-Teleg> <!Hulk> so, bootloader unlocking went successful?
+21:19:55 <murmr> yes
+21:20:35 <GrapheneOS-Teleg> <!Hulk> and you are using the official cable which came with your phone?
+21:21:04 <m4g3nt4[m]> <strcat[m] "m4g3nt4: broken USB cable, etc."> I've tried several cables and now it worked :D
+21:21:44 <m4g3nt4[m]> Thanks for your support
+21:24:24 <murmr> hmm, i can try again with a different cable. so reboot into the bootloader and redo the flashing process?
+21:24:55 <GrapheneOS-Teleg> <!Hulk> murmr: ypu should only stick with the Google cable
+21:24:59 <jj1013[m]> <murmr "hmm, i can try again with a diff"> Yup.
+21:25:39 <GrapheneOS-Teleg> <!Hulk> @gochoingles pls don't
+21:26:38 <GrapheneOS-Teleg> <!Hulk> murmr: the cable that came with your phone is the only one you need
+21:26:59 <GrapheneOS-Teleg> <g​ochoingles> My computer does not have an USB-C port.
+21:27:37 <GrapheneOS-Teleg> <!Hulk> i understand, but that doesn't mean that murmr's computer is the same
+21:27:49 <murmr> my machine doesnt have a usb-c port
+21:28:06 <jj1013[m]> <murmr "hmm, i can try again with a diff"> You would have to look for Anker or Aukey manufactured cables.
+21:28:21 <jj1013[m]> > <@freenode_murmr:matrix.org> hmm, i can try again with a different cable. so reboot into the bootloader and redo the flashing process?
+21:28:22 <jj1013[m]>  * You would have to look for Anker or Aukey manufactured cables in the case you really do not have an USB-C port.
+21:28:24 <GrapheneOS-Teleg> <!Hulk> here you go, well it's better to find a computer with a usb-C port
+21:28:28 <GrapheneOS-Teleg> <!Hulk> or a phone
+21:28:56 <jj1013[m]> <murmr "my machine doesnt have a usb-c p"> Anker and Aukey are the most recommended brands.
+21:29:49 <jj1013[m]> > <@freenode_murmr:matrix.org> my machine doesnt have a usb-c port
+21:29:49 <jj1013[m]>  * Anker and Aukey are the most recommended brands for USB-C to USB-A.
+21:29:49 <jj1013[m]> USB-A is the common USB port on a desktop computer as far as I am concerned.
+21:29:55 <murmr> sure, so when i have a machine w usb-c, on the phone do I exit out of fastbootd and back into the bootloader? Then re-obtain and flash on a different machine?
+21:30:17 <jj1013[m]> <GrapheneOS-Teleg "<!Hulk> here you go, well it's b"> Buying an entire computer with an USB-C port would be really expensive.
+21:31:27 <GrapheneOS-Teleg> <!Hulk> @gochoingles one can install GrapheneOS without a pc, by using a separate Android phone
+21:31:29 <jj1013[m]> <murmr "sure, so when i have a machine w"> You just have to get an Anker cable (USB-C to USB-A). When you get it ready, you start the flashing process.
+21:31:36 <jj1013[m]> I am assuming you know how to use CLI.
+21:31:56 <GrapheneOS-Teleg> <g​ochoingles> Not all phones are supported. Here's my Samsung Galaxy A01 Core.
+21:31:59 <GrapheneOS-Teleg> <!Hulk> @gochoingles don't recommend people to use CLI installation!
+21:32:54 <murmr> right, what state should the phone be in to redo the flashing? right now it is in fastbootd. should it be back in the bootloader?
+21:33:11 <GrapheneOS-Teleg> <!Hulk> yeah, but given that you might have friends and/or family this is not a big problem
+21:33:31 <GrapheneOS-Teleg> <g​ochoingles> Then there's my mom's Redmi Note 9 or something.
+21:33:31 <GrapheneOS-Teleg> <g​ochoingles> Again, I am assuming he knows how to use CLI.
+21:33:47 <jj1013[m]> <murmr "sure, so when i have a machine w"> If you are not experienced with command line, you could get the latest version of Chromium and get to the Web Install page on https://grapheneos.org
+21:34:30 <GrapheneOS-Teleg> <!Hulk> that's the thing, murmr was already using web installation method mate :P
+21:34:54 <GrapheneOS-Teleg> <!Hulk> murmr: i'm not answering your question
+21:34:58 <GrapheneOS-Teleg> <g​ochoingles> Strange he was talking about fastbootd in that case.
+21:35:06 <GrapheneOS-Teleg> <!Hulk> just because i'm not qualified enough
+21:35:38 <GrapheneOS-Teleg> <!Hulk> yeap, right here bro
+21:36:04 <jj1013[m]> murmr https://grapheneos.org/install/web Web Install.
+21:36:11 <murmr> okay, appreciate the help !Hulk.
+21:36:50 <GrapheneOS-Teleg> <!Hulk> murmr: i guess that your phone should be fine to be rebooted to normal state, but that's not guaranteed, and i'm not qualified enough to help you if something goes wrong there
+21:37:44 <GrapheneOS-Teleg> <!Hulk> either way, is there a different computer/laptop/ android phone that you could use to do complete the installation?
+21:39:01 <murmr> jj1013[m]: right, asking if the flashing process via the web install is idempotent, and what state the phone should be in to redo the flashing step (leave in fastbootd vs the bootloader)
+21:39:55 <jj1013[m]> <murmr "jj1013.: right, asking if the fl"> You must boot it into fastboot in order to begin the flashing process.
+21:40:26 <jj1013[m]> Not sure what you mean by "bootloader", but it really should not be in recovery mode.
+21:42:08 <itsokiwantogohom> Question: Why are the Graphene OS Dialer and Contacts app white/light/themed while the rest of the os is in dark mode?
+21:42:34 <GrapheneOS-Teleg> <!Hulk> itsokiwantogohom: hiello!
+21:42:47 <GrapheneOS-Teleg> <!Hulk> these are old AOSP apps
+21:42:57 <GrapheneOS-Teleg> <!Hulk> they do basic functionality
+21:43:12 <GrapheneOS-Teleg> <!Hulk> they were written before dark-theme became a thing
+21:44:24 <itsokiwantogohom> <GrapheneOS-Teleg "<!Hulk> these are old AOSP apps"> Any chance we will see newer versions in the future?
+21:45:38 <GrapheneOS-Teleg> <!Hulk> if you want to, you can contribute to the project by updating them
+21:46:01 <GrapheneOS-Teleg> <!Hulk> however Google didn't update them in the long while
+21:46:59 <GrapheneOS-Teleg> <!Hulk> also, they work as intended, so adding functionality/dark-theme to these apps is very low priority
+21:47:29 <itsokiwantogohom> <GrapheneOS-Teleg "<!Hulk> if you want to, you can "> Man, I would love to. Yet my professional background is not in software development.
+22:15:03 <rhclayto> Hello, Peter Easton directed me here. Thank you Peter! I have a question about VPNs in GrapeheneOS. I have read the FAQ at https://grapheneos.org/faq#vpn-support. With regards to setting an app-provided VPN at Settings ➔ Network & Internet ➔ Advanced ➔ VPN, should this be set independently in each individual user profile? Or would setting it in the Owner profile apply to secondary user profiles?
+22:20:12 <rhclayto> My specific situation is that I am trying to run an app called InviZible (https://github.com/Gedsh/InviZible). Bascially it runs Tor client & dnscrypt-proxy, then sets itself up as an Android VPN & routes all traffic through them. It works flawlessly in the owner profile, but it has no effect on traffic from secondary user profiles. If I then install it into a user profile, it doesn't appear as a candidate in the Android VPN settings (Settings ??
+22:20:12 <rhclayto> ? Network & Internet ➔ Advanced ➔ VPN).
+22:21:59 <GrapheneOS-Teleg> <!Hulk> rhclayto: hi!
+22:22:06 <GrapheneOS-Teleg> <!Hulk> let me try to help you)
+22:22:25 <rhclayto> Hi !Hulk.
+22:23:14 <GrapheneOS-Teleg> <!Hulk> so, I don't know how to fix this problem with this app (i never used it), but here is some highly recommended reading for you https://madaidans-insecurities.github.io/
+22:23:32 <GrapheneOS-Teleg> <!Hulk> speicifically https://madaidans-insecurities.github.io/encrypted-dns
+22:23:56 <entry1> rhclayto is this not similar to Orbot?
+22:24:43 <Lynn[m]> <icebergfive "Any community consensus or offic"> Aegis, and KeePassDX (ChaCha20 as the encryption algorithm, and Argon2id for the key derivation function).
+22:24:58 <rhclayto> Yes, it's similar to Orbot, but in addition to Tor also does DNSCrypt & I2P.
+22:28:34 <GrapheneOS-Teleg> <!Hulk> rhclayto: also, this https://madaidans-insecurities.github.io/vpns.html
+22:28:48 <GrapheneOS-Teleg> <!Hulk> as i said, highly recommended reading
+22:29:01 <odinos[m]> I'm having the same problem as described in this post: https://www.reddit.com/r/GrapheneOS/comments/flyn5b/whatsapp_periodically_becoming_inactive/
+22:29:13 <rhclayto> Suppose I were not using this app, InviZible, instead I used Orbot. Would I need to install Orbot on every user profile, or on the owner profile which would then corral all user profile traffic into the VPN? It's not clear from the FAQ.
+22:29:17 <odinos[m]> a
+22:30:51 <GrapheneOS-Teleg> <!Hulk> rhclayto: that's why you should read https://madaidans-insecurities.github.io/vpns
+22:33:51 <rhclayto> !Hulk: Thanks for the links. I have read them. I like this app because it allows me to route some apps through Tor, & other apps through a VPN (first through Shadowsocks on my own VPS paid for with cryptocurrency, with the obfs plugin), & DNS, goes to DNSCrypt servers, using DNSCrypt's anonymous proxy feature.
+22:34:03 <steaks[m]> I just bought a Pixel 5 from AT&T. I just found out you can't install grapheneos on a locked phone. Did I just waste $700?
+22:34:25 <akc3n[m]> Hi rhclayto this may be considered an offtopic discussion as per rule 2a. https://loui.ca/grapheneos.org/static/irc-rules.txt
+22:34:25 <akc3n[m]> #grapheneos-offtopic on freenode.
+22:34:25 <akc3n[m]> PS, yes you would have to install Orbot on the  profiles you would want to use it on.
+22:34:32 <entry1> <rhclayto "Suppose I were not using this ap"> Each profile to my knowledge since they are essentially separate.
+22:35:04 <rhclayto> !Hulk, thanks again for the links, but they don't give any guidance about how GrapheneOS should be configured, even with the recommendad apps from the FAQ.
+22:35:46 <GrapheneOS-Teleg> <!Hulk> rhclayto: welp, that's as much as i could do to help you)
+22:35:49 <GrapheneOS-Teleg> <!Hulk> gl hf
+22:36:01 <GrapheneOS-Teleg> <!Hulk> steaks[m]: hello!
+22:36:10 <rhclayto> entry1: Thanks. akc3n: I will be happy to ask over there. But really I'm just asking how the VPN configuration works on GrapheneOS.
+22:36:13 <steaks[m]> <GrapheneOS-Teleg "<!Hulk> steaks: hello!"> hi!
+22:36:37 <entry1> You will have to install the VPN app on each profile and configure "VPN always on" for profiles you always want the VPN connected on. If you do this. What are you trying to do exactly with VPNs within the OS?
+22:36:42 <GrapheneOS-Teleg> <!Hulk> you should go to At&T and ask them to unlock your phone
+22:36:44 * akc3n[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/PQSIQOweBkHthnyJVpnqvfSc/message.txt >
+22:36:51 <odinos[m]> <odinos[m] "I'm having the same problem as d"> is there any other advice someone can give me apart from daniels comment posted there?
+22:37:19 <steaks[m]> Thank you both! I will try both of those options
+22:37:21 <entry1> It is no different to stock android for VPNs to my knowledge rhclayto
+22:37:38 <steaks[m]> I didn't know carriers could unlock phones for you
+22:38:01 <rhclayto> entry1: I will try that with Orbot, since the app I have tried with doesn't show up as a candidate in the options at Settings ➔ Network & Internet ➔ Advanced ➔ VPN
+22:38:18 * akc3n[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/chpFLncufjifZTHCCWiWFbgZ/message.txt >
+22:38:34 <rhclayto> To clarify, it shows up & works in the owner profile, but not in the user profiles.
+22:39:06 * steaks[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/nnzAmlMInLRlwVbQXjcLZLJS/message.txt >
+22:39:30 <entry1> rhclayto
+22:39:30 <GrapheneOS-Teleg> <!Hulk> also steaks[m]: if i were you, i would just return the locked phone (as it is brand new, right?) and by the phone directly from Google
+22:39:45 * entry1 uploaded an image: (58KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/yBQcInZsawXWNDCYlTXXAPRv/Screenshot_20210407-183902.png >
+22:39:45 <entry1> This what you're looking for?
+22:40:34 <entry1> We'll move to #grapheneos-offtopic:matrix.org
+22:40:57 <rhclayto> Ok, see you over there.
+22:40:57 <entry1> Ping me on there if you want follow up/clarification
+22:42:05 <odinos[m]> is this channel for support?
+22:42:24 <GrapheneOS-Teleg> <!Hulk> odinos[m]: hello, GrapheneOS support is here
+22:42:34 <akc3n[m]> Yes for grapheneos.
+22:43:09 <odinos[m]> im not recieving whatsapp messages untill i unlock my phone sometimes
+22:43:29 <odinos[m]> daniel said disabling battery optimization should fix it but it doesnt
+22:44:13 <GrapheneOS-Teleg> <!Hulk> odinos[m]: here is what you should read regarding this question https://grapheneos.org/faq#notifications
+22:45:20 <GrapheneOS-Teleg> <!Hulk> aight, i'm heading out now, have fun people)
+22:45:27 <akc3n[m]> That's a great write up he did the other day. we needed something like that for the FAQ.
+22:45:42 <akc3n[m]> See ya @Hulk
+23:50:53 <lempis[m]> Should I be looking to fix OpenCamera and FreeDCam to get the ultrawide to work on the Pixel 5?

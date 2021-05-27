@@ -1,0 +1,301 @@
+00:43:35 <hwz588[m]> Hey:)
+00:43:35 <hwz588[m]>  Are there any plans for the new Google Pixel 6/Pro?
+00:43:35 <hwz588[m]> Could there be problems with the new Google Silicon SoC?(It based on the Exynos 2100 from Samsung)
+01:36:07 <strcat[m]> there aren't plans based around rumours
+01:36:09 <strcat[m]> there is no Pixel 6 available
+01:36:14 <strcat[m]> the Pixel 5a isn't even launched yet
+01:36:27 <strcat[m]> and as has been stated repeatedly, this project is not specifically for Pixels
+02:07:22 <evoran[m]> Running a pixel 3a and getting carrier signal for SMS/voice, but no data. Redid APN settings, and checked two sim cards. Sim cards working in another phone. Carrier account shows last log of data usage two days ago. Updated recently, but not sure exactly when. Could that have affected mobile data?
+02:07:47 <evoran[m]> Anything else I'm forgetting, or just hardware probably shot?
+03:30:45 <hasnoname[m]> HI, i'm trying to go back to stock and the device is not recongnized with fastboot. no problem with adb
+03:35:41 <DHFuchsiaOSwhen>  tried the common troubleshooting options already (cable and/or ports quality, updating drivers or installing udev)?
+03:36:32 <hasnoname[m]> on windows and using official usb
+03:37:54 <DHFuchsiaOSwhen> Have you tried doing it through flash.android.com (web installer on stock)?
+03:38:30 <hasnoname[m]> on mac, fastboot devices show the devices but fastboot flashing unlock says "FAILED (remote: 'flashing unlock is not allowed')
+03:38:30 <hasnoname[m]> fastboot: error: Command failed"
+03:39:04 <DHFuchsiaOSwhen> Oh, looks like the OEM unlock in developer settings is not toggled
+03:39:15 <DHFuchsiaOSwhen> toggled on*
+03:39:32 <hasnoname[m]> oh, i think. let me see
+04:26:56 <hasnoname[m]> shout out to anuprita and the devs of GOS. I had to move out to stock but I'd continue supporting and will get back to GOS at some point.
+04:34:28 <strcat[m]> build reproducibility issue for the Linux kernel is caused by CONFIG_IKHEADERS
+04:45:30 <strcat[m]> figured that out
+04:55:55 <strcat[m]> https://fingerprintjs.com/blog/external-protocol-flooding/
+04:56:34 <strcat[m]> shouldn't impact mobile Chromium since it lacks extensions
+05:07:12 <GrapheneOS-Teleg> JavaShin-X (@j​avashin) has joined the Telegram Group!
+05:07:20 <GrapheneOS-Teleg> <j​avashin> Nice
+05:07:28 <GrapheneOS-Teleg> <j​avashin> Hi People
+05:08:02 <GrapheneOS-Teleg> <j​avashin> oh this is irc
+05:14:14 <strcat[m]> it's an IRC channel with a bridged Matrix room and Telegram group
+05:14:50 <strcat[m]> Matrix and Telegram are connected to IRC, this is from Matrix, but goes through IRC to Telegram
+05:14:51 <edsh[m]> <blaqkbsd[m] "Probably FCC won't like such a g"> What brand? What countries?
+05:15:36 <GrapheneOS-Teleg> <j​avashin> is graphene more difficult to build than caf roms ?
+05:16:19 <GrapheneOS-Teleg> <j​avashin> i want to try building for this device
+05:16:25 <GrapheneOS-Teleg> <j​avashin> https://www.gsmarena.com/xiaomi_poco_m3-10599.php
+05:19:09 <skumar> can anyone talk about camera on pixel 5 through grapheneos, is google camera is better .? or stock camera is able to take advantage of hardware/HDR+ .?
+05:21:36 <edsh[m]> Normally the Google Camera is better of proprietary code which is removed in GrapheneOS builds.
+05:23:07 <skumar> edsh[m] thanks, what about 5G support - that is already there in os, right .?
+05:25:06 <edsh[m]> I am only an average GOS user. Sorry I can't answer this. However, somebody asked if only-4G is also activating 5G. The answer to this question was "yes". So, I am assume that 5G is activated.
+05:30:00 <edsh[m]> Does this help?
+05:39:27 <skumar> edsh[m] yes this is very helpful, thank you very much :)  . I was working on building on top of grapheneos lets see if I can succeed
+05:40:57 <edsh[m]> What is your project about?
+05:59:57 <Marloner> I am a new grapheneos (and IRC) user.  I successfully installed grapheneOS by CLI on a 4a sunfish, but couldn't get it to boot without leaving the bootloader unlocked after installation.
+06:00:20 <Marloner> (As I have for LineageOS and other ROMs.)  Does this create a security issue?
+06:02:04 <DHFuchsiaOSwhen> <Marloner "(As I have for LineageOS and oth"> Yes
+06:03:59 <Marloner> When I locked the bootloader after installation and tried to reboot into system, the phone consistently hung and put me back in the fastboot screen.
+06:04:49 <TheJollyRoger> Marloner: Your installation's not complete. Likely what happened was that the installation was interrupted partway through and the operating system has been installed partially, in a state where it will boot but not pass signature validation.
+06:05:08 <TheJollyRoger> If you haven't locked the bootloader, your installation of GrapheneOS is not complete and all of the handset's security features are disabled.
+06:05:36 <Marloner> So I'll have to start over again.
+06:05:37 <TheJollyRoger> So, I recommend what you do is you unlock the bootloader and try the flash again. Make sure you are using version 31 or later of fastboot.
+06:05:39 <TheJollyRoger> Yes.
+06:06:04 <Marloner> I do have version 31.  I wonder what I did wrong.
+06:06:33 <TheJollyRoger> This can occasionally be caused by prematurely rebooting or fiddling with the phone while it is in fastbootd. Sometimes, it's just a bit of bad luck.
+06:07:20 <Marloner> A follow-up:  You've said that the handset's security features are disabled.  Is this only in case the handset is accessed by someone besides me?
+06:07:48 <Marloner> In other words, do I retain grapheneos' other security features, as long as only I have access to the handset?
+06:07:56 <Marloner> I admit, I'm not eager to do the whole configuration over again.
+06:08:16 <TheJollyRoger> No, it's much worse than that. You've essentially disabled the hardware backed keystore, hardware bound encryption, and attestation. Any GrapheneOS security features dependent on those won't work.
+06:09:21 <TheJollyRoger> Remember, GrapheneOS is not a "ROM" - it's a complete system of many items that work in concert with each other to improve the security, privacy, and transparency of the Android Open Source Project.
+06:09:43 <Marloner> Thanks again for letting me know.  I'd better try again.
+06:09:45 <TheJollyRoger> So even if you have a really secure operating system, if you've chosen not to utilize any of the handset security features, you're doing the equvialent of building a concrete bunker on a rope bridge.
+06:10:19 <TheJollyRoger> Even if the concrete bunker has walls of two foot thick solid concrete, the rope bridge it's built on isn't going to be nearly as resistant to being attacked.
+06:10:38 <TheJollyRoger> Yep, definitely!
+06:10:47 <Marloner> Off I go ...
+06:10:49 <TheJollyRoger> The safest way to install GrapheneOS is using the Web Installer.
+06:11:11 <TheJollyRoger> Night shipmates.
+06:30:09 <edsh[m]> The the web installer actual more secure? Or is it a convenience thing?
+06:34:37 <edsh[m]> I liked the CLI install process. Is it deprecated? Are there more advantages/disadvantages to one or the other?
+06:36:34 <Guest24338> convenience mostly
+06:37:52 <edsh[m]> Please explain me the "mostly" part of your answer.
+06:39:35 <Guest24338> people make mistakes when writing CLI commands in the CLI, they often misread instructions and skip steps, people fluent in CLI might skip verification steps that are done by automation by the web installer.
+06:42:14 <strcat[m]> edsh: CLI install is only really worth using if your OS provides proper usable fastboot and signify packages
+06:42:22 <strcat[m]> otherwise you might as well be using the web installwe
+06:42:27 <strcat[m]>  * otherwise you might as well be using the web installer
+06:42:39 <somenerd[m]> also maybe getting the GrapheneOS signature out of band
+06:43:03 <strcat[m]> web installer has more checks and more robust error handling, not less robust, since it was made for us from scratch
+06:45:54 <edsh[m]> If I have fastboot, signify and a way to obtain the GOS sig out of band, I am also fine with the CLI install version? Besides of the error messages of course.
+06:46:14 <somenerd[m]> and if you know cli well enough
+06:46:24 <somenerd[m]> the point of CLI is to distrust the server
+06:46:42 <somenerd[m]> (the CLI install)
+06:47:44 <edsh[m]> That is what I am curious about. How does the web installer work? I give all the trust to a server I can not control? Or does the server ship me a ton of JS?
+06:48:03 <edsh[m]> I did the CLI version before without any problem.
+06:48:24 <edsh[m]> The CLI is even better by doing it correctly?
+06:48:43 <somenerd[m]> > That is what I am curious about. How does the web installer work? I give all the trust to a server I can not control? Or does the server ship me a ton of JS?
+06:48:43 <somenerd[m]> You have to trust the server in the web install
+06:49:40 <somenerd[m]> by assuming that the server is malicious, you have to assume that the instructions given are malicious, the image is malicious, and that any signature given is malicious
+06:50:34 <edsh[m]> That is a big no no for me. Or do I miss out about some verification magic? I a not reliant on server trust, because I can verify the integrity of the install with the Auditor app afterwards, right?
+06:51:16 <somenerd[m]> yeah, I believe that you can verify the integrity later on
+06:51:27 <edsh[m]> However, by trusting the signatures I don't have to trust the server infrastructure, right?
+06:51:43 <somenerd[m]> > However, by trusting the signatures I don't have to trust the server infrastructure, right?
+06:51:43 <somenerd[m]> the ones given on the site?
+06:52:05 <edsh[m]> You believe? Anybody else who is in the know?
+06:52:21 <somenerd[m]> I suggest looking at the logbot
+06:52:35 <somenerd[m]> https://freenode.logbot.info/grapheneos/20210514
+06:52:41 * edsh[m]  < https://matrix.org/_matrix/media/r0/download/matrix.org/TkBaIWUntsDsJoAdosFZQwsd/message.txt >
+06:52:43 <TheLoneWanderer[> You can verify the integrity using auditor
+06:53:04 <GrapheneOS-Teleg> ▄︻╦⌘≡══-------➖ 🕵️‍♂️ (@n​ologo) has joined the Telegram Group!
+06:53:10 <somenerd[m]> Local verification should work
+06:53:17 <somenerd[m]> (not remote verification)
+06:53:27 <somenerd[m]>  * Local verification should work (for the threat model)
+06:53:28 <edsh[m]> The Lone Wanderer: So even if the web installer fools me?
+06:53:31 <somenerd[m]>  * (not remote verification, though)
+06:53:42 <edsh[m]>  * The Lone Wanderer: So even if the web installer fools me, I am fine?
+06:53:50 <somenerd[m]> yeah, since it'd catch the malicious image
+06:53:55 <TheLoneWanderer[> AFAIK yes
+06:54:21 <strcat[m]> edsh: you trust the server whether you use web or CLI install unless you get fastboot / signify via your OS package manager, obtain/check the public key from multiple sources out-of-band and verify it properly
+06:54:24 <strcat[m]> and avoid trusting the instructions
+06:54:40 <strcat[m]> the web install does not involve trusting a server any more than the typical way people do CLI install
+06:54:50 <TheLoneWanderer[> If you're on Windows, you don't have a trusted signify package
+06:55:03 <edsh[m]> Yes. I did all this points.
+06:55:06 <strcat[m]> most people are just downloading fastboot via the instructions in the guide for standalone platform-tools, not via the OS package manager
+06:55:08 <TheLoneWanderer[> Minisign doesn't work. The compatibility is 1-way
+06:55:28 <strcat[m]> minisign doesn't work because we use the signify hashing feature
+06:55:40 <edsh[m]> <strcat[m] "most people are just downloading"> I used my package manager. I am on QubesOS.
+06:55:42 <strcat[m]> it's impractical to sign the factory images directly, we use the same approach as OpenBSD
+06:56:18 <TheLoneWanderer[> Yes, I'm just saying this incase someone tries to use minisign
+06:57:27 <strcat[m]> signing them directly with ed25519 would use 1GB of memory to sign and then again to verify so there's a hash
+06:57:34 <strcat[m]> and minisign doesn't support the signify hashing approach
+06:58:06 <strcat[m]> so we have to use either minisign or signify and either way it won't be compatible with the one we aren't using since the hashing approach is different
+06:58:26 <strcat[m]> or we could use the OpenSSH signing utility but it's overcomplicated for what we need
+06:58:31 <strcat[m]> don't really think there's a simple way to use that
+06:58:46 <strcat[m]> and also Debian, Windows, etc. have too old OpenSSH
+06:59:04 <strcat[m]> advantage of OpenSSH would be that Windows and macOS have it in their base install
+07:00:00 <TheLoneWanderer[> I personally don't think there's any need to change the current setup
+07:00:11 <edsh[m]> To sum up: The web install is an easier and convenient way to flash the best mobile OS. There isn't a infrastructure trust issue by verification (with Auditor) afterwards. However, the CLI is more safe in the first way by doing it right (What most users don't do).
+07:00:11 <edsh[m]> Does this fit reality?
+07:00:34 <edsh[m]> The setup worked fine for me last time.
+07:00:36 <TheLoneWanderer[> CLI is only preferable for those with experience
+07:00:45 <TheLoneWanderer[> IMHO
+07:00:48 <strcat[m]> CLI install offers the ability to avoid trusting our server infrastructure, web install currently doesn't but it would be possible to implement
+07:01:03 <strcat[m]> the way most people do the CLI install, it does not offer that advantage
+07:01:10 <strcat[m]> most distributions like Debian don't have a usable fastboot package
+07:01:26 <edsh[m]> Okay.
+07:02:19 <strcat[m]> if you use the standalone platform-tools approach to getting fastboot then you're trusting that software
+07:02:20 <edsh[m]> <strcat[m] "most distributions like Debian d"> I guess there was no problem for me last time. Maybe it was Fedora. I can not remember anymore. Sorry.
+07:02:20 <strcat[m]> in theory we could do our own releases and sign them but we aren't particularly interested
+07:02:41 <strcat[m]> edsh: you probably just used standalone platform-tools unless it was Arch Linux
+07:02:53 <strcat[m]> and Fedora lacks a signify package afaik
+07:03:54 <edsh[m]> Anyways. Thanks for explaining the web installer security considerations to me.
+07:04:08 <edsh[m]> Your all are awesome!
+07:04:20 <strcat[m]> if we really wanted we could teach the web installer to verify the signature and then release signed zips with the web installer code
+07:04:29 <strcat[m]> and you could verify signature and then run it from the local files
+07:04:39 <somenerd[m]> > CLI install offers the ability to avoid trusting our server infrastructure, web install currently doesn't but it would be possible to implement
+07:04:39 <somenerd[m]> Web Install + Local attestation (with auditor)?
+07:04:48 <somenerd[m]> think that works, but I'm not too sure
+07:04:56 <strcat[m]> Auditor 1st verification is useful but it's not really comparable to verifying the signature
+07:04:58 <edsh[m]> Yes. That was my idea.
+07:05:07 <strcat[m]> it's useful to use Auditor even if you do verify the factory images signature
+07:05:13 <strcat[m]> because it avoids trusting the computer you installed from
+07:05:35 <somenerd[m]> > Yes. That was my idea.
+07:05:35 <somenerd[m]> yeah, I wasn't sure if that worked or not though
+07:05:36 <strcat[m]> but at the same time, the initial unpaired Auditor verification is not particularly strong since it depends on the attestation root
+07:05:49 <strcat[m]> after the first verification, it is paired, and provides much stronger security properties
+07:06:08 <strcat[m]> it's largely Trust-On-First-Use although not entirely due to being able to bootstrap from the attestation root
+07:06:20 <strcat[m]> so Auditor isn't a substitute for verifying the factory images signature
+07:06:27 <edsh[m]> <strcat[m] "because it avoids trusting the c"> To ditch around a compromised fastboot for example?
+07:06:30 <strcat[m]> but it is useful, whether or not you verify the factory images signature
+07:06:55 <strcat[m]> edsh: just the OS / firmware / hardware of the computer being used to flash being compromised in general
+07:07:00 <strcat[m]> doesn't have to be fastboot itself
+07:07:18 <strcat[m]> traditional OSes have no application security model so any malicious software that was ever run is a full persistent compromise
+07:07:20 <edsh[m]> Yes, I mean a compromised PC at all.
+07:07:30 <strcat[m]> still applies to QubesOS within a specific guest
+07:08:52 <edsh[m]> I always create a fresh OS VM from an unmodified TemplateVM for this use cases.
+07:09:19 <edsh[m]> Stil not secure by application layer. However should do the job, right?
+07:12:53 <edsh[m]>  * Still not secure by application layer. However should do the job, right?
+07:13:21 <edsh[m]> How much active main developers GOS have at the moment? Is there some part I can contribute to with normal Rust knowledge?
+07:18:11 <mynacol[m]> <edsh[m] "How much active main developers "> A good starting point would be the issue tracker https://github.com/GrapheneOS/os-issue-tracker/issues and communicating with the main developers what you want to do
+07:18:40 <mynacol[m]> Thanks for offering your help
+07:19:05 <edsh[m]> Sure. Is there something to oxidize or written in Rust already? I don't know C, C++
+07:21:14 <strcat> Android 12 replaces a lot more Java with Kotlin and a lot of C and C++ with Rust
+07:21:25 <strcat> we aren't going to do that kind of porting downstream, doesn't make sense
+07:23:31 <edsh[m]> Cool. I am pretty new to Android from a developer perspective. Can I also create Android Apps with Rust and Android Studio?
+07:23:47 <edsh[m]>  * Cool. I am pretty new to Android from a developer perspective. Can I also create Android apps with Rust and Android Studio?
+07:25:22 <nscnt[m]> edsh: https://grapheneos.org/build#development-guidelines
+07:25:53 <edsh[m]> Okay. I will check it out. Thanks.
+07:25:56 <edsh[m]> Bye.
+08:12:49 <Marloner> A quick thank you to JollyRoger.  I used the grapheneOS web installer, as you suggested, and this time was able to successfully complete and load with a locked bootloader.  I appreciate the help.
+09:11:41 <GrapheneOS-Teleg> PenneVa (@P​marv) has joined the Telegram Group!
+09:15:59 <GrapheneOS-Teleg> <P​marv> Hi, I have a friend with GrapheneOS on Pixel5. She has Session installed and gets send issues due to Time Sync. She has no SIM in the phone and according to other users with same environment that is not an issue.Is there anyone with the same setting as my friend and can help?Thank you
+09:37:08 <strcat[m]> what kind of issues due to time sync?
+09:37:15 <strcat[m]> GrapheneOS has network time updates
+09:37:22 <strcat[m]> it only aims for 1s precision though
+10:27:29 <rny> strcat[m]: you can improve precision if the project buys a ipv4 prefix and does anycast routing
+10:27:30 <rny> :P
+10:28:04 <rny> or maybe its time to think about implementing/including roughtime?
+10:28:28 <strcat[m]> too complex for us to do downstream
+10:28:33 <strcat[m]> got so many other things to get done
+10:28:40 <rny> you dont think it can be upstreamed to aosp?
+10:28:46 <rny> wont google appreciate secure timestamps!?
+10:31:31 <rny> i'll admit i have an unusual obsession with timestamps
+10:37:54 <GrapheneOS-Teleg> <P​marv> Message is not sending and displays a 406 error code
+10:38:39 <GrapheneOS-Teleg> <P​marv> How to do this update? This GOS was just newly setup.
+10:39:51 <GrapheneOS-Teleg> <P​marv> Please keep it simple for us simple users.
+10:41:45 <strcat[m]> don't know what you mean by message not sending, what you mean about a 406 error code or what you mean by doing 'this update'
+10:41:49 <strcat[m]> you're going to need to be a lot clearer
+10:41:53 <strcat[m]> keep what simple for you?
+11:14:58 <GrapheneOS-Teleg> <P​marv> When my friend send a message to as example it end having this red circle on the right. When you tap on it it gives you the info what happened. And it says "HTTP request failed at destination with status code 406"I heard that this seems to be a Time Sync issue.Now when I send a message to my friend it goes thru.This happens if she tries to send a message to an individual user (like myself) or inside a closed group. Both of us
+11:15:31 <strcat[m]> can't see your images or most of your message from IRC/Matrix
+11:15:41 <strcat[m]> too long, and images don't go through the bridge from Telegram
+11:16:54 <GrapheneOS-Teleg> <P​marv> hehe I referred to some comments that I deemed to suggest timestamps can be solved with some complicated tricks.Our group is not very technically strong.Thanks
+11:17:25 <strcat[m]> simply stated that GrapheneOS has network time updates
+11:17:30 <strcat[m]> it already keeps the time up-to-date
+11:17:37 <strcat[m]> unless you've turned that off or have something blocking it
+11:17:49 <strcat[m]> I suggest reporting app issues to app developers and requesting help with the app in their community
+11:17:58 <strcat[m]> we don't know about Session, you can't really get help with it here
+11:18:04 <strcat[m]> no reason to think that this is a GrapheneOS issue
+11:18:30 <GrapheneOS-Teleg> <P​marv> Her mobile has no SIM card.Where and what to look out for?
+11:19:11 <GrapheneOS-Teleg> <P​marv> There was a request done by another user, Yes
+11:20:04 <GrapheneOS-Teleg> <P​marv> Agree when it's app related then you can't help.Still wanted to ask here to listen what you folks have to say about it.All your help is much appreciated.
+12:10:54 <sign4l[m]> Re
+12:12:23 <GrapheneOS-Teleg> <!Jeremy> Is it possible to remove the data lines of a pixel 3 usbc port?
+12:12:25 <GhostSplinterSix> I'm guessing TheJollyRoger is having issues?
+12:40:34 <Karl12> Hi guys, wanted to ask about eSIM-support on GrapheneOS for dual-SIM-usage on my Pixel 4a. Is it allready implemented? I read in the changelog "set slot number for eSIM (still need an eSIM activation app since it's one of the remaining missing components from not including Google apps and services)" - is there a way to use it? Or do I need to do
+12:40:35 <Karl12> this workaround (https://github.com/GrapheneOS/os-issue-tracker/issues/159#issuecomment-765451235) and is it still viable?
+12:44:00 <lackshan[m]> Karl12 The slot number for esim is part of what is needed for support but the OS still needs an lpa app. The workaround should still be viable for now
+12:44:55 <lackshan[m]> I'm currently working on said lpa app so hopefully we'll have esim support soon (although im not making any promises 😛)
+12:45:28 <Karl12> Hey, that would be really great! =D
+12:46:04 <Karl12> So, should I wait or try the workaround for now? ;D
+12:46:15 <lackshan[m]> Try the workaround for now
+12:46:33 <lackshan[m]> It'll take me a while to get it done and its my first time developing for AOSP 😛
+12:46:36 <Karl12> ok and thanks for the support!
+12:46:45 <lackshan[m]> No worries
+12:52:05 <Karl12> lackshan[m] One more question: Where would I see, if you would be successfull with such an app? Official changelog?
+12:53:09 <lackshan[m]> Changelog or you can monitor that github issue. I'll post status updates there
+12:53:36 <lackshan[m]> Also if youd like to help, I'd appreciate it if you could screenshot the process of adding an esim on stock android
+12:53:52 <GrapheneOS-Teleg> <P​marv> There is an app I use called "Droid Info" My GF who uses GOS seems not to be able to use it.What are you folks suggesting?
+12:53:58 <lackshan[m]> Saves me from having to think about ui design 😅
+12:57:48 <Karl12> lackshan[m] Sure! (y) '=D
+13:23:57 <lackshan[m]> Thanks!
+13:28:30 <GrapheneOS-Teleg> Daniel (@d​allemon) has joined the Telegram Group!
+14:04:40 <afterth0ught[m]> idk if this is the appropriate place to ask this, but I have been running graphene on a 4a and enjoy it a lot, but miss the ability to schedule restarts on Samsung to put the device in BFU (before first unlock) automatically. Is there any easy way to do this on graphene? Unfortunately the automator tools like Tasker are either proprietary, or require root. :\
+14:11:02 <strcat[m]> support for rebooting after N hours of not using any profile is planned
+14:11:06 <strcat[m]> contributions welcome
+14:11:12 <strcat[m]> features only happen if developers work on them
+14:11:23 <strcat[m]> there is no shortage of ideas for features, see the issue trackers
+14:11:32 <strcat[m]> there's a shortage of developer time
+14:13:03 <afterth0ught[m]> cool thanks, for some reason thought feature requests were not tracked in your issue tracker. i see the FR now. gracias
+14:25:17 <GrapheneOS-Teleg> !R has joined the Telegram Group!
+14:39:39 <nscnt[m]> afterth0ught: There's multi-user support and you can put users back to rest on GrapheneOS. Maybe this is something for you if you weren't familiar with it yet
+18:27:29 <bearbyte[m]> What's up bois and girlies 😍
+19:06:46 <GhostSplinterSix> Hello.
+19:15:12 <daiyomon[m]> bababooi
+19:21:09 <Railgun_Lover[m]> <bearbyte[m] "What's up bois and girlies 😍"> The sky
+19:22:25 <bearbyte[m]> I am impersonating Railgun_Lover: lol
+19:51:01 <bearbyte[m]> Do you guys as a privacy and security oriented community recommend using signal after they added mobilecoin or not anymore?
+19:51:01 <dig_nerds[m]> what happened between Micay and Donaldson? I just don't know anything about it.
+19:52:17 <dig_nerds[m]> What I heard from Reddit was Donaldson was working for CIA or something and trying to make CopperheadOS not safe on purpose, what was the full story?
+19:52:27 <helloworldkk87[m> <bearbyte[m] "Do you guys as a privacy and sec"> Signal still is secure and private.
+19:52:32 <plane_linuxmetri> Also what's the beef about  techlore
+19:54:48 <guzmann[m]> Hi... I believe there are some real professional android users here with a lot of knowledge.. I came here to ask if anyone knows what default android applications are involved to make a wifi call?
+19:56:34 <guzmann[m]> Reason I ask is that I generally turn off basically all system applications in my firewall.. Like I dont see reason for something like themes, gallery etc.. having internet access.. Its worked fine for like 2 years. But now I finally got a telecom provider with wificalling capabilities. but it does not work unless I open everything in the firewall.. Ive experimented for hours but cant find what specifically needs to be
+19:56:35 <guzmann[m]> enabled internet access for wificalling to work. Thank you
+19:57:50 <dub_a> exit
+20:02:52 <bearbyte[m]> <helloworldkk87[m "Signal still is secure and priva"> OK thx for your feedback!
+20:05:27 <dig_nerds[m]> WOW I can't see my messages anymore lol
+20:05:31 <M7777777y[m]> There are better options than signal
+20:06:08 <dig_nerds[m]> <M7777777y[m] "There are better options than si"> Molly?
+20:06:10 <M7777777y[m]> Signal requires a phone number and this is a big waste of time, (and money) if you want to use a burner for it
+20:06:21 <M7777777y[m]> In some countries it's difficult or expensive to get a burner #
+20:06:52 <M7777777y[m]> Matrix is one better option
+20:08:25 <M7777777y[m]> Signal is also centralized, I wouldn't give support to this
+20:08:46 <M7777777y[m]> Matrix isn't perfect either in this regard though
+20:09:25 <bearbyte[m]> <M7777777y[m] "Matrix is one better option"> Sure just got matrix today after I heard of mobilecoin. The thing is using signal doesn't convey you're in a type of sick hacker mode which in contrary with matrix might be the case for the average user...
+20:09:53 <M7777777y[m]> That's quite subjective
+20:10:06 <M7777777y[m]> To certain people signal may seem suspicious simply because it's E2EE
+20:10:20 <M7777777y[m]> Element branding is pretty neutral
+20:11:35 <bearbyte[m]> Aren't WhatsApp and Telegram "supposedly" also E2EE?
+20:11:41 <dig_nerds[m]> <M7777777y[m] "Element branding is pretty neutr"> Isn't Element = Matrix?
+20:12:04 <M7777777y[m]> You can also cite that Matrix is getting some official adoption and support within a few EU countries
+20:12:11 <M7777777y[m]> Element is one of the clients for the matrix protocols
+20:12:17 <M7777777y[m]> There are several options
+20:12:27 <M7777777y[m]>  * Element is one of the clients for the matrix protocol
+20:12:41 <cx7dd[m]> Matrix is just the protocol like smtp for email.
+20:12:41 <cx7dd[m]> Element is a client like thunderbird, outlook, etc.
+20:12:50 <M7777777y[m]> For example in France and Germany the government is using matrix
+20:13:05 <M7777777y[m]>  * For example in France and Germany certain sectors of the government is using matrix
+20:13:07 <M7777777y[m]>  * For example in France and Germany certain sectors of the government are using matrix
+20:13:49 <bearbyte[m]> <M7777777y[m] "That's quite subjective"> Right try telling the broad masses to start using matrix and see how it goes. Signal on the other hand has the typical features you might need like being able to record a voice memo send pictures and stickers even all the buttons are in the same place to make a switch painless as possible... Well true its subjective but in reality most of the people don't even care about
+20:13:49 <bearbyte[m]> privacy nor security.
+20:14:45 <bearbyte[m]> Right bummer just realised you can send stickers on matrix too. But I think you get the point?
+20:14:48 <M7777777y[m]> There are stickers, and you can send audio files and play them in element
+20:15:15 <bearbyte[m]> Well I take it back 😂
+20:15:15 <M7777777y[m]> Same for vids
+20:15:31 <bearbyte[m]> Haven't fully checked out the client
+20:15:43 <M7777777y[m]> I agree that signal is slightly more polished user experience
+20:15:54 <M7777777y[m]> But I don't think its significant enough to promote it over matrix
+20:16:15 <M7777777y[m]> Matrix is probably currently the best option for non tech savvy people
+20:16:51 <M7777777y[m]> Because due to its federated model it will have a better future going forward than signal
+20:16:53 <Yourmomuwu[m]> <bearbyte[m] "Right try telling the broad mass"> today everything needs to be dumbed down for mass to use
+20:17:02 <helloworldkk87[m> Matrix leaks alot of metadata
+20:17:11 <sphinx[m]> #grapheneos-offtopic:matrix.org
+20:17:13 <M7777777y[m]> ^ this is true
+20:17:18 <Yourmomuwu[m]> <helloworldkk87[m "Matrix leaks alot of metadata"> not a lot
+20:17:27 <helloworldkk87[m> Lets move to off topic
+20:17:40 <M7777777y[m]> Moving there
+20:18:42 <dig_nerds[m]> <helloworldkk87[m "Matrix leaks alot of metadata"> How come?
+20:18:53 <bearbyte[m]> <M7777777y[m] "Matrix is probably currently the"> Right
+20:19:02 <bearbyte[m]> <Yourmomuwu[m] "today everything needs to be dum"> That's true lol
+20:26:21 <dig_nerds[m]> How can I get into off topic room?
+20:27:25 <bearbyte[m]> #grapheneos-offtopic I guess?
+20:27:45 <nscnt[m]> #grapheneos-offtopic:matrix.org
+21:21:10 <bearbyte[m]> Not sure if its a bug I have encountered: Trying to connect to a WiFi I always used to connect to with my grapheneos device. Now it just says "obtaining IP address" and after a while "saved" not resulting in a successful connection. All other devices can connect to this network flawlessly. My grapheneos device also could but randomly it stopped working. I tried forgetting the network and typing the password again same
+21:21:10 <bearbyte[m]> issue. Also what might be interesting is that I cannot connect my grapheneos device to a WiFi repeater that is connected to that router... Does anyone know what's going on? I can connect to all other WiFi hotspots.
+22:33:47 <GrapheneOS-Teleg> S (@D​hqeu) has joined the Telegram Group!
