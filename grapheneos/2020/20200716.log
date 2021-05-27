@@ -1,0 +1,180 @@
+00:47:53 <aeonsolution[m]> If you are willing to pay jappie03, consider also donating to the project's lead developer too <https://github.com/sponsors/thestinger>
+08:13:42 <anupritaisno1[m]> BTW
+08:13:48 <anupritaisno1[m]> How much time is required for btrfs check to recover 40 GB of data?
+08:14:17 <anupritaisno1[m]> I just ran pacman -Syuu and it killed my rootfs which was on btrfs
+08:14:34 <anupritaisno1[m]> (It's actually less than 40 GB on the rootfs)
+08:16:03 <anupritaisno1[m]> Nobody?
+08:16:10 <anupritaisno1[m]> Well it's been running an hour
+08:20:08 * anupritaisno1[m] uploaded an image: IMG_20200716_134951_436.jpg (173KB) < https://matrix.org/_matrix/media/r0/download/m.apex.to/oGmszKPvBXqQlbbyNVXguTdD >
+08:20:12 <JTL> Is btrfs still that fragile?
+08:20:28 <anupritaisno1[m]> No
+08:20:44 <g65434-2[m]> why Syuu when Syu is enough?
+08:20:54 <careta> hello everyone
+08:21:21 <careta> I'm trying to find a diff / list of all the changes of grapheneOS on top of AOSP
+08:21:34 <careta> can anyone point me in the right direction? is there such a document or way to extract this info from the repos?
+08:21:52 <anupritaisno1[m]> Idk if it takes more than 12h I'm dropping my rootfs and regenerating it
+08:22:06 <JTL> careta: If you have a local sync of the GrapheneOS source, should be possible to differintiate between AOSP and GrapheneOS repositories
+08:22:12 <JTL> That's where I'd start
+08:22:36 <anupritaisno1[m]> careta: grapheneos always rebases on aosp source so the grapheneos changes are always on top
+08:22:50 <careta> ok perfect, so I can just diff the repos and I will get a good view of it
+08:22:53 <careta> thanks guys
+08:23:04 <anupritaisno1[m]> Use git cherry (not cherry-pick)
+08:23:18 <JTL> careta: Cheers
+08:23:20 <anupritaisno1[m]> Just look it up
+08:23:38 <careta> will do, thanks
+08:28:41 <careta> another dumb question
+08:29:12 <careta> I always thought that when any android phone is rooted (bootloader unlocked etc), it's not possible to install a custom OS and relock the bootloader
+08:29:44 <careta> do the pixel phones allow this? am I able to install grapheneOS on my pixel phone and relock the bootloader so that annoying message at boot doesn't appear?
+08:30:14 <cn3m[m]> Pixel phones let you load a custom key that then gets locked in
+08:30:19 <anupritaisno1[m]> The message will still appear
+08:30:19 <cn3m[m]> OnePlus phones do as well
+08:30:29 <cn3m[m]>  * OnePlus phones do as well (at least mostly)
+08:30:53 <anupritaisno1[m]> cn3m: it is strict now
+08:31:12 <anupritaisno1[m]> Oneplus 7 pro now honors the key and actually verifies
+08:31:13 <cn3m[m]> <anupritaisno1[m] "cn3m: it is strict now"> Everything since the OP3 right?
+08:31:22 <anupritaisno1[m]> Need to find out which firmware fixed it
+08:31:50 <anupritaisno1[m]> Op3 is a joke
+08:31:53 <careta> so the bootloader unlocked / phone is insecure messages still appear?
+08:32:07 <anupritaisno1[m]> Oneplus used the aosp publicly known key to sign boot.img
+08:32:10 <cn3m[m]> <careta "so the bootloader unlocked / pho"> no it just says it is using another OS
+08:32:29 <careta> ok got it
+08:32:36 <careta> I guess I need to do some experimentation
+08:32:36 <anupritaisno1[m]> You just do m otapackage, flash and lock op3
+08:32:39 <cn3m[m]> <anupritaisno1[m] "Oneplus used the aosp publicly k"> for the 3??
+08:32:43 <anupritaisno1[m]> You'll get green written by the bootloader
+08:32:50 <anupritaisno1[m]> cn3m: yes
+08:33:20 <anupritaisno1[m]> You'll only see a warning with a custom key
+08:33:20 <cn3m[m]> wow
+08:33:30 <cn3m[m]> ironic
+08:36:31 <careta> so just to make sure I understood
+08:36:41 <careta> it is possible to load a key into the phone that signs the image
+08:36:49 <careta> but the bootloader unlocked msg will still appear
+08:36:51 <careta> correct?
+08:38:10 <cn3m[m]> careta: yes, but it just says you are running a different os and gives a fingerprint
+08:38:33 <careta> this on the pixel - most other phones won't allow you to load other keys right?
+08:39:11 <cn3m[m]> careta: correct
+08:39:25 <careta> awesome, thanks
+08:41:51 <johannes[m]1> Hi guys
+08:41:51 <johannes[m]1> I bought a Pixel 3a for GrapheneOS. The device is used and has a cracked screen (cheap :)). Does anyone of you have experiences with replacement screens?
+08:41:51 <johannes[m]1> I plan to buy the following one because it was mentioned in a screen replacement turorial and seems to be reasonably priced: aliexpress.com/item/32953745867.html
+08:41:56 <sandelinos[m]> Got any source on how the OP3 stuff works? I have one lying around and I wanted to mess with signing my own boot images.
+08:42:38 <cn3m[m]> johannes: i'd check iFixIt
+08:45:47 <johannes[m]1> <cn3m[m] "johannes: i'd check iFixIt"> they do sell 3a screens but the reviews on the product page do not sound good
+09:14:30 <theultron[m]> <sandelinos[m] "Got any source on how the OP3 st"> I also have a 3T lying around. May be I can downgrade to it and use a custom rom with locked bootloader.
+09:21:46 <anupritaisno1[m]> theultron: see os_issue_tracker
+09:22:14 <anupritaisno1[m]> Hardened malloc makes op3 not boot
+09:22:23 <g65434-2[m]> isn't 3a screen AMOLED and not LCD tho ?
+09:22:34 <anupritaisno1[m]> And I don't feel like giving time to a 4 year old device
+09:25:42 <mrxx_0[m]> g65434-2 yep, 3a screen is amoled
+09:30:50 <g65434-2[m]> asking that cuz johannes wanna buy a lcd screen to repair his 3a 🤔
+09:38:57 <johannes[m]1> <g65434-2[m] "isn't 3a screen AMOLED and not L"> I am pretty sure the linked screen is AMOLED. Wrong product titles on aliexpress are common.
+10:19:32 <anupritaisno1[m]> I'm back in
+10:19:43 <anupritaisno1[m]> Sources and signing keys are unaffected
+10:19:51 <anupritaisno1[m]> But heavy damage to the base system
+10:21:16 * anupritaisno1[m] uploaded an image: Screenshot_20200716-155036_Termux.png < https://matrix.org/_matrix/media/r0/download/m.apex.to/WiUkNxraQXsBleDpcEKlLEjx >
+10:21:25 <anupritaisno1[m]> Let's hope pacman merges the system fine
+10:24:40 <g65434-2[m]> what happened to your system ?
+10:27:13 <dallemon[m]> anupritaisno1: long time since I've had such issues doing a -Syyuu
+12:31:45 <anupritaisno1[m]> g65434-2: btrfs I/O error during an upgrade
+12:32:16 <g65434-2[m]> F
+12:32:40 <g65434-2[m]> never felt btrfs was stable enough, always used ext and always will
+13:10:55 <dallemon[m]> <anupritaisno1[m] "g65434-2: btrfs I/O error during"> Damn. Hope you can recover.
+13:20:56 <anupritaisno1[m]> dallemon: well the results are out if you want
+13:21:13 <anupritaisno1[m]> Btrfs detected some corruption in a systemd journal and a swapfile
+13:21:24 <anupritaisno1[m]> Both easily resolved
+13:22:20 <anupritaisno1[m]> Nothing of value was lost
+14:01:08 <dallemon> anupritaisno1[m]: great :)
+14:02:03 <dallemon> anupritaisno1[m]: if you want something with similar feature sets try having a look at zfs :)
+14:07:02 <cdesai> ^
+14:34:23 <DarkUranium> I use zfs on my FreeBSD system. Rock-solid.
+14:34:57 <cdesai> I use it on Linux here, with compression enabled.
+14:35:09 <cdesai> That helps a lot with both android source code and build output
+14:35:24 <cdesai> On my src volume I get about 1.5x compression
+14:35:43 <cdesai> 2.5x on out, have seen up to 2.75x there
+14:36:00 <hasnoname[m]> Why the GOS devs Daniel and anupritaisno1 still use gmail account?
+14:53:38 <anupritaisno1[m]> Tbh one fuck up is just fine
+14:54:02 <anupritaisno1[m]> Considering the countless times during power outages btrfs didn't kill my data
+14:54:56 <hiya> Is Pixel 3a worth it if I buy today?
+14:55:04 <hiya> it is available for 31000 INR
+14:56:58 <cdesai> that's a big on the higher side for a 1year+ old phone, but it's still a good device, and would be supported by Google for 2 more years atleast
+14:57:40 <cdesai> dunno if you can get it cheaper anywhere else. It was 35-36k at launch last year after discounts.
+15:24:02 <hitchhooker[m]> friend asks how he can get synced contacts from google on gos?
+15:24:05 <hitchhooker[m]> and what solutions you folks have for contacts?
+15:24:22 <hitchhooker[m]> hiya, its great phone
+15:29:18 <takama02[m]> <hiya "it is available for 31000 INR"> In a month a new 4a comes out with price tag around 350$ but not sure if will be getting grapheneos supported anytime soon or at all
+15:34:39 <alzxjm[m]> <hitchhooker[m] "and what solutions you folks hav"> I've been using Etesync, which is great. I'm not sure about syncing with Google contacts - that probably requires a Google account on the phone along with Google Contact/Calendar sync.
+15:34:40 <alzxjm[m]> But Etesync uses E2EE for calendars, contacts, and tasks. Apps for Android, iOS, and Web Client along with a DAV bridge for desktop use.
+15:35:25 <anonymouserobot[> <hitchhooker[m] "friend asks how he can get synce"> I did it a few years ago so cant remember the app but I exported all my google contacts as vCards and just imported them manually into a phone
+15:35:27 <anonymouserobot[> now use etesync for contact syncing but you basically wanna export from google, import to a new device then delete all contacts from google/delete your google account
+15:35:28 <hitchhooker[m]> is it possible to get google account on phone or not?
+15:35:46 <anonymouserobot[> <hitchhooker[m] "is it possible to get google acc"> dont know but you really shouldnt
+15:36:58 <hitchhooker[m]> yeah i wont even have one, but friend is bothering. anyhow i tell him to export from google and either wait that i set up etesync server or use protonmail for contact sync
+15:37:31 <BeingFrey[m]> <hitchhooker[m] "is it possible to get google acc"> That would defeat the point of using GrapheneOS, if you add Google services to it.
+15:38:31 <alzxjm[m]> <hitchhooker[m] "is it possible to get google acc"> If you want a secure option (not as secure as Graphene, but as secure as Stock Pixel) you can try CalyxOS. It ships with microG and allows you to add a Google account and have good compatibility with Google services.
+15:38:52 <alzxjm[m]> #CalyxOS:matrix.org is the room for that OS. They people there are very helpful and CalyxOS is a fantastic service.
+15:41:34 <hitchhooker[m]> so google accounts work only if there's google services, got ya
+15:50:26 <strcat[m]> hitchhooker: what do you mean by 'get a Google account' on it?
+15:50:32 <strcat[m]> hitchhooker: you can of course use Google services via the browser
+15:50:46 <strcat[m]> the device supports arbitrary accounts - apps can provide accounts for other apps to use
+16:03:09 <hiya> cdesai: hitchhooker[m] Ok thanks guys
+16:03:42 <hiya> takama02[m]: Only if Google releases it ever in this life time :P
+16:03:59 <hiya> Google is not planning to launch it, it was only for leaks and all
+16:15:50 <hiya> Oh shit! Pixel 3a cannot be shipped to my place.
+16:26:07 <hiya> Is G020F model of Pixel 3a latest?
+16:28:13 <f8sai[m]> Probably, and it's bootloader unlockable afaik
+16:28:21 <f8sai[m]> (If you mean the OS, you can always update it)
+16:42:50 <hiya> f8sai[m]: yes. I was talking about model only
+16:43:34 <hiya> cdesai: Sir, recent on unlocked bootloader, myJio says phone is rooted
+16:43:45 <hiya> Are you using it too?
+16:45:02 <hitchhooker[m]> is it possible to automaticly sync contacts with protonmail account somehow? pressing +Add account seem to just cause graphic bug and return to same page
+16:45:58 <hitchhooker[m]> probably because there is no apps to add accounts from
+16:46:11 <hitchhooker[m]> yeah i guess etesync it is then
+17:10:32 <cdesai> there's https://www.davx5.com/tested-with
+17:25:02 <takama02[m]> is there a way to get a hand on tasker app?
+17:26:37 <takama02[m]> or shouldn't I
+17:48:19 <aeonsolution[m]> takama02: not clear what you mean
+18:05:35 <takama02[m]> <aeonsolution[m] "takama02: not clear what you mea"> sorry, I mean I can't figure out how to get this app since it's paid so can't be obtained via aurora store and the apk file from website is just a trial. or it's just recommended not to use apps others than foss
+18:07:11 <aeonsolution[m]> the logs talk about the choice between choosing foss apps or not https://freenode.logbot.info/grapheneos
+18:07:27 <aeonsolution[m]> it really depends on your threat model, that said
+18:08:01 <aeonsolution[m]> if you can get the apk and it doesn't depend on Google services or a fork like MicroG, it'll work for GOS
+18:08:41 <aeonsolution[m]> said another way, apps that work for Android without dependencies to other services will work on GrapheneOS
+18:09:24 <aeonsolution[m]> whether or not you trust that app is outside the scope if you can install it, if that makes sense
+18:09:56 <aeonsolution[m]>  * [correction] whether or not you trust that app is outside the scope of if you can install it, if that makes sense
+18:13:18 <SchismXL[m]> Easer is a FOSS alternative to Tasked, too.
+18:13:37 <SchismXL[m]> Tasker*
+18:16:40 <takama02[m]> <aeonsolution[m] "whether or not you trust that ap"> thank you, I think if the council of GOS users were't troubled with this particular app I could just leave it be, maybe try some alternative on f-droid too
+18:24:46 <JTL> anupritaisno1[m]: Wondering about the root cause of the fuck up...
+18:33:37 <rivetrenuck9> Hi All, asking an obvious question. I got 3A specifically for Graphene, however, should it not be something I want to continue using could I reinstall Google OS? If so could you point me to the instructions
+18:35:38 <SchismXL[m]> <rivetrenuck9 "Hi All, asking an obvious questi"> Yes.
+18:35:55 <SchismXL[m]> https://grapheneos.org/install all here.
+18:38:40 <rivetrenuck9> Of course, it was all in the bottom hah!
+18:38:50 <rivetrenuck9> Thank you for helping
+18:40:36 <SchismXL[m]> But, instead of using GrapheneOS images, you use the ones from Google, which can be found here: https://developers.google.com/android/images
+18:40:57 <SchismXL[m]> Or just follow that to revert back ^
+18:42:24 <SchismXL[m]> But do "fastboot erase avb_custom_key" as stated on the guide on GOS website.
+18:42:43 <rivetrenuck9> Ahh thank you for that advise
+18:42:45 <rivetrenuck9> I have made a note
+18:42:57 <rivetrenuck9> I am not used to any of this. It is all quite overwhelming
+18:43:01 <rivetrenuck9> and daunting
+18:43:08 <rivetrenuck9> Thank you for having this support channel
+18:43:56 <rivetrenuck9> Right, off I go to dip my toes in. Wish me lukc
+18:43:59 <rivetrenuck9> luck
+18:44:49 <SchismXL[m]> Follow everything precisely and you won't have a problem. Don't use Techlore's video, or any video for that matter, to guide you through. If you can get out of bed in the morning and tie your own shoelaces, you'll be able to do this. Good luck!
+19:07:21 <golden08> No one who has some experience in GrapheneOs and just phone security in general who could help me out private? Most of it are rookie questions but i want to be very sure everything is protected to the fullest. I'll pay good amount of bitcoin for the time you'll help.
+19:09:42 <iocontr0l[m]> <golden08 "No one who has some experience i"> What do you need to know
+19:30:06 <aeonsolution[m]> If you are willing to pay golden08 , consider also donating to the project's lead developer too https://grapheneos.org/donate#bitcoin
+19:31:04 <aeonsolution[m]> Off topic GrapheneOS users who maybe able to help <https://matrix.to/#/#freenode_#grapheneos-offtopic:matrix.org>
+19:31:10 <nickcalyx[m]> Yes donating is helpful
+20:08:05 <jknsec[m]> Can you join the offtopic room through RiotX or no?
+20:13:41 <jneplokh> Yes, just register through IRC and then use Riot/Matrix as your IRC client
+20:13:52 <jneplokh> https://github.com/matrix-org/matrix-appservice-irc/wiki/Guide:-How-to-use-Matrix-to-participate-in-IRC-rooms
+21:09:51 <handle_here[m]> strcat:
+21:33:12 <peter08> hey
+21:33:51 <peter08> U can help with graphenenos?
+21:36:21 <overheadscallop[> peter08: You should just ask your question, otherwise nobody will what you need help with.
+22:03:22 <strcat[m]> handle_here: why ping me
+23:04:03 <ride[m]> <golden08 "No one who has some experience i"> Golden08 just hacked all the blue checkmarks and he needs to make sure he's secure cashing out
+23:24:39 <anupritaisno1[m]> ride: legit
+23:32:36 <concat[m]> peter08 no sorry, this is only CopperheadOS support
+23:59:01 <dazinism> broda721: yeah it is possible
+23:59:29 <dazinism> But you have to use it every time you start the device

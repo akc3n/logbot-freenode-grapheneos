@@ -1,0 +1,495 @@
+00:01:39 <dazinism> Yeah, its a factory reset from bootloader. Cant remember exact key combination
+01:41:07 <aeonsolution[m]> the new version is broken right now
+01:41:18 <aeonsolution[m]> we are trying to figure out the issue
+01:41:40 <aeonsolution[m]> https://bugs.chromium.org/p/chromium/issues/detail?id=1106115
+01:41:49 <aeonsolution[m]> you could use the included prebuilts
+01:41:53 <aeonsolution[m]> for Vanadium
+01:41:59 <aeonsolution[m]> which are still valid
+01:42:09 <aeonsolution[m]> or build the previous version of Vanadium
+01:43:24 <aeonsolution[m]> https://github.com/GrapheneOS/Vanadium/blob/d6087e612aabc40a6084993c5c2902e6f725ec3b/args.gn
+01:43:46 <aeonsolution[m]> you would have to start all over from step 1 because gclient doesn't work backwards
+01:44:32 <aeonsolution[m]> or i should more accurately say, i don't know how to get glcient to not complain when i try to go to a previous version
+01:45:24 <aeonsolution[m]> this is the bug grindlefang <https://bugs.chromium.org/p/chromium/issues/detail?id=1106115>
+01:45:44 <aeonsolution[m]> oh
+01:45:53 <aeonsolution[m]> let me look at your error
+01:46:07 <aeonsolution[m]> what step is that happening on
+01:46:44 <aeonsolution[m]> the error I'm referring to happens when you run the `../generate_release.sh` command
+01:46:57 <aeonsolution[m]> oh
+01:47:05 <aeonsolution[m]> you need to be using python2
+01:47:54 <aeonsolution[m]> let me get you my workaround
+01:49:01 * aeonsolution[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/yKkbueQITricHtxIpQeKmwib >
+01:49:35 <aeonsolution[m]> this works for Arch based OSes
+01:50:20 * aeonsolution[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/CMveZPoyGKnwZADbtpUzPcmW >
+01:51:10 <aeonsolution[m]> weird it didn't show the full commands, uhh
+01:51:39 * aeonsolution[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/ffrcGXFvPVqjfYhIgJYQeAsQ >
+01:53:26 <aeonsolution[m]> grindlefang: I go based on the step, there is an error there that points it out, i just don't remember what exactly it is, but for most likely its not using python2 to when you run ninja that causes the problem
+01:53:44 <aeonsolution[m]>  * grindlefang: I go based on the step, there is an error there that points it out, i just don't remember what exactly it is, but most likely its not using python2 to when you run ninja that causes the problem
+01:54:08 <aeonsolution[m]> np
+01:54:31 <aeonsolution[m]> it wont work if you don't use python2, that build step hasn't been migrated yet
+01:54:59 <aeonsolution[m]> ?
+01:55:21 <aeonsolution[m]> you built GrapheneOS with your own Vanadium apks
+01:55:28 <aeonsolution[m]> using python3?
+01:56:05 <aeonsolution[m]> oh
+01:56:09 <aeonsolution[m]> lol so funny story
+01:56:20 <aeonsolution[m]> everything before that requires python3
+02:00:10 <aeonsolution[m]> thats why using the virtual environment at the ninja step is convenient
+02:00:33 <aeonsolution[m]> you dont have to mess with symlinks and bash path wizardy
+02:01:25 <aeonsolution[m]> so this is what we are stuck with until ninja gets migrated to use python3
+02:03:34 <aeonsolution[m]> hopefully you can find an equivalent for deb/ubuntu
+02:11:14 <aeonsolution[m]> my virtual environment is set to Python 2.7.18
+02:11:30 <aeonsolution[m]> but i wonder if something else broke on the way to that step
+02:11:44 <aeonsolution[m]> because you were using Python2
+02:12:04 <aeonsolution[m]> the ninja step is the only step that needs Python2
+02:13:11 <aeonsolution[m]> you didn't get any warnings for using python2 from gclient?
+02:17:10 <aeonsolution[m]> you can always use the old prebuilts or your previous built apks to build GrapheneOS
+02:17:17 <aeonsolution[m]> in the meantime
+02:18:01 <aeonsolution[m]> also would encourage you to look into the python2 virtual environment
+02:28:17 <cn3m[m]> does anyone have a link to Daniel's tweet about examples of the IOMMU?
+02:50:53 <cn3m[m]> https://twitter.com/DanielMicay/status/1158869170429333504
+02:53:49 <f8sai[m]> <cn3m[m] "https://twitter.com/DanielMicay/"> https://nitter.net/DanielMicay/status/1158869170429333504
+03:04:18 <cn3m[m]> <grindlefang[m] "So qualcomm's firmware is genera"> Oh by a lot. Google in some cases have improved on top of this. Pixels are really the only devices comparable to an iPhone. Qualcomm has a great track record and so has Google
+05:52:32 <renor> https://www.businessinsider.com/google-lawsuit-app-tracking-without-permission-reuters-2020-7?IR=T
+06:01:50 <jalb> Is it allowed to create a non-official XMPP channel to talk about GOS in Spanish language with users of this language like me?
+06:02:01 <jalb> Only to share some things
+06:02:03 <jalb> Thanks
+06:07:46 <cn3m[m]> <renor "https://www.businessinsider.com/"> that is a stretch
+06:12:08 <f8sai[m]> <cn3m[m] "that is a stretch "> How
+06:12:29 <f8sai[m]> Isn't it already proven, at least here
+06:12:45 <f8sai[m]> That opt-out doesn't work on Google Android?
+06:12:55 <f8sai[m]> <f8sai[m] "That opt-out doesn't work on Goo"> or at least ineffective
+06:12:57 <cn3m[m]> that is talking about something different
+06:13:25 <cn3m[m]> everyone can prove that in a few minutes that the ad id opt out is bogus on Android
+06:13:43 <f8sai[m]> <cn3m[m] "that is talking about something "> "...thousands of apps..."
+06:14:02 <f8sai[m]> well, alright
+06:14:25 <cn3m[m]> Firebase
+06:14:33 <cn3m[m]> that is a little different issue
+06:15:28 <cn3m[m]> this is very similar to the people complaining if they search a location on Maps Google knows they were likely there when they have location data off
+06:15:53 <cn3m[m]> the stuff they are targeting Google with are pretty stupid there are a lot better things
+06:17:22 <f8sai[m]> <cn3m[m] "Firebase "> Oh nvm, just read it again, and yeah, it was about firebase
+06:19:12 <cn3m[m]> No company could function if what Google was doing in these recent lawsuits were wrong
+06:19:37 <cn3m[m]> You can't say Google is collecting your location if you search your location with their service
+06:22:20 <cn3m[m]> You can't say they are tracking your browsing if you opt into another service powered by Google that is not supposed to be linked to a Google account
+06:23:02 <cn3m[m]> DuckDuckGo records search terms. They don't store it with an account. Drawing a clear line is the tricky point
+06:23:27 <f8sai[m]> <cn3m[m] "DuckDuckGo records search terms."> Agreed
+06:23:49 <f8sai[m]> (Sent a question on the off-topic)
+06:24:28 <cn3m[m]> answered
+06:25:08 <cn3m[m]> f8sai [GNU/GPL v3]: now an anti-trust against Google and Firebase could be interesting
+06:25:34 <cn3m[m]> one thing that holds Android back as a platform privacy wise is that Google can't have a major leg up with ad tracking
+06:26:15 <cn3m[m]> Apple used to have iAd which were supposed to be a safe and private alternative to the crappy ads you get. It died in a few short years since it got in the way of them protecting privacy.
+06:27:37 <cn3m[m]> If they strengthen privacy protections it doesn't effect their ads(since they are already compliant), but it could be played as a hostile move to competition in the ad space
+07:28:31 <jalb> Well, if there's no problem, it's created to share about GOS. XMPP non-official channel to users talking Spanish language: usuarios_grapheneos⊙sso
+09:58:11 <pikey[m]> a while back someone in here posted a link to a reddit post they made about connection issues on Graphene via VPN. I can't find the link or remember who the user was. If that user reads this, I would love to know if you solved it. My issues (virtually identical) are ongoing. Yesterday on four separate occasions I lost half an hour trying to get a connection via Signal, K9 Mail, Auditor and Newpipe, meanwhile Vanadium and
+09:58:11 <pikey[m]> DDG browser could connect fine. thanks
+10:07:41 <brenneke[m]> <pikey[m] "a while back someone in here pos"> Did you try a different server from your VPN provider?
+10:15:42 <pikey[m]> OH yes, tried it all! I tried every remote port they offer, and tons of different servers. It's more complex than that. I have used the same VPN provider for eons, never had this issue, and never had it on my iphone or even my last pixel 3a running graphene. Only since getting this Pixel 3, which I don't think is relevent but worth mentioning. Racking my brains!
+10:30:17 <brenneke[m]> And all works when off VPN?
+10:43:51 <pikey[m]> yep, good point i forgot to mention. when it happens, after trying different ports, connections etc (which I dont even bother with now as its happened so many times I know that won't help), i then go to settings, turn off "always on VPN" and "block connections outside VPN", then turn off VPN and hey presto, all the queued up signal messages and emails send in seconds, auditor/attestation submits my data for verification
+10:43:51 <pikey[m]> etc, all good. Then i turn those settings and VPN back on, and it's all fine for a while, until it craps out again
+10:44:53 <SchismXL[m]> You tried to reinstall GOS, @pikey:matrix.org? Doing that fixed my issues with WiFi memory issues
+10:45:24 <SchismXL[m]> That's the only other thing to suggest. It's been ongoing for you for a while now :(
+10:54:49 <pikey[m]> <SchismXL[m] "That's the only other thing to s"> Hadn't thought of that, and don't really want to!! I would have to learn how to back it all up and start again, and it was a struggle for me last time installing GOS!! I may consider that though, just waiting for one last attempt at support from PIA and my email provider in case they have any suggestions but i can't see that working out as it doesn't seem related to either
+10:54:49 <pikey[m]> service. Also I used AirVPN and uninstalled PIA (thinking it was PIA's fault) but it did the same on AirVPN too. So yes, your suggestion sounds like a logical next step, if only it didn't scare the shit out of me :D
+10:55:19 <brenneke[m]> Try a different VPN provider, because you used them for eons means nothing.
+10:55:19 <brenneke[m]> Windscribe has free accounts and they are good. They have an online debugging tool that will show what is being blocked and allowed.
+10:58:16 <alzxjm[m]> Mozilla's VPN just came out. Uses Wireguard on Mullvsd servers. Only $5/mo. Really good so far!
+10:58:30 <brenneke[m]> "It's more complex that."
+10:58:30 <brenneke[m]> I don't think you can say how complex the problem is until you know what it is.
+10:59:47 <brenneke[m]> Using Wireguard app on GOS with Windscribe, works flawlessly.
+11:01:01 <brenneke[m]> Auto connects, stays connected when switching from wifi to mobile, everything works.
+12:48:09 <question12> Hey how can you run dual apps? Or clone apps
+12:48:11 <question12> I want to use 2 whatsapp
+12:48:55 <theultron[m]> <question12 "I want to use 2 whatsapp"> Create Second User Profile.
+12:49:14 <question12> Do istill get notifications
+12:49:18 <question12> From the second profile?
+12:49:20 <theultron[m]> Settings -> System -> Advanced -> Multiple users
+12:49:25 <question12> Cause i use themn both regularly
+12:50:53 <theultron[m]> I am not sure if User Profile support notification from second profile to show in first profile.
+12:51:27 <theultron[m]> You can create an user profile and test.
+12:54:18 <theultron[m]> cn3m: MIUI allows the user to have dual apps in a single profile or get notifications from second profile in the first profile or vice versa. I am not sure if AOSP supports the same. Do you think these features add risk?
+12:56:42 <question12> Theres no way to clone an app
+12:56:45 <question12> On same iser profile?
+12:56:55 <question12> I used app cloner year ago on my android device
+12:56:59 <question12> Could make 10 copies of the apps
+13:03:29 <theultron[m]> You may try this. https://f-droid.org/packages/net.typeblog.shelter/
+13:03:31 <theultron[m]> I have no idea if this works.
+13:03:49 <NorbertTretkowsk> Shelter works.
+13:04:11 <question12> Thanks will try
+13:05:07 <f8sai[m]> Just a precaution, device management apps open up some issues (privacy and security-wise)
+13:07:03 <question12> How
+13:09:58 <f8sai[m]> <cyborgninjaneer[ "Shelter and other device manager"> quoting this
+13:10:28 <f8sai[m]> Also, one can search the logs on this chat for more details about device managers
+13:10:47 <question12>  Cant see that message
+13:10:47 <f8sai[m]> freenode.logbot.info/grapheneos
+13:11:37 <f8sai[m]> > <@cyborgninjaneer:matrix.org> Shelter and other device manager apps are not recommended. It's better to use a separate user profile if possible. Shelter is a hack or fudge to provide something that Android doesn't support.
+13:11:55 <f8sai[m]> <f8sai[m] "freenode.logbot.info/grapheneos"> You can search it there too
+13:16:24 <f8sai[m]> <question12 "I want to use 2 whatsapp"> You can even use up to 16 whatsapp if you want, since GrapheneOS supports 16 profiles
+13:16:25 <f8sai[m]> user profiles*
+13:17:28 <f8sai[m]> https://freenode.logbot.info/grapheneos/20200503#c3788344
+13:48:02 <renlord> strcat: is there a way to attach a debugger when runnign the cts bionic test?
+13:51:02 <renlord> ah ok
+13:51:08 <renlord> i see logcat dumping some important stuff
+13:55:18 <question12> So shelter not a good option?
+13:55:28 <question12> Cant really use multiple acounts cause i need to  use 2/3 whatsapps
+13:55:38 <question12> Regularly cant log in and out everytime to see if i got a notification
+13:57:16 <renlord> oh ok
+13:57:30 <renlord> mprotect failed because the mapping region is not page size aligned
+13:58:53 <f8sai[m]> <question12 "So shelter not a good option?"> Yeah, if you care about security
+13:59:22 <f8sai[m]> <question12 "So shelter not a good option?"> Not really for security and privacy
+13:59:34 <f8sai[m]> One doesn't have full control on the apps in work profiles
+13:59:46 <question12> More for privacy
+13:59:55 <question12> Attack on my phone when they have
+13:59:56 <question12> access
+14:00:00 <question12> They wont be able to right
+14:00:23 <question12> The minimum security risk im taking
+14:00:26 <question12> do they outweigh
+14:01:30 <f8sai[m]> https://hub.libranet.de/wiki/and-priv-sec/wiki/user-profiles#Work_profiles
+14:01:34 <renlord> im gonna improve the logging abit so i know which mapping has failed, the static TLS or the actual stack space
+14:02:08 <f8sai[m]> You decide, and if I was you, if the situation permits, I will not use WhatsApp for privacy, for they are owned by Facebook
+14:02:47 <question12> I dont really care about the privacy i mean
+14:02:51 <question12> Its more the security
+14:02:56 <question12> If customs wanna get in my phone or something
+14:03:10 <question12> My problem is not facebook or google atm
+14:04:41 <f8sai[m]> <question12 "Its more the security"> Well, device manager apps reduce security too
+14:04:57 <f8sai[m]> In a way that you have no full control on the work profile apps
+14:05:35 <question12> can u check private message
+14:06:04 <question12> Or send me one
+14:06:13 <question12> much appreciated
+14:09:44 <f8sai[m]> Alright, doubt I could answer more than the logs in this char
+14:10:20 <f8sai[m]> Btw, it is not a general recommendation to use Shelter/Island, and device admin/manager apps are scanned in Auditor for security reasons
+14:10:28 <f8sai[m]> <f8sai[m] "Alright, doubt I could answer mo"> chat*
+14:11:08 <f8sai[m]> https://freenode.logbot.info/?q=Device+admin&ch=grapheneos&w=a
+14:12:53 <f8sai[m]> A quote:
+14:12:53 <f8sai[m]> "Shelter has device admin permission over the work profile, which gives it more power than the device user over what happens there, a big problem if somebody manages to gain control of shelter. It is strongly advised not to grant shelter device admin over the personal profile."
+14:22:55 <joeri_poeri[m]> does my phone running grapheneos connect to any cell towers if I don't have a sim card installed
+14:23:13 <joeri_poeri[m]> it says emergency calls only, I'm sure it'll work but I don't want to try it haah
+14:24:12 <renlord> yes
+14:24:28 <renlord> if you dial 112, you can talk to somebody.
+14:26:10 <strcat[m]> renlord: I don't quite understand how we made this fail
+14:26:16 <strcat[m]> trying to figure that out
+14:26:18 <strcat[m]> do you understand how we broke this in the first place?
+14:26:23 <strcat[m]> I don't see where it aligns before
+14:26:38 <renlord> i elaborated further in the dev channel
+14:26:50 <renlord> strcat[m]: my thoughts are the same as yours!
+14:27:04 <renlord> i also dont remember where it was aligned before!
+14:27:18 <renlord> but the problem was that it failed because it was not aligned
+14:27:57 <strcat[m]> renlord: can you test without our changes
+14:28:05 <renlord> reverting all?
+14:28:35 <renlord> or just the secondary stack stuff?
+14:28:47 <renlord> there's quite a bit of work on top of stock AOSP
+14:28:48 <strcat[m]> secondary stack changes
+14:28:51 <strcat[m]> https://github.com/GrapheneOS/platform_bionic/commit/c37491423e379bc2e4b3fa6c98f893253fb4ff52#diff-38dd0ea0c5adf238691e5cd2953cdd4f
+14:28:52 <strcat[m]> so this one I don't see how it could break it
+14:29:11 <strcat[m]> https://github.com/GrapheneOS/platform_bionic/commit/b4aac77121d9f65582edf0941d69da0987d78b95#diff-38dd0ea0c5adf238691e5cd2953cdd4f
+14:29:18 <strcat[m]> https://github.com/GrapheneOS/platform_bionic/commit/b4c265e7f3dba87ac0fdc09f5898870690ddab3e#diff-38dd0ea0c5adf238691e5cd2953cdd4f
+14:29:21 <strcat[m]> renlord: just revert those 3
+14:29:22 <strcat[m]> and see
+14:31:14 <renlord> did i do something wrong with rounding up?
+14:32:51 <strcat[m]> it could be an issue in one of the other changes too
+14:32:53 <strcat[m]> I don't know
+14:34:25 <renlord> this will take awhile
+14:34:30 <renlord> the incremental build broke
+14:34:32 <renlord> lol
+14:34:36 <renlord> gotta recompile
+14:34:55 <renlord> i'll let you know tomorrow
+14:46:04 <anupritaisno1[m]> renlord: when you change bionic it will usually force a recompile of everything, no?
+14:51:38 <anupritaisno1[m]> strcat: it's weekend and I'm mostly free
+14:51:50 <anupritaisno1[m]> Need me to run CTS?
+14:52:43 <anupritaisno1[m]> Just pm on signal if you need me
+14:54:59 <strcat[m]> only if you change bionic headers
+15:02:17 <strcat[m]> renlord: it does seem safe to align it
+15:02:22 <strcat[m]> renlord: I just don't understand what we did wrong
+15:02:28 <strcat[m]> it looks very similar to how it worked before
+15:02:32 <strcat[m]> don't see why it'd be broken now
+15:02:44 <strcat[m]> renlord: maybe it gets misaligned in a way that we try to mprotect the wrong region
+15:02:46 <strcat[m]> how exactly does the test fail again?
+15:02:58 <strcat[m]> does one of the bionic mmap/mprotect calls fails?
+15:03:04 <strcat[m]>  * does one of the bionic mmap/mprotect calls fail?
+15:48:37 <petersuc> Hey when i start my pixel 3 i just unlock it wiht my 12 character/letter password that i always use to login my phone
+15:48:55 <petersuc> So they can impossibly get in this phone with a Cellebrite UFED attack or bruteforce?
+15:49:12 <petersuc> Or is this only when the phone is restarted and its locked?
+15:49:17 <petersuc> Like fully rebooted
+15:51:13 <petersuc> Cellebrite says they can extract the files on a pixel 3A, this OS makes it impossible right?
+15:51:24 <f8sai[m]> <petersuc "So they can impossibly get in th"> Restart it always
+15:51:28 <f8sai[m]> when unattended
+15:51:28 <f8sai[m]> Before switching profiles
+15:51:29 <f8sai[m]> Or when using password managers
+15:51:34 <f8sai[m]> Recommending passphrase with some number/symbol salt on random parts
+15:51:38 <f8sai[m]> <petersuc "Or is this only when the phone i"> Yeah
+15:51:38 <f8sai[m]> No after first unlock hack if they can't unlock it
+15:51:39 <alicebobandeve> Or just use lockdown mode. Settings>Display
+15:51:42 <petersuc> Like fully reboot
+15:51:46 <petersuc> or just click off button 1 second
+15:55:01 <f8sai[m]> <alicebobandeve "Or just use lockdown mode. Setti"> Nah, that doesn't help
+15:55:04 <f8sai[m]> The lead dev has refuted this already
+15:55:04 <f8sai[m]> Restarting the phone is the only surefire way against it
+15:55:05 <f8sai[m]> It flushes the encryption keys
+15:55:06 <f8sai[m]> Then all profiles would be again at encrypted state
+15:55:07 <f8sai[m]> (Afaik)
+15:55:07 <f8sai[m]> (Cant open them after restart)
+15:55:17 <f8sai[m]> <f8sai[m] "The lead dev has refuted this al"> One can check the logs about lockdown to see for themselfs
+15:55:18 <f8sai[m]> <petersuc "Or is this only when the phone i"> When it restarts, it's at locked state
+15:55:47 <petersuc> But the phone starts so fast after putting my code
+15:55:54 <petersuc> Is it really that  good
+15:55:55 <petersuc> encrypted
+15:56:02 <petersuc> I use veracrypt for my ssd on laptop
+15:56:18 <petersuc> It takes 4 minutes to load my 15 characther passowrd + pip
+15:57:26 <g65434-2[m]> lol what a waste of time
+15:57:50 <petersuc> Have a decent cpu and stuff
+15:57:58 <petersuc> But just really need that info to eb secure
+15:58:00 <petersuc> to be secure
+15:58:03 <petersuc> Dont care about tien
+15:58:04 <petersuc> time
+15:58:50 <g65434-2[m]> hope you chose 999 as PIP
+15:59:14 <petersuc> more like 600-700
+15:59:21 <g65434-2[m]> otherwise security is left to be desired
+15:59:25 <g65434-2[m]> rip
+15:59:31 <petersuc> Do you mind
+15:59:34 <petersuc> messaging me private?
+15:59:38 <petersuc> Have something to offer
+16:00:09 <petersuc> Looking for an experienced person
+16:00:33 <petersuc> Cant message u because no registered user
+16:01:05 <theultron[m]> This may not be the right place but I have a question regarding data recovery on Android. What are the sophisticated ways to recover deleted data on Android?
+16:01:14 <petersuc> cellebrite ufed
+16:01:17 <petersuc> if you have the money
+16:01:29 <petersuc> you know the password
+16:01:30 <petersuc> of the device?
+16:01:35 <theultron[m]> I have written a tasker task to delete everything important in case I have to hand over my phone to authority.
+16:01:37 <petersuc> Then there are enough data recovery
+16:01:39 <petersuc> methods
+16:01:52 <petersuc> You should over write the data
+16:01:59 <petersuc> Or else it can still be
+16:02:04 <petersuc> recovered
+16:02:24 <f8sai[m]> Celebrite and GrapheneOS
+16:02:25 <f8sai[m]> https://www.reddit.com/r/GrapheneOS/comments/hryhih/celebrite_and_grapheneos/
+16:02:37 <theultron[m]> <petersuc "You should over write the data"> Not possible to overwrite in a short span.
+16:02:41 <petersuc> Thankyou f8sai
+16:02:44 <petersuc> Can you rpivate message me?
+16:02:55 <f8sai[m]> Alright sure
+16:03:55 <petersuc> Thankyou
+16:04:54 <f8sai[m]> I just did
+16:05:07 <petersuc> Cant see
+16:05:14 <petersuc> You must log in with services to message this user - see https://freenode.net/kb/answer/registration
+16:05:18 <f8sai[m]> <theultron[m] "This may not be the right place "> Will follow this one
+16:05:19 <petersuc> Just created a password
+16:05:27 <f8sai[m]> (Not sure how it is done, but I'll wait for an answer)
+16:05:54 <petersuc> Can you not private message on freenode
+16:05:54 <f8sai[m]> <theultron[m] "Not possible to overwrite in a s"> (Maybe ask the off-topic GrapheneOS room)
+16:05:57 <petersuc> without password?
+16:07:00 <f8sai[m]> Can't answer you on that, my apologies
+16:07:08 <f8sai[m]> I use a Matrix client and different server
+16:07:15 <petersuc> Ah i just use plain chrome
+16:07:21 <petersuc> I'll be back in an hour
+16:07:29 <petersuc> Hope you'll be online have some questions to ask
+16:07:47 <petersuc> That i need help with but more privately.
+16:07:48 <f8sai[m]> Web client also works btw (matrix is called element now)
+16:08:00 <f8sai[m]> <petersuc "Hope you'll be online have some "> Will try, but can't assure
+16:15:09 <peter12> messaged u via here with account
+18:34:45 <joshman[m]> <petersuc "It takes 4 minutes to load my 15"> That's why FDE sucks big-time
+19:00:32 <tencarsb[m]> Hi there, is there such feature or wouldn't it be nice: you have two pins. One two unlock the phone and one to erase it?!
+19:05:15 <charuto> properly erasing all  the data would take a lot of time i imagine, not that useful in real world situations
+19:05:17 <joshman[m]> "tencarsb" (https://matrix.to/#/@tencarsb:matrix.org) erasing won't evade data recovery. You need to overwrite storage space, which is time consuming
+19:05:26 <dazinism> tencarsb: there is no such feature
+19:05:42 <charuto> you'd probably be better off physically destroying it or something along those lines
+19:05:52 <dazinism> josh.man: can just throw away the profile encryption keya
+19:06:04 <dazinism> Keys
+19:06:08 <charuto> and even then, data recovery would probably be possible
+19:07:36 <joshman[m]> It's overwrite or destroy. The rest is useless features giving false perception of security
+19:07:47 <dazinism> All the data is encrypted, without the keys, which are stored in Titan, the data is as good as random
+19:08:15 <dazinism> Also can't reliably overwrite flash storage
+19:09:19 <joshman[m]> As time passes new devices get created. Titan is ok today. How about tomorrow?
+19:10:26 <dazinism> Nothing is completely secure
+19:11:03 <dazinism> But as far as android phones go, Titan is state of the art
+19:12:36 <cn3m[m]> Titan is general is practically equivalent to the Secure Enclave too. In general state of the art is a fair term
+19:12:47 <dazinism> Dont recall seeing anyone recovering data from a deleted profile on an android phobe
+19:13:42 <dazinism> Would be much harder on a phone with strongbox
+19:13:45 <cn3m[m]> of course with the FBE
+19:13:45 <cn3m[m]> it is brilliant
+19:14:17 <joshman[m]> How does it compare to Samsung's  Secure Element?Not to start discussing Samsung. Strictly security chip
+19:14:35 <dazinism> Think Titan is better
+19:14:55 <cn3m[m]> > <@josh.man:matrix.org> How does it compare to Samsung's  Secure Element?
+19:14:55 <cn3m[m]> > Not to start discussing Samsung. Strictly security chip
+19:14:55 <cn3m[m]> Knox?
+19:15:01 <joshman[m]> Nope
+19:15:36 <joshman[m]> Secure Element. It was announced in latest S20. It was meant to be far superior than Knox
+19:15:43 <dazinism> Guess you mean Samsungs HSM in some top end device?
+19:16:51 <joshman[m]> https://www.androidheadlines.com/2020/05/samsung-launches-new-security-chip-for-smartphones.html
+19:17:37 <cn3m[m]> There is very little information on it
+19:17:43 <cn3m[m]> Apple and Google share a lot on their security chips
+19:18:29 <cn3m[m]> Apple has had an impeccable 7 year run, Google has an impeccable 2 year run(more if you count previous iterations)
+19:18:47 <spaceinfinite[m]> https://reddit.com/r/privatelife/comments/gtv8ut/writeup_criticism_of_rprivacy_and_rprivacytoolsio/
+19:18:53 <dazinism> Heard from Daniel and others that Samsung coding and architecture is often not so great
+19:19:02 <cn3m[m]> It is not
+19:19:18 <cn3m[m]> they add a bunch of stuff to Google and Qulacomm standards
+19:19:46 <spaceinfinite[m]> <spaceinfinite[m] "https://reddit.com/r/privatelife"> Whats with this guy claims?
+19:20:08 <spaceinfinite[m]> Cn3m you having day off?
+19:21:00 <cn3m[m]> spaceinfinite: I dunno but all those claims are almost entirely bogus I agreed with one
+19:21:12 <tencarsb[m]> OK, not to erase the storage, but how about destroy the key...
+19:21:48 <spaceinfinite[m]> <cn3m[m] "spaceinfinite: I dunno but all t"> Was joking obvs you cant keep arguing people whenever they seek attention
+19:21:56 <cn3m[m]> the key is destroyed when you remove a profile
+19:21:57 <cn3m[m]> the profile is encrypted with a generated key on the fly
+19:21:58 <cn3m[m]> that key is encrypted with your log ins
+19:22:12 <cn3m[m]> <spaceinfinite[m] "Was joking obvs you cant keep ar"> yeah, he has harassed me a lot I am done with the guy
+19:22:20 <dazinism> tencarsb: it could be done. Someone would need to step up and write the code
+19:22:36 <spaceinfinite[m]> Cos i dont see another reason for him to go on about it since everything has been asked and answered already
+19:23:14 <cn3m[m]> yeah that myth about the mail vulnerability speaks volumes
+19:23:33 <cn3m[m]> if Apple is confident enough to say something is not exploitable they believe it and no one proved them wrong
+19:23:39 <cn3m[m]> the guy is a fake
+19:23:46 <cn3m[m]> the Chrome stuff is somehow even worse
+19:25:33 <dazinism> tencarsb: theres already a feature to delete the keys after x wrong password/pin entries
+19:25:53 <dazinism> Although its not easily available for use
+19:26:10 <dazinism> Its part of MDM stuff
+19:27:47 <tencarsb[m]> Thanks alot, I got to go. Good Night.
+19:28:08 <anupritaisno1[m]> cn3m: my Oneplus 2 is the most secure phone in existence
+19:28:18 <cn3m[m]> <anupritaisno1[m] "cn3m: my Oneplus 2 is the most s"> you deleted the OS?
+19:30:05 <anupritaisno1[m]> WiFi, Bluetooth, USB, cellular are broken
+19:30:05 <anupritaisno1[m]> The screen is a kinky boi
+19:30:05 <anupritaisno1[m]> Battery is explosion
+19:30:34 <anupritaisno1[m]> cn3m: very secure
+19:30:56 <cn3m[m]> Battery is explosion
+19:31:00 <anupritaisno1[m]> I even put an apple logo on the back to assert superiority
+19:31:19 <cn3m[m]> I can't afford a secure phone so I just put an apple logo on the back and broke the radios
+19:31:20 <alex-resist> A good case study why security != safety
+19:31:23 <cn3m[m]> -anu probably
+19:31:32 <hypokeimenon[m]> Battery is explosion
+19:32:14 <anupritaisno1[m]> cn3m: phone fell into water 4 years ago
+19:32:22 <anupritaisno1[m]> It had a good run
+19:33:02 <cn3m[m]> it lived a good life
+19:33:27 <anupritaisno1[m]> At least it isn't a nokia
+19:33:52 <anupritaisno1[m]> Had a Nokia fall down
+19:33:52 <anupritaisno1[m]> Floor literally broke
+19:33:52 <anupritaisno1[m]> This is not sarcasm
+19:39:04 <dazinism> tencarsb: https://developer.android.com/reference/android/app/admin/DevicePolicyManager#setMaximumFailedPasswordsForWipe(android.content.ComponentName,%20int)
+19:46:42 * anupritaisno1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/mSalSvWODqWlItwtUxQIZsol >
+19:46:57 <anupritaisno1[m]> I'm hoping nobody notices the dent on the floor
+19:54:18 <xnat834[m]> Hi everyone. https://grapheneos.org/faq is a great read. I didn't even know about the changes to HWIDs and how apps can no longer access them in Android 10. Seems like a very good change for privacy.
+19:56:49 <cn3m[m]> xnat834: the usage guide is wonderful too
+19:59:13 <xnat834[m]> There is a part (https://grapheneos.org/faq#cellular-tracking) where I'd like to find more sources on. I thought the code running on the baseband is not open-source and Android can only ask it to do something. Or have there been reverse-engineering projects for the modems in Pixel phones? Or maybe a data transmission test with a cellular femtocell or what they are called.
+20:05:10 <overheadscallop[> <xnat834[m] "There is a part (https://graphen"> https://old.reddit.com/r/GrapheneOS/comments/cjjyd4/graphene_os/evdv0h8/
+20:05:35 <overheadscallop[> xnat834: also this tweet I think https://nitter.net/DanielMicay/status/1158869170429333504
+20:07:14 <mrmanpants[m]>  can i setup openvpn as a client in native graphene or do i need to use an app?
+20:09:33 <dazinism> mrmanpants: think you need an app
+20:09:36 <overheadscallop[> mrmanpants: https://grapheneos.org/faq#vpn-support
+20:10:18 <overheadscallop[> looks like openvpn needs an app
+20:10:39 <xnat834[m]> overheadscallop Thanks!
+20:10:57 <xnat834[m]> (Also, nitter.net  = 👍)
+20:12:37 <mrmanpants[m]> ok thanks
+20:13:54 <mrmanpants[m]> do you guys recommend using one of the built in protocols instead of openvpn or something else?
+20:14:46 <mrmanpants[m]> i.e. i want to have a VPN setup to connect to my home network, i can figure out how to setup anything, what would you recommend?
+20:16:05 <dazinism> Think all the built in protocols are a bit old and not so good
+20:16:50 <dazinism> As far as I know wireguard is best
+20:16:56 <dazinism> Think theres an official app
+20:20:45 <SEL[m]1> Yep there is
+20:20:49 <SEL[m]1> There's also a modified wireguard app that supposedly offers more features (?)
+21:02:29 <cn3m[m]> <bt700[m] "hey guys;; I was told to join he"> ah yeah sprint has proprietary bits. They are the only ones I know of that have issues
+21:23:47 <grindlefang[m]> <bt700[m] "aw; how hard would it be to modi"> https://grapheneos.org/build
+21:24:00 <grindlefang[m]> You can try yourself and see if you're up to the challenge
+21:53:32 <aeonsolution[m]> bt700: if you have an account with sprint, make sure the device is on their network before you try installing GrapheneOS
+21:54:45 <aeonsolution[m]> it may or may not work, but with the phone unlocked you have options to use a pre paid service sim
+22:16:02 <renlord> strcat[m]: yes, mprotect for the static TLS region failed
+22:16:16 <renlord> because the addr to static TLS was not page aligned
+22:18:32 <renlord> 07-17 02:50:36.603  2009  2009 W libc    : pthread_create failed: couldn't mprotect R+W 11200-byte thread mapping region: Invalid argument
+22:18:34 <renlord> 07-17 02:50:36.604  2009  2009 W libc    : invalid pthread_t (0) passed to pthread_join
+22:21:16 <renlord> strcat[m]: reverted the 3 commits they passed
+22:23:33 <renlord> i think its to do with how I calculated the address for static TLS
+22:23:56 <renlord> upstream calculates it by substracting from the top, but I add from base to where it should be
+22:24:06 <renlord> if you do a diff HEAD HEAD~3
+22:24:13 <renlord> you can see how the approaches are different
+22:26:28 <renlord>  i assume if they do it that way, when they did the mprotect, the len argument was not page aligned.
+22:50:12 <dazinism> bt700: the sprint stuff thats required, but not included is pretty nasty.
+22:50:15 <dazinism> https://en.m.wikipedia.org/wiki/OMA_Device_Management
+23:11:12 <pikey[m]> do i smell a troll?
+23:12:49 <pikey[m]> you nailed it. counter-intuitive is the watch word
+23:13:45 <cn3m[m]> Google phones are the only phones that support fully degoogling without sacrificing security
+23:13:52 <pikey[m]> its the most hardware secure device, Titan chip etc, Graphene is only being developed for phones which are capable ofbeing secure enough to satisfy the devs. thats my understanding, i am no dev so forgive me if i am wrong. but i "got over" the Google badge once it was intelligently explained to me exactly why the Pixel was chosen
+23:14:51 <cn3m[m]> The on time monthly updates for a reasonable time, and fully support custom os verified boot are extremely rare
+23:15:10 <pikey[m]> <DickFaggotson[m] "or, if you invert that line of t"> that fear is irrational. i had the very same fear. it was put to bed through explanation. if i could explain it to you i would, but i can say with confidence you needn't worry at all. Your device was built by google (hardware) but built by graphene (sw), taking advantage of all the good bits of this very secure device, but doing away with all the bad bits.
+23:15:11 <cn3m[m]> by far the most private Android device
+23:15:29 <jneplokh> The fact that it is a Google phone is an advantage, they are far more secure than any other Android. They are pretty much the only ones who take it seriously.
+23:15:30 <jneplokh> https://grapheneos.org/faq#device-support
+23:15:51 <cn3m[m]> Of all companies to support with your money for making an android phone Google is the best
+23:15:58 <cn3m[m]> none of them care about your privacy
+23:16:04 <cn3m[m]> but Google at least cares about your security
+23:16:11 <jneplokh> Google has excellent security
+23:16:26 <cn3m[m]> if you are going to fund anyone fund Google since they at least improve things
+23:16:43 <cn3m[m]> anyone else is going to make you give up security to get privacy(which means less privacy)
+23:17:04 <cn3m[m]> <DickFaggotson[m] "hah, no! "> If you buy Samsung you won't have security or privacy
+23:17:18 <pikey[m]> <DickFaggotson[m] "lol, would never expect the tigh"> i think you're confusing security with privacy. Google wants you to have VERY high security, as it's a great marketing point. what they do NOT (in my opinion) want you to have, is any privacy from THEM. Graphene takes care of that little chestnut, ad you get best of both worlds.
+23:17:25 <cn3m[m]> If you buy Google you get Security and Openess(which you can use to get privacy)
+23:17:43 <pikey[m]> perfectly put 6
+23:17:47 <pikey[m]>  * perfectly put ^
+23:18:16 <pikey[m]> i still feel a hint of trolling. :D
+23:18:40 <cn3m[m]> <DickFaggotson[m] "nah, i grabbed an Asus just for "> Lineage is actively falsifying security patches and breaking most of the core security features of Android. That can't be considered a private option
+23:19:12 <pikey[m]> using Lineage and claiming you're concerned about security, well ... nuff said i think. you haave your answers, if you choose to accept em. laters, good luck whatever you decide.
+23:19:19 <cn3m[m]> Google is way more responsible with your data than most OEMs. Incredibly low bar...
+23:19:30 <cn3m[m]> though Google wants to keep your data for themseleves
+23:19:36 <cn3m[m]>  * though Google wants to keep your data for themselves
+23:19:48 <cn3m[m]> Samsung or someone else is probably going to sell it
+23:20:02 <cn3m[m]> If I am going to support any Android hardware
+23:20:06 <cn3m[m]> Google's is the only remotely acceptable
+23:20:39 <cdesai> cn3m[m]: I really wish people would stop saying Lineage falsifies patch levels
+23:20:46 <pikey[m]> <DickFaggotson[m] "nah, I'm merely barely technolog"> if that's true (as it is for me) then stop making claims about things you don't understand and just ask people in here. virtually everyone who posts will know 1000 times more about security than I (or doubtless you) will ever know. So listen, it's good info, and better than whatever else you have been hearing if you're using lineage. Final point - you won't get a more
+23:20:46 <pikey[m]> secure and private device than a Graphene Pixel run carefully following advice and guidance in here and on GOS website. Maybe iphone close second. take your pick, but ditch the lineage! gotta run, cheers
+23:20:47 <Icy-Sprite^[m]> Yo what the heck, Riot is now Element
+23:20:57 <Icy-Sprite^[m]> I haven't signed in for a moment and now everything is changed ahhhhhhhhh
+23:21:09 <cdesai> they apply the aosp security patches monthly on time, even on older branches - something that you don't see anywhere else. any branch that gets updates from google is patched - 9.0, 8.0, 7.0 - I can go on and on
+23:21:09 <cn3m[m]> <cdesai "cn3m: I really wish people would"> Google sets out a standard and Lineage uses that bulletin without doing what is laid out.
+23:21:20 <cdesai> there's a separate vendor patch level
+23:21:23 <anupritaisno1[m]> <cn3m[m] "Lineage is actively falsifying s"> Bullshit
+23:21:26 <cn3m[m]> It is false advertising
+23:21:41 <cn3m[m]> The Google Security Bulletin includes vendor
+23:21:45 <cdesai> it's not, really. there's a vendor patch level right underneath
+23:21:46 <cn3m[m]> they need to add an AOSP patch level
+23:21:49 <cn3m[m]> change that
+23:21:51 <JTL> https://i.imgur.com/bbw3nVP.png
+23:22:00 <JTL> (not my screenshot mind you)
+23:22:01 <cn3m[m]> not the Android patch level that should be matched to stock
+23:22:12 <cn3m[m]> add another patch level to fix the dishonesty
+23:22:39 <cn3m[m]> they give people insecure devices and use Google labeling to give them a false sense of security
+23:22:46 <cdesai> there's no dishonesty, they just merge AOSP and retain the level - and have worked to add another level to see what it really is
+23:23:06 <cdesai> not everybody can afford to just buy a new device or stop using their old one when the vendor stops giving update
+23:23:19 <cn3m[m]> They don't meet the Android security bulletin they portray it is very simple
+23:23:28 <cn3m[m]> they need to change the way they show it to stop being dishonest
+23:23:32 <cn3m[m]> it is wrong
+23:23:37 <cdesai> at this point lineage has a better track record of security updates than most OEMs, given that even Google's Pixel 1 is stuck at Dec 2019, whereas with lineage it'd atleast have the latest aosp patches
+23:24:02 <cn3m[m]> Since Stock OEMs are not faking security bulletins to inflate that
+23:24:12 <cn3m[m]> they just need to change how they communicate it
+23:24:16 <cdesai> there have been instances of that as well
+23:24:31 <cn3m[m]> <cdesai "there have been instances of tha"> that was fake the researcher admitted he was wrong
+23:24:44 <cn3m[m]> that app he made hardly works either
+23:24:59 <cdesai> cn3m[m]: did you even see that screenshot?
+23:25:21 <cn3m[m]> Android security patch level is the official one
+23:25:34 <cn3m[m]> the vendor patch level should be called android security patch level
+23:25:47 <cn3m[m]> and the android security patch level should be named aosp patch level
+23:25:49 <cn3m[m]> to communicate it
+23:25:53 <cdesai> then go and propose that, and say that - instead of calling them dishonest.
+23:26:06 <cdesai> because I'm tired of reading this
+23:26:32 <cn3m[m]> cdesai: they have already been told that serveral times
+23:26:43 <cn3m[m]> but I will reach out to them again
+23:27:00 <cn3m[m]> it is almost certainly intentional
+23:27:21 <cdesai> cn3m[m]: and honestly, if naming is the only issue you can come up with - that's a pretty small thing
+23:27:27 <cdesai> it's not, it's just keeping what aosp has
+23:27:32 <cdesai> since it differs device to device
+23:27:43 <cdesai> vendor security patch level was added to stop this confusion
+23:27:52 <cdesai> and again, it's just semantics
+23:27:58 <Icy-Sprite^[m]> Guys what's the new Privacytools room???
+23:28:30 <cn3m[m]> cdesai: I will contact them and give them a more detailed proposal
+23:28:40 <cn3m[m]> <Icy-Sprite^[m] "Guys what's the new Privacytools"> it was just an upgraded room
+23:28:43 <cdesai> https://review.lineageos.org/q/topic:n-asb-2020-07
+23:28:43 <cdesai> https://review.lineageos.org/q/topic:O_asb_2020-07
+23:28:56 <anupritaisno1[m]> cdesai: they should add boot security patch too
+23:29:03 <cdesai> cn3m[m]: see, that's much better.
+23:29:03 <cdesai> Also full disclosure I'm a lineage dev myself, if you hadn't noticed the flair
+23:29:30 <cdesai> anupritaisno1[m]: yeah I was going to propose that at some point, but since most devices don't have firmware shipped with the builds it'd be hard to set
+23:29:31 <anupritaisno1[m]> Time to claim glassrom has august 5 2020 patch in kernel
+23:29:32 <cn3m[m]> I can't see the flair on this side and no problem
+23:30:18 <cdesai> cn3m[m]: https://www.xda-developers.com/lineageos-trust-centralized-interface-security-privacy/
+23:30:38 <cn3m[m]> yes, I have lineage on two devices around here
+23:30:48 <cn3m[m]> I have seen the Trust center
+23:30:51 <cn3m[m]> it is improved
+23:31:04 <cn3m[m]> since using clearly the wrong labeling
+23:31:30 <cn3m[m]> Google wouldn't consider that a full Android update what they are doing
+23:31:37 <cn3m[m]> most people don't know what a vendor image is
+23:42:12 <anupritaisno1[m]> cn3m: build glassrom then
+23:42:39 <madaidan[m]1> glassrom
+23:45:04 <madaidan[m]1> Don't assume arbitrary things without evidence then
+23:46:26 <cn3m[m]> <anupritaisno1[m] "cn3m: build glassrom then "> for those lineage phones? Not a bad idea

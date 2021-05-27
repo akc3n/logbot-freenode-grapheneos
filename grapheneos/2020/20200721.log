@@ -1,0 +1,375 @@
+00:25:18 <nickcalyx[m]> https://defcon.org/html/defcon-safemode/dc-safemode-speakers.html#Quintin
+00:41:32 <aeonsolution[m]> <grindlefang[m] "Is building Vanadium still broke"> yes, some of us are still working on it
+00:42:51 <aeonsolution[m]> <cdesai "strcat: https://chromium.googles"> thanks for finding this, going to read up
+01:15:32 <aeonsolution[m]> grindlefang: if you aren't building a production build of GOS, you can set is_official_build to false
+01:15:47 <aeonsolution[m]> https://github.com/GrapheneOS/Vanadium/blob/10/args.gn
+01:16:33 <aeonsolution[m]> cdesai figured out that this is related to the issue with the new version not working
+01:16:43 <aeonsolution[m]> its still unclear what is the root cause
+01:31:29 <sushiman[m]> so grapheneOS has profiles in its OS...
+01:31:44 <sushiman[m]> are these profiles 100% sandboxed from each other?
+01:34:27 <textmate> Wow
+01:34:31 <textmate> lots of users here
+01:35:23 <textmate> Ah I see its probably because of matrix
+01:35:36 <textmate> im going to sleep. I will talk tomorrow
+01:39:30 <anupritaisno1[m]> Good night then
+01:43:43 <aeonsolution[m]> <sushiman[m] "are these profiles 100% sandboxe"> yes, checkout <https://freenode.logbot.info/?ch=grapheneos&q=profiles> for more details
+01:44:01 <sushiman[m]> ty
+02:08:03 <cn3m[m]> <sushiman[m] "are these profiles 100% sandboxe"> Apps installs are really the only things not fully isolated. Though this is almost never an issue
+02:08:41 <anupritaisno1[m]> App installs from what I know are shared
+02:09:00 <cn3m[m]> if you had a v1 exploit you could use it to backdoor F-Droid and all subsequent updates for F-Droid apps across profiles, but Android 11 is fixing that
+02:09:03 <anupritaisno1[m]> If one user installs an app and another installs it android will just reuse the old one
+02:09:06 <LinusSexTips[m]> virgin Shelter vs CHAD multiple user profiles
+02:09:14 <anupritaisno1[m]> But give it a separate data
+02:09:31 <anupritaisno1[m]> <cn3m[m] "if you had a v1 exploit you coul"> How so?
+02:09:35 <cn3m[m]> <anupritaisno1[m] "How so?"> well when I played with Janus
+02:09:50 <cn3m[m]> you could make someone install an apk that looks like something else
+02:09:52 <cn3m[m]> they would feel safe since it is in another profile
+02:10:00 <cn3m[m]> it could then replace F-Droid for instance
+02:10:27 <cn3m[m]> then F-Droid could use the v1 exploit against all updates for apps or new installs
+02:10:39 <anupritaisno1[m]> Mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm
+02:10:45 <anupritaisno1[m]> Yeah you're right
+02:11:01 <anupritaisno1[m]> cn3m: should we make a system like tails then?
+02:11:02 <cn3m[m]> would be a complicated attack
+02:11:29 <cn3m[m]> gives you persistent access to any F-Droid app like the password manager and authentication tokens for example
+02:11:34 <anupritaisno1[m]> Essentially an android phone that loses all data on reboot
+02:11:40 <cn3m[m]> <anupritaisno1[m] "cn3m: should we make a system li"> doesn't that already exist and Android isn't using it?
+02:11:45 <cn3m[m]> DSU loader
+02:12:12 <cn3m[m]> would be nice to add to GrapheneOS to remove the need for dev devices anyway
+02:12:16 <anupritaisno1[m]> No actually have a clean data partition every boot
+02:12:33 <cn3m[m]> <anupritaisno1[m] "No actually have a clean data pa"> that could be very interesting
+02:12:51 <anupritaisno1[m]> All you have to do is mount a blank f2fs with checkpoint=disable:0
+02:12:55 <anupritaisno1[m]> The moment you shut down
+02:13:02 <anupritaisno1[m]> F2fs will erase all data
+02:13:26 <cn3m[m]> Yeah if you had a signing bypass
+02:13:32 <cn3m[m]> you could even backdoor the normally very strong Guest mode
+02:13:33 <anupritaisno1[m]> Set a session lock screen and on the next boot even the encryption key will be lost
+02:13:39 <cn3m[m]> it would have to work on v2 signing of course
+02:13:49 <cn3m[m]> but if you replaced Vanadium for example
+02:13:57 <cn3m[m]> even Guest mode(which denies app installs)
+02:14:08 <cn3m[m]> would still verify the fake Vanadium
+02:14:49 <cn3m[m]> <anupritaisno1[m] "Set a session lock screen and on"> would be cool at least as a proof of concept
+02:15:56 <anupritaisno1[m]> I accidentally implemented this on op7pro
+02:16:32 <cn3m[m]> <anupritaisno1[m] "I accidentally implemented this "> oh yeah? blank f2fs checkpoint disabled?
+02:16:38 <anupritaisno1[m]> There's a glassrom build that wipes your data off every boot and as long as you set a password it will not even be recoverable
+02:17:46 <cn3m[m]> you probably could modify it to do so automatically
+02:34:02 <nikoleos[m]> https://t.me/NoGoolag/3124
+02:34:55 <nikoleos[m]> > https://t.me/NoGoolag/3124
+02:34:55 <nikoleos[m]> How to avoid this crap ?
+02:35:59 * anupritaisno1[m] uploaded an image: Screenshot_20200721-080535_Telegram_FOSS.png < https://matrix.org/_matrix/media/r0/download/m.apex.to/WMjugApbfmXHJMcIHocNmGey >
+02:36:11 <anupritaisno1[m]> nikoleos: this is OT
+03:48:35 <theultron[m]> <anupritaisno1[m] "There's a glassrom build that wi"> Not recoverable using specialized tools?
+03:52:00 <cn3m[m]> <theultron[m] "Not recoverable using specialize"> TEE
+03:52:01 <cn3m[m]> it is not
+03:52:22 <cn3m[m]> unless they completely screwed it up
+03:52:30 <cn3m[m]> extremely unlikely
+04:06:47 <anupritaisno1[m]> <theultron[m] "Not recoverable using specialize"> No
+04:07:12 <anupritaisno1[m]> Since the key that was used for encryption itself is lost there is no recovery possible
+04:08:30 <theultron[m]> But those file recovery solutions still can recover some deleted decrypted data?
+04:09:06 <anupritaisno1[m]> Nothing is decrypted
+04:09:22 <anupritaisno1[m]> Even the metadata key is hardware wrapped
+06:05:00 <infiniteape[m]> I am trying to run ADB on Arch linux.  Do I need drivers?
+06:05:21 <infiniteape[m]> is there a package for that on pacman? Or I would manually have to install this
+06:08:34 <infiniteape[m]> Ive only ever done this on windows but id like to learn how to on linux
+06:23:57 <broda721[m]> Quick question, what is the maximum amount of user profiles one can make?
+06:28:24 <cn3m[m]> <broda721[m] "Quick question, what is the maxi"> 16
+06:28:37 <broda721[m]> Ah
+06:28:46 <broda721[m]> Is there any reason for the limit?
+06:29:24 <broda721[m]> * Is there any specific reason for the limit?
+06:37:23 <cn3m[m]> doubt it
+06:37:26 <cn3m[m]> probably UX
+06:52:50 <fll[m]> Hey cn3m, just saw that long reddit thread and I admire your patience. Thanks for the effort you put into that!
+06:56:04 <cn3m[m]> fll: thank you :)
+07:01:49 <cn3m[m]> I have a habit of letting posts through if I get asked them a lot and the usual go to Matrix instead doesn't work. That one was a huge time sap though I probably spent a good 4+ hours on that threat
+07:01:49 <cn3m[m]> thread*
+07:19:01 <fll[m]> Yeah, I imagined that was time consuming. But you provided a lot of good information that hopefully many people can read up on
+07:23:04 <fll[m]> It might make some question the false "open automatically = good" stance they've been taught in so many places
+07:26:06 <cn3m[m]> welcome librethinker
+07:26:37 <takama02[m]> Sorry for a dumb question but in instructions when i verify images with signature there is this command line only for a .sig file
+07:28:29 <takama02[m]> Does that suffice if I'll be flashing the image from the other file?
+07:29:19 <cn3m[m]> thanks that is my goal
+07:29:27 <cn3m[m]> I don't like misinformation especially about GrapheneOS
+07:30:21 <cn3m[m]> The main challenge is getting over Dunning Kruger's and on top of that having enough patience
+07:31:22 <cn3m[m]> yeah, open source is probably a 10% factor imo fll:
+07:31:36 <cn3m[m]> absolutely a good thing
+07:31:59 <cn3m[m]> that is how the verification works if I am understanding you correctly yes
+07:32:03 <cn3m[m]> takama02:
+07:34:27 <takama02[m]> <cn3m[m] "that is how the verification wor"> thank you
+07:34:51 <cn3m[m]> and btw don't bother verifying unless you have trusted repos like on linux
+07:35:18 <cn3m[m]> the website is better protected than installing a random verification tool off the net
+07:38:40 <takama02[m]> actually i do reinstall with verification after i switched to linux. gos opened a gate of foss for me :D
+08:54:12 <minz3[m]> Is this room broken? Chat is loading since joining.
+08:56:42 <SchismXL[m]> Maybe you're broken. Chat is fine here!
+08:57:08 <minz3[m]> OK thanks
+09:00:19 <cn3m[m]> <minz3[m] "Is this room broken? Chat is loa"> chat backlog doesn't show up
+09:00:25 <cn3m[m]> it is in the description
+09:00:37 <cn3m[m]> too look back you can read the logs
+09:01:15 <cn3m[m]> We have logs since anyone could be logging this anyway and at least it is open and transparent to everyone and can be used as a resource due to the good search ability
+09:04:42 <minz3[m]> Thanks for the fast answers :)
+09:34:01 <minz3[m]> Im using grapheneos now for serveral days and im wondering where i can disable celular network. The only way i can find, turn in airplane mode... Ist this the right way to do so?
+09:34:35 <cn3m[m]> <minz3[m] "Im using grapheneos now for serv"> yes
+09:34:44 <cn3m[m]> airplane mode is plenty robust
+09:35:52 <minz3[m]> 👍
+10:11:51 <brenneke[m]> Don't disagree but you can also add a mobile data tile to toggle mobile data.
+10:49:50 <cdesai> strcat[m]: apk works
+10:50:49 <cdesai> strcat[m]: https://git.io/JJCjN
+10:50:49 <cdesai> trichrome_chrome_apk
+10:50:49 <cdesai> didn't add the _64/_64_32 variants as I wasn't sure if they're needed
+10:51:26 <cdesai> should be trivial to add in chrome/android/BUILD.gn
+10:51:31 <cdesai> dunno how it worked with _bundle
+10:59:27 <tencarsb[m]> <infiniteape[m] "I am trying to run ADB on Arch l"> pacman -S android-tools
+11:00:02 <cdesai> strcat[m]: https://chromium-review.googlesource.com/c/chromium/src/+/2309771
+11:16:00 <cn3m[m]> tvg: hi
+11:16:13 <cn3m[m]> what carriers are you looking at?
+11:31:40 <Metro[m]> <tvg[m] "2Call.nl through bol.com"> You could try and see if belsimpel ships to your country. I know for sure that those are simlock free. https://www.belsimpel.nl/
+11:34:14 <tvg[m]> They do! Thank you very much
+11:34:51 <tvg[m]> And I will be able to succesfully install GrapheneOS on my Pixel 3a if I buy it from Belsimpel?
+11:36:59 <Metro[m]> <tvg[m] "And I will be able to succesfull"> I bought a pixel4 and am a happy camper with my GrepheneOS installed on it. 😃
+11:38:46 <tvg[m]> That's great to hear! Thank you so much for the assistence x
+12:43:18 <ura[m]> Is belsimpel the retailer?
+12:43:32 <ura[m]> oh well, seems like I'm an h late
+12:52:55 <anonhat[m]1> How is app startup lag on the 3 compared to the 3a?
+12:58:04 <ura[m]> Better, I'd guess. I'd not base a purchasing descision on that tho. Firstly, do you need a headphone jack? If yes, you need to pick the 3a anyways
+13:01:00 <anonhat[m]1> 😟
+13:02:16 <za_vilfp8kn0pcyh> Also depends if support time is important for you
+13:02:35 <ura[m]> oh yeah. almost forgot that
+13:02:51 <ura[m]> 3a will have longer support, right?
+13:03:04 <ura[m]> may 2022
+13:03:07 <homesteadhacker[> Hello all, a complete noob here.  I'm sure this is a FAQ, but I can't find it on grapheneos.org or reddit.  I just purchased an unlocked Pixel 3.  I want to activate it on Spectrum.  Do I need to wait until the SIM card arrives, activate it with vanilla android?  Or can I go ahead and install Graphineos on it now, and pop in the sim/activate it?
+13:03:09 <za_vilfp8kn0pcyh> 3a's startup lag is tolerable enough
+13:03:48 <ura[m]> spectrum is your carrier?
+13:04:01 <homesteadhacker[> yes, I think it's resold Verizon
+13:06:27 <ura[m]> You should be able to activate it with graphene installed, tho I'd wait for a second opinion on this. I'm not fully sure about the process of unlocking a SIM in your country. In my country (germany), I couldn't reasonably unlock a SIM on a custom ROM. Need to download an app called POSTIDENT and show my passport to some callcenter guy
+13:16:38 <SchismXL[m]> Anyone having problems with outgoing and incoming calls? Normal calls, not using other apps
+13:16:46 <SchismXL[m]> Internet is working etc.
+13:17:22 <SchismXL[m]> 4XL btw.
+13:17:25 <strcat[m]> cdesai: they aren't going to accept a change removing the bundle since it's what they use
+13:19:49 <homesteadhacker[> ura: thanks, maybe someone who has done this in the US with Verizon or Spectrum has some experience with this.  Do you think I'll get another unsolicited opinion, from my original question, or should I just pop in every now and then and re-ask ?
+13:21:11 <ura[m]> pop in every now and then and re-ask I'd say. Also be prepared to get other less helpful answers like mine as well before eventually getting useful info
+13:21:15 <cdesai[m]> strcat: I know, I mainly put it for feedback, and already left a comment saying that a separate target could be added if they’d accept it
+13:21:42 <cdesai[m]> I was going to do that but this was much easier and faster for now, and we don’t have a use for the bundles anyway
+13:21:55 <cdesai[m]> Apk is half the size now too
+13:27:48 <strcat> cdesai[m]: huh why is the apk so much smaller
+13:27:53 <strcat> are we generating the apk from bundle wrong?
+13:30:21 <strcat[m]> tvg: afaik the only locked variant is the Verizon one
+13:34:09 <SchismXL[m]> No worries, fixed the calls. I had "4G" selected instead of "4G (Recommended)" on the Preferred Network Type.
+13:39:10 <strcat[m]> you mean "4G only" right
+13:41:24 <SchismXL[m]> No, on 4G Recommended
+13:41:40 <strcat[m]> I'm talking about how you're saying "4G" above
+13:41:49 * SchismXL[m] uploaded an image: 4742f3aa-9326-4080-921c-c70ea354ef4f.png (46KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/JVjcsAwvCOgpWhChLJkSBDLJ >
+13:41:57 <strcat[m]> yes so as I said
+13:42:13 <strcat[m]> you had it on "4G only"
+13:42:21 <strcat[m]> not "4G"
+13:42:26 <SchismXL[m]> Ah, yes, sorry!
+13:43:00 <SchismXL[m]> Yeah, on 4G only, there's no calls. But on the recommended, there are calls.
+13:43:15 <strcat[m]> so you probably don't have VoLTE support
+13:43:30 <strcat[m]> in which case you need 2G/3G support to use traditional voice calls
+13:43:40 <strcat[m]> since you don't have calls over 4G
+13:43:59 <SchismXL[m]> 🎻 :(
+13:44:02 <strcat[m]> eventually carriers will drop 2G/3G
+13:44:12 <SchismXL[m]> Thanks, though. That makes perfect sense
+13:44:16 <strcat[m]> but will take a while
+13:45:36 <strcat[m]> cdesai: it would be good to open an issue about API 30 support early BTW
+13:45:53 <strcat[m]> cdesai: they promised to do better this year but I seriously doubt they will especially when they broke Trichrome's public build
+13:46:11 <strcat[m]> cdesai: so should open an issue about landing API 30 support for Android 11 early
+13:46:30 <strcat[m]> cdesai: maybe email the person we talked to last year
+13:48:05 <textmate> Good morning
+13:53:04 <textmate> I am speculating if I should get a Pixel 3a or not
+13:53:19 <textmate> You dont really get a good deal for the price
+13:53:38 <textmate> But it seems GrapheneOS is the only good OS
+13:53:55 <textmate> are there any alternatives or middle ways of graphene but for different devices?
+13:58:25 <strcat> use an iPhone
+13:58:39 <strcat> other than that there are no recommended alternatives
+13:58:48 <strcat> and it's off-topic for this channel
+13:59:12 <textmate> :p
+13:59:39 <textmate> I guess I will get a Pixel 3a then
+14:00:00 <minz3[m]> Yes you will be happy with it.
+14:00:10 <SchismXL[m]> https://matrix.to/#/!NKqyWWNTlbuXwOPMCt:matrix.org here's the off-topic GrapheneOS room
+14:00:18 <textmate> ah
+14:00:23 <textmate> Im not using Matrix
+14:01:02 <minz3[m]> Can someone recoment a hood cam app for pixel 3a with Grapheneos
+14:01:09 <minz3[m]> Gold*
+14:01:13 <minz3[m]> Good*
+14:01:23 <SchismXL[m]> #freenode_#grapheneos-offtopic:matrix.org
+14:01:30 <SchismXL[m]> I think that's the one.
+14:01:47 <strcat> the IRC channel is just #grapheneos-offtopic
+14:01:57 <strcat> that's just how matrix bridges it
+14:04:07 <sandelinos[m]> What's the status of GlassROM? I read some old messages and the dev seemed fed up with it.
+14:09:08 <hypokeimenon[m]> <sandelinos[m] "What's the status of GlassROM? I"> Ask anupritaisno1 in offtopic
+14:09:47 <sandelinos[m]> How do I join the channel? The link posted above says can't join empty channel
+14:10:23 <sandelinos[m]> not possible to re-join an empty room*
+14:10:36 <ura[m]> Hey textmate
+14:11:34 <ura[m]> textmate Order the Pixel 3a if you get a good deal. meaning <300€ in the EU. Got one for ~250
+14:16:49 <hypokeimenon[m]> <sandelinos[m] "How do I join the channel? The l"> #grapheneos_offtopic:matrix.org
+14:23:30 <minz3[m]> You can check "eBay Kleinanzeigen (germany) there are many Google pixle 3a for around 220€-200€ new form private resellers
+14:23:52 <ura[m]> holy moly
+14:24:15 <ura[m]> I bought as B-ware from alternate (also germany) and it was 250
+14:33:00 <crabman[m]> I can't find a way to make my contact list dark themed.  Is it possible?
+14:34:49 <textmate> minz3[m]: Wow, thanks for all the recommendations, I am from Iceland so Im not sure how helpful it is buying from germany
+14:34:56 <ura[m]> What application? It is possible with simpletools
+14:35:16 <ura[m]> sry textmate. seems like we just assumed XD
+14:35:42 <sandelinos[m]> The phone app doesn't follow system theme yea
+14:36:02 <textmate> ura[m]: its ok haha
+14:36:08 <crabman[m]> I am using the default application, I believe it is ver 1.7.31, I wanted to ask before trying an alternative manager.
+14:37:34 <ura[m]> I can only recommend the simpletools suite. sandelinos does darkmode work with the default application?
+14:37:46 <sandelinos[m]> I wonder why there even is a seperate contacts app when the contacts section in the dialer is almost exactly the same
+14:38:08 <sandelinos[m]> There is no dark mode in the Contacts or Phone apps
+14:39:00 <crabman[m]> So simpletools has a dark mode?
+14:39:20 <sandelinos[m]> Simple Dialer is dark by default
+14:39:46 <sandelinos[m]> I'm not sure about how secure or functional it is though
+14:39:51 <ura[m]> simple tools have darkmode but it has to be set on a one by one basis in the settings
+14:40:16 <ura[m]> not sure about functionality either. I can only attest to simple gallery and simple music player
+14:40:50 <crabman[m]> Thanks ura and sandelinos
+15:41:06 <kernelpaniker[m]> <minz3[m] "Can someone recoment a hood cam "> Open Camera on f-droid
+16:05:28 <riotuser1993[m]> Aurora store went to update wickr and it will not allow and I'm getting a pop up warning corrupt or invalid apk
+16:05:46 <riotuser1993[m]> <riotuser1993[m] "Aurora store went to update wick"> Sorry if off topic but is that a security issue ?
+16:16:51 <cn3m[m]> riotuser1993: where did you download it first?
+16:17:45 <minz3[m]> <kernelpaniker[m] "Open Camera on f-droid"> I'll try this
+16:23:04 <cdesai> strcat[m]: size difference is due to assets and resources.arsc, both are smaller, but I don't think we're missing anything
+16:23:53 <cdesai> strcat[m]: also yeah good idea about API 30. We talked with torne@, he left a reply on the issue and gerrit commit, exactly why I uploaded it in the first place, to get more eyeballs :P
+16:36:06 <za_vilfp8kn0pcyh> Can't find GrapheneOS offtopic on Element
+16:36:23 <za_vilfp8kn0pcyh> Tried searching, tried clicking the link, nothing works
+16:40:54 <za_vilfp8kn0pcyh> Would be nice if somebody invites me there, Element app just won't cooperate
+17:10:30 <riotuser1993[m]> <cn3m[m] "riotuser1993: where did you down"> Aurora store, I thought that as well and checked all other apps to make sure but I only have aurora store aurora droid and f droid (need to delete one of the droids)
+17:11:24 <riotuser1993[m]> <cn3m[m] "riotuser1993: where did you down"> I deleted comment so I could make sure it wasn't something silly like that but wickr is only available on aurora store and I've definitely not downloaded an apk from anywhere else
+17:36:22 <riotuser1993[m]> <cn3m[m] "riotuser1993: where did you down"> I don't know any other way of getting wickr other than apk or aurora store so I can't be a crossed app store issue
+17:39:36 <pacobell[m]> <dazinism "Guess if part the worry is Danie"> Um, does that actually work? It's somewhat salient to me as I'm thinking of jumping to CalyxOS for a while and want to test backup compatibility as that also uses Seedvault. My worry is that the key would somehow be different if I flash that OS. Are Seedvault backups even consistent between fresh installs of GOS on the same device?
+17:55:07 <aeonsolution[m]> cdesai and strcat: is there something I can help out with on the Vanadium end?
+17:57:00 <aeonsolution[m]> I was thinking maybe we can compare the old bundle with the new one and maybe backtrack and see what new or removed resource is causing the break
+18:36:10 <homesteadhacker[> Heyo.  anyone in the states have experience activating on Spectrum (Verizon) ?  I have a SIM card on the way and wondering if I should activate my unlocked Pixel 3 before, or after installing GrapheneOS?
+18:45:53 <crixtnn[m]> i've signed in my google account on vanadium and it shows the phone model. how can a web page know that?
+18:49:03 <cdesai> aeonsolution[m]: sure, but it's non trivial due to the amount of resources, and adding debugging to aapt didn't help
+19:10:31 <minz3[m]> I want to help but my english is not good
+19:10:59 <aragorndr[m]> Did you bought it from Verizon?
+19:11:30 <userrioter[m]> And did you unlock developer mode?
+19:14:00 <userrioter[m]> If you can’t figure it out, try commenting it under TechLore’s installation troubleshooting video and maybe send him a direct message in his Telegram channel
+19:14:54 <za_vilfp8kn0pcyh> <earthcloud11[m] "Hello Everyone, I was hoping I c"> Check the regulatory labels on about phone
+19:14:55 <jonah__> Idk who you are replying to userrioter... but he does also have a Matrix channel at #techlore:matrix.org which is probably more convenient for users here.
+19:15:23 <za_vilfp8kn0pcyh> If the model is G020E, throw it awa-, rather, return it
+19:16:09 <crixtnn[m]> start by installing the latest updates
+19:16:11 <za_vilfp8kn0pcyh> And try to ask for refund, had that experience where it was only sim unlockable
+19:17:01 <za_vilfp8kn0pcyh> <crixtnn[m] "start by installing the latest u"> This as well, but better check if it's not a Verizon varianr
+19:17:20 <za_vilfp8kn0pcyh> F
+19:17:35 <za_vilfp8kn0pcyh> RIP
+19:17:40 <za_vilfp8kn0pcyh> * This as well, but better check if it's not a Verizon variant
+19:18:21 <za_vilfp8kn0pcyh> Nope, gotta refund that
+19:18:39 <za_vilfp8kn0pcyh> It will never work, can't be OEM-unlocked
+19:18:41 <userrioter[m]> <jonah__ "Idk who you are replying to user"> Yeah, forgot about that, my bad. Also not sure if he’s as active on there — new to Matrix
+19:18:44 <za_vilfp8kn0pcyh> * Nope, gotta refund that, if possible
+19:20:59 <userrioter[m]> You can sell it on Swappa (albeit you have to pay about $40 to Swappa and $40 to PayPal if I recall correctly) or post it on LetGo and Facebook Marketplace. You’ll likely sell it at a better price locally
+19:21:09 <aragorndr[m]> Try returning it, and if you can't, resell it
+19:22:08 <userrioter[m]> You can also probably find a Pixel 4 XL for about $320+ locally if you check on the aforementioned sites or bid on eBay
+19:23:12 <userrioter[m]> I also got a T-Mobile variant and it works fine in Graphene OS (given I haven’t tried actually using it with an active SIM card though)
+19:23:31 <za_vilfp8kn0pcyh> <userrioter[m] "You can also probably find a Pix"> Gotta avoid Verizon, they ruin Google Pixel's openness
+19:24:04 <crixtnn[m]> do anyone has the 4 xl? how's the battery life on grapheneos?
+19:25:00 <SchismXL[m]> <crixtnn[m] "do anyone has the 4 xl? how's th"> Yeah, battery life is great.
+19:25:14 <SchismXL[m]> Even with heavy use, it lasts all day.
+19:25:26 <userrioter[m]> <crixtnn[m] "do anyone has the 4 xl? how's th"> I got one yesterday and so far it’s fabulous. I’ve had to recharge my iPhone meanwhile the Pixel still has 83% battery
+19:26:25 * SchismXL[m] uploaded an image: c099acff-ef5e-4fd2-b9dd-1caa77f7e7ea.png (47KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/hYCZVLilaRmebOPmggarwNLa >
+19:26:47 <SchismXL[m]> Here's today's usage. Went up a bit when I was in the car, but you can see.
+19:31:46 <crixtnn[m]> how many hours of screen on time? the face unlock works well? (eyes closed thing) other bugs?
+19:33:45 <SchismXL[m]> 4.5 hours since full charge with now 60% left. Face unlock is flawless. Closed eyes thing works well.
+19:33:45 <SchismXL[m]> There are some bugs.
+19:34:58 <SchismXL[m]> One is the 90hz screen issue, where there is a green hue at low brightness. That isn't GrapheneOS' fault, but a Google fault. It has been fixed by Google, but we have yet to see that fix on the 4XL. I would do it myself if I had the knowhow.
+19:35:09 <userrioter[m]> <SchismXL[m] "One is the 90hz screen issue, wh"> What are the bugs?
+19:35:30 <SchismXL[m]> Previous comment, userrioter
+19:36:36 <SchismXL[m]> I also had trouble with a WiFi memory leak, where every time I turned the WiFi on, my phone would reboot. However, a reflash of GrapheneOS fixed that.
+19:37:59 <SchismXL[m]> The green flicker can be avoided in low light if you're happy to put the phone in battery saving mode. That is because the battery saving mode uses 60hz instead of 90hz.
+19:38:17 <userrioter[m]> I haven’t had the green hue nor WiFi issues. I guess it’s a case case basis
+19:38:58 <crixtnn[m]> does the 90hz impacts battery life much?
+19:39:11 <SchismXL[m]> Yeah, case by case, but it is known and there have been multiple posts about it
+19:39:20 <SchismXL[m]> <crixtnn[m] "does the 90hz impacts battery li"> No, because it is default.
+19:39:52 <SchismXL[m]> 90hz all the time, unless you put your phone to battery saving mode. Haven't seen any option in the settings to set it to 60hz all the time
+19:45:53 <crixtnn[m]> thanks for the info. my 3a xl sometimes feels a bit sluggish and I'm in doubts as to get the 4xl or wait for the 4a xl. got used to the fingerprint reader. didn't quite got that, it unlocks with the eyes closed or not?
+19:47:17 <blacklight447[m]> <crixtnn[m] "thanks for the info. my 3a xl so"> Doesnt the 4a have a fingerprint reader?
+19:48:03 <SchismXL[m]> <crixtnn[m] "thanks for the info. my 3a xl so"> Just tested it. It works perfectly. If eyes are closed, it won't unlock.
+19:48:56 <crixtnn[m]> blacklight447 4a yes. 4 and 4 xl no.
+19:49:55 <crixtnn[m]> I'm not very sure of the privacy implications of face scan.
+19:50:26 <SchismXL[m]> As an aside, I was also used to the fingerprint reader on my OP6, but after couple of weeks of use on GrapheneOS, I find it weird when I pick up my OP6 and it isn't unlocking (also not a fan of how cheap it feels in comparison to the 4XL now).
+19:53:37 <crixtnn[m]> how about the soli radar? song skipping? other usefe functions/apps?
+19:53:42 <SchismXL[m]> You don't have to set face unlock, if you don't want to. If someone wanted to get into your phone using your face, I'm sure they'd force your eyes open. Fingerprints have also been known to be cloned, so you could be out of luck there, too. If it is for privacy, just use a long password.
+19:53:42 <SchismXL[m]> Also, all of the data for your face are kept locally and are encrypted (iirc), so no one could get access to them anyways.
+19:54:01 <crixtnn[m]> * how about the soli radar? song skipping? other useful functions/apps?
+19:54:43 <blacklight447[m]> <crixtnn[m] "blacklight447 4a yes. 4 and 4 xl"> Few
+19:55:11 <anupritaisno1[m]> <crixtnn[m] "how about the soli radar? song s"> Not available on grapheneos
+19:55:41 <blacklight447[m]> I also wonder if the 4a has a headphonejack
+19:55:45 <anupritaisno1[m]> cdesai you around?
+19:55:52 <crixtnn[m]> blacklight447: nope
+19:55:56 <blacklight447[m]> Its the sole reason i bought a 3a over the 3
+19:56:06 <unknown-losser[m> Hello i have a question😕
+19:56:15 <blacklight447[m]> I mean, more features for less money, yay
+19:56:25 <anupritaisno1[m]> Just hit me up on tg cdesai
+19:56:54 <unknown-losser[m> Why disabling Connectivity checks is a bad idea ?
+19:57:18 <blacklight447[m]> <unknown-losser[m "Why disabling Connectivity check"> I wouldn't call it necessarily a bad idea
+19:57:31 <SchismXL[m]> <crixtnn[m] "how about the soli radar? song s"> Not supported, as has just been said.
+19:57:37 * unknown-losser[m uploaded an image: Screenshot_20200722-011815_Bromite.png (329KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/vuiKWTEnjlrmacECdSGtSbHI >
+19:57:39 <blacklight447[m]> On one hand, its one less connection to google
+19:57:44 <unknown-losser[m> See this :-
+19:57:44 <the-real-johndoe> <blacklight447[m] "I mean, more features for less m"> Sameeeee
+19:57:50 <blacklight447[m]> On the other hand, your one of the few android devices not connecting to google
+19:58:08 <blacklight447[m]> Comes down to what you think is worse personally
+19:59:20 <blacklight447[m]> That part on the site mostly addresses the fact that NOT doing something is also part of your fingerprint
+19:59:30 <crixtnn[m]> i guess the  ideal unlock would be a privacy screen protector + long pin + pin scrambling
+19:59:39 <blacklight447[m]> Which in this case, would be not using google as the connectivity check
+20:00:01 <SchismXL[m]> <unknown-losser[m "See this :-"> As it says, it isn't desirable to stand out from the crowd. That is, if you disable the feature, you are singling yourself out, as others wouldn't have it switched off.
+20:00:11 <blacklight447[m]> <crixtnn[m] "i guess the  ideal unlock would "> I personally just use a fingerprint and a long passprase
+20:00:40 <blacklight447[m]> I use a fingerprint in public so i cannot be shoulder surfaced or recorded by cameras
+20:00:41 <unknown-losser[m> <blacklight447[m] "On the other hand, your one of t"> I think not connecting to google is far better. Already any system or other apps doesn't connect to google so why keep a way to sending IP every time turning of mobile data
+20:01:21 <blacklight447[m]> If i ever think i come into a situation where im forced to unlock my phone, then lockdown mode is 3 button taps away
+20:02:03 <blacklight447[m]> <unknown-losser[m "I think not connecting to google"> Then feel free to turn it off :)
+20:02:20 <blacklight447[m]> I just force all my traffic thru orbot anyway
+20:02:46 <blacklight447[m]> So using google as my connecrifiry check doesn't really impact me
+20:02:48 <crixtnn[m]> blacklight447: what button?
+20:05:26 <unknown-losser[m> <SchismXL[m] "As it says, it isn't desirable t"> Other not just stop there they also make more than thousands of more request
+20:06:55 <unknown-losser[m> <blacklight447[m] "So using google as my connecrifi"> Not really your connectivity check is go through without VPN and after that VPN start routing  traffic.
+20:08:23 <blacklight447[m]> <unknown-losser[m "Not really your connectivity che"> Lol, not if you set it to not allow traffic without the vpn
+20:08:58 <blacklight447[m]> And even then, the amount of data is negligible
+20:09:09 <blacklight447[m]> Its an empty request, barely anything more then a ping
+20:09:36 <unknown-losser[m> <blacklight447[m] "Lol, not if you set it to not al"> Don't trust me check it out yourself setup your own server of checking this and capture there your IP and see what you get
+20:09:43 <blacklight447[m]> Considering carrier grade nat and celluar networks are a thing, an consumer IP is getting less meaningfull by the day
+20:09:59 <blacklight447[m]> Thousands of consumers can be using a single ip address
+20:11:32 <SchismXL[m]> Exactly
+20:11:59 <unknown-losser[m> <blacklight447[m] "Its an empty request, barely any"> My problem is not that in my case almost every google domain is blocked and show me no WiFi or no mobile data while there is that's why i am so frustrated by this.
+20:12:01 <barrikade[m]> <blacklight447[m] "If i ever think i come into a si"> What is lockdown mode?
+20:13:20 <unknown-losser[m> <barrikade[m] "What is lockdown mode?"> Lockdown mode disable all kind of smart lock / bio login
+20:13:34 <blacklight447[m]> <barrikade[m] "What is lockdown mode?"> Shuts off the biometrics, throws encryption keys out of ram
+20:14:10 <blacklight447[m]> It will basically be the same as if your phone just booted
+20:14:26 <blacklight447[m]> Only being able to login with your password
+20:15:08 <blacklight447[m]> <unknown-losser[m "My problem is not that in my cas"> If you blocked the domain anyway then there no reason to not disable it
+20:15:35 <blacklight447[m]> Any fingerprinting it would cause would already be there
+20:16:42 <barrikade[m]> <blacklight447[m] "Shuts off the biometrics, throws"> Thanks for the answer. Thats interesting. I am hesitant to unlock my phone with fingerprint/bio login.
+20:16:45 <unknown-losser[m> <blacklight447[m] "If you blocked the domain anyway"> Oh my bro there is that no WiFi signal turn into full WiFi 😅
+20:17:29 <blacklight447[m]> > <@barrikade:matrix.org> Thanks for the answer. Thats interesting. I am hesitant to unlock my phone with fingerprint/bio login.
+20:17:29 <blacklight447[m]> >  How do you activate this lockdown mode? Do you just restart the phone?
+20:17:29 <blacklight447[m]> Hold the power button
+20:17:37 <blacklight447[m]> Then press lockdown
+20:18:06 <overheadscallop[> <blacklight447[m] "It will basically be the same as"> Are you sure? https://freenode.logbot.info/grapheneos/20200707#c4318044
+20:18:19 <overheadscallop[> log says it just disables biometrics
+20:18:22 <unknown-losser[m> You might also have to enable it from settings.
+20:19:12 <barrikade[m]> Alright. Thanks. Does the lockdown Option only appear when u have bio login or fingerprint activated? (I never had it activated)
+20:19:21 <crixtnn[m]> http://archive.is/UXj59
+20:21:13 <crixtnn[m]> on iphone you can disable biometrics by clicking power 5 times. thought there is something similar on android but no
+20:52:07 <xnat834[m]> <cn3m[m] "16"> Oh wow, is that specific to a certain Android version and up or GrapheneOS?
+20:58:51 <xnat834[m]> I can't find my message anymore
+20:58:53 <cn3m[m]> <xnat834[m] "Oh wow, is that specific to a ce"> no idea
+20:59:03 <xnat834[m]> Ah ok!
+20:59:57 <xnat834[m]> Og
+21:01:12 <xnat834[m]> Sorry, I mean: I'm dumb. I confused how an app like Shelter can only use the Guest profile vs. being able to add multiple users.
+21:11:36 <dreth[m]> How can one help with translations?
+21:16:03 <overheadscallop[> dreth: https://freenode.logbot.info/grapheneos/20200605#c4061272
+21:17:27 <xnat834[m]> I want to isolate multiple proprietary apps not only from my main profile, but also from each other. I'm using Shelter, which uses a single work profile,  so the apps all land in the same single work profile. Would it be preferable to use one profile per app instead? But I would have to switch the user each time I wanted to use a different app, correct?
+21:18:53 <cn3m[m]> <xnat834[m] "I want to isolate multiple propr"> multiple profiles per apps
+21:20:56 <overheadscallop[> xnat834: check out https://hub.libranet.de/wiki/and-priv-sec/wiki/user-profiles
+21:34:48 <sushiman[m]> does grapheneOS randomize MAC addresses when connecting to wifi?
+21:35:35 <cn3m[m]> <sushiman[m] "does grapheneOS randomize MAC ad"> yes check the FAQ for details
+21:35:56 <sushiman[m]> ty mate. youre a great help
+21:37:21 <cn3m[m]> :)
+21:37:58 <xnat834[m]> cn3m: overheadscallop Thanks! :)
+21:53:39 <cn3m[m]> <rridley[m] "anyone have a suggestion for a g"> Magic Earth and Google Maps Go seem to be the favorites
+22:10:04 <minz3[m]> Will Google maps even work in graphene os? ! Lol
+22:13:09 <cdesai> ok chromium build fixed
+22:13:11 <nickcalyx[m]> > anyone have a suggestion for a good maps program? about the only thing i can't find
+22:13:11 <nickcalyx[m]> Osmand from fdroid is good
+22:20:18 <joeri_poeri[m]> osmand works awesome. it's a bit slow at rendering the map when you scroll through it but it's awesome for general navigation.
+23:22:54 <joeri_poeri[m]> osmand is a great and customizable navigation app. you can get it all to work without installing any proprietary stuff. no tracking at all.
+23:35:38 <cyborgninjaneer[> Its search function is aenemic, but you can use duckduckgo to proxy apple maps.
+23:36:09 <cyborgninjaneer[> Then click osm directions and copy the GPS coordinates into OSMand

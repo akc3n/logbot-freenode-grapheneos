@@ -1,0 +1,197 @@
+00:59:43 <jayell[m]> thanks lia. you gave me alot of reading to do. later ill keep digging. does anyone understand the mechanism by which the phone app displays or not displays the 4th 'voicemail' tab. unlike issue 356 i do not even have that tab visible.
+02:02:31 <Brambe> my pixel 3 doesn't pick up my wired earbuds
+02:05:47 <rny> Brambe: usb toggle
+02:05:55 <Brambe> Ahhh smart man
+02:06:16 <rny> Brambe: Security > USB Accessories
+02:06:41 <rny> grapheneos highlight feature yo!
+02:09:48 <Brambe> also is there any way too install google hangouts?
+02:11:11 <rny> Brambe: strong play dependency, so no :(
+02:11:26 <Brambe> Yeah thought so
+02:12:00 <rny> follow Dylanger[m]'s microG PR, maybe you can when that's accepted.
+02:12:24 <rny> Brambe: https://github.com/GrapheneOS/platform_frameworks_base/pull/50
+02:12:35 <Lia[m]> <rny "follow Dylanger[m]'s microG PR, "> Don't think it is ready for merging yet
+02:13:18 <Lia[m]> (Well, str(cat) said it here some time ago)
+02:13:51 <rny> is it just rebase?
+02:16:14 <Dylanger[m]> Currently the PR allows for user/standard microG being installed
+02:16:20 <Dylanger[m]> With everything working
+02:16:31 <Lia[m]> No sig spoofing?
+02:16:43 <Dylanger[m]> It's sig spoofing
+02:16:47 <Dylanger[m]> You just dont
+02:16:54 <rny> still sig spoof, but the generalised permission model got removed
+02:16:59 <Dylanger[m]>  * You just don't need to give it the perm
+02:17:10 <Lia[m]> <Dylanger[m] "You just dont"> Wait, just on microG right? And the permissions gone too?
+02:17:10 <rny> so other apps cant get the sig spoofing capability
+02:17:48 <Lia[m]> <rny "so other apps cant get the sig s"> Figures. Not the lead dev, but usually it takes some testing and reviewing before it gets merged
+02:18:03 <Lia[m]> https://github.com/GrapheneOS/platform_frameworks_base/pull/28
+02:18:03 <Lia[m]> Like this one, has been for months, yet still not merged. Not sure why
+02:18:19 <Dylanger[m]> But Daniel has set some more requirements, a few months out I'd say
+02:18:55 <Lia[m]> <Dylanger[m] "But Daniel has set some more req"> Ah, I see 😅
+02:20:10 <Lia[m]> No rush though, kudos to the devs of GrapheneOS
+02:57:00 <dumbbot> Hello all, I am new to GrapheneOS.... I have a quick question about the necessity to lock the bootloader again after installation
+02:57:17 <dumbbot> Is that necessary?
+02:58:06 <dumbbot> I don't want to lose functionality.  I will not be installing Gapps and will be using F-Droid
+02:58:40 <jayell[m]> see the install page
+02:58:55 <jayell[m]> Locking the bootloader is important as it enables full verified boot. It also prevents using fastboot to flash, format or erase partitions. Verified boot will detect modifications to any of the OS partitions (vbmeta, boot/dtbo, product, system, vendor) and it will prevent reading any modified / corrupted data. If changes are detected, error correction data is used to attempt to obtain the original data at which point
+02:58:55 <jayell[m]> it's verified again which makes verified boot robust to non-malicious corruption.
+03:00:03 <jayell[m]> from graphe.org of course
+03:06:47 <dumbbot> jayell[m] : would there be any loss in fundtionality?
+03:07:29 <dumbbot> Also. I don't see prebuilt images on github
+03:08:04 <dumbbot> Where can I get a precompliled .zip pf GrapheneOS?
+03:08:12 <rny> dumbbot: no, why would that happen
+03:08:32 <rny> if you follow the key generation step/installation steps correctly, it should boot fine
+03:08:46 <rny> dumbbot: https://grapheneos.org/releases#stable-channel
+07:16:19 <rny> /
+08:56:58 <besamim5781[m]> Hello, do notifications in Vanadium PWAs work?
+09:19:20 <strcat[m]> besamim5781: yes, if they use non-FCM push
+09:19:48 <strcat[m]> besamim5781: it's not really about Vanadium but rather lack of Play services, Chrome on GrapheneOS would be the same
+09:20:07 <strcat[m]> Vanadium doesn't actually remove support for FCM right now but it depends on the OS providing it and it doesn't
+12:02:16 <a4ve3ryl1e3e3t7[> Hi
+13:49:47 <besamim5781[m]> <strcat[m] "besamim5781: yes, if they use no"> Thanks for the info. Tutanota PWA does not send notifications although the app itself is GSF independent
+14:16:03 <graphosy[m]> Hi all, I was wondering how does Bluetooth scanning exposes the phone identity to allow tracking? For example, if my Bluetooth on GOS is almost always on, can devices track which Bluetooth phones are around with some kind of an ID? And then see that I left and came back again since it's the same ID? Or is more like the WIFI randomized MAC address?
+14:29:56 <strcat> graphosy[m]: it works essentially how Wi-Fi does
+14:30:36 <strcat> but it accounts for needing to rotate the identifier when remaining connected to a device
+14:30:41 <strcat> unlike Wi-Fi
+15:13:23 <graphosy[m]> <strcat "but it accounts for needing to r"> How does that work?
+15:13:52 <graphosy[m]> <graphosy[m] "How does that work?"> What is exposed to the devices around me?
+15:35:36 <anupritaisno1[m]> strcat: BT MAC is randomized?
+15:39:26 <strcat[m]> my response covers that
+15:40:38 <strcat[m]> graphosy: anupritaisno1: if you want more details, I suggest reading about it from posts covering it in detail
+15:43:23 <strcat[m]> it's not specific to GrapheneOS
+16:12:36 <graphosy[m]> <strcat[m] "graphosy: anupritaisno1: if you "> How can we find it?
+16:15:42 <strcat> can't teach you how to do research, sorry
+16:15:51 <strcat> I gave an answer above, if you want more details there's lots of information available
+16:16:01 <strcat> the same question I answered is being asked in different ways - refer to my response above
+16:16:25 <strcat> 09:29:56          @strcat | graphosy[m]: it works essentially how Wi-Fi does
+16:16:26 <strcat> 09:30:36          @strcat | but it accounts for needing to rotate the identifier when remaining connected to a device
+16:16:28 <strcat> 09:30:41          @strcat | unlike Wi-Fi
+16:17:01 <strcat> if you aren't satisfied with that level of information, you'll need to do your own research, I'm not going to write an essay on Bluetooth here
+16:17:26 <strcat[m]> read https://grapheneos.org/usage#wifi-privacy
+16:17:28 <strcat[m]> apply what I said there
+16:17:30 <strcat[m]> that's your answer
+16:28:37 <brenneke[m]> graphosy: If you are using Element there is a search feature.
+16:41:02 <somenerd[m]> yeah
+16:52:41 <Zyansheep[m]1> How might I go about integrating the F-Droid PrivilegedExtension with GrapheneOS?
+16:53:58 <Zyansheep[m]1> on here https://android.izzysoft.de/articles/named/fdroid-intro-2 you are supposed to flash it with twrp but will that prevent me from relocking the bootloader?
+16:58:07 <drg-developer[m]> Hi! Does anybody know where the sensor acces feature is in de source code of grapheneOS?
+17:01:15 <Aldous[m]> Snapdragon 888 is the first mobile processor to have the hability to be a used as an hypervisor .... It's good new for grapheneOS to implement more security like qubesos does !!! 😍
+17:04:06 <Zyansheep[m]1> wait nvm I found it https://www.reddit.com/r/GrapheneOS/comments/f3xuy5/fdroid_privileged_extension/
+17:23:10 <arrebol[m]> Hi all, I have GOS installed in a Pixel4a, and sometimes I get a software reboot. I cannot reproduce it and I would like to get logs and see if I can get more information about what is happening. Can someone tell me how can which logs I should get? Logcat is just giving me last records and I haven't been able to get error messages from this log. Any other log source that I can check ?
+17:54:43 <blacklight447[m]> I wonder how trustworthy the encryption over bluetooth is
+17:55:06 <blacklight447[m]> Assuming both the phone and bluetooth device support the lastest bluetooth version
+17:56:52 <strcat[m]> Aldous: that's not true, existing Snapdragon SoCs have virtualization support
+17:57:09 <strcat[m]> drg-developer: frameworks/base, frameworks/native and packages/apps/Settings
+17:57:25 <drg-developer[m]> Thanks!
+17:57:31 <strcat[m]> arrebol: you should be able to get logcat logs, just find the relevant context
+17:57:59 <strcat[m]> btw, I added an atom feed for the release changelog: https://github.com/GrapheneOS/grapheneos.org/commit/abc83cbed6ebba15b5fc5a6f4f9524bb7e04db19
+17:59:56 <drg-developer[m]> Strcat: since you seem to know your stuff, do you know where the "start" command looks for services? For example: i got a root shell, and when i type " start  bootanim" my phone starts the boot animation. But the bootanimatioj executable is named "bootanimation" under /bin.
+18:01:32 <strcat[m]> https://feedly.com/i/discover/sources/search/feed/https%3A%2F%2Fgrapheneos.org%2Freleases.atom%3F2
+18:01:34 <strcat[m]> seems to work properly
+18:02:17 <njha[m]> Anyone have ideas for how to debug a malloc issue? StreetComplete consistently crashes on startup and the error is something to do with memory allocation
+18:02:45 <njha[m]> So it would have to be a grapheneos specific thing right?
+18:02:46 <strcat[m]> probably a memory corruption bug in the app
+18:02:53 <strcat[m]> njha: no
+18:02:59 <strcat[m]> GrapheneOS is just uncovering the memory corruption bug
+18:03:05 <strcat[m]> it happens elsewhere
+18:03:27 <njha[m]> makes sense
+18:03:52 <strcat[m]> drg-developer: `start` is for starting an init service
+18:04:07 <strcat[m]> drg-developer: look at system/core
+18:04:24 <drg-developer[m]> Can i just treat it as regular linux init?
+18:04:28 <strcat[m]> the `start` code is in `toolbox/start.cpp` there
+18:04:30 <drg-developer[m]> (Or openRC)
+18:04:36 <strcat[m]> unsure what you mean by that
+18:04:50 <drg-developer[m]> Well, the inner working of init
+18:04:58 <strcat[m]> it's Android's init system
+18:05:01 <JTL> yeah, only reason I can see to handle init services manually is for developemnt/debugging
+18:05:02 <strcat[m]> it's not something from somewhere else
+18:05:42 <drg-developer[m]> Well, thanks! I think i'll figure it our from here
+18:05:52 <strcat[m]> only low-level core system stuff is done with the low-level init system
+18:06:09 <strcat[m]> also it's what manages the system properties
+18:06:18 <strcat[m]> which is a low-level key-value database
+18:06:47 <drg-developer[m]> Well, i just like understanding a lot, and the bootup system is quite an important piece. Since i messed arround with linux init systems quite a bit, i thought it'd be fun with android init system too
+18:07:24 <strcat[m]> drg-developer: well look at system/core/init, the init configuration files for it in system/core/rootdir, etc.
+18:07:44 <strcat[m]> it implements an equivalent to udev itself (ueventd)
+18:09:24 <strcat[m]> drg-developer: rootdir/ueventd.rc is the configuration for that, and then there's a uevent.hardware.rc for hardware (and similarly hardware-specific init scripts)
+18:09:30 <strcat[m]> can find those in the device repos
+18:09:52 <strcat[m]> it's a pretty simple event-based init system
+18:09:56 <drg-developer[m]> Well, i got to tell a secret: i use lineageOS
+18:10:25 <strcat[m]> system properties are a key-value database for small string keys / values used to do very low-level global system configuration
+18:10:31 <strcat[m]> init manages that
+18:10:42 <drg-developer[m]> So init dir is under /system/etc/init ( i found by find . | grep init)
+18:11:02 <drg-developer[m]> but there are a lot of .rc files there, so i think it;s the right directory
+18:11:18 <njha[m]> Looks like the upstream library author rewrote some of the memory management code 5 days ago
+18:11:33 <njha[m]> Maybe if I just update that and rebuild 🤞
+18:12:00 <strcat[m]> njha: which library?
+18:12:36 <strcat[m]> also it's likely ASan will uncover whatever is wrong if the component doing it is built with it
+18:12:55 <strcat[m]> and that is easier to debug since it's a debugging tool with complex tracking of state and complex error output code
+18:22:54 <helpmeplease12> Hey i have downloaded the latest version of fastboot but still getting the message that its too old
+18:22:55 <helpmeplease12> https://gyazo.com/9ed8a342ff9fd14c60a6fb05c8e08598?token=da7c8928acab46ea3822ec9e4b0461eb
+18:23:01 <helpmeplease12> Anyone who knows the solution maybe?
+18:28:56 <helpmeplease12> No one?
+18:30:22 <obi[m]> <helpmeplease12 "https://gyazo.com/9ed8a342ff9fd1"> https://grapheneos.org/install follow directions here and you won't have a problem
+18:33:26 <helpmeplease12> I am following the directions, but im stuck in here for like half an houer\
+18:34:52 <obi[m]> If you followed the directions installing the tools, and not from outdated repositories, and then made sure to enter export PATH="$PWD/platform-tools:$PATH" like in the instructions before flash all, it will work
+18:36:08 <obi[m]> People get that error because they installed the tools from the outdated repository
+18:36:24 <obi[m]> as far as I know anyway
+18:37:04 <helpmeplease12> hhttps://gyazo.com/7d208390bae448294189ad48e769c8ae
+18:37:11 <helpmeplease12> IS this something because of powershell?\
+18:37:15 <helpmeplease12> should i use that isntead
+18:37:37 <helpmeplease12> i uninstalled fastboot and re-downloaded it from that site
+18:37:58 <obi[m]> are u on windows then?
+18:38:10 <helpmeplease12> No windows 7
+18:38:17 <helpmeplease12> But it worked for my first install 2 months ago
+18:38:33 <helpmeplease12> Also got this error but someone ficxed it via teamviewer
+18:38:58 <obi[m]> and you are downloading with curl and setting path for Wndows? $env:Path = "$pwd\platform-tools;$env:Path"
+18:39:38 <helpmeplease12> https://gyazo.com/c911aa68c7c020deade7e27b7570cf79
+18:39:41 <helpmeplease12> than getting thisd again\
+18:40:56 <helpmeplease12> but something liike that code
+18:40:58 <helpmeplease12> fixed it last time\
+18:41:01 <helpmeplease12> i remember
+18:41:30 <obi[m]> It's not something like that code, just set the path, like the instructions tell you
+18:49:20 <helpmeplease12> I dont understand the path
+18:49:32 <helpmeplease12> Sample output from fastboot --version afterwards:
+18:49:47 <helpmeplease12> Is this where it shuold be installed
+18:51:59 <obi[m]> after getting tools down, you just literally make sure your screen looks like th instrcutions say, and hit the enter button. Just have to have this in your shell before hitting enter, that is all $env:Path = "$pwd\platform-tools;$env:Path"
+18:52:31 <helpmeplease12> https://gyazo.com/6d686f4b2a423c19d0ef96cc0edc5a7f?token=7bdc7017fa80ed9e3a02feb2c5fc5908
+18:53:28 <nscnt> helpmeplease12: Use the PowerShell
+18:55:01 <obi[m]> <nscnt "helpmeplease12: Use the PowerShe"> he was originally
+18:55:08 <helpmeplease12> https://gyazo.com/6c45ceebc8a90a9e10f2f0f982192622
+18:55:16 <helpmeplease12> The first one when i dio Env platform tools
+18:55:23 <helpmeplease12> he just goes one below
+18:56:48 <helpmeplease12> https://gyazo.com/403afb10ebb600091a6081d49f7f413c
+18:56:51 <helpmeplease12> https://gyazo.com/403afb10ebb600091a6081d49f7f413c
+18:56:58 <helpmeplease12> This should be good right?
+18:57:07 <nscnt> Only Windows 10 is officially supported for installing GrapheneOS. I don't know what Windows 7 may miss
+18:57:14 <Dylanger[m]> <strcat[m] "Aldous: that's not true, existin"> From what I've seen it looks like 888 will be the first proper useable hypervisor, previous Qualcomm hypervisors have been not useable from an OEM standpoint
+18:59:11 <helpmeplease12> https://gyazo.com/69c7bc0ad5bb97f39c2e38c874d17b1e?token=dc9ad22c0ef0cb7218d4eee81ce4de54
+18:59:16 <helpmeplease12> It worked 2 months ago
+18:59:20 <helpmeplease12> But now i dont know
+18:59:23 <helpmeplease12> I can try on my windows 10 pc
+19:00:00 <nscnt> helpmeplease12: Then go do it
+19:03:08 <Dylanger[m]> <Dylanger[m] "From what I've seen it looks lik"> https://youtu.be/XvvtrKg7Xuk?t=1637
+19:03:22 <Dylanger[m]> Mmmmmm
+19:03:58 <Dylanger[m]> Question now is, will Qualcomm provide OEMs for the hypervisor, or will they use Xen or something
+19:04:07 <Dylanger[m]> They specifically said T1
+19:04:16 <Dylanger[m]> Style Hypervisor
+19:47:06 <Golli[m]> I'd surely like to see a SD888 in a Pixel.
+20:01:27 <arisu[m]> sunfish sure take its time to boot up for the first time
+20:06:13 <njha[m]> https://github.com/tangrams/tangram-es/issues/2215
+20:06:21 <njha[m]> ahh, I feel like maintainers are going to not care about grapheneOS :(
+20:06:47 <njha[m]> so I'd like to give a better hint of where the problem could be
+20:07:12 <njha[m]> but also calling C++ from java is cursed, change my mind
+20:37:28 <arisu[m]> they probably don't even know what grapheneOS is
+22:01:43 <anupritaisno1[m]> tosuto
+22:02:04 <anupritaisno1[m]> Sorry wrong tag
+22:02:07 <anima[m]> wow , just flashed sunfish , it took like 30 seconds
+22:02:19 <anima[m]> UFS is way faster compared to sargo
+22:02:22 <anupritaisno1[m]> anima: then you messed up
+22:02:34 <anima[m]> i didn't
+22:02:43 <anupritaisno1[m]> I'm not aware of anyone doing it in 30 seconds
+22:03:05 <anima[m]> i might doing a hyperbola about 30 seconds
+22:03:19 <anima[m]> but it was definitely faster than with 3A
+22:03:25 <anima[m]> better transfer rate
+22:03:34 <anupritaisno1[m]> Then do it elsewhere
+22:03:49 <anupritaisno1[m]> #grapheneos-offtopic:matrix.org
+22:10:13 <anupritaisno1[m]> njha: is that an app?
+22:11:01 <njha[m]> it's a library used in streetcomplete, which is an app
+22:15:57 <anupritaisno1[m]> njha: I'll debug it a little later
+22:16:28 <anupritaisno1[m]> One question you should have asked is what was the value of nativepointer when it threw the exception

@@ -1,0 +1,327 @@
+00:04:40 <dazinism> qyo3462572445: Theres this page on the community wiki. I've been doing minor updates / adding stuff. Was bashed together a bit rough..
+00:05:05 <dazinism> https://hub.libranet.de/wiki/graphene-os/wiki/Apps
+00:12:34 <qyo3462572445[m]> <dazinism "qyo3462572445: Theres this page "> Thank you.  I'll take a look.
+00:24:38 <renlord> cdesai: the fix you linked still does not work
+00:24:42 <renlord> getting URL not found
+00:24:58 <renlord> and i think the cookie file does not even get changed despite ToS being accepted
+00:25:16 <renlord> diffing the backup and the supposedly 'sed-ed' copy returns 0
+00:25:51 <renlord> just wanna confirm if its the same for other people or my copies are broken
+00:26:34 <JTL> > fix issue with new acknowledge prompt on google images page
+00:26:37 <JTL> yay google serverside changes /s
+00:28:06 <renlord> ya i applied those fixes, no difference
+00:28:16 <renlord> they must be cracking down hard
+00:28:18 <renlord> lol
+00:30:21 <renlord> oh whoops
+00:30:29 <renlord> the patch does work
+00:30:36 <renlord> coppied the ota string twice
+01:17:50 <renlord> strcat: there's actually a good number of other libraries that are required to build grapheneos
+01:17:55 <renlord> that arent included in the prebuilt
+01:18:17 <renlord> and also not sure if its something we want to do, its to refactor android-prepare-vendor to use bsdtar as oppose to unzip
+01:18:19 <renlord> and zip
+01:19:33 <renlord> why does building require ncurses5 baffles me
+01:19:43 <renlord> i dont even see it used anywhere.
+01:20:28 <renlord> i'll just build with a container
+01:36:02 <strcat[m]> renlord: I know a bunch of other libs are needed
+01:36:11 <strcat[m]> renlord: ncurses is needed by clang
+01:38:47 <strcat[m]> renlord: I forget what exactly needs ncurses5
+01:41:02 <renlord> apparently can do this -- LLVM_ENABLE_TERMINFO=OFF
+01:41:04 <renlord> to disable that requirement
+01:42:00 <renlord> but gotta rebuild the clang prebuilt
+01:42:03 <renlord> meh, so much effort
+01:42:20 <renlord> i'll just stick everything inside a container
+01:44:38 <strcat[m]> renlord: I'm testing it atm
+01:44:51 <strcat[m]> maybe ncurses5 isn't required now that gcc is avoided
+01:44:54 <strcat[m]> it might be gcc that uses it
+01:44:57 <strcat[m]> let me figure it out
+01:45:04 <renlord> clang is the one that uses it
+01:45:16 <renlord> based off this
+01:45:18 <renlord> https://github.com/android/ndk/issues/574
+01:48:35 <strcat[m]> renlord: clang doesn't seem linked against it anymore
+01:48:41 <strcat[m]> I think the issue was GCC which may no longer be an issue
+01:48:44 <strcat[m]> I'll test
+01:48:52 <strcat[m]> cause I avoided GCC fully for the kernel
+03:15:29 <strcat[m]> renlord: yeah still needed
+03:15:30 <strcat[m]> prebuilts/clang/host/linux-x86/clang-3289846/bin/clang.real: error while loading shared libraries: libncurses.so.5: cannot open shared object file: No such file or directory
+03:15:39 <strcat[m]> renlord: I guess they fixed for the NDK clang but not AOSP clang? dunno
+03:16:15 <strcat[m]> I could fix it
+03:20:28 <strcat[m]> renlord: ah
+03:20:31 <strcat[m]> renlord: the main AOSP clang is fine
+03:20:42 <strcat[m]> it's the renderscript clang that's using this
+03:21:20 <strcat[m]> renlord: renderscript is using an older clang snapshot in prebuilts/clang
+03:21:25 <strcat[m]> clang-3289846
+03:21:38 * strcat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/UpwTxywBsQNetJKRGCFWnfTq >
+03:21:58 <strcat[m]> I could rebuild it
+03:31:45 <strcat[m]> probably fixed by Android R
+03:31:49 <strcat[m]> we should just wait
+03:34:49 <renlord[m]> Replacing zip with bsdtar?
+03:35:22 <renlord[m]> So sick of Pacman nagging Everytime I update.
+03:36:40 <aeonsolution[m]> https://github.com/jferris/dotfiles/blob/master/aliases.local
+03:37:04 <aeonsolution[m]> some aliases i like for pacman :D
+03:45:29 <aeonsolution[m]> my favorite part is when im checking packages is the useless reinstall prompt; net size upgrade: 0 Y/n
+03:47:39 <M1eyejack[m]> i believe someone talked about Genode - Sculpt OS here, What's the difference with this and Qubes? I currently run Arch i was contemplating moving to Qubes because of how great GrapheneOS is. Any help on what to move to would be much appreciated
+03:54:45 <joshman[m]> There's more downsides to that. I am staying on Arch
+03:56:01 <joshman[m]> One thing Qubes is better than others is sandboxing VMs. The rest is just good ol Linux crapKernel
+03:56:19 <aeonsolution[m]> You'd have to learn how to use Debian, Fedora, and Whonix
+03:56:52 <aeonsolution[m]> you can also spin up a Windows vm
+03:57:17 <aeonsolution[m]> Qubes is super cool, its takes a lot of getting used too
+03:57:39 <M1eyejack[m]> <aeonsolution[m] "You'd have to learn how to use D"> ls there much to learn in Debian & Fedora coming from Arch? i though Arch is more harder to set up then those
+03:58:26 <joshman[m]> Nothing hard to learn about buggy Debian. The question is why?
+03:58:29 <M1eyejack[m]> Specially when you are using Intel and nvidia
+03:58:32 <aeonsolution[m]> Debian and Fedora are two different families of linux
+03:58:53 <aeonsolution[m]> so the package managers, setting up things to be identical
+03:58:57 <aeonsolution[m]> isnt always possible
+03:59:04 <M1eyejack[m]> yeah but i though the only thing that changes was the commands to instal Ppkg
+03:59:06 <joshman[m]> Forget Nvidia in Qubes you have no GPU
+03:59:13 <M1eyejack[m]> the rest is bash or fish zsh
+03:59:38 <M1eyejack[m]> i have both intel and nvidia graphics
+04:00:12 <M1eyejack[m]> Lenovo p52
+04:00:21 <TheJollyRoger> I was actually quite surprised to find that back when I first started out on Qubes, I had an NVIDIA 770+ card, and it was supported out of the box. All four monitors ran. Of course, there was no 3D acceleration and I think this is by design to avoid GPU passthrough and the attack surface of that.
+04:00:24 <M1eyejack[m]>  * the rest is bash or fish or zsh
+04:00:40 <M1eyejack[m]>  * yeah but i thought the only thing that changes was the commands to install pkg
+04:00:53 <TheJollyRoger> I think someone I met on the internet was able to get GPU passthrough to work, but didn't recommend it because of that.
+04:02:05 <M1eyejack[m]> <TheJollyRoger "I was actually quite surprised t"> wow thats good to know, and really why the need for 3D in qubes
+04:03:06 <joshman[m]> Why need for Qubes in the first place? It is no panacea
+04:03:06 <M1eyejack[m]> > <@aeonsolution:matrix.org> You'd have to learn how to use Debian, Fedora, and Whonix
+04:03:06 <M1eyejack[m]>  * ls there much to learn in Debian & Fedora coming from Arch? i thought Arch is more harder to set up then those
+04:04:03 <joshman[m]> Run tails of a USB. Same Debian, same holes
+04:04:44 <TheJollyRoger> Oh no not really. Just to update Fedora it's "dnf update && dnf upgrade" and on Debian the analogue is "apt update && apt upgrade" and that's it. Debian and Fedora really are far down the "baby-proof everything for user convenience" path.
+04:04:44 <M1eyejack[m]> i'm more interested in Sculpt OS though. but i only just learnt about it. so wanted to see why its  recommend over Qubes
+04:05:10 <TheJollyRoger> I unfortunately know nothing about SculptOS, sadly.
+04:06:21 <M1eyejack[m]> yeah Arch took me a few weeks to setup but what a learning curve it was. now i have amazing looking bspwm arch that runs both graphic cards, and sometimes i can even play games on it ;)
+04:06:35 <TheJollyRoger> Nicely done!
+04:07:40 <M1eyejack[m]> but recently switching to GrapheneOS made me really want to care more about Security and privacy. As someone stated linux is not all that. I was even surprised to find out bsd is not that secure :(
+04:08:18 <M1eyejack[m]> so now im at this cross roads
+04:08:26 <M1eyejack[m]> what is secure and what is not
+04:08:38 <TheJollyRoger> Well... to be perfectly honest, right now I think everyone kinda is!
+04:09:01 <M1eyejack[m]> windows with its patch tuesday because they can never get anything correct with updates lol
+04:09:15 <M1eyejack[m]> <TheJollyRoger "Well... to be perfectly honest, "> to true
+04:09:21 <TheJollyRoger> Endpoint security never sort of really became a big deal until somewhat recently, all things considered.
+04:10:04 <TheJollyRoger> Now suddenly, it's almost like we just got a "RING RING WAKEUP CALL!" and it only became obvious in hindsight.
+04:10:48 <joshman[m]>  security is not only OSes problem. Hardware is vulnerable as well
+04:11:24 <TheJollyRoger> Yep; concern over hardware security's only cropped up even more recently than endpoint security, even.
+04:11:25 <joshman[m]> Modern OSed try hard to keep up with Android and iOS provided years ago
+04:11:39 <M1eyejack[m]> yeah thats true, also i think with everyone moving to E2EE, and decentralize systems, self hosting, it more important then ever. wish there was some clarity with it
+04:12:11 <TheJollyRoger> Well, heh... with respect to "self host and decentralize" I've actually got something of a fairly laconic view on it, although that's mostly political and I don't relish discussing that here unless asked.
+04:14:10 <TheJollyRoger> I like to think about 2014 being the year of security in transit, 2015 being the year of end to end encryption, and 2017 as the year of hardware security entered public consciousness. Not sure what we'll see next moving forward.
+04:14:37 <TheJollyRoger> *the year of hardware security entering
+04:15:28 <M1eyejack[m]> 2021 the end of freedom lol
+04:15:40 * TheJollyRoger starts drowning his sorrows just thinking of that.
+04:15:47 <zaxxa[m]> Lol
+04:16:53 <M1eyejack[m]> im just happy humans created alcohol,
+04:17:11 <TheJollyRoger> Me *hic* too Sh-shipmatesh!
+04:18:01 <zaxxa[m]> Im interested to see arm on laptops
+04:19:08 <renlord[m]> Pinebook is an arm laptop
+04:19:23 <renlord[m]> Zero security but can boot.
+04:46:55 <cn3m[m]> pro tip
+04:47:38 <cn3m[m]> don't defend Apple's choice to only have one browser on iOS on /r/Firefox
+04:50:57 <gervarouge[m]> Long live Chromium only on my GrapheneOS
+05:04:12 <anupritaisno1[m]> strcat (@strcat:matrix.org):
+05:04:36 <anupritaisno1[m]> How does the OTA updater work?
+05:04:49 <anupritaisno1[m]> I mean where does it look for the link to the manifest?
+05:05:03 <anupritaisno1[m]> *metadata
+05:08:33 <renlord[m]> It's in a resources file.
+05:26:51 <izymandias[m]> TheJollyRoger: is it possible to harden the linux kurnel over time? or is it not something that can be fixed this late?
+05:29:48 <TheJollyRoger> Hi izymandias[m], before I go on I should stress I am definitely not an expert on this, I can't program, can't read computer code (yet!) and only I've been able to investigate as far as what some figures in the security community have written down.
+05:31:24 <TheJollyRoger> So, please understand this before I say that I think that based on what's going on right now that the situation isn't getting better.
+05:31:54 <TheJollyRoger> The design of a Monolithic Kernel assumes that everything inside the kernel forms a part of the trusted codebase.
+05:32:30 <TheJollyRoger> This means, simply put, that driver required to use your WiFi?
+05:32:53 <TheJollyRoger> If there's a bug in it, or an exploit, that exploit is in the heart of your operating system itself, with ultimate privilege.
+05:33:12 <TheJollyRoger> And it's probably contributed by a third-party vendor.
+05:33:47 <TheJollyRoger> Increasingly, a lot of these contributions end up being like "Ok, we've opened our driver source code. It's your problem now."
+05:34:52 <TheJollyRoger> That's what a Monolithic Kernel is. That's the philosophy of it: stuff in kernel space can (in some cases) be run faster.
+06:14:27 <zaxxa[m]> What other kernel types are there?
+06:19:25 <TheJollyRoger> Well, there's the concept of the Microkernel, with the idea being that the drivers might not be a part of the kernel itself. But the devil's in the details. What will ultimately decide the security of the kernel is going to be its design, and whether or not the kernel will be designed with distrusting the driver in mind. That's about as much as I know though.
+06:20:44 <zaxxa[m]> I saw on wiki just now a useful picture:
+06:20:44 <zaxxa[m]> https://en.m.wikipedia.org/wiki/Monolithic_kernel#/media/File%3AOS-structure2.svg
+06:23:39 <strcat[m]> the userspace equivalent to a monolithic kernel is putting every application and OS component into init, pid1
+06:23:46 <strcat[m]> running as root, no address space isolation or anything
+06:23:51 <strcat[m]> no privilege separation / sandboxing
+06:23:55 <strcat[m]> that's how the Linux kernel is designed
+06:24:04 <strcat[m]> rather than a 10-30k LOC core kernel it's 5 million LOC
+06:24:12 * TheJollyRoger winces.
+06:25:30 <TheJollyRoger> Sorry. I just had a flashback to when I used to just use the default account since I didn't know any better.
+07:07:11 <anupritaisno1[m]> renlord (@renlord:matrix.org): I can only see https://github.com/GrapheneOS/platform_packages_apps_Updater/blob/10/res/values/config.xml#L3
+07:08:47 <anupritaisno1[m]> That can't be it
+07:14:37 * jacksonpollock19 sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/UVGuZPJSpUTTrzIpPbVaqArV >
+07:28:48 <anupritaisno1[m]> <anupritaisno1[m] "renlord (@renlord:matrix.org): I"> strcat (@strcat:matrix.org): you know where the updater looks to find the metadata?
+07:35:20 <renlord[m]> Base frameworks.
+08:08:10 <strcat[m]> anupritaisno1: the metadata?
+08:08:37 <strcat[m]> anupritaisno1: at that URL
+08:08:41 <strcat[m]> anupritaisno1: /DEVICE-CHANNEL
+08:08:52 <strcat[m]> like sargo-beta
+08:08:54 <strcat[m]> sargo-stable
+08:44:49 <anupritaisno1[m]> strcat (@strcat:matrix.org): BTW if I add my own root ca
+08:44:53 <anupritaisno1[m]> Is it valid for update engine?
+08:46:00 <anupritaisno1[m]> Also what's the status of streaming OTAs
+08:46:19 <anupritaisno1[m]> (Assume I read the code already and know I need to set a property)
+09:05:53 * joshman[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/lRxIQsAUTNPIiNnbwjcbgOAA >
+09:09:40 <joshman[m]> Also Killswitch works so well and stable compared to iOS
+09:10:02 <joshman[m]> And Linux. It is a total fail on Linux. Constantly dropping off
+10:27:26 <joshman[m]> * And Linux. It is a total fail on Linux. Constantly dropping out
+11:06:19 <xabierd[m]> I use protonvpn on many devices without drops or issues.
+11:54:29 <jacksonpollock19> <joshman[m] "> <@jacksonpollock1993:matrix.or"> Thanks maybe I should connect manually through the built in VPN,
+11:55:51 <organella[m]> I have one issue with a Network permission resetting itself, does anyone know what could be causing it?
+11:56:25 <organella[m]> I've installed fdroid from the apk, from it I've installed aurora store and from it an app called TypeNote
+11:57:19 <organella[m]> I swt this app not to have Network access but on restart it's getting it back, and I think it may also be getting it occasionally without a restart but not 100℅ sure yet
+11:57:47 <organella[m]> swt -> set
+11:58:05 <organella[m]> * I set this app not to have Network access but on restart it's getting it back, and I think it may also be getting it occasionally without a restart but not 100℅ sure yet
+12:27:03 <renlord> strcat: does nsjail work inside a docker container?
+13:25:49 <j3ghprjfo[m]> Does anyone build there own grapheneos with customization features taken from another ROM (such as lineageos)?
+13:52:54 <madaidan[m]> <j3ghprjfo[m] "Does anyone build there own grap"> There's GlassROM
+14:14:30 <j3ghprjfo[m]> <madaidan[m] "There's GlassROM"> Looks like that is only build for one plus
+14:15:52 <madaidan[m]> <j3ghprjfo[m] "Looks like that is only build fo"> It's based on Lineage so you should be able to build it for any device that Lineage supports
+14:17:05 <madaidan[m]> GlassROM is Lineage with most of the GrapheneOS patchset applied
+14:22:41 <blacklight447[m]> <strcat[m] "rather than a 10-30k LOC core ke"> Who cares about keeping TCB s small anyway
+14:23:37 <blacklight447[m]> <madaidan[m] "GlassROM is Lineage with most of"> Does it come with lineages problems though?
+14:24:56 <madaidan[m]> <blacklight447[m] "Does it come with lineages probl"> Mostly no AFAIK.
+14:26:14 <blacklight447[m]> Hmm, interesting
+14:26:18 <blacklight447[m]> So we have no user debug builds and unlocked bootloader?
+14:26:36 <blacklight447[m]> Those are my major concerns namely
+14:26:54 <blacklight447[m]> That and the lack of firmware patches
+14:27:30 <madaidan[m]> <blacklight447[m] "So we have no user debug builds "> Nope. It uses verified boot and ordinary user builds.
+14:27:40 <madaidan[m]> anupritaisno1 is the dev
+14:28:02 <madaidan[m]> <blacklight447[m] "That and the lack of firmware pa"> Idk about that
+14:37:00 <blacklight447[m]> Cool
+15:16:06 <dazinism> > It uses verified boot.
+15:16:33 <dazinism> Kinda it just about does
+15:18:20 <dazinism> Its broken, but IIUC user data encryption is tied to it, so if you suddenly cant decrypt your user data, it may be that someone has modified the operating system
+15:18:53 <dazinism> Similar situation on the Fairphone 3
+15:19:24 <dazinism> https://hub.libranet.de/wiki/and-priv-sec/wiki/verified-boot
+15:20:02 <madaidan[m]> I'm aware of OnePlus' broken verified boot. That's irrelevant to Glassrom.
+15:20:22 <dazinism> > Similar situation on the Fairphone 3 (possibly)
+15:20:53 <MadCamel> Speaking of user data.. What's a good method to backup? I used to use titanium backup + syncthing but without root on graphene I'm sort of lost. Apps can't access eachothers data right?
+15:21:14 <Nikos[m]> @madaidan.:matrix.org:
+15:21:14 <Nikos[m]> GlassROM! Never heard of it before! Will check if I can use it for my zl1!!
+15:25:00 <dazinism> madaidan.: not completely irrelevant as they currently only target OnePlus.
+15:25:32 <anupritaisno1[m]> Hi madaidan called me here
+15:25:37 <madaidan[m]> <dazinism "madaidan.: not completely irrele"> No.
+15:25:40 <anupritaisno1[m]> Glassrom is very easy to build
+15:25:42 <dazinism> MadCamel: GrapheneOS has built in backups via seedvault
+15:26:03 * anupritaisno1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/BKQJvLLRQVDYsmwbMUOLoToY >
+15:26:13 <anupritaisno1[m]> Pre-2015 devices are the absolute limit
+15:26:23 <anupritaisno1[m]> If your device is older than that it can't run the ROM
+15:27:10 <Nikos[m]> Even if it has LOS17.1 port?
+15:27:27 <anupritaisno1[m]> If your device doesn't have at least android 8.0 on the stock ROM it can't run glassrom
+15:27:30 <anupritaisno1[m]> Yes
+15:27:32 <dazinism> MadCamel: look in settings > system > backup
+15:27:34 <anupritaisno1[m]> Even if you have lineageos as official
+15:27:36 <anupritaisno1[m]> You'll know why when it throws the build error
+15:28:16 <anupritaisno1[m]> Pre-2015 devices have an extremely weak selinux policy and glassrom doesn't ignore this
+15:28:34 <Nikos[m]> Ok, I have an zl1 that came with android 6 as stock and a s5neo that's even older so :(
+15:28:41 <dazinism> Disappointing that it appears that pretty much no current phones, except Pixel have proper implementation of verified boot
+15:28:43 <anupritaisno1[m]> It doesn't matter what the device came with
+15:28:53 <anupritaisno1[m]> The device should be on 8.0 on the stock ROM as a minimum, now if that came through an update it's fine
+15:28:56 <MadCamel> dazinism: nice, thanks
+15:29:19 <anupritaisno1[m]> How do you build it exactly?
+15:31:04 <anupritaisno1[m]> Well you sync lineageos down and run the glassrom patch script https://github.com/GlassROM/glassrom-landing/blob/master/patch-glassrom.bash
+15:31:04 <anupritaisno1[m]> At least disable RROs in your boardconfig
+15:31:04 <anupritaisno1[m]> Build lineage but breakfast <device> user or directly clone down GrapheneOS' scripts and call them to build it after the breakfast command is done
+15:31:42 <anupritaisno1[m]> And an obligatory warning
+15:31:56 <anupritaisno1[m]> Like grapheneos, glassrom has only been tested on current generation devices
+15:32:08 <anupritaisno1[m]> Just because it's easy to build doesn't mean stuff won't break
+15:32:20 <MadCamel> Yikes. Seedvault seems to support backups but not restore. As in there's no real way to restore should the phone be lost and replaced with a new one.
+15:32:53 <anupritaisno1[m]> It will and you will have to find and fix it yourself
+15:33:34 <anupritaisno1[m]> However glassrom has been able to boot off a 2011 Sony device with very little effort in the past
+15:33:37 <anupritaisno1[m]> So it's also a matter of luck
+15:34:34 <BrokenCog> hello, when 'Generating release signing keys' is it normal for the "avbtool extract_public_key --key avb.pem --output avb_pkmd.bin
+15:34:53 <BrokenCog> " step to produce an error: "../../external/avb/avbtool: Error getting public key: unable to load Public Key" ??
+15:35:18 <Nikos[m]> Thanks for the info @anupritaisno1:m.apex.to
+15:38:25 <dazinism> MadCamel: theres a setup wizard that handles restoring data to a new device
+15:41:38 <dazinism> *implementation of verified boot that supports an alternative OS
+15:44:16 <MadCamel> hmm ok. yeah I see it in seedvault's source code. It's just concerning that there's no UI I can find to restore. If it's built into the initial setup wizard then how can I install syncthing to get the backups onto the phone's storage for restore? Argh.
+15:45:04 <dazinism> anupritaisno1: guess having Auditor app support GlassROM would help alleviate some of the OnePlus verified boot brokenness.
+15:46:12 <dazinism> MadCamel: currently use usb storage, or Nextcloud
+15:46:39 * MadCamel squirts milk out of nose at the mention of nextcloud in a security-related channel
+15:46:51 <dazinism> Also less ideally could maybe shuffle it across with adb before the wizard runs
+15:47:22 <MadCamel> yeah I'm playing with activitylauncher, maybe I can find another way into the UI
+15:48:09 <MadCamel> yep, works. thanks for the pointers
+16:02:32 <dazinism> MadCamel: backup data for an app is also restored automatically when you install the app. If the backup file is available to the device at that time.
+16:22:30 <nickcalyx[m]> Madcamel you could probably get better answers in #seedvault
+16:25:01 <anupritaisno1[m]> dazinism: I will leave that up to the maintainers to decide
+16:25:44 <anupritaisno1[m]> Personally I'm all for adding it on my builds
+17:54:07 <TheJollyRoger> MadCamel: the easiest way to restore is to simply save your seedvault backups to a USB drive, and then plug that in when you first launch your new phone. That's how I got my settings and such back.
+17:54:57 <TheJollyRoger> MadCamel: Seedvault backups have the data encrypted (and the APKs are signed, as always), so it shouldn't matter if you store them on your AWS Glacier.
+17:55:41 <MadCamel> yep, but ehh. I still think there should be a way to access the restore UI post-setup.
+17:59:38 <MadCamel> I made an issue on seedvault's github ( https://github.com/stevesoltys/seedvault/issues/85 )  and a contributor is saying it's up to the OEM(Graphene) to configure. It's not a huge deal though.
+18:01:48 <MadCamel> My first instinct with any backup system is to validate the restore process so this threw me for a loop.
+18:03:49 <TheJollyRoger> Oh I see.
+18:03:59 <TheJollyRoger> Yeah, pragmatic!
+18:15:28 * yekip[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/oJDQqWtpTxYTRXBcEhGEOgqd >
+18:44:17 <headgas[m]> Selling my pixel 4xl so I can get a 3xl and put graphene os on it. So if anyone devs want it to work on graphene os. I tried to use it after removing gapps and everything and I can't see contacts in messages it's just numbers and I have no idea how to fix that. It just tells me in contacts that other apps can see them. So im selling it cus I can't deal with that.
+18:48:04 <nickcalyx[m]> I might be interested. Where are you
+18:48:25 <nickcalyx[m]> Send me a private msg
+18:54:05 <headgas[m]> Not sure how lol
+18:54:26 <headgas[m]> Im in Cali
+19:03:08 <jalb> Do you know if it's necessary to give internet access to Vanadium webview?, and if Bromite needs Bromite webview or it could use Vanadium webview too?
+19:03:47 <jalb> Maybe it's only the browser needing internet access and not webview... IDN
+19:10:56 <dazinism> jalb: bromite works fine and is independent of any webview. Bromite webview has to be added when the OS is built. It isnt added to GrapheneOS, as it uses Vanadium for webview.
+19:11:32 <dazinism> *which use Vanadium
+19:13:44 <dazinism> *which uses
+19:17:56 <jalb> dazinism, thanks!, but does it need internet access or only the browser?
+19:18:21 <jalb> I mean about vanadium webview
+19:18:59 <jalb> I see that it only works well without internet access
+19:22:10 <dazinism> anupritaisno1:  Auditor needs some work so that more devices can be added, if you got any spare time. Think this is the first bit that needs solving.
+19:24:05 <dazinism> https://github.com/GrapheneOS/Auditor/issues/64
+19:25:04 <anupritaisno1[m]> <dazinism "anupritaisno1:  Auditor needs so"> I'd be more than happy to contribute
+19:26:23 <anupritaisno1[m]> Btw
+19:26:35 <anupritaisno1[m]> Is there a way that works with just an attestation server?
+19:26:47 <anupritaisno1[m]> No 2 devices stuff
+19:32:40 <dazinism> anupritaisno1: yeah, the auditor of your device can be another device running Auditor app or the attestation server.
+19:34:17 <dazinism> Can set up to have the attestation server audit you and/or any android device that was launched with Oreo (or later)
+19:34:28 <dazinism> Thats got auditor app
+19:34:29 <anupritaisno1[m]> Well I can submit samples from a oneplus 7 pro
+19:35:51 <dazinism> A device can have multiple auditor devices that it links with
+19:36:28 <dazinism> *that it has set up to be able to audit it
+19:37:58 <dazinism> anupritaisno1: think theres a backlog of device samples that need manually processing so that they can be added.
+19:39:30 <anupritaisno1[m]> What about self hosting? Sounds like a plan
+19:40:52 <JTL> That's doable
+19:41:00 <JTL> (probably)
+19:57:35 <dazinism> anupritaisno1: self hosting should be possible, you'd have to make a build of Auditor app with your own server details.
+20:08:05 <dan-v[m]> anupritaisno1: it's a pretty giant hack at the moment, but i deploy my own custom auditor app and server. you could browse the build script to get a general idea how to do it: https://github.com/dan-v/rattlesnakeos-stack/blob/10.0/templates/build_template.go#L356
+20:08:19 <TheJollyRoger> dan-v[m]: wow!
+20:09:04 <dan-v[m]> the server part is aws specific as it runs on elastic beanstalk, but you could swap that out easily.
+20:09:21 <TheJollyRoger> Huh. Now I'm wondering if I could run it on Integricloud O_O.
+20:09:49 <dan-v[m]> yeah you could run it anywhere really
+20:10:24 <TheJollyRoger> "Yo dawg, I heard you liked remote attestation, so we put your remote attestation on a cloud service provider that supports remote attestation so you could have remote attestation for your remote attestation, dawg."
+20:10:49 <dan-v[m]> haha
+20:12:52 <TheJollyRoger> Huh. I just thought of something maybe I should look into doing, you reminded me of it with AWS.
+20:26:19 <jalb> So, anyone knows about my question about vanadium webview and internet access?
+20:26:30 <jalb> Thanks
+20:26:50 <JTL> 13:10 <@TheJollyRoger> "Yo dawg, I heard you liked remote attestation, so we put your remote attestation on a cloud service provider that supports remote attestation so you could have remote attestation for your remote attestation, dawg."
+20:26:52 <JTL> Love it
+23:16:50 <BrokenCog> anyone every encountery repo sync giving errors:
+23:17:10 <JTL> Which error?
+23:17:22 <BrokenCog> lol, one sec ... copying:
+23:17:23 <BrokenCog> platform/external/deqp-deps/SPIRV-Tools:
+23:17:24 <BrokenCog> fatal: unable to access 'https://android.googlesource.com/platform/external/deqp-deps/SPIRV-Tools/': Failed to connect to android.googlesource.com port 443: Connection refused
+23:17:38 <BrokenCog> and, no, not just that project.  everything.
+23:17:47 <BrokenCog> s/project/reop/
+23:17:58 <JTL> I get it
+23:18:10 <JTL> Checking now
+23:20:18 <JTL> Not seeing issues here, must be a local network issue?
+23:20:31 <BrokenCog> seperatley, on: https://github.com/GrapheneOS/platform_manifest/releases are the tag's for the repo init for release branches, but, what is the actual tag??  QQ2A.200501.001.B3.2020.05.05.02 for instance, the latest, is "no refs found"
+23:20:51 <BrokenCog> I don't think it's a network issue:  I can create a new directory, repo init, and start a blank sync and it works fin.
+23:20:56 <JTL> repo init https://github.com/GrapheneOS/platform_manifest.git -b refs/tags/QQ2A.200405.005.2020.04.14.23
+23:20:59 <JTL> Does this help at all?
+23:21:13 <JTL> (that's an older tag, but you get the point)
+23:21:24 <BrokenCog> agg I only used tags/... didn't put refs/tags ... thanks.
+23:22:02 <JTL> > 16:17 <BrokenCog> fatal: unable to access 'https://android.googlesource.com/platform/external/deqp-deps/SPIRV-Tools/': Failed to connect to android.googlesource.com port 443: Connection refused
+23:22:04 <JTL> This lead me to believe it was a network issue, usually reinit and sync should fix you up. Pay attention to other errors though
+23:23:13 <BrokenCog> I did a new init, and then sync.  I get the same connect refused.
+23:23:20 <JTL> Strange
+23:23:49 <JTL> does curl -v https://android.googlesource.com/platform/external/deqp-deps/SPIRV-Tools/ work?
+23:24:05 <JTL> Should get HTTP 200 and a bunch of HTML if it does
+23:24:26 <JTL> Connection refused lead to me to believe it was a network issue
+23:25:06 <BrokenCog> I get the HTTP page text using the curl.
+23:25:16 <JTL> Hmm
+23:25:21 <JTL> I'll look at it later if you don't find anything
+23:25:37 <JTL> my repo sync is still going with no issues
+23:26:30 <BrokenCog> I don't know what else to look at.  I'll start a new repo sync I guess.
+23:28:41 <BrokenCog> and, just for additional info it doesn't seem to matter which tag.  previously I had sync'd to the development branch, 10.  I've tried the latest refs/tags/QQ... just now and get the same error.  in a clean directory on either breanch though it syncs.
+23:29:00 <JTL> I'll see if I can find anything for you test in a bit
+23:29:25 <BrokenCog> okay.
+23:39:09 <JTL> BrokenCog: Just tried removing platform/external/deqp-deps/SPIRV-Tools from my local tree and recloning it, worked
+23:39:11 <JTL> heh
+23:50:40 <BrokenCog> it's not just that repo.  it's ALL repaos.
+23:52:28 <BrokenCog> and, also, for me it's under "platform/external" not "external" ?
+23:53:16 <BrokenCog> sorry ... it's NOT under platform/external.  It IS under external/...

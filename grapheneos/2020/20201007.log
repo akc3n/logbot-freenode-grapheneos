@@ -1,0 +1,490 @@
+00:44:17 <propertype[m]> <signalarch[m] "Reddit, several matrix rooms, I "> Yes it is
+01:39:55 <strcat[m]> madaidan.: let me know when you have more information though
+01:40:00 <strcat[m]> madaidan.: should figure out what's wrong
+01:40:20 <strcat[m]> enabling quarantines really shouldn't break anything
+01:55:25 <strcat[m]> need feedback on the latest beta so I can decide if it's ready for stable
+01:55:27 <strcat[m]> any issues with it?
+01:59:02 <strcat[m]> https://grapheneos.org/releases#2020.10.06.02
+01:59:25 <strcat[m]> we'll also have to do another release soon... exhausting amount of work
+02:00:33 <JTL> > reject received unix timestamps before build unix time for https-based network time implementation
+02:00:35 <JTL> Very sensible mitigation. I was thinking the same
+02:01:46 <nuudul[m]> im planning to buy a pixel phone, a pixel 2 will probably be enought for me. are there any cons of having legacy support?
+02:02:22 <renlord> nuudul[m]: pixel 2 is EOL and wont be receiving vendor firmware updates anymore soon
+02:02:42 <renlord> i.e. insecure to use
+02:02:53 <nuudul[m]> <renlord "nuudul: pixel 2 is EOL and wont "> ok
+02:03:25 <nuudul[m]> when will pixel 3* reach eol?
+02:03:45 <renlord> nuudul[m]: maybe in a year?
+02:03:47 <sphinxcat[m]> https://grapheneos.org/faq#recommended-devices
+02:04:09 <poisonoushydra> https://support.google.com/nexus/answer/4457705?hl=en
+02:04:46 <nuudul[m]> <poisonoushydra "https://support.google.com/nexus"> thx
+02:28:45 <strcat[m]> nuudul: our recommendation is a Pixel 4 atm - or once it's supported, a 4a, but we don't have a timeline for that
+02:28:50 <strcat[m]> need people to step up and help with 4a support
+02:35:36 <alex-resist> quick reminder that Pixel 4a is still not available in many parts of the world, including Germany
+02:35:56 <alex-resist> Once it's available here, I might buy one just for testing purposes
+02:38:08 <strcat[m]> https://grapheneos.org/releases#2020.10.06.02
+02:38:17 <strcat[m]> anyone using Beta channel?
+02:38:22 <strcat[m]> need feedback on the latest release
+02:38:25 <strcat[m]> everything works fine?
+02:39:01 <skwisgaar[m]> strcat: I’m on the beta on a 3 XL - when switching profiles or ending a session, maybe 1 in 10-15 times the phone lags for about 15 seconds, and the wallpaper disappears. The issue resolves itself but I thought I would mention it.
+02:39:34 <skwisgaar[m]> I use profiles regularly and haven’t seen it before
+02:39:57 <strcat[m]> ending session wasn't supported before
+02:39:58 <strcat[m]> though
+02:40:27 <skwisgaar[m]> Yeah but it also occurred a couple times just when switching between profiles
+02:41:06 <skwisgaar[m]> I had to try multiple times to reproduce it so it is uncommon
+02:46:10 <skwisgaar[m]> Honestly having trouble getting it to happen again
+02:47:09 <alex-resist> strcat[m] do you have any preference which model should be beta tested more? Or is the fact that any beta testing at all happens more important at this point?
+02:49:52 <strcat[m]> skwisgaar: it didn't break horribly tho right? was just a UX issue
+02:49:56 <strcat[m]> temporary annoyance
+02:50:10 <strcat[m]> setting unique wallpapers per user
+02:50:14 <strcat[m]> might make it clearer what happens
+02:52:32 <strcat> alex-resist: not really a preference
+02:52:45 <strcat> alex-resist: but a 4 or 4a (once it's supported) would last longest
+02:53:01 <strcat> 2 or 2 XL testing not very helpful anymore since they'll *likely* be gone by next year (don't know)
+02:53:53 <skwisgaar[m]> strcat: yeah exactly, it was only temporary
+02:54:48 <alex-resist> Currently, I could help with 3a and 3a XL. 4a once it's released. I think I will skip 4/4 XL, doesn't make much sense for me
+03:03:47 <anupritaisno1[m4> <skwisgaar[m] "strcat: I’m on the beta on a 3 X"> Yes this is present on the stock ROM too
+03:03:55 <anupritaisno1[m4> Switching user profiles is extremely slow
+03:07:26 <mlonjozos[m]1> Hello everyone, just got installed GrapheneOS into my pixel3XL
+03:07:26 <mlonjozos[m]1> Anybody know how I can get superuser privileges to install busybox so i can install xposed installer and xprivacylua? Thanks
+03:11:43 <critic[m]> anupritaisno1:  If 4a ever gets added, can someone please make a super simple guide for adding a new device along with some commit IDs so you can see what it takes to add a new device? Adding it to something like https://grapheneos.org/build
+03:11:44 <critic[m]> I ask this because so many new pixel devices are coming out. I'm personally interested in the 4a 5g and I don't wanna beg you guys to support it, but at the same time it's just daunting not knowing what to do.
+03:11:44 <critic[m]> Even if we could get some commit IDs or a fake branch/PR that has all the commits or even a simple git patch that show you what it took to get the new 4a (or another device) working would go a really long way for me :(
+03:12:37 <pech1019[m]> Just installed today's beta release on my 4XL. So far so good!
+03:12:51 <strcat> critic[m]: ot'
+03:12:56 <strcat> it's not a simple process
+03:13:43 <critic[m]> Yea I figured, but some basic steps on what's needed would be nice. That is, if it's possible to generically describe the process.
+03:17:09 <strcat[m]> critic: android-prepare-vendor support + port device repository changes + port device sepolicy changes + port kernel changes
+03:17:21 <strcat[m]> involves 4 repositories, nothing outside them, there is not a specific process for adding it
+03:17:35 <strcat[m]> have to figure it all out
+03:17:56 <strcat[m]> and then that's just the beginning of device development / maintenance work
+03:18:03 <strcat[m]> it is a long-term, difficult project
+03:18:40 <renlord> do we still need 3a maintainers since the kernels are all centrally managed in crosshatch?
+03:19:09 <renlord> and why not also merge sunfish and coral like the 3X series
+03:19:16 <renlord> strcat[m]: ^
+03:21:53 <strcat[m]> yes still need 3a maintainers
+03:22:01 <strcat[m]> stuff is different in userspace and the kernel is different just built from same sources
+03:22:10 <strcat[m]> renlord: it creates work if we merge it downstream
+03:22:17 <strcat[m]> renlord: it would be nice if they did it upstream
+03:28:33 * mlonjozos[m]1 sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/YtiuXmQwCPokOtreWiGcpAdp/message.txt >
+03:29:00 <renlord> mlonjozos[m]1: no superuser privilege at all
+03:29:09 <renlord> it is the anti-thesis of how to use a mobile os
+03:30:21 <renlord> if a user wants root, they clearly dont want a secure mobile os and should just ask about using a completely different OS in a different channel
+03:33:25 <strcat[m]> mlonjozos: GrapheneOS doesn't have those things, if you forked the OS to include them it wouldn't be GrapheneOS anymore
+03:33:46 <strcat[m]> also, client-side enforced security checks are insecure and don't work
+03:33:55 <strcat[m]> they can be trivially bypassed
+03:34:01 <strcat[m]> that's just privacy/security theater
+03:34:06 <mlonjozos[m]1> Okay I see thanks for the responses. How do i go about installing xprivacylua then? Any clue?
+03:34:14 <mlonjozos[m]1> Or is there a non-root alternative?
+03:34:18 <strcat[m]> mlonjozos: it's not part of GrapheneOS, and it's insecure anyway
+03:34:24 <strcat[m]> mlonjozos: there is already a strong sandbox and permission model
+03:34:32 <strcat[m]> which unlike xprivacy lua doesn't rely on insecure client-side checks
+03:35:20 <strcat[m]> code injected into an app is under the control of the app
+03:35:48 <strcat[m]> and it can trivially bypass assorted inserted checks for Java code... they don't even apply to native code in the first place, they are just client-side checks for the common code paths in Java
+03:36:00 <strcat[m]> it's not actually doing something that works
+03:36:24 <strcat[m]> apps can trivially bypass the injected hooks and often do so by accident just by accessing the information other ways like native code
+03:36:35 <strcat[m]> client side checks don't work, a check under the control of the adversary doesn't work
+03:36:41 <strcat[m]> they can remove the check
+03:36:43 <strcat[m]> security 101
+03:37:28 <strcat[m]> checks need to be performed by the server not the client that's supposed to be having restrictions placed upon it
+03:37:34 <strcat[m]> it's one of the most common novice security mistakes
+03:37:59 <strcat[m]> doing stuff like client-side validation in the app / browser instead of checking it on the app server but the same thing applies to OS security
+03:38:01 <strcat[m]> and privacy
+03:39:11 <mlonjozos[m]1> Hmm I see thank you so much for the detailed responses strcat i appreciate you
+03:40:47 <strcat[m]> mlonjozos: what xprivacy lua does is use a hooking framework (xposed) to inject checks which just isn't secure in general, unless they are injecting them into the server-side code only, which is not how it works
+03:44:31 <strcat[m]> pushing out latest release to stable channel
+03:44:40 <strcat[m]> no problems reported other than that minor UX issue with logout
+03:45:05 <alex-resist> strcat[m] that means available immediately?
+03:45:29 <strcat[m]> yeah it's available now
+03:45:36 <alex-resist> Yeah, installing already
+03:45:37 <strcat[m]> the updater only automatically checks around once every 4 hours
+03:45:39 <alex-resist> Seems to be super small
+03:45:41 <strcat[m]> you can trigger a check now if you want
+03:45:51 <strcat[m]> the update should be tiny as long as you were on the most recent past release
+03:46:00 <strcat[m]> alex-resist: as long as you stay up-to-date then you get updates as delta updates
+03:46:17 <strcat[m]> we release a full over-the-air update (able to update from any past version to current) which is the full OS
+03:46:24 <strcat[m]> and delta update from past version -> current
+03:46:40 <alex-resist> I know, but this didn't even show any download activity, it took less than 1 second or so
+03:46:40 <strcat[m]> it takes ridiculously long to generate deltas so we don't generate them for people further behind
+03:46:51 <strcat[m]> alex-resist: well it's like 6M or something
+03:47:01 <strcat[m]> and we have a fancy new update server with 2Gbit bandwidth now
+03:47:06 <alex-resist> It immediately started installing. With 6MB that makes sense :)
+03:47:46 <alex-resist> Does that also mean not many security updates from upstream? Or are they usually tiny?
+03:48:06 <strcat[m]> security updates are almost always very small
+03:48:23 <strcat[m]> many are ~5-10 lines of code changes each
+03:48:28 <strcat[m]> others are 50-100
+03:48:35 <strcat[m]> few are longer - some are, but not most
+03:48:37 <alex-resist> That sounds good. I sometimes install Graphene for other people and they are usually afraid that updates are enabled via LTE
+03:48:57 <strcat[m]> alex-resist: well if they always stay up-to-date they are almost always tiny
+03:49:04 <strcat[m]> if they fall behind 1 version the update will be huge
+03:49:18 <strcat[m]> since we don't generate deltas for older releases - we could, but it's too time consuming
+03:49:43 * strcat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/fCtbndFNCGQWGKaleMdjZFLd/message.txt >
+03:50:14 * strcat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/LeVWjztudDjWwPIKhbNQtJcr/message.txt >
+03:50:14 <alex-resist> Ok, that is indeed acceptable, even with a small data plan
+03:50:28 <strcat[m]> here is the previous release, which didn't have upstream changes:
+03:50:31 * strcat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/LIrYeOQYPvOWmCoiYdfLslPT/message.txt >
+03:50:42 <strcat[m]> alex-resist: sometimes they'll be a lot bigger, it depends on what we changed
+03:50:56 <strcat[m]> if we change C / C++ compilation options that impact tons of code in a significant way then it's going to be far larger
+03:51:19 <strcat[m]> alex-resist: an update that is just a fresh build with little changed is maybe 1-2M
+03:51:47 <strcat[m]> alex-resist: because it's shipping deltas, i.e. changes
+03:51:52 <strcat[m]> it calculates deltas - it takes ages
+03:52:02 <strcat[m]> tries to be quite efficient
+03:52:03 <alex-resist> Rebooting now...
+03:52:13 <strcat[m]> could probably make it take even longer to make them smaller but it's already insane
+03:52:45 <alex-resist> Oh oh, bootloop...
+03:52:50 <alex-resist> Now there's smoke
+03:52:57 <strcat[m]> alex-resist: really? which device
+03:53:02 <alex-resist> j/k everything's working fine, as usual :)
+03:53:08 <strcat[m]> lol
+03:53:08 <anupritaisno1[m4> <alex-resist "Now there's smoke"> OT
+03:53:49 <strcat[m]> alex-resist: if it does fail to boot nice thing is that it just rolls back after ~3 attempts (varies by device)
+03:54:36 <alex-resist> I'm using a 3a XL, which has extreme battery life, and so far no problems at all
+03:54:46 <strcat[m]> once it successfully boots it can't roll back anymore (for very important reasons, and not just security, old versions often can't handle the data of new versions - pretty much guaranteed they can't for major releases)
+03:54:59 <strcat[m]> new versions know how to migrate data from old ones, ofc can't do that the opposite way
+03:55:11 <alex-resist> I have one question regarding the update process
+03:55:32 <anupritaisno1[m4> <alex-resist "I have one question regarding th"> Don't ask to ask
+03:56:09 <alex-resist> I understand that the operating system exists twice, in a and b. Say we're currently running a, then the update will be installed on b in the background, right? And on the next boot, it will switch to b. When will it update a? Installing an update before the reboot can take a couple of minutes, but after the reboot, there is not much activity
+03:56:44 <anupritaisno1[m4> <alex-resist "I understand that the operating "> It will update a after the slot is marked as successful if required
+03:56:57 <anupritaisno1[m4> We don't ship such updates though
+03:57:44 <alex-resist> So if the other slot is never updated, do phones usually have version x in one slot, and x-1 in the other slot?
+03:57:53 <anupritaisno1[m4> So it will never touch a
+03:58:05 <strcat[m]> alex-resist: yes but once it boots successfully it disables the other slot from being bootable
+03:58:10 <strcat[m]> alex-resist: there is an active slot, and the concept of a slot being bootable
+03:58:17 <strcat[m]> lets say you are on slot a initially
+03:58:34 <strcat[m]> you get an update, it writes it out to the slot b partitions, it verifies that it was written out correctly and didn't get corrupted
+03:58:52 <strcat[m]> it runs post-installation stuff like compiling third party apps for the new OS
+03:59:02 <strcat[m]> when it's done it marks the new slot bootable and asks you to reboot
+03:59:20 <strcat[m]> if it boots successfully, once it gets to late boot, it marks the previous slot (a) as unbootable
+03:59:22 <anupritaisno1[m4> <strcat[m] "you get an update, it writes it "> BTW missed a step
+03:59:42 <anupritaisno1[m4> Before the install slot is marked unbootable
+03:59:54 <strcat[m]> well it marks current as good
+03:59:57 <strcat[m]> but I'm simplifying it
+04:00:25 <alex-resist> I see
+04:00:36 <alex-resist> so the previous system is marked unbootable until the next update appears
+04:01:20 <strcat[m]> yes and then it's only made bootable after it has successfully installed the new update and verified that it was written out correctly
+04:01:28 <strcat[m]> it hashes each of the partitions after writing them out and makes sure they match
+04:01:31 <alex-resist> Is that not occupying a considerable amount of storage space? Or is the added reliability considered worth it?
+04:02:00 <strcat[m]> alex-resist: the OS images are not really that big and space no longer has to be reserved per partition statically
+04:02:13 <strcat[m]> because it uses 'dynamic partitions' where OS partitions can be removed, added and resized by updates
+04:02:25 <strcat[m]> it has a slot a and slot b partition table
+04:02:28 <strcat[m]> essentially
+04:02:42 <alex-resist> I see, that is actually quite clever
+04:02:43 <strcat[m]> so when it updates slot b it can write out the new slot b partition table
+04:02:52 <anupritaisno1[m4> [strcat](https://matrix.to/#/@strcat:matrix.org) BTW for A-only it doesn't verify after applying by default right?
+04:03:08 <strcat[m]> dunno what you mean
+04:03:16 <strcat[m]> the normal update_engine update process always verifies
+04:03:32 <anupritaisno1[m4> <strcat[m] "dunno what you mean"> Iirc there's a --verify option for devices without slots
+04:03:38 <anupritaisno1[m4> That's disabled by default
+04:03:41 <alex-resist> Is there a place where one can read up on these mid-level technicalities? Is the Android documentation covering all this?
+04:03:42 <strcat[m]> well, I'm only talking about devices with slots
+04:03:53 <strcat[m]> alex-resist: also the whole process is designed to be atomic
+04:03:56 <anupritaisno1[m4> <alex-resist "Is there a place where one can r"> Yes
+04:04:02 <strcat[m]> alex-resist: so you can cut power (pull out battery, whatever) at any point
+04:04:08 <strcat[m]> and it won't corrupt the firmware / OS install
+04:04:22 <strcat[m]> because when it changes the modes on the slots that is atomic
+04:04:26 <anupritaisno1[m4> <strcat[m] "alex-resist: so you can cut powe"> Oneplus: yeah go ahead, try it
+04:04:37 <strcat[m]> alex-resist: you can happily reboot while Updater is installer
+04:04:40 <strcat[m]>  * alex-resist: you can happily reboot while Updater is installing
+04:05:04 <strcat[m]> next boot, when it checks for an update again, it'll just start installing again from scratch
+04:05:20 <strcat[m]> if what it already downloaded is still the newest, it will verify it and won't download it again
+04:05:27 <strcat[m]> also we resume partial downloads
+04:05:43 <strcat[m]> alex-resist: it doesn't matter since it's writing the update to inactive slot
+04:06:07 <strcat[m]> so that's the main point of it: it can update in the background without disrupting stuff or having the risk of horrible corruption and bricked device if it's interrupted
+04:06:16 <strcat[m]> doesn't need to have scary warnings telling you not to interrupt it
+04:06:28 <strcat[m]> I guess some users might think they can't interrupt it but it's totally safe to reboot halfway through an update is installed
+04:06:33 <alex-resist> That is so much more user friendly than what I'm used to from years of teaching people how to update LineageOS
+04:06:34 <strcat[m]> it'll just start over next boot
+04:06:38 <strcat[m]> after it checks for an update again
+04:07:07 <strcat[m]> alex-resist: https://source.android.com/devices/tech/ota/ab
+04:08:08 <strcat[m]> alex-resist: https://source.android.com/devices/tech/ota/ab#life-of-an-a-b-update
+04:08:53 <alex-resist> Super good, thank you so much. I should read those pages more often
+04:09:17 <strcat[m]> alex-resist: the reason there is no 'optimizing apps' after booting anymore is because A/B updates mount the new system partition and do that in the background before considering the update done
+04:10:16 <strcat[m]> alex-resist: verified boot + A/B updates provides a lot of reliability
+04:11:17 <strcat[m]> alex-resist: https://android.googlesource.com/platform/external/avb/+/master/README.md explains the OS verified boot (firmware verified boot is per-device, this is how the late stage bootloader verifies the OS + hands off verification to the OS though)
+04:12:01 <strcat[m]> essentially there's a vbmeta image, which is a small signed image and has hashes of everything else and a rollback index
+04:12:07 <strcat[m]> vbmeta is what's signed with the verified boot (avb) key
+04:12:35 <strcat[m]> bootloader verifies vbmeta signature, verifies stuff it references via hash and boots up the kernel from that
+04:12:44 <strcat[m]> and then the kernel verifies the large partitions via dm-verity dynamically as they are read
+04:13:17 <strcat[m]> so on a Pixel
+04:13:34 <strcat[m]> the Titan M is the main place that a custom AVB key is stored along with vbmeta rollback indices
+04:13:46 <strcat[m]> the rollback index is normally set to the security patch level
+04:14:02 <strcat[m]> as a timestamp
+04:14:38 <strcat[m]> it will refuse to boot an OS version with a lower rollback index, so an attacker can't gain root via exploitation and then write out an older OS version with more vulnerabilities that they can easily exploit next boot
+04:15:23 <strcat[m]> can also have chained vbmetas if you want to update things independently of the main vbmeta but that's useless for us
+04:15:25 <alex-resist> Sounds like a very solid design. Much more solid than the recent GNU/Linux approaches
+04:15:37 <strcat[m]> it's so you can do something like using a Google system image, a Qualcomm vendor image, an OEM product image with OEM vbmeta
+04:15:46 <strcat[m]> and chained vbmeta for system/vendor
+04:15:48 <strcat[m]> or other setups like that
+04:16:04 <strcat[m]> for a single vendor providing updates, like us, we just need 1 vbmeta
+04:16:11 <strcat[m]> don't need the chained ones
+04:16:12 <alex-resist> Is there any research how well the recent Pixel models resist Cellebrite devices?
+04:16:43 <strcat[m]> cellebrite mostly requires that you unlock the device and grant access via USB file transfer and/or adb
+04:17:01 <strcat[m]> it's mostly just a tool to deal with that for people...
+04:17:14 <strcat[m]> they have exploits for some firmware / OSes
+04:17:30 <alex-resist> I mean, if a device refuses USB connections and does not have any weak "recovery" modes, it should be pretty safe?
+04:18:04 <strcat[m]> alex-resist: if you are talking about profiles that are not currently logged in then exploiting the OS doesn't get data anyway
+04:18:40 <strcat[m]> if there is a profile logged in but locked, then exploiting the OS would obtain data in that profile that isn't protected by the keystore
+04:19:06 <strcat[m]> apps can use the keystore to protect data when the screen is locked based on the lock method
+04:19:55 <strcat[m]> alex-resist: we disable adding new USB peripherals after booting when the screen is locked, to reduce attack surface
+04:19:55 <adeus[m]1> Wire app is not working with GraphOS download latest apk directly from Wire website
+04:20:01 <adeus[m]1> The GUI is all messed up
+04:20:09 <strcat[m]> what about it is messed up?
+04:20:33 * adeus[m]1 uploaded an image: ima_71352a9.jpeg (58KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/yWdgMwXblpdMWiVbJEqEUrKh/ima_71352a9.jpeg >
+04:20:35 <strcat[m]> adeus: https://github.com/wireapp/wire-android/issues/3002
+04:20:39 <strcat[m]> looks like it's broken upstream
+04:20:43 <strcat[m]> i.e. in Wire
+04:21:00 <alex-resist> strcat[m] if such simple measures make a device pretty safe from Cellebrite attacks, why are they so successful? Are older Androids that much weaker, i.e. do they accept USB connections regardless of state and have sufficient vulnerabilities?
+04:21:15 <adeus[m]1> It keeps vibrating like that all double icons and fuzzy
+04:21:16 <strcat[m]> and it's not specific to GrapheneOS
+04:21:16 <adeus[m]1> Oh
+04:21:23 <adeus[m]1> It’s working fine on my non graph is pixel so I just assumed it was graph specific
+04:21:38 <strcat[m]> adeus: is that updated to Android 11?
+04:21:40 <adeus[m]1> I apologize I see I am running older. Version on android
+04:21:49 <adeus[m]1> <strcat[m] "adeus: is that updated to Androi"> No it’s 10
+04:21:57 <strcat[m]> adeus: Google does 'staged rollouts' of updates where it takes weeks before they prompt you to upgrade
+04:22:01 <strcat[m]> unless you manually upgrade asap
+04:22:03 <adeus[m]1> Again I apologize for not being more thorough
+04:24:34 <strcat[m]> adeus: they are probably doing something really weird like using private APIs despite all the obstacles they put up to discourage that and make it super clear it's wrong
+04:24:57 <strcat[m]> and then their weird hacks broke in Android 11
+04:25:02 <strcat[m]> happens with some apps
+04:25:18 <strcat[m]> I haven't seen many cases of apps breaking due to actual backwards incompatible changes
+04:25:30 <strcat[m]> other than apps targeting the new API level before they are really ready for it
+04:25:55 <strcat[m]> adeus: a major issue is that since most phones barely get major version upgrades and get their super late
+04:26:05 <strcat[m]> adeus: most app developers don't have Android 11 other than in the emulator if they use it
+04:26:22 <strcat[m]> shrug
+05:03:01 <anupritaisno1[m4> <strcat[m] "*shrug*"> What this mean btw
+05:14:12 <pencildeek> When logged in to a second profile I saw the exit profile option on the home screen and logged out of the profile completely. I can't get that dialogue to appear again
+05:14:32 <anupritaisno1[m4> <pencildeek "When logged in to a second profi"> Log in again
+05:17:01 <pencildeek> I did. Like 15 times
+05:18:01 <pencildeek> Not sure if it's a bug
+05:18:49 <pencildeek> I really like not having to reboot my device to shut the second profile down
+05:29:22 <mrxx_0[m]> Beta feedback : 3a xl all good
+05:30:26 <anupritaisno1[m4> <mrxx_0[m] "Beta feedback : 3a xl all good"> How?
+05:30:34 <anupritaisno1[m4> Test everything
+05:35:15 <pencildeek> I'm on a 3a and I can't get that dialogue to reappear. Rebooted a few times as well
+05:36:18 <strcat[m]> pencildeek: it's in the power menu
+05:36:34 <strcat[m]> I don't know what causes the lockscreen option to appear
+05:36:40 <strcat[m]> but the main option is in the power menu (global actions)
+05:39:13 <pencildeek> Thanks Daniel. The weird thing is it popped up in a rectangle box on my home screen when I first switched to the second profile without touching the power button
+05:39:50 <pencildeek> Gotcha
+05:40:19 <pencildeek> This is a real cool update. Thanks
+05:45:52 <pencildeek> The only other thing I'm noticing is that I have my font set to large and when I return to the administration account I have repeat widgets all over the screen and it returns to regular size except the toggle is still set to large?
+05:51:02 * duggalsu[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/ZDvXayRdcDjWYAiMOFcatzOP/message.txt >
+05:51:15 <duggalsu[m]> RP1A.200720.009.2020.10.01.23
+05:51:53 <strcat[m]> duggalsu: can you try clearing the dialer app data
+05:52:06 <strcat[m]> duggalsu: also a newer release is out now
+05:52:14 <strcat[m]> although I doubt it fixes whatever your issue is
+05:52:28 <strcat[m]> https://grapheneos.org/releases#2020.10.06.02
+05:52:40 <strcat[m]> duggalsu: so I'd suggest trying to reset network settings in the Settings app as another thing to try
+05:52:48 <strcat[m]> and just deal with connecting to wifi networks again
+05:52:50 <strcat[m]> duggalsu: or perhaps
+05:52:59 <strcat[m]> duggalsu: change the preferred radio mode
+05:53:02 <strcat[m]> duggalsu: before trying that
+05:55:21 <strcat[m]> duggalsu: and yeah probably worth triggering an update before investigating even though I doubt there are any related fixes
+05:59:22 <duggalsu[m]> Thanks!  The issue was that I had changed the network type from LTE (preferred) to LTE only
+06:06:36 <strcat[m]> duggalsu: we probably don't support VoLTE with your carrier yet
+06:06:50 <strcat[m]> duggalsu: or they don't support VoLTE (without a carrier phone at least)
+06:06:55 <anupritaisno1[m4> [duggalsu](https://matrix.to/#/@duggalsu:matrix.org) what carrier
+06:07:01 <strcat[m]> we need to add some more carrier configuration stuff
+06:07:05 <strcat[m]> per device
+06:07:35 <strcat[m]> we have proper APNs now but not extra config
+06:12:29 <duggalsu[m]> Airtel,  India
+06:14:58 * draskosaric[m]1 sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/WbGxrQEvITtuIrXJAlgWbfzy/message.txt >
+06:15:10 <anupritaisno1[m4> [duggalsu](https://matrix.to/#/@duggalsu:matrix.org) yep same
+06:15:19 <anupritaisno1[m4> Carrier config overlays are needed
+06:15:41 * anupritaisno1[m4 sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/MLHAxIScdnYzhsXtwewMnIeG/message.txt >
+06:15:47 <anupritaisno1[m4> Allocate swap
+06:16:20 <anupritaisno1[m4> You need ~33 GB of RAM to compile without swap
+06:19:23 <draskosaric[m]1> My computer alone has 32 GB of RAM and this is run on virtual machine. How large should I allocate swap with current 17GB of RAM?  20GB?
+06:21:21 <jalb> I don't know if I read it well but I thought that we could logout from a profile with this update, I can't find where it is
+06:26:32 <dreth[m]> unfortunately im still getting frequent system UI crashes on 3 XL. But exclusively after the android 11 update, this didnt happen before
+06:26:50 <blacklight447[m]> Ui crashes?
+06:26:57 <blacklight447[m]> Or just app crashes
+06:27:22 <dreth[m]> yeah, for example say im using an app, the app hangs, then the whole UI crashes and i can only restart the phone or wait maybe 20 mins
+06:27:34 <jalb> Anyone knows?
+06:27:48 <blacklight447[m]> <anupritaisno1[m4 "You need ~33 GB of RAM to compil"> Happy qubes os workstation noises
+06:28:18 <dreth[m]> has happened in almost any app but especially in some heavy websites using vanadium, on instagram watching stories and once using OSM to navigate somewhere
+06:28:38 <dreth[m]> it has become an almost daily occurrence now
+06:29:15 <trismous[m]> <anupritaisno1[m4 "You need ~33 GB of RAM to compil"> Wow, that's a lot of RAM
+07:25:56 <floz[m]> Do Pixel 5 will be compatible with grapheneos?
+07:26:13 <floz[m]> (hi guys🙂)
+07:26:25 <renlord> floz[m]: if there's a device maintainer, sure
+07:26:42 <renlord> floz[m]: are you volunteering? (hehe)
+07:32:04 <floz[m]> Ok so it's a bit early to buy pixel 5 !
+07:32:37 * draskosaric[m]1 sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/EIkfgsTpqlIhpkMqXWbGizNf/message.txt >
+07:33:13 <floz[m]> Haha no, i would like to but I don't have a big knowledge
+07:33:27 * draskosaric[m]1 sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/eHBsExxgUwxrUJUzhGtWOGlB/message.txt >
+07:37:33 * draskosaric[m]1 sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/jSeqFkCpHsndbKvSzJOEEvQc/message.txt >
+07:40:22 <anupritaisno1[m4> [neo](https://matrix.to/#/@draskosaric:matrix.org) check kernel/google/coral
+07:40:29 <anupritaisno1[m4> But on github
+07:40:49 <anupritaisno1[m4> https://github.com/GrapheneOS/kernel_google_coral/pull/15
+07:42:20 <draskosaric[m]1> Thank you so much!
+08:36:34 <uchihaitachi[m]> I read on GrapheneOS website that they want to integrate a hypervisor in the future like Xen, also I read on Reddit that Daniel Micay, the lead developer, said that Xen adds more attack surface. How come they want to integrate it? I am asking to know better, not to provoke or something. Also, if someone knows if that will happen soon or not.
+08:46:41 <shdudbdjdj[m]> <uchihaitachi[m] "I read on GrapheneOS website tha"> This would interest me also, because im thinking about using Graphene OS  and ask myself is the effort worth it?
+08:47:55 <uchihaitachi[m]> <shdudbdjdj[m] "This would interest me also, bec"> Flashing it is easy and the usage is almost similar to stock Android. it is really worth it
+08:49:51 <Beaver69> should anything go horribly wrong, is it possible to restore a backup with seedvault on a fresh install?
+08:52:10 <shdudbdjdj[m]> <Beaver69 "should anything go horribly wron"> I ment Qubes OS for Laptop 😀 Sorry
+08:52:58 <shdudbdjdj[m]> I think the are using xen to
+08:56:44 <uchihaitachi[m]> I think that may be off-topic.
+08:57:00 <uchihaitachi[m]>  * I think that's may be off-topic.
+09:13:02 <anupritaisno1[m4> Just
+09:13:07 <anupritaisno1[m4> Go to OT
+09:13:15 <anupritaisno1[m4> If you feel it's OT
+09:18:26 <graph> After update I can't see text on slide from top menu, only icons.
+09:18:57 <graph> Is this part of the update?
+09:27:35 <mrxx_0[m]> <graph "After update I can't see text on"> I don't get it, can you be more specific ?
+09:59:34 <the-real-johndoe> Hi guys, after turning dark mode on i noticed that the Phone,Contacts and Messaging app didnt turn to dark. Is this a bug?(I'm on the Pixel 3a XL)
+09:59:44 <the-real-johndoe>  * Hi guys, after turning dark mode on i noticed that the Phone,Contacts and Messaging app didnt turn to dark. Is this a bug? (I'm on the Pixel 3a XL)
+10:00:16 <the-real-johndoe>  * Hi guys, after turning dark mode on i noticed that the Phone,Contacts and Messaging app didnt turn to dark. Is this a bug? (I'm on the Pixel 3a XL updated to the latest version)
+10:12:08 <fll[m]> <the-real-johndoe "Hi guys, after turning dark mode"> The global dark mode setting only tells all apps to use dark mode if they have it. Those standard aosp apps often don't have a dark mode
+10:16:44 <the-real-johndoe> Ah ok thanks for the reply!
+10:48:22 <dazinism> dreth: I've had similar on my 3XL, but sounds like not as regular as you and the device recovers after 30 seconds - a minute
+10:54:08 <dazinism> Only seen it once in the last couple of days
+11:04:44 * draskosaric[m]1 sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/HXCWNFLbNmEhhKZVkkjhIGBh/message.txt >
+11:05:08 <strcat[m]> neo: the script is still python2 atm
+11:05:18 <strcat[m]> also you don't need a google library, just protobuf
+11:05:24 <strcat[m]> it's just in a google namespace
+11:05:34 <draskosaric[m]1> ok, thanks.
+11:49:55 * draskosaric[m]1 sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/zYaEMOIaLMcPsasHQxRSDFUU/message.txt >
+11:53:33 <draskosaric[m]1> How can I resolve this issue?
+12:22:23 <anupritaisno1[m4> The script is still python2?
+12:22:28 <anupritaisno1[m4> Works on my machine with python3
+12:22:31 <anupritaisno1[m4> Anyway
+12:22:43 * jcb[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/yeXfrChAbtPSxzuNmzJdyTtU/message.txt >
+12:22:46 <louipc> do you have python2 on it as well
+12:28:35 <mrxx_0[m]> <anupritaisno1[m4 "Works on my machine with python3"> Python3 is compatible with python2 so it can work but python2 isn't with python3
+12:52:05 <q9f> hello
+12:53:47 <q9f> I know there is no support for the Pixel 4a (yet) but I'm looking into new phones because my Pixel 2 reached end of life, unfortunately. (Otherwise, the perfect device.)
+12:54:35 <q9f> I'm only considering devices that might get GrapheneOS support in future and wondering whether it makes a difference between the Pixel 4a and the Pixel 4a (5G) which appear to be entirely different devices.
+12:59:39 <q9f> Pixel 4a 5G (bramble) vs. Pixel 4a (sunfish)
+13:02:40 <neo[m]2> <mrxx_0[m] "Python3 is compatible with pytho"> At some point, python2 was needed by some script during building process
+13:02:48 <neo[m]2> > <@mrxx_0:matrix.org> Python3 is compatible with python2 so it can work but python2 isn't with python3
+13:02:48 <neo[m]2>  * At some point, python2 was needed by some script during building process. I had python3 at that time.
+13:38:43 <q9f[m]> I know there is no support for the Pixel 4a (yet) but I'm looking into new phones because my Pixel 2 reached end of life, unfortunately. (Otherwise, the perfect device.)
+13:38:57 <q9f[m]> I'm only considering devices that might get GrapheneOS support in future and wondering whether it makes a difference between the Pixel 4a (sunfish) and the Pixel 4a (5G, bramble) which appear to be entirely different devices.
+13:53:56 <NorbertTretkowsk> q9f: https://grapheneos.org/faq#recommended-devices
+13:58:34 <q9f[m]> Thanks. I have read this carefully. My question is, will it make a huge difference to have a sunfish or bramble device? I'm not sure how Graphene considers/adds new devices.
+14:18:46 <mrxx_0[m]> <q9f[m] "Thanks. I have read this careful"> Once the device is supported and have a maintainer you are good to go, but very few people step up to help and maintain a device so ....
+15:22:27 <save2020[m]> I ve just installed GrapheneOS on a Pixel 3 XL and I do not have the fingerprint setting in security. Do you have any ideea if it's from GrapheneOS or from my phone? I havent tested the fingerprint before GrapheneOS.
+15:25:59 <q9f[m]> understood.
+15:26:13 <q9f[m]> Might just get a 3a then.
+15:40:18 <Sheru[m]> Why not 4? Face unlock can be set just for apps, unlike fingerprint
+15:40:58 <Sheru[m]> (Also cannot be easily spoofed as it scans the face through infrared/3D? With longer support time too?)
+15:51:43 <q9f[m]> The 128GB version of the Pixel 4 is sold out and the 4a features a headphone jack which the 4 doesn't have. Missing headphone jack is certainly the biggest annoyance with the Pixel 2 I have.
+15:52:44 <q9f[m]> On long road trips I either can listen to music or charge the phone but not both. Google engineers must be stoned when they designed a phone with only one output.
+15:54:08 <q9f[m]> I know that the 4 generally has the better features. It's just so painful to see that I would have to upgrade my entire stack (car, headphones, etc.) to bluetooth just to be able to conveniently use the phone again. And don't get me started on bluetooth lol ...
+16:04:56 <save2020[m]> You can gdt from Aliexpress.com an adaptor for booth. I havejust received 2 today
+16:05:25 <save2020[m]> RON 5.30  68%OFF | 2 In 1 Type C To 3.5mm Jack Earphone Charging Converter USB Type-C Audio Adapter for Xiaomi 6 Huawei P10 Mate 20 Type C Phones
+16:05:25 <save2020[m]> https://a.aliexpress.com/_mrM3M5Z
+16:05:37 <save2020[m]> 1.3 usd
+16:05:50 <save2020[m]> * 1.3 usd shipped
+16:06:36 <save2020[m]> * https://a.aliexpress.com/_mrM3M5Z
+16:15:27 <q9f[m]> I've read they do not work reliably and there is no official Pixel adapter that allows for both. Also I don't approve removing ports adding the need for even more adapters.
+16:15:44 <q9f[m]> That's the disqusting trend every Apple user moans about.
+16:17:45 <zook> Is visual voicemail missing right now on the Android 11 builds?
+16:18:38 <AppAraat[m]> Hi, suppose I only want to serve something on localhost and not on my LAN... normally I'd do something in `iptables`, but since I don't have root on my phone I don't think I can. What would the solutions be in this case?
+16:19:26 <Sheru[m]> <q9f[m] "I know that the 4 generally has "> Fair enough. If only a maintainer for 4a can come sooner
+16:50:33 <esmspwdcesmrcbtt> Does GrapheneOS offer protection against brute-force attacks?
+16:55:15 <mrxx_0[m]> <Sheru[m] "Fair enough. If only a maintaine"> Waiting for my 4a (pre order) to arrive
+16:56:45 <mrxx_0[m]> <Sheru[m] "Fair enough. If only a maintaine"> Waiting for my 4a (pre order) to arrive
+17:02:24 <mrxx_0[m]> <Sheru[m] "Fair enough. If only a maintaine"> Waiting for my 4a (pre order) to arrive
+17:14:22 <jpds> esmspwdcesmrcbtt: Yes, through the use of Titan M
+17:15:36 <zyxt128[m]> Is this a bot? ^^^
+17:15:58 <zyxt128[m]>  * Is this a bot? ^^^ (or a matrix/irc malfunction?)
+17:16:19 <zyxt128[m]>  * Is this a bot? ^^^ (or a matrix/irc malfunction)
+17:16:37 <zyxt128[m]>  * Is this a bot? ^^^^
+17:22:34 <mrxx_0[m]> OK I had a problem with element on my computer the message wasn't send. Sorry for the spam.
+17:27:37 <jpds> zyxt128[m]: Hmm?
+17:35:21 <luna> Hey all, I'm coming across this issue: https://github.com/GrapheneOS/os_issue_tracker/issues/208 I see that it was closed, but I'm getting it myself. Has anyone else seen any more solutions that are in the issue?
+17:52:08 <impostoroftheven> [luna](https://matrix.to/#/@freenode_luna:matrix.org) describe your issue
+17:53:52 <luna> actually just made this: https://github.com/GrapheneOS/os_issue_tracker/issues/359 Realized my issue was differet enough to the person in the issue.
+17:56:10 <luna> Let me know if you need some more information in some area.
+18:14:03 <brenneke[m]> <q9f[m] "I know that the 4 generally has "> I really love using my Bluetooth ear buds but pease enlighten me, is there something I should be aware of from a privacy or security standpoint about it's use?
+18:15:04 <mastercakex[m]> Do you also get calls in your left earbud only?
+19:25:13 <burningdaemon[m]> Do you use Tor (Orbot) with VPN and if yes, what kind of Apps should be routed through VPN
+19:36:39 <alex-resist> I use Orbot and it makes sense to route all apps through Tor that send or receive information that could be used to identify you
+19:36:45 <alex-resist> (If anonymity is your priority)
+19:37:23 <burningdaemon[m]> Also the Apps with linked Accounts?
+19:38:04 <alex-resist> Yes, those definitely, plus maybe podcast apps, OsmAnd, transportation apps etc.
+19:38:21 <alex-resist> Those that contain information about you that is not absolutely trivial and not the same for every user
+19:39:53 <alex-resist> In principle, I would like to route the entire phone through Orbot, but then captive portals (which are necessary to use many public WiFis) no longer work, and I really like to use public WiFis with Graphene
+19:40:22 <burningdaemon[m]> Ah OK thx
+19:40:22 <burningdaemon[m]>  
+19:40:22 <burningdaemon[m]> So I tried to use an other DNS like adguard. But the DNS don't work very well with Orbot VPN.
+19:40:48 <alex-resist> No idea about that. Not sure if that combination makes sense, maybe someone else can answe rthat
+19:40:52 <burningdaemon[m]> Does someone know how to block effective Ads on Graphene
+19:42:33 <alex-resist> You could use Bromite, which is a decent clearnet browser that includes ad-blocking
+19:43:59 <burningdaemon[m]> OK. I should use it more often. Thx
+19:46:12 <Knull[m]> blockada offers the DNS stuff but idk about their VPN.. Seems the only option to route traffic of any kind is to use Android's VPN function. So 1 app at a time can control that. So you'd need something like blokada but with a vpn that's more notable plus DNS control all in 1 place. idk anything like that
+19:47:54 <alex-resist> burningdaemon[m] Bromite + Orbot is also a possible combination
+19:49:08 <burningdaemon[m]> Ok
+19:49:18 <burningdaemon[m]> I will try it out
+19:49:48 <Knull[m]> for browser, yeah. Phone-wide though..
+19:50:53 <alex-resist> For better anonymity, you should make sure that Orbot uses different circuits for different target addresses. You can do that in Orbot's settings, idk why it's not enabled by default.
+20:00:35 <strcat[m]> esmspwdcesmrcbttbcobosldtsbaeige: there are multiple ways that it defends against brute force attacks, suggest reading past discussions / posts
+20:16:49 <alex-resist> Is there any way Orbot could be used as a full-device VPN but with captive portals still working?
+20:17:11 <burningdaemon[m]> <alex-resist "For better anonymity, you should"> Oh man. Thank you. That makes it even more anonymously.
+20:21:15 <alex-resist> Perhaps an option could be added: "Allow captive portals to bypass full-device VPN"
+20:22:04 <impostoroftheven> <alex-resist "Perhaps an option could be added"> They already afaik
+20:22:32 <impostoroftheven> I've tried airport WiFi a couple times with VPN
+20:22:33 <alex-resist> No, at least for me it hasn't worked so far
+20:22:43 <impostoroftheven> Captive portal does work for me at least
+20:22:56 <alex-resist> That's interesting. Is that new with Android 11?
+20:23:01 <impostoroftheven> Well that's definitely a good thing
+20:23:16 <impostoroftheven> No
+20:23:57 <strcat[m]> VPNs can choose to pass through certain traffic
+20:24:01 <strcat[m]> like local network traffic
+20:24:08 <strcat[m]> and they can choose to implement their own captive portal functionality
+20:24:12 <strcat[m]> Orbot doesn't do that stuff
+20:24:22 <impostoroftheven> Yeah that's most likely it
+20:24:24 <alex-resist> strcat[m] okay, than Orbot is the problem here
+20:24:29 <alex-resist> *then
+20:25:30 <alex-resist> It would be so nice to have a fully randomized MAC + full-device Orbot, but with captive portals still working. Worry-free public WiFis
+20:27:59 <strcat[m]> captive portals working requires it to pass through those connections or implement that itself
+20:28:06 <strcat[m]> not much we can do about it
+20:28:26 <strcat[m]> it seems like a good thing to me that the VPN is in control of all OS traffic above the low-level stuff
+20:28:55 <alex-resist> strcat[m] thx for the explanation. I had hoped the OS could detect captive portal traffic before it passes through the VPN, but it makes sense that a full-device VPN stays a full-device VPN
+21:48:42 <madaidan[m]> <alex-resist "For better anonymity, you should"> Can be quite expensive for your device and the network depending on how you use it.
+22:15:49 <xabi[m]> <save2020[m] "You can gdt from Aliexpress.com "> How is the sound quality, apple USB c to audio jack produces really crisp sound for just 10€
+23:45:00 * entry1[m] uploaded an image: 20201007_194410_301794547689703408.jpg < https://matrix.org/_matrix/media/r0/download/matrix.org/jATjiCWsjWVXzkRcbycaztst/20201007_194410_301794547689703408.jpg >
+23:45:40 <entry1[m]> Getting this error obtaining Google fastboot using the curl.exe in Powershell
+23:48:40 <strcat[m]> we assume people are on Windows 10
+23:48:49 <strcat[m]> if you're on an earlier version you won't have curl
+23:49:07 <strcat[m]> you could download it manually
+23:49:19 <strcat[m]>  * you could download it with your browser or another command
+23:49:56 <strcat[m]> we stick to writing instructions for current generation OSes because it's far too complicated and messy otherwise
+23:50:53 <strcat[m]> it would be possible to use Invoke-WebRequest instead of curl.exe for Windows before 10
+23:51:06 <entry1[m]> I'm on Windows 10 actually
+23:51:09 <strcat[m]> but we like using curl in the instructions to match other operating systems and because we're familiar with it
+23:51:20 <entry1[m]> Windows 10 pro
+23:51:22 <strcat[m]> entry1: should have curl if it's up-to-date then
+23:51:34 <strcat[m]> entry1: up-to-date?
+23:51:45 <strcat[m]> it was bundled over a year and a half ago in one of the updates
+23:51:57 <strcat[m]> https://devblogs.microsoft.com/commandline/tar-and-curl-come-to-windows/ was the preview of it before it was stable
+23:52:14 <strcat[m]> Windows 10 version 1803
+23:52:14 <strcat[m]> has curl
+23:52:22 <strcat[m]> https://docs.microsoft.com/en-us/windows/release-information/status-windows-10-1803
+23:53:04 <entry1[m]> Let me check real quick, my other computer worked doing it a while back. Got a new phone now and am using an older Windows 10 laptop.
+23:53:26 <entry1[m]> Thx for responses in advance
+23:54:02 <strcat[m]> probably need to update the laptop
+23:54:03 <strcat[m]> and then it will work
+23:54:09 <strcat[m]> also a good idea to get fixed USB drivers etc
+23:54:28 <strcat[m]> fastboot driver comes from Windows
+23:54:31 <entry1[m]> Ah. I'm on v1511 Windows 10 pro
+23:55:08 <M0xC0ncord[m]> >1511
+23:55:08 <M0xC0ncord[m]> holy crap
+23:55:13 <M0xC0ncord[m]>  * >
+23:55:13 <M0xC0ncord[m]> 1511
+23:55:13 <M0xC0ncord[m]> holy crap
+23:55:13 <strcat[m]> Google makes a fastboot driver that's integrated into Windows and Windows keeps it up-to-date
+23:55:18 <strcat[m]> well Microsoft may work on it too
+23:55:37 <M0xC0ncord[m]> Imagine being 5 years behind on Windows updates
+23:55:53 <HagbardCeline[m]> The google toolkit is really pretty good
+23:56:08 <entry1[m]> <M0xC0ncord[m] "Imagine being 5 years behind on "> Lol, just bought this Thinkpad
+23:56:09 <strcat[m]> seems like 3 years
+23:56:15 <entry1[m]> Didn't even bother checking
+23:56:28 <strcat[m]> just needs to be updated a few times
+23:56:35 <strcat[m]> probably has to go through multiple major updates
+23:56:41 <strcat[m]> dunno if they update directly to latest
+23:57:55 <M0xC0ncord[m]> I think Windows 10 these days will install "cumulative rollups" which are basically the feature updates stacked on top of each other
+23:57:59 <HagbardCeline[m]> Did I see someone talking about a Bluetooth audio issue?
+23:58:14 <entry1[m]> Thx a ton. Worked before on another Win10 computer I installed grapheneos on so that's most likely the issue. Will post a confirmation if it installs correctly so people who have the same issue will know

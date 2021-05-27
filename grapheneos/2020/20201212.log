@@ -1,0 +1,521 @@
+00:28:22 <fomijafi[m]> I'm having trouble using a secondary profile to make calls from. Anyone doing this successfully with the phone app?
+00:47:55 <dwkr[m]> I haven't used the secondary profiles a lot, but when I tested it things within the second profile took a little while to load up
+00:48:16 <dwkr[m]> I was able to receive a call with no problem in that second profile though
+00:53:49 <fomijafi[m]> I can when I use the SIM but I have a couple SIP accounts set up. The calls go through but no audio on either end once the call connects.
+01:20:21 <strcat[m]> going to give our connectivity check server a dedicated domain name, so we need to figure that out
+01:20:53 <strcat[m]> non-HSTS TLD (so not .app)
+01:22:32 <Lynn[m]> It was quite the pain getting TLS set up on a `.dev` TLD.
+01:22:52 <strcat[m]> Lynn: why?
+01:23:12 <strcat[m]> I recently added a couple more
+01:23:16 <strcat[m]> like https://vanadium.app/
+01:23:47 <strcat[m]> Lynn: I just use certbot --nginx certonly
+01:23:58 <strcat[m]> i.e. use nginx plugin but disable the horrible autoconfiguration part of it
+01:24:08 <strcat[m]> so it doesn't mess with the web server configuration
+01:27:42 <Lynn[m]> For some reason certbot was having none of it.
+01:28:07 <Lynn[m]> I was able to set up HSTS just fine on the other domain, though.
+01:28:13 <Lynn[m]> 🤷
+01:28:31 <strcat[m]> you have to make sure to use the current version too
+01:28:36 <strcat[m]> not the horrible ancient one in frozen distros
+01:29:42 <strcat[m]> this is the sample command I have to use as a template
+01:29:48 <strcat[m]>     certbot certonly --nginx --key-type ecdsa --must-staple --reuse-key -d domain.com -d www.domain.com --deploy-hook "/usr/local/bin/certbot-ocsp-fetcher -o /etc/nginx/ocsp-cache"
+01:30:31 <strcat[m]> and set up certbot-ocsp-fetcher to deal with that
+01:30:53 <strcat[m]> needs a timer unit along with that hook for certbot to run it after renewal before deploying the new certificate
+01:31:25 <strcat[m]> Lynn: I have guides for myself on setting up different things
+01:31:32 <strcat[m]> Lynn: I slowly publish that kind of stuff
+01:51:03 <Lynn[m]> strcat I have a similar set up for compiling PHP (*cough* since Ubuntu is 10 version behind *cough*), I saved my configuration settings, but I just have not gotten around to doing the same with `certbot`.
+01:51:17 <Lynn[m]>  * strcat I have a similar set up for compiling PHP (_cough_ since Ubuntu 20.04 is 10 versions behind _cough_), I saved my configuration settings, but I just have not gotten around to doing the same with `certbot`.
+01:51:29 <strcat[m]> Lynn: https://github.com/GrapheneOS/grapheneos.org/tree/master/nginx is essentially half of the setup
+01:51:52 <louipc> Lynn[m]: lol are u sick
+01:51:56 <strcat[m]> deploying that just involves commenting out the certificate part, start it, run certbot per above
+01:52:12 <strcat[m]> then uncomment, systemctl reload nginx
+01:52:42 <strcat[m]> and setting up the ocsp stapling thing pre-certbot
+01:53:05 <strcat[m]> just getting the script + service + timer unit in right places and starting the timer unit
+01:53:15 <strcat[m]>  * just getting the script + service + timer unit in right places and enabling/starting the timer unit
+01:53:25 <strcat[m]> it automatically deals with everything else
+01:53:35 <strcat[m]> it looks at the certbot configuration and figures out what it has to do
+01:53:46 <strcat[m]> it's a solid script
+01:54:03 <strcat[m]> fetches the OCSP response with openssl and caches it when it's valid, doesn't invalidate a working cache with an invalid response
+01:54:12 <strcat[m]> so for example they might expire after 7 days
+01:54:24 <strcat[m]> and suggest renewal after 2 days
+01:54:37 <strcat[m]> so it will follow that, renew it after 2 days, but if it gets an invalid response, it keeps the current valid one
+01:54:45 <strcat[m]> unlike nginx
+01:54:52 <strcat[m]> which also doesn't persistently cache it
+01:55:06 <strcat[m]> so OCSP server goes down + restart web server -> you're screwed (with must-staple)
+01:55:17 <strcat[m]> or similarly it returns 1 invalid response -> screwed
+01:55:39 <strcat[m]> nginx stapling is broken (apache is way worse than nginx and you can't even do it like this so...)
+01:56:08 <Lynn[m]> strcat Oh, do you know anything regarding listening on port 80 to redirect to HTTPS, for Nginx? Such as the `server_name` in my configuration I do not even specify the `server_name` directive for redirecting my traffic to HTTPS.
+01:58:21 <Lynn[m]> And that sounds like a decent easy set up.
+02:09:44 <strcat[m]> Lynn: the 1st server block listening on a port
+02:09:47 <strcat[m]> Lynn: is considered the default
+02:09:53 <strcat[m]> unless you explicitly set another default
+02:09:59 <strcat[m]> Lynn: so that just handles ALL names
+02:10:16 <strcat[m]> Lynn: so for example if you set a domain to use the grapheneos.org IP for the A/AAAA records
+02:10:27 <strcat[m]> the server will happily redirect you to https where you'll get a certificate error
+02:10:41 <strcat[m]> Lynn: could disable that by explicitly setting server blocks that report errors instead
+02:10:44 <strcat[m]> doesn't rly make a difference
+02:11:07 <strcat[m]> Lynn: default_server directive after listen
+02:11:39 <strcat[m]> Lynn: so for example to avoid certificate errors
+02:12:00 <strcat[m]> Lynn: the current development releases (not in stable yet) add this http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_reject_handshake
+02:12:33 <strcat[m]> Lynn: so if you really wanted you could add a default_server https block (or just define it first so that's implied) and reject connections with invalid SNI name
+02:14:56 <strcat[m]> I don't publish out Postfix configurations yet because it's such an overcomplicated config format
+02:15:02 <strcat[m]>  * I don't publish our Postfix configurations yet because it's such an overcomplicated config format
+02:15:09 <strcat[m]> email is so overcomplicated / messy
+02:15:10 <strcat[m]> horrible
+02:15:37 <strcat[m]> https://github.com/GrapheneOS/mail.grapheneos.org I just publish the spf-policyd, opendkim and opendmarc configs
+02:15:42 <strcat[m]> all 3 of those programs are horribly broken btw
+02:16:05 <strcat[m]>  * https://github.com/GrapheneOS/mail.grapheneos.org I just publish the policyd-spf-python, opendkim and opendmarc configs
+02:16:36 <strcat[m]> opendkim works properly I guess
+02:16:52 <strcat[m]> the other 2 don't
+02:18:17 <strcat[m]> it's easy to set up things properly to prevent spoofing your mails
+02:18:31 <strcat[m]> the problem is enforcing it on others because hardly anyone sets it up properly
+02:18:37 <strcat[m]> even Gmail doesn't forbid spoofing mail
+02:18:54 <strcat[m]> `drill _dmarc.gmail.com TXT`
+02:19:03 <strcat[m]> ;; ANSWER SECTION:
+02:19:03 <strcat[m]> _dmarc.gmail.com.	600	IN	TXT	"v=DMARC1; p=none; sp=quarantine; rua=mailto:mailauth-reports⊙gc"
+02:19:19 <strcat[m]> p=none means they permit spoofing mails for *@gmail.com
+02:19:42 <strcat[m]> for @.gmail.com they use quarantine which stops it (but may make it visible to users in spam folder, maybe not)
+02:20:14 <strcat[m]> so spammers for some reason love to set fake @gmail.com addresses
+02:20:34 <strcat[m]> and if you actually use gmail that's caught, but if you use anything else, it's not, because gmail permits it
+02:20:56 <strcat[m]> so I wanted to be able to hard-wire DMARC policy overrides like p=reject for gmail.com since Google always sends valid, signed mails themselves
+02:21:08 <strcat[m]> but I don't think opendmarc can do that
+02:21:11 <strcat[m]> so in the end it's pretty useless
+02:21:20 <strcat[m]> well
+02:21:27 <strcat[m]> I do often check the result manually
+02:21:42 <strcat[m]> it's just pretty annoying it doesn't automatically reject spoofed mail even for gmail.com
+02:21:53 <strcat[m]> I have to hit the keybind to view all headers and check
+05:35:33 <pixel-rush[m]> <strcat[m] "what server?"> > what server?
+05:36:49 <strcat[m]> what have you tried?
+05:36:55 <strcat[m]> there are different TTS options available
+05:36:59 <strcat[m]> unsure which ones work on Android 11 well
+05:53:35 <oldman_newuser> good evening.  so I am grasping that what I thought was aosp was really aosp+official_binaries and what grapheneos uses is aosp+android_prepare_vender .  android_prepare_vender utilizes some aspects of the official_binaries and repackages them. Also know I think I realize that google only supplies security updates for pixels on the latest release,
+05:53:35 <oldman_newuser> which is now 11.  So my quest is:  When I was using LOS and didnt upgrade to the next version(because it was a full wipe/install) I continued to get security updates.  How is that accomplished ?  Do they backport/cherry pick from the aosp master ? tia
+05:56:32 <strcat> oldman_newuser: you did not get full security updates, they just gave you the false impression that you did...
+05:56:43 <strcat> which they do across most devices
+05:57:32 <strcat> oldman_newuser: half of the security updates are AOSP updates, the other half are vendor updates (mix of open source things like kernel drivers, closed source things like most firmware, etc.)
+05:57:48 <strcat> oldman_newuser: Android security patch levels include both
+05:58:09 <strcat> oldman_newuser: it is very common for most aftermarket OSes to portray the AOSP updates as the whole thing and set the patch level inaccurately
+06:01:06 <oldman_newuser> thats makes sense.   how poor judgement would it be to use grapheneos based on android 10, which would fix my lack of voicemail?  I imagine there would be no updates ( understandably so, you cant support both versions), and is grapheneos based on android 10 even still available to download/flash ??
+06:05:20 <strcat> no it's not available, and you definitely shouldn't use it, doesn't make any sense to use that
+06:05:39 <strcat> whatever visual voicemail issues there are with certain carriers just need to be fixed by people with access to them
+06:07:21 <oldman_newuser> ty for your time.  I thought you might say that :-)   I'm going to keep investigating.   have a good night
+07:02:09 <Albakham[m]> Atm, is GrapheneOS based on android 10 or 11?
+07:02:21 <JTL> 11
+08:19:19 * madd_hatter[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/bbxcpRWsncWDPBVlgfJqfyIf/message.txt >
+10:06:12 <Janik[m]> you can try simple contacts
+10:07:15 <Janik[m]> is there a best practice regarding the f-droid priviledged extension?
+10:26:56 <Lia[m]> <Janik[m] "is there a best practice regardi"> The app itself is not built with best practices, unsure if any good opsec will save you from its vulnerabilities
+10:30:45 * Lia[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/YvPMtpqGFYyfEGStKXLddpUe/message.txt >
+10:33:46 <Lia[m]> Anyways, it will not work as user app to be honest
+10:54:09 <Janik[m]> I See. I also just read Daniels Post in an issue about this
+10:54:37 <Janik[m]> however in practice this means Ibwill be updating less frequently which is also suboptimal
+11:00:16 <strcat[m]> it's not the app update system we'll be including in the OS
+11:00:40 <strcat[m]> we aren't outsourcing that to something not close to meeting our security and usability standards
+11:01:03 <strcat[m]> we can't take shortcuts that are insecure, sorry
+11:01:27 <strcat[m]> it's also not on a path to being that way, they don't have aligned priorities with us at all
+11:01:48 <strcat[m]> Janik: F-Droid license rules out including it in GrapheneOS anyway
+11:02:07 <strcat[m]> and the OS needs to ship with a system for installing and updating apps
+11:02:45 <strcat[m]> so regardless we need to make our own similar to having our own OS update system
+11:03:13 <strcat[m]> a far simpler take on it focused on robust automatic updates not getting the way
+11:03:21 <strcat[m]> we can't have an update system that closes apps people are using
+11:03:30 <strcat[m]> like F-Droid with the priv ext
+11:03:41 <strcat[m]> and we can't have the security issues of trusting a huge amount of legacy code / attack surface
+11:04:06 <strcat[m]> and focus on a repository full of insecure apps with poor standards (not even the same standards as the Play Store about targetSdkVersion, etc.)
+11:05:09 <Golli[m]> <strcat[m] "Janik: F-Droid license rules out"> What if you had an app to download and then install F-Droid?
+11:05:37 <strcat[m]> bad user experience
+11:06:23 <strcat[m]> and still the license is an issue ruling it out from being in consideration as a core part of the project
+11:06:31 <strcat[m]> and the technical and project management issues similarly rule it out
+11:06:36 <strcat[m]> so it's just not under consideration
+11:07:12 <strcat[m]> we want to make a security-focused OS, and F-Droid doesn't fit into that
+11:07:49 <strcat[m]> it caused major issues after the Android 11 migration because they hadn't adopted an important security update from 2016 (v2 signatures) and incorrectly shipped apps with API 30+ and v1 signatures (which is invalid) which broke on Android 11
+11:08:08 <strcat[m]> Android 11 had developer previews available for months before that
+11:08:16 <strcat[m]> can't ship API 30+ apps without testing API 30
+11:08:40 <strcat[m]> the privileged extension support still doesn't actually work (it repeatedly tries to reinstall apps, and closes apps that are in use)
+11:09:03 <strcat[m]> it's just not under consideration, and won't be
+11:09:39 <strcat[m]> it's fine to use F-Droid as a stopgap to something better but we won't bundle it - also anything we bundle is very difficult to ever remove, bundling apps is bad
+11:09:52 <strcat[m]> then we're locked in to not removing it or we lose user data that's in it
+11:10:15 <strcat[m]> apps have to be bundled extremely carefully, there are serious consequences to doing it later on
+11:10:24 <strcat[m]> can't just undo the decision
+11:11:15 <strcat[m]> I haven't gotten help with addressing existing issues relevant to this like fixing original-package (which just addresses the problem of an app id for a bundled app needing to change)
+11:12:24 <strcat[m]> we're going to have a first party app repository with our builds of apps and a first party app update / install system meeting our requirements / standards and that's just how it's going to be, F-Droid is a third party program we can't trust with privileges like background install / removal of apps
+11:12:43 <strcat[m]> being able to automatically install code in the background is an enormous privilege
+11:13:18 <strcat[m]> it has to be given only to an extremely trustworthy app where we aren't reliant on an external project for maintaining it, and it doesn't have security issues
+11:14:46 <Janik[m]> this totally makes sense and I wasnt at all advocating for a different approach :+1:
+11:16:25 <Golli[m]> This first party app would also have support for external repo's then?
+11:17:18 <emsyna[m]> strcat:  in that regard, would you consider then using Aurora instead of F-droid ? Or fetching apps directly via GH (for those whom are open sourced) and if you can't , use Aurora Store as a fallback ?
+11:17:49 <emsyna[m]> obviously that includes apksign verify and whatnot
+11:17:55 <emsyna[m]> prior installing any app
+11:18:33 <Golli[m]> <emsyna[m] "strcat:  in that regard, would y"> He's wanting a Graphene made app for it due to the security concerns that using a third-party app has.
+11:19:29 <emsyna[m]> i know right, i just wanted an opinion about my method
+11:19:50 <emsyna[m]> the absolute best way would be to compile stuff on your own obviously
+11:20:20 <strcat[m]> Golli: no I don't think the app built into the OS wouldn't have support for external repos
+11:20:48 <strcat[m]> Golli: apps to install things from elsewhere could be packaged for it
+11:21:28 <strcat[m]> Golli: the way the unknown sources system works, the first party source for apps has to be a specific app not doing third party stuff
+11:21:34 <strcat[m]> Golli: or it breaks it
+11:21:47 <strcat[m]> F-Droid + priv ext breaks that system / device management based on it
+11:22:08 <strcat[m]> so for example there's a toggle we can expose to toggle whether a user profile can install apps from third party sources
+11:22:13 <strcat[m]> where first party means GrapheneOS
+11:22:27 <strcat[m]> if we had F-Droid bundled as a trusted source it wouldn't work
+11:22:34 <strcat[m]> and this is actually an important device management feature
+11:23:09 <strcat[m]> Seedvault has a similar issue but it can be fixed
+11:24:06 <strcat[m]> it can't be fixed for F-Droid, other than having a separate build of it with stuff removed for use with the privext, but it's one of the more minor problems among many issues
+11:24:34 <strcat[m]> thinking about the long term not short term
+11:24:48 <strcat[m]> we don't want to take shortcuts that are causing to cause unfixable, serious problems
+11:46:50 <somenerd[m]> > we don't want to take shortcuts that are causing to cause unfixable, serious problems
+11:46:51 <somenerd[m]> yeah many short term solutions tend to become long term ones
+11:47:00 <somenerd[m]> and that leads to a lot of problems
+13:39:07 <Janik[m]> anyone tried a contact tracing app already? Theres an open source build for the german corona APP with an reimplementation oft the Google API in f-droid but I cant geht it to work
+13:39:21 <Janik[m]> i cant Grant the permission for bluetooth
+13:53:29 <Golli[m]> Though I don't know why you'd want to use one of those contact tracing apps, you could always try to manually give it permission to use Bluetooth/Location in Settings -> Apps -> App Info -> Corona Contact Tracing Germany (I assume this is the one) -> Permissions -> etc
+14:02:20 <strcat> Janik[m]: there's one by the microG author iirc
+14:02:34 <strcat> ah that's what you're talking about
+14:02:42 <strcat> maybe it doesn't work on Android 11
+14:12:33 <fll[m]> Janik: there is no Bluetooth permission AFAIK. It needs the location permission set to always (even in background). The app says it's working for me on current graphene
+14:13:21 <fll[m]> It will show 'unknown risk' for the first couple of days. That's expected
+14:23:51 <Janik[m]> ah OK I set the location to always now it works thx
+14:38:44 <strcat[m]> Janik: location needed to do the kind of bluetooth scanning that it does (because it could track location based on the ids, etc. if it was written to do that - although it's not)
+14:38:55 <strcat[m]> Janik: there's permission-free Bluetooth pairing but doesn't work for that use case
+14:39:39 <Janik[m]> yeah I knew that it need location permission but the permission dialog failed because it only had permisssion when the app is active
+14:39:45 <Janik[m]> when manually setting it it works nw
+14:39:48 <Janik[m]>  * when manually setting it it works now
+16:07:54 <fluoridatedsheep> <Janik[m] "anyone tried a contact tracing a"> why would any rational person possibly want that?
+16:22:37 <Janik[m]> <fluoridatedsheep "why would any rational person po"> have you read the papers from DP-3T? is a privay focused decentralized approach
+16:22:39 <Janik[m]> noone else knows your identity
+16:23:01 <Janik[m]> why would'nt any rational person do everything to stop the pandemic?
+16:23:23 <Janik[m]> https://github.com/DP-3T
+16:23:29 <Janik[m]> germany uses this approach
+16:23:34 <Lia[m]> This will get off topic
+16:23:41 <Janik[m]> well, yeah
+16:24:56 <Lia[m]> <Janik[m] "why would'nt any rational person"> It wont stop the pandemic magically, but that's just me
+16:25:14 <Janik[m]> yes but I also didnt say that ;)
+16:25:52 <Lia[m]> <Janik[m] "yes but I also didnt say that ;)"> It implies that, but oh well
+16:29:31 <Lia[m]> Anybody tested the bootanimation zip?
+16:36:11 <fluoridatedsheep> <Janik[m] "why would'nt any rational person"> because the "pandemic" is pandemonium that is used to strip individuals of their liberty by playing on the highly suggestible nature of humanity. From Aldous Huxley: "The ideals of democracy and freedom confront the brute fact of human suggestibility. One-fifth of every electorate can be hypnotized almost in the twinkling of an eye, one-seventh can be relieved of pain
+16:36:11 <fluoridatedsheep> by injections of water, one-quarter will respond promptly and enthusiastically to hypnopaedia. And to these all too co-operative minorities must be added the slow-starting majorities, whose less extreme suggestibility can be effectually exploited by anyone who knows his business and is prepared to take the necessary time and trouble." But this is off-topic and I'll leave it at that. pm if you have any questions
+16:39:28 <entryware[m]> Huxley took the DMT.
+16:40:14 <fluoridatedsheep> certainly did, good sir lol
+16:44:47 <fluoridatedsheep> also more relevant to this chat, anyone have good offline music players? ive been getting off music platforms (that and maps were the only two closed source applications left). I got some scripts to pull music effectively now so now. Using simple music player but its garbage to say the least. cant even add songs to the queue properly
+16:45:52 <fluoridatedsheep> Considered taking a spyware well-developed one and just removing internet perms
+16:46:27 <Golli[m]> If you're still looking for that maps app, OsmAnd might be what you're after.
+16:46:37 <jpds> There's "Vinyl" on f-droid
+16:47:04 <fluoridatedsheep> <Golli[m] "If you're still looking for that"> OsmAnd is still pretty bad with US addresses though (maybe i just havent learned to tweak it right)
+16:48:03 <fluoridatedsheep> <jpds "There's "Vinyl" on f-droid"> I'll give it a test run, appreciate the recommendation
+16:50:53 <fluoridatedsheep> Okay vinyl is a winner
+16:55:24 <fluoridatedsheep>  * Fingers were crossed for vinyl. appears to crash with internet perm disabled
+16:57:08 <entryware[m]> Try Simple Music Player. It's bare bone but works.
+16:58:05 <fluoridatedsheep> <entryware[m] "Try Simple Music Player. It's ba"> Ah thats the one i mentioned above. It doesnt even add songs to the queue correctly, half the time it wont display my songs, has crashed many times. I found a different one on aurora
+16:58:26 <fluoridatedsheep> works well, doesnt crash without internet. com.vmons.mediaplayer.music
+17:00:50 <fluoridatedsheep> claims to be an offline player, aesthetic, no exodus report generated so couldnt view embedded trackers but like i said - internet perm disabled
+17:04:23 <entryware[m]> Cool. I don't make playlists so SMP is good enough for me. Tried Vanilla Player in the past, seemed okay but Idk if it's got trackers or if it's free as in GPL.
+17:05:11 <Janik[m]> there is also Gelli, a client for a (selfhosted) jellyfin instance, if you want to still do streaming instead of saming the music on your phone
+17:05:25 <fluoridatedsheep> Ah i see, if you dont use the player very often and SMP works, power to you. Was hoping itd get the job done but a bit buggy on my end
+17:06:07 <fluoridatedsheep> <Janik[m] "there is also Gelli, a client fo"> interesting. I'm quite content with offline for now and downloading from scripts when needed, but appreciate the rec
+17:06:56 <entryware[m]> Yeah, Simple Mobile Tools are buggy but I just like that all my icons look the same in the drawer lol.
+17:07:06 <jpds> fluoridatedsheep: Odd, works fine here with no net permissions
+17:07:39 <fluoridatedsheep> <jpds "fluoridated sheeple: Odd, works "> very odd. im running from a 3 rn if that has anything to do with it
+17:11:27 * Thatcher[m] uploaded an image: Screenshot_20201212-091014.png (101KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/fUXAvvOuhSfTYiTBjghnBwDP/Screenshot_20201212-091014.png >
+17:11:28 <Thatcher[m]> Anyone experiencing high battery usage with Vanadium? 9 mins of use ate up 7% of my battery
+17:12:23 <fluoridatedsheep> <Thatcher[m] "Anyone experiencing high battery"> ive been primarily using bromite so cant attest
+17:13:31 <Thatcher[m]> Maybe I'll get Bromite then
+17:15:08 <fluoridatedsheep> It's pretty solid. They both tie into eachother as you probably know. They've considered merging repos
+17:17:03 <Thatcher[m]> <fluoridatedsheep "It's pretty solid. They both tie"> I read somewhere that Bromite uses a lot of code from Vanadium
+17:17:18 <Thatcher[m]> Which is good!
+17:17:36 <fluoridatedsheep> i believe it is more sided in the opposite direction but i could be wrong. Daniel would have to attest to that one
+17:22:59 <strcat[m]> no we don't currently use any substantial stuff from there
+17:23:14 <strcat[m]> Thatcher: can't think of any reason you would have lower battery usage with Bromite, wouldn't make sense
+17:23:14 <fluoridatedsheep> ah my b
+17:23:16 <strcat[m]> they'll be comparable
+17:23:22 <strcat[m]> you must be using a demanding site that's pegging cores at 100%
+17:23:33 <strcat[m]> maybe you have a site open that's mining cryptocurrency or has a bug, who knows
+17:24:03 <strcat[m]> sites run code in the browser - can't really blame the browser if you have sites active pegging cores and using the GPU
+17:24:15 <strcat[m]> aside from disabling JS that's just how browsers work
+17:25:36 <organicpumpkin[m> <fluoridatedsheep "also more relevant to this chat,"> Music Player Go. Has 30+ SDK level, so better for your security if I am not wrong.
+17:25:58 <fluoridatedsheep> also you use anything for metadata removal from pics? tried devising a script to use mat2 but i think ill have to compile it myself for mobile. termux doesnt seem to like it
+17:26:38 <fluoridatedsheep> <organicpumpkin[m "Music Player Go. Has 30+ SDK lev"> i gave that one a look too, missing a lot of features though that make a daily player tolerable
+17:29:00 <fomijafi[m]> fluoridated sheeple: I've been using scrambled exif
+17:29:34 <organicpumpkin[m> <fluoridatedsheep "i gave that one a look too, miss"> They are all similar in that aspect. I have tried EVERY single one on f droid. Barely any variation in usability, they all don't have this feature or that one. So it was a choice of privacy over convenience for me.
+17:30:03 <fluoridatedsheep> roger that
+17:30:30 <fluoridatedsheep> <fomijafi[m] "fluoridated sheeple: I've been u"> That's a good application.. i just wanted something that could recursively wipe for all photos in a dir
+17:31:52 <organicpumpkin[m> <fluoridatedsheep "roger that"> This is the off topic group - #grapheneos-offtopic:matrix.org
+17:37:37 <dikkiedik> Just finished setting up a brand new pixel 4a to find out Esim is not supported. Nice!
+17:39:25 <organicpumpkin[m> <dikkiedik "Just finished setting up a brand"> Graphene has the compatibility for that. It can work once it is setup.
+17:40:28 <dikkiedik> Well that sounds like music to my ears :-)   Could you tell me a bit more or point me in the right direction ?
+17:41:02 <Thatcher[m]> <strcat[m] "they'll be comparable"> You are right. Bromite after 9 mins is the same exact battery usage as Vanadium. The only site I am going to is amazon.
+17:41:39 <strcat[m]> also keep in mind the estimates are not super accurate
+17:41:52 <strcat[m]> Thatcher: web sites can be pretty demanding these days
+17:42:07 <strcat[m]> opening a typical web page in 2020 is one of the most demanding things most people do on their computers
+17:42:22 <strcat[m]> parse and compile 300k lines of code
+17:42:26 <strcat[m]> run demanding code
+17:42:41 <strcat[m]> create a super complex DOM tree with all kinds of complex functionality, and apply transformations to it
+17:42:49 <strcat[m]> and keep redoing layout of the page as the styles change, etc.
+17:42:53 <strcat[m]> and as more content loads
+17:42:55 <Thatcher[m]> I'm gonna see if I can handle JS off 99% of the time
+17:43:00 <strcat[m]> so all the layout / rendering stuff again and again
+17:43:12 <strcat[m]> Thatcher: try https://www.webpagetest.org/
+17:43:15 <strcat[m]> on a web page
+17:45:46 <organicpumpkin[m> <dikkiedik "Well that sounds like music to m"> My understanding is that we have NO app to set it up currently. Until one is made.
+17:47:05 <strcat[m]> the OS supports eSIM but we don't have an app to handle activation, etc.
+17:47:08 <strcat[m]> because it's part of Play services
+17:47:22 <strcat[m]> well, it's not even part of Play services IIRC, it's an app beyond it that depends on it
+17:47:26 <strcat[m]> but you get the idea
+17:47:30 <strcat[m]> it needs to be reimplemented
+17:47:57 <organicpumpkin[m> <strcat[m] "because it's part of Play servic"> Ahh, so it can't be done without play services? (If we develop an app in house?)
+17:48:16 <strcat[m]> no
+17:48:17 <strcat[m]> didn't say that
+17:48:22 <strcat[m]> I said it needs to be reimplemented
+17:48:41 <organicpumpkin[m> Saw that later, makes sense.
+17:48:55 <strcat[m]> there is no inherent dependency on Play services, there is just not an open source app to use for it
+17:49:02 <engulf[m]> With Wireguard VPN (Always-on, Block connections without) is GrapheneOS supposed to check connectivity once you connect to a WiFi without the connectivity check going through the VPN?
+17:49:04 <strcat[m]> maybe one will be added to AOSP but in the meantime it has to be developed
+17:49:13 <strcat[m]> engulf:  it's supposed to do both
+17:49:34 <strcat[m]> engulf: it's supposed to check every network (IPv4, IPv6) for both HTTPS and HTTP and the VPN itself
+17:49:46 <strcat[m]> engulf: it's how it picks which network to use, handles captive portals, etc.
+17:50:16 <strcat[m]> engulf: so if you have mobile network + Wi-Fi connected + a VPN
+17:50:22 <strcat[m]> IPv4 and IPv6 on both networks
+17:51:02 <strcat[m]> there are 4 checks to do per network, so 12 different kinds of checks
+17:51:47 <strcat[m]> engulf: the network implementation itself has to handle connecting to the network so that the VPN can function
+17:51:58 <strcat[m]> all higher level traffic (OS, apps) goes through the VPN
+17:52:27 <strcat[m]> it has to be able to connect to the VPN so it needs working DNS, etc. and has to handle captive portals
+17:53:08 <strcat[m]> DNS for all the higher-level traffic is resolved via the VPN
+17:55:39 <strcat[m]> Thatcher: https://www.webpagetest.org/result/201212_Di2H_ecaca3c90667f10b1c6725b244896239/
+17:55:42 <strcat[m]> Thatcher: as an example of a lightweight site
+17:56:00 <strcat[m]> Thatcher: https://www.webpagetest.org/result/201212_DiAV_67d6e2a009f1fcec8e9f359cfc30a016/ a more typical one that's actually not that heavy compared to most
+17:56:32 <strcat[m]> Document Complete is the time that matters
+17:57:09 <strcat[m]> click the chart of what happens during loading www.nytimes.com
+17:57:27 <strcat[m]> look at all that work being done
+17:57:37 <Thatcher[m]> Holy shit
+17:57:43 <Thatcher[m]> That's insane
+17:57:49 <strcat[m]> and that's not really including all the code that runs
+17:58:07 <strcat[m]> and sites can use multiple threads via web workers
+17:58:07 <strcat[m]> and the GPU
+17:59:18 <strcat[m]> Thatcher: also worth noting nytimes has heavily moved towards first-party analytics/telemetry, ads, etc.
+17:59:23 <strcat[m]> Thatcher: and they are quite optimized with a good tech stack compared to others
+17:59:26 <strcat[m]> so... probably a bad example of how bad things are
+17:59:27 <strcat[m]> let me pick a better one
+18:00:09 <strcat[m]> going to assume trashier papers have slower sites
+18:00:26 <louipc> strcat[m]: you using a custom font?
+18:00:36 <Thatcher[m]> I need to learn to live with javascript disabled. I don't like loading unneccesary web crap
+18:00:57 <strcat[m]> louipc: yes we use Roboto (we serve all the assets ourselves)
+18:01:02 <strcat[m]> louipc: it's a highly optimized version though
+18:01:08 <strcat[m]> it's woff2 and only has the latin characters
+18:01:37 <strcat[m]> louipc: https://github.com/GrapheneOS/grapheneos.org/blob/master/static/grapheneos.css#L139-L187
+18:01:37 <louipc> is that for anti fingerprinting or something?
+18:02:04 <strcat[m]> it only loads ones that are used and is cached essentially 'forever'
+18:02:27 <strcat[m]> louipc: it's so the site looks decent? or you mean the fact that we only use first-party resources and don't use a CDN
+18:02:38 <louipc> i guess using random system font isnt great if you want a consistent look
+18:02:59 <strcat[m]> and btw with HTTP/2, that's quite fast, since with HTTP/2 browsers make a single connection and do up to 128 requests (with nginx default) concurrently
+18:03:05 <strcat[m]> louipc: we use Roboto so it matches what the OS uses
+18:03:10 <louipc> just found it funny that 70% of the site is font
+18:03:12 <strcat[m]> louipc: and it's tiny anyway
+18:03:28 <strcat[m]> louipc: well it's all heavily compressed (brotli precompression)
+18:03:31 <strcat[m]> louipc: and minified
+18:03:46 <strcat[m]> and we don't have images other than the little logo atm
+18:04:05 <strcat[m]> if we had a single photo or whatever it'd be way bigger than the fonts
+18:04:07 <louipc> yea its good anyway
+18:04:10 <strcat[m]> fonts also don't block page from rendering
+18:04:24 <louipc> cool
+18:04:28 <strcat[m]> and btw, soon shared CDN will basically be useless
+18:04:47 <louipc> you could even put the logo in the font, scalable
+18:04:52 <strcat[m]> because Chromium is moving to origin-based network isolation
+18:04:55 <engulf[m]>  * With Wireguard VPN (Always-on, Block connections without) is GrapheneOS supposed to check connectivity once you connect to a WiFi without the first connectivity check going through the VPN?
+18:05:07 <strcat[m]> separate cache, connection pool and a bunch of other things per origin
+18:05:26 <cyborgninjaneer[> Per origin? What does that mean?
+18:05:27 <strcat[m]> so if 1000 sites use the same version of jquery from the same CDN, that no longer gets shared across them (with that enabled)
+18:05:29 <louipc> but then it will be weird for ppl with custom fonts off
+18:05:49 <strcat[m]> cyborgninjaneer: the host name, basically
+18:05:54 <strcat[m]> foo.bar.baz
+18:06:05 <strcat[m]> http and https are different origins
+18:06:09 <strcat[m]> different port? different origin
+18:06:42 <louipc> lol that will bloat the cache the way sites are built these days
+18:06:44 <strcat[m]> cyborgninjaneer: everything other than cookies will be split per origin by default in Chromium (they are essentially doing a more extreme version of what Safari does)
+18:07:00 <strcat[m]> louipc: they did testing and it's actually not that bad since sites are so inefficient and don't update to latest versions of things
+18:07:11 <strcat[m]> but yeah it means that self-hosting stuff actually becomes ideal
+18:07:13 <louipc> pulling from 30 different places or more
+18:07:33 <strcat[m]> because if it's all on the same domain you can have it all fetched via 1 HTTP/2 connection in parallel (or better, HTTP/3)
+18:07:42 <strcat[m]> so for example if we wanted
+18:07:46 <strcat[m]> we could put
+18:08:15 <strcat[m]> Link: <https://grapheneos.org/whatever.woff2>, rel=preload, as=font
+18:08:18 <strcat[m]> as a header
+18:08:30 <strcat[m]> and then the browser would fetch it in parallel immediately after getting the initial response headers
+18:08:58 <strcat[m]> we don't do that atm because I don't think the browser can be smart enough to avoid loading the font if it already has it - and any Android-based OS already has Roboto
+18:09:03 <strcat[m]> so that's wasteful
+18:09:07 <strcat[m]> it does get cached anyways though
+18:09:23 <strcat[m]> louipc: it's really not that big though
+18:09:25 <strcat[m]> if you look
+18:10:06 <strcat[m]>   File: roboto_latin.woff2
+18:10:06 <strcat[m]>   Size: 15736     	Blocks: 32         IO Block: 4096   regular file
+18:10:17 <strcat[m]> louipc: cause only latin range
+18:10:27 <louipc> i know, just funny how it offsets the lightweightness of the rest of the site
+18:10:57 <strcat[m]> louipc: yeah, will be different when we have images tho
+18:11:19 <strcat[m]> ideally logo would be an svg but then Google refuses to acknowledge it the organization's logo
+18:11:34 <strcat[m]> shrug
+18:12:21 <strcat[m]> -rw------- 1 strcat strcat 93709 Dec 11 22:35 releases.html
+18:12:21 <strcat[m]> -rw------- 1 strcat strcat 14636 Dec 11 22:35 releases.html.br
+18:12:21 <strcat[m]> -rw------- 1 strcat strcat 17215 Dec 11 22:35 releases.html.gz
+18:12:48 <strcat[m]> louipc: we use pre-compression
+18:12:49 <strcat[m]> louipc: any modern browser will get served brotli
+18:12:50 <strcat[m]> louipc: so yeah without compression it would be different
+18:12:50 <joehandcockandja> Use webp
+18:13:10 <strcat[m]> joehandcockandjames: the logo in the json-ld has to be png so stuff understands it
+18:13:18 <strcat[m]> and then we need a logo on the page that matches the metadata
+18:13:56 <strcat[m]> joehandcockandjames: it's an annoyance of search engines, etc.
+18:14:08 <strcat[m]> doesn't really matter
+18:14:25 <strcat[m]> we'd just use the svg logo (it's part of the site anyway) otherwise
+18:14:33 <strcat[m]> could check and see if it's still an issue
+18:15:03 <strcat[m]> louipc: also that's the post-minification releases.html
+18:15:10 <strcat[m]> -rw------- 1 strcat strcat 130531 Dec 11 22:34 static/releases.html
+18:15:12 <strcat[m]> is before
+18:16:43 <strcat[m]> louipc: https://github.com/GrapheneOS/grapheneos.org/blob/master/process_static actually saves a lot of bandwidth
+18:32:12 <louipc> dang never heard of brotli
+18:32:40 <louipc> or zopfli
+18:33:31 <cyborgninjaneer[> Is this room still bridged to IRC?
+18:33:53 <louipc> yes
+18:39:20 <strcat[m]> louipc: zopfli is a DEFLATE (used by zip, gzip, zlib, png, etc.) implementation designed for precompression so it takes ages
+18:39:21 <strcat[m]> but gives better results
+18:39:35 <strcat[m]> can use it to further compress pngs or do better job at making gz, etc.
+18:40:14 <strcat[m]> louipc: brotli is a better DEFLATE with a standard static shared dictionary (really helps with small files, especially html, css, js since the standard dictionary is web-oriented) and better compression algorithm
+18:40:19 <faxing[m]> Will Graphene eventually get things like Adaptive Charging and Extreme Battery Saver that were in the last official Android update?
+18:40:23 <strcat[m]> louipc: also fairly focused on precompression
+18:40:33 <strcat[m]> faxing: we have the standard stuff from AOSP
+18:41:16 <faxing[m]> <strcat[m] "faxing: we have the standard stu"> So what you're saying is if it gets pushed to AOSP, then Graphene should get it?
+18:41:44 <strcat[m]> I mean, whatever was added in the latest release to AOSP, we have that that
+18:41:52 <strcat[m]> perhaps there are some things we don't toggle on, perhaps not
+18:43:39 <strcat[m]> faxing: https://storage.googleapis.com/support-forums-api/attachment/thread-87395744-15379016386618254117.png
+18:43:54 <strcat[m]> looks like adaptive charging is a hardware enabled feature
+18:46:04 <strcat[m]> Thatcher: https://www.webpagetest.org/result/201212_DiEG_3ab2770c0540bbc3741ebe82a4a9d3a4/ was my other test
+18:46:50 <strcat[m]> look at the insane # of js files they load from their server
+18:47:17 <faxing[m]> <strcat[m] "looks like adaptive charging is "> Right now, yes, but Google said that it will be a part of Android 12, so I was just wondering for things like that if they'll be enabled or if graphene kind of keeps it more minimal
+18:47:32 <faxing[m]> Thank you so much for the information though, you've been very helpful.
+18:47:44 <strcat[m]> faxing:  if it's in AOSP we have it
+18:48:10 <strcat[m]> faxing: it's not stated there what's an AOSP feature vs. Play services feature vs. Pixel-specific Google app feature
+18:48:50 <strcat[m]> most of that is about Google services so it's not relevant to AOSP
+18:50:58 <Possum_Von_Awess> Howdy
+18:51:17 <Possum_Von_Awess> anyone know of a foss option for webview?
+18:51:30 <Possum_Von_Awess> For this app https://play.google.com/store/apps/details?id=com.google.android.webview&hl=en_US&gl=US
+18:51:52 <Possum_Von_Awess> super useful, but its a google app
+18:53:17 <nscnt> Possum_Von_Awess: Vanadium provides the WebView on GrapheneOS
+18:53:30 <jpds> Possum_Von_Awess: https://github.com/GrapheneOS/Vanadium
+18:54:11 <Pratyush[m]> <Possum_Von_Awess "anyone know of a foss option for"> Depending on your device you might not be allowed to install any Foss web view.
+18:57:34 <Possum_Von_Awess> Why is that?
+18:58:04 <Possum_Von_Awess> For webview on vanadium, is it just "add to home screen" option?
+18:59:13 <nscnt> Possum_Von_Awess: The WebView is a system component to display web content.
+18:59:36 <nscnt> Other apps can use this View to display web content
+19:00:06 <Possum_Von_Awess> I see. I am setting up a phone for someone, and want to set it up so webpage apps have their own app icon
+19:00:50 <Possum_Von_Awess> Like you hit the app icon nd you jump to that webpage
+19:00:54 <nscnt> Possum_Von_Awess: I don't think that's WebView. You just add this page as a shortcut to the home screen
+19:01:06 <Possum_Von_Awess> yeah
+19:01:28 <nscnt> You may do that, yes
+19:01:53 <Possum_Von_Awess> are there any more elegant options?
+19:02:06 <Possum_Von_Awess> I am setting this up for a boomer
+19:02:13 <Possum_Von_Awess> a literal boomer
+19:02:51 <Possum_Von_Awess> they finally saw the light after all the crazy covid tracking stuff
+19:03:09 <Possum_Von_Awess> the FOSS saviors hahaha
+19:03:38 <nscnt> No, I don't know about another solution regarding your problem. The shortcut is pretty elegant if it's a well-made web app
+19:03:58 <Possum_Von_Awess> yeah it seems like the best but had to ask
+19:05:01 <strcat[m]> Possum_Von_Awess: the WebView is provided by Vanadium, it's open source
+19:05:10 <strcat[m]> Possum_Von_Awess: WebView is how apps render web content internally, it's not user-facing, it's a widget for apps to use
+19:05:35 <strcat[m]> Possum_Von_Awess: if you want to add a web page to the home screen, go to the site in Vanadium and use add to home page in the menu
+19:05:42 <Possum_Von_Awess> I see thank you. I was confused because it was listed as an app via google play
+19:06:07 <strcat[m]> because for the stock OS they update the app-based OS components via the Play Store
+19:06:17 <strcat[m]> and APEX components (although those aren't listed as apps)
+19:06:24 <Possum_Von_Awess> By the way does anyone here use the audiojackless pixels?
+19:06:50 <strcat[m]> they still have wired digital audio via USB-C
+19:07:13 <Possum_Von_Awess> I was thinking of picking up a 4xl, but the usbc audio dongles always breaks :(
+19:07:27 <strcat[m]> you can use USB-C headphones, don't need a dongle
+19:08:04 <Possum_Von_Awess> Im really looking for a 3.5m jack
+19:08:20 <Possum_Von_Awess> like a dongle that doesnt snap off
+19:08:31 <Possum_Von_Awess> like if it site flush with the phone
+19:08:38 <Possum_Von_Awess> like how cases do
+19:08:44 <Possum_Von_Awess> sits**
+19:09:23 <Possum_Von_Awess> I had a normal usbc dongle on another phone, and broke 2 in a day
+19:09:41 <strcat[m]> Possum_Von_Awess: that's how the USB-C plug is on the Pixel C, it's further to the back
+19:24:59 <Thatcher[m]> Is there any way to view the clipboard in Graphene?
+19:25:36 <strcat[m]> use a keyboard that offers clipboard management features
+19:25:46 <strcat[m]> or paste it in a text editor
+19:25:59 <Thatcher[m]> Ah, thank you
+19:27:58 <strcat[m]> GrapheneOS 2020.12.12.03 release: https://grapheneos.org/releases#2020.12.12.03
+19:28:03 <strcat[m]> https://twitter.com/GrapheneOS/status/1337841371177242627
+19:29:56 <strcat[m]> https://www.reddit.com/r/GrapheneOS/comments/kbv6t3/grapheneos_2020121203_release/
+19:51:41 <strcat[m]> updated https://grapheneos.org/faq#default-connections etc. already
+19:55:22 <Guest32> Hi there, complete noob here just got a Pixel 3 and I tried installing Graphene but I’m getting a message that OEM unlocking is not available on carrier locked phones, any way to get around this?
+19:57:03 <louipc> i think you can ask your carrier for unlock code
+19:57:12 <strcat[m]> Guest32: is it a Verizon model phone?
+19:57:27 <strcat[m]> Guest32: if not you should be able to get it unlocked
+19:57:31 <Guest32> I was told that the phone is carrier unlocked from Verizon
+19:57:42 <strcat[m]> you can enable adb and check
+19:58:06 <strcat[m]> `adb shell getprop ro.boot.cid`
+19:58:14 <strcat[m]> should say `00000000`
+19:58:16 <Guest32> Thanks, I’ll take a look
+19:58:33 <foxlegendzoro[m]> hey guys, trying to install grapheneos on my pixel 4a
+19:58:47 <foxlegendzoro[m]> when i was trying to run flash-all it kept telling me fastboot is too old
+19:58:51 <foxlegendzoro[m]> but i have the latest one
+19:58:56 <foxlegendzoro[m]> i tried flashing the files one by one
+19:59:06 <foxlegendzoro[m]> and now my phone is stuck on the grapheneos boot screen
+19:59:15 <louipc> was there some weird error message before that?
+19:59:29 <foxlegendzoro[m]> i dont think so
+19:59:49 <foxlegendzoro[m]> i closed the command line );
+20:00:10 <louipc> if it said flashboots too old that means it couldnt find your latest flashboot
+20:00:58 <foxlegendzoro[m]> sorry im kinda noobish i just switched back to android after being on iphone for a few years
+20:01:00 <foxlegendzoro[m]> what should i do?
+20:01:21 <foxlegendzoro[m]> been trying to install it for like over an hour now
+20:01:44 <louipc> you using the install instructions from grapheneos.org?
+20:02:04 <foxlegendzoro[m]> yeah to the best of my ability
+20:02:17 <foxlegendzoro[m]> right from the first try i was getting the too old error
+20:03:38 <louipc> and what OS are you using
+20:03:51 <foxlegendzoro[m]> windows 10
+20:04:01 <louipc> did you use powershell
+20:04:11 <foxlegendzoro[m]> i tried powershell and cmd
+20:04:23 <foxlegendzoro[m]> i got to the boot screen with  cmd
+20:04:24 <strcat[m]> foxlegendzoro: open up PowerShell again and make sure to run the `Path` command in the fastboot section
+20:04:25 <louipc> you must use powershell
+20:04:36 <louipc> and you need to keep the same powershell window
+20:04:41 <strcat[m]> foxlegendzoro: sounds like you have multiple fastboot installs
+20:04:43 <louipc> for the whole process
+20:04:54 <strcat[m]> foxlegendzoro: and you're not setting `Path` to refer to the one you just got
+20:05:02 <strcat[m]> I would also recommend removing whatever out-of-date fastboot install you have
+20:05:07 <strcat[m]> maybe something you installed earlier
+20:05:09 <louipc> yea remove all the old stuff
+20:05:19 <foxlegendzoro[m]> how do i run the path command
+20:05:22 <foxlegendzoro[m]> just path?
+20:09:06 <foxlegendzoro[m]> also how would i remove other installations
+20:09:17 <foxlegendzoro[m]> ive only installed it today any installs are the latest
+20:13:44 <foxlegendzoro[m]> anyone? ):
+20:16:40 <Guest9> Sorry, my IRC disconnected, I tried running fastboot flashing unlock but it gives an error saying flashing unlock is not allowed, is there anything I can do?
+20:17:42 <nscnt> foxlegendzoro[m]: Just try to start from the beginning. Follow the official installation guide
+20:17:58 <foxlegendzoro[m]> how do i set the path though
+20:17:59 <nscnt> All commands are written there for copy & paste
+20:18:11 <nscnt> $env:Path = "$pwd\platform-tools;$env:Path"
+20:19:27 <foxlegendzoro[m]> hell yeah i think i got it
+20:20:11 <strcat[m]> Guest9 (IRC): need to enable OEM unlocking
+20:20:47 <Guest9> Tried that, but it is grayed out saying it is not available on carrier locked phones
+20:21:07 <foxlegendzoro[m]> yeah im pretty sure you need an unlocked phone
+20:21:25 <Guest9> Factory unlocked? This ones a carrier unlocked...
+20:24:10 <nscnt> Guest9: As suggested earlier, you may enable adb and run: adb shell getprop ro.boot.cid
+20:24:25 <Guest9> Yeah, it reported 00000000
+20:25:45 <foxlegendzoro[m]> whats the best browser to use
+20:27:08 <fluoridatedsheep> <foxlegendzoro[m] "whats the best browser to use "> internet explorer
+20:27:13 <nscnt> foxlegendzoro[m]: Read this: https://grapheneos.org/usage#web-browsing
+20:27:34 <Guest9>  So... is there anything that can be done?
+20:28:15 <foxlegendzoro[m]> so the included one
+20:28:24 <nscnt> Guest9: I don't know how I could help, I'm sorry
+20:28:52 <Guest9> Ah alright, thanks anyway
+20:31:26 <joehandcockandja> Does anyone have VoLTE working on AT&T
+20:31:41 <nscnt> foxlegendzoro[m]: This excerpt explains underlying technical details of a web browser and gives a recommendation according to that. At the end it's your choice, depending on what your goal is
+20:32:02 <joehandcockandja> For some reason it just doesn't want to work for me
+20:32:25 <foxlegendzoro[m]> i saw someone say something about using a vanadium webapp for instagram
+20:32:34 <foxlegendzoro[m]> can someone tell me about that / how to
+20:33:05 <nscnt> foxlegendzoro[m]: We have #grapheneos-offtopic in case you didn't know
+20:33:45 <foxlegendzoro[m]> my bad
+20:33:48 <foxlegendzoro[m]> how do i get there
+20:34:07 <nscnt> #grapheneos-offtopic:matrix.org
+20:34:10 <nscnt> for Matrix users
+22:16:37 <aokiepokie[m]> Someone told me GraohebeOS is going support google play services is it true ? Any official source for this rumor
+22:19:48 <strcat[m]> no, it's not
+22:20:35 <strcat[m]> read the content on our site, Twitter account, etc.
+22:20:53 <strcat[m]> https://grapheneos.org/#never-google-services
+22:22:48 <strcat[m]> says what absolutely won't happen there along with what is being considered for the future, but definitely not a timeline for that and it has to be very carefully implemented, and may require substantial work to meet our standards
+22:41:26 <darbubu[m]> Hello, i have one question about seedvault. How i can show my 12 words or set this 12 words New?
+22:43:29 <rny> reset it
+23:40:28 <darbubu[m]> <rny "reset it"> Device reset? Seedvault reset? Or 12 words reset? I don't know how :(
+23:42:19 <strcat[m]> you can reset seedvault data
+23:42:21 <strcat[m]> app settings
+23:54:27 <Freedom18> First time using one of these but has anyone ran into (Mobile Network State = Unknown) after activating a new Pixel 3 XL on the Sprint/Tmobile network?

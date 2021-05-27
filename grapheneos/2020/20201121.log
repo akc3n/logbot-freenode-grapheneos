@@ -1,0 +1,1750 @@
+00:00:53 <strcat[m]> do it from Windows 10 and make sure to follow the instructions exactly as written
+00:00:53 <strcat[m]> adb isn't used by our official instructions
+00:01:01 <strcat[m]> so it's clear you're using unofficial instructions or coming up with your own way of doing it
+00:01:05 <strcat[m]> we can't provide support for that here
+00:01:13 <strcat[m]> you need to follow https://grapheneos.org/install exactly as written there
+00:02:25 <problems_10> I had the same waiting for any device message when I tried the instructions in that link.  using adb reboot bootloader was something that came up when I was searching for a solution in the chat history here.
+00:02:35 <strcat[m]> using Windows or macOS will be easier unless you're on a distribution with proper packages for this
+00:02:50 <problems_10> I'm currently logged into windows 10.
+00:02:57 <problems_10> I gave up on linux earlier.
+00:03:06 <strcat[m]> https://grapheneos.org/install#obtaining-fastboot
+00:03:09 <strcat[m]> make sure to start with that
+00:03:21 <strcat[m]> and do it all in the same PowerShell instance
+00:03:22 <problems_10> fastboot version 30.0.5-6877874
+00:03:43 <problems_10> That's my fastboot version in an admin powershell
+00:03:55 <strcat[m]> running `fastboot --version` from the default directory it opens in, right?
+00:04:00 <strcat[m]> not after changing directory
+00:08:14 <problems_10> I started over.  I did the first 3 commands where you use curl then verify the integrity of the download and finally unzip it.  It unzipped into system32 since that's what appears when I open an admin powershell window.
+00:08:29 <problems_10> I then ran the path command.
+00:08:52 <problems_10> When I run fastboot --version, it doesn't do anything though.  Just makes a new line.
+00:09:01 <problems_10> PS C:\WINDOWS\system32> $env:Path = "$pwd\platform-tools;$env:Path"PS C:\WINDOWS\system32> fastboot --version
+00:09:22 <problems_10> 'PS C:\WINDOWS\system32> $env:Path = "$pwd\platform-tools;$env:Path"PS C:\WINDOWS\system32> fastboot --version'
+00:09:40 <problems_10> Sorry about the formatting, I can't figure out how to do inline code.
+00:15:53 <TheJollyRoger> Hi problems_10, let me catch up a bit...
+00:18:55 <TheJollyRoger> problems_10: looks like where you set it to isn't where fastboot is located: what the `$env:Path = "$pwd\platform-tools;$env:Path"` command does is it sets the environment variable for your command path to look in the current directory and find the "platform-tools" tools folder in it, plus what the existing variable is.
+00:19:11 <TheJollyRoger> Either that or your installation's really gone belly-side up!
+00:19:44 <problems_10> So when I look in my windows/system32 folder, I see the zip and I see the platform-tools folder from when it unzipped.
+00:20:21 <problems_10> All the platform-tool files and exes are inside the platform-tools folder.  So curl worked and unzip worked.
+00:20:46 <TheJollyRoger> Ok, I think I see but just to confirm for me... can you try: "get-childitem C:\windows\system32\platform-tools\fastboot.exe" and see if it returns fastboot?
+00:20:48 <problems_10> C:\Windows\System32\platform-tools
+00:21:04 <problems_10> That's where everything is when I look in file explorer.  Sure trying your command
+00:21:36 <problems_10> That says the follow:
+00:21:38 <problems_10>     Directory: C:\windows\system32\platform-toolsMode                LastWriteTime         Length Name----                -------------         ------ -----a----        10/1/2020   3:27 PM        1397248 fastboot.exe
+00:21:46 <TheJollyRoger> Ok great, it's there...
+00:21:49 * TheJollyRoger scratches his head.
+00:22:05 <problems_10> Yeah idk, been trying this for hours.  Driving me crazy
+00:22:35 <strcat[m]> problems_10: you shouldn't be using an admin PowerShell, just use a regular one
+00:22:57 <problems_10> Got it, I'll redo the instructions with regular shell
+00:22:57 <strcat[m]> the intention isn't that you end up with the files where you're putting them
+00:23:03 <strcat[m]> that shouldn't matter but you should clean that up
+00:23:15 <problems_10> I'll delete it
+00:23:17 <anupritaisno1[m]> problems_10: pm me
+00:26:31 <problems_10> anupritaisno1[m] I don't have an account setup so I can't pm
+00:29:21 <problems_10> Using the downloads folder and a non-admin powershell works.  fastboot --version is working now
+00:31:05 <problems_10> I tried fastboot flashing unlocked again but it's still stuck at waiting for any device.  Before I typed that command, I powered the phone off then did volume down+power until it went to the fastboot mode screen.
+00:46:58 <strcat[m]> what kind of USB cable are you using?
+00:47:49 <problems_10> A thunderbolt cable that is USB C to USB C.  I tried a non-thunderbolt cable that was C to C and also a C to A cable but neither of those worked.
+00:48:39 <problems_10> If I don't use the thunderbolt rated cable, the usb options never appear in the notification shade on the pixel.  If I use the thunderbolt cable then it offers to charge or file transfer etc in the notification shade.
+00:49:09 <problems_10> It's also the only way I can get it to appear in device manager under "portable devices".  Otherwise it just never shows up in device manager.
+00:49:36 <strcat[m]> making it sound like your computer has broken USB
+00:50:05 <problems_10> Yes it really seems picky for some reason with this process.
+00:50:22 <problems_10> I haven't tried fastboot before with it though.
+00:50:30 <strcat[m]> well, USB has to work properly for it
+00:50:43 <problems_10> It's a thinkpad if this is some known issue
+00:50:53 <problems_10> P52
+00:51:13 <strcat[m]> lots of laptops have broken USB
+00:51:19 <strcat[m]> and computer cases (the front panel ports)
+00:52:17 <problems_10> I know ADB is ok if I use that thunderbolt cable.
+00:52:34 <problems_10> I'll see if I can borrow another computer.
+00:53:05 <strcat[m]> ADB is a lot more tolerant of broken USB
+00:53:18 <strcat[m]> problems_10: another thing to try is flipping the cable
+00:53:20 <strcat[m]> in one of the ports
+00:53:32 <strcat[m]> if they have a broken implementation that's not symmetric
+00:54:03 <strcat[m]> flip the cable for just the phone
+00:54:09 <problems_10> It's probably broken like you say.
+00:54:14 <strcat[m]> if that doesn't work flip it for both again (to try all the combinations)
+00:54:16 <ss132ikl> by the way, i did a lightweight sync and the actual size was 101G vs the reported size on the guide of 61G
+00:54:23 <problems_10> If I flip the cable, do I leave the fastboot command running?
+00:54:30 <strcat[m]> no
+00:54:33 <problems_10> Or kill it and rerun fastboot flash?
+00:54:40 <strcat[m]> yes
+00:54:42 <strcat[m]> ctrl-c
+00:54:54 <problems_10> Alight let me try some flipping combos
+00:55:29 <strcat[m]> steven: how did you do the lightweight sync though?
+00:55:35 <strcat[m]> I don't think we actually documented how to do that
+00:56:02 <ss132ikl> `repo init -u https://github.com/GrapheneOS/platform_manifest.git -b 11 -c`
+00:56:02 <ss132ikl> `repo sync -j16 -c`
+00:56:08 <ss132ikl> and yeah there is no docs on that but someone told me to use `-c`
+00:56:29 <ss132ikl> they both said `-c` did the same thing on the help page so i figured i'd throw it on both
+00:56:37 <strcat[m]> -c isn't enough
+00:56:45 <ss132ikl> oh
+00:56:56 <ss132ikl> what else do you need lol
+00:57:03 <ss132ikl> it's fine now obviously though
+00:57:10 <strcat[m]> all that -c does is fetch only the current branch, it will still fetch the full history of the current branch
+00:57:14 <ss132ikl> oh
+00:57:20 <ss132ikl> yeah that makes sense
+00:57:23 <strcat[m]> and I think it still fetches the tags anyway
+00:57:30 <problems_10> Doesn't work, I think the laptop is just broken.
+00:57:31 <strcat[m]> so it doesn't really save anything substantial
+00:57:57 <problems_10> I'll try with a desktop and rear usb ports.
+00:58:29 <strcat[m]> steven: by lightweight sync it means shallow clones of all the repositories with the depth option so that you don't have history
+00:58:35 <ss132ikl> yea
+00:58:49 <ss132ikl> oh --depth=1 then
+00:58:59 <strcat[m]> yeah --depth=1 for repo init
+00:59:14 <strcat[m]> and also -c --no-clone-bundle --no-tags to repo sync
+00:59:15 <strcat[m]> probably
+01:07:02 <problems_10> I tried a desktop but it doesn't appear under "portable devices".  Instead it seems to appear under usb serial bus controllers as an improperly installed device.
+01:07:31 <problems_10> I think that's a driver issue but windows says it foudn the right driver which can't be true.
+01:08:54 <problems_10> That's a windows 10 computer with a usb C to usb A cable in a 2.0 port.  Since the driver doesn't seem correct, I haven't been able to get the pixel to offer to save the computer rsa key.
+01:23:00 <strcat[m]> problems_10: make sure to use a rear USB port, and perhaps your USB C to A cable doesn't work
+01:23:13 <strcat[m]> problems_10: it works fine with either USB C to USB C or USB A to USB C
+01:23:18 <strcat[m]> USB 2 vs. 3 or whatever doesn't matter
+01:23:25 <strcat[m]> it just has to be a standards compliant, working USB implementation
+01:23:34 <strcat[m]> unfortunately a lot of cables, ports, hubs, etc. are not to be spec and are broken
+01:23:42 <strcat[m]> if you buy random off-brand USB cables you should assume they are broken
+01:23:48 <strcat[m]> and if you buy fancy ones, a lot of those are broken too
+01:24:06 <makingaliasesisa> Lol
+01:24:09 <strcat[m]> fastboot requires that it actually works properly
+01:24:14 <strcat[m]> it can't cope with broken USB
+01:24:20 <strcat[m]> adb is more forgiving
+01:25:00 <strcat[m]> if someone flashes from a Macbook with the USB C cable that comes with a phone they won't have problems, the issue is using broken hardware
+01:26:20 <problems_10> Yeah it's a rear usb plug.  I tried a rear C, rear usb 2.0 A, rear usb 3.0 A.
+01:26:48 <problems_10> I used an anker powerline cable, an LG v30 c to c and the c to c that came with it.
+01:27:10 <problems_10> All give the same unknown device in device manager and it's stopped with error 43.
+01:27:36 <problems_10> That error is actually what happens when I use anything but the thunderbolt c to c on my laptop.
+01:30:44 <strcat[m]> problems_10: you could try explicitly installing the official Android device driver
+01:30:48 <strcat[m]> but Windows should already install a working one
+01:30:59 <strcat[m]> it works for other people
+01:31:11 <strcat[m]> https://developer.android.com/studio/run/win-usb
+01:31:25 <strcat[m]> problems_10: Windows already has one that it gets automatically (I think it's probably just bundled with the latest Windows 10)
+01:31:37 <strcat[m]> so our instructions don't mention that because it shouldn't be needed
+01:36:48 <problems_10> I did try that link awhile ago and again just now.  When I select the unknown device and point it to the unzipped driver folder, it says the driver is not for x64 windows and refuses to install.
+01:37:11 <problems_10> Or it says the best driver is already installed after it looks in the win-usb folder.
+02:16:10 <problems_10> I tried a macbook pro 2012 which doesn't have any usb C ports but still can't get anything to appear with -fastboot devices
+02:17:06 <problems_10> 5 different USB C to USB A cables.  They can't all be bad.  Several are Anker and the others are what came with the pixel and a couple other phones like samsung.
+04:04:15 <blindula> Hello, my device is stuck after the flash-all command and wont boot.  says device state is locked and can't find valid operating system..
+04:04:30 <blindula> any help would be appreciated
+04:07:58 <strcat[m]> unlock and follow the instructions from https://grapheneos.org/install exactly as written there
+04:08:02 <strcat[m]> just start over
+04:08:13 <blindula> https://www.reddit.com/r/GrapheneOS/comments/jy478r/trouble_installing_on_pixel_4a/
+04:08:16 <blindula> Please read my post
+04:08:33 <blindula> My device will not boot and device state is locked, I'm not sure how to start over.
+04:08:41 <strcat[m]> you followed unofficial instructions using sketchy third party software
+04:08:42 <strcat[m]> that's not a good idea
+04:08:48 <strcat[m]> we only provide support for the official installation instructions
+04:09:01 <strcat[m]> blindula: start over using the official installation instructions - that's all you have to do
+04:09:14 <strcat[m]> blindula: except we don't know what third party software you installed and what it did to your machine
+04:09:16 <TheJollyRoger> Ahoy blindula, let me see if I can help you out - this can happen if you bypassed the fastboot safety check or used an unsupported fastboot version.
+04:09:17 <blindula> true, there was nothing that would work with the instructions on a website.  the instruction from a windows computer are very poor and not specific at all
+04:09:31 <strcat[m]> they are not very poor
+04:09:33 <strcat[m]> they give exactly the commands that you have to run
+04:09:49 <blindula> Ok i am in dire need lol...only thing is I'm on a different computer than i did the flash on, not sure if that matters
+04:09:55 <strcat[m]> if you copy paste what's there and adjust the device name and release version it will work on Windows and macOS
+04:10:02 <blindula> I mainly want to be able to complete the installation or restart from scratch
+04:10:21 <strcat[m]> you can do that, but first remove all the third party software
+04:10:25 <strcat[m]> including any third party drivers
+04:10:30 <TheJollyRoger> blindula, I can try and walk you through it a bit.
+04:10:31 <blindula> ok, my device is in fastboot mode right now but everything i try it just restarts and says can't find OS
+04:10:31 <strcat[m]> and hope it didn't leave behind anything permanent
+04:10:53 <strcat[m]> blindula: just follow the official instructions from the start
+04:10:57 <TheJollyRoger> I can't see your post since the subreddit is in maintenance mode at the moment, but it sounds like you flashed with an old version of fastboot and bypassed the fastboot check.
+04:11:00 <strcat[m]> after removing the third party software
+04:11:12 <blindula> Hey, i attempted install on windows 10 with much frustration, kept going between the newest directions on the website and the "minimal ADB" recommended downloads on installation tutorials. Attempted powershell, doesnt work whatsoever, they dont have any directions on how to use it but it says on the directions to use it. I try to type in the
+04:11:13 <blindula> command prompts on it and nothing happens. So, did it according to this tutorial:https://www.youtube.com/watch?v=gQkb0OAOXocMinimal ADB: https://forum.xda-developers.com/show...At first, seemed to run into a wall at the "flash all" part, then realized i was using usb-c to usb-c in a usb hub so, apparently thats not good enough. tried with a usb-a
+04:11:13 <blindula> to usb-c cable and flash-all command worked! Or seemed to work...did all it was supposed to say in the command prompt then when phone attempted to boot, says:"Can't find valid operating system. The device will not start.Visit this link on another device:g.co/ABHID: 879CD3F1"When holding down volume down and power buttons, goes into manual fastboot
+04:11:14 <blindula> but device state remains "locked". I am no longer at the same windows computer that i attempted the install at, however last i tried on that pc, "adb devices" prompt on cmd had no response.Now am trying to do anything i can to flash with stock os or reinstall graphene, unlock the bootloader somehow, with a different computer, a Mac OS, and nothing
+04:11:14 <blindula> is working. Installed all necessary filed, went into terminal, did the necessary prompts according to this video:https://www.youtube.com/watch?v=U6at2Dzay94When i enter "adb devices" on terminal, nothing comes up in response and the pixel phone (currently connected via usb-c to usb-a) does not show anything different on the screen from when it is
+04:11:15 <blindula> unplugged.Any advice?In the fastboot screen it says these things:Fastboot modeProduct revision:sunfish MP1.0(NA)Bootloader version: s5-0.2-6539975Baseband version: g7150-00018-200701-B-6643937Serial number: xxxxxxxxxxxxxNOS production: yesDRAM: 6GB micronDevice state: lockedBoot slot: aEnter reason:combo key
+04:11:25 <blindula> This is what my screen says right now:
+04:11:27 <blindula> Fastboot modeProduct revision:sunfish MP1.0(NA)Bootloader version: s5-0.2-6539975Baseband version: g7150-00018-200701-B-6643937Serial number: xxxxxxxxxxxxxNOS production: yesDRAM: 6GB micronDevice state: lockedBoot slot: aEnter reason:combo key
+04:11:45 <strcat[m]> there are no official instructions that mention anything about a 'minimal adb'
+04:11:52 <strcat[m]> it's broken third party software
+04:11:57 <TheJollyRoger> Yeah, third party guide and unofficial version of fastboot.
+04:12:01 <TheJollyRoger> That's what caused the bricking.
+04:12:04 <TheJollyRoger> Fortunately, this isn't permanent.
+04:12:16 <blindula> ok, any assistance would be greatly appreciated
+04:12:22 <strcat[m]> and our install script has a check that checks the fastboot version and errors out if it's invalid or too old
+04:12:34 <strcat[m]> but unfortunately people created unofficial instructions where they recommended removing the sanity check from the flashing script
+04:12:36 <TheJollyRoger> Yeah. If you removed or bypassed that check, this is what generally happens.
+04:12:51 <blindula> Ok, what can i do now though?
+04:13:06 <strcat[m]> blindula: remove third party software and just start over with the official guide
+04:13:12 <blindula> How
+04:13:15 <TheJollyRoger> We're going to start from the beginning, the first step is we're going to have to remove all the third party software, drivers, adb versions, etc.
+04:13:17 <blindula> I cannot start the device
+04:13:20 <TheJollyRoger> Because that's what caused the bricking.
+04:13:24 <TheJollyRoger> Nonono, on the computer doing the installation.
+04:13:27 <strcat[m]> blindula: you just said you're in fastboot mode
+04:13:27 <TheJollyRoger> Set the phone aside for now.
+04:13:29 <strcat[m]> and that it shows it's locked
+04:13:35 <strcat[m]> so the device is started, and working
+04:13:42 <blindula> Yeah, and when i try to boot the device, it says cannot find OS
+04:13:54 <strcat[m]> because you corrupted the OS, there is no OS
+04:14:00 <TheJollyRoger> strcat[m]: er, Captain, you want to handle this one...?
+04:14:01 <strcat[m]> so, follow the instructions to install an OS
+04:14:07 <blindula> and when i go on terminal on my mac, i enter adb devices and nothing comes up
+04:14:17 <strcat[m]> the official instructions don't say to use adb
+04:14:20 <strcat[m]> adb isn't used at all
+04:14:20 <blindula> ok...so what exactly is my next step here?
+04:14:26 <TheJollyRoger> blindula -- set the phone aside for now, we /must deal with the computer first/.
+04:14:28 <strcat[m]> stop following unofficial instructions
+04:14:32 <strcat[m]> they're wrong and dangerous
+04:14:41 <strcat[m]> the official instructions only use fastboot, not adb
+04:14:44 <blindula> you say start from scratch...i downloaded the necessary files from the install page
+04:14:48 <strcat[m]> so anything telling you to use adb isd wrong
+04:15:16 <strcat[m]> blindula: step 1 is getting fastboot per the instructions on the install page, but first remove whatever you already installed / downloaded from unofficial guides
+04:15:30 <TheJollyRoger> (On the computer. Set the phone aside for now.)
+04:15:31 <strcat[m]> uninstall any drivers you installed, remove/uninstall any fastboot / adb stuff you got
+04:15:44 <blindula> ok, so...i downloaded the platform tools package for mac from the link on the install page...and the sunfish factory-t2020.11.05.18.zip
+04:15:59 <blindula> I'm on a completely different computer than what i had previously used to flash
+04:16:07 <blindula> completely different operating system as well
+04:16:16 <strcat[m]> follow the way the instructions do it
+04:16:20 <strcat[m]> exact commands it uses
+04:16:51 <strcat[m]> so you should be able to run `fastboot --version` in the PowerShell instance it has you open
+04:16:58 <blindula> yeah but the problem is...the instructions do not say to do anything specific in the first half of the steps
+04:17:01 <strcat[m]> without changing directory
+04:17:14 <strcat[m]> https://grapheneos.org/install#standalone-platform-tools
+04:17:31 <blindula> I'm not on windows, I'm on a mac.  i tried initially on a windows, i am no longer at that location and must use a mac os to complete or repair the installation
+04:17:46 <strcat[m]> yeah so follow what it says for macOS
+04:17:48 <blindula> I have the platform tools downloaded for my mac
+04:17:57 <strcat[m]> https://grapheneos.org/install#standalone-platform-tools start with this section
+04:18:11 <strcat[m]> blindula: you did it per the instructions here? and `fastboot --version` reports the expected result?
+04:18:29 <strcat[m]> after that continue from https://grapheneos.org/install#unlocking-the-bootloader
+04:18:35 <TheJollyRoger> blindula: the next step is to extract it and add it to your command path, using the terminal.
+04:18:38 <blindula> I have downloaded the platform tools, what the hell is the next step?  does not say anything specific to do
+04:18:47 <blindula> Like click what, type what, open what EXACTLY
+04:18:54 <TheJollyRoger> blindula: open Terminal.
+04:18:57 <blindula> ok, done
+04:19:06 <blindula> phone is also connected in fastboot the whole time
+04:19:07 <strcat[m]> blindula: you need to get platform-tools per the instructions there
+04:19:09 <TheJollyRoger> Alright. Can you set the working directory in Terminal to where you've downloaded the file?
+04:19:15 <strcat[m]> no
+04:19:17 <strcat[m]> don't do that
+04:19:22 <strcat[m]> follow the instructions
+04:19:30 <strcat[m]> exactly the commands written there
+04:19:31 <strcat[m]> nothing is downloaded with a browser
+04:19:43 <strcat[m]> if you improvise and make up your own way of doing it, you can't get support here
+04:19:44 <blindula> what do the instructions say to do?  click what?  open what?  type what?  these are the worst instructions in the world LOL
+04:19:47 * TheJollyRoger backs off.
+04:19:48 <strcat[m]> you enter exactly the commands that are there
+04:20:08 <TheJollyRoger> Captain, respectfully, could I take this one?
+04:20:11 <strcat[m]> blindula: I think if they were the worst instructions in the world
+04:20:18 <blindula> I'm reading them i have no idea what theyre saying to do.  its says a whole bunch of stuff to verify, i understand that part.
+04:20:20 <strcat[m]> people with 0 experience with the CLI and 0 knowledge of how it works
+04:20:26 <strcat[m]> would not be able to successfully do this per the instructions
+04:20:34 <strcat[m]> the whole point is that it tells you exactly what to run
+04:20:36 <strcat[m]> no ambiguity
+04:20:56 <blindula> It says what to run...but not when.  not what to type, exactly when you need to type it.
+04:21:02 <strcat[m]> if you come up with your own way to download things, etc. then you'd have to understand exactly what you're doing
+04:21:05 <blindula> Next, add the tools to your PATH in the current shell so they can be used without referencing them by file path, enabling usage by the flashing script.
+04:21:16 <blindula> I'm on this step.  What the fuck is my "PATH"
+04:21:20 <strcat[m]> yeah and then it shows the commands
+04:21:23 <blindula> What is the current shell?
+04:21:25 <strcat[m]> it says on Windows do this
+04:21:29 <strcat[m]> on macOS and LInux do this
+04:21:34 <blindula> Says a bunch of shit without identifying what it is
+04:21:52 <blindula> Oh ok i see that now.  directions should maybe make that more specific
+04:21:56 <strcat[m]> you don't need to know what PATH is
+04:22:03 <blindula> Ok, understandable.
+04:22:12 <blindula> Maybe throw that in the directions lol
+04:22:25 <blindula> On Linux and macOS:export PATH="$PWD/platform-tools:$PATH"
+04:22:41 <blindula> So i enter what is in there after the quotes in terminal?  if not what the hell is that even there for
+04:22:52 <strcat[m]> no you put the whole command in
+04:22:55 <strcat[m]> not a specific part
+04:23:05 <strcat[m]> in the same shell where you downloaded platform-tools to the current directory
+04:23:09 <strcat[m]> and extracted it
+04:23:13 <blindula> like whoever wrote these directions should redo them.  step by step.  bulleted list.  1. 2. 3. 4. 5.  not a big list without anything specific on it
+04:23:14 <strcat[m]> there's a reason it has you do that with curl
+04:23:32 <strcat[m]> it is 100% specific
+04:23:36 <strcat[m]> it tells you exactly what to run
+04:23:38 <blindula> so i put the whole command after the colon?  so macOS:"_________
+04:23:41 <strcat[m]> you can literally copy-paste it 1 by 1
+04:23:49 <blindula> copy paste to what, terminal?
+04:23:59 <blindula> I'll try that right now and lets see what happens.
+04:24:18 <TheJollyRoger> Yes, to terminal. You're going to be doing this via the commandline. Note that some commands will return no output.
+04:24:30 <TheJollyRoger> `export` is one of them
+04:24:33 <blindula> the command being what is in quotes?   macOS:"export PATH="$PWD/platform-tools:$PATH" ?
+04:24:50 <blindula> commandline is terminal same thing yes?
+04:24:53 <TheJollyRoger> Type it exactly as you see it on the website.
+04:25:33 <blindula> I see this on the website curl -O https://dl.google.com/android/repository/eabcd8b4b7ab518c6af9c941af8494072f17ec4b.platform-tools_r30.0.5-darwin.zipecho 'SHA256 (eabcd8b4b7ab518c6af9c941af8494072f17ec4b.platform-tools_r30.0.5-darwin.zip) = e5780bad71a53cf9d693e1053a0748f49e4a67cc1f71d16a94ab4c943af3345f' | shasum -ctar xvf
+04:25:34 <blindula> fbad467867e935dce68a0296b00e6d1e76f15b15.platform-tools_r30.0.5-darwin.zip
+04:25:40 <blindula> On Linux and macOS:export PATH="$PWD/platform-tools:$PATH"
+04:25:43 <blindula> both of these
+04:25:58 <blindula> neither it says to enter into terminal, yet you are telling me just do what it says on the website
+04:26:37 <TheJollyRoger> Enter the commands, one at a time, into the terminal, and /wait for the command to complete/ before you start on the next one.
+04:26:42 <the5000[m]> What happens if you root a graphene phone
+04:26:47 <blindula> It says if you plan to do development work, download Android SDK, i don't care about development work.  I just want the damn os to work, so i can skip this step?  or no?
+04:26:59 <TheJollyRoger> No, you cannot skip steps.
+04:27:05 <blindula> Ok, i entered the first command, just said failed to open, error opening archive
+04:27:13 <TheJollyRoger> the5000[m]: it becomes reverted the moment you reboot it.
+04:27:21 <TheJollyRoger> blindula: sounds like you skipped a step.
+04:27:28 <TheJollyRoger> I want you to start with this:
+04:27:34 <blindula> curl -O https://dl.google.com/android/repository/eabcd8b4b7ab518c6af9c941af8494072f17ec4b.platform-tools_r30.0.5-darwin.zipecho 'SHA256 (eabcd8b4b7ab518c6af9c941af8494072f17ec4b.platform-tools_r30.0.5-darwin.zip) = e5780bad71a53cf9d693e1053a0748f49e4a67cc1f71d16a94ab4c943af3345f' | shasum -ctar xvf
+04:27:34 <blindula> fbad467867e935dce68a0296b00e6d1e76f15b15.platform-tools_r30.0.5-darwin.zip entered this into terminal, did nothing
+04:27:46 <blindula> ok please tell me what step to start with
+04:27:54 <TheJollyRoger> You're entering multiple steps at the same time. That's what's happening.
+04:28:09 <blindula> ok, please send in a message specifically what should i enter into terminal
+04:28:12 <TheJollyRoger> OK. I'm going to walk you through the installation instructions, but I'm going to need you to work with me on this, not skip steps, and not try to improvise.
+04:28:16 <TheJollyRoger> Can you do this for me?
+04:28:17 <blindula> i will copy paste it and tell you what it says
+04:28:24 <blindula> yes i have been trying the whole time
+04:28:51 <blindula> a proper answer is definitely not "look on the website" because as you can see, to me the website isnt very helpful.
+04:28:54 <TheJollyRoger> Alright. Is terminal up and running?
+04:29:03 <blindula> so please just give specific steps i will follow every one
+04:29:04 <blindula> yes
+04:29:18 <TheJollyRoger> OK. Are you in a location that terminal can read from and write to?
+04:29:34 <TheJollyRoger> If you're unsure, punch in:
+04:29:34 <the5000[m]> What do you mean reverted the second you boot it? It goes back to being non rooted?
+04:29:49 <TheJollyRoger> cd ~ && pwd
+04:29:56 <blindula> i am on an admin account on my macos.  a different one entirely than the one i previously attempted to flash grapheneos onto the pixel
+04:30:46 <blindula> i entered "cd ~ && pwd" into terminal it came up with "users/myaccount"
+04:31:18 <TheJollyRoger> the5000[m]: each installation of GrapheneOS is signed, verified, and is bitwise identical and verified to the condition it was released in. If you've installed properly and locked the bootloader, any changes you make to your system partition will be lost the moment you reboot and it will be restored to a known working configuration. If it can't, and the system image is irreversibly corrupted,
+04:31:20 <TheJollyRoger> then the phone won't boot.
+04:31:59 <blindula> I feel like this is what has happened to my phone ^^^
+04:32:09 <TheJollyRoger> Blindula, no, it isn't -- hang on a second.
+04:32:22 <TheJollyRoger> You used a third party fastboot to flash.
+04:32:26 <blindula> Ok, any help would be greatly appreciated before i give up entirely
+04:32:30 <TheJollyRoger> Ok, so now that you're in your home directory, I want you to run this:
+04:32:36 <blindula> ok
+04:32:39 <TheJollyRoger> curl -O https://dl.google.com/android/repository/eabcd8b4b7ab518c6af9c941af8494072f17ec4b.platform-tools_r30.0.5-darwin.zip
+04:32:59 <blindula> keep in mind, different os than i previously used to attempt the install.  previously used windows, now am on mac
+04:33:04 <blindula> ok i will try that
+04:33:05 <TheJollyRoger> Great.
+04:33:10 <blindula> its a download?
+04:33:22 <TheJollyRoger> Yes. It will reach out and download the proper version of fastboot that will not brick your phone.
+04:33:28 <blindula> ok, downloaded it "platform tools 2" what do i run within it
+04:33:47 <TheJollyRoger> It's finished already?
+04:33:57 <blindula> should i delete the "platform tools" downloaded from the link on the install website?
+04:34:10 <TheJollyRoger> Hold up.
+04:34:14 <TheJollyRoger> Delete both and start again.
+04:34:17 <blindula> Ok
+04:34:44 <TheJollyRoger> (I'm being cautious here, because again, I'm not looking over your shoulder and I cannot see your screen.)
+04:35:01 <blindula> Again, this computer is fresh, i have not connected to tthe pixel in any way with this computer until AFTER this issue has already happened with the attempted install on a windows computer.  i do not have access to that computer at this time, i can only use a mac.
+04:35:12 <blindula> I'll delete both and start again though.
+04:35:15 <TheJollyRoger> Yep, I gotcha. Just bear with me and we'll get this sorted out.
+04:35:32 <TheJollyRoger> So, Step Two:
+04:35:38 <blindula> I'll delete all files i downloaded on the mac regarding grapheneos as well
+04:35:47 <TheJollyRoger> Yes.
+04:36:00 <TheJollyRoger> Let's start with Step 1: return to your home directory:
+04:36:03 <blindula> Ok, done.
+04:36:06 <TheJollyRoger> cd ~ && pwd
+04:36:10 <blindula> on terminal?
+04:36:13 <TheJollyRoger> Yes.
+04:36:24 <TheJollyRoger> Step Two: We're going to obtain the zip archive of Platform Tools.
+04:36:35 <blindula> Ok, says /users/myaccount again
+04:36:41 <TheJollyRoger> Great.
+04:36:44 <TheJollyRoger> Step Two:
+04:36:46 <TheJollyRoger> curl -O https://dl.google.com/android/repository/platform-tools_r30.0.5-linux.zip
+04:36:52 <TheJollyRoger> Wait for that one to complete.
+04:37:03 <blindula> complete
+04:37:09 <TheJollyRoger> Oops.
+04:37:11 <TheJollyRoger> Hold it.
+04:37:15 <TheJollyRoger> Sorry, delete that one, that's for Linux.
+04:37:24 <TheJollyRoger> Sorry, Step Two:
+04:37:26 <TheJollyRoger> curl -O https://dl.google.com/android/repository/eabcd8b4b7ab518c6af9c941af8494072f17ec4b.platform-tools_r30.0.5-darwin.zip
+04:37:26 <blindula> ok
+04:37:39 <blindula> ok done
+04:37:39 <TheJollyRoger> Let me know when it completes.
+04:37:42 <TheJollyRoger> Step Three:
+04:37:51 <TheJollyRoger> echo 'SHA256 (eabcd8b4b7ab518c6af9c941af8494072f17ec4b.platform-tools_r30.0.5-darwin.zip) = e5780bad71a53cf9d693e1053a0748f49e4a67cc1f71d16a94ab4c943af3345f' | shasum -c
+04:38:05 <blindula> enter into terminal?
+04:38:08 <TheJollyRoger> Yep.
+04:38:21 <blindula> shasum: standard input: no properly formatted SHA1 checksum lines foundKaelans-MacBook-Pro:~ kaelanbecker$
+04:38:30 <blindula> came up
+04:38:53 <TheJollyRoger> Ok. Hang on a moment.
+04:38:57 <blindula> name that comes up is my own.  i don't particularly want it online but at this point i want the damn os installed and don't give a shit about anything else
+04:40:16 <TheJollyRoger> Odd that it'd toss that error. Will have to try to track down a mac and find out what's gone on with that. Give me a sec.
+04:40:35 <TheJollyRoger> Ok, do you have anything else that's called "platform-tools" in that directory?
+04:41:01 <TheJollyRoger> If so, stop and list 'em out. If not, Step Four:
+04:41:19 <blindula> directory?  like in my downloads folder where i downloaded the folder you linked me?  no its the only thing labeled "platform-tools"
+04:41:32 <blindula> if you want I'll go on discord with you and you can watch my screen
+04:41:38 <TheJollyRoger> In the folder /users/myaccount
+04:41:44 <TheJollyRoger> Sorry, I don't have Discord.
+04:42:09 <TheJollyRoger> You can do this with the command:
+04:42:16 <TheJollyRoger> ls *platform-tools*
+04:42:22 <blindula> ok, and it looks like only one folder titled platform-tools is on the whole entire hard drive
+04:42:25 <TheJollyRoger> Let me know what that command produces.
+04:42:35 <TheJollyRoger> Great. Step four:
+04:42:43 <blindula> included is?  or just type what is in asterisks?
+04:42:55 <TheJollyRoger> Yep, asterisks included.
+04:43:01 <TheJollyRoger> ls *platform-tools*
+04:43:02 <blindula> and "is"?
+04:43:12 <TheJollyRoger> that's an l. It stands for "List Segments"
+04:43:20 <blindula> Kaelans-MacBook-Pro:~ kaelanbecker$ ls *platform-tools*eabcd8b4b7ab518c6af9c941af8494072f17ec4b.platform-tools_r30.0.5-darwin.zipKaelans-MacBook-Pro:~ kaelanbecker$
+04:43:24 <blindula> This comes up
+04:43:32 <TheJollyRoger> Great! Ok, Step Four:
+04:43:51 <TheJollyRoger> tar xvf *platform-tools*.zip
+04:44:01 <TheJollyRoger> This might take a moment.
+04:44:06 <TheJollyRoger> Depending on how fast your computer is.
+04:44:25 <blindula> looks done but big wall of text
+04:44:37 <blindula> I'll paste the bottom portion or can paste the whole thing if needed
+04:44:45 <TheJollyRoger> Nah that's OK. I expect the big wall of text.
+04:44:45 <blindula> x platform-tools/systrace/catapult/third_party/pyserial/serial/tools/list_ports_linux.pyx platform-tools/systrace/catapult/third_party/pyserial/serial/tools/list_ports_osx.pyx platform-tools/systrace/catapult/third_party/pyserial/serial/tools/list_ports_posix.pyx
+04:44:46 <blindula> platform-tools/systrace/catapult/third_party/pyserial/serial/tools/list_ports_windows.pyx platform-tools/systrace/catapult/third_party/pyserial/serial/tools/miniterm.pyx platform-tools/systrace/catapult/third_party/pyserial/serial/urlhandler/x platform-tools/systrace/catapult/third_party/pyserial/serial/urlhandler/__init__.pyx
+04:44:46 <blindula> platform-tools/systrace/catapult/third_party/pyserial/serial/urlhandler/protocol_hwgrep.pyx platform-tools/systrace/catapult/third_party/pyserial/serial/urlhandler/protocol_loop.pyx platform-tools/systrace/catapult/third_party/pyserial/serial/urlhandler/protocol_rfc2217.pyx
+04:44:47 <blindula> platform-tools/systrace/catapult/third_party/pyserial/serial/urlhandler/protocol_socket.pyx platform-tools/systrace/catapult/third_party/pyserial/serial/win32.pyx platform-tools/systrace/catapult/third_party/zipfile/x platform-tools/systrace/catapult/third_party/zipfile/LICENSEx platform-tools/systrace/catapult/third_party/zipfile/README.chromiumx
+04:44:47 <blindula> platform-tools/systrace/catapult/third_party/zipfile/zipfile_2_7_13.pyx platform-tools/systrace/catapult/tracing/x platform-tools/systrace/catapult/tracing/tracing/x platform-tools/systrace/catapult/tracing/tracing/__init__.pyx platform-tools/systrace/catapult/tracing/tracing/trace_data/x
+04:44:48 <blindula> platform-tools/systrace/catapult/tracing/tracing/trace_data/__init__.pyx platform-tools/systrace/catapult/tracing/tracing/trace_data/trace_data.pyx platform-tools/systrace/catapult/tracing/tracing/trace_data/trace_data_unittest.pyx platform-tools/systrace/catapult/tracing/tracing_project.pyx platform-tools/systrace/NOTICEx
+04:44:48 <blindula> platform-tools/systrace/systrace.pyx platform-tools/systrace/UPSTREAM_REVISIONKaelans-MacBook-Pro:~ kaelanbecker$
+04:44:50 <TheJollyRoger> Aaargh stop!
+04:44:52 <TheJollyRoger> Okay, whew.
+04:45:23 <TheJollyRoger> Ok. Next up, Step Five, we're going to set the command path. This is what tells Mac OS "for this command, look here."
+04:45:35 <TheJollyRoger> Step five:
+04:45:38 <TheJollyRoger> export PATH="$PWD/platform-tools:$PATH"
+04:45:53 <TheJollyRoger> This command will return no output.
+04:46:03 <blindula> yeah nothing happened
+04:46:08 <blindula> entered it though
+04:46:17 <TheJollyRoger> Great. Now we're going to do a test.
+04:46:20 <TheJollyRoger> Step six:
+04:46:24 <TheJollyRoger> fastboot --version
+04:46:33 <TheJollyRoger> Let me know what it spits out.
+04:46:37 <blindula> fastboot version 30.0.5-6877874Installed as /Users/kaelanbecker/platform-tools/fastbootKaelans-MacBook-Pro:~ kaelanbecker$
+04:46:40 <TheJollyRoger> Perfect.
+04:46:57 <TheJollyRoger> Ok. The next step, we're going to obtain the image for your phone. Which phone do you have?
+04:47:05 <blindula> google pixel 4a
+04:47:12 <TheJollyRoger> Got it. It's not a 5G, correct?
+04:47:22 <TheJollyRoger> If it is a 5G, we will have to return it to the factory condition.
+04:47:23 <blindula> i don't think so, but i am not positive
+04:47:58 <blindula> https://www.amazon.com/Google-Pixel-4a-Unlocked-Smartphone/dp/B08CFSZLQ4/ref=sr_1_1_sspa?dchild=1&keywords=google+pixel+4a&qid=1605934057&sr=8-1-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUEyWFBTSTA0Q1A5MVlGJmVuY3J5cHRlZElkPUEwMDMxODY3M1JORUNBT0FRVDBSNSZlbmNyeXB0ZWRBZElkPUEwOTAyOTc0NkIwSkhWRUpaQkhEJndpZGdldE5hbWU9c3BfYXRmJmFjdGlvbj1jbGlja1JlZGlyZWN0
+04:47:58 <blindula> JmRvTm90TG9nQ2xpY2s9dHJ1ZQ==
+04:48:05 <blindula> it is this one, i do not think it is 5g
+04:48:11 <TheJollyRoger> strcat[m]: Er, sorry to bother you, but the 4a 5G Pixel will not allow you to flash the wrong images to it?
+04:49:11 <TheJollyRoger> It's the one that just says "4a" and not "4a with 5G"?
+04:49:19 <TheJollyRoger> Since there are four on that page.
+04:49:41 <louipc> well if it doesn't boot it will just go to previous one right
+04:49:56 <TheJollyRoger> louipc: he flashed with a third party fastboot that didn't support autodetection.
+04:50:05 <TheJollyRoger> His phone is getting the "No OS found" error.
+04:50:11 <louipc> hmmm...dang
+04:50:15 <TheJollyRoger> I'm walking him through the installation instructions now.
+04:50:46 <louipc> cool you are the best at that
+04:50:50 <strcat[m]> TheJollyRoger: it will check that the device matches for all of them
+04:50:56 <strcat[m]> 4a 5G is a totally different device not a variant of the 4a
+04:50:57 <TheJollyRoger> Oh whew.
+04:51:02 <strcat[m]> it's as different as the 4a is from the 3a
+04:51:09 <TheJollyRoger> Whew. Thank you. Woah, the whole chip is different?
+04:51:14 <TheJollyRoger> Yipes I did not know that!
+04:52:26 <blindula> I'm still here by the way lol patiently waiting.  i really appreciate the help by the way.  it was very frustrating trying to do this alone lol...not much info is out there to assist with troubleshooting this installation
+04:52:27 <TheJollyRoger> Ok. This is going to be a sunfish... so the next step, we're going to get the image for your phone.
+04:52:35 <blindula> ok
+04:53:02 <TheJollyRoger> Now. I know that there's some stuff about signify, but... we will not do that, and instead, we're going to use Auditor to verify your phone post install.
+04:53:29 <TheJollyRoger> So, this is Step Seven.
+04:53:47 <blindula> ok
+04:53:48 <TheJollyRoger> curl -O https://releases.grapheneos.org/sunfish-factory-2020.11.05.18.zip
+04:54:13 <blindula> downloading
+04:54:13 <TheJollyRoger> This could take a while to finish because that's around a gig and a half, so it may take a while depending on your connection speed.
+04:54:22 <blindula> about 30 seconds
+04:55:11 <TheJollyRoger> (I actually can't recall the exact size of the archive offhand, but it's not small)
+04:55:23 <TheJollyRoger> Let me know when it's finished.
+04:55:28 <blindula> done
+04:55:53 <TheJollyRoger> Ok. Step eight, we're going to unpack it. This will give you a big "wall of text" but I won't be needing it.
+04:55:55 <TheJollyRoger> Step Eight:
+04:56:00 <strcat[m]> https://asciinema.org/a/qVCcAFPUMheCIPejb6EwjXow4
+04:56:10 <TheJollyRoger> tar xvf sunfish-factory-2020.11.05.18.zip
+04:56:38 <blindula> tar: Error opening archive: Failed to open 'sunfish-factory-2020.11.05.18.zip'Kaelans-MacBook-Pro:~ kaelanbecker$
+04:56:39 * TheJollyRoger watches.
+04:57:30 <TheJollyRoger> !!
+04:57:54 <TheJollyRoger> blindula, can you do:
+04:58:06 <TheJollyRoger> ls sunfish-factory-2020.11.05.18.zip
+04:58:10 <TheJollyRoger> and let me see the results?
+04:58:13 <blindula> i will gladly make a donation to you sir thejollyroger if this is successful lol
+04:58:19 <blindula> via crypto, giftcard, etvc
+04:58:21 <blindula> etc
+04:58:34 <blindula> ls: sunfish-factory-2020.11.05.18.zip: No such file or directoryKaelans-MacBook-Pro:~ kaelanbecker$
+04:58:38 <TheJollyRoger> blindula: ah, not to me, but definitely to the project!
+04:58:47 <blindula> i will i guarantee you
+04:58:54 <blindula> and was i supposed to extract the folder?
+04:59:07 <TheJollyRoger> Hmm. Wonder if I typoed something there? can you just give me the results of
+04:59:14 <TheJollyRoger> ls sunfish-factory*
+04:59:17 <blindula> I would assume so but i am doing only what you tell me specifically
+04:59:26 <TheJollyRoger> Sure. We'll get through this!
+04:59:28 <blindula> ls: sunfish-factory*: No such file or directoryKaelans-MacBook-Pro:~ kaelanbecker$
+04:59:50 <TheJollyRoger> How very odd... doesn't seem to have downloaded. Let's try Step Seven again, second time's luck:
+05:00:10 <TheJollyRoger> curl -O https://releases.grapheneos.org/sunfish-factory-2020.11.05.18.zip
+05:00:12 <anne232> Is there any way to restore a new grapheneos phone from a backup after the inital setup process?
+05:00:34 <anne232> I am upgrading from a 3a to a 4a and I couldn't transfer the backup file to the 4a w/o ending the setup so that i could enable usb file transfr
+05:00:45 <blindula> ok, going to delete the previous download fist
+05:00:45 <anne232> so im wantign to know if i can still restore my 4a from my 3a's backup
+05:00:46 <blindula> first
+05:01:01 <TheJollyRoger> blindula: great.
+05:01:37 <TheJollyRoger> (if you're downloading this outside of curl or using a browser, it is likely saving it in a different location than the one I'm expecting, so the command will fail)
+05:02:08 <TheJollyRoger> anne232: I'm not sure if there's a way to do it after you've been through the setup wizard. Might have to ask someone more knowledgeable about it than I here.
+05:02:25 <blindula> im using chrome browser for mac os
+05:02:37 <TheJollyRoger> blindula: please use curl in the Terminal, otherwise I'm flying blind.
+05:02:48 <anne232> TheJollyRoger, How are you supposed to restore from a backup at all in this case?
+05:03:02 <anne232> The only options are the storage on your current device and "usb flash drive" and cloud
+05:03:04 <blindula> so, don't click that link?  just copy paste that into terminal?
+05:03:20 <blindula> That may have been my mistake.  i was clicking the link that comes up in the chat
+05:03:22 <anne232> I could not get the usb flash drive thing to work. But is there any way to bring the setup wizard back without erasing the data on he phone?
+05:03:23 <TheJollyRoger> blindula: yes, please copy the entirety of Step Seven into that terminal window we've been working in.
+05:03:56 <blindula> ok, that explains the discrepancy
+05:03:59 <blindula> downloading now
+05:04:15 <TheJollyRoger> anne232: I've only been able to get it to work at the wizard, unfortunately, but I've not really used Seedvault much. I think someone more expert than I will have to chime in.
+05:04:19 <TheJollyRoger> blindula: great!
+05:04:28 <blindula> that was my mistake but you can see how i figured it was a download you were sending me.  it came up as a hotlink in the chat.
+05:04:33 <louipcm> weird matrix is glitching like crazy. i cant see anne from this side
+05:04:36 <TheJollyRoger> Ah! I see.
+05:04:46 <TheJollyRoger> louipcm: oh yikes, you too now!?
+05:04:59 <TheJollyRoger> I wonder if you ended up on a different server on Freenode.
+05:05:00 <louipcm> not me. matrix
+05:05:06 <TheJollyRoger> And Matrix isn't bridging to it.
+05:05:11 <TheJollyRoger> Argh.
+05:05:20 <TheJollyRoger> Rrgh.
+05:05:24 <TheJollyRoger> Grr.
+05:05:38 <TheJollyRoger> First it was from Matrix to IRC, now it's the other way around, argh the damn thing always seems to be broken.
+05:05:53 <TheJollyRoger> blindula: let me know when the command's finished, and we'll move to Step Eight.
+05:06:32 <TheJollyRoger> If you want to confirm it's in the right place, you can try the command:
+05:06:47 <TheJollyRoger> ls sunfish-factory-2020.11.05.18.zip
+05:07:03 <blindula> ok, done trying command now
+05:07:16 <blindula> Kaelans-MacBook-Pro:~ kaelanbecker$ ls sunfish-factory-2020.11.05.18.zipsunfish-factory-2020.11.05.18.zip
+05:07:17 <TheJollyRoger> (That command is optional, it basically tells terminal "List Segments matching the name of sunfish-factory-2020.11.05.18.zip"
+05:07:19 <TheJollyRoger> Perfect.
+05:07:29 <TheJollyRoger> Okay, Step eight!
+05:07:33 <TheJollyRoger> tar xvf sunfish-factory-2020.11.05.18.zip
+05:07:57 <TheJollyRoger> This'll produce some weird-looking output, but that's OK, that's just the files in the image.
+05:08:03 <blindula> Kaelans-MacBook-Pro:~ kaelanbecker$ tar xvf sunfish-factory-2020.11.05.18.zipx sunfish-factory-2020.11.05.18/x sunfish-factory-2020.11.05.18/image-sunfish-2020.11.05.18.zipx sunfish-factory-2020.11.05.18/flash-base.shx sunfish-factory-2020.11.05.18/avb_pkmd.binx sunfish-factory-2020.11.05.18/radio-sunfish-g7150-00018-200701-b-6643937.imgx
+05:08:03 <blindula> sunfish-factory-2020.11.05.18/flash-all.batx sunfish-factory-2020.11.05.18/flash-all.shx sunfish-factory-2020.11.05.18/bootloader-sunfish-s5-0.2-6539975.imgKaelans-MacBook-Pro:~ kaelanbecker$
+05:08:07 <TheJollyRoger> Great!
+05:08:16 <TheJollyRoger> Now we're going to move into the directory:
+05:08:27 <TheJollyRoger> cd sunfish-factory-2020.11.05.18 && pwd
+05:08:27 <blindula> ok awesome
+05:08:33 <TheJollyRoger> That's step nine.
+05:08:40 <blindula> again i hope this works i will upload proof of a donation
+05:08:56 <TheJollyRoger> Ok, now, pick up your phone and plug it in.
+05:08:59 <blindula> Kaelans-MacBook-Pro:~ kaelanbecker$ cd sunfish-factory-2020.11.05.18 && pwd/Users/kaelanbecker/sunfish-factory-2020.11.05.18Kaelans-MacBook-Pro:sunfish-factory-2020.11.05.18 kaelanbecker$
+05:09:07 <TheJollyRoger> Great!
+05:09:10 <blindula> its been plugged in, not sure if thats good or bad
+05:09:22 <TheJollyRoger> That's fine. I'm going to need you to switch it onto fastboot mode.
+05:09:28 <blindula> already done
+05:09:32 <TheJollyRoger> Great.
+05:09:33 <blindula> I'll redo it just in case
+05:09:58 <blindula> ok done.  says fastboot mode, device locked, etc
+05:10:05 <TheJollyRoger> Ok, can you confirm for me it's on Fastboot, and you see something along the lines of Bootloader "Unlocked"?
+05:10:05 <blindula> enter reason:combo key
+05:10:22 <TheJollyRoger> Ok, Don't tell me your device serial, but can you do,
+05:10:24 <blindula> i see the same exact thing on the phone i saw before all this
+05:10:28 <TheJollyRoger> fastboot flashing unlock
+05:10:30 <blindula> ok one second
+05:10:38 <blindula> Fastboot modeProduct revision:sunfish MP1.0(NA)Bootloader version: s5-0.2-6539975Baseband version: g7150-00018-200701-B-6643937Serial number: xxxxxxxxxxxxxNOS production: yesDRAM: 6GB micronDevice state: lockedBoot slot: aEnter reason:combo key
+05:10:57 <blindula> actually theres more hold on
+05:11:00 <TheJollyRoger> Ok, once the command is entered on the terminal, I want you to go check your phone and see if the menu appeared. You'll need to scroll up and down.
+05:11:27 <blindula> After serial number it says secure boot: PRODUCTION
+05:11:41 <TheJollyRoger> Okay!
+05:11:43 <blindula> NOS production: yes, everything else the same
+05:12:01 <TheJollyRoger> (Yeah don't show me your device serial number, that's for you and you alone)
+05:12:01 <blindula> actually says UFS: 128gb Micron also
+05:12:20 <blindula> ok, entering "fastboot flashing unlock"
+05:12:31 <blindula> yes something came up on the phone
+05:12:35 <TheJollyRoger> Ok. It may say "waiting for device" - you're going to need to confirm it on the device.
+05:12:49 <blindula> "if you unlock the bootloader, you will be able to install custom operating system..."
+05:12:53 <TheJollyRoger> Yep!
+05:13:04 <TheJollyRoger> You'll need to scroll via volume down or volume up until it says "unlock bootloader."
+05:13:04 <blindula> switch on volume to unlock bootloader I'm guesssing?
+05:13:07 <TheJollyRoger> Yep!
+05:13:08 <blindula> ok
+05:13:17 <blindula> press power to unlock?
+05:13:20 <TheJollyRoger> Yep.
+05:13:23 <lacrimosa> hi, I am a linux noob and triedanderrored myself to thie chapter "Flashing factory images" of the installation instructions
+05:13:29 <TheJollyRoger> Your phone will freeze and reboot.
+05:13:31 <TheJollyRoger> Ahoy!
+05:13:45 <TheJollyRoger> But this is OK - once it comes back to fastboot, it should say something like "bootloader unlocked"
+05:13:49 <blindula> as you can see, there are obviously some steps i remember from the first time around that ARE pretty easy to follow, just obviously a lot in between that could be improved as far as directions go
+05:14:01 <TheJollyRoger> It may give you an ominous SOFTWARE INTEGRITY NOT GUARANTEED!!! WARNING! screen depending on devices.
+05:14:02 <blindula> i feel like i should write these steps down as well
+05:14:05 <lacrimosa> now, if I enter "unzip sunfish-factory-2020.11.05.18.zip" bash says, no such command found
+05:14:19 <blindula> ok, pressed unlock
+05:14:21 <TheJollyRoger> hi lacrimosa, you'll need to use tar xvf
+05:14:29 <blindula> fastboot mode and device state says unlocked
+05:14:31 <TheJollyRoger> I think unzip is only for Windows.
+05:14:44 <TheJollyRoger> Ok, great. Keep the phone plugged in, and set it down somewhere where it won't fall down.
+05:14:47 <lacrimosa> no, it's under linux: https://grapheneos.org/install#flashing-factory-images
+05:14:49 <TheJollyRoger> Make sure that cable is in there nice and snug.
+05:14:55 <blindula> got it
+05:15:05 <lacrimosa> On Linux:
+05:15:05 <TheJollyRoger> lacrimosa:  I'll be right with ya.
+05:15:06 <lacrimosa> unzip sunfish-factory-2020.11.05.18.zip
+05:15:14 <strcat> TheJollyRoger: unzip is for GNU systems only because GNU tar doesn't do zip
+05:15:20 <TheJollyRoger> oh.
+05:15:24 <strcat> bsdtar does zip, so on macOS and Windows you can use tar
+05:15:42 <TheJollyRoger> Alright, blindula, is it plugged in, it won't fall down, it's on that screen?
+05:15:47 <strcat> no need for the unzip tool which has not had updates since 2008 and has no vulnerabilities
+05:15:51 <strcat> except on linux distros
+05:15:56 <strcat> http://infozip.sourceforge.net/
+05:16:01 <strcat> this is what unzip and zip are on linux distros
+05:16:07 <strcat> LATEST RELEASES: Zip 3.00 was released on 7 July 2008
+05:16:12 <TheJollyRoger> 2008!?!??
+05:16:14 <blindula> Yes, on fastboot mode, next to power button says start, says press volume keys to select different menu
+05:16:16 <lacrimosa> can anybody help me? I don't understand anything
+05:16:24 <TheJollyRoger> Ok. Blindula, here comes the big one, in terminal.
+05:16:36 <blindula> i was born ready
+05:16:41 <blindula> lets go LOL
+05:16:46 <blindula> my body is ready
+05:16:49 <strcat> TheJollyRoger: yeah unzip last release in 2009
+05:16:57 <TheJollyRoger> Step twelve:
+05:17:07 <TheJollyRoger> ./flash-all.sh
+05:17:29 <TheJollyRoger> You may need to wait a few minutes for it to complete. Your phone may flash weird things on the screen from time to time.
+05:17:31 <blindula> ok, activity happening
+05:17:40 <TheJollyRoger> But it should look like that video that strcat sent on ascii cinema.
+05:17:57 <blindula> phone says "the bootloader is unlocked"
+05:17:59 <blindula> etc
+05:18:03 <TheJollyRoger> Yeah. This could take a couple minutes or so.
+05:18:15 <blindula> phone just restarted, said google, now says "fastbootd" in red at the top
+05:18:17 <TheJollyRoger> You can watch strcat's link on ascii cinema to see how the procedure looks.
+05:18:21 <blindula> black screen with commands on em
+05:18:31 <lacrimosa> it seems the steps before twelve would be interesting for me as well
+05:18:35 <blindula> says "Reboot system now" highlighted
+05:18:38 <TheJollyRoger> Yeah. Don't disturb until it says "Finished" on the screen of your terminal.
+05:18:39 <lacrimosa> I came too late
+05:18:46 <blindula> ok
+05:18:53 <TheJollyRoger> lacrimosa: just a sec, I can get you logbot. Our channel is publicly logged.
+05:19:04 <strcat> lacrimosa: it's easiest to do it on Windows or macOS
+05:19:19 <TheJollyRoger> Let me know once it says "Finished" but DON'T disturb the phone, we're not done yet.
+05:19:20 <lacrimosa> strcat> I'm already very far in instruction
+05:19:22 <strcat> lacrimosa: on a Linux distribution, you'll need to deal with distribution-specific installation of prerequisites and other things
+05:19:50 <lacrimosa> I don't want to mess up something, since the phone is conencted
+05:20:03 <strcat> it doesn't matter that it's connected
+05:20:07 <strcat> it's not currently doing anything
+05:20:09 <lacrimosa> maybe there  is something in clipboard and it will go crazy if I now stop it
+05:20:14 <blindula> went back to fastboot mode
+05:20:24 <TheJollyRoger> Sure. Look at your computer terminal screen?
+05:20:25 <strcat> lacrimosa: don't know what you mean by that
+05:20:26 <blindula> last few things on terminal look like:
+05:20:27 <blindula> Writing 'vendor_a'                                 OKAY [  2.055s]Sending sparse 'vendor_a' 2/2 (242960 KB)          OKAY [  5.940s]Writing 'vendor_a'                                 OKAY [  1.010s]archive does not contain 'vendor_dlkm.img'archive does not contain 'vendor_other.img'Erasing 'userdata'                                 OKAY [
+05:20:28 <blindula> 4.062s]Erase successful, but not automatically formatting.File system type raw not supported.Erasing 'metadata'                                 OKAY [  0.010s]Erase successful, but not automatically formatting.File system type raw not supported.Finished. Total time: 105.978sRebooting into bootloader                          OKAY [  0.000s]Finished.
+05:20:28 <blindula> Total time: 0.000sKaelans-MacBook-Pro:sunfish-factory-2020.11.05.18 kaelanbecker$
+05:20:32 <TheJollyRoger> Excellent!
+05:20:36 <TheJollyRoger> Ok, we're on the home stretch now.
+05:20:39 <TheJollyRoger> Step Thirteen:
+05:20:45 <TheJollyRoger> fastboot flashing lock
+05:20:58 <TheJollyRoger> Then look at the screen of your phone. You'll have to confirm it.
+05:21:00 <strcat> lacrimosa: it sounds like you need to install unzip, since you don't have it
+05:21:02 <TheJollyRoger> (On the device)
+05:21:04 <blindula> ok, if you lock the bootloader warning came up
+05:21:07 <strcat> lacrimosa: how to do that depends on your distribution
+05:21:10 <TheJollyRoger> Yeah. this time you want to lock it.
+05:21:15 <lacrimosa> let me check
+05:21:16 <blindula> adjust volume and select lock the bootloader?
+05:21:18 <TheJollyRoger> Yep!
+05:21:26 <blindula> ok, done
+05:21:27 <TheJollyRoger> Your phone is going to reboot one more time.
+05:21:33 <blindula> already pressed power to lock bootloader
+05:21:42 <TheJollyRoger> Great! Once your phone has rebooted, I want you to unplug your phone.
+05:21:43 <blindula> fastboot mode again
+05:22:01 <blindula> enter reason: reboot bootloader appears at bottom of phone screen
+05:22:07 <lacrimosa> strcat> now it works
+05:22:11 <lacrimosa> :)
+05:22:17 <anne232> TheJollyRoger, Do you know a way to access the wizard after it has been completed?
+05:22:19 <TheJollyRoger> Great. Now scroll with the volume keys until it says something like "start" or "power on" or something like that.
+05:22:24 <TheJollyRoger> anne232: sorry, I don't.
+05:22:28 <lacrimosa> extracting and inflating
+05:22:31 <blindula> it says start, should i press power?
+05:22:40 <strcat> anne232: you can do all of that via Settings
+05:22:44 <TheJollyRoger> blindula: yes. A yellow screen should come up that says,
+05:22:51 <TheJollyRoger> "Your phone is loading a different operating system."
+05:22:54 <blindula> yes it came up
+05:22:57 <TheJollyRoger> If you see that yellow text, that is GOOD.
+05:23:04 <TheJollyRoger> It means the verified boot is on and working.
+05:23:06 <blindula> ok, google screen came up
+05:23:09 <blindula> automatially
+05:23:15 <lacrimosa> the instruction manual is not clear (for me): "
+05:23:16 <blindula> says grapheneos...I'm good?!?!
+05:23:16 <lacrimosa> Move into the directory:
+05:23:17 <TheJollyRoger> (But you're loading a different operating system thanGoogles')
+05:23:18 <lacrimosa> cd sunfish-factory-2020.11.05.18
+05:23:25 <TheJollyRoger> blindula: yep. Welcome aboard the ship.
+05:23:42 <strcat> lacrimosa: just run the command it says, with device name and version adjusted as needed
+05:23:48 <blindula> Ok thank you, i will send a generous donation promptly.  i do have a couple more questions that werent exactly answered specifically on the FAQ
+05:23:54 <lacrimosa> does belong "cd sunfish-factory-2020.11.05.18" to the MacOS and Windows step or for me as well?
+05:23:57 <TheJollyRoger> lacrimosa: https://freenode.logbot.info/grapheneos this should get you today's logs.
+05:24:04 <strcat> lacrimosa: most steps are OS independent
+05:24:15 <strcat> only when it explicitly says it's OS specific is it OS specific
+05:24:26 <blindula> Is it recommended to use via only wifi, or can you activiate to sim service of your choice after grapheneos is installed?  i currently have no sim in the phone.
+05:24:26 <anne232> strcat, how?
+05:24:29 <TheJollyRoger> blindula: Donations are greatly appreciated! https://grapheneos.org/donate The project accepts bitcoin or Paypal or Github sponsorship.
+05:24:41 <strcat> anne232: all of the stuff in the initial setup wizard is configurable in the Settings app
+05:24:43 <blindula> I'll donate some coin right now
+05:24:46 <TheJollyRoger> blindula: if you want a SIM card, you can insert it now.
+05:24:48 <strcat> anne232: what specifically do you want to configure?
+05:24:54 <TheJollyRoger> blindula: you rock! :)
+05:24:56 <anne232> I want to restore from a backup, strcat
+05:25:12 <blindula> ok, i may work on this.  Is it recommended though for privacy?
+05:25:20 <strcat> anne232: you could factory reset to get back to the install wizard - atm seedvault doesn't provide a way to do that after setup
+05:25:27 <TheJollyRoger> It's recommended if you want to use your phone as a phone or have data! :)
+05:25:29 <strcat> it only supports restoring for a fresh install atm
+05:25:35 <strcat> that might change in a future seedvault version
+05:25:43 <strcat> it's not developed by us
+05:25:44 <TheJollyRoger> Turn over the little booklet that came with your phone. There should be a small SIM card tray tool in the bottom of the package.
+05:25:48 <blindula> true LOL...any other questions i have i will come here.  thank you very much for the assistance.
+05:26:00 <TheJollyRoger> Welcome aboard the good ship GrapheneOS!
+05:26:00 <anne232> strcat, The problem is, how do I restore it from backup? my idea was that I was going to move the backup file onto my 4a from my pc
+05:26:09 <anne232> but if i were to factory reset, that wouldnt be possible.
+05:26:24 <strcat> anne232: factory reset and then attach a flash drive with the backup
+05:26:29 <anne232> the only other restore option besidse the device's memory is "usb flash drive"
+05:26:29 <lacrimosa> shit
+05:26:33 <strcat> the phones come with an adapter you can use to attach a flash drive
+05:26:38 <anne232> What if I dont hav ea flash drive that will fit into a usb-c at the moment?
+05:26:39 <strcat> USB A to USB C
+05:26:41 <anne232> Oh I see
+05:26:45 <anne232> yea ur right
+05:26:51 <TheJollyRoger> blindula: if you've got any questions, I'm usually on here all the time, or you can ping me. I usually check the channel daily, and I answer promptly if pinged.
+05:27:10 <strcat> anne232: ideally seedvault would support restoring later but it doesn't atm because it's potentially error prone
+05:27:13 <TheJollyRoger> If I don't, then I may be away from the computer, or if I'm offline my computer's switched off.
+05:27:22 <strcat> since the device has already been set up and has data on it already
+05:27:28 <strcat> so the seedvault restore would wipe existing data
+05:27:37 <lacrimosa> I hope I didn't mess up
+05:27:46 <strcat> you can verify the install with Auditor
+05:28:01 <TheJollyRoger> Donations keep the project going! So thank you in advance for any contribution and I hope you find this useful!
+05:28:29 <TheJollyRoger> Oh yeah, good point. lacrimosa, blindula, on your computers, visit attestation.app
+05:28:31 <TheJollyRoger> Er,
+05:28:41 <TheJollyRoger> https://attestation.app in any modern web browser.
+05:29:07 <lacrimosa> I'm LOST
+05:29:22 <TheJollyRoger> There is a tutorial there (under "Tutorial") that will instruct you on how to use Android Remote Attestation to verify the authenticity of your installation after your install is complete.
+05:29:28 <TheJollyRoger> lacrimosa: where are you right now?
+05:29:50 <lacrimosa> after "unzip sunfish-factory-2020.11.05.18.zip" it did sth
+05:30:08 <lacrimosa> then I typed "cd sunfish-factory-2020.11.05.18" and afterwards "./flash-all.sh"
+05:30:21 <lacrimosa> terminal output is..nothing
+05:30:28 <TheJollyRoger> blindula: Once you get to your home screen, under your preinstalled apps you may see an app that looks like a little white shield. That's Auditor, it's one heckuva nifty app.
+05:30:44 <TheJollyRoger> Nothing?
+05:30:53 <TheJollyRoger> It just dumped you back to the prompt?
+05:31:06 <lacrimosa> I don't even now, but yeah, I guess
+05:32:01 <lacrimosa> *know
+05:32:24 <TheJollyRoger> Shiver me timbers that be strange!
+05:32:36 <lacrimosa> are you canadian?
+05:32:48 <TheJollyRoger> what does `fastboot --version` produce?
+05:32:50 <TheJollyRoger> Arr, I be!
+05:32:56 <JTL> Yarr harr!
+05:32:57 <lacrimosa> are you teh dev?
+05:33:20 <TheJollyRoger> Har harr, nay, I just be the channel greeter of this here ship!
+05:33:51 <lacrimosa> I don't even have a prompt anymore O.o
+05:33:58 <lacrimosa> what the..?
+05:34:42 <lacrimosa> can I close terminal?
+05:34:56 <TheJollyRoger> What happened?
+05:35:04 <lacrimosa> well
+05:35:36 <lacrimosa> how do I explain? you asked me where I am, I still am there, meaning: after trypoing in that ./falsh-all.sh
+05:35:42 <lacrimosa> nothing happened
+05:36:02 <lacrimosa> but now when I try to type something new into the terminal, it's not as usual
+05:36:09 <lacrimosa> no cursor blinking
+05:36:17 <TheJollyRoger> I... I have no idea what you've done o.O.
+05:36:19 <lacrimosa> no green , uhm , stuff
+05:36:27 <lacrimosa> ah shit
+05:36:34 * TheJollyRoger lifts his eyepatch off and stares.
+05:36:35 <strcat> this is why I recommended using macOS or Windows if you can, your Linux distribution doesn't have USB permissions set up for fastboot
+05:36:41 <strcat> you can cancel it with ctrl-c
+05:36:54 <lacrimosa> no
+05:37:02 <lacrimosa> CTRL + C didn't help
+05:37:16 <strcat> it will cancel the command if you do it in the terminal
+05:37:19 <lacrimosa> just made "^C" into the black wall of what was a terminal before
+05:37:31 <TheJollyRoger> lacrimosa: give it a moment.
+05:37:39 <lacrimosa> it's been 10 minutes
+05:38:13 <TheJollyRoger> Hhrgh. Might want to just try it on Windows, the distro might just be acting dumb.
+05:38:28 <aeonsolution[m]> let me help them jolly
+05:38:37 <lacrimosa> but why did I come this far?
+05:38:37 <TheJollyRoger> Sure. Thanks aeonsolution[m].
+05:38:49 <TheJollyRoger> I actually have to rack out for the night.
+05:38:59 <lacrimosa> jolly> are you the dev?
+05:39:08 <TheJollyRoger> lacrimosa: no, I'm just the channel greeter.
+05:39:14 <strcat> no, he's not a developer, and there isn't one developer, there are multiple
+05:39:41 <TheJollyRoger> by "channel greeter" I mean I just stay in this channel, put on a quirky pirate act and say hello to people.
+05:39:54 <lacrimosa> ok
+05:40:08 <lacrimosa> because this daniel guy
+05:40:17 <lacrimosa> whatever
+05:41:10 <lacrimosa> so, if I close terminal
+05:41:17 <lacrimosa> can I retry?
+05:41:27 <lacrimosa> or is all gone from some temp folder?
+05:41:53 <aeonsolution[m]> sounds good, you take it easy matey
+05:42:07 <aeonsolution[m]> my messages are delayed so please be patient lacrimosa
+05:42:25 <blindula> just donated $40 via btc
+05:42:42 <Dylanger[m]> This seems like it's going to be a problem, no one here is your personal support
+05:42:47 <TheJollyRoger> lacrimosa: Hey man, go easy on Daniel. His hard work has been what's made GrapheneOS what it is.
+05:43:00 <blindula> thank you very much.  if i ever need help again, as i said i will come here.  if any better way to contact let me know now before i leave the conversation.
+05:43:01 <TheJollyRoger> aeonsolution[m]: Thanks!
+05:43:09 <TheJollyRoger> blindula: Awesome, thanks for the contribution!
+05:43:12 <TheJollyRoger> Fare thee well!
+05:43:43 <lacrimosa> jolly> I am easy on him..I just wanted to tell him that his reaction on kuketz blog in Germany was well regarded
+05:43:58 <lacrimosa> excuse me if I seem strange to you
+05:44:01 <TheJollyRoger> Ah. Okay :).
+05:44:13 <lacrimosa> my english is bad and I am really, really under stress right now
+05:44:23 <TheJollyRoger> Sorry, I get a little bit guarded, my bad.
+05:44:28 <TheJollyRoger> D'oh.
+05:46:05 <lacrimosa> please guys
+05:46:23 <lacrimosa> I don't know if it's good for my phone to be stuck in bootloader mode all the time
+05:46:32 <lacrimosa> it's fresh out of the box
+05:46:45 <TheJollyRoger> It'll be fine. It doesn't hurt it or anything if that's what you're wondering?
+05:46:51 <lacrimosa> ok
+05:47:00 <TheJollyRoger> Unless like, you leave it on for days and days on end...
+05:47:19 <TheJollyRoger> lacrimosa, do you have access to a Windows 10 or Mac OS computer?
+05:47:26 <aeonsolution[m]> everyone here that contributes as a community member or a developer does this on their free time, please be mindful of that and how you treat others that are trying to help
+05:47:41 <lacrimosa> no
+05:49:09 <aeonsolution[m]> check your private messages lacrimosa, i'll assist you there
+05:49:20 <TheJollyRoger> Ok. Thank you aeonsolution[m]
+05:49:21 <Dylanger[m]> > everyone here that contributes as a community member or a developer does this on their free time, please be mindful of that and how you treat others that are trying to help
+05:49:21 <Dylanger[m]> > no
+05:49:21 <Dylanger[m]> wat
+05:49:44 <aeonsolution[m]> Dylanger: i think he was responding to not having windows or mac
+05:50:02 <aeonsolution[m]>  * Dylanger: i think they were responding to not having windows or mac
+05:50:16 <lacrimosa> yes, and I'm fine with "he"
+05:50:38 <lacrimosa> I don't find any private message
+05:51:06 <aeonsolution[m]> restart element, on the sidebar if you see messages
+05:51:25 <aeonsolution[m]> you should see messages*
+05:51:28 <anne232> I'm on the restore from backup thing on the installer
+05:51:36 <anne232> and I have a USB flash drive with the .backup file plugged into my device
+05:51:42 <anne232> and it just says "needs to be plugged in"
+05:51:49 <anne232> what do i do? I really wanna restore from backup
+05:51:54 <lacrimosa> nope, don't see no private messages
+05:51:59 <lacrimosa> can't you help me in here?
+05:52:57 <aeonsolution[m]> try sending me a message then, im trying to clutter the chat with installation troubleshooting
+05:53:17 <aeonsolution[m]> if you cant get that to work we can fall back the channel
+05:53:46 <aeonsolution[m]>  * try sending me a message then, im not trying to clutter the chat with installation troubleshooting
+05:54:08 <Blindula> hey, I'm back lol...just a couple questions since I'm clueless again other than third party recommendations...so i got the phone working, install complete, connected to wifi, can't seem to find how to download any apps.  video tutorial said go to "f-droid" website and also get "aurora droid" all of this can be done via the phone?  no more need for
+05:54:09 <Blindula> terminal/computer?
+05:54:42 <lacrimosa> I can't find how to send private messages
+05:55:21 <strcat[m]> Blindula: don't need the computer anymore
+05:55:24 <strcat[m]> just do it on the phone
+05:55:55 <strcat[m]> in the future we'll bundle our own app for installing and updating apps that aren't bundled with the OS
+05:55:56 <Blindula> ok cool, f-droid and auroradroid will enable me to get apps such as signal messenger, bitcoin wallet, etc?
+05:56:01 <aeonsolution[m]> lacrimosa: ok lets start from the beginning then. what os are you using?
+05:56:08 <strcat[m]> Blindula: Signal you need to install from Signal's website
+05:56:09 <lacrimosa> manjaro KDE
+05:56:16 <strcat[m]> or from Aurora Store
+05:56:23 <strcat[m]> up to you which way you get it
+05:56:25 <Blindula> strcat[m]: ok, all can be done on the phone?
+05:56:28 <aeonsolution[m]> oh nice
+05:56:28 <strcat[m]> yes
+05:56:42 <Blindula> any link to any tutorials or will it work automatically if downloaded with the phone browser
+05:57:06 <aeonsolution[m]> thats in my ball park then, im going to ask you to delete everything you've downloaded. we are going to start from scratch so we can be on the same page with a clean slate.
+05:57:08 <strcat[m]> Blindula: you can download F-Droid from https://f-droid.org/ and install it
+05:57:11 <strcat[m]> using the browser
+05:57:20 <lacrimosa> perfect, I embrace you
+05:57:52 <aeonsolution[m]> lacrimosa: let me know when you delete everything
+05:58:10 <lacrimosa> oh, I'm a linux noob, i don't know how
+05:58:29 <aeonsolution[m]> manjaro has a gui
+05:58:35 <lacrimosa> yes
+05:58:49 <aeonsolution[m]> use the File Manager
+05:59:03 <aeonsolution[m]> and delete everything you downloaded for the GrapheneOS
+05:59:28 <aeonsolution[m]> it'll make troubleshooting easier when we go thru each step
+05:59:30 <lacrimosa> I did the curl command from the instructions
+05:59:37 <aeonsolution[m]> cool
+05:59:38 <lacrimosa> I don't knwo where it landed
+05:59:51 <aeonsolution[m]> find where you downloaded those files first
+05:59:55 <aeonsolution[m]> and then delete them
+05:59:59 <lacrimosa> where do I look
+06:00:18 <aeonsolution[m]> use the File Manager and explore your home directory
+06:00:27 <lacrimosa> I thought I downloaded it to the phone? but that was a misunderstanding, since you're asking me to look on the PC
+06:00:52 <aeonsolution[m]> we are not working with your phone yet
+06:00:57 <aeonsolution[m]> turn that off
+06:01:36 <Blindula> i can't find signal on aurora?  anything i should be checking when it asks which repositories?
+06:01:42 <aeonsolution[m]> we are going to go thru the whole process from square 1
+06:01:45 <Blindula> no signal app on f-droid or aurora
+06:01:51 <lacrimosa> "sunfish-factory-2020.11.05.18" taht folder?
+06:01:59 <aeonsolution[m]> Blindula: get it from signal's website
+06:02:13 <strcat[m]> Blindula: you need Aurora Store to get Signal from the Play Store
+06:02:19 <lacrimosa> found some files and folders in /home
+06:02:19 <strcat[m]> Blindula: Aurora Droid is an F-Droid frontend
+06:02:22 <lacrimosa> deleted them all
+06:02:35 <strcat[m]> you either need to get it from Signal's website (which has an update system for itself) or via the Play Store (with Aurora Store)
+06:02:36 <Blindula> ok, aurora store is available where?
+06:02:40 <strcat[m]> either way will work
+06:02:48 <strcat[m]> Blindula: on F-Droid (or Aurora Droid if you got that already)
+06:03:01 <aeonsolution[m]> lacrimosa: nice, ok now do me a favor and open your Terminal
+06:03:02 <strcat[m]> F-Droid and Aurora Droid are both F-Droid implementations
+06:03:10 <strcat[m]> Aurora Store is a Play Store client
+06:03:19 <lacrimosa> ahh, lookey there! it's nto strange anymore
+06:03:20 <strcat[m]> https://signal.org/android/apk/
+06:03:26 <strcat[m]> is how to get Signal from their site
+06:03:28 <lacrimosa> *not
+06:03:35 <strcat[m]> which has an update check system built into the app
+06:03:36 <lacrimosa> terminal seems to be better
+06:03:55 <aeonsolution[m]> lacrimosa: you might of accidentally nuked your PATH by accident
+06:04:01 <aeonsolution[m]> it happens
+06:04:05 <lacrimosa> whatever that means
+06:04:07 <Blindula> ok, so just go to the site?  I can't find play store on f-droid or aurora droid
+06:04:25 <Blindula> with play store i would be able to download any regular android app?
+06:04:35 <aeonsolution[m]> ok so now follow the steps on this part https://grapheneos.org/install#obtaining-fastboot lacrimosa
+06:05:00 <aeonsolution[m]> Manjaro falls under the Arch family
+06:05:03 <lacrimosa> sunfish-factory-2020.11.05.18
+06:05:04 <lacrimosa> fastboot version 30.0.4
+06:05:06 <lacrimosa> Installed as /usr/bin/fastboot
+06:05:09 <Blindula> or is it just "aurora store"?
+06:05:10 <aeonsolution[m]> so follow the Linux instructions
+06:05:12 <lacrimosa> ignore the first
+06:05:24 <lacrimosa> I all did taht
+06:05:44 <lacrimosa> so I give here my single steps so you can say STOP if I make a mistake
+06:05:51 <aeonsolution[m]> cool, we are doing it again so we are on the same page and i can be assured that no steps were missing
+06:06:12 <aeonsolution[m]> troubleshooting backwards is very difficult and puts a lot of pressure on the end user to resolve
+06:06:12 <lacrimosa> actually, that was difficult for me:
+06:06:22 <lacrimosa> look:
+06:06:29 <aeonsolution[m]> when we walk thru it step by step, section by section
+06:06:38 <Blindula> and should i be using tor browser?  is there any sort of guide that walks through setup?
+06:06:38 <aeonsolution[m]> we get thru the process together
+06:07:15 <lacrimosa> my assumption: since fastboot tools were given me from the official majaro repo, I don't have to follow the part below "Standalone platform-tools"
+06:07:48 <lacrimosa> is this correct?
+06:07:49 <aeonsolution[m]> lacrimosa: there's a catch with Manjaro
+06:08:02 <aeonsolution[m]> the packages aren't as up to date as Arch Linux's
+06:08:11 <lacrimosa> but it's higher than 29
+06:08:15 <aeonsolution[m]> so only power users know how to deal
+06:08:16 <lacrimosa> or whatever's in the maunal
+06:08:37 <lacrimosa> I don't understand
+06:08:39 <aeonsolution[m]> right, but other packages may not be as up to date
+06:09:00 <lacrimosa> so, please, do me a favor
+06:09:09 <aeonsolution[m]> I'll explain briefly
+06:09:13 <lacrimosa> no
+06:09:16 <lacrimosa> please not
+06:09:44 <aeonsolution[m]> ?
+06:09:51 <lacrimosa> please tell me one thing for now: what is the next command after I installed fastboot via repo-GUI?
+06:10:05 <anupritaisno1[m]> lacrimosa: pm me
+06:10:55 <lacrimosa> I don't understand the manual
+06:11:01 <Blindula> anybody able to help me briefly just with the setup and how to download initial few apps on the os?
+06:11:31 <lacrimosa> is it "export PATH="$PWD/platform-tools:$PATH"" or is this only for standalone-tools?
+06:11:39 <Blindula> downloading signal now just would like a few more specific ones.  appears that the available "app stores" search functions do not work very well
+06:12:42 <aeonsolution[m]> lacrimosa: it is hard to help you when you jump ahead and understand why distributions listed by name are the only ones with the proper tools
+06:13:05 <aeonsolution[m]> you need to download the standalone tools for Manjaro because the packages are not identical to Arch Linux
+06:13:13 <lacrimosa> ah, ok, I'm sorry
+06:13:15 <aeonsolution[m]>  * lacrimosa: it is hard to help you when you jump ahead and don't understand why distributions listed by name are the only ones with the proper tools
+06:13:23 <lacrimosa> yeah, got you
+06:13:27 <lacrimosa> I'm sorry
+06:13:43 <aeonsolution[m]> it's ok, i had that issue too when I was using Manjaro
+06:13:45 <renlord> strcat[m]: videos cant seem to play within signal
+06:13:49 <aeonsolution[m]> that's why I was trying to explain
+06:13:55 <lacrimosa> sry
+06:14:02 <aeonsolution[m]> no harm, no foul
+06:14:31 <aeonsolution[m]> let me know when you finish downloading the platform tools, do it one line at a time
+06:15:06 <strcat[m]> renlord:  just videos?
+06:15:13 <strcat[m]> renlord: latest version from Play Store?
+06:15:18 <strcat[m]> the web one is often out-of-date
+06:15:26 <strcat[m]> don't know why
+06:15:41 <lacrimosa> done
+06:15:48 <renlord> strcat[m]: from playstore, yes just videos
+06:16:01 <aeonsolution[m]> lacrimosa: ok now this is the important part
+06:16:08 <aeonsolution[m]> from this step foward
+06:16:20 <aeonsolution[m]> do not close your terminal
+06:16:23 <lacrimosa> ok
+06:16:29 <aeonsolution[m]> did you run the export PATH command already?
+06:16:39 <lacrimosa> no, it says i need to unzip
+06:16:48 <aeonsolution[m]> ok cool
+06:16:48 <lacrimosa> the command was given in terminal by itself
+06:17:06 <lacrimosa> unzip?
+06:17:21 <aeonsolution[m]> yeah run the unzip command if you havent already
+06:17:25 <lacrimosa> ok
+06:17:27 <lacrimosa> done
+06:18:12 <lacrimosa> should I run PATH command?
+06:18:19 <aeonsolution[m]> now run the command under "On Linux and macOS:"
+06:18:21 <aeonsolution[m]> yes
+06:18:35 <lacrimosa> export PATH="$PWD/platform-tools:$PATH"
+06:18:39 <lacrimosa> oops, wrong window
+06:18:42 <aeonsolution[m]> yes
+06:18:48 <lacrimosa> done
+06:19:08 <aeonsolution[m]> ok now download signify with this command
+06:19:10 <lacrimosa> verison?
+06:19:17 <lacrimosa> ok, sry
+06:19:33 <anupritaisno1[m]> lacrimosa: pm
+06:20:24 <lacrimosa> can I inbetween run "fastboot --verison"?
+06:20:28 <aeonsolution[m]> `sudo pacman -Syu signify --needed`
+06:20:38 <aeonsolution[m]> yeah you can
+06:20:59 <lacrimosa> fastboot version 30.0.5-6877874
+06:21:00 <lacrimosa> Installed as /home/alba/platform-tools/fastboot
+06:21:01 <aeonsolution[m]> Manjaro uses Arch Linux package manager so you can use the same commands to download packages
+06:21:22 <aeonsolution[m]> cool, looking good so far
+06:21:27 <lacrimosa> can I delete my last message?
+06:21:48 <aeonsolution[m]> in the terminal you can press the keyboard keys
+06:21:55 <aeonsolution[m]> CTRL and L to clear the Terminal
+06:21:56 <lacrimosa> no, in here
+06:22:01 <aeonsolution[m]> but dont close the terminal
+06:22:06 <aeonsolution[m]> you can
+06:22:10 <aeonsolution[m]> but it's still logged
+06:22:13 <lacrimosa> ok
+06:22:16 <lacrimosa> nvmnd
+06:22:31 <aeonsolution[m]> you can delete it so you cant see it in the client
+06:22:56 <lacrimosa> sudo command done
+06:23:14 <aeonsolution[m]> ok cool
+06:23:50 <aeonsolution[m]> run this command too to make sure you have android tools
+06:24:06 <aeonsolution[m]> `sudo pacman -Syu android-tools --needed`
+06:24:39 <lacrimosa> done
+06:24:43 <aeonsolution[m]> the --needed flag just makes sure not to redownload it if you already did it
+06:24:44 <aeonsolution[m]> nice
+06:25:03 <aeonsolution[m]> ok now lets turn on your phone with the key combo that boots into fastboot
+06:25:20 <lacrimosa> done
+06:25:23 <aeonsolution[m]> hold down the down side key and the power button
+06:25:26 <aeonsolution[m]> nice
+06:25:35 <aeonsolution[m]> ok so here is the moment of truth
+06:25:43 <aeonsolution[m]> if your hardware supports it
+06:26:02 <aeonsolution[m]> and you have a fully functioning cable that can transfer data
+06:26:16 <aeonsolution[m]> you can now send fastboot commands to your device
+06:26:25 <aeonsolution[m]> what cable are you using
+06:26:31 <aeonsolution[m]> A to C or C to C?
+06:26:35 <lacrimosa> a to c
+06:27:03 <aeonsolution[m]> ok cool, plug the cable on the side that is connected to the motherboard
+06:27:26 <aeonsolution[m]> if you dont know thats ok, we will just plug it in until we can send commands successfully
+06:27:42 <lacrimosa> oh, I had it in front panel (usb 3.0) ...can I unplug an d plug it on back of PC on USB 2.0?
+06:27:53 <aeonsolution[m]> yeah try that
+06:28:02 <aeonsolution[m]> well
+06:28:10 <lacrimosa> done
+06:28:28 <aeonsolution[m]> ok we can start from there and wrong foward
+06:28:59 <aeonsolution[m]> run this command `fastboot flashing unlock`
+06:29:16 <aeonsolution[m]>  * ok we can start from there and work foward
+06:29:22 <lacrimosa> (bootloader) Device already unlocked
+06:29:23 <lacrimosa> OKAY [  0.121s]
+06:29:25 <lacrimosa> Finished. Total time: 0.121s
+06:29:30 <aeonsolution[m]> LEGGO
+06:29:37 <lacrimosa> that means "cool"?
+06:29:38 <anupritaisno1[m]> lacrimosa:
+06:30:10 <aeonsolution[m]> lacrimosa: yes
+06:30:12 <anupritaisno1[m]> Run ./flash-all.sh
+06:30:12 <Blindula> can somebody please tell me how the fuck i get any regular apps
+06:30:16 <lacrimosa> fine
+06:30:24 <lacrimosa> lol, blindula
+06:30:44 <Blindula> whoever made f-droid and aurora droid sucks with search function
+06:30:56 <Blindula> search one thing and the whole damn list comes up
+06:31:04 <Blindula> every single app available on the whole thing
+06:31:04 <aeonsolution[m]> lacrimosa: now do the steps from here https://grapheneos.org/install#obtaining-factory-images
+06:31:15 <aeonsolution[m]> for your specific device
+06:31:24 <Blindula> half this shit is links to subreddits.  what type of apps are those?  psh
+06:31:26 <lacrimosa> ok,
+06:31:34 <aeonsolution[m]> which can be found on https://grapheneos.org/releases
+06:31:43 <lacrimosa> ok, yeah been there, done that
+06:31:45 <lacrimosa> will do again
+06:31:56 <aeonsolution[m]> cool, muscle memory
+06:32:07 <lacrimosa> it's actually the current installation one
+06:32:27 <lacrimosa> so, I don't even have to change anything from the official installation since I use the 4a
+06:32:35 <aeonsolution[m]> oh nice
+06:32:38 <aeonsolution[m]> well there you go
+06:33:26 <aeonsolution[m]> Blindula: there are various stores to get APKs for your phone, you can try the Aurora Store, Fdroid, APKMirror, etc...
+06:33:49 <aeonsolution[m]> Fdroid has had issues in the past, you can find the info in the logs
+06:33:55 <lacrimosa> signify -Cqp factory.pub -x sunfish-factory-2020.11.05.18.zip.sig && echo verified
+06:34:01 <lacrimosa> oops, sorry
+06:34:10 <aeonsolution[m]> there is not an endorsed store
+06:34:10 <lacrimosa> "verified" was the outcome, all fine
+06:34:20 <aeonsolution[m]> lacrimosa: nice
+06:34:49 <aeonsolution[m]> now do the steps here https://grapheneos.org/install#flashing-factory-images
+06:35:01 <lacrimosa> ok
+06:35:18 <lacrimosa> here, I make sure that you confirm
+06:35:20 <lacrimosa> 1. unzip sunfish-factory-2020.11.05.18.zip
+06:35:26 <lacrimosa> 2. cd sunfish-factory-2020.11.05.18
+06:35:26 <anne232> is there any way to backup your contacts with grapheneOS?
+06:35:35 <lacrimosa> 3. ./flash-all.sh
+06:35:51 <lacrimosa> correct?
+06:36:29 <aeonsolution[m]> anne232: do you mean for the Contacts app?
+06:36:36 <anne232> yes aeonsolution[m]
+06:36:59 <aeonsolution[m]> check the app's settings
+06:37:03 <aeonsolution[m]> there should be an export option
+06:37:07 <anne232> i did. its not there lol
+06:37:29 <anne232> it says display options, soudns and vibration, quick responses, calls, blocked numbesr, voicemail, accessibility and about
+06:37:32 <anne232> Those are the options, no export
+06:37:44 <aeonsolution[m]> open up the app->click on the 3 bars(sandwich)->Export
+06:37:46 <lacrimosa> aeonsolution[m]: wait...do I really have to reboot first, before doing steps 1-3?
+06:37:57 <anne232> aeonsolution[m], I dont have the 3 bars
+06:38:05 <anne232> For me its 3 dots next to a microphone icon
+06:38:06 <lacrimosa> "Reboot into the bootloader interface to begin the flashing procedure."
+06:38:10 <anne232> next to the search bar
+06:38:16 <aeonsolution[m]> lacrimosa: did you change to the directory already
+06:38:35 <lacrimosa> no
+06:38:39 <lacrimosa> i dod nothing, yet
+06:38:45 <lacrimosa> did*
+06:38:51 <aeonsolution[m]> ok give me a second
+06:39:02 <anne232> im not sure if grapheneos uses the same contacts app as normal android...
+06:39:06 <aeonsolution[m]> lacrimosa: run `cd sunfish-factory-2020.11.05.18`
+06:39:07 <lacrimosa> the instructions beginn with
+06:39:11 <lacrimosa> but:
+06:39:15 <aeonsolution[m]> then the flashall
+06:39:21 <lacrimosa> the instructions say: "Reboot into the bootloader interface to begin the flashing procedure."
+06:39:28 <lacrimosa> before cd.
+06:39:33 <strcat[m]> anne232: we use the AOSP Contacts app with minor changes, same with Dialer, etc.
+06:39:49 <aeonsolution[m]> you are in the bootloader already on your phone
+06:39:58 <lacrimosa> why does it say itthen?
+06:40:11 <aeonsolution[m]> just to make sure you are in the bootloader
+06:40:18 <aeonsolution[m]> its a chicken and the egg thing
+06:40:23 <lacrimosa> are you absolutely sure?
+06:40:29 <aeonsolution[m]> some people dont know you need to be on the bootloader on your phone
+06:40:30 <aeonsolution[m]> yes
+06:40:35 <lacrimosa> ok
+06:40:44 <lacrimosa> so now I go steps 1-3?
+06:41:00 <aeonsolution[m]> yes
+06:41:09 <aeonsolution[m]> i had missed that sorry
+06:41:32 <lacrimosa> (so the reboot instruction is for those who skip to the flashing factory image chapter directly, right?)
+06:42:25 <aeonsolution[m]> lacrimosa: it's for those that dont have their phone in the bootloader
+06:42:28 <aeonsolution[m]> at this step
+06:42:32 <aeonsolution[m]> the flashing step
+06:42:46 <aeonsolution[m]> anne232: open up the contacts app
+06:43:03 <strcat[m]> older devices used to reboot after unlock
+06:43:09 <strcat[m]> and lock
+06:43:13 <strcat[m]> so it was more complicated
+06:43:18 <strcat[m]> we can probably remove that sentence now
+06:44:02 <lacrimosa> guys
+06:44:05 <aeonsolution[m]> <strcat[m] "we can probably remove that sent"> I'll make a PR for that
+06:44:06 <lacrimosa> it doesn't look good
+06:44:11 <strcat[m]> I can do it
+06:44:56 <lacrimosa> it seems to be the same issue I had before I came here: the prompt in terminal didn'T react at all, terminal seems to be ffrozen
+06:44:58 <aeonsolution[m]> if there was an error, that's ok we can troubleshoot it
+06:45:12 <strcat[m]> lacrimosa: that just means a command is running
+06:45:24 <aeonsolution[m]> yeah don't mess with the device
+06:45:33 <aeonsolution[m]> let it do its thing
+06:45:45 <strcat[m]> lacrimosa: what did you run, and what is it showing?
+06:46:01 <lacrimosa> i ran steps 1-3
+06:46:12 <lacrimosa> and after ./flash-all.sh
+06:46:16 <lacrimosa> it's stuck or sth
+06:46:23 <lacrimosa> on the device itself i did nothing
+06:46:27 <strcat[m]> it's not producing output?
+06:46:32 <lacrimosa> nope
+06:46:40 <strcat[m]> you need to explain what exactly happened after you ran it
+06:46:56 <strcat[m]> also, did you successfully unlock the device earlier, already?
+06:46:59 <lacrimosa> I pressed ENTER and the cursor stopped
+06:47:06 <Blindula> any recommended crypto wallets for the os?
+06:47:13 <Blindula> any mycelium clients?
+06:47:20 <Blindula> or anything for monero recommended?
+06:47:20 <strcat[m]> lacrimosa: that's expected when you run the command, but it produces output
+06:47:50 <lacrimosa> strcat[m]: I don't understand
+06:48:02 <lacrimosa> waht you mean with your question
+06:48:04 <strcat[m]> when a command is running, there isn't a prompt to enter new commands
+06:48:06 <strcat[m]> until it finishes
+06:48:21 <strcat[m]> lacrimosa: what output did ./flash-all.sh produce when you ran it
+06:48:28 <lacrimosa> none at all
+06:48:44 <strcat[m]> did you successfully unlock the device with fastboot in the earlier step?
+06:48:53 <strcat[m]> does the phone screen say unlocked?
+06:48:53 <lacrimosa> I don't understand that question
+06:48:59 <lacrimosa> yes
+06:49:11 <aeonsolution[m]> he said it was succesfully unlocked
+06:49:38 <strcat[m]> lacrimosa: take a screenshot of the terminal where you're running ./flash-all.sh
+06:50:13 <Blindula> any recommended bitcoin clients?
+06:50:39 <Blindula> mycelium available to download anywhere or just "dash electrum wallet"
+06:54:11 <lacrimosa> i did a screenshot with flameshot
+06:54:16 <lacrimosa> and pressed SAVE
+06:54:23 <lacrimosa> where do I find this screenshot?
+06:54:24 <lacrimosa> grrr
+06:54:35 <aeonsolution[m]> its in your home directory
+06:54:40 <aeonsolution[m]> open a new File Manager
+06:54:43 <aeonsolution[m]> dont close the terminal
+06:55:22 <lacrimosa> nope
+06:55:25 <lacrimosa> can't see
+06:55:30 <lacrimosa> can't find grrr
+06:55:33 <Blindula> trying to download electrum dash, says no orbot detected...can't find tor or orbot in appstore.  can this be downloaded via browser?
+06:55:44 <lacrimosa> goddamnit
+06:56:22 <lacrimosa> WHY?
+06:56:30 <lacrimosa> is always anything complicated?
+06:56:50 <lacrimosa> I can't even deliver a screenshot O.l
+06:57:08 <Blindula> CAN I DOWNLOAD THE REGULAR ORBOT ANDROID APK FROM BROWSER
+06:57:31 <Blindula> WILL IT WORK WITH GRAPHENEOS?  OR CAN SOMEBODY SEND ME A PROPER LINK TO ORBOT, ANYTHING TO GET ELECTRUM DASH WORKING
+06:58:30 <aeonsolution[m]> just get the APKs from trusted sources
+06:58:48 <aeonsolution[m]> if you want Orbot and the Tor Project provides the APK and you trust them
+06:58:54 <Blindula> and trusted sources would be?  or any specific non trusted sources to look out for?
+06:58:56 <Blindula> ok thank you
+06:58:56 <aeonsolution[m]> download from your phones browser yes
+06:59:24 <strcat[m]> lacrimosa: what output is there after running ./flash-all.sh, what does it write out to the terminal?
+06:59:27 <strcat[m]> lacrimosa: nothing?
+06:59:30 <strcat[m]> it just stalls with that?
+07:00:20 <lacrimosa> yes
+07:00:33 <aeonsolution[m]> lacrimosa: is the computer you are using resource constrained?
+07:00:48 <lacrimosa> and now, if I rightclick on serttings from flameshot, it just dissappears
+07:00:52 <anne232> i still cant figure out if you can back up your contacts or not
+07:01:01 <lacrimosa> aeonsolution[m]: I don't udnerstand
+07:01:13 <anne232> Blindula, Electrum for BTC. for XMR i'd probably use their official client or anything they recommend?
+07:01:18 <aeonsolution[m]> Blindula: another thing you need to be aware of if you aren't already, Apps that require the Google Services Framework and don't know how to work without it will not work
+07:01:43 <aeonsolution[m]> lacrimosa: how much RAM does your PC have?
+07:01:52 <lacrimosa> 16GB
+07:02:13 <aeonsolution[m]> lacrimosa: try the steps here https://grapheneos.org/install#troubleshooting
+07:02:29 <aeonsolution[m]> its weird that you dont have an output but lets push past that and try this
+07:02:42 <aeonsolution[m]> just before you do that
+07:02:48 <lacrimosa> I don't understand the troubeshooting section
+07:02:51 <aeonsolution[m]> run the `$PWD` command
+07:02:59 <lacrimosa> what does it do?
+07:02:59 <aeonsolution[m]> dont show us the output
+07:03:15 <aeonsolution[m]> it prints your working directory
+07:03:26 <aeonsolution[m]> PrintWorkingDirectory
+07:03:41 <lacrimosa> ok, but you need to know that my TERMINAL isn't working at all
+07:03:47 <lacrimosa> as when I came here
+07:04:08 <aeonsolution[m]> ok
+07:04:12 <lacrimosa> it suddenly worked again after we deleted everything from the home folder
+07:04:15 <aeonsolution[m]> with your mouse
+07:04:20 <aeonsolution[m]> click inside the terminal once
+07:04:24 <lacrimosa> yes
+07:04:33 <aeonsolution[m]> then on your keyboard press
+07:04:44 <aeonsolution[m]> CTRL then C
+07:04:50 <aeonsolution[m]> together
+07:05:05 <aeonsolution[m]> do that once
+07:05:16 <lacrimosa> as I said back then it just makes appear "^C"
+07:05:50 <aeonsolution[m]> doing that once should not do that
+07:05:51 <lacrimosa> I need to delete the files in home folder
+07:06:07 <aeonsolution[m]> why?
+07:06:15 <lacrimosa> that's when the prompt reappered when we did it first time
+07:06:38 <lacrimosa> shall Iß
+07:06:41 <lacrimosa> shall I?
+07:07:02 <aeonsolution[m]> no dont do that
+07:07:11 <aeonsolution[m]> open up the file manager again
+07:07:16 <aeonsolution[m]> and check how much space you have
+07:07:25 <lacrimosa> how?
+07:07:37 <aeonsolution[m]> the bottom part of the File Manager tells you Free Space:
+07:07:45 <lacrimosa> 70 GB free
+07:08:00 <aeonsolution[m]> take a screenshot
+07:08:12 <aeonsolution[m]> and google how to get it from Manjaro
+07:08:30 <aeonsolution[m]> take a screenshot of the terminal I mean
+07:08:36 <aeonsolution[m]> thats the next thing we have to do
+07:09:26 <lacrimosa> it seems flameshot is misbehaving
+07:09:28 <lacrimosa> grrr
+07:09:52 <aeonsolution[m]> KDE should have a tool for Screenshots
+07:09:55 <aeonsolution[m]> google that
+07:10:37 <aeonsolution[m]> https://userbase.kde.org/Taking_Screenshots
+07:10:40 <lacrimosa> yeah, but I want
+07:10:46 <lacrimosa> to blurr stuff
+07:10:48 <lacrimosa> username
+07:10:49 <lacrimosa> etc
+07:11:05 <aeonsolution[m]> we just want two commands
+07:11:38 <aeonsolution[m]> cd sunfish-factory-2020.11.05.18 and ./flash-all.sh
+07:11:43 <aeonsolution[m]> thats it
+07:12:23 <aeonsolution[m]> the terminal doesnt have anything sensitive either
+07:12:36 <aeonsolution[m]> and if you are following the steps there shouldnt be anything private
+07:13:02 <aeonsolution[m]> we dont want your full screen
+07:13:30 <aeonsolution[m]> absent of that we cant diagnose the issue
+07:15:50 <lacrimosa> Screenshot_20201121_081243-1
+07:16:11 <lacrimosa> pastebin
+07:16:27 <aeonsolution[m]> use the attachment button
+07:16:47 <lacrimosa> where?
+07:17:02 <aeonsolution[m]> nvm you are on freenode
+07:17:20 <lacrimosa> is there somthin like pastebin?
+07:17:45 <aeonsolution[m]> we are trying to see the behavior of your terminal
+07:17:54 <aeonsolution[m]> we believe that you are typing the commands correctly
+07:17:55 <lacrimosa> I did a screenshot
+07:18:08 <aeonsolution[m]> what we cant see is what your terminal is doing when you run the flash command
+07:18:09 <lacrimosa> how do I share my screenshot with you?
+07:18:14 <aeonsolution[m]> you just pasted the name
+07:18:19 <lacrimosa> I know
+07:18:23 <aeonsolution[m]> there is no link the to picture
+07:18:27 <lacrimosa> I knoiw
+07:18:31 <lacrimosa> HOW
+07:18:35 <lacrimosa> do I link it?
+07:18:36 <aeonsolution[m]>  * there is no link to the picture
+07:19:43 <aeonsolution[m]> I'm on matrix, i dont know how Freenode shares pictures
+07:20:03 <lacrimosa> well, shit
+07:22:40 <lacrimosa> I'm lost
+07:23:17 <aeonsolution[m]> press CTRL and C again on the terminal after clicking inside it once again
+07:24:04 <aeonsolution[m]> do you get the cursor back
+07:24:06 <lacrimosa> https://www.screenshare.de/8248-caws-338f/#key=8mq3-rzvp-2ip1-x6zy-k25s-3afm-5528-o3cq
+07:25:14 <aeonsolution[m]> it was just running
+07:25:22 <lacrimosa> what?
+07:25:27 <lacrimosa> I don't udnerstand
+07:25:29 <aeonsolution[m]> the command
+07:25:35 <lacrimosa> I don't understand
+07:26:08 <aeonsolution[m]> since there isnt a time stamp i cant how far apart the kill comand was from the .flash all
+07:26:16 <aeonsolution[m]> on your keyboard
+07:26:18 <lacrimosa> long time
+07:26:22 <aeonsolution[m]> press CTRL and L
+07:26:30 <lacrimosa> L or C?
+07:26:38 <aeonsolution[m]> L
+07:26:42 <aeonsolution[m]> we are clearing the terminal
+07:26:58 <aeonsolution[m]> run the fastboot version command again to make sure it is still on your PATH
+07:27:13 <lacrimosa> it just adds "^L" to look like this now: ^C^L
+07:29:19 <aeonsolution[m]> did you accidently press
+07:29:24 <aeonsolution[m]> CTRL and Z
+07:29:26 <lacrimosa> no
+07:29:59 <lacrimosa> usually if I type sth in terminal, there is my username, etc in front of cursor
+07:30:07 <lacrimosa> here, it is not anymore
+07:30:13 <lacrimosa> since it broke after flash command
+07:30:26 <aeonsolution[m]> the terminal isnt broken
+07:30:40 <lacrimosa> why can't it even abort then?
+07:30:42 <aeonsolution[m]> its suspended or running a process
+07:30:44 <lacrimosa> no command woirks
+07:30:47 <lacrimosa> ok
+07:30:53 <aeonsolution[m]> the commands work
+07:31:02 <aeonsolution[m]> thats why you see new characters
+07:31:03 <lacrimosa> you sure?
+07:31:22 <aeonsolution[m]> yes
+07:31:24 <aeonsolution[m]> press CTRL and Z
+07:31:36 <lacrimosa> stopped
+07:31:49 <lacrimosa> now it looks back to normal
+07:31:56 <aeonsolution[m]> lol
+07:32:00 <lacrimosa> still in sunfish- dirctory
+07:32:08 <aeonsolution[m]> so do you have a $ now
+07:32:13 <lacrimosa> yes
+07:32:21 <aeonsolution[m]> nice
+07:32:25 <aeonsolution[m]> alright
+07:32:33 <aeonsolution[m]> CTRL and L now
+07:32:41 <lacrimosa> done
+07:33:01 <aeonsolution[m]> run `ls`
+07:33:16 <aeonsolution[m]> can you see the flashall.sh in your directory
+07:33:23 <lacrimosa> https://www.screenshare.de/8248-caws-338f/#key=8mq3-rzvp-2ip1-x6zy-k25s-3afm-5528-o3cq
+07:33:26 <lacrimosa> oops
+07:33:32 <lacrimosa> avb_pkmd.bin                           flash-base.sh
+07:33:41 <lacrimosa> bootloader-sunfish-s5-0.2-6539975.img  image-sunfish-2020.11.05.18.zip
+07:33:51 <lacrimosa> the latter is in color red
+07:33:59 <lacrimosa> flash-all.bat                          radio-sunfish-g7150-00018-200701-b-6643937.img
+07:34:03 <lacrimosa> that's all
+07:34:19 <lacrimosa> uh, wait: "flash-all.sh" in green
+07:34:26 <aeonsolution[m]> ok cool
+07:34:48 <aeonsolution[m]> run the `./flash-all.sh`
+07:35:07 <lacrimosa> < waiting for any device >
+07:35:09 <aeonsolution[m]> make sure your device is plugged in
+07:35:13 <lacrimosa> it is
+07:35:29 <aeonsolution[m]> unplug the device and plug it in again
+07:35:38 <aeonsolution[m]> make sure it is on and in the bootloader
+07:35:54 <lacrimosa> sending radio
+07:35:58 <lacrimosa> finished
+07:36:06 <lacrimosa> oops
+07:36:15 <lacrimosa> now activity happening ^^
+07:36:15 <aeonsolution[m]> dont touch the device
+07:36:33 <lacrimosa> won't
+07:36:51 <aeonsolution[m]> after that finishes you need to lock it
+07:36:53 <aeonsolution[m]> https://grapheneos.org/install#locking-the-bootloader
+07:37:00 <lacrimosa> so, waht was the issue?
+07:37:26 <aeonsolution[m]> the user was not following instructions
+07:37:27 <aeonsolution[m]> and pressed keys they werent supposed too
+07:37:31 <lacrimosa> lol
+07:37:41 <lacrimosa> I don't think so
+07:37:58 <aeonsolution[m]> you pressed the suspend keys
+07:37:58 <aeonsolution[m]> CTRL and Z
+07:38:01 <aeonsolution[m]> by accident somehow
+07:38:08 <lacrimosa> no, I never did that
+07:38:11 <lacrimosa> 100% sure
+07:38:33 <aeonsolution[m]> you probably didnt intentionally do it
+07:38:43 <lacrimosa> nope, definitely not
+07:38:51 <aeonsolution[m]> but your terminal was suspended
+07:38:53 <lacrimosa> but maybe another command
+07:38:59 <lacrimosa> but not in terminal
+07:39:06 <lacrimosa> it's finished
+07:39:06 <aeonsolution[m]> when you CTRL and Z a second time it got unsuspended
+07:39:15 <aeonsolution[m]> ok now lock it
+07:39:34 <lacrimosa> done
+07:39:44 <lacrimosa> thank you very much
+07:39:52 <aeonsolution[m]> now boot the alternate operating system
+07:39:58 <aeonsolution[m]> GrapheneOS
+07:40:01 <lacrimosa> yeah
+07:40:02 <aeonsolution[m]> you are very welcome
+07:40:18 <lacrimosa> you have a hell of patience with me, thx
+07:40:55 <aeonsolution[m]> its alright, I understand where you are coming from
+07:41:04 <aeonsolution[m]> patience and empathy are important
+07:41:29 <aeonsolution[m]> well welcome to the club
+07:41:32 <lacrimosa> yes, but I am stuck with it for 5 hours and got really impatient ^^
+07:42:02 <aeonsolution[m]> well i had an advantage because I've used Manjaro but its not the best
+07:42:11 <aeonsolution[m]> the only thing it has going for it is the udev rules
+07:42:19 <aeonsolution[m]> but thats it lol
+07:42:26 <blindula> Can anybody help me download monerujo wallet?  added the repository to f-droid and every time i try to download it says failed
+07:42:31 <aeonsolution[m]> the packages are always out of sync
+07:42:34 <blindula> last thing i need for the night lol
+07:43:07 <aeonsolution[m]> blindula: check the logs, i dont think anyone that uses cypto currency is on that can help
+07:43:54 <blindula> "Error installing monerujo      /data/user/0org.fdroid.fdroid/cache/apks/f-droid.monerujo.io-1/repo failed to verify!"
+07:44:16 <aeonsolution[m]> lacrimosa: really sorry you had to wait 5 hours. the channel is great but needs all the information you can provide to help you work thru the issue
+07:44:41 <aeonsolution[m]> otherwise we are all shooting in the dark
+07:45:35 <aeonsolution[m]> blindula: that might be an app developer issue, you might want to reach out them to see if the app is working like its supposed too
+07:45:40 <lacrimosa> what? no, I was stuck for 4 hours before I came here
+07:46:07 <aeonsolution[m]> <lacrimosa "what? no, I was stuck for 4 hour"> oh, well you came to the right place lol
+07:46:44 <aeonsolution[m]> Hi everyone, the project appreciates donations if you haven't donated yet! grapheneos.org/donate
+07:46:53 <aeonsolution[m]> Paypal and Github sponsors are the best bet right now!
+07:47:07 <lacrimosa> how do I install f-droid? by browser?
+07:47:32 <aeonsolution[m]> from trusted sources, yes
+07:47:42 <lacrimosa> ok
+07:50:31 <lacrimosa> I wanted to disable OEM unlocking, but the developer settings menu is gone
+07:50:36 <lacrimosa> so no to do?
+07:51:50 <aeonsolution[m]> do the secret knock on Build Number
+07:52:01 <lacrimosa> ok
+07:52:03 <aeonsolution[m]> then go to developer settings and disable OEM Unlocking
+07:52:07 <lacrimosa> ok
+07:52:30 <aeonsolution[m]> and then turn off developer options
+07:52:47 <lacrimosa> thx
+07:53:01 <aeonsolution[m]> np
+07:54:37 <lacrimosa> what app stores do you use besides fdroid?
+07:55:19 <aeonsolution[m]> im really minimalist, if i cant get the apps from the app developers, I get them from Aurora Store
+07:55:42 <lacrimosa> but fdroid you use?
+07:56:00 <aeonsolution[m]> that's not an endorsement, its just something that's worked for me and haven't needed to switch
+07:56:10 <aeonsolution[m]> i dont use fdroid
+07:56:14 <lacrimosa> oh, ok
+07:56:54 <lacrimosa> so for a mainstream noob like me, would you recommend to use aurora ?
+07:57:04 <lacrimosa> and f-droid as well?
+07:57:22 <aeonsolution[m]> ehh, just try them both out and see which one you like
+07:57:30 <aeonsolution[m]> just dont becareful what you install
+07:57:43 <aeonsolution[m]> same rules apply as if you were using Google Play Store
+07:58:14 <aeonsolution[m]> there isnt a RIGHT way
+07:58:24 <aeonsolution[m]> just dont shoot yourself in the foot is my motto
+07:58:49 <aeonsolution[m]>  * just be careful what you install
+07:59:01 <lacrimosa> yeah, I'd consider myself as a minimalist
+07:59:17 <lacrimosa> I just want a working navigation
+07:59:23 <lacrimosa> an offline calendar
+07:59:32 <lacrimosa> and maybe threema
+08:03:22 <aeonsolution[m]> good luck with that, you'll figure it out
+08:03:47 <aeonsolution[m]> im calling it a night, take care everyone. be good to each other
+08:04:39 <strcat[m]> lacrimosa: Etar is a good calendar app
+08:04:59 <strcat[m]> there are multiple openstreetmaps-based map apps, some with working navigation (like maps.me) - they all have various drawbacks though
+08:21:41 <aeonsolution[m]> anne232: forgot to give you the steps for the Contacts app. Open up the app, on the Contacts bar at the top there is a 3 bar button (aka the Hamburger) on the left. Click on that. Then when the left drawer appears click on the Setting option. That opens up a new list of options. You want to click on the Export option and create the .vcf file that can be imported later through the Contacts app.
+08:22:23 <aeonsolution[m]> Good luck
+08:41:18 <anne232> lol
+08:41:20 <anne232> i figured it out
+08:41:22 <anne232> i was being stupid
+08:41:24 <anne232> You were right.
+08:42:04 <anne232> thx
+09:26:52 <nfpdex[m]> Hey, in the Graphene FAQ I found this:
+09:26:53 <nfpdex[m]> "It should also be clear that the expectation is for people to buy a device to run GrapheneOS, rather than GrapheneOS supporting their existing devices. This will only become more true if GrapheneOS is successful enough to accomplish the goal of having devices produced based on an SoC reference design with minor improvements for privacy and security. Broad device support is the opposite of what the project wants to
+09:26:54 <nfpdex[m]> achieve in the long term."
+09:27:16 <nfpdex[m]> So does it mean that in the longterm they plan to build their own hardware that comes with GrapheneOS?
+09:27:59 <nfpdex[m]> And if so, is there anything more to find out about those plans?
+09:28:26 <somenerd[m]> > So does it mean that in the longterm they plan to build their own hardware that comes with GrapheneOS?
+09:28:27 <somenerd[m]> yes
+09:28:35 <somenerd[m]> not sure about exact plans
+09:29:09 <somenerd[m]> but I believe there was a comment on making RISC - V smartphones
+09:29:24 <somenerd[m]> let me see if I have the link
+09:30:41 <somenerd[m]> (emphasis on I believe btw)
+09:31:14 <somenerd[m]> not sure where it is
+09:32:30 <nfpdex[m]> Thank you somenerd Another question I am interested in: I found a reddit where Daniel Micay wrote about security/privacy of Linux and was very critical, but there was not really a clear recommendation concerning what he would use on Desktop. Are there any discussions/advices what OS you would use for this? I am not an expert at all, I'm just a regular user who wants to do something against the mass surveillance of
+09:32:31 <nfpdex[m]> governments and corporations and want to have a reasonable safe environment to work in.
+09:32:46 <somenerd[m]> I think this may help
+09:32:54 <somenerd[m]> also ot so go to the off topic channel
+09:33:11 <somenerd[m]> https://madaidans-insecurities.github.io/security-privacy-advice.html
+09:34:32 <somenerd[m]>  * also ot so go to the off topic channel #grapheneos-offtopic
+10:38:07 <doobry[m]> <strcat[m] "there are multiple openstreetmap"> to my knowledge, maps.me is *full* of trackers and horrible concerning privacy. there's a tracker-free fork called "maps" available in f-droid, but I didn't follow it lately. I use osmand and I'm happy with it.
+10:38:41 <doobry[m]> here's a german article about how bad maps.me is: https://mobilsicher.de/ratgeber/navi-apps-im-check-maps-me-nicht-empfehlenswert
+10:46:44 <alzxjm[m]> Magic Earth is a decent option for turn-by-turn navigation. It's powered by OSM, has a good privacy policy, is based in Europe, and the app has no trackers. Closed source though.
+11:30:51 <lacrimosa> to connect via adb do I have to get the smartphone into fastboot mode?
+11:51:48 <lacrimosa> ok, probably not.
+11:52:04 <lacrimosa> but I can't see my pixel device listed after adb devices
+11:52:09 <lacrimosa> maybe I miss the drivers?
+11:52:22 <lacrimosa> or maybe do I need to have developer option activated?
+11:53:01 <COVID-1984> Is the GOS backup feature mean to be able to (i.e.): backup a pixel 3a & restore to a pixel 4?
+11:53:05 <COVID-1984> meant*
+12:00:10 <aldous_leekie[m]> <COVID-1984 "Is the GOS backup feature mean t"> Hahahahhahaa what a name hahahaha
+12:01:03 <COVID-1984> :)
+12:02:15 <aldous_leekie[m]> I love u just for that
+12:08:18 <nscnt> COVID-1984: I'm not too familiar with Seedvault. I don't know why it shouldn't work. Just keep in mind that it may not back up everything that you expect to be backed up. Maybe someone else can help here out with the details.
+12:12:13 <nscnt> Because I think it's very app-dependent. The developer of the app needs to allow backups of it etc.
+12:15:01 <COVID-1984> @nscnt ah I thought the backup to USB flash feature was a full filesystem operation
+12:21:08 <nscnt> COVID-1984: No, that's the point. That's not possible due to how AOSP manages storage.
+12:21:29 <COVID-1984> oh I didn't realize. Thanks
+12:21:49 <nscnt> I don't know any details, though. Waiting for someone else expanding on it ^^
+12:22:14 <COVID-1984> It took quite a while to setup, and I'm still not done... If it could be imaged or something, then it wouldn't be a problem.
+12:24:57 <nscnt> COVID-1984: https://github.com/seedvault-app/seedvault and especially https://github.com/seedvault-app/seedvault/wiki/FAQ for some official information c:
+12:28:00 <COVID-1984> right, seedvault. will read that over
+14:19:58 <BadActor> Hi, is anyone here?
+14:22:16 <louipc> nope
+14:30:34 <BadActor> No one haha
+14:32:25 <BadActor> Sorry, I've never used this platform
+14:39:28 <pikey[m]> sorry for the off topic question but a little while back either anupritaisno1: or  strcat told me abouit a good vps server. I need a remote machine i can use as my own, just for web browsing remotely from wherever i am, via VNC or similar. I remember one being recommended a while back by one of you but can't remember, if you could remind me i would be grateful. thanks
+14:41:47 <BadActor> I could use some help with my grapheneos install that I messed up if anyone has a minute
+14:51:59 <pikey[m]> sorry, i would help if i could but it would be blind leading blind
+14:52:03 <pikey[m]> whats up with it?
+14:54:26 <BadActor> After install, it just flashed google logo and then goes to the dead android logo and says "no command"
+14:55:41 <BadActor> Looks like the grapheneos recovery is there as I can get to that menu, but it doesn't look like any of the options really work
+14:56:16 <pikey[m]> hmm
+14:56:17 <pikey[m]> what device
+14:56:59 <BadActor> Pixel 4a
+14:57:29 <pikey[m]> nice. hopinhg for one of those myself soon
+14:57:43 <pikey[m]> i coul dbe wrong but i have a feeling someone had similar problem a little while back.
+14:57:50 <pikey[m]> i think they just reflashed it and it was fine second time
+14:58:41 <BadActor> I was so excited. I'm a noob at flashing different rooms though. I reflashed a second time and it does the same thing.
+14:59:24 <BadActor> When it says it's done on the pc, I can see that a certain line failed
+14:59:56 <BadActor> Looks like it says the boot slot is wrong, but I don't know what that means
+15:15:11 <aeonsolution[m]> <lacrimosa "but I can't see my pixel device "> you don't have debugging enabled which is only in developer options, it is recommended you dont use adb
+15:16:56 <aeonsolution[m]> BadActor: try starting over from scratch https://grapheneos.org/install
+15:17:58 <aeonsolution[m]> it is not uncommon to have missed a step, trying again is probably your best bet
+15:31:18 <BadActor> I can try starting over, but have no android menus so I'm assuming to just start from an unlocked bootloader?
+15:33:26 <aeonsolution[m]> lacrimosa: and to clarify I mean that after installing a production OS such as GrapheneOS, you should not use adb afterwards because it adb tools are using for debugging, testing, and flashing
+15:34:20 <aeonsolution[m]> <BadActor "I can try starting over, but hav"> if you are referring to your device then it is probably soft bricked, you can fix that by flashing again
+15:34:38 <aeonsolution[m]> i would recommend you delete everything related to GrapheneOS you downloaded
+15:34:43 <aeonsolution[m]> and start from scratch
+15:34:56 <aeonsolution[m]> i would turn off your phone for now too
+15:36:09 <BadActor> thanks so much, thats what im doing, I guess all the steps are copy and paste into windows command prompt right?
+15:36:18 <aeonsolution[m]> if you were able to soft brick it by flashing, you most likely unlocked the bootloader
+15:36:45 <aeonsolution[m]> you are supposed to be using Powershell on windows
+15:36:58 <tobsn[m]> <BadActor "I was so excited. I'm a noob at "> There is a fix for that, had run into the same problem
+15:37:05 <aeonsolution[m]> did you follow video instructions?
+15:37:15 <BadActor> yes, my bootloader is unlocked and the fastboot screen is the only one i can get to
+15:37:38 <BadActor> yes i followed the video instructions on youtube lol
+15:37:40 <tobsn[m]> Youtube > Techlore
+15:37:44 <BadActor> yep
+15:37:56 <tobsn[m]> GrapheneOS install guide second video
+15:38:08 <aeonsolution[m]> dont use unofficial instructions
+15:38:10 <tobsn[m]> You need to modify the run.bat
+15:38:20 <aeonsolution[m]> no you dont
+15:38:32 <BadActor> i modified the flash all file
+15:38:42 <tobsn[m]> I had to modify it to got it working
+15:38:59 <aeonsolution[m]> please follow the official instructions on the website if you want support from this channel
+15:39:17 <aeonsolution[m]> if you mess up your device during flashing, it is because you modified things you arent supposed too
+15:39:44 <louipc> lol sounds like grapheneos need to make an official install video
+15:39:52 <BadActor> on my phone it says boot slot:b    enter reason: no valid slot to boot
+15:39:55 <somenerd[m]> yeah sounds like that
+15:39:58 <louipc> then ppl will stop using the bad ones
+15:40:05 <somenerd[m]> mmhm
+15:40:08 <tobsn[m]> I found the official instruction to confusing, so I stuck to the techlore video + fix video
+15:40:18 <aeonsolution[m]> <louipc "lol sounds like grapheneos need "> people will still figure out how not to follow the official instructions
+15:40:19 <tobsn[m]> * I found the official instruction too confusing, so I stuck to the techlore video + fix video
+15:40:31 <louipc> aeonsolution[m]: :p
+15:40:47 <somenerd[m]> > people will still figure out how not to follow the official instructions
+15:40:47 <somenerd[m]> it'll make the situation better thouhg
+15:40:48 <BadActor> I'm now trying to follow official instructions now...
+15:40:51 <somenerd[m]>  * > people will still figure out how not to follow the official instructions
+15:40:51 <somenerd[m]> it'll make the situation better though
+15:40:51 <aeonsolution[m]> you dont need to modify files and potentially brick your phone by someone that does not know how to build an operating system
+15:41:15 <aeonsolution[m]> its not good advice even if you had a positive outcome this one time
+15:41:51 <aeonsolution[m]> 👍️
+15:42:12 <louipc> i'm thinking the instructions could be split into 3 versions to make it simpler?
+15:42:46 <louipc> simpler for the reader i mean. windows, linux, mac
+15:42:57 <aeonsolution[m]> BadActor, tobsn. making modifications files is cool to figure out the process, I wouldn't discourage that but its not official instructions and shouldn't be presented as a way to flash GrapheneOS
+15:43:20 <aeonsolution[m]> it adds more work on the devs and the community that sticks to the instructions and tries to help troubleshoot
+15:43:43 <BadActor> so do I go to command prompt on windows to paste these instructions to install platform tools?
+15:43:59 <aeonsolution[m]> on windows, we are officially supporting Powershell because it is what has all the supported Command Line tools
+15:44:14 <aeonsolution[m]> BadActor: no, close your Command Prompt and open up Powershell
+15:44:23 <BadActor> how to open powershell?
+15:44:31 <aeonsolution[m]>  * BadActor, tobsn. making modifications to files is cool to figure out the process, I wouldn't discourage that but its not official instructions and shouldn't be presented as a way to flash GrapheneOS
+15:44:43 <aeonsolution[m]>  * BadActor, tobsn. making modifications to files is cool to figure out the process, I wouldn't discourage that but its not official instructions and shouldn't be presented as a way to properly flash GrapheneOS
+15:45:21 <aeonsolution[m]> go to the windows button and type Powershell
+15:45:29 <aeonsolution[m]> select the first option
+15:45:48 <aeonsolution[m]> and when you open it, make sure you only use this one open Powershell to run all the commands
+15:46:19 <BadActor> ok im doing it now
+15:47:12 <aeonsolution[m]> if you are used to using command prompt, this may take some getting used too but in the future windows is going to probably only use Powershell
+15:47:38 <aeonsolution[m]> but thats a different story for another day
+15:47:43 <aeonsolution[m]> good luck
+15:49:15 <BadActor> I have halfway made it through a few linux courses so, yeah I'm still a noob
+15:49:43 <BadActor> It's extracting
+15:51:31 <aeonsolution[m]> its cool, we are start as beginners at some point
+15:51:49 <aeonsolution[m]> anyone that tells you otherwise is a liar and insecure lol
+15:52:23 <BadActor> so,... i hope I'm doing this right
+15:53:32 <aeonsolution[m]> if you follow the steps as prescribed on the page and for your specific device, you'll be fine
+15:53:39 <BadActor> do I have to verify to install
+15:53:50 <aeonsolution[m]> are you flashing for Pixel 4a?
+15:54:47 <BadActor> yes
+15:55:09 <aeonsolution[m]> i dont remember if you can verify on windows
+15:55:18 <aeonsolution[m]> i want to say you cant but you can try
+15:55:51 <BadActor> do i download the image by clicking on the page and downloading, or somehow through the powershell page i have open
+15:56:12 <aeonsolution[m]> follow the instructions
+15:56:20 <aeonsolution[m]> everything gets downloaded via Powershell
+15:56:38 <aeonsolution[m]> you dont need to open File Explorer
+15:57:15 <aeonsolution[m]> you only need the 1 open Powershell window
+15:57:18 <BadActor> ok cool, im just reading how to do it
+15:57:30 <BadActor> yeah, i still have that window open
+16:00:03 <aeonsolution[m]> ok just continue reading thru the instructions
+16:00:13 <aeonsolution[m]> if signify doesnt work you can skip it on Windows
+16:01:30 <aeonsolution[m]> good luck, if you need help reach out here on the channel someone will fill in
+16:01:37 <aeonsolution[m]> im taking off for now
+16:01:44 <BadActor> ok thanks
+16:03:22 <BadActor> can anyone tell me what I'm doing wrong when trying to download the factory images in powershell?
+16:06:43 <omgimjustsobroke> Hi guys
+16:06:56 <omgimjustsobroke> Just wanna drop in to know if Whatsapp works on GrapheneOS
+16:07:13 <louipc> i've heard that it works
+16:07:41 <malicoye[m]> Yes it does
+16:07:56 <louipc> there's a note: No notifications unless the app is running in the background
+16:08:19 <louipc> https://plexus.techlore.tech/applications/whats-app
+16:08:33 <malicoye[m]> Turn on Run In Background
+16:08:49 <louipc> that site isn't entirely accurate for all apps tho
+16:09:50 <somenerd[m]> it's crowdsourced, so I can see why
+16:10:08 <malicoye[m]> That site is highly inaccurate
+16:10:19 <omgimjustsobroke> Cool, thanks dude. Do I need to install OpenGapps or something
+16:10:27 <louipc> no
+16:11:14 <Aldous[m]> No
+16:11:42 <golli[m]2> Does GrapheneOS have a way to do a firewall management without using up the VPN slot?
+16:12:06 <omgimjustsobroke> thanks
+16:12:10 <malicoye[m]> What other devices do that?
+16:12:43 <somenerd[m]> > Does GrapheneOS have a way to do a firewall management without using up the VPN slot?
+16:12:43 <somenerd[m]> Netguard-type? or blocking domains?
+16:13:04 <aeonsolution[m]> <BadActor "can anyone tell me what I'm doin"> what is the command you are running
+16:13:12 <aeonsolution[m]> got time to help you on this one last thing
+16:14:07 <aeonsolution[m]> `curl -O https://releases.grapheneos.org/sunfish-factory-2020.11.05.18.zip` this is the command you need to run on Windows
+16:14:18 <aeonsolution[m]> if it doesnt work try curl.exe
+16:14:29 <BadActor> curl -O https://releases.grapheneos.org/sunfish-factory-2020.11.05.18.zip
+16:14:33 <aeonsolution[m]> you might of not run the command at the top of the section to remove the alias
+16:14:50 <aeonsolution[m]> run this first `Remove-Item Alias:Curl`
+16:14:59 <aeonsolution[m]> then run the curl command again
+16:16:02 <aeonsolution[m]> did it work
+16:16:09 <BadActor> GENIUS,... seems to be downloading now
+16:16:17 <aeonsolution[m]> nice
+16:16:29 <aeonsolution[m]> keep following the instructions
+16:16:32 <aeonsolution[m]> you are 30% there
+16:16:33 <aeonsolution[m]> good luck
+16:16:45 <BadActor> we will see how far I get haha, thanks so much
+16:17:17 * golli[m]2 sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/MaifwtAagWFqpmPWDaNQLoNx/message.txt >
+16:17:41 <somenerd[m]> It can revoke the "INTERNET" permission
+16:17:48 <somenerd[m]> similar to netguard
+16:18:06 <golli[m]2> Ohh, nice.
+16:18:27 <golli[m]2> So is that a thing that you need to give the app permission to use? Or do all apps have that permission by default?
+16:19:11 <somenerd[m]> I think they have it by default or on request(when downloaded), and you can revoke it.
+16:19:33 <golli[m]2> Ahh, okay then. So I guess that would be enough.
+16:21:09 <golli[m]2> Does GrapheneOS have a menu at all (in Settings maybe?) to set the default permissions for all apps?
+16:21:09 <golli[m]2> So things like access to Bluetooth can be set to disabled by default, Inetnet can be disabled by default, Camera can be enabled by default, etc?
+16:21:39 <somenerd[m]> idk sorry
+16:22:09 <somenerd[m]> I believe (from my experience using Android) that the permissions are given on install
+16:22:21 <somenerd[m]> some may also be given on runtime
+16:22:31 <somenerd[m]> not really sure about GrapheneOS though
+16:23:47 <golli[m]2> Okay, cheers 👍️
+16:31:41 <BadActor> It seems I was successful in flashing, but I havent tried starting it yet. do i lock the bootloader back from the same powershell?
+16:33:07 <tobsn[m]> <BadActor "It seems I was successful in fla"> Here dude
+16:33:10 <tobsn[m]> https://www.youtube.com/watch?v=qG6x4q1Ugz0
+16:33:55 <tobsn[m]> GrapheneOS Install Error Troubleshooting Guide 👍
+16:35:53 <BadActor> thanks
+16:36:29 <BadActor> I was successful, this is awesome. I was so worried that I wouldnt be able to find someone to help
+16:36:49 <tobsn[m]> Same over here
+16:37:37 <BadActor> I tried everything from those videos, but once I understood the official guide it finally worked
+16:39:22 <COVID-1984> What's y'all fav mail client on GOS?
+16:39:46 <dar_gomml[m]> <aeonsolution[m] "if signify doesnt work you can s"> if you have 7zip installed on windows you can use that to generate the checksum to compare..
+16:39:57 <louipc> lock the boot loader
+16:40:20 <BadActor> I locked it and am setting up now
+16:40:41 <dar_gomml[m]> <COVID-1984 "What's y'all fav mail client on "> i use k9-mail
+16:45:29 <BadActor> First apps to get?anyone?
+16:47:17 <louipc> please join #grapheneos-offtopic for chat about non grapheneos apps
+16:47:27 <BadActor> ok
+16:47:45 <louipc> thanks
+16:48:56 <alzxjm[m]> K-9 beta is good if you have IMAP. Protonmail works fine other than push notifications.
+16:49:25 <alzxjm[m]> I actually disabled Mail notifications on my iPhone.
+16:49:51 <alzxjm[m]> After the experience of using a phone without constant frickin' email notifications all the time.
+17:31:08 <tobsn[m]> <COVID-1984 "What's y'all fav mail client on "> FairEmail, you even get notifications without any trouble out of the box
+17:43:03 <ss132ikl> <anupritaisno1[m] "steven: revert our commit to dis"> which commit is this?
+17:52:01 <dar_gomml[m]> <tobsn[m] "FairEmail, you even get notifica"> k9 notifications work too
+17:55:56 <malicoye[m]> K9 is like we are still in the 90s
+17:55:56 <malicoye[m]> Fairmail is so much better
+17:55:57 <dazinism> Apparently tutanota notifications work. It also does well in implementing email security features
+17:57:15 <malicoye[m]> I like the idea Criptext is doing for email, except their relentless to drop GS
+17:58:00 <malicoye[m]> * I like the idea Criptext is doing for email, except their relentlessness to drop GS
+18:00:11 * dazinism uploaded an image: 20201121_175920_955.png (106KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/HwmKzWNwwYhBdcbMJqOSOiHe/20201121_175920_955.png >
+18:00:33 <dazinism> https://www.usenix.org/conference/usenixsecurity20/presentation/lee-hyeonmin
+18:00:58 <somenerd[m]> what is "mail.com" lol
+18:00:59 <malicoye[m]> Criptext is not on the list
+18:01:00 <dazinism> (Think renlord shared that paper)
+18:01:17 <malicoye[m]> List is outdated
+18:07:49 <louipc> lol so gmail is the worst?
+18:13:28 <malicoye[m]> So, none is experiencing issues with split screen? Am I the single person to use it?
+18:14:31 <alzxjm[m]> > <@malicoye:matrix.org> K9 is like we are still in the 90s
+18:14:31 <alzxjm[m]> > Fairmail is so much better
+18:14:31 <alzxjm[m]> K-9 Beta has an updated UI. Looks way more modern.
+18:23:07 <ss132ikl> i've been using K-9 Material (although i haven't tried it on graphene yet but i would assume the notification code is the same as original k9)
+18:30:53 <tobsn[m]> <malicoye[m] "So, none is experiencing issues "> Split Screen is working fine for me
+18:37:08 <nfpdex[m]> concerning email, you should check out posteo.de
+18:37:49 <nfpdex[m]> based in germany.
+18:45:05 <malicoye[m]> And Germany is 5 eyes. Far from average
+18:48:08 <nfpdex[m]> I dont know, its just something that german pen testers / privacy enthusiasts often recommend instead of proton mail because they think they are more trustworthy.
+18:48:20 <anakinskywalker> What's up GrapheneOS community! Does anyone here have an idea if Pixel 5 will be supported soon?
+18:48:51 <nscnt> anakinskywalker: No plans to support it any time soon.
+18:51:46 <Kvuj[m]> Lack of maintainers or device specific?
+18:51:58 <TheJollyRoger> anakinskywalker: It's not on the project's roadmap. In order for it to be on the roadmap, we'll likely need another full-time developer to be hired or volunteer to support the device for the expected lifetime of the device.
+18:52:17 <anakinskywalker> OK thanks, I'm ready to dump IOS for privacy concerns but I would like 5g capabilities... other than that how's the Pixel 4 running for you guys? I'm guessing it's pretty damn fast based on its specs
+18:53:43 <TheJollyRoger> GrapheneOS is not a business, but is rather a collaborative open source project; the best way to see new stuff added to it or it come to devices you wish to have it supported is to open an editor and submit the code, or to sponsor developers to work on it, much like how the Linux Kernel is.
+18:53:58 <TheJollyRoger> anakinskywalker: the Pixel 4 works great for me.
+18:54:14 <anakinskywalker> TheJollyRoger. Are you a developer? I work for Collins Aerospace as an embedded software engineer developing custom linux OS and I'm interested in contributing as a volunteer
+18:54:35 <TheJollyRoger> anakinskywalker: ah, I apologize but I am not a developer, I'm just something of the channel greeter.
+18:54:39 <TheJollyRoger> Heh. Which reminds me...
+18:54:44 <TheJollyRoger> *ahem*
+18:54:58 <TheJollyRoger> Ahoy! Welcome aboard the ship, shipmate!
+18:55:28 <TheJollyRoger> We'd definitely love to have code contributions!
+18:56:26 <anakinskywalker> Hey thanks! Appreciate the warm welcome, open-source communities are hard to beat in that sense
+18:56:49 <TheJollyRoger> Arr! I do enjoy the feeling of community!
+18:57:18 <dazinism> Yeah, hello anakinskywalker code contribution is super welcome
+18:58:16 <TheJollyRoger> The Pixel 4 and 4a are working and tested well, but if I recall right, the 4a(5G) is actually a very different phone underneath, so it requires dedicated device support. I'm unfortunately not knowledgeable enough to explain how though.
+18:59:18 <dazinism> Yeah think the 4a 5G is more like the Pixel 5 I think
+18:59:54 <dazinism> Apparently I think too much
+19:00:03 <TheJollyRoger> Different chip?
+19:00:07 <anakinskywalker> Yea that sounds right from a hardware perspective
+19:00:11 <TheJollyRoger> Makes sense!
+19:00:57 <anakinskywalker> Any developers here?
+19:01:18 <TheJollyRoger> Indeed, I think a few of them are here.
+19:02:15 <dazinism> anakinskywalker if  you are interested in contributing code have a look at https://hub.libranet.de/wiki/graphene-os/wiki/Helping-graphene-os
+19:03:16 <dazinism> The developers do participate here a lot. Guess they're not about right now though.
+19:04:08 <TheJollyRoger> Yeah. Usually you tend to have the best luck later in the day. I can try to answer some general questions though.
+19:04:32 <anakinskywalker> cool thanks! That link has all the info I was looking for.
+19:04:42 <TheJollyRoger> Excellent!
+19:05:49 <TheJollyRoger> With respect to the Pixel 4 on GrapheneOS, I noticed a few differences between regular Android on the Pixel 4, GrapheneOS on the Pixel 3, and GrapheneOS on the Pixel 4.
+19:07:10 <TheJollyRoger> Running GrapheneOS, the battery life on the Pixel 4 actually does seem to be somewhat better than on the Google operating system. I did notice that the Pixel 4's screen does feel a tad bit "smoother" if that makes any sense.
+19:09:26 <TheJollyRoger> **smoother than the 3's
+19:10:13 <TheJollyRoger> In terms of the processing power and speed of the 3 versus either OS on the 4, I wasn't able to actually put either phone under enough load to make it start making a big difference. Both of them are pretty fast and the difference in time it takes to initialize and load apps is not noticeable from the factory operating system.
+19:10:27 <anakinskywalker> That makes sense since it's probably a more lightweight OS than Google's.
+19:10:35 <TheJollyRoger> Yeah.
+19:11:32 <anakinskywalker> I like the IOS's UI but I'm sick and tired of this fake privacy publicity. I'm ready to take the leap and dump IOS for good.
+19:11:51 <TheJollyRoger> I think Soli (Radar) isn't activated on the Pixel 4 for Graphene and there's definitely no Play Services running in the background.
+19:11:58 <TheJollyRoger> hey right on!
+19:17:10 <TheJollyRoger> The camera on the Pixel 4 is indeed better, and on the Google operating system it takes amazing pictures, but I haven't really explored the Pixel 4 using OpenCamera yet, the camera doesn't tend to be a big draw for me.
+19:18:17 <malicoye[m]> @an
+19:18:46 <TheJollyRoger> The Pixel Visual Core does take more realistic pictures than software-only HDR. Even though the software HDR does produce more vibrant colours, they often come out very very oversaturated, and the edges usually end up being a tad bit fuzzy because it is slower to capture them and composite them. The difference isn't noticeable on a 6" screen but it will start to become visible when you view it
+19:18:48 <TheJollyRoger> at full scale on a larger monitor.
+19:19:11 <TheJollyRoger> Er, the difference in the outlines being blurry
+19:19:14 <malicoye[m]> * anakinskywalker and what are you doing with desktop?
+19:22:16 <anakinskywalker> malicoye[m]. I've been using Ubuntu for years... thinking about trying out arch linux soon.
+19:23:04 <TheJollyRoger> Hey, that's awesome, a lot of the developers here also run Arch.
+19:23:49 <anakinskywalker> That wouldn't surprise me coming from a community of die hard linux fans
+19:25:15 <anakinskywalker> Although the most die hard linux users I've met use Gentoo
+19:26:05 <golli[m]2> <TheJollyRoger "anakinskywalker: It's not on the"> Is this also the case for the 4a 5G?
+19:29:26 <TheJollyRoger> Hi golli[m]2, yes, it is also the case for the 4a5G. The 4a5G may look just like the 4a but apparently it's an entirely different phone underneath.
+19:29:38 <TheJollyRoger> anakinskywalker: hehe, yeah.
+19:31:56 <golli[m]2> Ahh, I see.
+19:32:43 <TheJollyRoger> Yeah. If indeed it has a different chip underneath, then that means that the kernel for the chip will be entirely different, and with it, all the drivers, out-of-tree-code, that sort of thing.
+19:33:19 <golli[m]2> I'm debating between the 4XL and the 4a 5G (I've been spoiled by big screens, as a long time Note user), and was leaning more towards the 4a since 3.5mm jack and no radar thing eating up battery.
+19:34:10 <golli[m]2> <TheJollyRoger "Yeah. If indeed it has a differe"> Ooooooo, okay. So it's not exactly an easy port then? More of a work from the ground up?
+19:34:25 <TheJollyRoger> Yeah. It will require more work, likely a dedicated maintainer to be allocated to it full time.
+19:34:41 <TheJollyRoger> A good metric is something like this:
+19:34:51 <TheJollyRoger> For every device, imagine one more person.
+19:35:16 <golli[m]2> 👌
+19:35:50 <golli[m]2> With that being the case then, would updates be delayed for such a device if the maintainer took a week's holiday?
+19:36:20 <TheJollyRoger> The Pixel 3 and 3XL are very similar (the big difference between them is that the 3XL has a different driver for the screen, but otherwise they're similar phones) they can use the same kernel.
+19:37:06 <TheJollyRoger> But that's one person right there, and likely for sustainability, we would want to have other people stepping in to share the load.
+19:37:39 <TheJollyRoger> This is why despite having a fairly large core development team, broad device support is not a goal of GrapheneOS and likely never will be.
+19:39:05 <TheJollyRoger> golli[m]2: I honestly don't know. But developer hours are definitely a scarce resource so that's why the team cannot afford to become overcommitted.
+19:39:13 <golli[m]2> So I should play it safe and go for something like the 4XL?
+19:40:26 <TheJollyRoger> Yes, the recommended course of action is to simply do as the site suggests and purchase a device that GrapheneOS currently supports, rather than purchase a later device and expect it to become supported later down the road.
+19:41:09 <golli[m]2> 👍️
+19:41:09 <golli[m]2> Appreciate it.
+19:41:27 <TheJollyRoger> https://grapheneos.org/faq#recommended-devices This is the writeup.
+19:41:31 <TheJollyRoger> Arr, anytime!
+19:42:14 <TheJollyRoger> Your 4XL should stay with you for a long time. I very much like my 4 although sometimes I find myself wishing I bought a bigger screen.
+19:43:55 <TheJollyRoger> The only real complaint I have about the 4 is that like the 3 because it's made of glass it's VERY slippery if you attempt to use your phone in the rain, so just bear that in mind. I got one of those $9 Spigen rubber cases to mitigate this problem and it's saved my phone more than once.
+19:44:14 <TheJollyRoger> (Well that and the lack of the fingerprint sensor, which I made a lot of use out of)
+19:45:06 <TheJollyRoger> The metal edges do help, but the back is smooth.
+19:45:41 <golli[m]2> Yeah, I always use a case and screen protector (I've made the mistake not to twice).
+19:45:49 <TheJollyRoger> Aaargh!
+19:46:40 <nfpdex[m]> I wonder why people do not build phones that have such a rubber protection out of the box.
+19:47:13 <golli[m]2> Because that would add to the size and weight of the device.
+19:49:47 <TheJollyRoger> I also think that it's because the cheap cases are easily replaceable. If I get a nasty gash or gouge on the side of my Spigen rubber case from dropping it down the concrete steps outside my apartment, that's no problem, just peel it off and throw it away.
+19:49:55 <TheJollyRoger> Apply a new one, ready to roll.
+19:54:03 <TheJollyRoger> Plus, this also gives people the choice of which case to buy and personalize their devices, I guess? I know I like to change cases depending on where I expect to be going.
+19:56:26 <nfpdex[m]> Maybe. But I still think it would make sense for hardware producers to come up with a solution that their phones are not broken as easily as it is right now. Or it doesn't, because like this they can make more money by repairing it, or people buying new ones.
+19:57:01 <nfpdex[m]> Is it true that the Pixel 3 will not get any updates anymore soon?
+19:57:16 <nfpdex[m]> What will that mean for maintaining graphene for it?
+19:58:11 <TheJollyRoger> Hi nfpdex[m], don't think that's the case for the 3. The 2 though, is in the process of being depreciated.
+19:58:18 <nfpdex[m]> Will they stop to support it when google stops to make updates for it?
+19:58:27 <TheJollyRoger> As for the 3 I'd say you're probably good to go for another year.
+19:58:59 <TheJollyRoger> When Qualcomm stops issuing firmware updates for the chip, and Google stops making updates for a device, yes, the device will likely be let go.
+19:59:51 <TheJollyRoger> Even if we suddenly won the developer lottery and had an army of skilled developers show up at our door willing to work for free, it would not make sense for us to keep supporting a device that is no longer getting firmware updates.
+20:00:19 <nfpdex[m]> I understand. Hm.. even more reason to push some graphene os smartphone of its own.
+20:00:25 <TheJollyRoger> Indeed!
+20:01:29 <TheJollyRoger> If I recall right, the way it tends to work tends to be that when you purchase chips from Qualcomm, you'd have to negotiate for a period of how long Qualcomm will continue to ship firmware updates for your chip.
+20:01:46 <TheJollyRoger> Some vendors, like Google, will negotiate for a whole three years.
+20:02:01 <TheJollyRoger> Some will negotiate for two.
+20:02:59 <TheJollyRoger> Some negotiate for one. I would not be surprised if some fly-by-night OEMs don't negotiate at all and simply buy whatever chips they can get out of the bin knowing they will be insecure by the time they reach their customers' hands.
+20:04:35 <ss132ikl>  is it normal for linking vmlinuz.o to take over 2 hours?
+20:05:11 <TheJollyRoger> This is why Google devices are so much more expensive than OnePlus devices even though OnePlus devices look good "on paper"; memory, disk space and extra CPU is relatively cheap, it's easier to convince Joe Consumer that the device is more appealing because those numbers are bigger, but "Will they ship and commit to firmware updates?" is not something Joe Average Consumer will think about, much
+20:05:12 <TheJollyRoger> less understand.
+20:06:31 <TheJollyRoger> So this is where OnePlus pinches its pennies: device support, firmware security, and on the length of time until that phone needs to be abandoned.
+20:06:41 <TheJollyRoger> *vendor support,
+20:06:57 <TheJollyRoger> ss132ikl: I don't know. It depends on your computer.
+20:07:06 <nfpdex[m]> I see. But then, when making a smartphone for graphene OS, it won't be reasonable to be dependent on qualcomm and in need to pay them all the time for their updates, right? So free hardware would be the way to go, isn't it?
+20:08:04 <TheJollyRoger> nfpdex[m]: It would be, but the first device would probably cost a few billion.
+20:08:22 <TheJollyRoger> If not more.
+20:10:49 <TheJollyRoger> Apple are able to be in the coveted position to be able to say "we can support our chips for however long we like" because they're Apple and have the expertise, and manufacturing capability (or the means to pay others who do) to be able to manufacture their own chips.
+20:11:57 <TheJollyRoger> Raptor is able to manufacture truly Libre hardware because they're combining elements of a known design, they utilized a reference design to do it, and IBM actually had their backs.
+20:12:22 <TheJollyRoger> This is the difference vendor support can make.
+20:12:51 <nfpdex[m]> never heard of raptor.
+20:12:58 <TheJollyRoger> https://raptorcs.com You have now!
+20:13:37 <TheJollyRoger> The Talos II was the first modern, truly open and PERFORMANT libre general purpose computing platform designed to be owner controllable from day one.
+20:14:17 <TheJollyRoger> I was one of the early adopters, the Morgan's Revenge is my pride and joy.
+20:14:28 <nfpdex[m]> I only knew the stuff that is endorsed by the free software foundation.
+20:15:16 <TheJollyRoger> I don't really care about those, what I do care about was that this machine shipped with full schematics, full hardware documentation, and is open all the way down to the self boot engine.
+20:15:43 <TheJollyRoger> As soon as the FSF decided on a secondary processor exemption, I knew that the sticker had lost its meaning.
+20:16:34 <TheJollyRoger> Also, for what it's worth the Talos II is on the RYF list.
+20:17:13 <TheJollyRoger> (actually, let's head over to the offtopic channel, this is getting away from GrapheneOS)
+20:18:44 <smoke47> i have a question, and i apologize if it was asked before, i couldn't find an aswer to it. is the pizel 4a 5g also supported alonside the standard pixel 4a?
+20:19:36 <nfpdex[m]> No, its not supported as far as I know.
+20:21:36 <TheJollyRoger> Ahoy smoke47, we just answered that but I can give you the rundown on it: unfortunately not, and GrapheneOS will not support it until there's another maintainer available to support the device full time.
+20:22:07 <smoke47> got it, thanks so much!
+20:22:35 <TheJollyRoger> The 4a and the 4a5G are entirely different phones underneath, and would require a different kernel, drivers... the rule of thumb is, in order for a device supported in a sustainable manner, that means there must be one more person there to do the work for it.
+20:22:50 <TheJollyRoger> Arr, ye be welcome!
+20:22:59 <problems_10> Are pixel 4a ever broken where they can't be recognized while in fastboot mode?  I tried a bunch of different cables and a couple computers but it was never recognized with fastboot devices.  I then started thinking it was the pixel 4a that was the issue so I borrowed a friend's pixel 4.  That was recognized immediately with all the cables and
+20:23:00 <problems_10> computers I had tried.
+20:23:50 <TheJollyRoger> problems_10: I had an issue a long time ago where a combination of water, perspiration, sweat, and lint got into the USB slot on my phone and damaged the fragile metal prongs in it.
+20:24:23 <problems_10> ADB recognizes the 4a but you had explained that is much less picky than fastboot.
+20:24:27 <TheJollyRoger> I later found that not only the prongs were damaged but also the water had leaked into the little chip inside the USB slot and destroyed it from within.
+20:24:43 <problems_10> I think I'll sell it and buy another one.
+20:25:04 <TheJollyRoger> problems_10: refresh my memory (I'm significantly less intoxicated now than I was lass night), you're on Windows 10, correct?
+20:25:11 <TheJollyRoger> *last
+20:25:12 <problems_10> It was used so maybe it came with broken fastboot although the person who had it before me never rooted it or did any fastbooting.
+20:25:28 <problems_10> Yeah windows 10 and tried popos which is ubuntu.
+20:25:53 * TheJollyRoger thinks.
+20:26:26 <problems_10> My friend's pixel 4 immediately was recognized by fastboot with no crazy swapping of cables or computers.  So I'm thinking it's not my computer or cables.
+20:26:32 <TheJollyRoger> Well, I'm stumped.
+20:26:37 <problems_10> Which only leaves the 4a but that is just bizarre.
+20:27:09 <TheJollyRoger> Yeah. I really don't know what to tell you, sorry.
+20:27:31 <problems_10> the 4a shows up as an unknown device in device manager and refuses to let me give it the google usb driver folder.  The pixel 4, doesn't have that issue.  It always shows up as a portable device.
+20:27:56 <problems_10> The only time the pixel 4a isn't an unknown device is if it is powered on and not in fastboot.
+20:34:10 <golli[m]2> With GrapheneOS, does the 4 XL's Face ID still work?
+20:34:57 <TheJollyRoger> golli[m]2: Face Unlock is tested and works perfectly, the same as the regular Google Android.
+20:35:35 <golli[m]2> Sweet.
+20:35:49 <alzxjm[m]> <golli[m]2 "With GrapheneOS, does the 4 XL's"> Yep
+20:36:33 <golli[m]2> When I get round to getting a 4 XL and installing GOS on it, I'll be seeing what I can do with it (would aim to get a kind of "database" of faces that attempt to unlock the phone).
+20:39:40 <alzxjm[m]> <TheJollyRoger "Golli: Face Unlock is tested and"> Slightly slower since Project Soli is not supported. But I'm not sure it's noticeable.
+20:40:53 <TheJollyRoger> Ah, huh, never noticed that!
+23:40:46 <justanotherlurke> <nfpdex[m] "I dont know, its just something "> Also mailbox.org gets recommended a lot by the same bunch.
+23:46:12 <takhar[m]> Ctemplar is pretty sold as well.
+23:47:18 <justanotherlurke> <TheJollyRoger "Hi nfpdex, don't think that's th"> Is the 2 not planned for legacy support?🤔

@@ -1,0 +1,315 @@
+00:11:22 <cyborgninjaneer[> I no longer recommend Signal.
+00:11:52 <cyborgninjaneer[> They now store your "social graph" in a format secured by very weak encryption.
+00:12:27 <cyborgninjaneer[> It's one RAM dump away from exposing everyone's contact list to very easy brute force attacks
+00:12:33 <nickcalyx[m]> Very weak? Please explain
+00:12:47 <cyborgninjaneer[> 4-digit pin code
+00:13:04 <cyborgninjaneer[> The security relies on preventing any offline attacks.
+00:13:28 <nickcalyx[m]> My signal pin is way more than 4.
+00:14:06 <cyborgninjaneer[> They take care never to keep the information anywhere except RAM, distributed across many servers, but if someone manages to cause a RAM dump, or Signal is forced by court order to do so, those are all exposed.
+00:14:24 <cyborgninjaneer[> > My signal pin is way more than 4.
+00:14:24 <cyborgninjaneer[> Are all of your contacts the same?
+00:14:31 <cyborgninjaneer[> And how do you know?
+00:14:57 <travankor_> i’m getting “we kill people with metadata” vibes
+00:15:37 <nickcalyx[m]> I wouldn't know what others do but you said 4 digits
+00:15:56 <cyborgninjaneer[> Main reason to use Signal was to avoid storing any information off the device.
+00:16:09 <cyborgninjaneer[> Not on the server.
+00:16:42 <cyborgninjaneer[> Yeah, I know for a fact most of my contacts only have 4-digit pins and I can't do a damn thing about it.
+00:17:51 <cyborgninjaneer[> I don't know that there is anything better at the moment unfortunately.
+00:31:28 <nickcalyx[m]> I have this feeling that the encryption on signal's servers is a bit more complicated then '4 digits'
+00:32:39 <glct[m]> <cyborgninjaneer[ "It's one RAM dump away from expo"> It's not the encryption that's weak, it's the pin length that users choose
+00:32:43 <interceptingfist> <glct[m] "Lol what are you asking, the com"> Both
+00:37:33 <glct[m]> <cyborgninjaneer[ "Yeah, I know for a fact most of "> Instead of making conclusions based on your (respectfully) limited knowledge, read and discover more before you do so. It's unhelpful too nobody
+00:38:41 <cyborgninjaneer[> > > <@cyborgninjaneer:matrix.org> It's one RAM dump away from exposing everyone's contact list to very easy brute force attacks
+00:38:41 <cyborgninjaneer[> > It's not the encryption that's weak, it's the pin length that users choose
+00:38:41 <cyborgninjaneer[> Nitpick the terminology all you want. The point is the same.
+00:40:19 * cyborgninjaneer[ sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/bUTQMDikAIzrHdOMgtSWtlrr >
+00:40:44 <cyborgninjaneer[> Got no choice though. It's done and there's no better alternative.
+00:41:13 <cyborgninjaneer[> It's not a huge reduction in security, but its a non-zero reduction in security.
+00:41:25 <cyborgninjaneer[> That's enough to piss me off.
+00:42:38 <glct[m]> Ok... Well anyhoo have a good day. I'm glad we can agree this isn't as serious as you made it sound initially
+00:46:30 <cyborgninjaneer[> It's a serious trust issue. Hopefully it never develops into a real world breach
+00:52:02 <cyborgninjaneer[> Here's hoping for a superior replacement for Signal soon.
+00:52:52 <cdesai> that'll just lead to https://xkcd.com/1810/
+00:53:27 <JTL> cdesai: Sad but true
+00:56:34 <cyborgninjaneer[> Well yes. Very true.
+00:57:35 <cyborgninjaneer[> Hopefully Signal will at least let users opt out of the SVR system.
+00:58:22 <faxing[m]> SVR?
+00:58:51 <outsider[m]1> <cyborgninjaneer[ "Hopefully Signal will at least l"> hopefully. they were planning on it. session already has a working implementation of it
+01:01:20 <cyborgninjaneer[> > > <@cyborgninjaneer:matrix.org> Hopefully Signal will at least let users opt out of the SVR system.
+01:01:20 <cyborgninjaneer[> > hopefully. they were planning on it. session already has a working implementation of it
+01:01:20 <cyborgninjaneer[> Oh fuck. Session too? At least it doesn't use telephone numbers.
+01:01:25 <hypokeimenon[m]> Does Session directly handle sms/SMS encryption and allow voice-over-ip calls?
+01:02:03 <cyborgninjaneer[> Session has nothing to do with SMS.
+01:02:20 <cyborgninjaneer[> I don't think VoIP is implemented yet
+01:02:32 <hypokeimenon[m]> it's always touted as THE alternative to Signal
+01:03:13 <cyborgninjaneer[> Session is still in development and hasn't been audited that I know of.
+01:03:23 <cyborgninjaneer[> Signal is pretty mature
+01:03:35 <greenmoon[m]> I saw it's somehow related to blockchain technology do it store the messages permanently in a blockchain???
+01:03:44 <cyborgninjaneer[> No...
+01:03:53 <greenmoon[m]> Oh OK!
+01:04:05 <cyborgninjaneer[> The blockchain has to do with how it's funded
+01:08:22 <outsider[m]1> i wouldnt trust session for anything sensitive
+01:10:11 <cyborgninjaneer[> Neither would I, yet. I trust it more than SMS, which has no privacy at all except by policy.
+01:26:15 <nickcalyx[m]> Signal isn't funded by the block chain
+01:44:32 <strcat[m]> anupritaisno1: you can drop the BPF JIT related commits, since BPF JIT isn't used and requires enabling CONFIG_MODULES anyway
+01:44:57 <strcat[m]> I'd rather just keep it disabled
+01:54:20 <strcat[m]> anupritaisno1: for yama we need to add back the toggle we used to have in dev settings
+01:54:41 <strcat[m]> so probably set Yama ptrace setting to 2 by default
+01:54:45 <strcat[m]> and have a setting to disable it
+01:54:52 <strcat[m]> maybe in dev options, maybe in regular security settings
+01:54:55 <strcat[m]> because it might break some apps
+01:55:06 <strcat[m]> if it's needed by non-devs needs to be in sec settings
+01:55:07 <strcat[m]> unsure
+01:55:46 <strcat[m]> apps all have a unique uid/gid (per-app per-profile) and the SELinux domains are now unique too
+01:56:09 <strcat[m]> and the OS sandbox feature (isolatedProcess) for building sandboxes in apps uses unique uid/gid per sandboxed process
+01:56:16 <strcat[m]> and similarly unique SELinux domain
+01:56:27 <strcat[m]> so there is not much that the ptrace_scope feature really does
+01:56:43 <strcat[m]> there aren't many processes that run as the same uid/gid and the same SELinux domain
+01:56:58 <strcat[m]> so the only real purpose of it is that it's a toggle to dynamically enable / disable ptrace
+01:57:05 <strcat[m]> to reduce kernel attack surface mostly
+01:57:11 <strcat[m]> since it's a non-trivial feature
+02:41:54 <cyborgninjaneer[> > so probably set Yama ptrace setting to 2 by default
+02:41:54 <cyborgninjaneer[> Isn't yama a kernel security module?
+02:43:08 <cyborgninjaneer[> Ooooo
+02:43:26 <cyborgninjaneer[> Didn't know that was in GrapheneOS
+02:44:27 <cyborgninjaneer[> https://www.kernel.org/doc/html/latest/admin-guide/LSM/Yama.html for anyone else wondering, this is what Yama is
+02:56:53 <sheruleeya[m]> can't find this on logs, so I'll ask this...
+02:57:11 <sheruleeya[m]> How harmful or useful is it to block *.gstatic.com when using nextdns as private dns
+02:57:48 <sheruleeya[m]> As it connects initially, it somehow leaks the real ip, which is problematoc
+02:57:58 <sheruleeya[m]> * As it connects initially, it somehow leaks the real ip, which is problematic
+02:58:20 <sheruleeya[m]> Apparently, that query bypasses the block connection without vpn
+03:00:08 <sheruleeya[m]> and the logs I found here at most only tells me that those queries on GrapheneOS is just for connecting (?) purposes and doesnt send anything identifying
+03:05:00 <nickcalyx[m]> I think it will break shit if you do that.
+03:05:26 <sheruleeya[m]> Alright, I won't. I doubt it sends anything identifying (data) anyways
+03:06:10 <sheruleeya[m]> But still, I'm not sure how the initial connection of private dns thru gstatic leaks the real ip (it's my concern, but not the greatest)
+03:09:38 <sheruleeya[m]> Well, thanks anyways.
+04:15:29 <renlord> does anyone know if loudspeaker control goes thru mediarouter?
+04:15:54 <renlord> had a weird issue when having a call over loudspeaker, the volume is really low
+04:16:05 <renlord> after pairing with a new BT device
+04:16:27 <renlord> valldrac: related to the BT bug? ^
+05:07:58 <greenmoon[m]> What's going on seaclown 😲
+08:07:29 <marquisderad[m]> Are there some kind of global settings I could modify or way of having GrapheneOS boot up with airplane mode enabled as the default?
+08:29:27 <dazinism> <marquisderad[m] "Are there some kind of global se"> marquisderad: enable it before you turn the phone off.
+08:32:18 <marquisderad[m]> It will persist even on restart?
+08:32:31 <marquisderad[m]> I was thinking I would have to do it using ADB or something possibly
+08:54:11 <sheruleeya[m]> <marquisderad[m] "It will persist even on restart?"> Yes, been using it on Airplane mode ever since.
+09:42:29 <sheruleeya[m]> * Yes, been using it on Airplane mode ever since. Tested on frequent reboots
+11:02:21 <sheruleeya[m]> Is it me or Aurora store on GrapheneOS is getting buggy recently
+11:02:38 <sheruleeya[m]> I can't download apks from there
+11:05:27 <Mobius[m]> aurora is getting buggy, not graphene
+11:05:28 <dallemon[m]> sheruleeya: it will stabilize eventually
+11:05:53 <dallemon[m]> Aurora have had some issues recently
+11:06:03 <sheruleeya[m]> switched from gitlab to fdroid version and it's all the same
+11:06:25 <dallemon[m]> <sheruleeya[m] "switched from gitlab to fdroid v"> Yes, because it's their backend having issues
+11:06:49 <dallemon[m]> Not the app
+11:07:23 <sheruleeya[m]> <Mobius[m] "aurora is getting buggy, not gra"> Well, I just installed on a stock OS with Play Services from Aurora Store few mins ago
+11:07:34 <sheruleeya[m]> From another phone
+11:08:09 <sheruleeya[m]> But it could also be coincidence...
+11:08:26 <dallemon[m]> <sheruleeya[m] "But it could also be coincidence"> It is. You probably got one of the more stable servers on the other phone
+11:08:31 <sheruleeya[m]> * Well, I just installed on a stock OS (also android 10) with Play Services from Aurora Store few mins ago
+11:09:26 <dallemon[m]> If you use a "real" Google account then you will have 0 issues
+11:10:33 <sheruleeya[m]> <dallemon[m] "If you use a "real" Google accou"> Both have anonymous account
+11:15:17 <dallemon[m]> <sheruleeya[m] "Both have anonymous account"> Yes, I assumed that. That's why I mentioned using a different account.
+11:15:50 <yxcvbnmlp[m]> <M5jd92[m] "Anybody using nordvpn as VPN for"> yes
+11:16:14 <sheruleeya[m]> Will try again later
+12:13:22 <f2jphyh82z[m]> I'm getting extreme flickering issues on the pixel 4 xl experimental build (not complaining, just want to report). When my screen is dark the screen will flicker (such as the keyboard) between high and low brightness it almost seems related to the refresh rate...
+12:14:08 <f2jphyh82z[m]> If I manually bring the brightness way up it doesn't happen. Also turning adaptive brightness on or off does not change anything
+12:14:32 <f2jphyh82z[m]> I've re installed the rom twice, no change. If I go back to stock pixel the problem goes away
+12:15:15 <f2jphyh82z[m]> <f2jphyh82z[m] "I'm getting extreme flickering i"> The flickering brightness is only noticeable on dark but not fully black areas of the screen
+12:16:33 <f2jphyh82z[m]> Am I allowed to post a video here of the issue?
+12:18:25 <f2jphyh82z[m]> Oh wait I'd need another phone to record it 😂
+12:43:08 <anupritaisno1[m]> f2jphyh82z: one moment
+12:43:21 <anupritaisno1[m]> @paintedman?
+12:43:27 <anupritaisno1[m]> Oh god where is he
+12:44:13 <sheruleeya[m]> paintedman
+12:44:18 <sheruleeya[m]> pinged him for you
+12:45:05 <anupritaisno1[m]> Yeah paintedman please check this on the official build against your 4xl
+12:45:22 <paintedman[m]> Yes, I have this flickering too
+12:45:45 <anupritaisno1[m]> Why didn't you report it
+12:46:04 <anupritaisno1[m]> How bad is it?
+12:46:35 <paintedman[m]> It's barely noticeable
+12:46:49 <paintedman[m]> Even clean aosp build has this issue
+12:47:52 <anupritaisno1[m]> Does it only happen when unlocking?
+12:47:56 <paintedman[m]> I tried calyx and it has this flickering too. It seems that the problem is in kernel
+12:48:06 <anupritaisno1[m]> Hmmmm
+12:48:23 <anupritaisno1[m]> Well if stock AOSP has the issue not much we can do
+12:48:30 <paintedman[m]> I've already seen some related patch. Will send you later
+12:49:10 <anupritaisno1[m]> BTW he says it is related to refresh rate
+12:49:11 <paintedman[m]> But I not sure that we have to use that patches
+12:49:15 <f2jphyh82z[m]> Can it be related to the 90/60hz refresh rate of the phone? Something not an option in other pixels
+12:49:17 <anupritaisno1[m]> I might have a hack for that
+12:49:45 <anupritaisno1[m]> paintedman: https://github.com/GlassROM-devices/kernel_google_coral/commit/0e46e399e62136ff51e89af1c5f8f05ce5a72713
+12:49:45 <anupritaisno1[m]> This commit forces 90hz
+12:49:45 <anupritaisno1[m]> Cherry-pick and build the entire ROM
+12:49:58 <paintedman[m]> Yes, the patch which I saw was related to refresh rate
+12:50:31 * paintedman[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/zZxIxnNFdRXydXvrsIsocFBi >
+12:50:49 <anupritaisno1[m]> Test if it is gone
+12:54:23 <anupritaisno1[m]> Btw for pixel 4 please tag me anupritaisno1 I'll help as soon as I see the message
+12:56:00 <f2jphyh82z[m]> Will do thank you. Glad I joined the matrix 😊
+13:06:42 <nowbody[m]> Hello all, does you version of Graphene OS have a shield on a screen? Asking cause my does not
+13:07:27 <nowbody[m]> Also, after a reboot a see a Google Logo briefly for a second or so, and only then Graphene Logo
+13:07:39 <nowbody[m]> Is is how it should be?
+13:08:29 <nowbody[m]> Attestation App seems to work fine
+13:10:53 <Mobius[m]> yeah it's normal
+13:10:53 <anupritaisno1[m]> Yes
+13:11:18 <Mobius[m]> as long as you have strong/high verification as reported by attestation all is good
+14:07:36 <zen_monkey[m]> Hello! May be this question has been posted already. But not sure how to search old messages with key words in this app. So pardon for repeat question. Currently I see it is pixel devices that are supported. Will it be expanded to one plus devices in future?
+14:08:30 <sheruleeya[m]> What app?
+14:08:34 <zen_monkey[m]> I mean the riot app. I'm accessing it from my mobile.
+14:09:51 <sheruleeya[m]> You can from logs, on some chats
+14:10:51 <sheruleeya[m]> But not sure on the app feature itseld
+14:10:51 <sheruleeya[m]> Not on riotX for sure I think
+14:10:51 <sheruleeya[m]> * But not sure on the app feature itself
+14:12:30 <zen_monkey[m]> <sheruleeya[m] "Not on riotX for sure I think"> Thank you. But I guess my primary question didn't get the attention at the same level 😀
+14:14:18 <sheruleeya[m]> <zen_monkey[m] "Hello! May be this question has "> Nope, because of security issues. The lead developer Daniel has already said about not supporting Oneplus phones.
+14:15:15 <anupritaisno1[m]> Oneplus has glassrom
+14:15:25 <zen_monkey[m]> <sheruleeya[m] "Nope, because of security issues"> Thank you. I was sure my question must be a repeat. Good day.
+14:15:32 <anupritaisno1[m]> Glassrom is lineageos with grapheneos stuff
+14:15:46 <zen_monkey[m]> <anupritaisno1[m] "Oneplus has glassrom "> Never hear of it. May be I'll DDG . Thanks.
+14:15:55 <sheruleeya[m]> <anupritaisno1[m] "Glassrom is lineageos with graph"> Yeah, and also there's that.
+14:15:59 <anupritaisno1[m]> A few patches are missing
+14:16:43 <anupritaisno1[m]> Well there's a device in glassrom's won't support
+14:17:42 <anupritaisno1[m]> There's none for Oneplus 5/5t
+14:17:42 <anupritaisno1[m]> There never will be even if a maintainer is available
+14:18:17 * sheruleeya[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/ByaUNeFKiFTMiaipPxPnFbEA >
+14:18:56 <sheruleeya[m]> * Was it because of no custom avb? Or no LOS?
+14:21:13 <anupritaisno1[m]> No it's just that the people developing it need to get their head checked. The code quality on that device is terrible and it's not even oneplus' fault
+15:58:19 <hasnoname[m]> <anupritaisno1[m] "No it's just that the people dev"> Damn. Mine's a 5t and seems like its Dev halted other than crdroid but with quite a lot of issues
+16:01:50 <Mobius[m]> also have 5t, glad i got pixel now
+16:02:00 <Mobius[m]> oneplus has become a shitty brand these days
+16:04:14 <hasnoname[m]> <Mobius[m] "oneplus has become a shitty bran"> I will too. Just waiting for GOS to support a newer device so I don't end up with a device that'd be supported for an year or 2
+16:04:53 <dazinism> georgeaux one thing I saw about your auditor result. You got new usb enabled when device is locked. Safer to keep that off.
+16:07:19 <anupritaisno1[m]> <hasnoname[m] "Damn. Mine's a 5t and seems like"> Crdroid is the reason it is halted
+16:08:44 <anupritaisno1[m]> Unmaintainable patches by crdroid keep getting merged into lineage along with beta quality code from the stock rom which they push
+16:09:19 <anupritaisno1[m]> They = crdroid
+16:13:27 <Mobius[m]> crdroid is a pile of shit lol
+16:13:37 <Mobius[m]> only apophis work was decent
+16:15:48 <hasnoname[m]> <anupritaisno1[m] "Unmaintainable patches by crdroi"> And there are forks based on crdroid lol
+16:16:31 <anupritaisno1[m]> Anyway guys please keep the discussion about grapheneos
+16:16:50 <anupritaisno1[m]> Not crdroid. Or glassrom
+16:18:54 <sheruleeya[m]> <hasnoname[m] "I will too. Just waiting for GOS"> 4a has a high chance to be supported
+16:19:05 <sheruleeya[m]> * 4a has a good chance to be supported
+16:19:27 <sheruleeya[m]> (Not really high, we have to see if 4 support would be stable and good to go for 4a)
+16:21:03 <hasnoname[m]> What do you GOS folks do when you have to use an app that refuses to work without play services? Like Lyft (I know uber works over browser) or something else?
+16:21:14 <sheruleeya[m]> Can't be measured, and probably 4a needs another maintainer, so it really depends. By the time it would be supported, it would be around 2.5 yrs of guaranteed support left
+16:21:28 <sheruleeya[m]> <hasnoname[m] "What do you GOS folks do when yo"> Browser
+16:22:00 <sheruleeya[m]> I don't use online services too much on my side, maybe others can give you better answers
+16:22:18 <hasnoname[m]> <sheruleeya[m] "Browser"> One's that don't have browser alternate
+16:22:23 <AdventureCommuni> WebApps
+16:23:02 <sheruleeya[m]> Well... Technically yes on those with browser alternate (like can be opened with links)
+16:23:15 <sheruleeya[m]> * Well... Technically yes on those with browser sites (like can be opened with links)
+16:24:11 <sheruleeya[m]> But, if you can live without it, no offense, don't use it.
+16:24:11 <sheruleeya[m]> If you need it that much, like apps with hard dependency on play services, you may consider CalyxOS which has MicroG replacement
+16:25:19 <sheruleeya[m]> For me, if it doesn't work, I won't use it. And if it can be used, I use them in a separate profile, for more likely than not, it's closed source.
+16:26:48 <sheruleeya[m]> (I don't represent the other users, and this is my own user case.)
+16:27:09 <sheruleeya[m]> * (I don't represent the other users, and this is my own use case.)
+16:27:52 <hasnoname[m]> I wish it was that simple. I for some reason didnt like microg and was running lineage bare. Found myself stuck in the middle of night with no uber vehicles but lyft
+16:27:53 <sheruleeya[m]> * But, if you can live without it, no offense, don't use it (no alternative on websites is a red flag for me)
+16:27:53 <sheruleeya[m]> If you need it that much, like apps with hard dependency on play services, you may consider CalyxOS which has MicroG replacement
+16:28:24 <hasnoname[m]> Luckily wife uses an iPhone and was and to call her to get me a lyft
+16:29:04 <hasnoname[m]> *was able to
+16:29:25 <rover1[m]> hasnoname: need to balance usability and feature willing give up
+16:29:32 <sheruleeya[m]> <hasnoname[m] "I wish it was that simple. I for"> You can ask the calyx peeps on their community on how their microG works. I think it works slightly different on their OS, which can be used with bootloader locked.
+16:30:00 <sheruleeya[m]> * You can ask the calyx peeps on their community on how their microG works. I think it works slightly different on their OS (on spoofing, etc) which can be used with bootloader locked.
+16:30:49 <sheruleeya[m]> Since you had a different user case, and Lyft is vital to your life here it seems.
+16:33:35 <sheruleeya[m]> Invited you there
+16:34:47 <sheruleeya[m]> * Invited you there hasnoname
+16:35:05 <sheruleeya[m]> Since unrelated topics here can't go too far
+16:36:22 <sheruleeya[m]> * Invited you there has nonnoname  on calyxOS
+16:41:20 <sheruleeya[m]> About esignatures not being seen on pdfreader
+16:41:20 <sheruleeya[m]> https://github.com/GrapheneOS/PdfViewer/issues/55
+16:41:20 <sheruleeya[m]> Apparently, there was a report that covers it (what I saw was a subset of this issue)
+17:10:39 <cyborgninjaneer[> Is there a "best practice" for using the Tor browser on GrapheneOS to mitigate security risks to the device?
+17:16:27 <AdventureCommuni> yeah, dont use tor browser
+17:16:31 <AdventureCommuni> better off runnning orbot for vanadium or bromite
+17:17:32 <cyborgninjaneer[> > better off runnning orbot for vanadium or bromite
+17:17:32 <cyborgninjaneer[> Fingerprinting.
+17:17:59 <cyborgninjaneer[> Is there still a risk with JavaScript disabled?
+17:18:01 <sheruleeya[m]> <AdventureCommuni "better off runnning orbot for va"> It should route that I guess, but fingerprints (albeit it is only used in 5.5% tracking)
+17:18:08 <MysteriousWizard> Hmm
+17:18:21 <sheruleeya[m]> If you want to use it, on a separate profiles it go?
+17:18:50 <sheruleeya[m]> * It should route that I guess, but fingerprints (albeit it is only used in 5% tracking according to Firefox (?)) Gotta double check this
+17:19:12 <cyborgninjaneer[> I had considered a separate profile, but with JavaScript is disabled is Gecko still a liability?
+17:21:00 <sheruleeya[m]> On increasing attack surfaces, security sacrifices, well yeah, it's a liability
+17:22:29 <sheruleeya[m]> You can check the logs about fingerprinting, tor browser, etc for details
+17:23:26 <sheruleeya[m]> * It should route that I guess, but fingerprints (albeit it is only used in 3.5% tracking according to Mozilla) Gotta double check this
+17:26:14 <sheruleeya[m]> https://freenode.logbot.info/?q=Fingerprinting&ch=grapheneos
+17:26:14 <sheruleeya[m]> (Example for fingerprinting)
+17:26:49 <cyborgninjaneer[> A better question might be whether Vanadium has a more unique fingerprint than Tor browser with Javascript disabled on bith
+17:26:57 <cyborgninjaneer[> Both*
+17:27:38 <sheruleeya[m]> I rather use Bromite for anti-fingerprinting
+17:28:58 <cyborgninjaneer[> My original question was quite specific, but perhaps I did not word it well: With JavaScript disabled, what is the remaining attack surface like in Tor Browser?
+17:29:01 <sheruleeya[m]> Not sure about that on your question though
+17:29:40 <sheruleeya[m]> * I rather use Bromite for anti-fingerprinting, if I was to choose between Bromite or Vanadium
+17:29:59 <cyborgninjaneer[> Without JavaScript, what other means are there of compromising an Android device?
+17:30:27 <sheruleeya[m]> * Not sure about that on your question though, having two different browsers on different forks increase the attack surface. Firefox has no additional isolation besides from the os itself.
+17:30:55 <cyborgninjaneer[> That's not helpful as I already know that.
+17:31:05 <sheruleeya[m]> (I really need to delegate this to somebody else to be honest, or on sites:
+17:31:05 <sheruleeya[m]> Check out whonix and tor documentation)
+17:31:28 <sheruleeya[m]> It would honestly answer your questions more than I can myself.
+17:31:47 <cyborgninjaneer[> To be more general, what attack vectors remain for browser-based malware when JavaScript is disabled?
+17:32:00 <sheruleeya[m]> <cyborgninjaneer[ "My original question was quite s"> JS attacks isn't the only attack that exists afaik
+17:32:14 <sheruleeya[m]> The link/correlation attacks
+17:34:07 <sheruleeya[m]> https://madaidans-insecurities.github.io/firefox-chromium.html
+17:34:47 <sheruleeya[m]> a recommended read
+17:37:36 <sheruleeya[m]> https://medium.com/@thegrugq/tor-and-its-discontents-ef5164845908
+17:59:11 <cyborgninjaneer[> So long story short it's as bad as I thought.
+18:10:37 <packetup[m]> anupritaisno1: no issues so far with the Pixel 4 XL.
+18:22:22 <jalb> Hi, about VPN leaks when using different users. If I only install some VPN app in another profile and so I only use the VPN there, will the main user (admin) be connecting to the VPN too?. When I finish I stop the VPN app and in the main user I don't see the VPN connected in the Network settings. So?. Thanks
+18:37:34 <cyborgninjaneer[> Each user profile needs its own VPN app. I'm fairly certain the inactive profile is basically shut down when you switch, so it shouldn't be able to connect to anything at all, but I can't confirm that.
+18:38:27 <jalb> cyborgninjaneer[: so, the admin profile (without the VPN app) will be connecting with the normal connection?
+18:38:52 <jalb> I know that for example WIFI is ACTIVE when you are in a different user/profile
+18:39:15 <jalb> That's why I ask
+18:46:57 <cyborgninjaneer[> > cyborgninjaneer: so, the admin profile (without the VPN app) will be connecting with the normal connection?
+18:46:57 <cyborgninjaneer[> Yes. It will connect to the clearnet unless you set up a VPN in that profile
+18:47:18 <jalb> cyborgninjaneer[: thanks
+18:52:00 <rover1[m]> cyborgninjaneer: no background process if switch to another profile?
+18:52:57 <cyborgninjaneer[> > cyborgninjaneer: no background process if switch to another profile?
+18:52:57 <cyborgninjaneer[> That's the part I'm not sure about
+18:53:00 <cyborgninjaneer[> I think not.
+18:53:51 <jalb> Well, Wifi is active in all the profiles
+18:55:26 <jalb> When you switch to the main profile you'll see that connections have been made while you were in another prifle
+18:55:35 <jalb> *profile
+19:24:45 <fomijafi[m]> Can anyone recommend a good VoIP service with DID number that allows group messaging? I was testing VoIP.ms but no group messaging :(
+19:25:27 <jiibus[m]> jmp.chat has group messaging in Alpha, but it works for the most part from my understanding.
+19:25:46 <jiibus[m]> Definitely a way more private service than voip.ms
+19:26:30 <fomijafi[m]> Looks like about 3 bucks per month
+19:26:32 <jiibus[m]> You just have to contact support to have group messaging turned on for your account
+19:26:33 <fomijafi[m]> Not awful
+19:26:59 <jiibus[m]> Yea, $35/year isn't too baf
+19:27:03 <jiibus[m]>  * Yea, $35/year isn't too bad
+19:28:36 <jiibus[m]> The conversations app works well with their service for me. When someone leaves a voicemail, for example, it automatically sends it as a `.wav` attachment from that person
+19:31:18 <fomijafi[m]> jiibus: do you know if there are pricing models for multiple numbers? Not seeing that on their site?
+19:31:43 <jiibus[m]> Not sure, never had that need for myself. Could always jump in their jabber room and ask
+19:32:32 <jiibus[m]>  * Not sure, never had that need for myself. Could always jump in their jabber room and ask
+19:32:32 <jiibus[m]> discuss⊙csc
+19:34:29 <fomijafi[m]> Thanks for uku help!
+19:35:11 <fomijafi[m]> * Thanks for your help!
+19:58:53 <glct[m]> <fomijafi[m] "Can anyone recommend a good VoIP"> MySudo might be what you're looking for
+20:28:23 <fomijafi[m]> glct: via aurora store you're suggesting?
+20:40:51 <glct[m]> I'm suggesting the app, but yes it's available on Google play store and by extension the aurora store. On Android if you're USA, CA or Aus If otherwise it's not yet available
+20:40:53 <fomijafi[m]> Though I did use mysudo on an iPhone previously. Very user friendly.
+20:40:53 <fomijafi[m]> Thanks, trying to keep this GOS device fully free from play services.
+20:40:54 <jneplokh> MySudo requires play services
+20:44:38 <glct[m]> How do you know Jacob? Have you tested it on a Google free device?
+20:46:25 <jneplokh> Yep, I’ve tried it on GrapheneOS and it simply does not launch. They have a hard dependency for now unfortunately
+20:56:59 <nickcalyx[m]> It also won yt work with microg but we've had people submit crash logs
+21:07:42 <glct[m]> Ah... That's too bad. Thanks for confirming
+21:28:27 <xabi[m]> <anupritaisno1[m] "Crdroid is the reason it is halt"> Is omnirom a good base? They used to make fun about lineage/cyanogen code quality
+21:30:43 <jneplokh> glct: Yeah it is pretty unfortunate, you have to DIY a solution, but that can be fun as well ;)
+21:35:02 <john_doe2[m]> Hey, I am going to buy a new phone soon, was considering either iphone 2020 se or a pixel 3a ( to install grapheneOS on). I was more inclined towards pixel 3a, however i was told that the project might die off because the lead dev hasn't been receiving sufficient community support, is that just a rumor or is there substance to it?
+21:36:06 <Mobius[m]> don't trust everything you read on the internet
+21:37:20 <glct[m]> I think there was a point a while back where that was the case, with a lack of development support. But the situation (from my outsider's perspective) is a healthier. There's consistent monetary contributions as well (which needs more support to reach the goal) but anyway to conclude my point, the answer is no
+21:38:15 <glct[m]> There's still assistance needed from us with a misinformation campaign against GOS which is the reason I'm here, to help. Still doing my research on this
+21:39:40 <qyo3462572445[m]> <glct[m] "MySudo might be what you're look"> Check out JMP. Not sure about group messages but, the devs are EXTREMELY responsive on their xmpp group for any questions or issues.
+21:41:17 <qyo3462572445[m]> Anddd I just saw that someone already suggested this. Sorry.
+21:41:19 <jneplokh> Yeah I gave JMP a try and it is solid, I just needed numbers for sms verifications codes though, so I went with voip.ms. But when I did ask a question, the devs answered really quickly
+21:44:29 <fomijafi[m]> Yea I think I might hang onto VoIP.ms for a throwaway, but checking out jmp now
+23:18:31 <naithan[m]> !nick test2
+23:52:07 <neonfuz2> So is it blasphemy to install zoom on grapheneOS
+23:52:44 <sheruleeya[m]> On a separate profile, maybe not
+23:58:16 <cyborgninjaneer[> Zoom will steal your virtue.
+23:58:52 <cyborgninjaneer[> Shouldn't hack your phone as long as it's in a separate profile though
+23:59:02 <cyborgninjaneer[> Minimize permissions as well
+23:59:05 <sheruleeya[m]> But again, I refrain from doing it, as much as possible. You could use the website anyways if possonle.
+23:59:41 <sheruleeya[m]> * But again, I refrain from doing it, as much as possible. You could use the website anyways if possible (yes it is, when you tick the desktop mode)

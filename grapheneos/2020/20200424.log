@@ -1,0 +1,714 @@
+00:39:24 <nuttso[m]> Hey guys
+00:39:49 <nuttso[m]> Anybody know where one could compile GrapheneOS in the cloud
+00:39:58 <nuttso[m]> For faster builds
+00:40:33 <nuttso[m]> Amazon offers something like this is think. Where you can set how much resources you need and only pay for them
+00:46:20 <renlord> rattlesnakeos does that
+00:47:10 <nuttso[m]> Ah yes
+00:47:14 <nuttso[m]> Remember him
+00:52:05 * nuttso[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/KfrOYAZLFuFnQclPqQCsCvbY >
+00:54:01 <JTL> > Wouldn't this make sense for GrapheneOS? I assume in development you don't rebuild everything from zero just you changes but not sure?
+00:54:06 <JTL> That's often the case for development
+00:55:34 <nuttso[m]> <JTL "That's often the case for develo"> ?
+00:56:00 <nuttso[m]> Development are faster builds as production. Right?
+00:56:26 <JTL> Faster then production?
+00:58:31 <nuttso[m]> Building for development and building for production
+00:59:14 <JTL> Development builds are faster, yes
+01:00:04 <nuttso[m]> What would make more sense. Donate for hardware or donate for cloud like AWS Lambda
+01:00:59 <JTL> Donate for what?
+01:01:04 <renlord> might be nice to have CI for the project
+01:01:16 <renlord> so PRs can run the approrpriate CTS tests
+01:01:17 <nuttso[m]> <JTL "Donate for what?"> Apples oranges flowers
+01:01:33 <renlord> but CTS requires actual devices to run the test on
+01:01:38 <JTL> renlord: yeah
+01:01:43 <JTL> nuttso[m]: Don't think I follow?
+01:01:50 <nuttso[m]> Money
+01:02:06 <nuttso[m]> I want to give a friend money to help him so he can help us
+01:02:16 <nuttso[m]> He needs faster building
+01:04:55 <nuttso[m]> <JTL "nuttso: Don't think I follow?"> I don't know what would make more sense? Giving him money for a service like this or for hardware. He is interested in helping with development. And I want to help him out with some donations? Got it?
+01:05:26 <JTL> I'd personally get hardware
+01:05:43 <nuttso[m]> <JTL "I'd personally get hardware"> Why
+01:05:45 <JTL> Cloud building works in a pinch, but if paid by the hour it can get pricey
+01:05:58 <JTL> and bandwidth costs with Amazon and some other cloud providers can be expensive
+01:07:38 <renlord> incremental builds are fast
+01:07:45 <renlord> its only the initial build is slow
+01:07:53 <JTL> ^
+01:08:00 <renlord> and you only need to do the long build once a month
+01:08:31 <renlord> especially working on features, the build and test cycle is quite fast
+01:08:49 <nuttso[m]> <renlord "especially working on features, "> This is what I wanted to know
+01:09:11 <renlord> changes to framework only requires incremental builds
+01:09:16 <renlord> no need to rebuild the whole OS
+01:09:47 <renlord> and then you just run `adb sync all`
+01:10:51 <nuttso[m]> So you need for example 6 hours for initial build and incremental is like 2
+01:11:00 <renlord> no, way faster
+01:11:03 <renlord> minutes
+01:11:08 <renlord> or even seconds
+01:11:15 <renlord> depending on how many files change changed
+01:11:17 <renlord> *have
+01:14:43 <nuttso[m]> Check pm renlord
+01:24:08 <danvittegleo[m]> yeah if you want to do development, i definitely don't recommend the cloud approach. its not very convenient to have to spin up and down an environment in order to save costs.
+01:25:40 <JTL> Persistent storage costs money, else you'll be spending time with rebuilds even with the fastest server
+01:25:50 <danvittegleo[m]> and if you want to persist a dev environment in order to be able to do incremental builds the costs will quickly add up.
+01:26:00 <danvittegleo[m]> yeah exactly.
+01:29:09 <TheJollyRoger-M> Hey guys. Sorry about the delays. Putting out some fires here. (Figuratively)
+01:29:56 <renlord> TheJollyRoger-M: i just put out a fire today
+01:30:04 <renlord> sdcard broken on my ARM SBC
+01:30:08 <renlord> sdcards are so fkin bad
+01:30:10 <renlord> jesus
+01:30:35 <renlord> i break one every 2 months on average
+01:30:49 <renlord> shouldnt have bought the cheapass sdcard pack
+01:30:49 <JTL> In theory they have industrial SD cards, but I've noticed they're difficult to find in Canada
+01:31:00 <renlord> from officeworks
+01:31:02 <renlord> so fkin shit
+01:31:08 <TheJollyRoger-M> Sheesh >_<
+01:31:17 <TheJollyRoger-M> I'm trying to fix Python.
+01:31:25 <renlord> i dont even trust it to keep my dog photos
+01:31:37 <JTL> My mitigation is I keep a diskimage of anything important and have a spare SD card handy to flash when needed
+01:31:40 <JTL> renlord: same
+01:31:41 <TheJollyRoger-M> On my two computers.
+01:31:55 <TheJollyRoger-M> Jeez.
+01:32:44 <TheJollyRoger-M> Right now for some reason my irc VM is also busted and connects to oftc via Tor just fine but won't connect to freenode via Tor even though my cloud server will.
+01:33:19 <renlord> TheJollyRoger-M: cert expired?
+01:33:27 <renlord> i spent many hours before arriving on that conclusion
+01:33:43 <renlord> the sasl auth mechanism doesnt tell you if the cert has expired.
+01:33:46 <TheJollyRoger-M> So I gotta get that back up and then finish the stupid stuff I promised on the CTS and get the PCBs soldered and order new cables.
+01:33:56 <TheJollyRoger-M> I don't think so... It's set for something like 9999 days...
+01:34:07 <JTL> TheJollyRoger-M: back
+01:34:25 <TheJollyRoger-M> It doesn't seem to be connecting to the proxy, oddly enough. Even though the one for oftc is.
+01:36:54 <TheJollyRoger-M> Lemme check anyways...
+01:37:09 <TheJollyRoger-M> Hmm looks like it's still good. I use the same cert at oftc
+01:40:40 <DannyWorkOrderPr> <JTL "I might have some more discussio"> Include me in that Matrix room, please! Have ideas on how it should be done.
+01:41:02 <DannyWorkOrderPr> Been chatting with him re: this myself
+01:42:00 <TheJollyRoger-M> I gotta get this fixed so hang on a sec, sorry.
+01:42:11 <TheJollyRoger-M> Working as fast as I can
+01:42:50 <DannyWorkOrderPr> No rush, just eagerness =]
+02:02:57 <algebro[m]> cdesai: you gave me a set of commands awhile back to remount a partition on the device and then sync code changes really quickly, can you remind me what they were?
+02:03:19 <renlord> adb root; adb remount; adb reboot; adb sync all
+02:03:35 <algebro[m]> Trying to set aside some time to look at the camera driver stuff
+02:03:36 <algebro[m]> Great thanks
+02:03:53 <renlord> remember to disable-verity
+02:52:45 * grapheneosuser[m sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/uVuBWBjfFiLElaWaEIFyqlqQ >
+02:53:41 <madaidan[m]> This has been asked countless times already.
+02:54:02 <madaidan[m]> Look over the issues on github if you want to start technical work.
+02:54:46 <madaidan[m]> If you can't do technical work, test GrapheneOS or counter misinformation (especially Copperhead attacks)
+02:55:27 <grapheneosuser[m> Alright, though says something if it has been asked a lot.
+02:55:48 <grapheneosuser[m> And thanks for the reply.
+02:57:05 <grapheneosuser[m> Can I ask though, how does one develop these skills? Like, what programs do I need to know? Does it tell u on github page?
+02:58:25 <madaidan[m]> https://grapheneos.org/build#development-guidelines
+03:00:10 <grapheneosuser[m> Thank you.
+03:02:15 <grapheneosuser[m> And sorry for the same questions, just new to this.
+03:02:51 <renlord> grapheneosuser[m: we have logging enabled, you can just review them
+03:04:06 <madaidan[m]> <renlord "User: we have logging enabled, y"> They're on matrix so they can just search anyway
+03:26:23 <bseeinu[m]> Personal keyboard preferences? No need for Swype but 3 languages used daily
+03:46:25 <Hirppa> I have found AOSP keyboard quite good with all automatic typing aids disabled and volume keys configured as arrow keys.
+03:49:19 <Hirppa> It works well enough for multiple languages too.
+03:59:55 <bseeinu[m]> I guess that might be the best option
+04:00:33 <bseeinu[m]> Doing my best to make anysoft work in an iPhone-ish style
+05:13:17 <grapheneosuser[m> > > <@freenode_renlord:matrix.org> User: we have logging enabled, you can just review them
+05:13:17 <grapheneosuser[m> > They're on matrix so they can just search anyway
+05:13:17 <grapheneosuser[m> Logging? What is that and search for what?
+05:57:53 <d-rav[m]> https://freenode.logbot.info/grapheneos
+05:58:36 <d-rav[m]>  * User: https://freenode.logbot.info/grapheneos
+06:00:55 <joshman[m]> <bseeinu[m] "Personal keyboard preferences? N"> I use daily 4 languages. Unfortunately there's nothing near to what Gboard offers
+06:03:02 <joshman[m]> * I use  4 languages .daily.  Unfortunately there's nothing near to what Gboard offers
+06:09:09 <joshman[m]> bseeinu keep in mind that you wireless chargers will be on slow mode unless you have Google certified one. That's the only bummer for me
+06:42:09 <grapheneosuser[m> > https://freenode.logbot.info/grapheneos
+06:42:09 <grapheneosuser[m> So that's what logging is. Thank you. Will have a read.
+06:42:34 <renlord> grapheneosuser[m: if you have any questions, search first; if not found, then ask.
+06:43:39 <TheJollyRoger> Yarr. I'm usually the first tier, so ask me first, I'll try to find you an answer and if I don't find you one, then I can take it to someone who might.
+06:43:49 <grapheneosuser[m> Okay. Though my questions will/are prob bout how to understand this. Really am a beginner.
+06:44:23 <TheJollyRoger> Mhmm?
+06:44:32 <TheJollyRoger> What could I help you with?
+06:44:57 <grapheneosuser[m> > Yarr. I'm usually the first tier, so ask me first, I'll try to find you an answer and if I don't find you one, then I can take it to someone who might.
+06:44:58 <grapheneosuser[m> Is there a page for me to understand how to use Riot, in regard to contacting people.
+06:46:12 <grapheneosuser[m> > What could I help you with?
+06:46:12 <grapheneosuser[m> Everything. :D How to use this app, what I can do to help as a beginner etc. Have read a bit on the Build page on the Grapheneos site and tbh, prob have to read again. Feels like another language haha
+06:46:18 <TheJollyRoger> Heh, not with us there isn't. Riot's a different software package that's an entirely different project from GrapheneOS and we have nothing to do with them, but unofficially I can give you a few pointers.
+06:47:00 <grapheneosuser[m> > Heh, not with us there isn't. Riot's a different software package that's an entirely different project from GrapheneOS and we have nothing to do with them, but unofficially I can give you a few pointers.
+06:47:00 <grapheneosuser[m> Please do. :)
+06:47:03 <TheJollyRoger> We chose to bridge Matrix to IRC since a lot of people were on Matrix and it makes things easier for mobile users.
+06:47:48 <TheJollyRoger> Well, first up with Riot, be prepared for some quality of service issues. At this moment the server's highly congested because the service is so damn popular and this lead to a lot of growing pains.
+06:48:14 * JTL makes "tech support" joke
+06:48:19 <JTL> :D
+06:48:35 <TheJollyRoger> So from time to time, messages may not go through, messages may take long periods of time... or sometimes get discarded entirely.
+06:49:30 <TheJollyRoger> Hehehe, yes, I'm the first-tier tech support :P.
+06:49:38 * TheJollyRoger makes a joke about turning it off and back on again)
+06:50:07 <grapheneosuser[m> Okay :) haha yea, I saw that.
+06:50:34 <grapheneosuser[m> Could you please explain to me the tiers?
+06:50:42 <dallemon[m]> > * <@freenode_TheJollyRoger:matrix.org> makes a joke about turning it off and back on again)
+06:50:42 <dallemon[m]> That's no joke!
+06:50:46 <grapheneosuser[m> Also, what's the best way to contact u?
+06:51:10 <TheJollyRoger> What you can do as a beginner, is simply read and learn, hang around, idle and read the backbuffers. I've also started a GrapheneOS knowledge base, so if you want a little bit of light and casual reading on GrapheneOS and some basic questions about it, let me fetch it for you...
+06:51:36 <TheJollyRoger> Now I should say this with a hefty disclaimer that I chip in on this without the developers' oversight, so there might be some stuff I've missed.
+06:51:40 <grapheneosuser[m> Please do. Want to learn and know everything!
+06:52:07 <grapheneosuser[m> No worries. Here to learn, not judge. :)
+06:53:18 <TheJollyRoger> So before reading my knowledge collection, you may want to check the official FAQ first listed at https://grapheneos.org/faq . Although it's small at this very moment, it covers most of the most pressing questions most people have.
+06:53:32 <TheJollyRoger> I've got some scraps here for some stuff it doesn't tcover:
+06:54:30 <TheJollyRoger> https://github.com/Peter-Easton/GrapheneOS-Knowledge This I should mention, is not scrutinized nor endorsed by the developers, it's something I wrote based off some conversations we've had in the past as well as some of my own looking around.
+06:55:55 <TheJollyRoger> A good place to start there is "GrapheneOS versus Others" which should tell you a bit about the project's goals and why it's made the way it is.
+06:56:40 <TheJollyRoger> GrapheneOS is not "A custom ROM" it's actually a very comprehensive package of many different subprojects that work in harmony with each other to improve the security characteristics, trustworthiness, and privacy of the Android Open Source Project, and possibly, upstream.
+06:58:31 <rutxonboard[m]> > * TheJollyRoger makes a joke about turning it off and back on again)
+06:58:31 <rutxonboard[m]> Are you sure it's plugged in?
+06:59:31 <TheJollyRoger> For instance, GrapheneOS is the reference implementation for Daniel Micay's hardened_malloc, which is designed to protect against memory corruption vulnerabilities that Linux is actually very vulnerable to. It's an all-new design made from the ground up by Daniel Micay himself, although it vaguely resembles some elements of OpenBSD's .
+06:59:57 <TheJollyRoger> rutxonboard[m]: ehehehehe X3. Yes I could see myself asking that ahahahaha
+07:05:34 <grapheneosuser[m> So what would you call it then, instead of a custom ROM?
+07:05:50 <TheJollyRoger> I would call it a mobile operating system.
+07:06:20 <TheJollyRoger> The term "Custom ROM" actually kinda is a bit of a misnomer. Phones haven't loaded their operating systems from electronically erasable programmable flash memory for generations.
+07:06:36 <TheJollyRoger> *electronically erasable programmable read-only flash memory for generations
+07:06:40 <grapheneosuser[m> Makes sense.
+07:07:23 <TheJollyRoger> Yeah. So if someone says to me "Custom ROM" I immediately get a mental picture of them taking apart an old Motorola Handset from 1995, and desoldering and removing the eeprom chip out.
+07:07:23 <rutxonboard[m]> Custom ROM is also a euphemism for insecure
+07:07:28 * TheJollyRoger cackles
+07:07:35 <TheJollyRoger> Ahahahahaha rutxonboard[m] I agree so much, haha!
+07:07:42 <grapheneosuser[m> Haha
+07:08:22 <grapheneosuser[m> Yea, I just think of LineageOS > insecure.
+07:08:23 <TheJollyRoger> Yeah. Generally, the community of "custom roms" seem to target what I call "TPUs" or "Toxic Power Users"
+07:10:01 <grapheneosuser[m> Yea, that's why I never could get into LineageOS, just wasn't what Grapheneos is. That's why, I really want to help. But please, continue your explanations. :)
+07:10:17 <rutxonboard[m]> If you want to keep a phone for more than 3 years you need an iPhone
+07:10:22 <TheJollyRoger> Sure. What else would you like to know about the project?
+07:10:36 <TheJollyRoger> Seconded!
+07:10:43 <grapheneosuser[m> Yea, never likes Apples though.
+07:10:49 <grapheneosuser[m> Liked*
+07:11:23 <TheJollyRoger> Yeah... they are not for everyone.
+07:11:29 <rutxonboard[m]> "Custom ROMs" are pointless
+07:11:40 <rutxonboard[m]> I never have had an iPhone
+07:11:46 <rutxonboard[m]> I kinda want to try one sometime
+07:11:54 <TheJollyRoger> I mean, I would probably be using one if I didn't have my Graphene Pixel 3, but I probably would see it as nothing more than something I run Signal on.
+07:12:13 <grapheneosuser[m> Idk, tbh, read a lot on reddit, just the basics and light, extremely light knowledge on GOS.
+07:12:27 <rutxonboard[m]> > Idk, tbh, read a lot on reddit, just the basics and light, extremely light knowledge on GOS.
+07:12:27 <rutxonboard[m]> Which subreddits?
+07:12:41 <grapheneosuser[m> And agreed. Played round with one, but never liked the ecosystem.
+07:12:52 <rutxonboard[m]> Everything beside netsec and grapheneos is very misleading
+07:13:03 <rutxonboard[m]> Okay maybe not everything
+07:13:11 <strcat> anupritaisno1[m]: m target-files-package brillo_update_payload && script/release.sh sargo is how I usually build
+07:13:14 <strcat> rather than using dist
+07:13:17 <grapheneosuser[m> Just the grapheneos reddit page. And scrolled through a lot.
+07:13:44 <rutxonboard[m]> > Just the grapheneos reddit page. And scrolled through a lot.
+07:13:44 <rutxonboard[m]> Reddit Comment Search for topics on "DanielMicay"
+07:14:26 <rutxonboard[m]> Search for Linux, Firefox, Librem, iOS, and you'll learn a lot
+07:15:12 <grapheneosuser[m> Okay, though kinda tired of reddit atm. This app is refreshing and thanks for the help in advance.
+07:15:35 <TheJollyRoger> Right now, in terms of help... on the technical side we've got quite a lot of outstanding issues. most of them are documented on the issue tracker, but regardless of whether you're a frontend dev, a backend dev, a C/Rust programmer, a web developer... there's a spot for you.
+07:16:17 <grapheneosuser[m> The other ones I read r privacy and privacytools. Though, like I said, not really crazy bout reddit. Some people have outdated info sometimes.
+07:16:43 <grapheneosuser[m> I'm none of those things haha
+07:16:45 <rutxonboard[m]> > I mean, I would probably be using one if I didn't have my Graphene Pixel 3, but I probably would see it as nothing more than something I run Signal on.
+07:16:45 <rutxonboard[m]> Do you think GrapheneOS is better than iOS? Apple seems to have a much better option for a sane store option and the permissions are stronger. GrapheneOS is more secure as an OS in spite of running Linux is my take
+07:16:47 <TheJollyRoger> Yay
+07:17:31 <rutxonboard[m]> Privacy and PrivacyToolsIO are both paranoid and devoid of any first hand knowledge
+07:18:15 <grapheneosuser[m> At some point, I think if u gonna get hacked u will. But I think, it's better to support an indie than a billion dollar POS company. Idk, that's my take.
+07:18:36 <grapheneosuser[m> Yea haha, that's what I can to
+07:18:41 <grapheneosuser[m> Came*
+07:18:59 <grapheneosuser[m> I mean, that's what I realised on those pages
+07:19:42 <grapheneosuser[m> But will look on those other reddit pages. Thanks for the tip. :)
+07:19:45 <TheJollyRoger> Well, I think the easiest way to put it is... a targeted attack is something where the attackers have every advantage over the defenders. But we have bigger problems to worry about, and those big problems are things like the low-hanging fruit like common, humble, easy exploits.
+07:20:12 <rutxonboard[m]> I want two devices. Either a good iPhone as a daily driver and an inexpensive Graphene for building on. Or just have two Pixels (sounds boring for a phone enthusiast)
+07:20:41 <rutxonboard[m]> I could keep my nice Pixel and get a cheap iPhone as a daily driver, but seems weird
+07:21:04 <TheJollyRoger> Most people in the privacy community think that they're going to be targeted by the Massoud and the Massoud will use some secret hardware backdoor installed on every computer but don't realize that their oh-so-precious Debian hasn't merged any of the fixes for their browser in months, leaving the front door wide open.
+07:21:50 <grapheneosuser[m> Tbh, still use windows. Kinda thing it has better security. Idk, inform me haha
+07:21:57 <grapheneosuser[m> Think*
+07:22:18 <rutxonboard[m]> I tried working with the emulator, but it hasn't worked for me on the latest build
+07:22:37 <rutxonboard[m]> > Tbh, still use windows. Kinda thing it has better security. Idk, inform me haha
+07:22:37 <rutxonboard[m]> macOS > Windows > Linux out of the box
+07:22:44 <rutxonboard[m]> Truth be told they all kinda suck though
+07:22:49 <TheJollyRoger> To be honest, you're actually most likely right. For about the past 20 years the Linux kernel has become this sorta... almost like a dumping ground of "Hey we want it to run faster? Let's just throw it into the kernel, what could go wrong?"
+07:23:02 <grapheneosuser[m> > I want two devices. Either a good iPhone as a daily driver and an inexpensive Graphene for building on. Or just have two Pixels (sounds boring for a phone enthusiast)
+07:23:02 <grapheneosuser[m> Why not just pixel?
+07:23:05 <TheJollyRoger> But this problem is made worse by a number of issues:
+07:23:16 <analogpathy[m]> <rutxonboard[m] "Truth be told they all kinda suc"> once Kicksecure transitions to Void maybe that will slightly change
+07:23:30 <TheJollyRoger> I'll hold this thought and address the thing about Pixels :)
+07:23:34 <rutxonboard[m]> > > I want two devices. Either a good iPhone as a daily driver and an inexpensive Graphene for building on. Or just have two Pixels (sounds boring for a phone enthusiast)
+07:23:34 <rutxonboard[m]> > Why not just pixel?
+07:23:34 <rutxonboard[m]> I am not going to reflash my daily driver whenever I want to mess around with GrapheneOS code
+07:24:13 <TheJollyRoger> So with respect to Pixels, GrapheneOS would like to support different handsets at a future date, but the reasons why GrapheneOS supports Pixels are a tad bit technical:
+07:24:36 <rutxonboard[m]> > > <@rutxonboard:matrix.org> Truth be told they all kinda suck though
+07:24:36 <rutxonboard[m]> > once Kicksecure transitions to Void maybe that will slightly change
+07:24:36 <rutxonboard[m]> I dunno. I think Fedora Silverblue with the mighty SELinux sandbox is a much better path. Lock that sucker down and give it dm-verify and you're soaring
+07:24:43 <grapheneosuser[m> > So with respect to Pixels, GrapheneOS would like to support different handsets at a future date, but the reasons why GrapheneOS supports Pixels are a tad bit technical:
+07:24:43 <grapheneosuser[m> Ohh I c
+07:25:26 <TheJollyRoger> The first one is that Pixels actually are the most extensively documented and they're the most open handsets we can get. The drivers are open, the firmware can be made available to partners, and the manufacturer is actually the most forthcoming to work with us on running alternative operating systems on their handsets.
+07:25:27 <rutxonboard[m]> Pixels are so much better than everything else for security in virtually every way. To list it all could take a while
+07:26:00 <rutxonboard[m]> iPhone excluded of course
+07:26:10 <grapheneosuser[m> Yea have read a bit bout that topic.
+07:26:13 <TheJollyRoger> Not only that, but Google goes as far as to supplying their development tools, their software, their toolchains, all to us.
+07:26:43 <grapheneosuser[m> So why would u still use an iPhone then?
+07:27:05 <grapheneosuser[m> If apple is the complete opposite?
+07:27:05 <grapheneosuser[m> If it is.
+07:27:15 <TheJollyRoger> Other vendors tend to be actively hostile to running different operating systems on their handsets: for instance, Samsung has an E-Fuse in the phone that will get burnt if you unlock the bootloader, and then from there if you do that that disables the bootloader security /permanently./
+07:27:47 <TheJollyRoger> Some other vendors use software for debugging their own handsets that's proprietary to them, closed source, or not even available at all.
+07:27:58 <rutxonboard[m]> > If apple is the complete opposite?
+07:27:58 <rutxonboard[m]> Apple is essentially the only other phone maker that cares about security
+07:28:03 <TheJollyRoger> Ha, yeah...
+07:28:21 <rutxonboard[m]> Nokia is okay, but only because Android One and Google shoves it down their throat
+07:28:27 <rutxonboard[m]> Only if you need the sub $200 range tbh
+07:28:28 <grapheneosuser[m> Do they though?
+07:28:40 <TheJollyRoger> Apple and security? Well...
+07:29:15 <TheJollyRoger> To give you a nice case in point, Apple was the first to introduce a four-level file based encryption system and make that mandatory, when Android phones were only just starting to get full disk encryption ... which is useless in a phone.
+07:29:17 <grapheneosuser[m> Yea, cause idk, apple to me is the last option.
+07:29:51 <rutxonboard[m]> Apple has had the best IOMMUs for years. They don't have as much crud to get patches for stuff out like Google having security partners they have to disclose too. They run the OS on a saneish kernel. They have a lot better permissions
+07:29:56 <rutxonboard[m]> I have had Nexus and Pixel since they came out
+07:30:05 <rutxonboard[m]> I wouldn't touch any other Android brand
+07:30:30 <TheJollyRoger> One of the levels they had was that they used a public-key encryption system that allowed you to take pictures while the phone was locked and the cryptographic keys were ejected from the memory, and then save those photos to the drive encrypted.
+07:30:57 <TheJollyRoger> With android, at the time, the phones that did have FDE simply just were either encrypted, or they were switched on.
+07:30:57 <grapheneosuser[m> Very interesting. Yea had one plus before, but really wanted something way better. So, here I am.
+07:31:24 <rutxonboard[m]> OnePlus is one of the worst flagships for security
+07:31:30 * TheJollyRoger snickers
+07:31:41 <rutxonboard[m]> Their SELinux rules suck, their updates suck
+07:31:43 <TheJollyRoger> One Plus Verified boot - it allows you to boot it unverified :D
+07:31:51 <rutxonboard[m]> OnePlus is bad...
+07:32:01 <strcat> renlord: btw you should build with `m` instead of `make -j32` since these days make isn't used anymore, soong takes over immediately and uses kati for makefiles
+07:32:09 <strcat> I just never bothered to update docs
+07:32:20 <grapheneosuser[m> That I know haha, thought Samsung was worse though?
+07:32:22 <TheJollyRoger> One sec.
+07:32:25 <strcat> make does the same thing, but -j doesn't control anything relevant anymore
+07:32:30 <strcat> since it has 1 job: handing off to soong
+07:32:36 <TheJollyRoger> strcat: just `make -m` ?
+07:32:41 <TheJollyRoger> Want me to send in a PR?
+07:32:44 <strcat> and makes more sense to use `m` rather than unnecessarily involving GNU make
+07:32:48 <strcat> TheJollyRoger: no make isn't used anymore
+07:32:54 <TheJollyRoger> Oh, oops, okay!
+07:33:00 <strcat> you build with the command m
+07:33:02 <strcat> it's literally called m
+07:33:10 <renlord> how to control how many jobs?
+07:33:19 <renlord> what if i wanna play games while it builds?
+07:33:23 <renlord> i dont want to get a spasm
+07:33:49 <rutxonboard[m]> > That I know haha, thought Samsung was worse though?
+07:33:49 <rutxonboard[m]> No Samsung is much better than OnePlus, but they are both shit
+07:33:50 <strcat> renlord: that's in soong
+07:33:56 <strcat> renlord: make -j32 doesn't do anything atm anyway
+07:34:10 <strcat> renlord: it has 1 job, starting soong, and soong doesn't care what you passed to make for jobs
+07:34:14 <renlord> i mean is there a flag i can pass to m?
+07:34:15 <rutxonboard[m]> Samsung is a lot better actually
+07:34:35 <strcat> renlord: there might be a way to control it but it will be something like an env var
+07:34:42 <TheJollyRoger> strcat oh, I see, I just read the docs and saw "To build the default build target: m" ?
+07:34:45 <renlord> ok. i'll just check the logs
+07:34:48 <renlord> *manpage
+07:34:53 <strcat> renlord: TheJollyRoger: https://paste.xinu.at/63V
+07:35:00 <strcat> you can see what `m` is with `type` command in shell
+07:35:05 <strcat> it's just a tiny function that starts soong
+07:35:08 <TheJollyRoger> Oh.
+07:35:36 <grapheneosuser[m> > One sec.
+07:35:36 <grapheneosuser[m> No worries.
+07:35:46 <strcat> renlord: TheJollyRoger: if you run GNU make
+07:35:52 <strcat> literally all it does is run this bit
+07:35:54 <strcat> https://github.com/GrapheneOS/platform_build/blob/10/core/main.mk#L12-L27
+07:36:13 <strcat> renlord: TheJollyRoger: it's just a compatibility shim so people can still run make - it quickly just replaces make with soong, just like running m
+07:36:23 <TheJollyRoger> Oh I see.
+07:36:43 <TheJollyRoger> I was just looking over the "build" section to see if I'd need to fix something, looks like it's already been done.
+07:37:01 <strcat> hmmm
+07:37:06 <strcat> renlord: I guess it does actually use -j
+07:37:09 <strcat> that's what makeparallel does
+07:37:11 <strcat> https://android.googlesource.com/platform/build/+/refs/tags/android-8.0.0_r30/tools/makeparallel/
+07:37:16 <strcat> renlord: it uses a hack to figure out the number of jobs
+07:37:32 <renlord> i should also look and see if soong makes gradle builds more friendly
+07:37:37 <renlord> wihtin the aosp build
+07:37:43 <strcat> renlord: maybe you can just pass -j to m after all
+07:37:45 <strcat> don't know
+07:37:57 <strcat> renlord: I guess it's possible that you can
+07:38:24 <strcat> renlord: seems all that make wrapper does is use a hacky command to figure out how many jobs make has
+07:38:25 <renlord> i read some hacks around it, but it doesnt look robust
+07:38:41 <strcat> renlord: and then pass -j to soong?
+07:38:41 <renlord> since you always have to reinvoke gradle when to make minute changes
+07:38:43 <strcat> lol
+07:39:05 <renlord> s/to/you/
+07:39:15 <strcat> renlord: so yeah try m -j1
+07:39:22 <strcat> but using make is pointless
+07:39:54 <TheJollyRoger> grapheneosuser[m: Whew. OK, and back. Any other questions you'd like to ask me...?
+07:40:14 <strcat> renlord: also I modernized the approach to setting up SCHED_BATCH
+07:40:25 <strcat> https://github.com/GrapheneOS/platform_build_soong/commit/76723b5745f08e88efa99295fbb53ed60e80af92
+07:40:34 <strcat> set for soong build system now
+07:40:38 <strcat> rather than in the interactive shell
+07:40:48 <strcat> so it doesn't get applied to the emulator which was bad for interacting with the emulator
+07:40:50 <strcat> really bad
+07:41:03 <strcat> since SCHED_BATCH will happily cause 1.5s of lag
+07:41:06 <renlord> strcat: do you plan to setup CI soon
+07:41:08 <strcat> maximizes throughput
+07:41:15 <strcat> renlord: *shrug* seems unrealistic
+07:41:16 <renlord> to automate running cts modules when people submit PRs?
+07:41:30 <strcat> can't afford the time and money investment
+07:41:44 <renlord> but its aimed at saving you time
+07:41:46 <renlord> lol
+07:41:46 <TheJollyRoger> Oh yeah. strcat, I had to briefly take the CTS stuff on my cloud server down, since I have run out of disk space.
+07:41:48 <strcat> CTS takes far too long to run too
+07:41:57 <renlord> ya, exactly, so automate that
+07:42:03 <TheJollyRoger> I'm just going to try to fix that and then I can send it back up.
+07:42:09 <renlord> maybe bionic can be set to just run cts bionic for example
+07:42:20 <strcat> renlord: yeah passing -j1 to m works
+07:42:25 <renlord> then frameworks, the relevant cts mdoules
+07:42:40 <strcat> I'll document it
+07:43:49 <strcat> renlord: I wouldn't recommend limiting # of jobs to keep interactive use going fine
+07:44:06 <strcat> renlord: just change SCHED_BATCH to SCHED_IDLE and it'll try to avoid slowing anything else down
+07:44:20 <strcat> change chrt -b to chrt -i in my soong change
+07:44:55 <strcat> q // Sane default matching ninja
+07:44:57 <strcat>  ret.parallel = runtime.NumCPU() + 2
+07:45:01 <strcat> renlord: that's the default # of jobs
+07:45:06 <strcat> runtime.NumCPU() + 2
+07:45:38 <strcat> https://golang.org/pkg/runtime/#NumCPU
+07:48:35 <strcat> and... that's why I use xmllint instead of just html validation https://paste.xinu.at/tpDZW
+08:17:56 <renlord> strcat: does linux not credit downstream projects that found bugs?
+08:18:02 <renlord> in their commits or patches?
+08:25:58 * jacksonpollock19 uploaded an image: Screenshot_20200424-092220.png (163KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/rSiTCCeXDYgzjTCXXWcfMSGW >
+08:26:25 <jacksonpollock19> That normal?
+08:26:51 <TheJollyRoger> Yes.
+08:27:29 <strcat[m]> https://www.reddit.com/r/GrapheneOS/comments/g6xvoo/pixel_4_and_pixel_4xl_support/
+08:27:31 <strcat[m]> same questions over and over
+08:27:41 <strcat[m]> I don't feel like having the FAQ helps much
+08:28:04 <renlord> the issue is reddit, not so much the FAQ
+08:28:22 <renlord> redditers are the scums of the internet, they just assume everything will be on reddit
+08:28:25 <TheJollyRoger> Erm... could we link the FAQ to the reddit?
+08:28:31 <renlord> and cannot be bothered to navigate out of the fucking site to do some basic research
+08:29:09 <TheJollyRoger> Like, in a sticky?
+08:29:13 <renlord> TheJollyRoger: nah, it wont work, its not on reddit
+08:29:18 <TheJollyRoger> Okay :(
+08:30:52 <jacksonpollock19> <TheJollyRoger "Yes."> Thanks
+08:33:14 <TheJollyRoger> jacksonpollock19: Mine says active for 15 minutes and While in background 10 hours.
+08:33:38 <TheJollyRoger> It's a part of the operating system.
+08:35:52 <renlord> strcat[m]: does linux not credit downstream projects that found bugs?
+08:36:29 <strcat[m]> renlord: I don't know why I wasn't mentioned but you can look back and see I was the one who reported it and that Intel developer responded to me then fixed it
+08:36:46 <strcat[m]> I didn't get a CC on that commit so I wasn't aware when it finally landed
+08:36:57 <renlord> maybe you should just file the CVE anyways
+08:37:03 <renlord> so you get get properly credited
+08:37:09 <strcat[m]> meanwhile I get CCed on all kinds of shit I don't want to hear about and it constantly spams me for each iteration of the patch, all the people reviewing it and then when it lands in linux-mm / linux-next and progresses forward
+08:37:13 <strcat[m]> renlord: don't really care
+08:37:36 <strcat[m]> I've reported a lot of bugs that never got CVEs
+08:38:00 <strcat[m]> and I don't want to have to waste time explaining why this is a security bug (obvious to me, maybe not others)
+08:38:26 <renlord> kek, not obvious to me too!
+08:38:54 <renlord> i've taken up your suggestion and im gonna deploy my own smtp server
+08:39:03 <renlord> usd getting too expensive now
+08:42:00 <TheJollyRoger> Wow!
+08:42:47 <jacksonpollock19> <TheJollyRoger "It's a part of the operating sys"> OK thanks good to know
+08:43:04 <grapheneosuser[m> TheJollyRoger: thanks for your help before. If you can continue that would be great. :)
+08:43:17 <TheJollyRoger> Yep, what would you like me to ramble about?
+08:44:24 <grapheneosuser[m> Anything that you would think a basic like myself would love to know.
+08:45:47 <TheJollyRoger> Sure. Well, at this moment, GrapheneOS has been described as "not production ready" because at this moment, it's in the early phase of its development and it's published and released as a sort of "Early Release" builds to attract developers.
+08:46:09 <TheJollyRoger> However, the releases are fully tested.
+08:47:10 <TheJollyRoger> The reason why it's described as being "not production ready" is because at this moment, GrapheneOS does not bundle an appstore, and that's left users to have to source their own applications. The android security model assumes that users will be installing their apps from a curated app store included with the device, and that those applications are signed by the application developers
+08:47:13 <TheJollyRoger> themselves.
+08:47:39 <TheJollyRoger> Although in recent years, Google has responded to complaints about app developers losing their keys and getting locked out of their own apps by allowing Google Play to sign their apps on their behalf.
+08:48:29 <TheJollyRoger> Because "leaving the user to find their own apps and fend for themselves" is antithetical to the principle of good security design, this is why the decision to describe GrapheneOS as "not production ready" is purely pragmatic.
+08:49:30 <TheJollyRoger> Some people have asked us to include F-Droid as an application store, which we don't want to do at this moment for a couple of reasons: the first reason being that for all of F-Droid's bragging about being "malware free" they contain a very large number of obsolete or outdated apps or even apps that have been abandoned by their upstream developers
+08:50:26 <TheJollyRoger> An insecure app that's a juicy target for exploitation is just as bad as malware.
+08:51:25 <TheJollyRoger> F-Droid's internal protocols around security and insider access have been called into question before.
+08:52:52 <TheJollyRoger> So we've chosen quite deliberately not to include them, and in the future hope that when the project has more developers and device maintainers, we might be able to start work on a curated first-party app store that will have a small number of very carefully selected applications that will be selected based on technical merit, rather than seek to establish a widespread ecosystem.
+08:53:19 <TheJollyRoger> Speaking of which... developers and maintainers!
+08:54:59 <TheJollyRoger> It's an important thing to mention that GrapheneOS is not a business and has no plans of becoming one. Instead, Daniel would like it to be a non-profit open source project similar to the Linux foundation, where people, vendors, and such, support and actively contribute to the development of the software, in exchange for the ability to use it and its innovations freely.
+08:56:01 <TheJollyRoger> Some other benefits for maintainers and developers have been discussed: Daniel is a respected security expert and researcher and for contributors and maintainers I'm pretty sure he could work out something like a letter for a reference of character, which would be a *killer* thing to have on your resume.
+08:56:32 <TheJollyRoger> I have one joke I like to tell about Daniel and that's "When we have a problem with security, we go to Google. When Google has a problem with security, they go to him."
+08:58:08 <TheJollyRoger> So... if you're interested in knowing more, go ahead and read my notes. There's more in there.
+08:58:24 <TheJollyRoger> I'd prefer to answer specific questions, rather than fill the channel with scrollback and ranting.
+08:58:57 <grapheneosuser[m> Will do. Very interesting to say the least. The notes are in that link u sent before? Just checking.
+08:59:07 <TheJollyRoger> Yep! Some of them are there.
+08:59:38 <grapheneosuser[m> And fair enough. I don't want to talk too much of your time or tire u out. Once again. Thanks for informing me.
+08:59:51 <grapheneosuser[m> Take*
+09:00:51 <grapheneosuser[m> Awesome. I think at this time, I will read all u have sent and if I come across something (after having searched and made sure I didn't miss anything), I will ask.
+09:00:58 <TheJollyRoger> Sure.
+09:01:52 <grapheneosuser[m> To ask future questions. Should I just ask here?
+09:01:57 <TheJollyRoger> Sure.
+09:11:27 <rutxonboard[m]> F-Droid is such an interesting tale
+09:12:08 <TheJollyRoger> DannyWorkOrderPr: https://github.com/Peter-Easton/GrapheneOS-Knowledge/blob/master/The-Compatibility-Test-Suite.md This is about the CTS.
+09:12:11 <TheJollyRoger> Sorry it took so long.
+09:17:50 <grapheneosuser[m> > F-Droid is such an interesting tale
+09:17:50 <grapheneosuser[m> How so?
+09:44:06 <flabbergasted> Is the internal DAC in the Pixel phones any good? Or should I get an USB-C to 3.5 adapter?
+09:44:17 <flabbergasted> If anyone knows
+09:46:44 <flabbergasted> I'm considering the apple usb-c to 3.5 adapter as the DAC in it is supposed to be quite good for the price.
+09:55:03 <anupritaisno1[m]> strcat you here?
+09:55:34 <anupritaisno1[m]> Need to ask, is it possible to build the same toolchain as Google's aosp prebuilt
+09:59:28 <strcat> anupritaisno1[m]: yes
+10:02:48 <anupritaisno1[m]> How?
+10:02:52 <anupritaisno1[m]> I just somehow want to derive the same source as the one they used for QPR2
+10:03:15 <strcat> which part of the toolchain
+10:03:20 <strcat> clang?
+10:03:37 <strcat> for the llvm stuff look in prebuilts/clang/host/linux-x86/
+10:04:11 <anupritaisno1[m]> Yes just clang
+10:04:24 <strcat> so first you need to identify the current one being used
+10:04:32 <strcat> it's sometimes different for kernel and the rest of the OS
+10:04:45 <anupritaisno1[m]> Guess that come with llvm, no?
+10:04:50 <anupritaisno1[m]> Yeah but can I reproducibly build Google's clang?
+10:04:52 <strcat> yes clang/llvm/lld
+10:04:52 <anupritaisno1[m]> Yeah that I have in soong
+10:05:08 <anupritaisno1[m]> For kernel I just hardcode the path in makefile and use a mainline clang
+10:05:10 <strcat> so atm it's clang-r353983c1
+10:05:20 <strcat> for OS
+10:05:39 <anupritaisno1[m]> Yeah how to reproduce a functionally similar build
+10:05:43 <strcat> and atm it's the same for the Pixel kernels
+10:05:58 <anupritaisno1[m]> Guess I'll have to rebuild renderscript clang too?
+10:05:59 <strcat> so you go to
+10:06:04 <strcat> android/grapheneos/prebuilts/clang/host/linux-x86/clang-r353983c1
+10:06:11 <strcat> well prebuilts/clang/host/linux-x86/clang-r353983c1
+10:06:19 <strcat> and look at manifest_6052599.xml there
+10:06:26 <anupritaisno1[m]> Got it and then?
+10:06:28 <strcat> you need to use that with repo
+10:06:52 <strcat> anupritaisno1[m]: so
+10:06:58 <strcat> make a separate tree for AOSP LLVM tree
+10:07:02 <strcat> check out AOSP master
+10:07:14 <strcat> then use this as a local manifest to override these repositories
+10:07:23 <strcat> and sync so you have AOSP master + these as an override
+10:07:31 <strcat> and then you can build clang clang++, etc. targets
+10:07:40 <strcat> and it should reproduce exactly what they built
+10:07:44 <strcat> in my experience it's reproducible
+10:07:52 <anupritaisno1[m]> Okay https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+/refs/heads/master/clang-r377782d/manifest_6364210.xml
+10:07:55 <anupritaisno1[m]> Something like that?
+10:08:07 <strcat> anupritaisno1[m]: it's clang-r353983c1 atm tho
+10:08:13 <strcat> anupritaisno1[m]: nooo I mean
+10:08:20 <strcat> anupritaisno1[m]: do repo init for AOSP master
+10:08:23 <strcat> sync that
+10:08:30 <anupritaisno1[m]> Yeah I got it
+10:08:33 <anupritaisno1[m]> But something like that file?
+10:08:34 <strcat> then drop in the clang-r353983c1 manifest as local manifest
+10:08:49 <strcat> anupritaisno1[m]: yes just use the one for the right clang ver
+10:08:57 <strcat> you use it as a local manifest on top of AOSP master manifest
+10:09:21 <anupritaisno1[m]> Okay and then?
+10:09:24 <strcat> anupritaisno1[m]: you should basically make a whole separate checkout of AOSP for clang
+10:09:24 <anupritaisno1[m]> make <what target goes here>?
+10:09:32 <strcat> anupritaisno1[m]: clang clang++
+10:09:34 <strcat> for clang
+10:09:38 <strcat> optionally add ldd and so on
+10:09:40 <strcat> to build all of it
+10:09:50 <strcat> lld is used as the linker these days
+10:10:04 <strcat> anupritaisno1[m]: there might be a target that builds all of them, I was just building what I changed - clang and clang++ before
+10:10:19 <anupritaisno1[m]> Doesn't aosp master use like
+10:10:22 <anupritaisno1[m]> Polly or something
+10:10:41 <anupritaisno1[m]> Might have to revert that to get it to be reproducible
+10:10:51 <strcat> anupritaisno1[m]: no
+10:10:56 <strcat> you aren't actually building AOSP master or using what they have
+10:11:03 <strcat> anupritaisno1[m]: this manifest overrides the relevant stuff
+10:21:23 <strcat> DANE/TLS now enabled beyond port 25 on mail.grapheneos.org
+10:21:42 <strcat> I could probably just disable the regular imap port and smtp submission port tho
+10:21:55 <strcat> cause STARTTLS is sill
+10:21:57 <strcat> silly*
+10:22:05 <strcat> IMAPS / SMTPS ports are good enough
+10:53:40 <mxnorvak[m]> hi, is the search functionality limited to the time i joined this room or am i able to search through all of the chats in Riot?
+10:54:04 <strcat> mxnorvak[m]: when you joined the room
+10:54:11 <strcat> there are separate logs that were started recently
+10:56:53 <mxnorvak[m]> would have been nice if i could search before that as well :(, have learnt a lot from you guys discussing different topics in here
+10:58:06 <mxnorvak[m]> <strcat "there are separate logs that wer"> what are these logs?
+11:09:44 <valldrac> mxnorvak[m]: https://freenode.logbot.info/grapheneos
+11:13:48 <mxnorvak[m]> valldrac: thanks this will be very useful
+11:15:30 <mxnorvak[m]> if the main user profile (admin )is named --user 0? what numbers are assigned to the second and third user you can create?
+11:15:47 <dazinism> mxnorvak: the other place to look is reddit
+11:16:16 <dazinism> I find Red Reader (on Fdroid ) a nice way to use reddit
+11:16:26 <dazinism> For reading
+11:16:36 <dazinism> Works well with orbot
+11:16:54 <mxnorvak[m]> dazinism : yeah i've been using Slide , would you say Red Reader is better?
+11:17:08 <dazinism> mxnorvak: I think its user 11 then 12 etc.
+11:17:34 <dazinism> Not tried slide, Red Reader works well for me
+11:20:01 <mxnorvak[m]> dazinism: the problem with reddit is apart from GrapheneOS subreddit and specially ones answered by Daniel himself, other subreddits are full of misinformation and old information as far as i can tell
+11:23:38 <mxnorvak[m]> i've searched through the degoogle ,privacy, fdroid ,fossdroid ,thehatedone ,and other subreddits but i cant say ive learned, its mostly reading ppls opinion and most of the time it seems like ppl dont know what they're talking about
+11:23:49 <dazinism> mxnorvak: theres the, now archived, projects old Reddit
+11:23:56 <dazinism> For user numbering
+11:24:10 <dazinism> Can check by installing this in profile https://f-droid.org/app/me.zhanghai.android.files Then in ⁝ menu
+11:24:10 <dazinism> Copy path
+11:27:35 <dazinism> Yeah lots of all that reddit stuff is unhelpful/confusing.
+11:28:15 <mxnorvak[m]> > <@DzzzzzzR:matrix.org> Can check by installing this in profile https://f-droid.org/app/me.zhanghai.android.files Then in ⁝ menu
+11:28:15 <mxnorvak[m]> > Copy path
+11:28:15 <mxnorvak[m]> thanks this is great :)
+11:28:37 <strcat> adb is for developers
+11:28:45 <strcat> probably shouldn't have adb enabled on a production device
+11:29:07 <strcat> your question about --user implies you're using adb when you probably shouldn't be using it
+11:29:20 <strcat> since it sounds like you're asking about the syntax used for some of the shell commands
+11:29:34 <mxnorvak[m]> <strcat "probably shouldn't have adb enab"> yeah i,ll turn it off, it was just for pm uninstalling some stock apps
+11:30:31 <dazinism> Uninstall
+11:30:36 <strcat> that doesn't sound like a good idea
+11:30:56 <strcat> you should use the Settings app to disable apps
+11:31:09 <strcat> mxnorvak[m]: are you aware that you haven't actually removed them?
+11:31:53 <strcat> how could you? if you had actually modified the OS images, it would fail to boot as verified boot would detect the corruption
+11:32:02 <strcat> the OS is read-only
+11:32:18 <strcat> you might think you removed them but you didn't
+11:32:30 <mxnorvak[m]> <strcat "mxnorvak: are you aware that you"> yeah from what others have told me its data is still there and its just removed for the current user
+11:32:55 <strcat> but why are you doing it via adb instead of the Settings UI
+11:33:05 <strcat> adb doesn't stop you breaking things completely
+11:33:30 <strcat> it's really not meant to be used on a prod device, especially running commands like that
+11:33:59 <mxnorvak[m]> yeah ive exprienced breaking things as ive uninstalled some apps i shouldnt have and was forced to do a factory reset to set things back to normal again
+11:34:10 <strcat> something might be broken right now
+11:34:14 <strcat> and you just don't realize
+11:34:27 <strcat> and now bug reports from you can't be taken
+11:34:40 <strcat> if you do stuff like that you're outside of what can be supported
+11:34:44 <strcat> you should disable apps in Settings
+11:34:47 <strcat> not via adb
+11:34:53 <dazinism> strcat: thry arent on GrapheneOS, but stock Xiaomi
+11:35:05 <strcat> ah
+11:35:08 <mxnorvak[m]> but then there's no other option to debloat stock apps from other R
+11:35:09 <mxnorvak[m]> yeah
+11:35:35 <mxnorvak[m]> <strcat "if you do stuff like that you're"> just to be clear, im not using GrapheneOS rn
+11:35:51 <strcat> didn't realize that
+11:36:03 <mxnorvak[m]> but the option isnt available to disable app in setting for stock apps and bloatware in MIUI
+11:36:09 <mxnorvak[m]> yeah :(
+11:38:15 <mxnorvak[m]> but i ended up using lineage again, some stock apps on xiaomi are so badly built into the OS and also creating different user profiles as a means to isolate let say whatsapp didnt work
+11:39:47 <mxnorvak[m]> <dazinism "mxnorvak: theres the, now archiv"> what is this? could you tell me more about it?
+11:41:22 <mxnorvak[m]> <mxnorvak[m] "but i ended up using lineage aga"> i mean the process for setting up user profiles kept failing
+11:42:06 <dazinism> mxnorvak: the projects legacy reddit is at r/copperheados
+11:42:27 <dazinism> From before the project split from Copperhead
+11:42:43 <dazinism> Daniel set up and ran that reddit
+11:44:23 <limitless0[m]> strcat (@freenode_strcat:matrix.org): just leave subreddit as read only and pin a comment of this room  of whoever has questions. Why do you always have to answer every question to that level of detail seriously!
+11:46:22 <strcat[m]> because the alternative is not approving the posts
+11:46:26 <strcat[m]> and then people get mad
+11:46:29 <strcat[m]> and start drama
+11:46:45 <strcat[m]> if I just approve them without answering it's a cycle of misinformation being spread
+11:46:51 <strcat[m]> the subreddit does a lot more harm than good
+11:49:29 <mxnorvak[m]> <dazinism "Daniel set up and ran that reddi"> I"ll check it, thanks
+11:50:04 <limitless0[m]> I was on subreddit before You made me aware of this room,i aswell had questions as many others and used the search on reddit,but i just think its a waste of energy really.i mean its up to you how much you can handle but to just pin a page and say no new posts and link to this room.
+11:50:20 <dazinism> >I"ll check it, thanks
+11:50:53 <mxnorvak[m]> > <@DzzzzzzR:matrix.org> Daniel set up and ran that reddit
+11:50:53 <mxnorvak[m]>  * I'll check it, thanks
+11:51:05 <dazinism> If theres a question about Graphene Searching on both reddits for info can be very useful
+11:52:18 <limitless0[m]> Dont approve any posts,whoever dont make an effort to create an account and join this room then whats the point of every question that its not that are serious questions cos 99% of them have been asked and answered before by you or other people
+11:52:24 <limitless0[m]> Over and out
+11:55:08 <limitless0[m]> strcat (@strcat:matrix.org): i mean : "is this automated copy and paste response?"
+12:01:42 <mxnorvak[m]> <dazinism "If theres a question about Graph"> do you know if its possible to move files between different users in a device, to and from admin user to other users, i've searched but didnt find a way
+12:01:49 <dazinism> strcat : I'm thinking of setting up a community wiki for GrapheneOS
+12:01:57 <strcat> mxnorvak[m]: it's not possible to share data or communicate across profiles
+12:02:07 <dazinism> mxnorvak: no, theres no way
+12:02:29 <mxnorvak[m]> ah alright
+12:03:38 <dazinism> Can set up something like nextcloud or if you want e2e encryption riot to transfer files
+12:04:13 <mxnorvak[m]> do you guys use any EXIF app to remove metadata from pictures or file between sharing em?
+12:04:43 <mxnorvak[m]> <dazinism "Can set up something like nextcl"> yeah, or maybe just managing it locally by a pc or something
+12:05:02 <mxnorvak[m]>  * do you guys use any EXIF app to remove metadata from pictures or file beforesharing em?
+12:05:07 <mxnorvak[m]>  * do you guys use any EXIF app to remove metadata from pictures or file before sharing em?
+12:05:24 <dazinism> Think can use USB storage also
+12:05:53 <mxnorvak[m]> yeah i gotta try that one
+12:06:28 <dazinism> I tried and it worked for me, although someone here reported it wasnt successful
+12:07:39 <grapheneosuser[m> > strcat : I'm thinking of setting up a community wiki for GrapheneOS
+12:07:39 <grapheneosuser[m> Please do
+12:08:20 <cx2[m]> <mxnorvak[m] "do you guys use any EXIF app to "> Phone or Desktop?
+12:09:11 <mxnorvak[m]> cx2: phone but using on in desktop would be nice too
+12:10:25 <cx2[m]> Scrambled Exif.... you don't really get a report of what was there, or was cleaned. BUT mat2 on desktop cli will..... mat2 uses code from Scrambled Exif
+12:12:12 <mxnorvak[m]> cx2:but Scrambled Exif works as intended right? without the report to make sure it did
+12:14:18 <cx2[m]> From what I can tell, yes. I have run jpegs through it, then sent it to desktop and they were effectively sanitized. That said, because it doesn't print a report or anything, I wouldn't do anything sensitive with it.
+12:14:19 <cx2[m]> I will say that because of it's inclusion into mat2's code, it would make me believe that it's effective.
+12:16:20 <cx2[m]> https://gitlab.com/juanitobananas/scrambled-exif/-/releases
+12:16:20 <cx2[m]> https://0xacab.org/jvoisin/mat2/-/releases
+12:17:35 <mxnorvak[m]> thank you :)
+12:26:15 <mxnorvak[m]> <dazinism "I tried and it worked for me, al"> it works, although im thinking it'd increase the wear and tear on the usb port , good thing its usb type c, image if it was micro usb !
+12:29:42 <dazinism> Wonder if theres such a thing as a super slimline USB C storage?
+12:45:41 <mxnorvak[m]> the users were 12 and 13
+12:46:26 <mxnorvak[m]> i guess 10 and 11 are for work profile and guest user
+12:48:46 <dazinism> mxnorvak: not sure, thought I'd had either 10 or 11 in the past, before I used a work profile, and I dont think I've ever used guest.
+12:51:04 <dazinism> Was wondering if a ultra slimline USB C flash could stay in semi permanently, especially if protected by bulkiness of a fatter phone case. But a quick search, they all look too big
+12:52:05 <mxnorvak[m]> a question about PWA, ive read that facebook trackers go far beyond just the page you're in and actually analyze your other open tabs as well, i dont know if this i factually correct tho
+12:52:09 <mxnorvak[m]> in this case
+12:52:25 <mxnorvak[m]> would using twitter as a PWA in bromite be any safe?
+12:52:47 <dazinism> Guess the slimline standard USB flash has a part/most the chip inside the port.
+12:54:25 <mxnorvak[m]> would the per tab sandbox of chromium be any good in this case?
+12:56:02 <mxnorvak[m]> <dazinism "Was wondering if a ultra slimlin"> i think even the smallest ones look too big for a phone
+13:00:06 <dazinism> mxnorvak: for twitter tracking,  think its more they set cookies & webpages that have 'share on twitter' buttons may automatically share data about visitors with Twitter (those pages run twitter code)
+13:00:21 <mxnorvak[m]> maybe if SanDisk Ultra Fit series had a usb c version that would have been nice
+13:01:08 <dazinism> That is certainly the way Facebook do/did do it
+13:02:03 <dazinism> The also wouldnt let people use their logo on their page (a Facebook button) without that page/button running Facebook tracker code
+13:02:28 <dazinism> All this was a few years back, not been following how things have progressed
+13:03:18 <mxnorvak[m]> hmm so that seem like it doesnt have anything to do with the browser you use
+13:04:24 <dazinism> Well I guess theres ways to stop them doing that, bit also ways they can work around you trying to stop them
+13:04:52 <dazinism> (Eg.browser fingerprinting )
+13:05:58 <mxnorvak[m]> yeah there's that
+13:06:11 <mxnorvak[m]> but in terms of privacy and security
+13:06:15 <mxnorvak[m]> which would be the best?
+13:06:35 <mxnorvak[m]> the offical app, a client or PWA
+13:07:37 <dazinism> Maybe a independent client
+13:08:11 <dazinism> I've used twidere in the past, it stopped getting updates, but I notice they are working on it again
+13:09:34 <dazinism> Has been problems setting it up with twitter, I heard some failed, some succeeded.
+13:10:08 <dazinism> Due to limiting the amount of connections that can be made.
+13:11:01 <dazinism> This didnt used to be a problem, the developer worked around the limitations, but when they dropped support, they also dropped the work around
+13:11:21 <dazinism> Now they are working on it again, I guess maybe the workaround is back?
+13:12:05 <dazinism> I'd suggest you check the issues on their github if you interested
+13:12:41 <mxnorvak[m]> sure , i'll check it out
+13:13:39 <dazinism> Its usable without granting storage permission, although IIRC does leave some data in shared
+13:14:07 <dazinism> So best to use it in a profile where only very trusted apps have storage permission
+13:15:12 <mxnorvak[m]> aha ok
+13:19:04 <mxnorvak[m]> btw speaking of profiles and users, read somewhere that its a good practice to create a second account in windows and always be on that for daily usage as it doesnt have admin permissions and malwares cant autoinstall themselves and stuff, would that also apply to android, creating a user profile and having that as the daily user to limit access, although apps on android user profiles arent shared the same way they
+13:19:04 <mxnorvak[m]> are in windows and i guess storage works differently too
+13:25:47 <nscnt> Android has a good lockdown already. It has a permission model and apps are sandboxed (and many other things I probably still don't know).
+13:26:46 <nscnt> mxnorvak[m]: A use case for a different user on Android would be if you don't want an app to known what other apps you have installed.
+13:29:51 <nscnt> You don't get real security benefits when using a different user profile as a daily user as far as I could imagine.
+14:41:25 <cx2[m]> Any ideas as to why the VLC app offered from VideoLan.org is version 3.2.9, and the one on F-Droid is 3.2.11?
+14:41:25 <cx2[m]> This seems a bit odd... what am i missing?
+14:42:40 <cx2[m]>  * Any ideas as to why the VLC APK offered from VideoLan.org is version 3.2.9, and the one on F-Droid is 3.2.11?
+14:42:40 <cx2[m]> This seems a bit odd... what am i missing?
+14:43:15 <cx2[m]>  * Any ideas as to why the VLC APK offered from VideoLan.org is version 3.2.9, and the one on F-Droid is 3.2.11 and 20 days ahead?
+14:43:15 <cx2[m]> This seems a bit odd... what am i missing?
+14:53:27 <nscnt> VideoLan just offers the apps through the app stores, right?
+14:53:52 <nscnt> It's just a HTML paragraph saying 3.2.9
+14:54:19 <nscnt> It's the latest version in the app stores
+14:55:10 <nscnt> You're missing that if they don't automate the website changes, it'll stay 3.2.9 as a string
+14:56:16 <nscnt> Ah missed that apk mirror
+14:58:08 <nscnt> Probably just didn't update it idk
+15:01:46 <nscnt> They probably just don't care about the mirror
+15:03:05 <nscnt> Take a look at vlc-android releases
+15:08:33 <nscnt> It's just the case: The app stores are more up-to-date than the apks in their mirrors because they haven't updated it.
+15:11:36 <cx2[m]> That's sort of what I figured....but seemed a bit off.
+15:11:36 <cx2[m]> Extremely popular that nearly everyone downloads.... on F-Droid.... seems like a juicy target.
+15:11:48 <cx2[m]>  * That's sort of what I figured....but seemed a bit off.
+15:11:48 <cx2[m]> Extremely popular app that nearly everyone downloads.... on F-Droid.... seems like a juicy target.
+15:16:23 <nscnt> Don't make a story out of it. It's just what it is.
+15:20:09 <DannyWorkOrderPr> renlord (@freenode_renlord:matrix.org)
+15:20:09 <DannyWorkOrderPr> > what if i wanna play games while it builds?
+15:20:09 <DannyWorkOrderPr> *considers putting up an Urban Terror server for the Graphene community* haha - anyone ever played?
+15:21:03 <DannyWorkOrderPr> TheJollyRoger: Thanks for the CTS doc! will start Verizon/stock testing ASAP.
+15:23:06 <cx2[m]> <nscnt "Don't make a story out of it. It"> Yes sir! I will disregard some fairly obvious irregularities, sir!
+15:29:34 <nscnt> DannyWorkOrderPr: I've never heard of it.
+15:29:46 <nscnt> Looks like a self-made CS: GO lol
+15:30:38 <DannyWorkOrderPr> <nscnt "Looks like a self-made CS: GO lo"> Now with less RCE!
+15:31:44 <nscnt> Not sure what's meant with 'RCE'
+15:32:33 <DannyWorkOrderPr> Remote code execution. CS:GO and Team Fortress 2 code leaked recently/has reportedly been leaked for some time. Has not faired well, security-wise.
+15:33:48 <DannyWorkOrderPr> Besides that consideration, I find Urban Terror MUCH more fun! Jump off of walls into a power slide, and let the gun eat as you slide across a doorway, etc haha
+15:34:21 <DannyWorkOrderPr> cx2 The VLC team has always seemed to be app-store first. They get into every store ASAP (including early adoption of Windows app store, even RT!), so, makes some sense they're focused there.
+15:35:24 <cx2[m]> Danny@WorkOrderPro: Good info, I had absolutely no idea.  Thanks!
+15:36:30 <DannyWorkOrderPr> Your centralization concerns surrounding F-Droid are reasonable, and reflex the views of some here. I love Bromite's choice to use their own F-Droid-compatible repo.
+15:36:56 <DannyWorkOrderPr> s/reflex/reflect
+15:38:00 <cx2[m]> In all fairness, I wasn't TOO Terribly concerned, but it was certainily a bit odd.
+15:40:00 <DannyWorkOrderPr> Re-reading, I see you only meant VLC on F-Droid, not F-Droid itself - sorry for misrepresenting your statement! My comments still stand =]
+15:43:08 <DannyWorkOrderPr> <DannyWorkOrderPr "Besides that consideration, I fi"> Last OffTopic gaming comment: Urban Terror is (intentionally, lol) open source, a passion-project, and the long-term community reminds me very much of the IRC crowd. Super neat.
+15:44:04 <cx2[m]> Well, no, in no way do I claim to be an expert... definitely have learned a thing or two here, too include some interesting facts about F-Droid. That said I happened across this issue for the very reason that I generally don't have an issue with F-Droid - I check the app against Git just out of comfort. As such, I don't really have too many apps and the ones that I do, are very well maintained. I figure, as long as I stay
+15:44:05 <cx2[m]> away from those that are less maintained, even if they aren't quite abandoned, then I should be on pretty solid footing
+15:49:02 <DannyWorkOrderPr> I'd say that people here are much less interested in bad/insecure project code being loaded into F-Droid as they are a potential F-Droid breach causing otherwise good apps to be backdoored in some way, because they hold the keys and the app dev does not.
+15:49:55 <DannyWorkOrderPr> At least, that's how it's sounded to me - the above is not speaking for anyone else, my interpretation of discussion I've witnessed, is all.
+15:51:34 <pachiplushi[m]> Hello, is there a download available for the Pixel 1? I know its not supported anymore obviously.
+15:56:50 <Hirppa> No, but you can always compile GrapheneOS for Pixel 1 by yourself (for yourself)
+15:58:53 <Hirppa> Pixel 1 no longer receives security updates from Google, so that's why GrapheneOS developers have dropped support for it
+16:37:51 <strcat> Hirppa: would need to add back support for it to the sources and then build
+16:38:01 <strcat> not much work
+16:38:23 <strcat> til Android 11 then it'll be more work
+16:38:47 <strcat> atm basically just need to revert the commit removing it and copy over the small set of per-device commits GrapheneOS has and maybe some minor things it's missing upstream
+17:02:25 <Hirppa> yeah
+17:07:56 <strcat> google's new webmaster tools are such garbage
+17:08:06 <strcat> need to see if bing or yandex can give me part of what they screwed up
+17:08:22 <strcat> I liked being able to look through links to the site particularly 404s
+17:08:37 <strcat> people make a LOT of broken links and you can salvage them with redirects
+17:09:50 <strcat> love how Bing supports myspace profiles but not twitter
+17:11:35 <madaidan[m]> People still use myspace?
+17:11:55 <strcat> bing is terrible
+17:11:58 <strcat> it has barely indexed the site
+17:14:21 <DannyWorkOrderPr> > People still use myspace?
+17:14:21 <DannyWorkOrderPr> Unsigned-by-major-label musicians/bands, mostly.
+17:19:50 <madaidan[m]> I've only really seen it used for those internet safety videos
+17:34:38 * DannyWorkOrderPr uploaded an image: Screenshot_20200424-132744.png (206KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/uFbKNcYQbDQhXavJkjtPsUqb >
+17:34:59 <DannyWorkOrderPr> At least they're (somewhat) forthcoming about their weaknesses!
+17:38:48 <strcat> process per site also != site isolation
+17:38:51 <strcat> at all
+17:39:05 <strcat> things can be in separate processes and not sandboxed semantically from each other
+17:43:24 <madaidan[m]> <DannyWorkOrderPr "At least they're (somewhat) fort"> Not all the time
+17:43:58 <madaidan[m]> Like that time Tom Ritters tried to pretend mozjemalloc is a hardened malloc
+17:54:18 <anupritaisno1[m]> strcat (@freenode_strcat:matrix.org): trying to add back exec spawning
+17:54:35 <anupritaisno1[m]> Where did you make changes for it? I found these
+17:54:35 <anupritaisno1[m]> frameworks/base
+17:54:35 <anupritaisno1[m]> libcore
+17:54:56 <strcat[m]> you also need that rro change
+17:56:41 <anupritaisno1[m]> Done
+17:57:42 <anupritaisno1[m]> https://github.com/GlassROM/android_frameworks_base/compare/23c4fde776a1...fa3fc28f670f
+17:57:56 <anupritaisno1[m]> Ignore that
+17:58:02 <anupritaisno1[m]> https://github.com/GlassROM-devices/android_device_oneplus_sm8150-common/compare/51a4021ace6a...e34028a3d89a
+17:58:42 <anupritaisno1[m]> strcat (@strcat:matrix.org): would you know where to copy the firmware to?
+17:59:01 <anupritaisno1[m]> I think my device has 30+ firmware partitions
+18:53:05 <cx2[m]> Pretty good read that should warm TheJollyRoger 's soul....
+18:53:05 <cx2[m]> https://latacora.micro.blog/2019/07/16/the-pgp-problem.html
+19:00:36 <cx2[m]> hahah...
+19:00:36 <cx2[m]> >We can't accept bad cryptosystems just to make Unix nerds feel better about their toys.
+19:20:21 <TheJollyRoger> Hehehe. Yeah, I've read that one, it hits pretty hard. Indeedy, for a while I've been trying to write a new handbook for GPG, just... there's a lot of work involved. >_<
+19:21:27 <TheJollyRoger> DannyWorkOrderPr: I'll have more stuff coming for the CTS and I also uploaded a form to fill out in text, which is how we should be sending in the reports. I'll get back to you more on it later today!
+19:46:50 <DannyWorkOrderPr> Awesome
+19:50:11 <TheJollyRoger> Yep, expect an update today.
+20:55:51 <TheJollyRoger> DannyWorkOrderPr: https://github.com/Peter-Easton/GrapheneOS-Knowledge/blob/master/For%20Testers/The-Compatibility-Test-Suite.md
+20:55:56 <TheJollyRoger> Here's for you!
+21:15:11 <anupritaisno1[m]> https://github.com/GlassROM-devices/android_kernel_oneplus_sm8150/commit/80f5c279003b893bc117d9084f164d60d737c961
+21:15:19 <anupritaisno1[m]> Feel free to adapt it
+22:20:19 * anupritaisno1[m] uploaded an image: Screenshot_20200425-034934_Settings.png (200KB) < https://matrix.org/_matrix/media/r0/download/m.apex.to/EohsThLTBQnPCflhQYyeXTUc >
+22:20:22 <anupritaisno1[m]> strcat seems rro did the trick
+22:37:05 <TheJollyRoger> Argh. Sorry about bouncing so much, guys. I think I've almost fixed it.
+22:54:46 <anupritaisno1[m]> Strcat do you mind if I import your pdfviewer as a subtree?
+22:58:54 <anupritaisno1[m]> https://github.com/GlassROM/android_vendor_flossprebuilts/commit/4474c3c38802e75b3d5ee28d67526f57732dca9b

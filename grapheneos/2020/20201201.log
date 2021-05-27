@@ -1,0 +1,148 @@
+00:02:34 <textmate> im going to bed now
+00:51:27 <Dylanger[m]> TheJollyRoger: There's no eUICC support
+00:51:37 <Dylanger[m]> https://github.com/microg/GmsCore/issues/1282
+00:52:07 <Dylanger[m]> I've asked someone to implement an LPA into microG, but I doubt anyone will end up doing it, it's a huge task
+00:52:07 <TheJollyRoger> Oh, I see. Whoops.
+00:52:13 <TheJollyRoger> Yikes.
+01:24:58 <louipx> what is that
+01:32:11 <rny> telcos are just lazy
+01:32:14 <rny> T_T
+01:51:49 <Lia[m]> Relatable
+03:14:43 <strcat[m]> Dylanger: it should be done as a standalone app
+03:15:35 <Dylanger[m]> That would break permission model tho
+03:16:05 <Dylanger[m]> Standalone apps shouldn't be allow to send raw ADPUs to ICCs
+03:16:12 <Dylanger[m]>  * Standalone apps shouldn't be allowed to send raw ADPUs to ICCs
+03:58:50 <strcat[m]> Dylanger: it's a priv-app
+03:59:00 <strcat[m]> I don't see why it would go in microG
+03:59:06 <strcat[m]> it has nothing to do with Google services
+04:01:31 <Dylanger[m]> Google has created an LPA backend
+04:01:38 <Dylanger[m]> So there are other apps that rely on these APIs
+04:01:48 <Dylanger[m]> Slam that bad boi into microG
+04:01:53 <Dylanger[m]> All of the other LPAs will start working
+04:03:16 <Lia[m]> Won't that result to no-op when microG is a user app?
+04:03:44 <Dylanger[m]> This isn't strictly related to GOS, etcetc
+04:06:36 <rny> cant telcos directly implement the eUICC api?
+04:06:44 <rny> why give in to the play services cartel
+04:06:47 <rny> rebel pls
+04:07:46 <Dylanger[m]> Your telco can use do all sort of fun stuff from the UICC
+04:08:04 <Dylanger[m]> Launch browser, make  calls etc
+04:08:18 <Lia[m]> SIMs are insecure anyways /jk
+04:08:44 <Dylanger[m]> Their secrets hard actually quite hard to extract
+04:09:04 <Dylanger[m]> Had some success maybe with side channel Vcc glitching
+04:09:14 <Dylanger[m]> There's a specification, RAT or something I forget
+04:09:21 <Dylanger[m]> Allows SIM - Modem calls
+04:19:11 <Dylanger[m]> ETSI TS 102 223
+04:19:12 <Dylanger[m]> That bad boi right ter
+04:19:15 <Dylanger[m]>  * That bad boi right there
+04:20:57 * Dylanger[m] uploaded an image: Screenshot_2020-12-01_15-20-18.png (118KiB) < https://matrix.org/_matrix/media/r0/download/diagnostix.io/BNgcGHeckqmCyNgpYIkjPXNf/Screenshot_2020-12-01_15-20-18.png >
+04:20:59 * Dylanger[m] uploaded an image: Screenshot_2020-12-01_15-19-59.png (132KiB) < https://matrix.org/_matrix/media/r0/download/diagnostix.io/rplqcnyqoPHFjYvcdTEnUohz/Screenshot_2020-12-01_15-19-59.png >
+04:21:37 <Dylanger[m]> > requesting the terminal to launch the browser corresponding to a URL (if class "ab" is supported)
+04:21:37 <Dylanger[m]> 👌
+04:24:29 <rny> i see
+04:24:37 * rny feels naked
+04:25:10 <rny> maybe we should write the LPA
+04:25:47 <Dylanger[m]> That's a suuuuuper heavy order, I doubt anyone will write it
+04:26:09 <Dylanger[m]> Hopefully Google or someone else opens what they have, looots of logic going on backend LPAs
+04:27:12 <Dylanger[m]> > * <@freenode_rny:matrix.org> feels naked
+04:27:12 <Dylanger[m]> The API above has nothing to do with an LPA/eSIM at all, literally any/all network providers can write Applets that can get advantage of the stuff above
+04:47:06 <rny> Dylanger[m]: dont they interface via the LPA though?
+04:47:40 <JTL> > 20:07 <Dylanger[m]> Your telco can use do all sort of fun stuff from the UICC
+04:47:44 <JTL> SIM toolkit?
+04:58:22 <Coffee[m]1> Hey all. I bought a 4a today and am about to install Graphene on it. It is on Android 11. Anything i should be aware of before following the installation guide on the GOS website?
+05:07:04 <Lia[m]> <Coffee[m]1 "Hey all. I bought a 4a today and"> Bootloader should be unlockable and not from verizon?
+05:07:56 <rny> lol also remember to check if "secure boot: yes"
+05:08:40 <rny> maybe oems in the wild
+05:12:30 <Coffee[m]1> <Lia[m] "Bootloader should be unlockable "> Carrier Unlocked, yes
+05:12:48 * Lia[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/EOGNxfTPRitUVhTOMiRJLKAq/message.txt >
+05:13:03 <Lia[m]> <rny "lol also remember to check if "s"> Has to be production build, one can see in bootloader interface
+05:13:17 <Coffee[m]1> I meant bootloader unlockable
+05:13:51 <Coffee[m]1> Not from verizon.
+05:15:50 <Lia[m]> Then feel free to flash GrapheneOS ^^
+05:16:00 <Coffee[m]1> Doing it now
+05:29:09 * brenneke[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/tTePhSwLwKNQukTXJqWDdbCO/message.txt >
+05:31:16 * Lia[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/DlwBWxAdEqbqiMWHfgMVybEt/message.txt >
+05:32:28 <brenneke[m]> Yup.
+05:33:45 <Lia[m]> Okay, that's odd. I found success on Windows, but not on Ubuntu
+05:41:25 <madd_hatter[m]> I had no issue on Win once updated.
+07:35:18 <Pratyush[m]> <Lia[m] "Okay, that's odd. I found succes"> i guess because ubuntu suggest adb fastboot old outdated package.
+07:52:17 <Coffee[m]1> Just checking in to say GOS installed flawlessly on Pixel 4a. Just relocked the bootloader and tinkering with Graphene settings. This OS is amazing! I'm gonna donate to the project!
+08:00:21 <nscnt> Coffee[m]1: Glad you like it! c:
+09:41:42 <arisu[m]> yeah overall the easiest OS to flash graphene is windows honestly
+09:41:43 <arisu[m]> the only cons is you can't use signify but it's not a big deal
+10:05:13 <dar_gomml[m]> <arisu[m] "the only cons is you can't use s"> u can use 7zip to calc checksums too
+10:59:00 <anupritaisno1[m]> dar_gomml: I'm not aware of graphene providing checksums
+10:59:13 <anupritaisno1[m]> Also checksums are a guarantee of integrity at best
+10:59:23 <anupritaisno1[m]> They do not guarantee authenticity
+10:59:26 <arisu[m]> ^
+11:00:04 <anupritaisno1[m]> So it really isn't the same level of security as signify
+11:00:51 <arisu[m]> you don't even need 7zip for checksum anyway, GetFile-Hash gets the work done
+11:02:34 <anupritaisno1[m]> arisu: get-filehash
+11:02:35 <arisu[m]>  * you don't even need 7zip for checksum anyway, Get-FileHash gets the work done (i dont re
+11:02:35 <arisu[m]>  * you don't even need 7zip for checksum anyway, Get-FileHash gets the work done
+11:02:38 <arisu[m]> yeah i just corrected at the same time you sent lol
+11:06:04 <anupritaisno1[m]> arisu: I personally wouldn't recommend 7-zip at all
+11:06:33 <anupritaisno1[m]> They don't even do code signing correctly so you don't even know if you are downloading a correct 7-zip executable
+11:07:09 <anupritaisno1[m]> So you get a chicken and egg problem
+11:07:34 <anupritaisno1[m]> And the install guide does recommend against that
+11:08:37 <arisu[m]> they don't do code signing at all, putting a name without a cert isn't a signature
+11:09:22 <anupritaisno1[m]> A compromised signify would be able to compromise your OS and the GrapheneOS download due to the lack of an application security model on traditional operating systems. It would be worse than not trying to verify the signatures. It's far less likely that our servers would be compromised than someone's GitHub account or GitHub itself.
+11:09:28 <anupritaisno1[m]> Replace signify with 7-zip
+11:09:36 <arisu[m]> i used peazip in the past but it was kind of sluggish
+11:09:40 <anupritaisno1[m]> You can't verify it since they don't sign it
+11:10:27 <arisu[m]> and yet it's on winget manifests, it's definitely odd
+11:10:40 <arisu[m]> no auto update either
+11:10:43 <anupritaisno1[m]> arisu: ideally what we should do is
+11:10:56 <anupritaisno1[m]> Maybe do a minimal signify -V implementation
+11:11:17 <anupritaisno1[m]> But that isn't a solution exactly
+11:12:10 <anupritaisno1[m]> Because the problem here is that you need a way to verify the signify binary
+11:14:16 <arisu[m]> yeah well, it's kind of complicated ; best approach to this is using arch
+11:14:59 <arisu[m]> but who knows what the future holds, perhaps microsoft will implement signify natively as they are working on Android
+11:29:23 <anupritaisno1[m]> Microsoft doing android (allegedly) is not related to signify support in any way
+11:30:31 <arisu[m]> i know, but maybe they'll implement it one day or another
+11:30:58 <anupritaisno1[m]> Why would Microsoft do it?
+11:31:06 <anupritaisno1[m]> Signify is a third party thing
+11:31:22 <anupritaisno1[m]> Microsoft already has a sane signing option built into the OS
+11:32:06 <anupritaisno1[m]> Anyway please move this to OT
+11:38:24 <anupritaisno1[m]> Also we are choosing to use signify
+11:38:34 <anupritaisno1[m]> It isn't an android thing
+12:13:03 <SkyFox[privacyto> Iirc, Minisign can verify Signify signatures
+12:36:21 <strcat> not the kind used by GrapheneOS for factory images
+12:39:14 <strcat[m]> SkyFox [privacytools.io]: signify uses direct signing with ed25519 without pre-hashing
+12:39:35 <strcat[m]> which means you need to hold the entire file being signed in memory
+12:39:39 <strcat[m]> and it takes a long time for a long file
+12:40:45 <strcat[m]> what they did is support signing traditional BSD checksum files with sha256 or sha512 as the algorithm
+12:41:05 <strcat[m]>  * what they did is support verifying traditional BSD checksum files with sha256 or sha512 as the algorithm and an inline signify signature
+12:41:18 <strcat[m]> that's what GrapheneOS uses for releases
+12:41:44 <strcat[m]> so, you could perhaps use minisign to verify the inline signature, but then you'd need to extract the checksum file and verify that with a tool able to do that
+12:41:52 <strcat[m]> signify has that built-in
+12:42:14 <strcat[m]> look at the content of one of the signature files
+13:50:05 <ruddo[m]> <strcat[m] "which means you need to hold the"> That seems like a very dumb design decision from the Signify people.  In that particular and obvious sense, the tool they intended to replace (GPG) is actually better.  I can't imagine using Signify to validate a file in excess of 8 GB in size (e.g. an OS installer) on most consumer hardware.
+13:50:21 <ruddo[m]> Can't they at least `mmap` the file they are about to verify?
+13:51:09 <strcat[m]> ruddo: you're supposed to use the signed checksum files as we do
+13:51:11 <strcat[m]> and as OpenBSD does
+13:51:47 <strcat[m]> signify knows how to verify them
+13:52:39 <strcat[m]> they did it this way to reuse the concept of BSD checksum files for the hashing part
+16:13:13 <brenneke[m]> <Lia[m] "Okay, that's odd. I found succes"> I also had no success with Ubuntu when following the GOS install guide.
+16:15:04 <strcat[m]> https://grapheneos.org/install#obtaining-fastboot
+16:15:18 <strcat[m]> the guide now recommends installing the out-of-date distribution package with udev rules on Debian and Ubuntu
+16:15:32 <strcat[m]> because it's still good enough for Pixels since their device type ids haven't changed
+16:15:48 <strcat[m]> allows doing the rest as non-root
+17:35:50 * MattV111[m] uploaded an image: Screenshot_20201201-123500.png (53KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/gbxeTGqHgsWxJEdeyvbAisPv/Screenshot_20201201-123500.png >
+17:36:10 <MattV111[m]> I've been getting that error since 11/27 update.
+17:36:34 <MattV111[m]> It worked fine previously
+17:37:13 <MattV111[m]> I'm on Pixel 4 XL TMobile
+17:37:33 <MattV111[m]> T-Mobile service unlocked pixel
+18:01:51 <strcat[m]> very unlikely that it's caused by that update
+18:02:16 <strcat[m]> more likely it broke with your carrier somehow and you only noticed after a reboot
+20:49:36 <arisu[m]> cannot wait to get sunfish tomorrow (according to DHL) to see the difference with sargo
+20:52:55 <Coffee[m]1> Is it safe to disable 'OEM unlocking' in developer settings after Graphene is installed? I dont want anyone messing with my bootloader if I leave my phone unattended
+20:55:04 <Coffee[m]1> Oh nvm, i see it in the instructions! Duh
+21:50:30 <certainindividua> <arisu[m] "cannot wait to get sunfish tomor"> Works like a dream in my experience. Enjoy.
+22:37:05 <jayell[m]> having a few issues with new pixel 4a on GOS. i do not have a 'voicemail' tab in the phone app. on my previous 'android-hardening-variant-that-shall-not-be-named' (cu hd) the 4th tab 'voicemail' appeared fine. i am on verizon. within the app choosing 'settings->voicemail->advanced settings->setup' simply takes me to a 'voicemail number' page which shows '*86' . how can i get this functionality to work? i cannot go back
+22:37:05 <jayell[m]> to calling '*86' every day :):):)
+22:40:55 <certainindividua> Never seen that tab anywhere on any OS, but that doesnt mean anything and doesnt help you. Maybe add it to your speed dial? Then it's just a click away. Or even add it to your start screen.
+22:53:59 <jayell[m]> all androids i have ever seen have 'visual voicemail' or whatever you want to call it. and certainly ios has it. not sure what you mean ny 'never seen it on any OS'. clearly it was in my earlier hardened android so im sure its part of AOSP also. i did not have to make any changes for it to work previously. adding to speed dial does nothing towards knowing that you actually have a voicemail to check . . .
+23:07:04 <hypokeimenon[m]> certainindividual: nice avatar
+23:17:34 <jayell[m]> my mistake, visual voicemail is some sort of voice to text nonsense. what i am trying to restore is simply the ability to view all voicemails and easily play,save, or delete. all without dialing another number. all versions of android (including hardened) have had this functionality.
+23:36:14 <Lia[m]> <jayell[m] "my mistake, visual voicemail is "> https://github.com/GrapheneOS/os_issue_tracker/issues/356
+23:37:33 <Lia[m]> https://github.com/GrapheneOS/os_issue_tracker/issues/153#issuecomment-734263067

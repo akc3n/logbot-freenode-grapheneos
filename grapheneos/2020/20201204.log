@@ -1,0 +1,269 @@
+00:00:50 <kevr> question: flashing a pixel 4a, are there any special cases where a release for pixel 4a would brick the device, or is it relatively safe for all revisions etc?
+00:03:24 <anima[m]> I flashed my sunfish yesterday , 0 issues
+00:09:19 <TheJollyRoger> Hello kevr, the only reason that you would end up softbricking is if you use an old version of fastboot and attempt to bypass the fastboot version check.
+00:10:17 <TheJollyRoger> Rumour has it that if you attempt to write a 4a image to a 4a5G phone, it will hardbrick. So don't do either of those things.
+00:11:29 <anima[m]> it have to be intentional, given you have codename in fast boot menu...
+00:15:27 <kevr> TheJollyRoger • is there an reference to the rumor or why it became a rumor?
+00:15:42 <kevr> TheJollyRoger • thank you, by the way, for the quick reply and help!
+00:17:13 <anima[m]> as long as you follow the guide , you will never have issues
+00:17:57 <kevr> that's a bold claim :o
+00:18:40 <JTL> kevr: Someone in another channel claims to have done it :|
+00:19:18 <louipc> i kinda wanna try
+00:21:23 <TheJollyRoger> kevr: I call it a rumour, because someone in another channel mentioned to have hardbricked their 4a5G by attempting to put a 4a image on it. Supposedly, there is a check in place to prevent that from happening, but so far we haven't been able to confirm this.
+00:21:29 <TheJollyRoger> So that's why I say "rumour has it."
+00:22:52 <TheJollyRoger> kevr: outside of that, what we've also had happen is that people have been following a guide on the internet that advocates using a third-party fastboot, and another person has been advocating to remove the versioning check.
+00:23:50 <TheJollyRoger> What typically happens if you do both of those -- tampering with the versioning safety check and using nonstandard fastboot from shady sources -- is that older or incorrectly versioned releases of fastboot may not support autodetection, and may install the operating system to the incorrect A/B partition.
+00:24:16 <TheJollyRoger> This isn't the end of the world, but it does mean you'll get the "No Operating System found" error, and your phone will not boot.
+00:24:50 <TheJollyRoger> If you do that, then you simply will need to start all over again and get the correct version of fastboot and NOT REMOVE THE SAFETY CHECK from the installation script.
+00:25:12 <TheJollyRoger> Aside from that, Pixels are built like tanks, they're difficult to brick.
+00:25:15 <kevr> i gotcha.
+00:25:28 <kevr> nice :)
+00:25:32 <TheJollyRoger> Yep!
+00:25:34 <kevr> thanks a lot!
+00:25:46 <TheJollyRoger> Anytime! Anything else I could answer for you?
+00:27:00 <kevr> I should be okay, I'll just follow the guide; if I get stuck I'll ask around in here. Looks pretty straightforward and complete though
+00:27:32 <TheJollyRoger> Sure! Yes, the guide is your best bet.
+00:27:40 <TheJollyRoger> Correction: the *official* guide!
+00:27:52 <kevr> i'm quite glad you guys actually have this channel, searching around google for custom roms on android generally freaks me out and super risky
+00:27:56 <kevr> (and the guide)
+00:28:01 <kevr> *official guide :P
+00:28:05 <TheJollyRoger> If you are installing from a Linux host, you will need udev rules to permit your device to pass through.
+00:28:32 <kevr> will keep that in mind
+00:28:35 <TheJollyRoger> Yep! Well, the good news is, GrapheneOS is not really a "custom ROM" - it's a full production-quality release, with signed releases and over the air updates.
+00:28:48 <kevr> neato
+00:29:16 <TheJollyRoger> Releases are not done as userdebug builds, the way LineageOS does them, they're realesed as full factory images, the way Google would release them.
+00:29:38 <TheJollyRoger> Be sure to lock your bootloader after installation, because that's what completes the installation; each instance of GrapheneOS on a given class of device is signed, verified, and bitwise identical.
+00:31:37 <kevr> For sure.
+00:31:55 <kevr> I've got "fastboot version 30.0.5" from repos on Arch Linux.
+00:32:01 * kevr hopes this one satisfies ;)
+00:32:05 <TheJollyRoger> Perfect. That's the right way to go!
+00:32:08 <kevr> nice.
+00:32:10 <kevr> <3
+00:33:17 <kevr> I'll report how it went in a few days, I don't have the phone on-hand currently. again, thanks a ton for all of your help, and let me know if you need a c/cpp/python code monkey for anything, i don't currently have a job and i'd love to contribute where it helps
+00:33:53 <TheJollyRoger> We totally do!
+00:34:15 <kevr> (...i can do others to, php, javascript, whatever's clever; haven't touched rust yet though, and i'm not too big on erlang)
+00:34:37 <TheJollyRoger> I'm unfortunately not the best person to ask for where to fit in with development (I'm just the greeter, not actually a developer yet!), but the developers indeed do hang out here and we need volunteers, desperately.
+00:35:03 <kevr> in that case, i'll be regularly peeping in here to see what i can jump in on (:
+00:35:22 <TheJollyRoger> I think python is definitely used in some of the support stuff for GrapheneOS, and C also plays a big role in it, especially since there's a lot of work involved with patching the kernels and such.
+00:35:30 <TheJollyRoger> Woohoo! Well glad to have you aboard the ship!
+00:35:45 <kevr> \o/
+00:35:51 <TheJollyRoger> Yarr!
+06:21:48 <aye_papi[m]> Halo mama citassss
+13:06:21 <whatisthematrix[> <kevr "\o/"> Welcome!
+13:27:13 <BugHunter1000> this place looks cool.
+13:52:26 <dakotah[m]> It is
+14:18:14 <COVID-1984> Some posts around about "IMU" (accelerometer etc) for phone finger printing... I'm guessing GOS has handled that, but when googling grapheneos + IMU I didn't find much..
+14:19:19 <somenerd[m]> I think you can revoke miscellaneous sensor permissions
+14:20:47 <somenerd[m]>  * I think you can revoke miscellaneous sensor permissions, which may help prevent this.
+14:20:54 <strcat[m]> COVID-1984: we add a Sensors permission for all sensors not covered by existing permissions
+14:21:07 <strcat[m]> you can disable it for all the apps you install
+14:24:39 <arpysco[m]> I really like that you can disable all sensors via the quick settings dev tiles in the dev options menu
+14:25:33 <arpysco[m]> When I first enabled it I didn't realize it disabled the cameras too and for a few min I was wondering why my cameras weren't working...
+14:31:18 <COVID-1984> strcat[m]: thanks
+16:16:24 <ephemeralang[m]> Does anyone know how to set up dnscrypt proxy on graphene os?
+16:30:51 <lodtank> i've never played around with any cloud stuff, didn't like that, but do some here have any suggestions for setting up my own cloud to sync with graphene?
+16:36:26 <strcat[m]> ephemeralang: use the recommended DNS-over-TLS provided by the OS
+16:37:01 <strcat[m]> ephemeralang: if you really want to use something else, that's what the VPN service feature provides, apps can provide arbitrary features based on the network traffic being tunneled through them
+16:37:21 <strcat[m]> you need to get support from app authors for that
+16:37:46 <strcat[m]> if you're using a VPN you should probably be using their DNS instead of connecting to external DNS servers through it, see our FAQ
+16:39:00 <strcat[m]> VPN service apps can provide their own DNS servers for use by the OS without tunneling other traffic through themselves, or they can do both
+16:39:21 <strcat[m]> it's just the standard way for apps to do those things, and they can provide a combination of different features if they want
+16:42:08 <jpds> lodtank: Easiest is syncthing.net
+17:23:13 <g2gy8ac2rcqn[m]> noob here, I couldn't find any open source Korean keyboards. Is there anyway that I can use non proprietary Korean keyboard? and is there any security & privacy issues using proprietary keyboards such as "Google Korean Input"? thanks.
+17:28:24 <dwkr[m]> anupritaisno1: odd that AnySoft Keyboard has so many languages but not Korean.
+17:28:24 <dwkr[m]> Some users will use the Arora store to download a keyboard like the gboard and then shut off it's network access in Graphene's permissions settings. So that's a potential route for you.
+17:28:56 <anima[m]> nothing beats gboard for multi language support
+17:29:12 <alzxjm[m]> lodtank: I prefer Nextcloud.
+17:31:00 <dwkr[m]> *Aurora store
+17:40:20 * g2gy8ac2rcqn[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/EwqetdOPBLywPlrExZLiduHc/message.txt >
+17:41:28 <dwkr[m]> Of course
+17:42:58 <cenapatop689[m]> strcat The flowtime biosensing app hangs at startup.
+17:43:18 <cenapatop689[m]> strcat: can you help me?
+17:43:40 <strcat[m]> ask the channel, not me specifically please
+17:43:52 <strcat[m]> get logs from `adb logcat`
+17:45:36 <cenapatop689[m]> I dont mean at device boot..
+17:45:59 <cenapatop689[m]> Adb logcat
+17:45:59 <cenapatop689[m]> Device waiting
+17:48:24 <cenapatop689[m]> Ah
+17:48:26 <cenapatop689[m]> Hm
+17:48:45 <cenapatop689[m]> How can I share it to you
+17:49:09 <cenapatop689[m]> Ah now I see
+17:49:22 <cenapatop689[m]> Google play service missing
+18:06:25 <cenapatop689[m]> Now it Works
+18:09:04 <pamachs[m]> Hi everyone, I am new to Graphene and I have to say what a wonderful system you guys have going on. Thank you. I will be around going forward to keep learning and see how I can contribute in the future.
+18:09:34 <anupritaisno1[m]> pamachs: thanks a lot
+18:09:54 <anupritaisno1[m]> Please pm me if you want to get started with contribution
+19:24:15 <arjan25> Greetings! I'm trying to install GrapheneOS onto a Pixel 4a (sunfish), but fastboot doesn't recognize the device. I've seen mention of 1) drivers; 2) USB cable as causes. I'm using latest Windows 10, and the device is recognized in Windows when started, so that seems unlikely to be the problem.
+19:25:02 <arjan25> And I've now tried the official USB-C cable on the two USB-C ports on my PC, and a USB-A to C cable as well, with no success.
+19:25:34 <arjan25> Fastboot is at `fastboot version 30.0.5-6877874`
+19:25:57 <arjan25> Any pointers how to proceed?
+19:28:18 <madd_hatter[m]> 3xl Is the visual voicemail suppose to be integrated into AOSP and by extension GOS phone app?
+19:28:18 <madd_hatter[m]> Not speaking about its real world functionality but its settings / button should be visible in the phone app, correct?
+19:35:14 <pamachs[m]> <arjan25 "Greetings! I'm trying to install"> Honestly I stopped trying this kind of stuff on windows a long time ago. Using Linux I had O problems. Might be worth looking into.
+19:36:49 <arjan25> Any reports that using Linux with the same hardware solved such a fastboot issue? Cause Win10 is officially supported.
+19:38:09 <anima[m]> <arjan25 "Greetings! I'm trying to install"> check devices manager, install driver via windows update
+19:38:25 <arjan25> It says driver is up to date
+19:44:35 <madd_hatter[m]> arjan25:  I had no issues once I had current Android SDK tools.  The only thing not part of the standard procedure I did just out of habit after oem unlocking was I enabled usb debugging.
+19:44:35 <madd_hatter[m]> The only other issue I have seen frequently deals with the usb cables/adapters.  Seems people try a few then go buy another and it works.
+19:45:41 <madd_hatter[m]> I know usb debug is not needed in fastboot but that's the only thing out of normal procedure I did
+19:47:08 <arjan25> Anyone know if it has to be USB-C to USB-C? (in which case I can skip trying other cables)
+19:48:23 <madd_hatter[m]> No I used A to c cablr
+19:48:34 <madd_hatter[m]> * No I used A to c cable
+19:53:00 <dar_gomml[m]> <madd_hatter[m] "No I used A to c cablr"> same
+20:05:18 <arjan25> So it turns out it was a driver issue after all. At first Windows reported driver OK, no updates available. After a reboot somehow the device was no longer recognized and showed up as generic USB device. After installing the Google USB driver the phone is recognized as "Android Device", and now `fastboot devices` does list the phone.
+20:06:09 <arjan25> So it seems that relying on the standard Windows USB driver is not sufficient (at least not in all cases).
+20:23:54 <fredrickdouglas> I am trying to flash crosshatch-factory-2020.11.27.15.zip on my Pixel 3xl. I have done it before but now it is saying that my fastboot is too old. I have the latest version.
+20:25:19 <nscnt> fredrickdouglas: What operating system are you running on your computer?
+20:25:32 <fredrickdouglas> Windows 10. Same as last time.
+20:25:53 <nscnt> fredrickdouglas: You're using the PowerShell?
+20:26:22 <fredrickdouglas> I tried cmd and powershell
+20:26:54 <madd_hatter[m]> 👍
+20:26:54 <madd_hatter[m]> MS Windows strikes again.  I have almost completely cut, hacked, and torn Windows and its eco system from life.  Only have it for one or two apps I can not replace YET.
+20:27:52 <fredrickdouglas> Yeah, I kinda hate linux and macs are expensive so the cheap windows is all that remains
+20:28:21 <nscnt> fredrickdouglas: Have you been following the guide from the very beginning again? Including curling the latest fastboot and including it into the PATH variable?
+20:29:19 <fredrickdouglas> I never got it to work by strictly following the directions. I have had better luck following techlore's tutorial on youtube.
+20:29:35 <Thatcher[m]> <fredrickdouglas "Yeah, I kinda hate linux and mac"> I installed Graphene from Ubuntu Mate and it is a straightforward process with no bullshit. If you hate linux, try out Mate
+20:29:36 <nscnt> fredrickdouglas: Don't do it.
+20:29:53 <nscnt> fredrickdouglas: We can't help you if you follow unofficial guides.
+20:30:13 <fredrickdouglas> I tried the official guides as well
+20:30:25 <nscnt> fredrickdouglas: A video is outdated fast. The guide is a living document.
+20:30:48 <nscnt> fredrickdouglas: The guide is just copy & paste.
+20:31:06 <fredrickdouglas> Yeah, I noticed that they updated it but still having issues
+20:31:12 <nscnt> fredrickdouglas: My suggestion is to try it from the beginning; just following the official guide.
+20:31:26 <copenhagen_bram[> Hello!
+20:31:41 <Kvuj[m]> you can just leave Linux on a usb drive and `sudo apt install android-tools-adb android-tools-fastboot`
+20:31:51 <copenhagen_bram[> I'm starting to wonder if I should've gone for GrapheneOS instead of LineageOS
+20:31:53 <fredrickdouglas> Not that good with powershell or cmd for that matter so I get lost
+20:32:18 <Kvuj[m]>  * you can just leave Linux on a usb drive and `sudo apt install android-tools-adb android-tools-fastboot` and wipe it right after.
+20:32:21 <nscnt> fredrickdouglas: No problem, it's just copy and paste. Just follow the guide closely.
+20:32:27 <fredrickdouglas> and copying $env:Path = "$pwd\platform-tools;$env:Path" doesnt do anything for me
+20:32:32 <Thatcher[m]> <copenhagen_bram[ "I'm starting to wonder if I shou"> Graphene all the way!
+20:32:33 <clox[m]> Why you guys developers do not make a youtube video for window, linux and mac . Will be a life saver for us who are not developers. Will glad make a nice donation for it :-)
+20:32:54 <faxing[m]> <copenhagen_bram[ "I'm starting to wonder if I shou"> Yeah probably lol
+20:32:56 <nscnt> clox[m]: As I said, it can be outdated fast.
+20:33:02 <faxing[m]> Might be a bit biased though
+20:33:42 <fredrickdouglas> how do i change my powershell to run commands without .\
+20:33:48 <copenhagen_bram[> Do GrapheneOS phones work well with Visible Unlimited's plan? I noticed they're selling Pixel phones that GrapheneOS supports
+20:34:17 <nscnt> fredrickdouglas: Just try from the very beginning. I think Techlore suggestes changing something in the script and stuff. Don't do this. Start from the beginning.
+20:34:36 <copenhagen_bram[> I bought a budget phone that I heard would work with LineageOS, thinking maybe Visible would support it. It turns out they don't, and now I have a serviceless LineageOS phone that I'm looking for a new service for.
+20:34:37 <Thatcher[m]> <copenhagen_bram[ "Do GrapheneOS phones work well w"> Stay away from carrier Pixels
+20:34:39 <fredrickdouglas> If it is a verizon phone it has a different IMEI and isnt unlockable
+20:34:58 <copenhagen_bram[>  * I bought a budget phone that I heard would work with LineageOS, thinking maybe Visible would support it. It turns out they don't, and now I'm trying to find an alternative unlimited service that will support my LineageOS phone.
+20:35:21 * Lia[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/zniPeZXKpAbfSbnUnospImrN/message.txt >
+20:35:44 <copenhagen_bram[> <Thatcher[m] "Stay away from carrier Pixels"> Okay, I will. I'm staying away from Pixels because I already spent my money on a Motorola Moto G7
+20:36:03 <Lia[m]> rip
+20:37:03 <clox[m]> <nscnt "clox: As I said, it can be outda"> To bad, nscnt. It will be much so understanding for many users who do not have knowledge like you guys
+20:37:05 <copenhagen_bram[> Has anybody used Visible Unlimited? Will they work with an unlocked GrapheneOS Pixel?
+20:38:24 <ephemeralang[m]> <strcat[m] "ephemeralang: use the recommende"> I have it enabled in settings, but running a test on dnsleaktest.com shows it still using my ISP's DNS for some reason.
+20:39:44 <strcat[m]> ephemeralang: don't think you have it enabled then
+20:40:10 <strcat[m]> you manually configured a DNS-over-TLS server?
+20:40:17 <strcat[m]> which one
+20:40:36 <Lia[m]> <copenhagen_bram[ "Has anybody used Visible Unlimit"> Not sure, but probably will not be completely functional: https://github.com/GrapheneOS/os_issue_tracker/issues/153
+20:40:44 <ephemeralang[m]> I have it set to automatic, is there a certain provider that I should manually input?
+20:40:59 <strcat[m]> automatic continues to use the network provided DNS servers
+20:41:30 <ephemeralang[m]> O
+20:41:34 <strcat[m]> it uses DNS-over-TLS to communicate with them if available, providing opportunistic encryption that does not work against an active attacker
+20:41:35 <strcat[m]> please read the FAQ sections on this, it's one the topics that's covered very well
+20:41:41 <Thatcher[m]> <ephemeralang[m] "I have it set to automatic, is t"> I use nextdns and i like it
+20:41:51 <nscnt> clox[m]: There's still work going on -- trying to make everything easier. The project is aware of the barrier of how to install a new factory image.
+20:42:13 <copenhagen_bram[> <Lia[m] "Not sure, but probably will not "> Oof.
+20:42:47 <Lia[m]> https://github.com/GrapheneOS/os_issue_tracker/issues/153#issuecomment-734263067
+20:43:36 <Lia[m]> Not sure if that still applies now
+20:44:06 * Lia[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/NywnXPNbKkvqzeUvpFpNQHgW/message.txt >
+20:44:36 <Lia[m]> (Tho that's more of an upstream issue)
+20:44:45 <copenhagen_bram[> I wish there were lists of how well mobile plans work with certain builds of GrapheneOS (or LineageOS)
+20:48:49 <Lia[m]> Just to be clear, mobile data works, but according to the other Visible/Verizon users, not VoLTE (apparently) and voicemails
+20:55:22 <strcat[m]> Verizon requires including a bunch of Verizon apps as privileged apps
+20:55:24 <strcat[m]> in the OS
+20:55:26 <strcat[m]> normally all the standard stuff can work with no special apps
+20:55:28 <strcat[m]> copenhagen_bram: this is not a GrapheneOS issue
+20:55:48 <strcat[m]> if you bring your own device without all the Verizon apps, etc. you'll experience the same thing
+20:56:08 <strcat[m]> regardless of it being the stock OS with Play services or GrapheneOS
+20:57:53 <clox[m]> <nscnt "clox: There's still work going o"> I am very happy with the project. That is the best software out there by far
+21:29:00 <TheJollyRoger> Shiver me timbers, Verizon and their wanting to do things their own way...
+21:31:48 <faxing[m]> <copenhagen_bram[ "Has anybody used Visible Unlimit"> Can confirm first hand that that's a hard no.
+21:32:21 <faxing[m]> Used visible for almost a year on an iPhone, then after it not working on graphene I ended up switching to Mint Mobile - mint has fucked service but good prices
+21:32:31 <faxing[m]>  * Used visible for almost a year on an iPhone, then after it not working on graphene I ended up switching to Mint Mobile - mint has fucked service in my (and many) areas but good prices
+21:40:31 <neopetsarecool[m> Mint is the best by far
+22:01:34 <alzxjm[m]> <neopetsarecool[m "Mint is the best by far"> Because it's cheap? Or because it happens to work well with GrapheneOS for some reason?
+22:23:22 <pamachs[m]> Its super cheap that's the only reason I can think lol
+22:32:49 <vsinghsanwal[m]> <strcat[m] "Verizon requires including a bun"> Do you think a non Verizon VoLTE should work OK then? As long as it doesn't need its own privileged apps?
+22:36:20 <strcat[m]>  once we ship the CarrierConfig settings to deal with per-carrier variances yeah
+22:46:27 <henko> Hello. So my old phone is slowly dying. I am thinking about getting a Pixel 4a and install GrapheneOS onto it. The question is how do I install some proprietary apps like for public transport in my country on it, which are only available on the official google play store?
+22:46:30 <henko> I
+22:47:46 <henko> I've discovered the 'Aurora Store' but is this recommended from a privacy perspective?
+22:48:02 <henko> Thank you for your input.
+22:48:28 <vsinghsanwal[m]> <henko "Hello. So my old phone is slowly"> If they don't require Google Play Services, you could probably install them from Aurora Store.
+22:49:00 <henko> and if they do? is that a dead giveaway that the app won't work?
+22:49:26 <vsinghsanwal[m]> <henko "I've discovered the 'Aurora Stor"> From a privacy perspective, Google can't relate the app to your account. But if the app itself is not privacy friendly, then no.
+22:50:03 <antonizoon[m]> henko: some apps wont work at all without google play services, but other apps just warn about it but work fine.
+22:50:16 <antonizoon[m]> Or wont give notifications, etc..
+22:50:18 <vsinghsanwal[m]> <vsinghsanwal[m] "From a privacy perspective, Goog"> But you could still create another user profile on the phone and use that for non private apps like that (I guess)
+22:50:50 <henko> how do you use grapheneOS?
+22:50:57 <antonizoon[m]> Wasnt there the Shelter app on F-Droid to create sandboxed work profiles too
+22:50:57 <henko> Do most of you guys just have two phones?
+22:51:02 <jpds> henko: Same way you use android
+22:51:44 <vsinghsanwal[m]> <antonizoon[m] "Wasnt there the Shelter app on F"> Yes, but not great from a security perspective is my understanding. (If shelter is compromised, everything in it is)
+22:52:51 <antonizoon[m]> Whereas user profiles are sandboxed far better?
+22:52:54 <vsinghsanwal[m]> <henko "Do most of you guys just have tw"> No. Most of us prioritise what is important to us and make hard choices (for e.g. not using that convenient transport app or using its website etc.)
+22:53:20 <jpds> antonizoon[m]: Yep
+22:53:58 <vsinghsanwal[m]> <antonizoon[m] "Whereas user profiles are sandbo"> It is a completely different user, so like a proper android user. Whereas shelter just creates a work profile that an admin (in this case shelter, I think) has full control over.
+22:55:29 <antonizoon[m]> Good to know
+22:55:38 <vsinghsanwal[m]> Everything I am stating is either from personal experience or picked up here and there. So take it with a grain of salt.
+22:55:39 <lev[m]> <henko "Do most of you guys just have tw"> no, I've found there to be minimal trade off tbh.  the biggest hit is notifications not working for some things, but it works for the important stuff: email, sms/signal, phone, calendar, alarm, etc
+22:56:32 <antonizoon[m]> Notifications do work fine on element which by definition is a notification service
+22:56:53 <antonizoon[m]> I guess a bot could just be made for some instances to ping your phone
+22:57:13 <antonizoon[m]> Well, not a drop in replacement obviously.
+22:57:28 <henko> the thing is I already have a pinephone which can do the most basic stuff. for me its basically a linux with call & sms functionality... but the performance is still just way too lackluster
+22:58:06 <henko> antonizoon[m]: yeah true... I try to use an as atomic app selection as I can, but some apps well are needed
+22:58:17 <vsinghsanwal[m]> Graphene is way more usable than that. Way more.
+22:59:26 <henko> like my online bank *needs* an smartphone to confirm transfers and the public transport app which doesn't have a nearly as complete offer on their webpage
+23:00:23 <henko> vsinghsanwal[m]: glad to hear
+23:01:04 <jpds> henko: My bank app complains about not having play services and then carries on fine
+23:02:20 <henko> jpds: and for apps which absolutely need play services I could use (https://microg.org/), right?
+23:02:29 <jpds> henko: No
+23:02:43 <jpds> henko: https://grapheneos.org/#never-google-services
+23:05:18 <botder[m]> I only wanted to get rid of WhatsApp but chose to buy a new Pixel 4a and install GrapheneOS on it
+23:07:23 <botder[m]> The phone is really nice and the OS runs well
+23:13:35 <Thatcher[m]> <botder[m] "I only wanted to get rid of What"> Good decision
+23:16:23 <vsinghsanwal[m]> <henko "jpds: and for apps which absolut"> Eventually. It will take time, but my understanding is that the GrapheneOS team are starting work on a special implementation and build of microg that will be secure. But don't depend on that now.
+23:17:41 <vsinghsanwal[m]> But yes, some of apps which require Google play services, also just give me a warning bit work perfectly. While others just don't start.
+23:23:29 <henko> okay. thanks @all for your input. I will just buy the pixel 4a and check if its usable as a daily driver. I hope it will :)
+23:25:47 <henko> One last question... what about Map navigation. I can really get rid of all Google apps except for Google Maps. But I'll gess that this app heavily relies on Play Services. I will try to use OSM
+23:26:07 <henko> But does anybody have real life experience with Gmaps?
+23:27:34 <henko> I think I'm not making any friends here when I'm mentioning Google products so often *heh*
+23:30:49 <Lia[m]> <henko "One last question... what about "> try using it in Vanadium incognito tab instead?
+23:31:53 <jpds> henko: I use osmand+, gmaps apparently works without play services
+23:32:28 <Lia[m]> <jpds "henko: I use osmand+, gmaps appa"> Same here
+23:35:51 <antonizoon[m]> henko: in many cases open street maps in osmand is far more detailed than google maps. Works offline too.
+23:36:23 <antonizoon[m]> Btw what im really wondering is how you managed to live with the pinephone so long. Is it really at least somewhat usable yet
+23:38:57 <henko> even if you get by... your battery is dead in 5 hours in idle and 2-3 hours of usage. surfing, reading email
+23:39:18 <henko> well i used it as a mobile laptop without social functionality
+23:40:08 <antonizoon[m]> henko How good does it work in convergence mode
+23:40:50 <antonizoon[m]> As the web browser is the most intensive component... Hows firefox or chrome
+23:41:05 <henko> never tried it. don't have the dock
+23:42:32 <antonizoon[m]> And what distros seemed decent? Ubports seemed to be the top one usability wise, but the simple x server was what worked the best, whereas phosh and kde seemed to be subpar
+23:42:53 <antonizoon[m]> henko: how do you use it as a mobile laptop
+23:44:17 <antonizoon[m]> Especially with the latest mainline kernel... On par with the orange pi or heck even a raspberry pi yet support wise?
+23:44:32 <henko> The UBports edition worked the best out of the box imho... but still laggy and sometimes not responsive and slugish
+23:44:38 <strcat[m]> please keep the channel on-topic
+23:45:26 <henko> i mean i would say you can use it as a daily driver if you limit your use cases... but you need a hefty battery pack with you all day
+23:45:54 <henko> I connect via mosh to my server and attach to the tmux session
+23:46:37 <henko> from there i use all my ncurses programs like neomutt
+23:47:04 <henko> the browser one the pinephone works decent. you can even play youtube mostly stutter free
+23:47:14 <strcat[m]> keep the channel on-topic
+23:47:35 <henko> strcat[m]: sorry. wilco.
+23:47:49 <strcat[m]> there's a #grapheneos-offtopic channel
+23:52:48 <`Scott`[m]> Hey all, should I expect push notifications to work (via GCM/FCM) if I apply some work (e.g. install Micro-G, etc.) -- or will it never work?
+23:53:23 <`Scott`[m]> I'm finding it hard to find any concrete information as to whether it can work or not.
+23:53:40 <strcat[m]> there is no inherent dependency of push notifications on FCM
+23:54:01 <strcat[m]> apps can provide a different implementation, and that works fine
+23:54:21 <strcat[m]> there is nothing you can do to make FCM work on GrapheneOS
+23:54:31 <strcat[m]> it's not included
+23:55:32 <strcat[m]>  * there is nothing you can do to make apps using FCM via Play services to work on GrapheneOS
+23:56:16 <`Scott`[m]> Okay, thanks. I'm fine for personal stuff with no push but there's one app for work that uses traditional Android push notifications (Pager Duty) that I need to have working.
+23:56:51 <`Scott`[m]> Looks like I'll need to drop back to text messages. Bums.
+23:56:59 <`Scott`[m]> Thanks.
+23:57:57 <`Scott`[m]> Also, coming from stock Android 11, "flip to shhh" was handy but I don't see it in GOS.  It's that correct?
+23:59:16 <strcat[m]> traditional Android push notifications is the app keeping open a connection to receive pushed data from the server
+23:59:38 <strcat[m]> FCM is part of Play services, not the baseline Android

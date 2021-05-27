@@ -1,0 +1,808 @@
+00:06:19 * aeonsolution[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/TeHVGeFUSdjcIePHVDHZeffQ >
+01:49:27 <TheJollyRoger> Hello aeonsolution[m], I'm going to stop you there for a sec - it looks like it's failing validation.
+01:49:40 <TheJollyRoger> Give me a moment and let me test it on my end.
+01:49:59 <TheJollyRoger> If the download was interrupted or corrupted, this could cause the signature validation to fail.
+01:50:13 <aeonsolution[m]> <TheJollyRoger "Hello aeonsolution, I'm going to"> Got it. Thank you.
+01:50:34 <TheJollyRoger> This may take some time since I'm on a very slow connection.
+01:51:59 <aeonsolution[m]> No worries, I'll try to do a redownload it again to make sure. It's good to know that intermittent issues could of casued it.
+01:53:15 <TheJollyRoger> Eight minutes to go, provided my shaky DSL connection holds out and doesn't explode on me.
+01:55:40 <TheJollyRoger> Yeah. If it fails validation, usually it's caused by the download coming down incomplete. Signify will only exit with a status code of zero (or "verified!") if it matches the original, bit-for-bit. If it's missing significant portions of the file it won't be able to validate.
+01:56:40 * TheJollyRoger reaches up the tubes and tries to pull the bits down faster with his hand.
+01:59:53 <aeonsolution[m]> Yeah, I got the same result. I'll wait to see if you can confirm it. TheJollyRoger
+02:00:55 <TheJollyRoger> Okay! Just a few more minutes to go. I'm on DSL :(
+02:01:01 <TheJollyRoger> Like, *old* style DSL.
+02:01:57 <aeonsolution[m]> No worries! Thanks
+02:03:17 <TheJollyRoger> captain@morgans-revenge ~/Downloads $ signify -Cqp factory.pub -x sargo-factory-2020.04.14.23.zip.sig  && echo "Looks good, all checks out...?"
+02:03:19 <TheJollyRoger> Looks good, all checks out...?
+02:03:30 <TheJollyRoger> Hmm.
+02:03:37 <TheJollyRoger> Let me go check the keys.
+02:04:03 <TheJollyRoger> Hang on a second, since the keys should be published at the GrapheneOS twitter account, the GrapheneOS reddit account, and on Github all at the same time.
+02:05:47 <TheJollyRoger> Let me just check my copy of the key...
+02:06:54 <TheJollyRoger> My key appears to match the one on Github, Reddit, and on Twitter. There should be some links there, check to see thet factory.pub matches it.
+02:09:19 * aeonsolution[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/kjQueUVaavmDRNBkjKVbRkZy >
+02:09:33 <aeonsolution[m]> Its probably something on my side then
+02:10:19 <TheJollyRoger> Let's take a look...
+02:11:43 <TheJollyRoger> captain@morgans-revenge ~/Downloads/grapheneos-tests $ du sargo-factory-2020.04.14.23.zip
+02:11:44 <TheJollyRoger> 951348 sargo-factory-2020.04.14.23.zipyf
+02:11:59 <TheJollyRoger> Are you getting something that looks like that? (disregard that last f, I slipped)
+02:13:06 <TheJollyRoger> This is *not* secure, this is just a quick sanity check to make sure that your download is the correct size.
+02:13:41 <aeonsolution[m]> noted
+02:15:36 <TheJollyRoger> This channel's not end-to-end secure so I wouldn't want to try sending keys or hashes through it.
+02:16:26 <TheJollyRoger> (I also don't want you trusting me)
+02:17:12 <aeonsolution[m]> got it, we're on the same page
+02:17:13 <aeonsolution[m]> let me test this out
+02:25:00 <Hirppa> I also downloaded the file and the signature seems to match for me.
+02:25:29 <TheJollyRoger> Whew, thanks Hirppa
+02:25:45 <aeonsolution[m]> thank you to both of you
+02:25:53 <aeonsolution[m]> i'll try to figure out what's happening on my end
+02:26:06 <TheJollyRoger> Sure. I'm just going to quickly make one experiment...
+02:26:58 <TheJollyRoger> Let's see what curl says...
+02:27:14 <aeonsolution[m]> a part of me thinks its because i downloaded the file on windows (host) and pasted them ito manjaro(vm); it could be the file rights could be affected in the transfer
+02:29:12 <TheJollyRoger> Hmm. If you're flashing from Windows, if the download is the correct size, then you can skip signify, and simply use auditor and remote attestation to prove the authenticity of the operating system after the install.
+02:29:51 <TheJollyRoger> It's a bit easier, although it'll mean you'll need to make sure that the download's complete.
+02:32:51 <aeonsolution[m]> awesome, ok let me check that out, thank you
+02:33:26 <TheJollyRoger> For me, sargo-factory-2020.04.14.23.zip is coming in at 930 Megabytes.
+02:33:42 <TheJollyRoger> Before you flash, just go here:
+02:34:39 <TheJollyRoger> https://attestation.app/about This is a detailed explanation of how it's going to work but I can give you the thirty-second version.
+02:36:13 <TheJollyRoger> The HSM in your phone contains a certificate which is signed and validated by a certificate chain all the way back to a root certificate self-signed and published by Google. It can remotely attest to the status of the system image via a challenge and sign that challenge via its own private key. The operating system can't lie to it because the HSM is the root of trust for your phone.
+02:36:45 <TheJollyRoger> So if we can't verify your phone's system image before installing it, you can still verify it after.
+02:37:09 <JTL> TheJollyRoger: Shuld be possible to validate the image
+02:37:15 <JTL> I'm still thinking it's a corrupted download?
+02:37:41 <TheJollyRoger> Yeah, it sounds like a corrupted download.
+02:38:17 <aeonsolution[m]> i'm thinking that too
+02:38:22 <TheJollyRoger> But if he's downloading it on the host he won't have signify for Windows and it wouldn't do much good to obtain it via a binary download.
+02:38:43 <TheJollyRoger> So we're going to have to figure out first where this is at >_<.
+02:38:45 <Hirppa> aeonsolution[m]: The file size should be exactly 974172268 bytes. Does this match?
+02:40:27 <TheJollyRoger> Try running `wget https://releases.grapheneos.org/sargo-factory-2020.04.14.23.zip` or `curl https://releases.grapheneos.org/sargo-factory-2020.04.14.23.zip --output sargo-factory-2020.04.14.23.zip` ?
+02:41:20 <aeonsolution[m]> its still downloading it says 929 mb but ill confirm the exact file size when it finishes
+02:41:52 <TheJollyRoger> Okay!
+02:43:50 <TheJollyRoger> Hirppa, I'm getting 974172268 via ls -ltr too.
+02:55:56 <TheJollyRoger> >_>... I'm starting to think I ought to put together a Windows computer full time for troubleshooting Windows GrapheneOS installs.
+02:57:16 <aeonsolution[m]> If I can get this sorted out, I can make a pull request to make this easier for windows installs too!
+02:57:29 <aeonsolution[m]> for the website docs*
+02:57:32 <TheJollyRoger> \o/ Yarr
+02:58:01 <TheJollyRoger> I've sometimes wondered if there's a way to get CertUtil to play ball with signing, but I haven't figured out CertUtil yet >_<.
+03:05:48 <aeonsolution[m]> 929 MB (974,172,268 bytes)
+03:06:10 <aeonsolution[m]> thats the size on windows
+03:07:54 <aeonsolution[m]> <TheJollyRoger "I've sometimes wondered if there"> that sounds interesting
+03:08:22 <Biv[m]> JollyRoger it strikes me as odd that you have the pirate theme but do not pirate software
+03:10:08 <TheJollyRoger> aeonsolution[m]: looks like it matches the size Hirppa and I got, at least, from what Freenode and Matrix is telling me >_>...
+03:10:38 <TheJollyRoger> Biv[m]: Yep, different kind of pirate xP.
+03:11:50 <aeonsolution[m]> <TheJollyRoger "aeonsolution: looks like it matc"> yeah thats good; im going to download directly from the vm and see what i get. i appreciate everyone's help!
+03:12:31 <Biv[m]> bah pirates thieve
+03:12:56 <Biv[m]> you have to keep up with your branding
+03:13:00 <Biv[m]> what do you thieve if not software
+03:13:03 <Biv[m]> whose booty do you plunder
+03:13:38 <TheJollyRoger> The Spanish Treasure Fleet, of course!
+03:13:50 <TheJollyRoger> aeonsolution[m]: awesome, alright!
+03:19:46 <jcpicard32[m]> I know there's a lot of need for device maintainers right now. What exactly is involved in that? Does it take a lot of knowledge? It's something I'd be willing to do if someone knowledgeable could explain to me a little bit.
+03:20:39 <TheJollyRoger> Hi jcpicard32[m], well... I'm not quite exactly knowledgeable in all this but...
+03:21:28 <TheJollyRoger> From what I understand being a device maintainer means porting all of the upstream patches, and device-specific work and patches and updating the kernels and software for each specific device. This means also being able to run android-prepare-vendor to extract the firmware from the factory images and incorporate the firmware images into what will become the final releases.
+03:21:54 <TheJollyRoger> It's a commitment that lasts the lifetime of the device, so that's usually a three-year commitment.
+03:23:55 <jcpicard32[m]> Ok. I assume there's somewhere I can read about that? Do I need a decidated device for it? I'd definitely be willing to commit to updates for a device's lifetime. Sorry if I'm asking a lot of questions. I'm seriously interested in learning more about it. If it's something I can start with to be helpful while I get my coding up to snuff I'm all for it
+03:24:07 <TheJollyRoger> Don't quote me on this but from what I understand a significant amount of work is specific to each device, even though some devices can use almost the same kernel.
+03:24:29 <TheJollyRoger> Oh no problem :), I hope I can answer them. I'll try to as much as I can, I'm very appreciative of you stepping up!
+03:24:31 <TheJollyRoger> Well...
+03:25:35 <jcpicard32[m]> Definitely want to do what I can. I had been reading a bunch about the Copperhead stuff on your (I think?) github before school and work got in the way. I definitely want to do what I can for the project as I've loved using it as a daily driver for the last five months
+03:26:21 <TheJollyRoger> I unfortunately don't know much more than that. Having a dedicated device specifically for it would definitely be a huge asset but I'm not sure it'd be 110% required.
+03:28:28 <jcpicard32[m]> No problem. Thanks so much for what you could tell me!
+03:34:26 <TheJollyRoger> You're welcome! Sorry it wasn't much. I think... I think sometime I'll try to ask someone else more in the know and record the duties and responsibilities and what's needed of a device maintainer.
+03:34:53 <jcpicard32[m]> That would be awesome. If it's something in my skillset I'd definitely be willing to look into it.
+03:34:54 <TheJollyRoger> I know that there's a lot of work with the kernels involved with it.
+03:35:22 <jcpicard32[m]> It's a little rough getting into this because my background is in Mech E not CS. But I'm trying to learn what I can in my free time
+03:35:24 <TheJollyRoger> And Android-Prepare-Vendor!
+03:35:47 <TheJollyRoger> \o/ Well that's darn awesome, I'm a Mechanical Technologist as well by trade, trying to go back to school hopefully soon!
+03:37:09 <jcpicard32[m]> That's awesome. About to finish my degree. Not the best timing, unfortunately
+03:40:37 <TheJollyRoger> Yeah :(
+03:44:38 <TheJollyRoger> Hmm. I think given how sometimes I've had to unlock and use uart on my phone to get the debugging logs, a spare device would probably be best. It's not nice to restore some stuff that doesn't get backed up.
+03:45:04 <jcpicard32[m]> Makes sense
+03:53:09 <countermeasure> The Signal app likes to display an icon on the lock screen and in the notifications bar of the home screen to remind you that it's running in the bachground.
+03:53:22 <countermeasure> I'm hiding it by going to Settings > Apps and notifications > Signal > Notifications, then toggling Other to off.
+03:53:34 <countermeasure> Does that sound like the right approach?
+03:57:22 <Hirppa> I thinks so. At least I have done the same for it.
+03:57:45 <TheJollyRoger> Yeah. You can hide the notification if you prefer it that way.
+03:57:56 <jcpicard32[m]> countermeasure: It should work just fine. Afaik I few people have done exactly that without encountering unexpected behaviour
+03:58:11 <jcpicard32[m]> *Behavior
+03:58:30 <countermeasure> Awesome. Thanks everyone!
+03:59:16 <joshman[m]> <countermeasure "I'm hiding it by going to Settin"> By hiding this you'll also hide active call notification. Which makes calling annoying
+04:00:32 <TheJollyRoger> Oh ha, didn't know that XP. Oops.
+04:01:18 <Hirppa> Oh
+04:01:41 <jcpicard32[m]> The more you know. Thanks for the info
+04:01:44 <countermeasure> joshman[m]: What do you mean by "active call notification"? Do you mean that the phone won't ring if someone tries to voice call me via Signal?
+04:02:56 <joshman[m]> Toggle Other off than try to call someone
+04:03:04 <countermeasure> I just received a Signal voice call with 'Other' set to off, and the phone rang for that call as expected.
+04:03:22 <joshman[m]> You won't see badge in the upper right corner
+04:04:01 <countermeasure> I just successfully called another Signal phone too.
+04:04:30 <joshman[m]> Call is working!
+04:05:06 <joshman[m]> I am trying to say that you won't see notification badge that your call is active and ongoing
+04:06:00 <joshman[m]> Which sometimes is very annoying you won't see if you or your partner hung up
+04:07:10 <countermeasure> joshman[m]: Ahh, I can see the behaviour you're talking about now.
+04:07:36 <countermeasure> I don't think it's going to bother me, although I can see how it's not ideal.
+04:07:52 <countermeasure> Thanks for pointing it out.
+04:08:24 <countermeasure> joshman[m]: Is there anything else that you know of that the 'Other' setting controls as well?
+04:08:30 <TheJollyRoger> Got it. Makes sense, thanks joshman[m]
+04:10:42 <miniblue[m]> Hey are you supposed to get that "your device is loading a different operating system warning on bootup. I figured that was standard but now am not sure.
+04:10:57 <jcpicard32[m]> That's totally fine. Don't worry about it
+04:11:24 <miniblue[m]> Sorry if that's dumb.
+04:12:11 <jcpicard32[m]> No worries. You're certainly not the first to ask that. It's totally understandable.
+04:15:08 <miniblue[m]> Okay cool. It is normal then. Figured it was just the way the hardware worked and not an issue with verified boot or anything (otherwise it would probably yell at me in a different way), but the Google documentation is relatively fear-mongery and unspecific.
+04:15:27 <miniblue[m]> Or what I read specifically was, anyway.
+04:16:08 <miniblue[m]> Simply got confused and wanted clarification, was all.
+04:20:18 <TheJollyRoger> miniblue[m]: If you see it's yellow, then that's perfectly normal, it means that the Verified Boot is enforcing and provisioned to a custom key set in the boot loader.
+04:20:51 <TheJollyRoger> If you're worried that that key is not the correct one, you can use attestation.app to try remote attestation.
+04:21:32 <TheJollyRoger> Only start to worry if that screen turns orange and displays an ominous "Software Integrity Not Guaranteed!" logo.
+04:21:44 <miniblue[m]> Yep. And since it's a verified key but not Google's standard key, hence the "warning".
+04:21:48 <TheJollyRoger> *Not Guaranteed!" text
+04:21:50 <TheJollyRoger> Yeah.
+04:22:41 <miniblue[m]> Already did the attestation app because I trust nothing by default. And thus far there has been no ominous text.
+04:23:22 <miniblue[m]> Thanks for clarifying
+04:23:39 <TheJollyRoger> Whew ^_^.
+04:31:23 <aeonsolution[m]> hey everyone, I was able to verify the files with signify on manjaro
+04:31:35 <TheJollyRoger> \o/
+04:31:38 <TheJollyRoger> SPLICE THE MAINBRACE!
+04:31:38 <aeonsolution[m]> so @joll
+04:32:18 <aeonsolution[m]> so JollyRoger i figured out the issue
+04:32:19 <TheJollyRoger> I got an idea now to verify the one you got on Windows without transferring it via VM passthrough.
+04:32:22 <TheJollyRoger> Yeah? :D
+04:32:41 <aeonsolution[m]> i was missing the .zip file when i ran the command
+04:32:41 <TheJollyRoger> We can hash the one you just verified with openssl and then hash the one you downloaded on Windows with Certutil. If the hashes match, it should be the same file.
+04:32:47 <TheJollyRoger> O_O
+04:32:49 <TheJollyRoger> OH
+04:32:52 <TheJollyRoger> XD
+04:32:58 <aeonsolution[m]> yeahhh
+04:33:00 * TheJollyRoger thwaps himself.
+04:33:06 <TheJollyRoger> D'oh! Ah well, X3.
+04:33:24 <TheJollyRoger> We can hash both using certutil and openssl if you like, just to be sure. :)
+04:33:41 <aeonsolution[m]> yeah, im up for trying that
+04:34:07 <aeonsolution[m]> so what i did just now was download the three files from within the vm and was able to get the verify
+04:34:45 <TheJollyRoger> Okay! On Linux, you're going to want to do "openssl dgst -sha256 sargo-factory-2020.04.14.23.zip" on the one you just verified.
+04:35:08 <TheJollyRoger> It's going to spit out something like "SHA256(sargo-factory-2020.04.14.23.zip)= and then the digest.
+04:35:35 <JTL> 121:32 <aeonsolution[m]> i was missing the .zip file when i ran the command
+04:35:37 <JTL> Whoops
+04:35:52 <TheJollyRoger> Next up on your Windows machine in cmd you're going to want to do "certutil -hashfile sargo-factory-2020.04.14.23.zip SHA256"
+04:36:07 <TheJollyRoger> If all is gone right, it should be the same on both sides.
+04:36:55 <aeonsolution[m]> got it, let me download the certutil
+04:37:02 <TheJollyRoger> Oh no no no,
+04:37:10 <TheJollyRoger> you don't need to download certutil, certutil is a part of windows.
+04:37:29 <aeonsolution[m]> in cmd?
+04:37:33 <TheJollyRoger> It's the Windows Cryptography API and public key suite. It's built in. It's a part of your operating system.
+04:37:34 <TheJollyRoger> Yep!
+04:37:46 <aeonsolution[m]> or is it a powershell tool
+04:37:52 <aeonsolution[m]> oh nice ok
+04:37:56 <aeonsolution[m]> give me a sec
+04:37:58 <TheJollyRoger> Yep, in cmd!
+04:38:05 <TheJollyRoger> cd to the correct directory of course X)
+04:41:29 <aeonsolution[m]> confirmed
+04:41:32 <aeonsolution[m]> same SHA
+04:41:43 <TheJollyRoger> YES! It's authentic!
+04:42:00 <TheJollyRoger> \o/
+04:42:04 * TheJollyRoger doles out the rum.
+04:42:18 <aeonsolution[m]> \o/
+04:44:28 <aeonsolution[m]> I'll try to write this up and make a pull request for the website. really appreciate the help TheJollyRoger
+04:46:31 <TheJollyRoger> Yarr, anytime!
+04:48:25 <miniblue[m]> Quick question since I don't know of a better place to ask this. What desktop OS would you guys recommend? I have a PC that I use as a daily driver with Windows, Linux Mint (shudder), and Arch on separate disks. Ideally I would want to shift to something like Qubes but I want to keep Windows for games, and I heard that dual-booting Qubes with another OS is risky or ill-advised. Would you recommend that I invest in
+04:48:25 <miniblue[m]> separate hardware just for Qubes or should I try dual-booting?
+04:49:19 <miniblue[m]> Or possibly loading another decently secure operating system that I can boot to do anything that isn't games.
+04:50:49 <TheJollyRoger> Hi miniblue[m], I just keep my Qubes drive on a separate drive and disconnect it and the other drives when it's not in use. Yes, in theory Windows could flash the BIOS of the computer but that's outside my threat vector.
+04:51:11 <JTL> and possible to detect against with enough hardware
+04:53:32 <miniblue[m]> So it's not too ill-advised if I keep them on separate drives and take the proper precautions? I don't need it for any ultra-private or ultra-secure operations, I just want something more secure than what I have.
+04:58:35 <TheJollyRoger> It's bound to be miles more secure than a monolithic operating system. I don't share anything between my drives (I have separate drives for each). SMM rootkits and the like... well, they're not in my threat model :(
+05:01:24 * cx2[m] uploaded an image: Screenshot_20200426-020243.png (923KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/KFiiSmeWKbLIblsSJOMJrAFM >
+05:01:27 <cx2[m]> Just thought I'd share.....my home screen.
+05:03:15 <TheJollyRoger> Ahahaha nice!
+05:07:59 <miniblue[m]> Neat!
+05:07:59 <miniblue[m]> So if my threat model for my PC doesn't entail the need for advanced persistent threats or stuff like BIOS flashing, SMM rootkits, or the malicious modification of /boot it wouldn't hurt to duel boot Qubes, at least as a way to get away from insecure monolithic operating system such as Debian and its derivative s?
+05:08:59 <overheadscallop[> another kiss launcher user? nice
+05:09:21 <miniblue[m]> Plus it would be good to actual experiment with Qubes in case I ever get to that point.
+05:10:56 <gervarouge[m]> Hypothetically what's the risk of running an app with VirtualXposed I know there's a good chance it's security theater. Is there any security risks?
+05:11:20 <gervarouge[m]> Not that I would run an app that would require it
+05:13:25 <TheJollyRoger> miniblue[m]: if you disconnect your Qubes drive from the computer and keep it on the shelf while Windows is running, there really shouldn't be any risk of Windows changing your kernel :)
+05:13:58 <TheJollyRoger> It's a tiny bit of a kludgy hack, but you could even install /boot/ onto a USB drive and just disconnect that.
+05:17:00 <TheJollyRoger> *when not in use.
+05:17:43 <TheJollyRoger> Although again, this leaves the encrypted partition still accessible to modification, tampering, or even being wiped entirely, if the less trusted operating system gets compromised.
+05:18:02 <TheJollyRoger> *Even if the less trusted operating system can't read out the contents of the encrypted drive.
+05:18:30 <miniblue[m]> Very inconvenient to disconnect a whole drive every time I switch between OS's (I do a lot, lol), but I wouldn't necessarily mind. The kludgy USB hack is amusing.
+05:18:53 <miniblue[m]> But yeah oh god that seems like a bit of a security nightmare.
+05:20:24 <TheJollyRoger> I used to keep /boot/ on a separate USB drive so I'd have an entirely encrypted full disk. But it's... kinda inconvenient.
+05:20:38 <TheJollyRoger> *entirely encrypted root disk
+05:21:14 <TheJollyRoger> Also it didn't really do much for me in the long run :P.
+05:21:59 <miniblue[m]> It's a pita to open up my case, undo the screws, yank my HDD out of its place on the rack, and unplug the SATA cable every time I want to play a game, but I'll do it if that's what's recommended.
+05:22:19 <JTL> Could possibly install an external toggle switch with enough work
+05:22:28 <JTL> But that's for another discussion
+05:27:06 <TheJollyRoger> Maximum meme computer: "Arch <o-> Gentoo" toggleable switch.
+05:28:31 <TheJollyRoger> miniblue[m]: that's what I do. I just have the three disks in cages side by side. well, until I bricked my Qubes drive.
+05:31:48 <miniblue[m]> My god...
+05:34:42 <miniblue[m]> I'll do it!
+05:35:56 <miniblue[m]> Time to back up all of my files again.
+05:36:25 <TheJollyRoger> Arr!
+05:52:49 <anupritaisno1[m]> TheJollyRoger: you got a sore throat?
+06:06:21 <miniblue[m]> From all the rum he drinks, I assume. Somehow. :P
+06:33:10 <grapheneosuser[m> Hi folks. :) just wondering, has anyone used Joplin or Turtle? If so, what are the pros/cons of either. Couldn't find much user feedback on Turtl.
+06:34:55 <grapheneosuser[m> Also, if Zoom has been installed on a windows machine, what's the process to completely remove it? Would there be any leftover (harmful) files to the OS?
+06:35:18 <grapheneosuser[m> Thanks in advance. :)
+06:38:49 <analogpathy[m]> <grapheneosuser[m "Also, if Zoom has been installed"> Unknown, however on Windows a useful open-source application called "Bulk Crap Uninstaller" might be benefitical for you to remove any additional junk or registries leftover.
+06:50:42 <grapheneosuser[m> Thank you analogpathy for the reply. Yea, just wanted to help a friend in regards to Zoom.
+06:50:42 <grapheneosuser[m> If anyone else knows, thank you in advance.
+06:56:02 * grapheneosuser[m sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/uUUaxQnRVreNCgJYwzxNhHUw >
+07:22:01 <analogpathy[m]> Yeah.
+10:53:49 <silkbrain[m]> <TheJollyRoger "nunbit, you're not listening."> It's unfortunate how it turns out. I disagree that nunbit  was trolling there. What we see was something like sarcastic ping-pong of rants, with not only he as player. It's not a way to discuss anything, and you stated the room's topic (testing-based evaluation of technological security measures), but he didn't disagree with you. He answered to users that propose use of
+10:53:49 <silkbrain[m]> proprietary software and to points like "no one can audit every line of code, hence using proprietary software is no bad".
+11:06:24 <Zenithium[m]> "I think my favorite feature is daily telemetry uploads with all my perrsonal files." "I am installing back most secure os in world Microsoft and buy myself iphone for 999 who gives a shit chinese workers die." "proprietary worship" How can you call this not trolling? Almost every thing he said was "sarcastic" and dismissive, making fun of the people replying to him, spamming the crying laugh emoji on people's
+11:06:24 <Zenithium[m]> explanations etc.
+11:06:45 <Zenithium[m]> And not addressing people's actual points
+11:12:23 <Zenithium[m]> silkbrain:
+11:12:23 <Zenithium[m]> >sarcastic statements about wrong viewpoint that "freedom software == security and privacy" - there is no evidence that nunbit have that viewpoint
+11:12:23 <Zenithium[m]> Why would he advocate for open source software then? The whole reason people insist on that is so that they can confirm it's secure and private. If he agreed that Windows had better security then he wouldn't have gotten so upset, so he does have that viewpoint.
+11:27:42 <mxnorvak[m]> hey,im wondering what is the go to note and to-do list app you guys prefer the most? personally im looking for something that does local backups and encrypts the notes, havent found a decent one yet, most are more focused on online back ups
+11:40:25 <Zenithium[m]> mxnorvak: This might seem like a stupid question but what is the benefit of those over regular text files? I always see people talk about them but I just don't get it lol
+11:41:04 <grapheneosuser[m> I would like to know as well.
+11:41:08 <nscnt> mxnorvak[m]: I'm using Standard Notes, but with the online function. You can use it without an account. The files will be encrypted (if a local password is set) and kept locally. It's pretty much plain-text, though.
+11:42:03 <grapheneosuser[m> Anyone here us turtl?
+11:42:06 <grapheneosuser[m> Use*
+11:46:58 <grapheneosuser[m> > mxnorvak: I'm using Standard Notes, but with the online function. You can use it without an account. The files will be encrypted (if a local password is set) and kept locally. It's pretty much plain-text, though.
+11:46:58 <grapheneosuser[m> Any known trackers in the app?
+11:49:22 <grapheneosuser[m> Cause bugsnag comes up in Aurora Protect. Is this a false positive?
+11:52:11 <mxnorvak[m]> <Zenithium[m] "mxnorvak: This might seem like a"> the apps you mean? instead of creating a text file? if that's what you're asking then personally for me its about having the notes in an organized way and also being able to sort em based on my preference , i think all of this is available via a text file as well but its more work i guess
+11:53:35 <limitless0[m]> <mxnorvak[m] "hey,im wondering what is the go "> Sealnotes
+12:14:43 <mxnorvak[m]> limitless0: just checked sealnotes, its last update is for 3 years ago :/
+12:15:19 <mxnorvak[m]> <nscnt "mxnorvak: I'm using Standard Not"> I'll try it tnx
+12:15:24 <cx2[m]> <limitless0[m] "Sealnotes"> Joplin Notes are pretty great
+12:17:57 <cx2[m]> I also have standard notes and paid for the 5 year plan... mainly to support the guys. But Joplin, has so far, but the better candidate for a number of reasons.
+12:17:57 <cx2[m]> My only issue with Joplin, the notes are encrypted e2e, HOWEVER there is neither an app nor per-note password option. They used to have this..... it went away, and now they are feverishly working toward it again.
+12:18:22 <cx2[m]> Both are VERY actively developed.
+12:18:53 <mxnorvak[m]> <cx2[m] "Joplin Notes are pretty great"> tried it, everything about it is great but it seems like the encryption is only for when you wanna sync with another device
+12:23:15 <cx2[m]> mxnorvak: so I just stole one of the saved out .md files from my Sync Folder, the data are stored encrypted on your device.
+12:23:57 <mxnorvak[m]> that's great news :D
+12:24:09 <cx2[m]> mxnorvak: Let me also say that I use Syncthing to sync that folder.
+12:25:22 <mxnorvak[m]> i dont know how syncthing  works, does it have anything to do with the encryption? doesnt Joplin sync automatically?
+12:25:32 <cx2[m]> Meaning I have a local folder from with to physically copy out one of the .md files.
+12:25:32 <cx2[m]> No matter the case, as long as you add an encryption password, wether you are syncing with the cloud or not, it should be e2e encrypted.
+12:25:32 <cx2[m]> my only beef is that they don't quite have an app password ready to go just yet....
+12:27:30 <mxnorvak[m]> im not gotta sync really i just want it stored locally and maybe i'll do a manual backup once in a while
+12:27:58 <cx2[m]> The software does already point to a server out of the box like Standard Notes. Meaning if you want to sync your notes, you have to set something up.... which is why I went with Syncthing.
+12:29:57 <cx2[m]> mxnorvak: Then Jopling would be a pretty great choice in my opinion. There is a lot more that you can do with them under the hood. But to your point, yes, each note is encrypted locally, and you can export a backup however often you like (I personnally do this once a week myself).
+12:31:19 <mxnorvak[m]> thank you that's great :)
+12:31:52 <cx2[m]> I woudl try both.... they both are pretty great.... Standard Notes just has a LOT more flare and at the moment, also has some issues
+12:32:10 <Zenithium[m]> Syncthing is peer-to-peer so there's no point in E2E encryption
+12:33:09 <mxnorvak[m]> yeah im gonna try em both and find a way to export my notes from the previous app i used to use
+12:33:10 <cx2[m]> Zenithium: Sure, if that's all you ever plan on using.
+12:34:10 <cx2[m]> I think syncthing is a beast.... enormous fan. I use and abuse it.
+12:36:48 <cx2[m]> 1) Its free, well maintained, and actively Developted. 2) QOwn Notes.... I just can't deal....maybe someday when I grow up.
+12:39:15 <nscnt> Zenithium[m]: P2P => no point in E2E. uhm...?
+12:39:51 <nscnt> *E2EE
+12:46:32 <Zenithium[m]> <nscnt "Zenithium: P2P => no point in E2"> Isn't that how it works? Your two devices are the only two "peers" afaik
+12:46:39 <Zenithium[m]> I guess I should read more about P2P
+12:51:59 <nscnt> Zenithium[m]: Let's don't limit this discussion on Syncthing. If you use peer-to-peer, there's no implication to be made about encryption.
+12:53:58 <nscnt> If you use one cable from one device to the other to share documents, well okay.
+12:55:46 <nscnt> With Syncthing you still use the internet to sync. Just a server is stripped out of the ubiquitous use of syncing services (e.g clouds storages).
+12:56:19 <nscnt> Are you willing to sync your files over a shady Wi-Fi?
+12:57:33 <nscnt> Unencrypted?
+12:58:50 <nscnt> Just because you don't sync it over a centralized server like with OneDrive?
+12:58:57 <Zenithium[m]> Yes I agree, I had a brainfart
+12:59:24 <nscnt> :]
+13:03:57 <Zenithium[m]> Speaking of E2EE, I never understood why can't the software that the data is going through just read it after it gets decrypted on the other end e.g. Signal is E2EE but can't the app just read all of my messages since it has to display them?
+13:04:23 <Zenithium[m]> I mean I'm guessing it can, but people often talk like "only you and the recipient" can see the contents
+13:04:28 <Zenithium[m]> WIth E2EE
+13:04:34 <Zenithium[m]> It's kinda misleading
+13:05:27 <cx2[m]> Software can indeed read it on the other end if the data is not ALSO encrypted at rest..... SIgnal and Wickr encrypt the data as rest, as well as in transit.
+13:06:44 <nscnt> It's a bit more complicated, I guess.
+13:06:52 <cx2[m]> WhatsApp, Telegram, Viber... they are great examples of data that is encrypted in transit. But stored unencrypted on the users device.
+13:06:56 <Zenithium[m]> But they can see it before it's encrypted, and they can decrypt it when they want because they have the key
+13:07:09 <bseeinu[m]> Is the Google USB-C 3.5mm headphone adapter to be shit or is it the USB-C port?
+13:07:19 <nscnt> They don't have the keys, that's the thing.
+13:07:50 <bseeinu[m]> The one found with the Pixel 3. It disconnects every few minutes while in a pocket
+13:08:15 <Zenithium[m]> cx2: Signal on Desktop stores attachments unencrypted and the rest is "encrypted at rest" with the key sitting in the same directory so it's just security theater
+13:08:21 <cx2[m]> <Zenithium[m] "But they can see it before it's "> With Signal / Wickr (and i'm sure others), this is not true.
+13:08:45 <cx2[m]> I wouldn't use any desktop client?
+13:09:21 <nscnt> I think you could imagine the app more as a place holder. They don't "read" the messages. They just display the content that gets encrypted/decrypted locally.
+13:09:43 <Zenithium[m]> <nscnt "They don't have the keys, that's"> I just have a hard time imagining that since the app is doing everything, if some other app was doing the encryption/decryption it would sound more convincing
+13:09:51 <cx2[m]> Good explanation
+13:11:25 <cx2[m]> Zenithium:
+13:13:13 <cx2[m]> Zenithium: see, that's beginng to sound like the PGP fiasco at that point. Take email on GOS for expmple.... K9 is the app receiving, with OpenKeychain holding the keys. TheJollyRoger would have a hayday with this process.
+13:13:13 <cx2[m]> It seems that it woudl be prohibitively difficult at best. And just like PGP would be all but impossible to have Forward Secrecy.
+13:13:20 <Zenithium[m]> <nscnt "I think you could imagine the ap"> Yes when I say "reading" I mean that the messages could hypothetically be sending the messages somewhere after they're decrypted locally as E2EE doesn't help if the endpoints are compromised and app certainly have the capability to read the screen, logs and whatever other APIs that are available to them
+13:14:11 <cx2[m]> <Zenithium[m] "Yes when I say "reading" I mean "> Which is where Forward secrecy comes into play..... this is exacly that use case
+13:16:46 <Zenithium[m]> <cx2[m] "Which is where Forward secrecy c"> Forward secrecy prevents past data being decrypted but if the app gets the key each time then they can just individually decrypt message by message
+13:16:54 <nscnt> Mh... idk. It's at the limit of my knowledge. The only thing I could offer, is: That's not what they do, tho. ^^
+13:19:51 <cx2[m]> Zenithium: Yeah this is definitely getting deeper and deeper into an encryption conversation... The short version is, that's not exacly true. And of ALL the options available right now, what signal is putting forward is pure gold.
+13:19:52 <cx2[m]> SO.... keep your bootloader locked, keep verified boot intact.... really just use GOS + Graphene
+13:20:15 <cx2[m]> if any of what you discussed is a true concern of your, Id stick with WIre, Signal, and Wickr.
+13:20:50 <cx2[m]> And stay away from Telegram, Whatsapp, Viber, et.al...
+13:20:50 <Zenithium[m]> Yeah I'm not attacking Signal or anything, I'm just curious about the actual limitations/weaknesses of E2EE and encryption at rest
+13:21:40 <cx2[m]> <Zenithium[m] "Yeah I'm not attacking Signal or"> You already know that answer.... The weakness is the person holding the handset.
+13:22:03 <cx2[m]> haha
+13:22:15 <cx2[m]> At least regarding something like Signal
+13:37:47 <silkbrain[m]> <Zenithium[m] ""I think my favorite feature is "> My point was: both sides behave badly in discussion, but person with mod privileges prefer one of them without trying to resolve conflict of viewpoints. It's bad.
+13:53:30 <cx2[m]> Hmmmmm....I don't have a background in digital forensics, but don't think it takes a Dick Tracey to solve this mystery.
+13:53:30 <cx2[m]> was nunbit bounced from the channel?
+14:04:08 <Zenithium[m]> Yeah JR banned him I think
+14:05:41 <Zenithium[m]> I don't really think "both sides behaved badly" as I re-read the conversation 2-3 times now and there were maybe a few sarcastic comments mostly from the same person while nunbit's were all either sarcastic or insulting
+14:06:03 * Zenithium[m] uploaded an image: 2020-04-26_15-49-54.png (113KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/PYgiTySEPUZmtFUbvotXFznk >
+14:06:11 <Zenithium[m]> lol
+14:07:05 <cx2[m]> well.... it would seem that he's back. There has only been one person with the same grammatical mistakes / errors..... and "silkbrain" just popped up today?
+14:07:05 <cx2[m]> Weird.
+14:08:36 <cx2[m]> Zenithium: Not even a little bit.... First, I have no issue with folks telling it like it is.... so long as they are able to be in recieve mode if they are incorrect.... the shit that guy was spitting was just silly, and was eating up space.
+14:08:41 <nscnt> It's really funny how you can find out who's who by their writing. I've seen a few here changing nicks and I still know they are the same person. (Not that they want to cover it, but still) :D
+14:09:20 <cx2[m]> Well, this one sort of sticks out pretty badly.
+14:09:33 <cx2[m]> But yeah I agree haha =]
+14:11:32 <nscnt> Shitchat
+14:12:21 * silkbrain[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/uehbKhLkPHEhkEGixtTzdCmw >
+14:12:24 <nscnt> ... as I was reading the history; instead of chitchat.
+14:13:24 <cx2[m]> <silkbrain[m] "> <@cx2:matrix.org> well.... it "> I would say it was rather direct.
+14:14:07 <nscnt> Let it go
+14:14:08 <nscnt> plz
+14:14:56 <nscnt> How about talking about your work for your future contribution? :]
+14:14:56 <cx2[m]> nscnt: you're right.... as long as the same shit doesn't keep happening... you're absolutely right.
+14:15:14 <nscnt> your (pl.)
+14:15:16 <silkbrain[m]> <cx2[m] "I would say it was rather direct"> And why do you think so? : )
+14:18:00 <cx2[m]> <nscnt "How about talking about your wor"> Me? .... Well I am definitely making a financial contribution.... one in a lump sum... the other in monthlys..... which as long as Github Continues to match, will be a pretty decent amount of money... Which I will continue to do for the long term. (and I'll send you a DM nscnt to prove that this is true)
+14:20:40 <cx2[m]> I have two other things that I have to offer.... one I can put forward directly, but it's requireing me to learn some new things.... which is fine, I have the time and am starting classes soon.
+14:20:40 <cx2[m]> The other is through contacts that I have at other.... places. That will take a bit to unfold and it might not happen at all. When / if it begines to pick up steam, I will fill in the appropriate individuals.... you, renlord, strcat... etc.
+14:20:40 <cx2[m]> I can assure you that I am not just sitting stagnant, and am eager to do more.
+14:20:58 <cx2[m]> nscnt: does that answer your question? =]
+14:24:07 * cx2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/txpdkUtMZfPpeorJfYnvMgQc >
+14:25:56 <nscnt> Sure, I wasn't too serious ^^
+14:47:10 <nscnt> I upgraded my Mobo+CPU+RAM. Going to move to Arch Linux (switching from Fedora), because I want a minimal setup. Hoping to contribute something at some point (more than just HTML changes so far).
+14:48:58 <aeonsolution[m]> You should try out Manjaro's minimal install. Its based on Arch and has access to all the same packages.
+14:49:14 <nscnt> Good thing that my "job" consists of studying stuff that'll help me with the work on e.g. GrapheneOS
+14:49:31 <aeonsolution[m]> You won't have to do the manual setup and you can keep the gnome desktop if thats what you used in fedora.
+14:49:51 <nscnt> aeonsolution[m]: Yea, idk. I would like to use Arch directly.
+14:50:05 <nscnt> Re: Gnome. Absolutely not :D
+14:50:27 <nscnt> Well, I use it. But I don't want it.
+14:51:01 <nscnt> I'll gain some knowledge making the switch, I guess.
+14:51:12 <aeonsolution[m]> manjaro officially supports xfce, kde, and gnome; i think theres another one too
+14:51:25 <nscnt> I don't want DEs
+14:51:33 <nscnt> well, a DE
+14:51:49 <Zenithium[m]> Good choice
+14:51:53 <aeonsolution[m]> <nscnt "I'll gain some knowledge making "> defiitely you will but you'll set yourself back a little bit
+14:52:01 <Zenithium[m]> Manjaro staggers security updates
+14:52:05 <aeonsolution[m]> in time
+14:54:03 <nscnt> 'In time' as in...? "Arch = stone age, bad" or just that it's time consuming to do it all yourself?
+14:54:55 <aeonsolution[m]> time consuming especially if you like to understand and twinker with your setup
+14:55:29 <aeonsolution[m]> tinker*
+14:56:28 <aeonsolution[m]> its a great experience and don't want to discourage it; if you do get stuck i wanted to offer manjaro as a backup if you really want to get started quicker
+14:56:29 <nscnt> I know. I'm fine with that
+14:56:47 <aeonsolution[m]> cool, happy hunting then
+14:57:11 <nscnt> Otherwise I would stay on Fedora, I think
+14:59:03 <aeonsolution[m]> got it; if you have questions about the package manager i can help you out; just send me a message. good luck
+14:59:06 <nscnt> I pretty much know what I want my setup to be like. The thing is that I need to *remove* a lot of stuff on Fedora rn. On Arch Linux it'll be just a few additions ^^
+14:59:57 <nscnt> aeonsolution[m]: Sure. :) I already made a cheat sheet for me for basic commands :D
+15:11:56 <cx2[m]> <nscnt "I pretty much know what I want m"> Would like to move from the Ubuntu world.....would you say that Arch is a good move?
+15:15:54 <Zenithium[m]> If you want to learn a lot heh
+15:16:01 <Zenithium[m]> I guess question is why do you want to move?
+15:20:18 <nscnt> cx2[m]: I wouldn't suggest it, no.
+15:20:55 <nscnt> I mean... I don't know your skill level and your will to do everything yourself.
+15:22:14 <nscnt> cx2[m]: I'll keep recommending Fedora as a distro that just works out of the box.
+15:27:07 <nscnt> I started my journey with Ubuntu years ago, too. I don't know exactly how it happened, but I slid down the rabbit hole of "living in the terminal" and stuff. Started with using your package manager in the terminal, using vim, changing desktop environments/windows managers, ...,  and at the end the often "I'm living in the terminal".
+15:27:41 <nscnt> So I feel ready to make the jump to Arch Linux
+15:29:24 <nscnt> There's no real skill or knowledge that I have that makes me want to switch. I just know it's the time now :D
+15:31:50 <nscnt> ... knowledge *which would warrant a recommendation for someone
+15:32:28 <nscnt> (fits better to what I wanted to say)
+15:33:07 <Zenithium[m]> I went from Ubuntu to Qubes, that was... interesting x)
+15:33:31 <Zenithium[m]> Eventually got off Qubes because I wanted to play games and didn't want to deal with GPU passthrough
+15:33:45 <Zenithium[m]> Plus I only have 8GB of RAM ;_;
+15:34:06 <nscnt> I installed Windows 10 on one of my cheap HDDs for the ease of gaming.
+15:34:32 <nscnt> I got 64GB now :3
+15:35:30 <Zenithium[m]> I don't really play AAA games so I've been doing fine with natively supported games on Steam + Proton/Wine for the ones that aren't
+15:35:54 <Zenithium[m]> I was happy when DS3 launched on Steam Proton without any real problem
+15:37:02 <nscnt> I only play CS: GO (which would run on GNU+Linux). Planning to play Call of Duty: Warzone (which pretty much *only* runs on Windows because of anti-cheat stuff), which is the reason for my decision.
+15:37:49 <nscnt> But I play like once in a calendar quarter. Nothing fancy needed.
+15:38:14 <nscnt> Using un-activated Windows, because my last OEM license is gone with my old mobo.
+15:39:53 <nscnt> Won't pay even 4 € for some grey market vendor
+15:40:37 <nscnt> There's no drawback for me to use it un-activated
+15:40:58 <nscnt> Just some visual personalization stuff like "I want my taskbar on the top, not bottom" that won't work
+15:42:05 <cx2[m]> <nscnt "cx2: I wouldn't suggest it, no."> Delayed... Ok.... So to your point... certainly not an expert by any stretch.... But I would "like to do more" and am fairly determined.... would you consider fedora a strong middle ground?
+15:43:27 <nscnt> cx2[m]: It taught me to this point, so I would say yes.
+15:44:44 <Zenithium[m]> I do think that Fedora is definitely better than Ubuntu but I don't think you'll neccessarily "do more" since afaik Fedora just werks™
+15:44:48 <nscnt> My switch from Ubuntu to Fedora was fairly philosophical for me.
+15:44:49 <cx2[m]> nscnt: Done and done.... and when I melt everything it's you're fault. =]
+15:45:01 <Zenithium[m]> nscnt why did you decide that you don't want a DE? :P
+15:45:16 <nscnt> Zenithium[m]: bloat
+15:45:24 <cx2[m]> your*
+15:45:57 <Zenithium[m]> <nscnt "Zenithium: bloat"> Ah I see you're a man of culture lmao
+15:46:00 <nscnt> Zenithium[m]: cx2[m]: It works out of the box, true. But it's a nice system to work on. Tinkering and working at the same time.
+15:46:07 <nscnt> Zenithium[m]: ye
+15:47:58 <nscnt> I would say Fedora is nice to learn by iteration.
+15:48:22 <nscnt> I went deeper and deeper, step by step.
+15:50:06 <nscnt> Never broke my system, even though it's now bloated by all of my attempts through the months (re-installed at some point).
+15:50:08 <Zenithium[m]> If you're against bloat, maybe you should go for Void or Artix as they don't have systemd
+15:51:02 <nscnt> Zenithium[m]: systemd isn't currently something that's affecting my decision. Maybe in the future. I'll keep it in my mind.
+15:56:43 <Zenithium[m]> Also have to mention Gentoo heh
+15:57:07 <DannyWorkOrderPr> <nscnt "cx2: I'll keep recommending Fedo"> One of these days, I'm going to have to give it a try over Arch-based. What are the stability/security differentials, if anyone can speak somewhat authoritatively on it?
+15:57:55 <cx2[m]> Intersted in this as well.
+16:01:57 <Zenithium[m]> Daniel and madaidan use Arch iirc
+16:02:32 <madaidan[m]> I use arch btw
+16:02:52 <madaidan[m]> <Zenithium[m] "Daniel and madaidan use Arch iir"> Stan
+16:02:56 <Zenithium[m]> Perhaps Fedora is more secure out-of-the-box with SELinux enabled by default but I'm not sure how strict the policies are (I assume not very) but Arch can be hardened more than Fedora I think because it has linux-hardened and other htings
+16:04:26 <madaidan[m]> <Zenithium[m] "Perhaps Fedora is more secure ou"> Fedora's SELinux is negligible since most things still run unconfined. Enabling a MAC framework is useless if you don't develop strict, full system policies for it.
+16:05:21 <madaidan[m]> Even Debian and Ubuntu use AppArmor by default.
+16:05:28 <madaidan[m]> Doesn't mean much.
+16:29:31 <joshman[m]> There's absolutely no need in distro hopping. They all are crap if you are after security
+16:32:59 <grapheneosuser[m> Please explain. :)
+16:35:03 <niklasnothstine[> There's some fairly easy-to-find criticisms of Linux by the lead maintainer — monolithic kernel / privilege escalation, lack of reasonable sandboxing solutions for the desktop, cargo cultish behavior. Might be worth looking up some of strcat's critiques on Reddit for an intro.
+16:44:32 <grapheneosuser[m> Have read a bit. Just like reading up on peoples opinions here. But will do.
+16:51:19 <niklasnothstine[> Having read those, and having had very little exposure to an alternative opinion besides "install Firefox and Linux" for infosec, they were a bit of an eye-opener. I own a Mac, and was interested in buying a Linux box to replace it out of some concerns about what Macs do during device activation, and that basically made me stick with what I had as the lesser of the evils.
+17:48:57 <analogpathy[m]> <joshman[m] "There's absolutely no need in di"> That might change once Kicksecure transitions to Void Linux as base. I have high hopes once there's no shitty Debian, the project will have actual potential.
+17:56:20 <analogpathy[m]> <Zenithium[m] "If you're against bloat, maybe y"> systemd is also a general attack vector, the size of the innit is far of a lesser issue for me.
+17:56:48 <analogpathy[m]> <nscnt "I don't want DEs"> i3 is usually my to-go
+18:17:20 <nscnt> analogpathy[m]: I'm planing to use dmw.
+18:17:51 <analogpathy[m]> <nscnt "analogpathy: I'm planing to use "> don't you have to recompile each time because they dislike having a config file?
+18:19:09 <nscnt> analogpathy[m]: As far as I know, yep.
+18:19:34 <analogpathy[m]> yeah, that was a deterrent for me. but maybe you'll like it.
+18:20:49 <nscnt> I'm not sure myself. I'll see. i3 will be my alternative as I already used it in the past.
+18:23:10 <analogpathy[m]> I've wanted to try xmonad because it's written in Haskell
+18:23:40 <analogpathy[m]> but not for actual use, I don't like X11
+18:25:01 <nscnt> analogpathy[m]: You use Wayland?
+18:25:28 <Zenithium[m]> <analogpathy[m] "don't you have to recompile each"> It takes like a second lol
+18:28:27 <analogpathy[m]> <nscnt "analogpathy: You use Wayland?"> yes
+18:29:13 <analogpathy[m]> <Zenithium[m] "It takes like a second lol"> dwm had a lot less features/needed recompiling and was like 6MB
+18:29:53 <analogpathy[m]> i3way was on the horizion, that project got canned though and Sway came out instead
+18:29:58 <analogpathy[m]> so that's particularly validating, having a stable Wayland drop-in replacement window manager
+18:33:03 <Zenithium[m]> <analogpathy[m] "dwm had a lot less features/need"> Wut? It's 60K
+18:33:29 <analogpathy[m]> <Zenithium[m] "Wut? It's 60K"> my config was probably 6MB
+18:35:18 <Zenithium[m]> I don't know how that's even possible lol
+18:36:07 <analogpathy[m]> I stole an omega setup iirc
+18:36:55 <analogpathy[m]> there were a lot of features that it doesn't come with
+18:38:21 <analogpathy[m]> could just be faulty memory
+18:39:30 <Zenithium[m]> Dunno what an omega setup is but the whole point of dwm is to patch in what you want so it's not bloated with unneeded features
+18:39:40 <Zenithium[m]> Maybe it had every existing patch for dwm
+18:39:44 <Zenithium[m]> ¯\_(ツ)_/¯
+18:41:00 <analogpathy[m]> I like having a config file myself
+18:41:15 <analogpathy[m]> some of their philosophical design choices are a bit nitpicky
+18:41:27 <analogpathy[m]> other than being X and that i didn't mind it but I still liked my i3 sway
+18:51:28 <analogpathy[m]> <Zenithium[m] "Wut? It's 60K"> actually 26k
+18:51:43 <analogpathy[m]> I checked just now
+18:52:56 <analogpathy[m]> > <@zenithium:matrix.org> It takes like a second lol
+18:52:56 <analogpathy[m]>  * dwm had a lot less features/needed recompiling and was like 24K
+18:54:25 <analogpathy[m]> I was definitely thinking of something else lmao
+18:54:48 <nscnt> Zenithium[m]: Do you have a public repo of your setup?
+18:56:39 <analogpathy[m]> Has anyone ever heard of 2bwm btw?
+18:59:55 <Zenithium[m]> <nscnt "Zenithium: Do you have a public "> Nope, I don't really use dwm (yet), just played around with it a bit in my Arch VM when I was trying out what it would be like to install without a DE. The only thing I changed was the Mod key from Alt to Super (though I don't know if I even want to change anything else, maybe add a few more tiling layouts)
+19:00:47 <nscnt> Zenithium[m]: That's exactly my plan as well.
+19:02:32 <analogpathy[m]> <Zenithium[m] "Dunno what an omega setup is but"> actually, I remember having 42 patches and 23 scripts now
+19:03:00 <analogpathy[m]> I was using a set-up from a normie called Luke Smith
+19:03:07 <analogpathy[m]> no I definitely recall correctly now
+19:03:53 <Zenithium[m]> lol
+19:07:13 <nscnt> Luke Smith is one of the reason how I slipped in this, tbh
+19:07:35 <nscnt> *reasons why
+19:08:49 <analogpathy[m]> <nscnt "I'm not sure myself. I'll see. i"> if you use i3 sway https://github.com/nwg-piotr/autotiling is nice if you don't like manual splitting
+19:08:56 <analogpathy[m]> <nscnt "Luke Smith is one of the reason "> I originally heard of dwm from another channel that's actually decent called DistroTube
+19:09:32 <analogpathy[m]> Luke Smith sometimes has some bullshit takes, like on Telegram he improperly describes Telegram's cons and also made a broad claim with little evidence that Discord "doxed people that they don't like" which I have tried finding but to no avail. Some of his bash script videos are ok, but he also recommends bad browsers additionally.
+19:09:36 <dazinism> rutxonboard : wonder about this https://www.shiftphones.com/en/shiftmu/
+19:10:07 <nscnt> analogpathy[m]: Yea, I watched some videos of him, too. But I'm currently not interested in his content and deleted the url from by rss feed.
+19:10:41 <nscnt> The above re: DistroTube
+19:10:45 <Zenithium[m]> I saw from him that Youtube channels have RSS feeds :p
+19:10:49 <dazinism> If you read/translate the German says something about an unlocked bootloader
+19:11:08 <analogpathy[m]> <Zenithium[m] "I saw from him that Youtube chan"> thanks to Invidious
+19:11:19 <dazinism> Wonder they will support alternative signing keys for verified boot
+19:11:38 <analogpathy[m]> nscnt yeah his content isn't really interesting, I usually only stumble upon DistroTube if I'm looking for things to use
+19:11:43 <analogpathy[m]> he's one of the first videos to pop up in the search results
+19:12:37 <nscnt> dazinism: I can confirm: Bootloader is marketed as unlockable.
+19:13:32 <nscnt> Source: Me, native German speaker
+19:13:48 <Zenithium[m]> DT is like an order of magnitude more normie than Luke, I just find him incredibly bland and boring to watch
+19:14:38 <analogpathy[m]> he has no interesting commentary or interesting anything in his videos expect for what he's reviewing sometimes
+19:14:40 <nscnt> analogpathy[m]: I recognise the stuff with Telegram and especially the one with Zoom. Not too good alternatives he's mentioning there and with false hope.
+19:15:08 <analogpathy[m]> <analogpathy[m] "he has no interesting commentary"> (DistroTube)
+19:16:55 <analogpathy[m]> <nscnt "analogpathy: I recognise the stu"> I admittetly couldn't watch the entirety of the Zoom video, but on the Telegram one the way he explains it makes me believe he doesn't know much about the topic.
+19:17:13 <analogpathy[m]> and I also want to know more about Discord "doxing people they dislike" because that's a very relevant claim in the video that no evidence has surfaced on the internet and is very baseless from what I could find.
+19:17:22 <analogpathy[m]> Telegram and DIscord are bad, but I don't think he is very informative on those matters and not giving good perceptions to his viewers
+19:19:17 <nscnt> analogpathy[m]: He's playing one of the /r/privacy guys on these topics. But gladly we all have a critical mind. =]
+19:23:06 <nscnt> It's not like we have to believe everything anyone says.
+19:23:55 <analogpathy[m]> Haha yeah, just the majority of the privacy community generally only value one side of the spectrum (intuitive to what that is) and echo false information about security and don't actually specify what they are recommending are not secure and a compromise.
+19:23:56 <analogpathy[m]> I myself, rather prefer having a balance of both. I don't like to lose security because I value it extensively. I'm fine if people have their preferences and all but the mentality that "everything open-source is safe and secure" is just bullshit and all. That's just one of many misinformation I've encountered and had to debunk repetitively.
+19:24:15 <analogpathy[m]> <nscnt "It's not like we have to believe"> expect for Daniel Micay /s
+19:25:01 <nscnt> :D
+19:49:44 <TheJollyRoger> This might just be me, but I figure that because most of the security community know enough to just be a danger to themselves, they end up valuing knobs, tweaks, and tunables and other visible indications of some security in progress, even if it's just theatrics. Reminds me of the situation with airline security.
+19:50:29 <TheJollyRoger> And hospitals doing things like fitting babies with IR tracking bracelets, even though a determined attacker could simply *detach the tracking bracelet*
+19:52:51 <Zenithium[m]> <TheJollyRoger "And hospitals doing things like "> Detach??? Who would do that!? XD
+19:54:12 <TheJollyRoger> No clue, apparently, they were trumping up talk about "anti infant-kidnapping initiatives"
+19:54:19 * TheJollyRoger shrugs.
+19:55:13 <Zenithium[m]> I should put the /s at the end
+19:55:25 <TheJollyRoger> It's a symptom of what I call Toxic Power User Mentality; wanting simple answers to extremely complex, multifaceted and nuanced issues.
+19:55:28 <TheJollyRoger> Hehe, I got ya :D
+19:55:55 <Zenithium[m]> Btw someone asked you something way above
+19:56:02 <TheJollyRoger> Scrollin' back.
+20:03:36 <TheJollyRoger> I don't want to dig up dead discussions. If it comes up again I'll make the call, just as I did before.
+20:08:05 <Zenithium[m]> 👍️
+20:11:26 <TheJollyRoger> If this is about nunbit, I'd like to stress if something else like this happens again, I'll make the call, that's all.
+20:12:22 <TheJollyRoger> Heh. If it's about "Arr" -- that's sorta... ah, let me find the video :)
+20:12:57 <Zenithium[m]> Yep about nunbit, just wanted to tell you since the other guy said that he's waiting for your response
+20:16:21 <TheJollyRoger> There's not much I feel the need to respond to. We gave him numerous chances to stop posting in a manner that was clearly meant to provoke and inflame.
+20:18:07 <cx2[m]> <Zenithium[m] "Yep about nunbit, just wanted to"> Pretty certain the "other guy" is also nunbit, unfortunately.
+20:19:04 <Zenithium[m]> <TheJollyRoger "There's not much I feel the need"> I share your sentiment and expressed my opinions when the question was asked
+20:19:55 <TheJollyRoger> Well, I'm usually around the computer, so if it escalates from "Golden Mean" fallacies (ie: "both sides are at fault"), then give me a shout.
+20:20:06 <Zenithium[m]> <cx2[m] "Pretty certain the "other guy" i"> Idk I didn't really think so since he would've replied to himself in the conversation with an impartial opinion and I don't see the point of that, but as they say "on the internet nobody knows you're a dog" lol
+20:20:18 <TheJollyRoger> Yeah.
+20:20:25 <TheJollyRoger> Nobody knows I'm a cowboy and not a pirate. Oops! :)
+20:20:50 <cx2[m]> Blasphemy!!
+20:20:55 <TheJollyRoger> Hehehe :)
+20:21:37 <Zenithium[m]> So should I address you as partner instead of matey now? heh
+20:22:15 <TheJollyRoger> Heh, naw. Matey is what I go by, but if I wasn't a pirate, I'd be a cowboy!
+20:25:35 <Zenithium[m]> From looting treasure to herding cattle eh? x)
+20:25:51 <TheJollyRoger> As long as there's adventure involved :)
+20:34:25 <mitchr> I read somewhere recently about new pixel 3as coming with Android 10 having issues with TWRP. While graphene OS does not mention TWRP in the install guide, is there anything to be worried about here? Has anyone done a successful install on a recently purchased Pixel 3a?
+20:34:33 <TheJollyRoger> Ahoy!
+20:34:49 <mitchr> Ahoy!
+20:35:05 <TheJollyRoger> A few people here have, I think the 3a's been the most popular of all the phones.
+20:35:45 <mitchr> Good to hear, I still am able to cancel my order :)
+20:35:59 <TheJollyRoger> The procedure to install GrapheneOS is the same as the production operating system.
+20:36:05 <cx2[m]> <mitchr "I read somewhere recently about "> works like a champ. TWRP not required.
+20:36:18 <TheJollyRoger> So all the stuff you've ever picked up from XDA or Lineage, just toss it out the window.
+20:36:48 <mitchr> Good news, some of that stuff seemed pretty janky in the first place.
+20:36:56 <TheJollyRoger> Yarr, it be.
+20:37:24 <TheJollyRoger> GrapheneOS instead uses proper production releases, the same way Google publishes factory images for their phones.
+20:37:46 <mitchr> Oh that's nice! Feels like less of a hack :)
+20:37:58 <TheJollyRoger> Hehehe, indeed!
+20:38:03 <mitchr> Should I expect any issues with Verizon as a service provider? I'm getting an unlocked phone of course!
+20:38:04 <cx2[m]> There's a good reason for that...
+20:38:34 <TheJollyRoger> Yep. GrapheneOS insists on doing things the correct way, not "just get it to boot and that's gud nuff"
+20:39:03 <TheJollyRoger> mitchr: I don't think so. I think someone on the subreddit bought a phone from the Google Store and reported "just put the SIM card in, and it works."
+20:39:38 <TheJollyRoger> *bought a phone from the Google Store, installed GrapheneOS on it, and reported "just put the SIM card in and it works."
+20:39:42 <mitchr> Very nice, thanks a lot y'all!
+20:39:47 <TheJollyRoger> Yarr, anytime!
+20:40:34 <mitchr> Once I get up and running, I'd like to contribute what I can to this project. I did take a course on operating systems in college and did a little bit of kernel hacking, but haven't messed with that stuff in a while. Any tips on how to approach this kind of development?
+20:40:55 <TheJollyRoger> If you ever do need to revert back to the factory operating system, the procedure is the same except for one minor step - you have to just erase the GrapheneOS custom key from the bootloader before you lock it again. That's all.
+20:41:01 <TheJollyRoger> So there is no need for any dodgy XDA stuff.
+20:41:13 <mitchr> Oh nice, sounds easy enough.
+20:41:34 <cx2[m]> I'd triple check that it is indeed unlocked or "unlockable"....before you buy. Definitely don't want to wait on the phone.... only to have it be useless
+20:41:35 <TheJollyRoger> Oh fantastic to hear you'd like to join up :)
+20:41:49 <TheJollyRoger> Well, lemme think...
+20:42:04 <mitchr> Buying it directly from Google, that should be unlockable yes?
+20:42:08 <TheJollyRoger> Yes!
+20:42:12 <TheJollyRoger> That's the best way to do it honestly.
+20:42:19 <cx2[m]> <mitchr "Once I get up and running, I'd l"> https://grapheneos.org/build#development-guidelines
+20:42:49 <JTL> > 13:40 <mitchr> Once I get up and running, I'd like to contribute what I can to this project. I did take a course on operating systems in college and did a little bit of kernel hacking, but haven't messed with that stuff in a while. Any tips on how to approach this kind of development?
+20:42:51 <JTL> I think that's better then a lot of people here. I have somewhat of a similar academic background as well
+20:42:56 <TheJollyRoger> You're going to need to get really really good with git, that's the first thing I could probably tell you. The whole project uses git for everything. I'm only just starting to wrap my head about it now.
+20:43:08 * JTL rebases TheJollyRoger
+20:43:18 <JTL> Why are your feet on your head?
+20:43:23 * TheJollyRoger is rebased with HEAD~2
+20:43:36 <TheJollyRoger> Oh no, now I need a --fixup!
+20:44:16 <mitchr> Oh I'm down with git. If any of you are into EMACS, you'll know how good Magit can be :)
+20:44:24 <TheJollyRoger> \o/ Excellent!
+20:45:20 <TheJollyRoger> There's going to be a lot of positions available. The thing we most desperately need at this moment are people who know how to do things like run android-prepare-vendor to extract the firmware payloads from the Google Factory images.
+20:45:27 <TheJollyRoger> And incorporate those into our own.
+20:45:54 <TheJollyRoger> As well as do things like backport the patches, bugfixes, device-specific exploit mitigations and workarounds to the kernels.
+20:46:23 <TheJollyRoger> I think some devices like the 3 and 3XL can use the same kernel but the driver for the screens is different so little problems like those quickly start rearing their ugly heads.
+20:47:08 <TheJollyRoger> However, if that's not to your speed and you're more an app developer, we also need help there on that front as well. The project's really desperately wanted to have a first-party app store written from scratch that would allow us to have a specially curated and delibaretly selected app collection.
+20:47:23 <mitchr> I see. I don't have any Android experience really, but I exist happily in C (when I'm not using LISP!), and can probably put at least some effort towards kernel hacking.
+20:47:38 <TheJollyRoger> If you do Java or Java backends, there's also a lot of work that needs to be done in-- AH! in C ^_^
+20:47:56 <TheJollyRoger> Someone with your skills will very likely be needed on the kernels then.
+20:48:21 <mitchr> :)  sounds great! haven't really messed with Java, but did spend most of my undergraduate time learning C++. Both are equally bloated, right? XD
+20:48:29 <TheJollyRoger> Especially backporting all those security fixes to the older LTS kernels, I imagine as the older kernels get further and further away from mainline they become harder and harder to maintain.
+20:48:54 <TheJollyRoger> I actually don't know, ahahaha XP. I've only just started on Java and not been having the best time of it :P.
+20:49:45 <TheJollyRoger> There's also a whole bunch of other things that really would work in C... there's an issue tracker that's actually full of old features that need to be brought forward.
+20:50:00 <mitchr> A lot of "modern" languages seem beyond me. All the frameworks and garbage they need for the sake of "portability" are so confusing... either give me an interpreter or a compiler, none of this Virtual Machine nonsense!
+20:50:23 <TheJollyRoger> So the code for some of that stuff is actually still existant but it may be for an older version of Android or an older kernel or target an older version of the Android API... but it could be polished back up again.
+20:50:29 <TheJollyRoger> Let me try and find some examples, one moment
+20:50:57 <TheJollyRoger> Harr-harr :D. I like the cut of yer jibb!
+20:52:31 <mitchr> Cool! I'm not sure how comfortable I am messing with my own device in "risky" ways, since I don't have a bunch of devices I can easily interchange. How much of this development could I work on strictly from my Linux machine? Things of course need to be tested on actual hardware, but best not to risk breaking things :)
+20:52:36 <TheJollyRoger> So... I'm not quuiiiiiite sure what all of these mean, but... right here, Daniel went through and tagged many of these issues with "Past-Feature" when he wrote them. https://github.com/GrapheneOS/os_issue_tracker/issues?page=3&q=is%3Aissue+is%3Aopen So the code for some of these old past features, many of which were for kernel hardening or exploit mitigations, may still exist in the old Android
+20:52:37 <TheJollyRoger> Hardening Archive.
+20:52:57 <TheJollyRoger> So it *might* be possible to go back in time into the old AndroidHardening Archives, bisect the code, and see where it could be patched back into GrapheneOS.
+20:53:48 <TheJollyRoger> I think the old Archives are listed on thestinger's profile, scroll down to his organizations and you'll see three stickers: one for GrapheneOS, one for AndroidHardening, and one for AndroidHardeningArchive.
+20:54:03 <TheJollyRoger> His commit log might have more information -- it's a lot of source code but it might still be there.
+20:54:19 <TheJollyRoger> The good news is...
+20:54:49 <TheJollyRoger> mitchr: we've actually got great news on that front. GrapheneOS actually can be built for and run in the Emulator!
+20:55:07 <TheJollyRoger> If you have a fairly modern processor with virtualization extensions, usually GrapheneOS will run on it.
+20:55:41 <mitchr> Great! I'll spend a little time looking at these things until my phone arrives. Thanks for answering all my questions, I'm sure I'll be back in a few weeks :)
+20:55:50 <TheJollyRoger> It is nice to have a spare phone, but for some things like many past-features and such, unless you're doing driver work or device-specific work, then the emulator will save you about $400.
+20:55:57 <TheJollyRoger> Horay ^_^.
+20:56:23 <mitchr> Do you have any resources about emulating GrapheneOS? Would give me something to play with in the meantime :)
+20:57:10 <TheJollyRoger> I don't at this current moment... I think when you download the depot tools and start the build, you'll be required to run a script called "choosecombo" which will present you with a series of choices for what architecture you want to compile GrapheneOS for.
+20:57:15 <TheJollyRoger> In this case, you'll want to pick the emulator.
+20:57:27 <mitchr> Gotcha! Thanks again!
+20:57:32 <cx2[m]> Ive mentioned this on here before as well....mitchr Will gladly buy/send vetted persons a handset specificlly for development purpose.
+20:57:41 <TheJollyRoger> \o/
+20:57:49 <cx2[m]> key there being "vetted"
+20:58:20 <TheJollyRoger> mitchr: I've actually got a small document typed...
+20:58:22 <TheJollyRoger> Just a sec.
+20:59:16 <mitchr> Oh great! Good to know about handsets being provided. I'm not sure if I'll be able to dive that deep into the project to warrant that much effort being worth it, working on a PhD right now :)
+20:59:24 <TheJollyRoger> It's a tad bit out of date so I need to update it, but https://github.com/Peter-Easton/GrapheneOS-Knowledge/blob/master/GrapheneOS-Shopping-List.md This document should tell you a bit about what you might need. You'll need some software packages from Google in the form of Android Studio which includes the Android platform tools,
+20:59:49 <TheJollyRoger> (This is for developing or building GrapheneOS, not for just running it)
+20:59:58 <TheJollyRoger> and the Google Depot Tools, which are used for building.
+21:00:29 <mitchr> Cool cool, thanks! I think some of these tools are conveniently provided as Arch Linux packages!
+21:00:32 <mitchr> Thanks y'all!
+21:00:35 <TheJollyRoger> \o/ Horay
+22:05:28 * status_active[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/vbAfnPReTRYADQzBovNZlkml >
+22:08:02 * status_active[m] uploaded an image: fastboot.png (14KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/FaYXRDlcKKJcxdBCxKdsAffC >
+22:31:37 <TheJollyRoger> Hi status_active[m], I'll be right with ya.
+22:32:00 <TheJollyRoger> can you do a quick sanity check for me and run `which fastboot` ?
+22:32:40 <TheJollyRoger> Also, are you using a good-quality USB-A to USB-C cable, plugged in directly to your computer's motherboard and not a front-port?
+22:43:03 <status_active[m]> It says /usr/bin/fastboot
+22:43:54 <status_active[m]> yes, I'm using a good quality USB cable
+22:45:04 <status_active[m]> thank you for your help
+22:45:50 <TheJollyRoger> I think I see what the problem is now, actually!
+22:46:25 <status_active[m]> oh really?
+22:46:36 <TheJollyRoger> Yeah. I think what's happening is that it's using the fastboot version from your operating system repositories, rather than the one you've downloaded from Google.
+22:46:42 <TheJollyRoger> You're on Mint, correct?
+22:46:55 <status_active[m]> damn, yes! I'm on mint
+22:47:33 <status_active[m]> how can I force to use the right version?
+22:47:48 <TheJollyRoger> Got it, you're going to have to uninstall the Androd platform tools from your operating system.
+22:48:09 <TheJollyRoger> Then you're going to have to add the right version to your operating system command path. I'll walk you through the process.
+22:48:28 <status_active[m]> oh thank you!
+22:48:37 <TheJollyRoger> Just a moment and let me just check the package name.
+22:49:50 <TheJollyRoger> You're going to need to `sudo apt remove android-tools-fastboot` or `sudo apt remove android-sdk-platform-tools-common` -- I forget which one it is.
+22:50:06 <TheJollyRoger> But you're going to have to remove the android platform tools that came with your operating system.
+22:50:42 <status_active[m]> ok, let's try it
+22:50:55 <TheJollyRoger> If you can get `fastboot: command not found` and `adb: command not found` you're in good shape.
+22:51:44 <status_active[m]> done!, It worked with the sudo apt remove android-tools-fastboot
+22:51:55 <status_active[m]> and now it shows command not found
+22:52:06 <TheJollyRoger> Great! Now for `adb` just to be sure?
+22:52:39 <status_active[m]> it's still installed
+22:53:09 <status_active[m]> should I try sudo apt remove adb?
+22:53:10 <TheJollyRoger> Great. You'll have to `sudo apt remove android-tools-adb` then. Don't worry, we'll get the right one in a moment.
+22:53:12 <TheJollyRoger> Yeah.
+22:53:28 <TheJollyRoger> I'm not quite sure what it's called in Mint, I think Mint and Debian use their own naming sequence that I'm not familiar with.
+22:54:11 <TheJollyRoger> Something like `adb` or `android-platform-tools-common` or `android-platform-tools-adb`
+22:54:36 <TheJollyRoger> It might be one of those three.
+22:55:26 <TheJollyRoger> when adb returns `adb: command not found` then you're in good shape.
+22:55:37 <status_active[m]> that's weird , it's still there
+22:55:48 <TheJollyRoger> can you type in `which adb` ?
+22:56:10 <status_active[m]> returns nothing
+22:56:33 <status_active[m]> but if I type adb it return options
+22:57:12 <TheJollyRoger> Odd. wonder if the android debug bridge server is still running in memory.
+22:57:25 <TheJollyRoger> Try rebooting your PC?
+22:57:31 <status_active[m]> oh, I know why. The adb is pointing to the latest version I download
+22:57:40 <TheJollyRoger> Oh, adb --version is pointing to the correct one?
+22:57:55 <TheJollyRoger> Check `adb --version`
+22:58:12 <status_active[m]> it says Android Debug Bridge version 1.0.41
+22:58:12 <status_active[m]> Version 30.0.0-6374843
+22:58:16 <TheJollyRoger> OK great!
+22:58:53 <TheJollyRoger> ADB is not strictly needed for this, but it's nice to have just in case... in that same directory where you have adb located, can you run `ls fastboot` to list the contents and see which directory it's in?
+22:59:51 <status_active[m]> it's in the same folder as ADB
+23:00:56 <TheJollyRoger> Great. Add it to your .bashrc with `echo export PATH=$PATH:[path-to-directory-containing-the-tools] >> ~/.bashrc`
+23:00:59 <TheJollyRoger> Whoops.
+23:01:00 <TheJollyRoger> Sorry
+23:01:09 <TheJollyRoger> Great. Add it to your .bashrc with `echo "export PATH=$PATH:[path-to-directory-containing-the-tools]" >> ~/.bashrc`
+23:01:40 <status_active[m]> let's see
+23:01:41 <TheJollyRoger> So if it's in the directory "/home/my_username/Downloads/platform-tools/"
+23:02:12 <TheJollyRoger> This command would be `echo "export PATH=$PATH:/home/my_username/Downloads/platform-tools/" >> ~/.bashrc
+23:02:16 <TheJollyRoger> `
+23:02:48 <TheJollyRoger> This'll let the command shell know to append that directory where `adb` and `fastboot` live each time you open a new bash shell from this point forward.
+23:03:30 <status_active[m]> ok, done! I hit enter but it does not show anything
+23:03:59 <TheJollyRoger> If you don't want to start a new bash session you can then just run the command `export PATH=$PATH:/home/my_username/Downloads/platform-tools/` right then and there to test it out.
+23:04:03 <TheJollyRoger> Yep, it won't.
+23:04:12 <status_active[m]> ok
+23:04:20 <TheJollyRoger> Then try running fastboot --version
+23:04:39 <status_active[m]> it says fastboot version 30.0.0-6374843
+23:04:45 <TheJollyRoger> Splice the mainbrace!
+23:04:52 <TheJollyRoger> now try running the flashing script.
+23:05:06 <status_active[m]> lets see
+23:05:18 <TheJollyRoger> Make sure that cable's in there very snugly... I assume you've already verified the download?
+23:05:25 <status_active[m]> no, same issue
+23:05:38 <status_active[m]> yeap, verifies
+23:05:43 <status_active[m]> verified
+23:05:46 <TheJollyRoger> Just a minute.
+23:06:25 <status_active[m]> if I hit which fastboot, it's still pointed to /usr/bin/fastboot
+23:07:03 <TheJollyRoger> Hmm. Can you hit up `apt search fastboot` for me and see what's installed?
+23:08:16 <status_active[m]> fastboot/bionic-updates,bionic-security,now 1:8.1.0+r23-5~18.04 amd64 [installed]
+23:08:16 <status_active[m]>   Android fastboot tool
+23:08:30 <TheJollyRoger> Aha. It's still installed.
+23:08:32 <status_active[m]> still with the old version, damn
+23:08:40 <zoraver[m]> >r23-5
+23:08:45 <status_active[m]> yeap
+23:09:24 <TheJollyRoger> Yeah. Going to have to uninstall it somehow. Try `sudo apt purge fastboot`
+23:09:52 <zoraver[m]> If I remember how Debian packages adb and fastboot, this means that your fastboot is from ~5 years ago
+23:10:04 <TheJollyRoger> Oh good gravy.
+23:10:37 <zoraver[m]> Wait, it might be only 3 years...
+23:10:37 <TheJollyRoger> At that rate, I'd start wondering if that could have actually failed autodetection and then bricked the phone.
+23:10:55 <TheJollyRoger> It'd be softbricked, not hardbricked, but still.
+23:11:00 <JTL> zoraver[m]: Gentoo's fastboot appears to be from a Android 9.0 tag
+23:11:02 <JTL> lol
+23:11:03 <status_active[m]> when I hit sudo apt purge fastboot it says "Package 'fastboot' is not installed, so not removed"
+23:11:13 <JTL> I've been meaning to try and fix it, but busy
+23:12:13 <TheJollyRoger> status_active[m]: this is going to be a clumsy hack, but could you try running `sudo mv /usr/bin/fastboot/ /usr/bin/fastboot-too-old-to-run` for the time being?
+23:12:50 <TheJollyRoger> I don't think we could make Mint much worse >_<.
+23:13:13 <status_active[m]> mv: cannot stat '/usr/bin/fastboot/': No such file or directory
+23:13:41 <status_active[m]> I hit which fastboot and returns nothing
+23:14:09 <TheJollyRoger> Ah sorry, my bad
+23:14:20 <TheJollyRoger> `sudo mv /usr/bin/fastboot /usr/bin/fastboot-too-old-to-run`
+23:14:35 <status_active[m]> can we move the latest fastboot to /usr/bin ?
+23:14:49 <TheJollyRoger> Try it, nothing to lose.
+23:15:25 <TheJollyRoger> I have no idea what the mint devs were thinking about doing this >_<
+23:15:31 <JTL> I wouldn't
+23:15:38 <TheJollyRoger> Ok, don't then :P.
+23:15:39 <JTL> Did you uninstall the existing fastboot properly
+23:15:47 <JTL> Hold on. I might know something
+23:15:54 <status_active[m]> now it's flashing
+23:16:00 <JTL> uh okay
+23:16:26 <status_active[m]> there you go
+23:16:39 <JTL> All good?
+23:16:53 <status_active[m]> thank you TheJollyRoger !
+23:17:04 <TheJollyRoger> You're welcome!
+23:17:19 <status_active[m]> now let's wait!
+23:17:41 <status_active[m]> damn, failed again
+23:17:48 <TheJollyRoger> What's it say?
+23:18:02 <status_active[m]> it says /usr/bin/mke2fs failed with status 1
+23:18:02 <status_active[m]> fastboot: error: Cannot generate image for userdata
+23:19:38 * status_active[m] uploaded an image: fastboot2.png (104KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/RgeVyWtbTmJKTkzdRNKFmMtm >
+23:20:26 <TheJollyRoger> Let's take a look...
+23:24:13 <TheJollyRoger> Hmm...
+23:25:13 <TheJollyRoger> Dunno if it's safe to skip the wipe option, what's your verdict on this JTL?
+23:25:27 <TheJollyRoger> Since I think this can cause bootlooping if it goes wrong.
+23:25:41 <JTL> I'm slightly concerned
+23:26:11 <JTL> If I was doing that I'd try and uninstall the "outdated" android tools and install from upstream
+23:26:26 <JTL> Hold on. I might got something for you
+23:26:34 <TheJollyRoger> Okay!
+23:26:56 <status_active[m]> thank you guys for your time
+23:27:00 <TheJollyRoger> We were trying to earlier, but Mint kept doing some schrodinger's uninstall for some very bizarre reason O_O
+23:27:00 <JTL> No problem
+23:27:03 <JTL> I need to eat again soon
+23:27:09 <JTL> TheJollyRoger: I have some ideas
+23:27:09 <TheJollyRoger> I'm stumped, actually >_<.
+23:27:21 <TheJollyRoger> Go JTL Go!
+23:28:06 <JTL> what does `dpkg -S /usr/bin/fastboot` do
+23:28:45 <status_active[m]> it says dpkg-query: no path found matching pattern /usr/bin/fastboot
+23:28:50 <JTL> hmm okay
+23:28:53 <JTL> hold on
+23:28:57 <zoraver[m]> status_active: e2fsprogs provides mke2fs
+23:29:08 <zoraver[m]> What version of e2fsprogs do you have installed?
+23:30:03 <status_active[m]> how can I check that? I got lost
+23:30:22 <JTL> status_active[m]: try `dpkg-query -l |grep android`
+23:30:24 <status_active[m]> it says command not found
+23:30:31 <JTL> for dpkg-query?
+23:31:12 <status_active[m]> there's no e2fsprogs on the list
+23:31:27 <JTL> We're not checking e2fsprogs (yet)
+23:31:34 <JTL> This is for any trace of leftover Android tools
+23:31:46 <JTL> (my dpkg-query command)
+23:32:03 * status_active[m] uploaded an image: screen.png (72KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/YISPfjRRxIDNAELYuetuHabX >
+23:32:20 <zoraver[m]> Interestingly enough, the android sdk provides its own copy of mke2fs...
+23:32:29 <JTL> That's a partial screencap, can you get me the full output?
+23:32:36 <JTL> (use pastebin or something)
+23:32:49 <JTL> actually pasting all of it in matrix chat should work fine
+23:33:19 * TheJollyRoger drowns his sorrows at having to wget everything
+23:33:28 <JTL> lol
+23:33:55 * status_active[m] uploaded an image: screen2.png (128KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/NrHthIKwnTFfGwkFISGHDCcC >
+23:34:12 <JTL> That's all of it?
+23:35:03 <status_active[m]> yeap
+23:35:09 <status_active[m]> that's all
+23:35:09 <JTL> In that case, let's check e2fsprogs next
+23:35:11 * status_active[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/YCtRMyGLyJtexuCSPqTadxtS >
+23:35:12 <JTL> dpkg-query -l |grep e2fsprogs
+23:35:34 <zoraver[m]> Also, `which mke2fs`
+23:35:46 <miniblue[m]> why does nothing work like it's supposed to
+23:36:02 <status_active[m]> dpkg-query -l |grep e2fsprogs
+23:36:02 <status_active[m]> ii  e2fsprogs                                     1.44.1-1ubuntu1.3                                amd64        ext2/ext3/ext4 file system utilities
+23:36:02 <status_active[m]> ii  libuuid-perl                                  0.27-1build1                                     amd64        Perl extension for using UUID interfaces as defined in e2fsprogs
+23:36:02 <JTL> miniblue[m]: blame outdated development practices
+23:36:21 <JTL> Hmm
+23:36:27 <JTL> I need to eat now, but I'll get back to you later
+23:36:31 <status_active[m]> which mke2fs shows:
+23:36:31 <status_active[m]> /sbin/mke2fs
+23:37:11 <miniblue[m]> Every OS I have tried to install has caused me issues. Arch. Qubes. Mint. Windows. Graphene even.
+23:37:32 <TheJollyRoger> miniblue[m], I get the feeling that Mint comes with the problem of being so far from upstream it's ended up in a very bad situation.
+23:37:38 <zoraver[m]> e2fsprogs 1.44.1 is over two years old... Just something to note
+23:37:58 <zoraver[m]> The android sdk ships with its own copy of mke2fs
+23:38:01 <miniblue[m]> Yeah, for sure.
+23:38:32 <zoraver[m]> Also, the script tried to run /usr/bin/mke2fs. Does that file exist?
+23:39:34 <miniblue[m]> Currently going through with Qubes the same thing I went through with Arch. That is, this doesn't exist, the BIOS don't recognize it as existing, boot into recovery mode, reinstall, reinstall again, fuck you.
+23:40:35 <status_active[m]> no, /usr/bin/mke2fs. it doesn't exist
+23:40:54 <miniblue[m]> something something UEFI
+23:41:45 <TheJollyRoger> miniblue[m]: Aaargh. I call EFI "Extremely Foul Interface" and even worse when kids aren't around.
+23:42:58 <zoraver[m]> status_active: can you post the contents of flash-all.sh?
+23:43:38 <miniblue[m]> Thing is my desktop/motherboard won't even let me boot via MBR/BIOS even if I wanted to. Because fuck you.
+23:43:56 <TheJollyRoger> Aaaargh
+23:44:46 <miniblue[m]> Infuriating. Good luck to you guys, won't pollute the channel.
+23:45:03 <status_active[m]> sure, here it goes
+23:45:04 * status_active[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/IZpHNPcEGIDBmHQPqhOkaxQX >
+23:45:30 <zoraver[m]> Thanks!
+23:45:40 <TheJollyRoger> Luck!
+23:46:00 * status_active[m] uploaded an image: flash.png (137KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/SLlhdYKIbviZQerfcbdNzKGk >
+23:49:01 <zoraver[m]> My advice is to add the copy of mke2fs that came with the android sdk to your path
+23:49:23 <zoraver[m]> If you haven't already
+23:49:33 <status_active[m]> ok, let's try it
+23:50:29 <status_active[m]> ok, done
+23:51:17 <status_active[m]> copied to /sbin
+23:51:30 <status_active[m]> should I try to flash again?
+23:52:17 <zoraver[m]> Go for it
+23:55:28 * status_active[m] uploaded an image: fastboot3.png (168KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/HiDwQHzNOOjMnOlONqHpgAwc >
+23:55:31 <status_active[m]> failed again
+23:56:23 <zoraver[m]> It is interesting that it thinks that mke2fs is in /usr/bin/
+23:56:28 <zoraver[m]> It being fastboot
+23:56:58 <status_active[m]> should I copy it to /usr/bin?
+23:57:35 <status_active[m]> copied it before to /sbin
+23:58:06 <zoraver[m]> Worth a try
+23:58:14 <status_active[m]> let's see
+23:58:15 <zoraver[m]> It is weird behavior though...
+23:59:27 <status_active[m]> humm

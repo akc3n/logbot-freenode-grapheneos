@@ -1,0 +1,799 @@
+00:09:07 <strcat[m]> madaidan.: no need to include default config changes
+00:11:06 <madaidan[m]> <strcat[m] "madaidan.: no need to include de"> Ok, got rid of them
+00:31:28 <strcat[m]> madaidan.: main thing that needs to be done is debugging the slab canary issue that's blocking re-enabling it
+00:31:45 <strcat[m]> can't remember when the issue was introduced
+00:50:40 <madaidan[m]> The ASLR commits above are all of them though, right?
+00:53:37 <strcat[m]> maybe?
+00:53:42 <strcat[m]> I didn't quite finish on arm64 btw
+00:53:42 <strcat[m]> before
+00:53:53 <strcat[m]> and also there's the 4 level page table bug that needs to be resolved (see os_issue_tracker)
+01:37:53 <DDD2232> I am getting a bunch of errors installing OS on pixel 3 XL.
+01:38:04 <DDD2232> Does anyone have few min to help me out with this?
+01:42:27 <TheJollyRoger> Hi DDD2232 your timing's good, I just sat down.
+01:42:35 <DDD2232> Awesome!
+01:42:54 <TheJollyRoger> Alright -- where are you right now and are you installing using the official guide? Have you read the official guide start-to-end?
+01:43:01 <DDD2232> I have
+01:43:04 <DDD2232> I downloaded image
+01:43:08 <DDD2232> Doing flash-all
+01:43:16 <DDD2232> I did flash-all previously on regular factory images
+01:43:17 <TheJollyRoger> Ok, what do you see in the scrollback?
+01:43:28 <DDD2232> So I am somwhat familiar with the process.
+01:43:31 <DDD2232> well first
+01:43:41 <DDD2232> fastboot too old; please download the latest version at https://developer.android.com/studio/releases/platform-tools.html
+01:43:49 <DDD2232> But I have the newest verssion
+01:43:55 <TheJollyRoger> can you run for me:
+01:44:02 <TheJollyRoger> which fastboot ; fastboot --version
+01:44:05 <TheJollyRoger> and let me see the result?
+01:44:23 <DDD2232> fastboot version eac51f2bb6a8-android
+01:45:08 <DDD2232> platform-tools_r30.0.2-windows
+01:45:14 <DDD2232> is what I downloaded and installed
+01:45:27 <TheJollyRoger> You're on Windows?
+01:45:28 <TheJollyRoger> Ok.
+01:45:30 <DDD2232> I can edit bath file to ignore the error. But then I have next one and next one
+01:45:31 <DDD2232> yes
+01:45:49 <TheJollyRoger> Don't, unless you want to get the dreaded "No OS found" error.
+01:46:07 <DDD2232> I generally got to
+01:46:07 <DDD2232> Erase successful, but not automatically formatting.
+01:46:15 <DDD2232> I can still boot into OS
+01:46:20 <DDD2232> but regular google OS
+01:46:32 <DDD2232> Cant install Graphene
+01:46:41 <TheJollyRoger> For some reason even though you did download platform tools, your command path is still set to prefer the incorrect version of fastboot.
+01:47:02 <DDD2232> path is set to the same adb folder/
+01:47:05 <DDD2232> Same one I am using
+01:47:20 <TheJollyRoger> Then it should be returning 30.0
+01:47:47 <TheJollyRoger> I'd suggest removing fastboot and making sure that it's fully removed and starting over again with unpacking fastboot and adding it to your path.
+01:48:24 <DDD2232> ok one sec
+01:48:51 <TheJollyRoger> If fastboot --version doesn't return 30.0- then something is wrong.
+01:49:43 <TheJollyRoger> It should do this even on Windows - that sanity check was added because people kept flashing using incorrect or outdated versions of fastboot or "Minimal Fastboot" versions distributed for Windows, and ending up with the "No OS found" error.
+01:50:40 <DDD2232> Ok, but putting this error aside, if I downloaded the newest one, and I am running a newest one by opening CMD window in that specific folder...
+01:50:56 <DDD2232> Shouldn't I be able to manually skip this?
+01:51:09 <TheJollyRoger> You should be using Powershell, not cmd.
+01:51:40 <TheJollyRoger> Until you get fastboot --version to return the correct version, don't continue.
+01:52:53 <TheJollyRoger> It looks like you've installed one of those "minimal fastboot" versions and your command path is preferring that over 30.
+01:53:22 <DDD2232> hmmm
+01:53:46 <DDD2232> ok let me check
+01:54:21 <TheJollyRoger> So the thing you will need to do first is to remove all traces of the old fastboot from your system, because these "minimal fastboot" versions packaged for Windows often don't support autodetection and then your phone won't boot from the correct partition.
+01:54:40 <TheJollyRoger> So it keeps trying to boot from the Google partition.
+01:54:53 <DDD2232> Ok got you. SHould I install full SDK?
+01:55:07 <TheJollyRoger> You won't need to. Simply download the official platform tools latest from google.
+01:55:58 <TheJollyRoger> You will need to then add it to your command path.
+01:56:24 <TheJollyRoger> Also - please be sure to read the installation guide fully, you will need to use Powershell for this, not cmd.
+01:57:32 <DDD2232> I read that just tend to name them interchangeably. Just an old habit. But I have been opening PS and going to the appropriate adb folder.
+01:57:54 <madaidan[m]> <strcat[m] "I didn't quite finish on arm64 b"> What else is there to be done?
+01:58:09 <TheJollyRoger> Great. Be sure to add it to your command path, since flash-all will need to call fastboot multiple times.
+01:58:39 <strcat[m]> madaidan.: making it preserve ASLR entropy under memory exhaustion iirc
+01:58:39 <strcat[m]> I forget
+01:58:41 <TheJollyRoger> Once again, make sure you run "fastboot --version" and check that it returns the correct version.
+02:00:41 <madaidan[m]> <strcat[m] "madaidan.: making it preserve AS"> Isn't that part of GRKERNSEC_PROC_MEMMAP?
+02:00:55 <DDD2232> fastboot version 30.0.2-6538114
+02:00:58 <DDD2232> I got it
+02:01:06 <TheJollyRoger> Great!
+02:01:54 <madaidan[m]> Are issues 43 and 101 the same?
+02:02:19 <madaidan[m]> Submitted the ASLR enhancements btw
+02:03:48 <DDD2232> TheJollyRoger tried flash-all it is giving me some stupid Cant read the file error. Letm e redownload
+02:15:05 <DDD2232> Ok I got further than before
+02:15:08 <DDD2232> Resizing 'product_b'                               OKAY [  0.010s]
+02:15:31 <DDD2232> It happens too fast. I try to reboot to bootloader on the device but the scripts stops way before I can get to i.t
+02:15:35 <DDD2232> it*
+02:15:53 <TheJollyRoger> Hold on. What are you doing...?
+02:16:24 <DDD2232> flash-all
+02:16:30 <TheJollyRoger> The script should be allowed to run to completion...
+02:16:44 <anupritaisno1[m]> In case fastboot flashing or flash all is too difficult
+02:16:55 <anupritaisno1[m]> Flash boot.img and the avb key, reboot recovery and sideload the full OTA
+02:17:14 <anupritaisno1[m]> TheJollyRoger: will guide you :D
+02:17:25 <TheJollyRoger> Okay!
+02:17:32 <TheJollyRoger> anupritaisno1[m]: I'll take notes for this part then!
+02:17:47 <anupritaisno1[m]> I'll pm those
+02:17:47 <DDD2232> Ok I guess I did not understand that part. Webpage guide says to select reboot to bootloader on the device on Pixel 3 XL.
+02:18:15 <TheJollyRoger> DDD2232: let it run to completion first. It will eventually pause at fastbootd - note the d.
+02:18:33 <TheJollyRoger> Your device will restart on its own several times, let it.
+02:19:12 <anupritaisno1[m]> TheJollyRoger: https://forum.xda-developers.com/oneplus-7-pro/development/9-glassrom-t3987291
+02:19:25 <anupritaisno1[m]> That's how I tell my users to do it
+02:19:33 <DDD2232> and my script stopped mid way saying
+02:19:34 <DDD2232> Resizing 'system_b'                                OKAY [  0.009s]
+02:19:54 <DDD2232> but I ran it again, and it seems it went through. I have OS boot screen now.
+02:20:28 <DDD2232> anupritaisno1[m] I was thinking of that being my next step. Always had more luck than with flash-all images.
+02:20:31 <TheJollyRoger> anupritaisno1[m]: oh fantastic, I'll go and take a look.
+02:20:39 <DDD2232> But it seems it went through. Give me few min
+02:21:18 <anupritaisno1[m]> Sadly there's no bootable-only image for graphene but you can just flash the boot.img and recovery.img if it exists to make up for that TheJollyRoger
+02:21:27 <anupritaisno1[m]> And yes A/B devices can ship a recovery partition now
+02:21:34 <TheJollyRoger> Huh, wow.
+02:22:05 <anupritaisno1[m]> It uses the same update mechanism
+02:22:14 <anupritaisno1[m]> Add recovery to AB_OTA_PARTITIONS
+02:22:46 <anupritaisno1[m]> The build system tries to generate a patch for it, probably a Q bug but doesn't include an install-recovery.sh
+02:24:06 <TheJollyRoger> anupritaisno1[m], sometime I'll have to read more about GlassROM!
+02:24:26 <anupritaisno1[m]> It is just grapheneos
+02:24:50 <anupritaisno1[m]> But supports devices which graphene can't without needing significant modifications
+02:25:08 <anupritaisno1[m]> That is why it doesn't exist on pixel though it does get tested against it
+02:25:28 <TheJollyRoger> Oh fantastic.
+02:25:31 <TheJollyRoger> That's pretty awesome.
+02:27:11 <anupritaisno1[m]> Remember that glassrom does not have the hardened malloc "mitigations"
+02:27:32 <anupritaisno1[m]> I haven't had any reports of anything outside pixel having audio issues
+02:28:10 <anupritaisno1[m]> There were issues with front/back camera in the beginning but then an OEM vendor blob update fixed those so that mitigation isn't needed either
+02:28:31 <TheJollyRoger> Oh huh.
+02:28:34 <anupritaisno1[m]> Tl;dr the hardened malloc on glassrom might break stuff on pixels
+02:28:46 <DDD2232> TheJollyRoger and anupritaisno1. I am in. Everything seemed to be doing fine. Thank you immensly!
+02:29:26 <TheJollyRoger> DDD2232: yarr, splice the mainbrace!
+02:29:31 <TheJollyRoger> Welcome aboard the ship!
+02:29:41 <DDD2232> haha : ))
+02:33:16 <anupritaisno1[m]> TheJollyRoger: BTW you got a pixel 3?
+02:33:20 <anupritaisno1[m]> Or 3xl
+03:07:27 <TheJollyRoger> Hi anupritaisno1[m], mine is the ordinary Vanilla 3.
+03:07:37 <TheJollyRoger> Whoops, sorry about the delay.
+03:07:59 <TheJollyRoger> In retrospect I am sort of regretting not getting a bigger screen but I think next time I will fix that.
+03:17:09 <anupritaisno1[m]> <TheJollyRoger "Hi anupritaisno1, mine is the or"> Can you test that pull request?
+03:17:25 <anupritaisno1[m]> https://github.com/GrapheneOS/kernel_google_crosshatch/pull/3
+03:17:41 <anupritaisno1[m]> I want to go revision by revision and make sure there is no breakage
+03:22:25 <TheJollyRoger> Lemme take a look...
+03:23:15 <TheJollyRoger> Just build with this...?
+03:25:51 <TheJollyRoger> Just getting set up right now!
+03:32:34 <TheJollyRoger> anupritaisno1[m]: I will need some help in figuring out how to merge this and add it to my build tree, I'm just getting stuff synced right now...
+03:36:30 <anupritaisno1[m]> Build
+03:36:35 <anupritaisno1[m]> And for this one just make sure USB connection is good
+03:36:57 <anupritaisno1[m]> <TheJollyRoger "anupritaisno1: I will need some "> git pull
+03:37:03 <anupritaisno1[m]> It'll cleanly merge
+03:38:49 <TheJollyRoger-M> One sec. Think my home internet connection just barfed.
+03:39:06 <anupritaisno1[m]> There won't even be a merge commit created
+03:39:29 <TheJollyRoger-M> Downloading and syncing right now, Im just going to back up what apps I can on my phone.
+03:40:24 <anupritaisno1[m]> git pull https://github.com/GlassROM-devices/kernel_google_crosshatch
+03:40:32 <anupritaisno1[m]> If there are build errors though I took care there shouldn't be
+03:40:36 <anupritaisno1[m]> Send a build log
+03:41:36 <anupritaisno1[m]> JollyRoger: take your time
+03:41:57 <anupritaisno1[m]> I want to get this done at least for crosshatch before the July security patch
+03:42:08 <anupritaisno1[m]> Preferably for all the devices
+03:42:32 <anupritaisno1[m]> But at least crosshatch
+03:46:19 <TheJollyRoger-M> Okay!
+03:55:32 <TheJollyRoger> You know that things are going insane when ssh to screen chokes from lack of bandwidth... crap on a cracker I need to get better Internet.
+04:02:57 <anupritaisno1[m]> BTW here's the update for the optimized browser stuff https://transfer.sh/gA2Q8/ChromePublic.apk
+04:02:58 <anupritaisno1[m]> Pixel 3 and 4 only
+04:03:23 <anupritaisno1[m]> Contains my shadow call stack patch too which I sent to daniel
+04:07:15 <TheJollyRoger> Okay! I'm downloading it all now.
+04:08:45 <anupritaisno1[m]> BTW
+04:08:58 <anupritaisno1[m]> You don't need to build everything
+04:09:08 <anupritaisno1[m]> Build kernel + m bootimage
+04:09:19 <anupritaisno1[m]> Then fastboot boot boot.img
+04:09:56 <TheJollyRoger> Got it. I will need to unlock bootloader though and all, right?
+04:10:45 <TheJollyRoger> Shoot. I got a problem here, repo's not syncing. Give me a moment to sort this out.
+04:12:10 <mmcblk0[m]> The both are you juste kiding from users?🤔
+04:57:07 <TheJollyRoger> OK there we go!
+04:57:14 * TheJollyRoger beats the computer with a wrench.
+05:00:49 <TheJollyRoger> Just trying to clone the stuff now.
+05:15:20 <brenneke[m]1> Do I need to be concerned with wiping free space on GrapheneOS phone after sensitive files deleted?
+05:27:42 <TheJollyRoger> brenneke[m]1: I don't think so. The files are encrypted with different keys.
+05:35:12 <cn3m[m]> brenneke: if you have to turn over your device unlocked sure, but you would be much better off with multiple profiles
+05:35:41 <TheJollyRoger> anupritaisno1[m]: Sorry about the delay, I'm really having trouble applying the patch. I'm trying to browse git help.
+05:42:52 <brenneke[m]1> <cn3m[m] "brenneke: if you have to turn ov"> OK.....worried more about getting hacked, nothing illegal.  They would physically need phone to recover anything deleted correct?
+05:44:14 <cn3m[m]> <brenneke[m]1 "OK.....worried more about gettin"> Install diskdigger and run that to see what they could pull up with app level access
+05:57:30 <brenneke[m]1> <cn3m[m] "Install diskdigger and run that "> Interesting thanks, safe app?
+06:15:41 <cn3m[m]> <brenneke[m]1 "Interesting thanks, safe app?"> Idk take network permissions?
+06:34:09 <rosarium[m]> brenneke I used diskdigger to recover files from a 500gb hdd after messing it up... I researched these recovery apps a lot then, diskdigger seemed like one of the most clean ones. Although I cant say 100%, I dont have the knowledge to review the code. :|
+06:39:01 <brenneke[m]1> <rosarium[m] "brenneke I used diskdigger to re"> Thank you.
+06:39:19 <altoslos[m]1> Has anyone managed to get microg working?
+06:39:47 <rosarium[m]> but it didnt ransomware me at least, so i'd say go for it
+06:40:23 <anupritaisno1[m]> brenneke: you can use blkdiscard
+06:40:32 <brenneke[m]1> <cn3m[m] "Install diskdigger and run that "> Does seem like a long way around, why not use an app that wipes free space right off the hop?
+06:40:50 <anupritaisno1[m]> I also have a proper build of the fstrim binary
+06:41:02 <cn3m[m]> <altoslos[m]1 "Has anyone managed to get microg"> No it's not supported
+06:41:22 <anupritaisno1[m]> Assuming you can get a root shell just run fstrim -av and all deleted data is gone
+06:41:30 <anupritaisno1[m]> Microg is stupid
+06:41:35 <altoslos[m]1> I don't care if its supported I'm wondering if anyone has gotten it to work
+06:41:53 <anupritaisno1[m]> <altoslos[m]1 "I don't care if its supported I'"> For the record you can install it
+06:42:13 <anupritaisno1[m]> But most apps will reject it
+06:42:21 <altoslos[m]1> anupritaisno1: I tried. Apps that use it instant crash for me
+06:42:30 <anupritaisno1[m]> Why wouldn't they?
+06:42:46 <anupritaisno1[m]> Signature spoofing is not even a thing
+06:43:51 <altoslos[m]1> Is there a way to give it permission to
+06:55:32 <anupritaisno1[m]> <altoslos[m]1 "Is there a way to give it permis"> Dude
+06:56:05 <altoslos[m]1> ?
+06:56:14 <altoslos[m]1> I'm looking for a simple yes or no
+06:59:26 <anupritaisno1[m]> Sorry all I got it nullptr
+06:59:36 <anupritaisno1[m]> * Sorry all I got is nullptr
+06:59:41 <anupritaisno1[m]> That said
+06:59:59 <anupritaisno1[m]> You can't grant a permission that does not exist
+07:03:43 <joshman[m]> <altoslos[m]1 "Has anyone managed to get microg"> Use CalyxOS instead of GrapheneOS
+07:07:21 <altoslos[m]1> Not what I asked for
+07:10:29 <dazinism> If you somehow can get it to work, you've broken GrapheneOS to a degree that it's no longer considered GrapheneOS
+07:11:57 <dazinism> Think you'd probably have build your own.
+07:13:15 <dazinism> Could maybe somehow get the bits into a normal build (I'm not sure how) but that would break verified boot and updates
+07:16:48 <dazinism> As I understanding things
+07:47:08 <joshman[m]> <dazinism "If you somehow can get it to wor"> This
+07:56:46 <stuux[m]> Ich finde es toll, dass Unges Gardine aus 100% alten Hemden besteht.
+07:56:46 <stuux[m]> ￼
+08:53:51 <cn3m[m]> Run Android in Limbo ARM emulator and run microG in that
+09:00:13 <cn3m[m]> Welcome
+09:10:48 <cn3m[m]> Android 11 is replacing the Files app. Hopefully the AOSP one doesn't break down
+09:12:48 <jalb66> cn3m[m], which app is now?
+09:52:52 <furofuro_01[m]> <cn3m[m] "Android 11 is replacing the File"> Surpised they'll replaced that app
+13:23:54 <blacklight447[m]> Question, would this fix the issue that all apps can list all apps installed on your phone:https://developer.android.com/preview/privacy/package-visibility
+13:34:12 <hypokeimenon[m]> big if true
+14:16:03 <generateduser392> similar to sandboxing?
+14:16:20 <generateduser392> but still not as good compared to apple?
+14:23:51 <blacklight447[m]> It seems like an app needs to list the specific apps it needs to be able to see on install time
+14:27:46 <overheadscallop[> they can also define file types to get a list of apps that handle them
+14:42:07 <cdesai> blacklight447[m]: yes, but the thing to note here, as with most of these features - is that they're only for apps targetting api 30
+14:53:24 <blacklight447[m]> I am aware, but it has to start somewhere right
+14:54:30 <dazinism> blacklight447: it doesnt help much
+14:55:47 <cdesai> it would make things better after a few releases, when due to play store policies most apps would've updated their target api :)
+14:57:03 <dazinism> https://www.reddit.com/r/GrapheneOS/comments/fpc2av/apps_are_meant_to_be_able_to_enumerate_other_apps/
+15:09:24 <blacklight447[m]> <dazinism "https://www.reddit.com/r/Graphen"> This is two months ago though
+15:09:28 <blacklight447[m]> Maybe there is more to this
+15:09:45 <blacklight447[m]> I mean if its litterly pointless then google normally wouldn't go thru the effort of making it
+15:14:06 <dazinism> blacklight447: pretty sure its still valid. Think if an app makes itself available for interactions, then other apps can detect it.
+15:18:54 <blacklight447[m]> We will have to see what it entails
+15:19:49 <blacklight447[m]> Then again, buildings arent build at once, they are build brick by brick
+15:20:15 <blacklight447[m]> If this doesn't block all ways, its atleast a start
+15:31:07 <dazinism> blacklight447: its linked from the reddit post, but this and the following comments explain more about how the design of how apps interact in android make implementing something that achieves this very difficult
+15:31:12 <dazinism> https://github.com/GrapheneOS/os_issue_tracker/issues/149#issuecomment-553580613
+15:32:45 <dazinism> Think the 'easy' option is to make using multiple profiles better.
+15:33:41 <dazinism> Which i guess would be to enable ways to share data across profiles
+15:34:30 <dazinism> Also maybe a switch to shut down a profile
+15:35:00 <dazinism> I mean user profiles
+15:35:51 <dazinism> Would also be good to be able to let user profiles share UI (like with the work profile)
+15:39:57 <madaidan[m]> <blacklight447[m] "Question, would this fix the iss"> Yes, as long as the app uses a fine-grained intent filter and doesn't have the QUERY_ALL_PACKAGES permissions.
+15:40:21 <madaidan[m]> <dazinism "blacklight447: pretty sure its s"> That's exactly what it prevents.
+15:41:12 <madaidan[m]> It restricts IPC between apps so they can't communicate as much, which should prevent enumerating apps.
+15:41:33 <madaidan[m]> It requires the app uses the intent filter properly of course.
+15:44:16 <madaidan[m]> <madaidan[m] "Yes, as long as the app uses a f"> Oh and the app needs to use scoped storage.
+15:54:27 <blacklight447[m]> <madaidan[m] "Oh and the app needs to use scop"> Thats required by api 30 right?
+15:56:39 <dazinism> blacklight447: for any app thats a new install
+16:00:30 <dazinism> madaidan.: IIUC apps will have to declare what they want to interact with.
+16:00:41 <dazinism> So it doesnt help if an app developer wants to try and detect apps, although you could get an idea of that by checking the apps manifest
+16:03:52 <blacklight447[m]> <dazinism "madaidan.: IIUC apps will have t"> Isnt this a bit the same as in openbsd pledge?
+16:04:07 <blacklight447[m]> Declare what they access , but they cannot alter it afterwards
+16:05:10 <dazinism> Also in the github issue I linked just above, strcat gives the impression theres likely other system APIs that could be used.
+16:06:34 <dazinism> blacklight447: sounds like it, don't know if theres anything to stop this being changed with an app update?
+16:31:01 <overheadscallop[> it won't work on graphene
+16:31:08 <jiibus[m]> Hello! Would installing Aurora Services via ADB [like their instructions say](https://gitlab.com/AuroraOSS/AuroraServices#installation) mess things up in Graphene?
+16:31:18 <jiibus[m]> Kinda thought that would be the case. Oh well
+16:31:46 <jiibus[m]> Manually updating every app it is!
+16:37:46 <blacklight447[m]> Atleast the download is done automatically
+16:39:24 <yekip[m]> I have a pretty huge music library in iTunes (spit!) which I would like (if poss) to migrate over to Graphene somehow. No idea where to start so before i look into how, i thought I would just check if it's even possible to retain playlists etc? I am on a mac, so thinking of using android file transfer app and hoping drag and drop will work to at least dump it all over, but if playlists could be retained that would pretty
+16:39:24 <yekip[m]> nice
+17:14:05 <meltedcheddar[m]> Do you have problems with RiotX notifications? Any way to fix it?
+17:17:42 <dazinism> jiibus: automatic app updates will come with the GrapheneOS app store. Initially will just be system apps - vanadium, PDF viewer, auditor
+17:18:23 <dazinism> Then a curated set of apps that supply common functionality
+17:18:25 <meltedcheddar[m]> <dazinism "jiibus: automatic app updates wi"> Graphene app store? What a drem
+17:18:34 <meltedcheddar[m]> Dream
+17:21:58 <dazinism> https://github.com/GrapheneOS/os_issue_tracker/issues/94
+17:25:08 <jiibus[m]> That's great to hear! Looking forward to it. Any idea when it will actually be implemented?
+17:57:12 <jcpicard32[m]> It really depends. More people contributing will obviously make progress faster. As it is now it's something nice to work on when higher priority work is done for Daniel and the current contributors
+18:44:54 <yekip[m]> anyone know if its possible to transfer music from itunes to graphene and keep playlists?
+20:03:38 <jiibus[m]> You try [this](https://www.app.com/story/money/industries/technology/2016/06/06/itune-android-sync/84996824/#:~:text=To%20import%20your%20iTunes%20playlists,you're%20good%20to%20go.)?
+20:37:36 <radixed9[m]> <jiibus[m] "That's great to hear! Looking fo"> I am working on improving the updater app and laying the foundation for an app store. Sadly, I haven't been able to work on it for a few days. The goal is to get Vanadium, Auditor, and PDF Viewer rolling out without having to have a full release.
+20:56:57 <greenmoon[m]> Cool but one more store app? 3 stores app on the phone isnt a bit too much?
+21:11:19 <radixed9[m]> Third party apps stores aren't an ideal solution. Neither F-Droid or Aurora are robust or secure enough to turn into a first party app store
+21:30:29 <ch878787> hi
+21:30:36 <ch878787> I am a noob
+21:30:40 <ch878787> I need help
+21:31:00 <ch878787> Trying to instal graphene OS on Pixel device.
+21:31:10 <ch878787> I get the following error message
+21:31:11 <ch878787> fastboot : The term 'fastboot' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path is correct and try again. At line:1 char:10 + $version=fastboot --version; try { $verNum = $version[0].substring(17 ... + ~~~~~~~~ + CategoryInfo :
+21:31:12 <ch878787> ObjectNotFound: (fastboot:String) [], CommandNotFoundException + FullyQualifiedErrorId : CommandNotFoundException
+21:31:26 <ch878787> keeps saying fastboot version too old
+21:32:37 <hitchhooker[m]> [satoshi@satoshi-tm1703 ~]$ fastboot --version
+21:32:37 <hitchhooker[m]> fastboot version 30.0.0-2
+21:33:02 <ch878787> I am a noob
+21:33:31 <ch878787> can you please walk me through the steps? My bootloader is unlocked already
+21:33:54 <ch878787> I followed grapeheen install but still it is saying old fastboot version and giving that error
+21:34:58 <ch878787> please
+21:35:43 <TheJollyRoger> Hi ch878787,
+21:35:53 <ch878787> hi
+21:36:09 <TheJollyRoger> Can you run "fastboot --version" and tell me what you get, as well as your desktop operating system, please?
+21:36:16 <ch878787> ok
+21:36:38 <TheJollyRoger> You'll need to be on Version 10 if you are running Windows.
+21:37:10 <ch878787> do i do that from command prompt?
+21:37:38 <TheJollyRoger> Yes -- if you are getting the error message "fastboot too old" then STOP right there.
+21:38:08 <TheJollyRoger> The reason that sanity check is there is for your protection so you don't softbrick your device with a butchered version of fastboot that won't support autodetection.
+21:38:30 <TheJollyRoger> You will need to use Powershell, not cmd.
+21:38:44 <ch878787> ok I am new to this but I will try ok
+21:38:47 <ch878787> one sec
+21:38:50 <TheJollyRoger> Sure.
+21:39:17 <TheJollyRoger> If you installed a "Minimal fastboot" or anything but https://developer.android.com/studio/releases/platform-tools this, uninstall it.
+21:39:46 <TheJollyRoger> You will need the official Fastboot from Google.
+21:40:13 <ch878787> fastboot : The term 'fastboot' is not recognized as the name of a cmdlet, function, script file, or operable program.
+21:40:14 <ch878787> CommandNotFoundException
+21:40:24 <ch878787> I go t that message
+21:40:46 <TheJollyRoger> OK, great - that's actually a good sign because it shows you haven't installed a bad version. Go and get the .zip fastboot from Google.
+21:41:08 <ch878787> can you send the link
+21:41:14 <ch878787> just so I do everything smoothly
+21:41:29 <TheJollyRoger> Just did, scroll up to "If you installed a Minimal fastboot"
+21:41:37 <ch878787> oh ok thanks
+21:41:47 <TheJollyRoger> Be sure to get platform-tools latest.
+21:42:13 <ch878787> So I will click: Download SDK Platform-Tools for Windows
+21:42:19 <ch878787> ?
+21:42:29 <ch878787> ok
+21:42:30 <TheJollyRoger> Hang on a moment, because I have no browser at this time.
+21:42:37 <ch878787> ok
+21:42:49 <TheJollyRoger> You can either wait until I'm back at my station, or you can search download the standalone platform tools.
+21:42:59 <ch878787> I will wait :)
+21:43:33 <TheJollyRoger> While you do, read everything in the Installation guide - read it twice.
+21:44:36 <ch878787> the grapehene  os guide
+21:44:37 <ch878787> ?
+21:44:53 <TheJollyRoger> Fortunately, I've memorized this url:
+21:45:00 <TheJollyRoger> https://grapheneos.org/install
+21:45:55 <ch878787> lol
+21:46:33 <ch878787> i will still need your help ebcause I have used this guide and I get the same issues (old fastboot) and error message
+21:47:05 <ch878787> at present, my bootloader is unlocked, my google security patches are up to date
+21:47:34 <ch878787> so lets start from there
+21:47:36 <ch878787> please
+21:47:52 <TheJollyRoger> Ok. Do you have the latest standalone platform tools?
+21:48:05 <ch878787> umm I will try and do that now
+21:48:10 <ch878787> what is the latests version?
+21:48:14 <TheJollyRoger> Unzip the zip file and you should see "adb"  and "fastboot" inside platform-tools
+21:48:21 <TheJollyRoger> It should say latest, the number is 30.0.2.
+21:48:42 <ch878787> ok I WILL
+21:48:59 <ch878787> thanks I will do that
+21:49:20 <TheJollyRoger> This is going to be important - take note of where you unzip it to.
+21:49:40 <ch878787> ok
+21:49:49 <TheJollyRoger> If you are on Windows I suggest you unzip it to C:\Users\[yourname]\Applications\>
+21:49:58 <TheJollyRoger> Replacing "[yourname]" with your username of course.
+21:50:33 <TheJollyRoger> This should leave you with a single folder in there called C:\Users\[yourname]\Applications\platform-tools\> in which you should see "adb" and "fastboot" executables.
+21:51:35 <ch878787> I got it
+21:51:41 <ch878787> i did it
+21:51:56 <TheJollyRoger> Ok. In powershell I want you to do a quick sanity check for me since I'm not there and not looking over your shoulder
+21:52:01 <ch878787> ok
+21:52:04 <TheJollyRoger> run the following command:
+21:52:07 <ch878787> ok
+21:52:22 <TheJollyRoger> dir %HOMEDIR%\Applications\platform-tools\fastboot*
+21:52:54 <ch878787> by the way I saved the extracted platform tools files in the downloads folder
+21:53:21 <TheJollyRoger> Ok, so tell me what this command returns:
+21:53:22 <ch878787> I got the same errror message
+21:53:23 <ch878787> dir : Cannot find path 'C:\Users\dell\%HOMEDIR%\Applications\platform-tools' because it does not exist.
+21:53:23 <ch878787> Exception
+21:53:38 <TheJollyRoger> dir %HOMEDIR%\Applications\platform-tools\
+21:53:42 <TheJollyRoger> Argh fuck
+21:53:46 <TheJollyRoger> belay that
+21:53:52 <ch878787> hmm?
+21:53:53 <TheJollyRoger> dir %HOMEDIR\Downloads\platform-tools
+21:53:57 <TheJollyRoger> That one.
+21:54:06 <TheJollyRoger> Sorry, bit distracted.
+21:54:50 <ch878787> dir : Cannot find path 'C:\Users\dell\%HOMEDIR\Downloads\platform-tools' because it does not exist.
+21:54:50 <ch878787> FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetChildItemCommand
+21:55:10 <TheJollyRoger> Ok. Where did you unzip it to?
+21:55:32 <TheJollyRoger> Oh, wait, sorry, I made another typo:
+21:55:37 <ch878787> ok
+21:55:38 <TheJollyRoger> dir %HOMEDIR%\Downloads\platform-tools
+21:55:43 <TheJollyRoger> I missed the closing % sign
+21:55:44 <TheJollyRoger> My bad
+21:56:05 <TheJollyRoger> Once again, this is a quick sanity check because I can't actually see your computer from where I sit.
+21:56:14 <ch878787> same errror message
+21:56:27 <ch878787> i unzipped it to downloads folder
+21:56:44 <TheJollyRoger> Ok, can you tell me the path of fastboot?
+21:56:54 <ch878787> umm
+21:57:39 <ch878787> do you mean how to locate the fastboot.exe file?
+21:58:07 <ch878787> if so
+21:58:09 <ch878787> C:\Users\dell\Downloads\platform-tools_r30.0.2-windows (1)\platform-tools
+21:58:53 <TheJollyRoger> ok. cd to that directory.
+21:59:07 <ch878787> how
+21:59:25 <TheJollyRoger> cd C:\Users\dell\Downloads\platform-tools_r30.0.2-windows
+21:59:31 <TheJollyRoger> (if what you've told me is correct)
+21:59:40 <ch878787> do I type that in powershell
+21:59:41 <ch878787> ?
+22:00:04 <TheJollyRoger> Yes. It should change the working directory shown at the prompt. You can check its contents with the "dir" command to make sure you ended up in the right location.
+22:00:36 <ch878787> same error message came up
+22:00:55 <ch878787> do I have to do a add path enviroment variable thing?
+22:01:31 <TheJollyRoger> No, right now we need to find out where fastboot.exe is unzipped to.
+22:01:56 <ch878787> C:\Users\dell\Downloads\platform-tools_r30.0.2-windows (1)\platform-tools
+22:02:10 <ch878787> that is where
+22:02:25 <TheJollyRoger> ok, but, how come you're getting an error message when you'er trying to change your directory to that location?
+22:02:49 <ch878787> i dont know I am a noob
+22:03:19 <ch878787> should I delete everything and start again
+22:03:44 <ch878787> or did you accidentally do a type again
+22:03:49 <TheJollyRoger> No. hold on a sec.
+22:04:05 <TheJollyRoger> I think I see what the issue is --
+22:04:13 <ch878787> okk
+22:04:24 <TheJollyRoger> tar Cxvf C:
+22:04:27 <TheJollyRoger> Belay that.
+22:04:37 <TheJollyRoger> Hit enter prematurely
+22:04:58 <ch878787> I should copy and paste that in powershell and hit enter
+22:04:59 <ch878787> ?
+22:05:09 <TheJollyRoger> tar xvf C:\Users\dell\Downloads\platform-tools_r30.0.2-windows.zip
+22:05:13 <TheJollyRoger> This one.
+22:05:25 <TheJollyRoger> Not the one above, this one. Into powershell
+22:05:33 <ch878787> omg
+22:05:35 <TheJollyRoger> Looks like powershell for some reason hid the filename extension
+22:05:47 <TheJollyRoger> So that confused me.
+22:05:51 <ch878787> a whole load of listing happend
+22:05:55 <ch878787> in powershell
+22:05:58 <ch878787> now it stopped
+22:06:02 <TheJollyRoger> ok now can you do:
+22:06:22 <TheJollyRoger> cd C:\Users\dell\Downloads\platform-tools ; ls
+22:06:46 <TheJollyRoger> see if "fastboot" is there.
+22:07:03 <TheJollyRoger> This should change the directory to platform-tools and list the contents
+22:07:53 <ch878787> yes a list of contents is there under the same red  error message but no fastboot
+22:08:03 <TheJollyRoger> Paste what you see.
+22:08:07 <TheJollyRoger> Remember I'm not there.
+22:08:09 <TheJollyRoger> I can't see.
+22:08:12 <TheJollyRoger> I'm flying blind.
+22:08:22 <ch878787> Mode                LastWriteTime         Length Name
+22:08:23 <ch878787> d-r---       18/11/2019     21:00                3D Objects
+22:08:25 <ch878787> Documents
+22:08:30 <ch878787> autoupdate
+22:08:33 <ch878787> 1140 .lmmsrc.xml
+22:09:11 <ch878787> the red errror message says cd : Cannot find path 'C:\Users\dell\Downloads\platform-tools' because it does not exist.
+22:09:12 <ch878787> oundException
+22:10:08 <TheJollyRoger> cd to Downloads and see if a "platform-tools" folder is there.
+22:10:40 <ch878787> i dont understand sorry
+22:10:45 <ch878787> what do i do?
+22:11:08 <TheJollyRoger> I'm trying to get enough information to get a bigger picture but you're not giving me enough information so I have to guess.
+22:11:25 <ch878787> ok but like how do i cd to downloads
+22:12:27 <TheJollyRoger> you need to find out where you downloaded platform tools to and use the "cd" command in powershell to change your directory to it.
+22:12:44 <TheJollyRoger> You can move up a directory with "cd .." or into a directory by typing in its name after cd
+22:12:58 <TheJollyRoger> If it has a space in it, in Powershell you must enclose the name in quotes.
+22:14:54 <TheJollyRoger> https://grapheneos.org/install#standalone-platform-tools Please review this.
+22:14:58 <ch878787> I think i did it
+22:14:59 <TheJollyRoger> These steps are exact.
+22:15:26 <TheJollyRoger> Ok. Is the command "dir fastboot*" returning fastboot?
+22:16:24 <ch878787> ok so here is what i did
+22:16:26 <ch878787> cd C:\Users\dell\Downloads\platform-tools_r30.0.2-windows (1)\platform-tools
+22:16:45 <ch878787> i typed that in powershell as it is the exact same path to the unzipped platform tools folder
+22:16:46 <ch878787> then
+22:16:58 <ch878787> i got
+22:17:00 <ch878787> PS C:\Users\dell> cd C:\Users\dell\Downloads\platform-tools_r30.0.2-windows (1)\platform-tools
+22:17:01 <ch878787> CategoryInfo          : InvalidArgument: (:) [Set-Location], ParameterBindingException
+22:17:19 <TheJollyRoger> Yeah that's incorrect - you're giving it two separate arguments and telling it to cd to two different locations, one of which is a zipfile and the other doesn't exist yet.
+22:17:40 <ch878787> ohhhh
+22:18:02 <TheJollyRoger> This is why I need to see the whole scrollback otherwise I'm just guessing.
+22:18:13 <TheJollyRoger> Remember, I'm not sitting next to you.
+22:18:13 <ch878787> ok
+22:18:18 <ch878787> i know
+22:18:35 <ch878787> i did what projectserv said and i got /msg : The term '/msg' is not recognized as the name of a cmdlet, function, script file, or operable program. Check the spelling of the name, or if a path was included, verify that the path
+22:18:35 <ch878787> (/msg:String) [], CommandNotFoundException
+22:19:10 <TheJollyRoger> "/msg" is to private message someone on IRC in your client. Why are you typing it into powershell?
+22:19:35 <ch878787> i got confused man its my first time using this thing... I got directed to it by daniel mccay
+22:19:44 <ch878787> himself after i emailed him
+22:20:55 <TheJollyRoger> Were you trying to message me?
+22:21:02 <TheJollyRoger> :P.
+22:21:13 <TheJollyRoger> I understand that the commandline can be a bit daunting... we'll work it out together.
+22:21:25 <ch878787> ok
+22:21:48 <TheJollyRoger> So, do you know where the platform-tools directory is, and can you cd to it? Locate it in Windows Explorer first if you're having trouble or need a hint.
+22:21:52 <ch878787> ok so I typed cd and then the platform tools folder and it showed the following
+22:22:16 <ch878787> after i hit enter
+22:22:17 <ch878787> PS C:\Users\dell\platform-tools>
+22:22:46 <ch878787> is that good?
+22:23:25 <TheJollyRoger> we're about to find out. Type in "dir" and paste the result.
+22:23:31 <ch878787> ok
+22:23:49 <ch878787> Mode                LastWriteTime         Length Name
+22:23:50 <ch878787> 28/05/2020     23:35          97792 AdbWinApi.dll
+22:23:53 <ch878787> 43520 hprof-conv.exe
+22:23:57 <ch878787> 28/05/2020     23:35             38 source.properties
+22:24:17 <TheJollyRoger> I'm going to start numbering commands, so we can keep track of things.
+22:24:24 <ch878787> ok
+22:24:29 <TheJollyRoger> Is that all?
+22:24:36 <TheJollyRoger> Because if that's all, that's not the right location.
+22:24:47 <ch878787> that is all
+22:24:58 <TheJollyRoger> Yep, you're doing it wrong. Let's simply start from the beginning.
+22:25:21 <TheJollyRoger> 1)
+22:25:35 <TheJollyRoger> mkdir C:\Users\Dell\GrapheneOS
+22:25:37 <TheJollyRoger> 2)
+22:25:43 <TheJollyRoger> cd C:\Users\Dell\GrapheneOS
+22:25:45 <TheJollyRoger> Do those two.
+22:26:46 <ch878787> put them in powershell?
+22:26:52 <TheJollyRoger> Yes.
+22:27:15 <ch878787> should i post what i find to you after each input?
+22:27:46 <TheJollyRoger> Yes, including the commands you type. Once the prompt reads "PS C:\Users\Dell\GrapheneOS>" we're ready to continue
+22:28:18 <ch878787> I put mkdir C:\Users\Dell\GrapheneOS
+22:28:22 <ch878787> and got
+22:28:40 <ch878787>  Directory: C:\Users\Dell
+22:28:50 <ch878787> now I will do your second step
+22:28:52 <TheJollyRoger> Paste the entire thing.
+22:28:56 <TheJollyRoger> Give me a screenshot if you can.
+22:29:04 <TheJollyRoger> I'm not able to see and I no longer trust your word at it.
+22:29:11 <ch878787> PS C:\Users\dell\platform-tools> mkdir C:\Users\Dell\GrapheneOS
+22:29:51 <ch878787> should i do your next step (2)
+22:29:58 <TheJollyRoger> Yes.
+22:30:14 <ch878787> PS C:\Users\dell\platform-tools> cd C:\Users\Dell\GrapheneOS
+22:31:19 <ch878787> hope all is ok so far
+22:31:26 <TheJollyRoger> Ok. Now does the prompt tell you that you've switched to C:\Users\Dell\GrapheneOS?
+22:31:52 <ch878787> it says PS C:\Users\Dell\GrapheneOS>
+22:32:01 <TheJollyRoger> (If you're copying the whole output, include the trailing prompt at the end, that tells me that the command has completed)
+22:32:02 <ch878787> and cursor is blining just after that
+22:32:22 <ch878787> ok look
+22:32:25 <ch878787> PS C:\Users\dell\platform-tools> mkdir C:\Users\Dell\GrapheneOS
+22:32:27 <ch878787> C:\Users\Dell\GrapheneOS>
+22:32:51 <TheJollyRoger> Great, that's what I want to see.
+22:32:53 <TheJollyRoger> Step 3:
+22:32:58 <ch878787> :)
+22:33:00 <TheJollyRoger> curl.exe -O https://dl.google.com/android/repository/platform-tools_r30.0.2-windows.zip
+22:33:06 <TheJollyRoger> Wait for this one to finish.
+22:33:37 <ch878787> so should I copy and past the above line and paste it in powershell and wait for it to do its thing
+22:33:39 <ch878787> ?
+22:33:46 <TheJollyRoger> Yes
+22:33:50 <ch878787> ok
+22:34:19 <TheJollyRoger> While we wait... what device do you have? Is it a Pixel 3, 3XL, 3a, or 3aXL?
+22:34:58 <ch878787> PS C:\Users\dell\platform-tools> cd platform-tools_r30.0.2-windows (1)
+22:35:00 <ch878787> FullyQualifiedErrorId : PositionalParameterNotFound,Microsoft.PowerShell.Commands.SetLocationCommand
+22:35:03 <ch878787> GrapheneOS
+22:35:05 <ch878787> 0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+22:35:26 <TheJollyRoger> Why are you doing that?
+22:35:30 <ch878787> it was a quick seeming error message
+22:35:30 <TheJollyRoger> No, you need to run step 3.
+22:35:38 <ch878787> i did
+22:36:02 <ch878787> ohh
+22:36:29 <TheJollyRoger> Please look at Step 3 again.
+22:36:32 <ch878787> you mean go to "run" in the start menu and enter it there?
+22:36:38 <ch878787> ok
+22:36:40 <TheJollyRoger> No, I want you to enter it in Powershell.
+22:37:09 <TheJollyRoger> You're also in the wrong location -- did you open up another window?
+22:37:13 <ch878787> no
+22:37:29 <TheJollyRoger> paste the prompt.
+22:37:40 <ch878787> is the promot just curl.exe
+22:37:42 <ch878787> ?
+22:37:44 <TheJollyRoger> no.
+22:37:45 <ch878787> prompt
+22:38:06 <TheJollyRoger> On the line next to the blinking cursor, do you see "PS C:\Users\Dell\GrapheneOS>" ?
+22:38:29 <ch878787> yes
+22:38:39 <TheJollyRoger> ok. in Powershell enter step 3.
+22:39:16 <ch878787> so I will put
+22:39:18 <ch878787> curl.exe -O https://dl.google.com/android/repository/platform-tools_r30.0.2-windows.zip
+22:39:23 <ch878787> into powershell
+22:39:29 <ch878787> ?
+22:39:40 <TheJollyRoger> into Powershell, at the prompt of "PS C:\Users\Dell\GrapheneOS>"
+22:39:49 <TheJollyRoger> And wait for that to complete.
+22:40:27 <ch878787> i put the above in and now will hit enter ok
+22:40:50 <TheJollyRoger> yes.
+22:41:25 <TheJollyRoger> It needs to be exactly as typed, and when you see the PS C:\Users\Dell\GrapheneOS> prompt, I want to see the entire output.
+22:41:47 <ch878787> PS C:\Users\dell\platform-tools> cd C:\Users\Dell\GrapheneOS
+22:41:47 <ch878787> 0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+22:41:50 <ch878787> Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+22:41:52 <ch878787> unable to check revocation for the certificate.
+22:42:02 <TheJollyRoger> You're doing it wrong.
+22:42:25 <ch878787> ok
+22:42:40 <ch878787> how do i do it right
+22:42:40 <TheJollyRoger> "cd C:\Users\Dell\GrapheneOS" is not what I asked you to type at the prompt.
+22:43:26 <ch878787> sorry i did what you said and included that line in the paste by accident
+22:43:45 <ch878787> PS C:\Users\Dell\GrapheneOS> curl.exe -O https://dl.google.com/android/repository/platform-tools_r30.0.2-windows.zip
+22:43:45 <ch878787> 0
+22:43:46 <ch878787> Time  Current
+22:43:50 <ch878787> C:\Users\Dell\GrapheneOS>
+22:45:32 <ch878787> i want to cry.
+22:45:51 <TheJollyRoger> I'm sorry mate. Give me a minute.
+22:46:02 <ch878787> ok
+22:47:07 <TheJollyRoger> If you have a way to post images, show me a screenshot.
+22:47:15 <TheJollyRoger> Since this is not working out.
+22:47:41 <ch878787> one second
+22:47:44 <TheJollyRoger> I can reach the download server from here... not sure why it's barfing about CRL
+22:48:47 <TheJollyRoger> Unless your system clock is off or something.
+22:48:51 <TheJollyRoger> *way off*
+22:49:34 <ch878787> can i just delete platforms tools and re download t
+22:49:36 <ch878787> it
+22:50:02 <ch878787> i can extract it to a created folder
+22:50:22 <ch878787> newly created folder*
+22:50:22 <TheJollyRoger> Download it, and extract it so that all of its contents are within C:\Users\Dell\GrapheneOS\platform-tools\
+22:50:31 <ch878787> ok
+22:50:45 <TheJollyRoger> You will want fastboot to reside in C:\Users\Dell\GrapheneOS\platform-tools\fastboot.exe
+22:50:51 <TheJollyRoger> If it doesn't end up in there, don't continue.
+22:51:13 <ch878787> ok
+22:51:22 <ch878787> ill try now
+22:51:23 <TheJollyRoger> there should be a folder called "platform-tools" in the .zip file.
+22:51:35 <TheJollyRoger> The entire contents of platform-tools MUST BE KEPT TOGETHER
+22:54:04 <ch878787> ok i extracted it to
+22:54:06 <ch878787> C:\Users\Dell\GrapheneOS\platform-tools\
+22:54:20 <ch878787> now what
+22:55:18 <TheJollyRoger> Is fastboot.exe, adb.exe, and all the rest of the contents of platform tools in "C:\Users\Dell\GrapheneOS\platform-tools?" You absolutely sure you didn't do something like extract them to "C:\Users\Dell\GrapheneOS\platform-tools\platform-tools"?
+22:55:23 <TheJollyRoger> Absolutely, 100% certain?
+22:55:32 <ch878787> <<< checking
+22:57:06 <ch878787> you are a genius.
+22:57:28 <TheJollyRoger> If you want me to check, then in powershell, do "dir C:\Users\Dell\GrapheneOS\" and screenshot me the entire thing.
+22:57:33 <ch878787> So do I copy and paste the contents in the platform tools folder
+22:57:43 <TheJollyRoger> Put them all into where I told you to.
+22:57:46 <schnenhcs[m]> Gonna spin my own builds of Graphene later this year. How well can one consolidate things to save resources?
+22:57:46 <schnenhcs[m]> Can the java parts be reused for multiple devices?
+22:57:46 <schnenhcs[m]> What else can?
+22:58:07 <ch878787> ok
+22:58:43 <ch878787> i did it jolly
+22:58:48 <ch878787> :D
+22:58:52 <TheJollyRoger> schnenhcs[m]: sorry, not sure at this moment. I'll have to get back to you on that since I'm only just trying to experiment with building now.
+22:59:02 <schnenhcs[m]> My only source is xda until now and thats just on both ends of horrible. Dont have beefy hw yet
+22:59:12 <TheJollyRoger> ch878787: ok great. In powershell I want you to try Step 3.5:
+22:59:21 <TheJollyRoger> dir C:\Users\Dell\GrapheneOS\platform-tools
+22:59:27 <TheJollyRoger> Paste me the entire result.
+22:59:45 <TheJollyRoger> Because if we go any further and you haven't set this up properly, it's going to be a dead end.
+22:59:56 <ch878787> PS C:\Users\Dell\GrapheneOS> dir C:\Users\Dell\GrapheneOS\platform-tools
+22:59:57 <ch878787> platform-tools
+23:00:01 <ch878787> 23:53         427008 etc1tool.exe
+23:00:04 <ch878787> mke2fs.conf
+23:00:13 <TheJollyRoger> The whole thing, please.
+23:00:28 <TheJollyRoger> Put it on ix.io or something.
+23:00:44 <TheJollyRoger> Or, wait, you can't do that because you don't have curl. On pastebin or something.
+23:01:03 <ch878787> platform-tools
+23:01:05 <ch878787> 23:53         427008 etc1tool.exe
+23:01:09 <ch878787> mke2fs.conf
+23:01:31 <TheJollyRoger> Put the whole thing on pastebin, it's truncating you to three lines.
+23:01:53 <ch878787> how do i put it on pastebin (never heard of it)
+23:02:06 <ch878787> or
+23:02:14 <ch878787> i can copy and paste the fastboot line?
+23:02:28 <ch878787> -a----       11/06/2020     23:53        1393664 fastboot.exe
+23:02:31 <TheJollyRoger> Go to pastebin.com and copy everything you see in Powershell into it since I told you to run that command.
+23:03:14 <TheJollyRoger> Because the thing is, I can't really trust that you've done it correctly so I have to see the output for myself.
+23:03:31 <ch878787> ok
+23:03:44 <ch878787> i pasted it inside the textbox o pastebin.. now what do i do
+23:03:58 <TheJollyRoger> Send me the link so I can see it.
+23:04:42 <ch878787> i have to sign in apparently
+23:05:28 <ch878787> i did do what you said
+23:07:05 <TheJollyRoger> No you shouldn't. Just click create paste. https://pastebin.com/6rz8USwv
+23:07:57 <ch878787> https://pastebin.com/W3607JRX
+23:08:20 <ch878787> i live in uk btw
+23:08:53 <TheJollyRoger> Ok, good. That's what I want to see.
+23:09:16 <ch878787> yesssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss
+23:09:26 <TheJollyRoger> Step 4:
+23:09:28 <ch878787> ok
+23:10:02 <TheJollyRoger> $env:Path = "C:\Users\Dell\GrapheneOS\platform-tools;$env:Path"
+23:10:14 <TheJollyRoger> Type that into Powershell exactly as it is.
+23:10:19 <ch878787> ok
+23:10:23 <TheJollyRoger> It will not return any output.
+23:10:42 <ch878787> yep ok now what do i do
+23:10:46 <TheJollyRoger> Once it is ready to accept more input, I want you to try
+23:10:50 <TheJollyRoger> fastboot --version
+23:10:57 <TheJollyRoger> Into Powershell.
+23:11:06 <TheJollyRoger> This is step 5: "fastboot --version"
+23:11:07 <ch878787> Installed as C:\Users\Dell\GrapheneOS\platform-tools\fastboot.exe
+23:11:28 <TheJollyRoger> Does it say something like "Fastboot version 30.0.2-" and then some numbers?
+23:11:31 <ch878787> *gulps*
+23:11:46 <TheJollyRoger> Please paste everything.
+23:11:48 <ch878787> yes it says fastboot version 30.0.2-6538114
+23:11:58 <TheJollyRoger> Yes! We're making good progress!
+23:12:01 <ch878787> omg
+23:12:11 <ch878787> i hope this works
+23:12:20 <TheJollyRoger> Now... don't close that powershell window.
+23:12:24 <ch878787> ok
+23:12:27 <ch878787> im scared
+23:12:33 <TheJollyRoger> Copy down step 4 and save it.
+23:12:43 <TheJollyRoger> If you do by accident close that powershell window, you will need to do Step 4 again.
+23:12:50 <TheJollyRoger> Save it into a .txt file or something.
+23:12:52 <TheJollyRoger> Or on a paper.
+23:13:31 <ch878787> ok i did it
+23:13:52 <TheJollyRoger> What Step 4 is doing, is it's saying to the computer: "When you are searching for commands to run, I want you to search to this location first, before the usual places you check."
+23:14:15 <ch878787> ohh okk
+23:14:20 <ch878787> i get it
+23:14:30 <TheJollyRoger> So when you type in the "fastboot" command, the computer will see "Oh hey he wants me to search in this location first, and if I find something called "fastboot" that must be the one he wants me to run."
+23:14:45 <ch878787> OT IT - WELL EXPLAINED
+23:14:48 <ch878787> GOT IT :d
+23:14:50 <ch878787> :D
+23:14:53 <ch878787> :)
+23:14:53 <TheJollyRoger> "If I don't find one there, then I search the usual places defined by the system for commands to run. If I still don't find it, tell him I hit an error."
+23:15:00 <ch878787> ok
+23:15:02 <TheJollyRoger> Makes sense?
+23:15:05 <ch878787> yes
+23:15:27 <TheJollyRoger> Great. Ok, the next step... sorry. I forgot which device you had.
+23:15:32 <TheJollyRoger> We're going to need to get the right one.
+23:15:35 <ch878787> 3a
+23:16:17 <TheJollyRoger> 3a. OK, now... the 3a is referred to internally at Google by the codename of "Sargo."
+23:16:24 <ch878787> ok
+23:16:46 <TheJollyRoger> If you're sure that's the right one, go and download this: https://releases.grapheneos.org/sargo-factory-2020.06.02.02.zip
+23:17:24 <ch878787> pixel 3a
+23:17:41 <ch878787> ok its d/l right now
+23:17:44 <TheJollyRoger> Great.
+23:17:58 <TheJollyRoger> While we wait, let's get your phone set up.
+23:18:18 <ch878787> ok
+23:18:34 <TheJollyRoger> This is going to require unlocking the bootloader, so if there's anything on your phone that you do not want to lose, now's the time to either save it, copy it, or disarm your 2FA on your accounts if you have One Time Password tokens saved to that phone.
+23:18:47 <ch878787> its unlocked already
+23:18:52 <TheJollyRoger> Ok, great.
+23:19:08 <ch878787> i did it using Youtuber Techlore's installation guide
+23:19:21 <ch878787> but the flashing of the system image failed
+23:19:25 <TheJollyRoger> If you switch it on, you're getting an ominous "Software Integrity Not Guaranteed!" warning in bright orange letters?
+23:19:35 <ch878787> one sec
+23:19:55 <ch878787> checking to confrm
+23:20:04 <TheJollyRoger> Reboot it and if that ominous warning comes up, we're doing well.
+23:20:11 <ch878787> yeh it came up
+23:20:14 <TheJollyRoger> Great.
+23:20:17 <ch878787> :)
+23:20:20 <TheJollyRoger> Ok, plug it into your computer.
+23:20:29 <TheJollyRoger> Now... couple guidelines as you do...
+23:20:34 <ch878787> ok
+23:20:53 <TheJollyRoger> First up, if your computer is a /desktop/, plug it directly into a port on the back of the computer, do not use your front ports.
+23:21:03 <ch878787> i have laptop
+23:21:21 <TheJollyRoger> Ok. Use a USB-A to USB-C cable and plug it into the laptop.
+23:21:29 <TheJollyRoger> Don't use a hub or a USB splitter.
+23:21:43 <ch878787> i am using the 2.0 ports which are not the ones with "ss" inscribed near the mouth of the physical port (someone said it in the comments section of tech lores video
+23:22:01 <TheJollyRoger> Ok... this might go a bit more slowly then.
+23:22:07 <ch878787> ok
+23:23:05 <TheJollyRoger> Hopefully this should work. Once that zip file is downloaded, I want you to unzip it to anywhere you like, but I want you to take note of where you unzip it to. We will need it.
+23:24:16 <ch878787> ok unzipped
+23:24:37 <TheJollyRoger> You may want to extract it to "C:\Users\Dell\GrapheneOS\" It should create a subfolder there that might look like sargo-factory-06.02.02
+23:24:39 <TheJollyRoger> Do you see it?
+23:24:58 <ch878787> i did it before you typed that last line
+23:25:42 <TheJollyRoger> Ok, do you know its exact location?
+23:25:56 <ch878787> yes i do
+23:26:16 <TheJollyRoger> Great. Navigate to it in Powershell using cd.
+23:26:45 <ch878787> ok now what do i do
+23:26:51 <TheJollyRoger> remember, the cd command stands for "Change Directory To..."
+23:26:55 <ch878787> ok
+23:27:09 <TheJollyRoger> Alright, bring up pastebin again and type in "dir" Do you see a file in there called "flash-all.bat"?
+23:27:49 <ch878787> dir in powershell
+23:27:51 <ch878787> ?
+23:27:52 <TheJollyRoger> Paste me the results if you're uncertain.
+23:27:55 <TheJollyRoger> Yes, in powershell.
+23:28:42 <ch878787> I see that flash-all.bat
+23:28:54 <TheJollyRoger> Great. Alright, return to your phone.
+23:28:58 <TheJollyRoger> Switch it off.
+23:29:30 <ch878787> switched off
+23:30:14 <TheJollyRoger> Press and hold the Volumedown key, then press and hold down the Power key. Give it roughly seven or nine seconds, and it should turn on to fastboot again.
+23:30:30 <TheJollyRoger> Keep 'em held down until fastboot comes on.
+23:30:38 <ch878787> its on
+23:30:50 <TheJollyRoger> Alright. Now in powershell, cross your fingers and type in:
+23:31:05 <TheJollyRoger> ./flash-all.bat
+23:31:22 <TheJollyRoger> This is step 7 (whoop, should've kept the numbers)
+23:31:58 <ch878787> its listing fings
+23:32:02 <ch878787> phone gong off and on
+23:32:11 <ch878787> ummm
+23:32:25 <ch878787> omg
+23:32:36 <TheJollyRoger> Yep. Leave it be for a bit... Don't disturb your phone while it's installing.
+23:32:37 <ch878787> now it says fastbootd
+23:32:47 <TheJollyRoger> Great. Do you see a third option there that says "Reboot to Bootloader"?
+23:32:55 <ch878787> yes
+23:33:18 <ch878787> should i use the volume keys
+23:33:21 <TheJollyRoger> you'll need to use the Volume Up and Volume Down keys to select it. Move it until it's highlighted and tap and release the power button as "enter"
+23:33:22 <TheJollyRoger> Yep.
+23:33:30 <TheJollyRoger> tap, then immediately release
+23:33:58 <TheJollyRoger> Don't press and hold it, just click it once. Pressing and holding the POWER button for more than ten seconds is the Android equivalent of "Emergency Halt"
+23:34:03 <ch878787> ok now what do i do its on fastboot mode now
+23:34:17 <ch878787> ok
+23:34:39 <TheJollyRoger> Step nine, do you see in the corner  some text commands? Tap the volume up key until you see it say "Start"
+23:34:53 <ch878787> says start
+23:34:57 <TheJollyRoger> this is just a quick sanity check to make sure that GrapheneOS indeed installed.
+23:35:01 <ch878787> okk
+23:35:05 <TheJollyRoger> Tap the power key and immediately release it.
+23:35:20 <TheJollyRoger> Since right now the bootloader is not locked, so it's going to give you that ominous warning.
+23:35:28 <TheJollyRoger> But that's OK just this once because this is only a test.
+23:35:42 <ch878787> it says my device is corrupt and cant be used properly
+23:35:55 <ch878787> do i press power button to continue
+23:36:33 <ch878787> it says device is corrupt. it cant be trusted and may not work properly..
+23:36:46 <TheJollyRoger> Give it ten seconds
+23:36:49 <ch878787> it gives optio to press power to continue?
+23:36:59 <TheJollyRoger> Hold up a moment...
+23:37:07 <ch878787> ok i am waiting
+23:38:21 <ch878787> nothing is happening but it does give me the option to press power button to continue?
+23:38:56 <TheJollyRoger> Yeah give it a try.
+23:39:17 <TheJollyRoger> This is really unusual though.
+23:39:22 <ch878787> hmm
+23:40:24 <TheJollyRoger> Fortunately, don't worry. It's not bricked, it's just that the flashing didn't complete properly.
+23:40:34 <ch878787> ok
+23:40:56 <ch878787> it is showing google startup first image/logo but it just stays there. shall we retry flash
+23:40:57 <ch878787> ?
+23:41:00 <TheJollyRoger> (The good news is, Google publishes factory images on their website, so you can always revert to the Google OS using the same method)
+23:41:08 <TheJollyRoger> Before we retry it...
+23:41:21 <TheJollyRoger> Just a sec.
+23:41:25 <ch878787> ok
+23:41:52 <ch878787> this was the farthest i have ever gotten which I am very pleased about but i just want it to work
+23:42:09 <TheJollyRoger> I'm just checking something for you here.
+23:42:12 <ch878787> ok
+23:43:02 <TheJollyRoger> Since I normally don't keep images for devices I don't own I have to go download them.
+23:43:14 <ch878787> ok
+23:45:25 <TheJollyRoger> The size of the .zip should be 936MB... it's not coming up as any less, does it?
+23:46:04 <ch878787> no but i am re-extracting it
+23:46:17 <ch878787> see if i can do it again
+23:46:34 <ch878787> do i need to keep them in the same folder when it extracts or move it anywehre
+23:46:37 <ch878787> ?
+23:46:56 <TheJollyRoger> As long as you can cd to and run the correct flash-all.bat
+23:47:39 <ch878787> the zip was 936
+23:47:51 <ch878787> one sec ok
+23:47:57 <ch878787> should i turn my phone of?
+23:47:59 <ch878787> off
+23:48:01 <ch878787> ?
+23:48:20 <TheJollyRoger> You'll need to reboot to fastboot to flash it. Fastboot can only talk to the phone when it's in fastboot mode.
+23:48:43 <TheJollyRoger> To get to fastboot, do what we did with holding down the volume down key and the power key until fastboot comes up.
+23:49:17 <ch878787> ok just so you know I -re-extracted the zip and checked the total size afterward - 973mb
+23:49:35 <TheJollyRoger> Yep, archives get larger when you unzip them.
+23:49:40 <ch878787> cool ok
+23:50:03 <TheJollyRoger> I was just wondering if you did something like try to extract it before it was finished downloading or something like that... normally that shouldn't happen.
+23:50:44 <ch878787> i copied and pasted the files in the extracted folder, moved them in the sargo folder and deleted the previous one so maybe that caused a problem
+23:51:28 <ch878787> so now I re-extracted it and have not copied or pasted anything... can you walk me through the final bit again
+23:51:53 <ch878787> i hold power and volume down to go into fastboot right
+23:52:00 <ch878787> after i power off?
+23:52:02 <TheJollyRoger> I have no idea what you just did.-
+23:52:14 <ch878787> i mean to say
+23:52:24 <ch878787> when we flashed it just now
+23:53:43 <ch878787> i had downloaded the system image and unzipped it. so there were two folders...sargo and when i cliked into sargo another one with all the contents of the unzipped file. i copied and pasted those contents into the sargo one and delted the original
+23:53:55 <ch878787> this time i wont do that
+23:54:19 <ch878787> so i will power my phone off first yeh?
+23:54:41 <TheJollyRoger> Yeah sorry man, I can't actually trust you at your word and I don't know what you're doing there.
+23:55:08 <ch878787> ok
+23:55:21 <ch878787> can we try reflashing
+23:56:24 <ch878787> oh boy. i cant power my phone off
+23:56:52 <ch878787> ok i am in fastboot mode
+23:56:54 <ch878787> :)
+23:57:58 <TheJollyRoger> You can try reflashing, I'm not sure what went wrong with it; a majority of problems get caused by USB on the host, or a bad cable.
+23:58:05 <TheJollyRoger> I'm out of time and have to head off for a bit.
+23:58:29 <ch878787> ok thanks for your help anyways
+23:59:36 <TheJollyRoger> If all else fails try from a different computer.

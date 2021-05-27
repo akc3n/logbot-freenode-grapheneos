@@ -1,0 +1,88 @@
+03:21:35 <Newbman> quick question if anybody is bored, I installed on a pixel 4 XL and can't activate always on display. Is this a feature or a bug?
+03:51:21 <renlord> do non-technical users still find flashing graphene os to be challenging?
+04:31:59 <strcat[m]> Newbman: not supported until the next release, and it wasn't a bug
+04:32:02 <strcat[m]> a feature not being supported is not a bug
+04:45:27 <Newbman> I asked to be sure I didn't do something wrong ie: bug on my personal device. thanks for the reply :)
+04:53:04 <Newbman> renlord, its pretty easy if you can infer some stuff with the code ie: swapping crosshatch for coral in the terminal commands provided in the tutorial
+04:53:21 <Newbman> depending on your device
+05:04:03 <devnull[m]3> <strcat[m] "Newbman: not supported until the"> Oh nice that its being added in the next release 🙂
+06:07:42 <devnull[m]3> Could someone elaborate what the "Sensor" permission does?
+06:09:19 <blacklight447[m]> Denies access to stuff like your gyroscope
+06:09:58 <strcat[m]> controls access to sensors not covered by more specific permissions (Microphone, Camera, Body Sensors, Activity Recognition)
+06:10:30 <strcat[m]> iOS and Android simply permit access to those for apps in the foreground
+06:10:50 <strcat[m]> so GrapheneOS adds a new permission for controlling it
+06:11:15 <strcat[m]> and since apps do not declare whether they need it (they aren't written for GrapheneOS specifically), we have to assume every app needs it, although most don't
+06:12:08 <strcat[m]> if people were interested in doing the work, we could do a search for all uses of the APIs in the base system and mark apps that need it, and then exclude system apps from being assumed to need it, but it wouldn't provide much benefit
+06:12:25 <strcat[m]> this is also something that would need to continue to be maintained over time or it would have to go back to how it is now
+06:16:09 <lpcvoid[m]1> Is there any good resource where one could start reading to learn about the architecture with the goal of becoming a contributor?
+06:16:44 <devnull[m]3> <strcat[m] "and since apps do not declare wh"> I see. Thanks for the clarification. How can I find out if an app needs it or not? Just remove it and see if its still running well?
+06:45:32 <renlord[m]> <lpcvoid[m]1 "Is there any good resource where"> https://developer.android.com/guide/platform
+06:45:43 <renlord[m]> and lots of grepping
+06:45:58 <renlord[m]> i'd say i spend half my time using grep
+06:46:31 <renlord[m]> so much grep usage, i decided to use the-silver-searcher instead, it is more performant.
+06:46:51 <renlord[m]> if people have even faster tools to grep, please let me know
+06:47:18 <anupritaisno1[m]> <renlord[m] "i'd say i spend half my time usi"> 9% here
+06:47:45 <anupritaisno1[m]> history | grep grep | wc -l / history | wc -l * 100
+06:48:32 <renlord[m]> % of `m`?
+06:50:08 <anupritaisno1[m]> 20%
+06:52:21 <anupritaisno1[m]> 30% for git
+06:52:30 <lpcvoid[m]1> Thanks for that. I actually use ack instead of grep
+07:02:36 <renlord[m]> i guess if you know your way around the codebase, then you dont need to grep as much
+07:04:03 <anupritaisno1[m]> [renlord](https://matrix.to/#/@renlord:matrix.org) idk
+07:04:15 <noctux> renlord[m]: people claim that ripgrep is faster than ag
+07:04:17 <anupritaisno1[m]> I've lost my shell history several times
+07:05:16 <renlord> interesting, i'll try LOL
+07:05:36 <renlord> we need more *greps
+07:47:43 <strcat[m]> devnull: turn it off, turn it on if you end up needing it for that app
+07:47:48 <strcat[m]> just remember you turned it off
+08:04:13 <doobry[m]> ripgrep is awesome. especially that it excludes e.g. git metadata files per default is so handy!
+08:04:37 <doobry[m]> one of the tools that I tried out once and adapted its usage immediately 😉
+09:16:43 <kopolee11[m]> <Lynn[m]2 "Eh. There are a lot more issues "> Another problem as explained on GrapheneOS is that installing any Gecko-based browser (like the Tor Browser) opens up a lot of attack service.
+09:17:03 <kopolee11[m]> * Another problem as explained on grapheneos.org is that installing any Gecko-based browser (like the Tor Browser) opens up a lot of attack service.
+09:17:03 <kopolee11[m]> One way to mitigate that is to open the Tor Browser in its own user profile. Then you get best available privacy, and minimize the harms from the poor security.
+09:28:02 <Partyush[m]> Hello anyone know when pixel 4a will get support for graphene Os ?
+09:29:30 <anupritaisno1[m]> [Partyush](https://matrix.to/#/@partyu:matrix.org) after auditor is fixed
+09:29:46 <anupritaisno1[m]> https://github.com/GrapheneOS/Auditor/issues/76
+09:35:26 <Partyush[m]> <anupritaisno1[m] "[Partyush](https://matrix.to/#/@"> There was some experimental release ? How to get it
+09:43:15 <Lynn[m]2> > <@kopolee11:matrix.org> Another problem as explained on grapheneos.org is that installing any Gecko-based browser (like the Tor Browser) opens up a lot of attack service.
+09:43:15 <Lynn[m]2> > One way to mitigate that is to open the Tor Browser in its own user profile. Then you get best available privacy, and minimize the harms from the poor security.
+09:43:15 <Lynn[m]2> Most browsers with a decent feature set like Chromium or FF will have a lot of attack surface. Not just FF.
+09:43:21 <Lynn[m]2> But yeah 👍thu
+09:43:29 <Lynn[m]2> * But yeah 👍
+09:48:45 <cn3m> Lynn: sure, but sandboxing is a key factor in attack surface reduction
+09:49:02 <cn3m> If your renderer can't access browser data or the network a render bug is a lot less of attack surface
+09:52:33 <Lynn[m]2> Chromium is still a huge code base, even with its isolation techniques, it'd be a little silly to assume there isn't any issues that could potentially arise even in the isolated parts.
+09:55:28 <Lynn[m]2> It does a pretty good job, no doubt about that, but there is still a lot of potential for issues.
+10:09:54 <username_420[m]> Hello there !
+10:09:54 <username_420[m]> Does anyone have a recommendation for a good "trackid" app ? (like shazam but without the spying part)
+10:09:54 <username_420[m]> Thanks in advance
+10:11:27 <cn3m> Lynn: a browser complexity is nearing an OS pretty much
+10:11:59 <cn3m> Isolation and hardening is incredibly important
+10:12:15 <cn3m> FF has no sandboxing on Android
+10:12:41 <cn3m> It really is disingenuous to compare the attack surface imo
+10:13:10 <Lynn[m]2> <cn3m "Lynn: a browser complexity is ne"> Yep. :P again. Huge.
+10:13:23 <Lynn[m]2> Lots of potential.
+10:14:47 <burningdaemon[m]> I tested Panopticlick on the Browsers (Bromite and Vanadium) , but the result is not pretty good. https://panopticlick.eff.org
+10:14:47 <burningdaemon[m]> Could be my fault I guess, or do you know what could be the problem.
+10:18:42 <Lynn[m]2> [burningdaemon](https://matrix.to/#/@burningdaemon:matrix.org) That site is just to scare you to into using privacy friendly tools.
+10:18:42 <Lynn[m]2> It is not effective at fingerprinting you properly, and doesn't provide even close to real world results.
+10:19:35 <burningdaemon[m]> Ah OK thx
+10:19:41 <Lynn[m]2> If you're worried about being fingerprinted, don't use Vanadium, nor Bromite. Use Tor Browser.
+10:21:08 <burningdaemon[m]> How do you visit non .onion sites in Tor . The most sites have Forbidden Access or an Infinity recapture Robot test thing
+10:24:19 <textmate> Is it safe to say that Pixel 4a will have solid support in the futureÞ
+10:24:53 <Partyush[m]> <textmate "Is it safe to say that Pixel 4a "> 3a have so safe to assume :)
+10:25:15 <textmate> Ok
+10:25:35 <textmate> But do you think its realistic that it will be working before EOY?
+10:26:21 <Partyush[m]> I am sorry i didn't get your mean what is 'EOY' ??
+10:26:38 <textmate> end of year
+10:26:41 <burningdaemon[m]> Maybe End Of Year???
+10:28:31 <Partyush[m]> Yeah possibly where did i found pixel 4a had a experimental release but i didn't get my hands on yet.
+10:56:26 <null[m]> <cn3m "FF has no sandboxing on Android "> Yeah. This is the key factor when comparing FF and Chromium-based running on Android specifically.
+11:21:01 <kopolee11[m]> <Lynn[m]2 "> <@kopolee11:matrix.org> Anothe"> Yea but by using GrapheneOS you're already using a Chromium based browser, WebView, etc. So you're already open to that attack surface. By downloading a FF based browser you're just adding to your attack surface.
+11:21:37 <Lynn[m]2> That's besides the point.
+11:22:09 <Lynn[m]2> I'm talking about browsers themselves.
+11:23:57 <kopolee11[m]> Fair enough, but we're on the GrapheneOS channel, so anything not related to running browsers on GrapheneOS is sorta OT.
+14:34:43 <joltman[m]> Are any devs actively working on Auditor support for 4a?
+14:36:32 <anupritaisno1[m]> [joltman](https://matrix.to/#/@joltman:matrix.org) no
+21:58:02 <neo[m]> Hi. guys. When I do 'script/release.sh sargo' what key passphrase should I enter? I tried the one I use to create avb.pem, but received "Error decrypting key".
+22:00:03 <neo[m]>  * Hi. guys. When I do 'script/release.sh sargo' what key passphrase should I enter? I tried the one I use to create avb.pem, but received "Error decrypting key". Actually, I use the same passphrase everywhere I asked about it.

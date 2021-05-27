@@ -1,0 +1,1419 @@
+00:00:00 <TheJollyRoger> "Hang on a moment guys, this installer comes on eight DVDs!"
+00:00:00 <strcat[m]> requires a lot of manual intervention
+00:00:05 <strcat[m]> best to just start over each new release
+00:00:26 <cdesai> oh btw, https://chromium.googlesource.com/chromium/src/+/master/docs/windows_build_instructions.md#Why-is-my-build-slow had some interesting variables / tools
+00:00:28 <strcat[m]> TheJollyRoger: the slackware design is basically meant for a time before internet access
+00:00:33 <strcat[m]> at least fast internet, lol
+00:00:35 <TheJollyRoger> Oh good gravy.
+00:00:43 <strcat[m]> i.e. must ship everything and assume no updates
+00:00:59 <strcat[m]> they have some kind of philosophical disagreement with dependency management
+00:01:01 <TheJollyRoger> I wonder if that's how its security model works too.
+00:01:35 <strcat[m]> if applications are contained/sandboxed and bundle their own deps
+00:01:40 <strcat[m]> that's different
+00:01:41 <TheJollyRoger> <sarcasm>"Can't hack it if it's not online loooooool now let's just plug our ears and forget about the bajillion different USB drives our user just plugged in."</sarcasm>
+00:01:41 <strcat[m]> but that's not how it is
+00:01:58 <cdesai> also somewhat relevant - https://lwn.net/Articles/818860/
+00:02:50 <strcat[m]> cdesai: if you look at aosp master you'll notice they added more prebuilts like m4
+00:03:06 <TheJollyRoger> I used to think I got "marooned" on Gentoo island and ended up becoming stuck here unable to find a way off and doomed to scratch out a miserable existence fighting with this system. Now I'm thinking maybe I just might have noplace to swim to.
+00:03:39 <strcat[m]> they also moved to python3 finally
+00:03:42 <strcat[m]> so that will be there for Android 11
+00:04:02 <cdesai> strcat[m]: yeah, I noticed that they add more darwin prebuilts too. I submitted a patch to be able to use zfs compression on my $OUT
+00:04:34 <strcat[m]> I like that Arch is a rolling release (latest stable releases of upstream software) and has a policy against unnecessary downstream patching / customizations so it ships the software as upstream intends
+00:04:53 <strcat[m]> but it's still the standard approach to a distribution without a well defined base system
+00:05:07 <strcat[m]> and not a fan of glibc, GCC, binutils, systemd, etc.
+00:05:19 * TheJollyRoger buries his face in his hands.
+00:05:22 <strcat[m]> it's the least bad way of consuming this awful setup tho
+00:08:26 <strcat[m]> almost done the build in this container
+00:09:08 <strcat[m]> it will be nice when the kernel build uses the pure LLVM toolchain
+00:09:21 <strcat[m]> atm we're still using GCC as HOSTCC/HOSTCXX which I could probably change right now
+00:09:32 <strcat[m]> but binutils is still used too for host and for the target
+00:09:43 <strcat[m]> https://www.kernel.org/doc/html/latest/kbuild/llvm.html
+00:09:54 * strcat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/jVZnPekQQmTQGzfSDfZtVTJs >
+00:09:58 <strcat[m]> will be nice when that's just the norm
+00:10:08 <strcat[m]> I'll see how far I can get it atm
+00:10:21 <strcat[m]> don't want to build target stuff with different tools than they do though
+00:13:17 <strcat[m]> interesting fact: the *BSDs consider GPLv3 to be a non-free license and GPLv2 less than totally free
+00:13:50 <TheJollyRoger> This... this didn't have anything to do with Theo De Raadt saying something about "If they take our code, they wrap it with GPL code, and then we can't get it back...?"
+00:14:08 <strcat[m]> TheJollyRoger: GPLv2 and GPLv3 place restrictions on the use of the software
+00:14:14 <strcat[m]> especially GPLv3
+00:14:28 <TheJollyRoger> Oh. Oh yeah...
+00:14:35 <strcat[m]> TheJollyRoger: as one funny example, GPLv2 licensed software forbids using it with GPLv3 licensed software
+00:14:55 <strcat[m]> it only works if people licensed it as "GPLv2 or later" which trusts the FSF with the ability to change their licensing terms
+00:15:05 <strcat[m]> so for example the Linux kernel is GPLv2 only
+00:15:21 <strcat[m]> this means you cannot take Linux kernel code and include it in glibc, that's a violation of the GPLv2
+00:15:30 <strcat[m]> you cannot even reference it / read it or you're contaminating your work
+00:15:54 <strcat[m]> TheJollyRoger: that's pretty much the definition of non-free licenses - forbidding you from using it due to restrictions
+00:16:02 <strcat[m]> similarly GPLv3 forbids having a locked down device
+00:16:24 <TheJollyRoger> Sheesh >_<.
+00:16:49 <strcat[m]> GrapheneOS cannot include GPLv3 code or then it cannot be used on a device not supporting unlocking the bootloader, and we want to support that
+00:16:50 <strcat[m]> so it isn't okay to include any GPLv3 licensed project in GrapheneOS
+00:16:51 <strcat[m]> which rules out bundling many apps even aside from how we don't want to bundle a lot of apps
+00:17:02 <TheJollyRoger> Oh wow.
+00:17:09 <strcat[m]> so aside from all the issues I have with F-Droid, we are forbidden by their license from bundling it
+00:17:15 <TheJollyRoger> That's crazy, I didn't realize it was THAT intrusive!
+00:17:20 <TheJollyRoger> Then again... I uh...
+00:17:22 * TheJollyRoger redfaces.
+00:17:27 <TheJollyRoger> I didn't read the license either... >_<.
+00:17:45 <strcat[m]> Copperhead is violating the GPLv2 licensing for my kernel code
+00:17:54 <strcat[m]> not just the old CC non-commercial licensing that I used
+00:18:04 <TheJollyRoger> Wow.
+00:18:07 <strcat[m]> nice it built
+00:21:23 <strcat[m]> btw  a quote of the GPLv2
+00:21:24 <strcat[m]> > Any attempt otherwise to copy, modify, sublicense or distribute the Program is void, and will automatically terminate your rights under this License
+00:21:30 <strcat[m]> this bit was removed in the GPLv3
+00:21:43 <strcat[m]> this means that a GPLv2 violator like Copperhead permanently loses any rights to use the code in the future - forever
+00:22:01 <kieni111[m]> Thank you dazinism & TheJollyRoger !
+00:22:04 <strcat[m]> too late now, they never have a right to use that code again
+00:22:24 <TheJollyRoger> Hohohohoho
+00:22:39 <strcat[m]> so the GPLv2 is pretty strict since it voids the rights it grants you FOREVER for violating it ever
+00:22:50 <strcat[m]> they made the GPLv3 substantially less strict in this regard
+00:23:09 <strcat[m]> and the FSF tried to scare people into moving to GPLv3 due to this
+00:23:25 <strcat[m]> by saying that their own license (GPLv2) is draconian
+00:23:27 <TheJollyRoger> kieni111[m]: yarr, hope it fixes yer problem, shipmate!
+00:23:29 <TheJollyRoger> Wow.
+00:23:37 <TheJollyRoger> Now even the FSF can't even make up their minds, eh? O_O
+00:23:40 <JTL> I like the idea of the GPL licenses, but I can't support the FSF
+00:23:41 <strcat[m]> https://www.fsf.org/news/android-termination-upgrade-gplv3
+00:24:14 <strcat[m]> so for example NVIDIA is a GPLv2 violator therefore the company has FOREVER lost the rights to use the Linux kernel at all, ever, for any reason
+00:24:42 <strcat[m]> anyone who contributes code to it can sue them based on past / current GPL violations and they would need explicit permission from all the authors to ever use it again
+00:24:56 <strcat[m]> of course no one really tries to enforce these copyrights to extent of the law in practice
+00:25:03 <strcat[m]> but THAT'S WHAT IT SAYS and it is enforceable
+00:25:24 <strcat[m]> I have code in the upstream kernel
+00:25:39 <strcat[m]> but not enough to sue any of these companies for anything substantial
+00:26:21 <strcat[m]> cdesai: look in prebuilts/build-tools/linux-x86/bin in AOSP master vs. AOSP 10
+00:26:23 <strcat[m]> as an example
+00:53:01 <strcat[m]> read https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+/master/GCC_4_9_DEPRECATION.md for some amusement btw
+00:53:05 <strcat[m]> TheJollyRoger: ^
+00:54:03 <JTL>     Move GCC binary name.
+00:54:04 <JTL>     Total 10s sleep.
+00:54:06 <JTL> Ahahaha
+00:56:19 <strcat[m]> I think the only use for us is some remaining bits of the Pixel 2 / 2 XL kernel
+00:56:26 <strcat[m]> unsure what exactly it gets used for
+00:56:42 <strcat[m]> but it prints a few warnings even though the kernel code is built with clang
+00:57:04 <strcat[m]> not too concerned, Pixel 2 / 2 XL will be gone next year
+00:57:15 <strcat[m]> and so will that legacy GCC toolchain soon...
+00:57:24 <strcat[m]> I guess it has to get fixed for Android R for Pixel 2 / 2 XL
+00:58:17 <strcat[m]> it seems to happen for linking some built-in.o files
+01:02:29 <strcat[m]> maybe it's used for the vdso
+01:02:30 <strcat[m]> hmm
+01:05:29 <strcat[m]> cdesai: https://github.com/GrapheneOS/kernel_google_crosshatch/blob/10/build.sh
+01:05:32 <strcat[m]> improved this a bit btw
+01:10:18 <strcat[m]> ohhh I see
+01:13:26 <strcat[m]> ok nice narrowing down where it's still using gcc
+01:13:33 <strcat[m]> it's using it with gcc -E
+01:14:18 <strcat[m]> I think it's just scripts/gcc-version.sh lol
+01:14:19 <strcat[m]> hmm
+01:14:33 <strcat[m]> or scripts/checksyscalls.sh
+01:15:18 <strcat[m]> yup it's gcc-version.sh
+01:24:15 <strcat[m]> ok fixed that
+01:24:30 <strcat[m]> backported a commit from Android 11 kernel for both
+01:24:39 <strcat[m]> https://github.com/GrapheneOS/kernel_google_crosshatch/commit/a23f3a75e20fcb656bb77f3a894aab828218b45a
+01:24:43 <strcat[m]> some weird leftover cruft
+01:32:25 <strcat[m]> https://github.com/GrapheneOS/grapheneos.org/commit/dadc7238b414da4b5eae50b5fa187b96d5d53801
+01:32:28 <strcat[m]> well some minor progress
+01:34:45 <strcat[m]> https://git.yzena.com/gavin/bc is used to provide bc by AOSP master
+01:35:03 <strcat[m]>  /home/strcat/android/aosp/prebuilts/build-tools/path/linux-x86/bc
+01:35:11 <strcat[m]> lrwxrwxrwx 1 strcat strcat 34 Apr 23 15:21 /home/strcat/android/aosp/prebuilts/build-tools/path/linux-x86/bc -> ../../linux-x86/bin/gavinhoward-bc
+01:35:16 <strcat[m]> so can mark that one as fixed too
+01:35:54 <strcat[m]> cdesai: ahhh we're supposed to use path in addition to bin
+01:36:31 <strcat[m]> https://paste.xinu.at/MuMT/
+01:36:36 <strcat[m]> cdesai: this provides bc and a bunch of other tools
+01:37:54 <strcat[m]> just need to make the kernel build use this too
+01:38:23 <strcat[m]> and maybe if everything is provided we can unset the existing PATH
+01:41:25 <strcat[m]> avoids needing bc, which, diffutils, etc. and avoids the dependency on the host for most of the *nix utilities
+01:41:58 <strcat[m]> wonder if we should use the sandbox for the kernel build if that's possible
+01:43:48 <strcat[m]> bc is still needed for now
+01:45:08 <strcat[m]> https://grapheneos.org/build#build-dependencies
+01:45:13 <strcat[m]> ok so there are 3 linux kernel build deps for now
+01:45:33 <strcat[m]> avoiding libgcc requires using compiler-rt for the stuff clang builds for use on the host as part of the kernel build
+01:46:16 <strcat[m]> avoiding binutils requires using the LLVM toolchain for stuff other than compilation too, which is coming and largely implemented for userspace already (AOSP and the NDK use ld.lld instead of ld.bfd or ld.gold)
+01:51:20 <strcat[m]> and notice they used toybox for most of it, gavinhoward-bc, one-true-awk
+01:51:30 <strcat[m]> nice to get lighter, more robust versions of tools as part of this
+01:51:41 * TheJollyRoger reads.
+01:52:29 <TheJollyRoger> "move gcc binary to new file name?" Wait so what are they doing, like "ln -s gcc" or something...?
+01:52:41 <TheJollyRoger> Ay carumba >_<.
+01:52:55 <strcat[m]> TheJollyRoger: it's a good thing
+01:53:23 <strcat[m]> they replaced all the variants of GCC with scripts that call the real gcc and warn in Android 10 and in Android 11 it's removed - no more GCC
+01:53:29 <strcat[m]> will be happy to see binutils go too
+01:53:41 <strcat[m]> TheJollyRoger: I hadn't realized that they're also avoiding using GNU coreutils, GNU awk, etc.
+01:53:47 <strcat[m]> that's what I just noticed
+01:53:52 <strcat[m]> and implemented it in our kernel build script
+01:54:23 <TheJollyRoger> OH
+01:54:26 <strcat[m]> TheJollyRoger: as part of doing reproducible builds, AOSP is using a build sandbox and shipping prebuilt versions of all the needed tools/libraries to build
+01:54:32 <TheJollyRoger> Oh wow.
+01:54:45 <strcat[m]> but as part of doing that, this is also a move to BSD/MIT licensed tools and away from having tons of bloat/cruft in them
+01:54:53 <TheJollyRoger> Wow!
+01:55:32 <strcat[m]> TheJollyRoger:  https://paste.xinu.at/1gWc/ what I was showing here is what's provided by the build-tools prebuilts in AOSP master
+01:55:37 <strcat[m]> it's a bit more than in Android 10
+01:55:57 <strcat[m]> https://paste.xinu.at/psbX6o/
+01:56:01 <strcat[m]> this is for Android 10 (GrapheneOS)
+01:56:42 * TheJollyRoger reads both....
+01:57:09 <strcat[m]> hopefully in Android 11 this process is complete and there are no longer host build dependencies other than the kernel
+01:57:15 <strcat[m]> because it makes things easier and more reproducible / reliable
+01:57:33 <strcat[m]> to have specific versions of all the tools that are used with a way to rebuild those
+01:57:57 <strcat[m]> rather than relying on getting stuff from the host - arbitrary versions, different projects providing them (varies per distribution since multiple packages can provide many tools)
+01:57:58 <TheJollyRoger> Wow. All self-contained and everything, so we won't have the same issues with a scattered, messy build system...?
+01:58:31 <strcat[m]> so for example a tool like cp could be busybox, toybox, GNU coreutils, plan9port, *BSD tools or who knows what else
+01:58:38 <strcat[m]> all slightly different
+01:58:46 <strcat[m]> these things can impact reproducible builds
+01:59:07 <strcat[m]> they're using modern, permissively licensed versions of the tools like toybox
+01:59:21 <strcat[m]> TheJollyRoger: https://github.com/landley/toybox
+01:59:23 <strcat[m]> this is what Android uses itself too
+01:59:33 <TheJollyRoger> Wow.
+02:00:09 <strcat[m]> http://landley.net/toybox/
+02:00:20 <strcat[m]> part of the motivation behind toybox is being able to build Android on Android BTW
+02:01:08 <JTL> Does the toolchain to build AOSP on ARM64 already exist?
+02:01:18 <JTL> Or is that a future goal?
+02:02:16 <strcat[m]> JTL: future but moving to LLVM etc. is a huge help
+02:02:28 <strcat[m]> JTL: cross-compilation with LLVM and moving to a different host to build is so much easier
+02:02:40 <strcat[m]> with GCC you're tied to using a specific toolchain to build on a specific host for a specific target
+02:03:09 <TheJollyRoger> I didn't realize this part earlier O_O
+02:03:22 <strcat[m]> so for example there's a linux-x86 build of aarch64-linux-android-g++, aarch64-linux-android-ar, aarch64-linux-android-as and so on
+02:03:36 <strcat[m]> all the binutils and gcc stuff is per-target tools
+02:03:46 <strcat[m]> they even have SEPARATE toolchains for different kinds of ARMv7
+02:04:18 <strcat[m]> and there is ld.bfd and ld.gold, both incomplete
+02:04:23 <strcat[m]> as part of binutils
+02:04:33 <strcat[m]> you need ld.gold for some things, ld.bfd for others, both are super problematic
+02:04:42 <strcat[m]> ld.gold is unmaintained since it's the 'Google linker' and they moved on to LLD
+02:04:59 <strcat[m]> ld.bfd is super slow, badly supports LTO / plugins, and is written as this horrifying meta shell script thing
+02:05:26 <strcat[m]> ld.bfd sources are this massive shell script system that generates code
+02:05:28 <strcat[m]> it's really fucked up
+02:05:31 <strcat[m]> that's the 'gnu linker'
+02:05:57 <strcat[m]> ld.gold was a replacement that's far faster / more capable but they didn't really care and Google moved on to LLVM so it's dead and probably shouldn't be used anymore
+02:05:58 <strcat[m]> should use LLD
+02:06:08 <strcat[m]> AOSP and the NDK already moved to LLD
+02:06:14 <strcat[m]> kernel builds haven't yet but should
+02:06:33 <strcat[m]> will make linking the kernel much faster and can support thinlto
+02:07:43 <strcat[m]> https://android.googlesource.com/platform/build/soong/+/master/ui/build/paths/config.go#76
+02:07:52 <strcat[m]> ah so this is a full list of tools that can be used from the host
+02:07:53 <strcat[m]> in master
+02:08:15 <strcat[m]> and 'can be' doesn't mean that's what it uses normally (has openjdk prebuilts for example)
+02:10:32 <strcat[m]> so we could use this list and figure out what's actually needed
+02:13:07 <TheJollyRoger> Wow.
+02:15:00 <strcat[m]> rsync is such a badly made tool without a good replacement
+02:16:08 <strcat[m]> TheJollyRoger: you'll be happy to hear that rsync replaced md4 with md5 in 2008 and made no progress since then
+02:16:19 <TheJollyRoger> ...Oh god.
+02:16:40 <JTL> Jesus fuck
+02:16:42 * TheJollyRoger turns green.
+02:16:51 <JTL> Who thought that was a good idea
+02:18:52 <TheJollyRoger> That's insane... aaargh.
+02:19:34 <strcat[m]> it's what it uses to compare if files are the same
+02:19:37 <strcat[m]> which has security implications
+02:20:10 <strcat[m]>        -c, --checksum
+02:20:10 <strcat[m]>               This  changes the way rsync checks if the files have been changed and are in need of a transfer.  Without this option, rsync uses a "quick check" that (by
+02:20:10 <strcat[m]>               default) checks if each file’s size and time of last modification match between the sender and receiver.
+02:20:11 <strcat[m]> when you use -c
+02:20:16 <strcat[m]> >               For protocol 30 and beyond (first supported in 3.0.0), the checksum used is MD5.  For older protocols, the checksum used is MD4.
+02:20:25 * TheJollyRoger starts feeling sick.
+02:20:50 <strcat[m]> checksum should really be the default
+02:21:01 <strcat[m]> guessing based on size + last mod time is kinda bad
+02:21:19 <strcat[m]> sometimes last mod time is set to a placeholder such as when doing reproducible builds
+02:21:42 <strcat[m]> generating a filesystem or archive that's reproducible (so file metadata has to match)
+02:21:54 <strcat[m]> rsync has so many options and the UX is really bad
+02:21:58 <strcat[m]> it has a weird way of doing things
+02:22:10 <strcat[m]> it changes behavior based on whether you use an explicit / at the end of directories
+02:22:18 <strcat[m]> and it's hard to remember which way it works with different options / parameters
+02:22:49 <strcat[m]> TheJollyRoger: https://github.com/GrapheneOS/grapheneos.org/blob/master/deploy_static#L21 it's good at doing stuff like this
+02:22:52 <strcat[m]> delta-based sync
+02:22:56 <strcat[m]> updates only changed files using deltas
+02:23:51 <TheJollyRoger> It... it just uses md5 to compute the differences?
+02:24:49 <strcat[m]> TheJollyRoger: it uses md5 to check if it needs to do anything (or md4 for the older protocol)
+02:25:05 <strcat[m]> it uses an internal rdiff algorithm for calculating the difference and sending that
+02:25:15 <strcat[m]> and then it does another checksum to make sure it transferred correctly
+02:25:19 <strcat[m]> with md4/md5
+02:25:37 <strcat[m]> TheJollyRoger: rsync is usually used over ssh but it used to be used over rsh (basically telnet)
+02:25:49 <strcat[m]> TheJollyRoger: it still has support for rsh if you do ./configure --with-rsh it uses rsh instead of ssh
+02:26:01 <strcat[m]> TheJollyRoger: and rsync also has a NATIVE protocol where you run an rsync server
+02:26:13 <strcat[m]> and I think that's totally insecure, no authentication of data or  encryption
+02:26:24 <TheJollyRoger> ...O_O.
+02:26:27 <TheJollyRoger> Oh god.
+02:26:39 <strcat[m]> TheJollyRoger: yeah rsync service has no authentication or encryption
+02:26:49 <strcat[m]> typically you use it over ssh though, or just locally
+02:26:57 <strcat[m]> it's basically a "better cp"
+02:27:04 <strcat[m]> but it has a lot of horrible cruft
+02:27:09 <TheJollyRoger> Jeez T_T
+02:27:11 <strcat[m]> and I don't think the diff algorithm it uses is particularly good
+02:27:19 <strcat[m]> rsync is a tool that DESPERATELY needs a replacement lol
+02:27:49 <TheJollyRoger> AAAaaaaa X(
+02:28:02 <strcat[m]> TheJollyRoger: https://librsync.github.io/ is a reimplementation of the rsync delta protocol without the insecure wire protocol
+02:28:14 <strcat[m]> although it's not actually a remote sync tool - it's just the delta algorithm
+02:28:18 <strcat[m]> it provides an rdiff tool
+02:28:32 <aeonsolution[m]> have you looked at https://syncthing.net/
+02:28:38 <strcat[m]> seems they support BLAKE2 for secure hashing
+02:28:46 <strcat[m]> in librsync (unrelated to the rsync project)
+02:28:57 <TheJollyRoger> Wow. I should get that then.
+02:29:24 <strcat[m]> https://github.com/dropbox/librsync I like how this has 1 commit
+02:29:37 <strcat[m]> TheJollyRoger: there are probably better diff algorithms now
+02:29:54 <strcat[m]> TheJollyRoger: librsync is just a saner reimplementation of a portion of rsync, not the whole tool
+02:30:04 <TheJollyRoger> Oh, darn :(
+02:30:13 <strcat[m]> librsync doesn't provide 'rsync' just a library with part of the protocol (how it does diffs) and an rdiff tool
+02:30:34 <strcat[m]> rdiff-backup and duplicity use rdiff from librsync
+02:30:47 <strcat[m]> TheJollyRoger: https://rdiff-backup.net/
+02:31:01 <TheJollyRoger> Oh wow.
+02:31:50 <renlord> is dane gonna replace hpkp?
+02:31:56 <strcat[m]> TheJollyRoger: rdiff-backup and duplicity are basically a poor man's version control
+02:32:03 <strcat[m]> duplicity has encryption built-in
+02:32:39 <renlord> i use duplicity, and i'd say its not cheap to provide hardware for it
+02:32:55 <strcat[m]> rsnapshot is another thing that seems dumber
+02:33:02 <TheJollyRoger> That... that I could see myself using extensively, on the desktop, to take online backups.
+02:33:19 <strcat[m]> TheJollyRoger:  lol https://github.com/dropbox/librsync really amuses me
+02:33:24 <strcat[m]> they only included 1 commit
+02:33:32 <strcat[m]> they spelled librsync wrong in the repo description
+02:33:37 <strcat[m]> 'Dropbox modified version of librysnc'
+02:33:54 <strcat[m]> I wonder if they still use it
+02:34:02 <strcat[m]> I hope not
+02:34:09 <strcat[m]> that fork uses md4 only
+02:34:42 <TheJollyRoger> Good gravy >_<.
+02:34:52 <strcat[m]> renlord: I just put everything in git and back that up
+02:35:11 <strcat[m]> ~/documents, etc. in git repos
+02:35:43 <strcat[m]> and then just make a snapshot and keep a certain number of them
+02:35:44 <renlord> git does not work really well for binary blobs, rich media files
+02:36:01 <renlord> especially when in between history, you remove stuff
+02:36:04 <TheJollyRoger> Huh. that... that actually never occurred to me before at all.
+02:36:11 <strcat[m]> renlord: it works fine with binary blobs really
+02:36:12 <TheJollyRoger> But now that kinda makes sense.
+02:36:20 <strcat[m]> renlord: it just can't handle any kind of merges / conflicts or anything itself
+02:36:30 <strcat[m]> renlord: although you can actually delegate that to a tool
+02:36:40 <renlord> if you want to keep history snapshots of the blob, i guess its alright
+02:36:52 <renlord> but i usually dont need to restore to previous snapshot
+02:37:08 <strcat[m]> renlord: what kind of blob though
+02:37:22 <strcat[m]> like with an image you can definitely save each revision, it's just annoying because it doesn't understand a binary image format
+02:37:27 <renlord> compressed tarballs for example
+02:37:37 <strcat[m]> so it doesn't provide any kind of useful diffs or merges itself
+02:37:39 <renlord> sometimes i archive things i want to put away for good
+02:37:54 <strcat[m]> renlord: but in that case it's a final revision of it
+02:37:59 <TheJollyRoger> I could do a ton better with my backup system, I'm desperate to build a better one.
+02:38:18 <strcat[m]> TheJollyRoger: keep stuff in git, back up git repo
+02:38:20 <renlord> who knows, maybe one fine day i find a dangling doc that belongs in that archive and i update it
+02:38:23 <renlord> gg
+02:38:34 <TheJollyRoger> I think I might do just that then!
+02:38:45 <strcat[m]> renlord: well git will just be storing both revisions of it
+02:38:58 <strcat[m]> renlord: if you don't want all past revisions of it git doesn't fit the bill
+02:39:04 <TheJollyRoger> I was considering getting Tarsnap but then I realized all those Tarsnap credits are going to add up quickly.
+02:39:34 <TheJollyRoger> So I'd thought to use Tarsnap for the short term and then keep stuff offline in cold storage for the long term.
+02:39:47 <renlord> but yes, i can see how git can be a robust backup solution
+02:41:49 <strcat[m]> for stuff that isn't private but I don't want people bothering me about I just use private repos on github
+02:45:57 <madaidan[m]> Now I'm interested in what you have there
+02:46:57 <strcat[m]> https://github.com/thestinger/dotfiles
+02:47:22 <strcat[m]> used to be public but I got tired of being bothered about it
+02:47:30 <strcat[m]> people suggesting things, arguing about whether I should do something
+02:47:35 <strcat[m]> not what I want to deal with
+02:47:54 <madaidan[m]> The secret vimrc :O
+02:47:57 <strcat[m]> and now I have to be less concerned about accidentally adding something private although I never have
+02:48:11 <madaidan[m]> Can't you disable issues?
+02:48:22 <strcat[m]> yeah  but they can commit on commits, lines in commits
+02:48:39 <strcat[m]> and you can't disable pull requests
+02:48:54 <madaidan[m]> Ah
+02:49:29 <strcat[m]> my vimrc isn't that complicated
+02:49:46 <strcat[m]> a lot of you need this:
+02:49:46 <strcat[m]>     " highlight trailing whitespace, except when typing at eol
+02:49:47 <strcat[m]>     highlight ExtraWhitespace ctermbg=darkred guibg=darkred
+02:49:47 <strcat[m]>     match ExtraWhitespace /\s\+$/
+02:49:52 <strcat[m]> always have to remove your trailing whitespace
+02:50:18 <renlord> i think my nvimrc removes trailing whitespace
+02:50:24 <renlord> and prints indents
+02:50:25 * strcat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/tUeLazZFOHFimYmZxIwDWJFe >
+02:50:36 <strcat[m]> renlord: I don't want it to remove automatically
+02:50:45 <strcat[m]> since I don't want to make extra changes I didn't intend that will cause conflicts etc
+02:51:05 <madaidan[m]> I've never really used vim excluding the times I opened it by accident and spent the rest of the day trying to close it
+02:51:35 <renlord> i dont know how to use any other editor
+02:51:44 <strcat[m]> I can't stand using anything else
+02:51:59 <strcat[m]> and can't stand crappy vim modes for any thing else
+02:52:01 <renlord> the only other one i can use is echo >> FILE
+02:52:09 <strcat[m]> renlord: I don't use neovim atm largely because I don't really use many plugins
+02:52:12 <strcat[m]> so it doesn't impact me much
+02:52:32 <renlord> if a specfic line, echo | sed >> FILE
+02:52:48 <renlord> if a specfic line, sed -i FILE
+02:53:07 <renlord> i cant stand nano/emacs
+02:53:14 <renlord> particularly not the GUI editors either
+02:53:23 <renlord> vscode bothers me the most
+02:53:33 <renlord> fkin baggages that come with those projects
+02:53:35 <renlord> ffs
+02:53:44 <madaidan[m]> I've always used atom
+02:57:00 <JTL> vim++;
+02:57:45 <renlord> vim license is great too
+02:57:47 <renlord> https://www.vim.org/about.php
+02:57:53 <renlord> Vim is charityware. Its license is GPL-compatible, so it's distributed freely, but we ask that if you find it useful you make a donation to help children in Uganda through the ICCF. The full license text can be found in the documentation. Much more information about charityware on Charityware.info.
+02:57:54 <JTL> > 19:47 <strcat[m]> used to be public but I got tired of being bothered about it
+02:57:54 <renlord> lol
+02:57:56 <JTL> Could disable issues/PRs and tell people to bugger off?
+02:58:01 <JTL> I've seen that
+02:58:26 <strcat[m]> you can't disable PRs
+02:58:28 <strcat[m]> or comments on stuff
+02:58:45 <renlord> gitlab you can
+02:58:52 <renlord> but gitlab is really unreliable
+02:58:53 <renlord> lol
+02:59:22 <JTL> strcat[m]: aw sucks
+03:00:32 <JTL> Some projects have bots to automaticly close PRs but that's janky
+03:00:45 <renlord> could just ignore the PRs
+03:01:14 <JTL> Meh. Probably doesn't want to deal with the notifications and other "spam" from it
+03:01:43 <renlord> strcat[m] has admitted that he gets way too much spam from github anyways
+03:01:55 <JTL> Can't say I'm surprised
+03:02:04 <strcat[m]> I get way too much email
+03:02:13 <strcat[m]> people send me tons of questions and complaints daily
+03:02:18 <renlord> strcat[m]: do you bounce broken dkim mail?
+03:02:24 <strcat[m]> I don't read half of the email I receive
+03:02:27 <strcat[m]> renlord: yes
+03:02:32 <renlord> haha
+03:02:50 <strcat[m]> renlord: hard fail spf failures, dkim failures and dmarc will be enforced soon
+03:02:57 <strcat[m]> I'm still using opendmarc in testing mode atm
+03:03:03 <strcat[m]> renlord: this gets rid of lots of spam and emails I don't want
+03:03:19 <strcat[m]> if someone wants to send me an email and can't because they don't have dkim set up properly GOOD, less email
+03:03:37 <strcat[m]> if it's important enough to send me it they can fix the problem (they get an error message when their email server gives up retrying)
+03:03:43 <renlord> i cant enable dmarc
+03:03:48 <renlord> it will bounce too many
+03:03:53 <strcat[m]> renlord: you can whitelist a domain
+03:04:04 <renlord> i already did whitelist some
+03:04:14 <renlord> and also what's with mailing list and broken dkim signatures
+03:04:22 <strcat[m]> On-BadSignature tempfail
+03:04:28 <strcat[m]> it's necessary to add that to opendkim config
+03:04:30 <renlord> i did set that ^
+03:04:31 <strcat[m]> or it doesn't reject bad signatures
+03:04:38 <renlord> but it still bounces broken dkim signatures
+03:04:38 <strcat[m]> but the thing is without DMARC
+03:04:48 <strcat[m]> a domain with DKIM set up can send emails WITHOUT DKIM
+03:04:52 <strcat[m]> DKIM doesn't enforce that it is used
+03:05:00 <strcat[m]> so you also need DMARC to enforce that DKIM/SPF are used
+03:05:07 <strcat[m]> renlord: I have spf-engine set up too
+03:05:15 <strcat[m]> spf-engine + opendkim enforcing has reduced my spam a lot
+03:05:50 <strcat[m]> but atm I have the problem of tons of @gmail.com spam that's spoofed because Google's SPF is soft fail by itself - need to use DMARC
+03:05:58 <renlord> hmm, not in community yet
+03:06:03 <renlord> still AUR
+03:06:03 <strcat[m]> really need to finish testing and enabling opendmarc
+03:06:42 <strcat[m]> postfix-policyd-spf-python is what it's called
+03:06:45 <strcat[m]> but spf-engine provides it now
+03:07:02 <renlord> i'll just install with pip
+03:07:17 <strcat[m]> https://paste.xinu.at/FhnL5/ this is my config for that basically the standard one without TestOnly = 1 and with PermError_reject and TermError_Defer enabled
+03:07:34 <strcat[m]> maybe that can be stricter
+03:07:43 <strcat[m]> once I have opendmarc enforcing I'll barely be receiving spam
+03:07:51 <strcat[m]> I don't want automated spam filtering aside from this
+03:08:01 <strcat[m]> I'd be tempted to require TLS as a way of reducing spam
+03:08:16 <strcat[m]> I'd rather drop email that's just being done wrong
+03:08:17 <renlord> do you subscribe to some blacklist to reject spam MTAs?
+03:08:22 <strcat[m]> renlord: no
+03:08:30 <strcat[m]> renlord: I don't receive enough spam to need that
+03:08:53 <strcat[m]> most of the spam I receive is invalid spoofed email from @gmail.com addresses
+03:09:04 <strcat[m]> so setting opendmarc to enforcing mode is going to remove it all
+03:10:00 <strcat[m]> https://paste.xinu.at/PbbL/
+03:10:02 <strcat[m]> here's a sample one
+03:10:20 <strcat[m]> just need to start enforcing opendmarc
+03:10:25 <strcat[m]> I'll do it right now to save myself time later
+03:10:45 <strcat[m]> renlord: anyway I hate email, anything that makes me receive less email is good
+03:10:52 <strcat[m]> renlord: so I'd be tempted to enforce TLS too
+03:10:57 <renlord> lol
+03:11:16 <strcat[m]> like if people receive errors sending me email because their email server is insecure
+03:11:17 <strcat[m]> that's amazing
+03:11:33 <strcat[m]> because they will only persist and keep trying to send me email if it's important
+03:11:47 <strcat[m]> renlord: greylisting is also a good idea
+03:11:55 <strcat[m]> renlord: valid email servers are REQUIRED to try multiple times
+03:12:08 <strcat[m]> renlord: I'm all for stuff like that - I am just not going to run a spam filter or use blacklists unless it gets really bad
+03:12:16 <strcat[m]> and I see no point in putting stuff in a spam folder - I don't use one
+03:12:53 <renlord> maybe can publish a shamelist
+03:13:01 <renlord> of MTAs that got bounced and their reasons
+03:13:05 <strcat[m]> renlord: I just don't care
+03:13:05 <renlord> every month of something
+03:13:12 <strcat[m]> I won't even look at the logs
+03:13:25 <strcat[m]> if people are sending me email insecurely and it gets bounced that's their problem
+03:13:47 <renlord> what about gov emails with broken MTA setups
+03:13:53 <renlord> you cant just ignore them, can you?
+03:13:53 <strcat[m]> fuck them
+03:13:54 <renlord> @_@
+03:13:58 <strcat[m]> yeah I can ignore them
+03:14:07 <strcat[m]> I don't think our government has broken email setups anyway
+03:14:14 <renlord> mine does
+03:14:15 <renlord> KEK
+03:14:21 <strcat[m]> renlord: if the email bounces they are going to get an error, they can't claim that I received it
+03:14:31 <strcat[m]> I will have a log proving it bounced because it was invalid
+03:14:54 <strcat[m]> and if they are sending invalid emails - maybe they don't want people to be aware they were contacted after all
+03:15:00 <strcat[m]> either way don't care
+03:15:23 <strcat[m]> renlord: I'm also not using this for my personal email yet, I'm given up on personal email for the time being
+03:15:25 <strcat[m]> too much of a dumpster fire
+03:15:27 <strcat[m]> too much spam
+03:15:33 <renlord> lol
+03:15:52 <strcat[m]> currently 15000 emails in my spam folder
+03:15:54 <strcat[m]> from a week
+03:16:06 <strcat[m]> do you really think I'm going to look in there
+03:16:07 <renlord> so far so good for me
+03:16:17 <strcat[m]> using mailing lists gets you tons of spam emails
+03:16:28 <strcat[m]> it gets your email into tons of mailing list archives
+03:16:38 <strcat[m]> and spam harvesters probably sub to mailing list
+03:16:41 <renlord> but opendkim is bouncing a lot of lists.linuxfoundation.org emails
+03:16:50 <strcat[m]> renlord: their list is probably set up wrong
+03:16:50 <renlord> despite in my exemptdomains list
+03:17:12 <renlord> the opendkim.conf docs is not really good
+03:17:15 <strcat[m]> renlord: because they are probably saying an email is from danielmicay⊙gc but MODIFYING headers and content
+03:17:22 <renlord> its says "dataset", but dont really specify what the format is
+03:17:25 <strcat[m]> renlord: you're probably trying to exempt the FROM domain
+03:17:34 <strcat[m]> but the issue is not that
+03:17:45 <strcat[m]> renlord: proper mailing lists modify the sender for DKIM signed emails
+03:18:05 <strcat[m]> they should mangle it so it doesn't claim to be from danielmicay⊙gc if they modified it basically
+03:18:10 <strcat[m]> oss-security was updated and does this properly now
+03:19:48 <strcat[m]> renlord: the issue is they modify people's emails to add the mailing list name, unsubscribe link, etc.
+03:19:58 <strcat[m]> renlord: they should NOT be doing that, they should ONLY be adding headers they are allowed to add
+03:20:00 <izymandias[m]> Is encryption on by default now on the Riot client?
+03:20:07 <strcat[m]> including headers for unsub info
+03:22:18 <strcat[m]> renlord: a lot of people on lkml, etc. think it's "brain damage" to prevent spoofing emails and they refused to fix stuff
+03:22:26 <strcat[m]> renlord: I'm totally fine with dropping emails from dumb people
+03:22:39 <renlord> what? 'brain damage'? why
+03:22:41 <strcat[m]> if they don't want their list sending me email that's cool with me I won't submit patches or bug reports
+03:23:24 <renlord> why are lkml people have such an adversarial attitude towards security
+03:23:33 <renlord> s/are/do/
+03:23:33 <strcat[m]> renlord: https://mailarchive.ietf.org/arch/msg/dmarc/9rQfAonKX8quvJ47GObCmTuNcos/
+03:23:47 <strcat[m]> anyway stuff like mailman knows how to mangle the FROM header to not falsely claim that the email was sent that way
+03:24:02 <strcat[m]> reminds me that I need to enable length enforcement
+03:24:28 <renlord> i enabled length enforcement
+03:28:05 <strcat[m]> renlord: https://begriffs.com/posts/2018-09-18-dmarc-mailing-list.html
+03:29:14 <strcat[m]> they are supposed to use List-Unsubscribe and List-ID
+03:29:16 <strcat[m]> and leave your message alone
+03:29:27 <strcat[m]> and there, works fine, no invalid DKIM from mangling the emails
+03:29:47 <strcat[m]> renlord: lots of mail server software refuses to do stuff sanely and so they have to mangle the FROM address so it doesn't falsely claim to have been sent by that person
+03:29:54 <strcat[m]> but they could always just do stuff sanely
+03:30:15 <strcat[m]> and yeah if they mangle email and DON'T change the FROM address to work around it (which they shouldn't need to do if they are sane) then it will be invalid / rejected
+03:30:22 <strcat[m]> and I just won't receive that email - fine with me!
+03:32:39 <strcat[m]> renlord: it's way better to reject email so people get an error vs. putting in spam too
+03:35:09 <renlord> im not too sure about that, since the reject message usually just end up in journalctl and people dont really check
+03:35:24 <renlord> i'm more inclined to record it in the Subject header or something to shame when replying
+03:35:49 <renlord> Subject: [From your fucking broken MTA: bad dkim signature] -- actual subject
+03:36:47 <strcat[m]> renlord: it sends an error email abck
+03:36:48 <strcat[m]> back
+03:37:11 <strcat[m]> renlord: well depends on people's MTA
+03:37:19 <strcat[m]> but with gmail, gmail sends you an error message
+03:37:23 <strcat[m]> showing that a mail was rejected
+03:37:31 <strcat[m]> and postfix will do the same
+03:37:37 <strcat[m]> afaik opensmtpd did that too
+03:37:46 <strcat[m]> BodyLengthDB is not working for me
+03:37:48 <strcat[m]> it's not adding l=
+03:37:48 <renlord> uh yea, it does atm
+03:39:43 <strcat[m]> renlord: hmm
+03:39:45 <strcat[m]> maybe it's secure by default
+03:39:49 <strcat[m]> and nothing needs to be changed
+03:39:57 <strcat[m]> I just don't quite understand this bit
+03:41:04 <strcat[m]> ok I think you are NOT supposed to include l=
+03:41:14 <strcat[m]> using l= is what allows appending
+03:41:17 <strcat[m]> without l= it does the whole body
+03:43:11 <renlord> DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=renlord.com; s=km1; t=1588995525; bh=ox46pMTSiQeECirfXg0FC4rP4SAnyHcFZQ41g+gT2mc=; l=1188; h=Date:From:To:Subject; b=Udu2HT9wcmB4lB3xJF6dvVg7+/KMbgUVlW6E5ktji0HkHCW2dgk60uUVhoQPZ9tmT
+03:43:18 <renlord> does append l=
+03:44:06 <renlord> BodyLengthDB file just put "*" inthere
+03:51:14 <strcat[m]> renlord: you don't want l=
+03:51:20 <strcat[m]> putting l= is what's insecure, I realized
+03:51:30 <strcat[m]> renlord: if you put l= that's what allows appending apparently
+03:51:33 <strcat[m]> you should remove that lol
+03:51:42 <renlord> but i enabled bodylengthdb
+03:51:57 <strcat[m]> renlord: you don't want that
+03:52:03 <renlord> wtf
+03:52:07 <renlord> did i just did the inverse
+03:52:11 <strcat[m]> renlord: yes
+03:52:14 <strcat[m]> you DON'T want l=
+03:52:30 <strcat[m]> renlord: if you have l=1188 it means appending after that message is allowed
+03:52:39 <renlord> ok
+03:52:42 <renlord> removed then
+03:52:54 <strcat[m]> I realized the advice we saw about this was just wrong/confusing
+03:53:01 <renlord> softfail doesnt seem to work for me
+03:53:07 <strcat[m]> btw my opendmarc just broke and I had to totally uninstall it
+03:53:09 <renlord> still hard rejecting
+03:53:18 <strcat[m]> fucking opendmarc
+03:53:21 <strcat[m]> it's so complicated
+03:53:26 <strcat[m]> why can't I use it without a database
+03:53:30 <strcat[m]> why do I need some database
+03:53:38 <renlord> i dont have a db
+03:54:28 <strcat[m]> ah that's just for DMARC reports
+03:54:33 <strcat[m]> I tried to set that up but fuck it
+03:54:37 <strcat[m]> the database got totally screwed
+03:54:40 <strcat[m]> I purged all of it
+04:00:31 <strcat[m]> renlord: email is so horrible
+04:00:37 <strcat[m]> renlord: btw I can give you the setup to remove Received header
+04:00:54 <strcat[m]> renlord: make /etc/postfix/submission_header_checks
+04:01:03 <strcat[m]> with the contents `/^Received:/ IGNORE`
+04:01:08 <strcat[m]> and then
+04:01:40 <renlord> yep, i have that setup
+04:01:44 <strcat[m]> subcleanup unix n       -       -       -       0       cleanup
+04:01:44 <strcat[m]>   -o header_checks=regexp:/etc/postfix/submission_header_checks
+04:01:44 <renlord> strips my local ip address
+04:01:46 <strcat[m]> ah
+04:01:54 <strcat[m]> and   -o cleanup_service_name=subcleanup
+04:01:55 <strcat[m]> yeah
+04:01:59 <renlord> i was so mad when i saw my ip when testing
+04:02:05 <strcat[m]> lol yeah
+04:02:17 <renlord> insane defaults
+04:02:40 <renlord> the ovh panel + api backend does not work with ipv6 reverse ip
+04:02:48 <renlord> support ticket still not addressed
+04:02:49 <renlord> sad
+04:03:21 <JTL> OVH - French for "Often Very Hackey"
+04:05:10 <renlord> mutt does not do dane checks when sending mail
+04:05:35 <renlord> unless you replace the default smtp program with something else?
+04:06:13 <renlord> and if you use the submission port, does that mean you need dane setup for port 587 also?
+04:07:01 <strcat[m]> renlord: you can set up DANE for anything
+04:07:07 <strcat[m]> you might as well enable it for all the mail server ports
+04:07:10 <strcat[m]> record for each port
+04:07:22 <strcat[m]> renlord: but nothing checks it aside from a few other MTAs  in practice
+04:07:32 <strcat[m]> renlord: you should ALSO use a valid Let's Encrypt cert with certbot --reuse-key
+04:07:50 <renlord> ya i do that
+04:07:55 <renlord> so i dont have to rotate the dane entries
+04:08:19 <strcat[m]> renlord: well it'd be broken to not do it
+04:08:25 <strcat[m]> cause you don't know when exactly it'll update
+04:08:28 <strcat[m]> and it doesn't give you a chance to rotate
+04:08:40 <strcat[m]> you'd need to do key rotations manually - issue new certificates, add new record for rotation
+04:08:43 <strcat[m]> and then wait for TTL
+04:08:48 <strcat[m]> then switch to new ones
+04:08:55 <renlord> true
+04:09:05 <renlord> and DNS TTL cache expiration is inconsistent
+04:09:13 <strcat[m]> renlord: it's better to use smtps and imaps and just disable the STARTTLS services
+04:09:20 <strcat[m]> I'm planning on doing that
+04:09:30 <strcat[m]> it doesn't really matter
+04:09:33 <renlord> i tried to toggle smtps in main.cf
+04:09:35 <strcat[m]> the STARTTLS ports are just unnecessary
+04:09:38 <renlord> but postfix just crashed and burn
+04:09:44 <renlord> dont know why
+04:09:44 <strcat[m]> renlord: it's in master.cf
+04:09:52 <renlord> ya, master.cf
+04:10:07 <strcat[m]> renlord: https://paste.xinu.at/sY6TTz/ like this
+04:10:07 <renlord> it cant run together with smtpd?
+04:10:15 <strcat[m]> it can
+04:10:17 <strcat[m]> it is smtpd
+04:10:20 <strcat[m]> it hosts both
+04:10:30 <strcat[m]> I plan to disable the STARTTLS submission port tho
+04:10:31 <strcat[m]> I don't need it
+04:10:35 <strcat[m]> these ports are only for YOU anyway
+04:10:47 <renlord> do i comment this out then
+04:10:49 <renlord> /usr/lib/systemd/system/opendmarc.service;
+04:11:10 <renlord> smtp      inet  n       -       n       -       -       smtpd
+04:11:23 <renlord> ^^
+04:11:27 <strcat[m]> no don't comment anything out
+04:11:37 <strcat[m]> you still need port 25 smtp with STARTTLS to receive mail too
+04:11:53 <strcat[m]> you can just disable the smtp submission port and imap and stick to smtps + imaps
+04:12:05 <strcat[m]> so 3 ports instead of 5
+04:12:55 <strcat[m]> renlord: in mutt set ssl_force_tls
+04:13:15 <renlord> postfix/master[10337]: fatal: 0.0.0.0:smtps: Servname not supported for ai_socktype
+04:13:18 <renlord> ya i just get this
+04:13:22 <renlord> when i turn on smtps
+04:14:35 <strcat[m]> renlord: it's missing in /etc/services
+04:14:46 <strcat[m]> on Arch
+04:15:01 <strcat[m]> add
+04:15:08 <strcat[m]> smtps 465/tcp
+04:15:24 <renlord> thanks
+04:15:26 <strcat[m]> ah wait no
+04:15:28 <strcat[m]> you can add it as an alias
+04:15:37 <renlord> and the defaults on arch does not run postfix in a chroot
+04:15:39 <renlord> is that fine?
+04:15:55 <strcat[m]> renlord: it's good to run it in a chroot
+04:16:09 <strcat[m]> it requires moving the opendkim / opendmarc sockets inside the chroot
+04:16:18 <strcat[m]> other than that not much changes
+04:16:27 <renlord> where does it actually chroot into?
+04:17:12 <strcat[m]> renlord: /var/spool/postfix
+04:17:17 <strcat[m]> so you put them at
+04:17:26 <strcat[m]>  /var/spool/postfix/opendmarc/opendmarc.sock
+04:17:33 <strcat[m]>  /var/spool/postfix/opendkim/opendkim.sock
+04:17:41 <strcat[m]> owned by opendmarc:postfix / opendkim:postfix
+04:17:56 <strcat[m]> renlord: and refer to them as unix:opendmarc/opendmarc.sock
+04:18:00 <strcat[m]> in config
+04:18:05 <strcat[m]> since /var/spool/postfix will be /
+04:18:23 <strcat[m]> I don't know what else will break in the defaults
+04:19:19 <strcat[m]> renlord: https://bugs.archlinux.org/task/20436
+04:19:23 <strcat[m]> but I think smtps is recommended now
+04:19:26 <strcat[m]> it was un-deprecated
+04:20:10 <strcat[m]> https://tools.ietf.org/html/rfc8314
+04:20:23 <renlord> ok i can turn off submission then
+04:21:23 <strcat[m]> renlord: yeah and I guess they just wants you to call it 'submissions' (submission secure) instead of 'smtps'
+04:21:24 <strcat[m]> to be 'standard'
+04:21:43 <strcat[m]> renlord: if you call it 'submissions' I assume it will work without changing /etc/services
+04:21:48 <strcat[m]> but the postfix config calls it smtps
+04:23:18 <strcat[m]> renlord: and you can disable the imap regular port too in dovecot
+04:23:40 <strcat[m]> renlord: I set ssl = required for dovecot and set up the TLS security stuff
+04:23:53 <strcat[m]> but I didn't disable that port yet
+04:24:03 <renlord> hmm, having ssl accept errors on smtps
+04:24:19 <strcat[m]> renlord: what error?
+04:24:29 <strcat[m]> maybe mutt wasn't using TLS before at all?
+04:24:35 <strcat[m]> it servers same cert
+04:24:38 <renlord> it was definintely
+04:24:40 <renlord> i have force TLS
+04:25:45 <strcat[m]> what error?
+04:25:52 <strcat[m]> connect with openssl's cli client maybe
+04:26:51 <renlord> openssl cli connect works
+04:26:57 <renlord> mutt just hangs
+04:26:58 <renlord> @_@
+04:27:19 <strcat[m]> make sure to use smtps://
+04:27:21 <strcat[m]> as the protocol
+04:27:26 <strcat[m]> not smtp
+04:27:34 <strcat[m]> cause it's a different protocol than smtp with STARTTLS
+04:27:52 * renlord sighs
+04:28:08 <strcat[m]> renlord: https://paste.xinu.at/DlrGHq/ this is my mutt config atm
+04:28:08 <renlord> this is definitely a bug
+04:28:09 <renlord> wtf
+04:28:16 <renlord> crashes the fucking program if wrong protocol stated
+04:28:28 <strcat[m]> imap_idle is what makes it use push
+04:28:30 <renlord> actually have to sigkill to kill the program
+04:28:34 <strcat[m]> lol
+04:28:37 <strcat[m]> renlord: that's how mutt is
+04:28:45 <strcat[m]> sometimes it screws up and hits an error
+04:28:50 <strcat[m]> like sasl auth failing
+04:28:52 <strcat[m]> and it just locks in a loop
+04:28:57 <strcat[m]> mutt pisses me off
+04:29:05 <strcat[m]> I really wish I could disable line wrapping at terminal length
+04:29:16 <strcat[m]> so it stops splitting lines unnecessarily and lets terminal wrap them
+04:29:19 <strcat[m]> I don't get why it does that
+04:29:35 <strcat[m]> I really hate the mutt pager but using another pager loses too much
+04:30:54 <renlord> text_flowed?
+04:33:48 <strcat[m]> renlord: the issue is viewing mail not sending it
+04:34:02 <strcat[m]> renlord: mutt's pager wraps line at terminal length and you can't turn it off
+04:34:14 <strcat[m]> renlord: so if people send you mails with long lines it splits them at the edge of the terminal
+04:34:23 <strcat[m]> so you can't copy them properly or click links
+04:35:27 <strcat[m]> I can fix it with set pager=less
+04:35:34 <strcat[m]> but then I don't have the mutt binds in the pager
+04:35:51 <strcat[m]> less is much better as the pager tho
+04:37:19 <strcat[m]> renlord: or use 'vim -R -' as pager but either way lose the mutt binds since you aren't in mutt anymore
+04:37:39 <renlord> i use less as my pager
+04:38:05 <renlord> oh wait no, i autoview it via w3m
+04:38:06 <renlord> lol
+04:38:11 <renlord> so i can parse html links also
+04:38:29 <renlord> i use to use less, but couldnt extract the a links
+04:39:13 <renlord> auto_view text/html
+04:39:25 <renlord> text/html;  /usr/bin/w3m -o display_link_number=1 -dump -T text/html '%s'; copiousoutput; nametemplate=%s.html -- mailcap
+04:44:03 <renlord> ist crazy how everytime only after ovh support replies me their backend API will start working again
+04:44:18 <strcat[m]> renlord: so for imap you just set the port to 0
+04:44:20 <renlord> makes me wonder if they are more or less busy putting out dumpster fires half the time
+04:44:22 <strcat[m]> that's how dovecot has you disable stuff
+04:44:24 <strcat[m]> set port to 0 lol
+04:44:37 <strcat[m]>   inet_listener imap {
+04:44:38 <strcat[m]>     port = 0
+04:44:38 <strcat[m]>   }
+04:44:40 <strcat[m]> that disables it
+04:45:03 <renlord> huh
+04:45:04 <strcat[m]> https://github.com/GrapheneOS/infrastructure/blob/master/servers.md#grapheneos-mail-server
+04:45:06 <strcat[m]> cleaned things up a bit
+04:45:15 <strcat[m]> renlord: cause you only need imaps
+04:45:18 <renlord> i just set protocols = imaps
+04:45:23 <renlord> and it doesnt listen on 143 anymore
+04:45:30 <renlord> only 993 now
+04:45:54 <strcat[m]> renlord: run dovecot -n
+04:45:58 <strcat[m]> I think that option is deprecated
+04:46:01 <renlord> i chcked with `ss -utlpn`
+04:46:21 <strcat[m]> you should set `ssl = required` and set port to 0 for the imap service afaik
+04:46:32 <renlord> oh, so that gets translated to inet listener?
+04:46:35 <renlord> @_@
+04:46:36 <renlord> so weird
+04:46:55 <strcat[m]> renlord: 0 explicitly supports disabling it
+04:47:05 <strcat[m]> if you run dovecot -n I think it will warn about protocols = imaps
+04:47:16 <strcat[m]> probably already has a warning in the log
+04:47:24 <renlord> yes ti does
+04:47:33 <renlord> why they remove sane conf options?
+04:47:36 <renlord> sad life
+04:47:41 <strcat[m]> yeah so use ssl = required (which forces either TLS or STARTTLS) and then that port = 0 trick
+04:47:43 <strcat[m]> lol
+04:47:47 <strcat[m]> renlord: dunno they prefer port = 0
+04:47:50 <strcat[m]> in those config blocks
+04:47:57 <renlord> that's so unintuitive
+04:47:58 <strcat[m]> enabled = false would make more sense but they like port = 0
+04:48:28 <strcat[m]> renlord: it's kinda funny that they deprecate smtps and then realized it was useful and made it 'submissions'
+04:48:34 <strcat[m]> renlord: to go along with 'submission'
+04:48:47 <strcat[m]> renlord: and now 'submission' is recommended to be deprecated
+04:48:52 <strcat[m]> anyways
+04:49:05 <strcat[m]> 3 ports now instead of 5, so 3 DANE entries instead of 5 too
+04:49:15 <renlord> i think submissions would have made more sense
+04:49:26 <renlord> unless there are plans for external MTAs to also connect on 465
+04:49:31 <renlord> but they probably just use 25 and STARTTLS
+04:49:32 <strcat[m]> renlord: it's cause originally it was the TLS SMTP port
+04:49:41 <strcat[m]> but then they gave up on that and everyone implemented it as TLS submissions port
+04:49:53 <strcat[m]>  * but then they gave up on that and everyone implemented it as TLS submission port
+04:50:07 <strcat[m]> so smtps is indeed the wrong name
+04:50:14 <strcat[m]> submissions is the standard name now and it does make more sense
+04:50:19 <strcat[m]> just weird artifact of history
+04:50:26 <strcat[m]> that's why Arch doesn't have smtps as an alias for it
+04:50:37 <strcat[m]> you could change the postfix config to use 'submissions' to be more correct
+04:50:47 <strcat[m]> it'll work fine it's just a port name
+04:50:49 <renlord> i'll probably just do that
+04:52:49 <strcat[m]> renlord: 18 spam emails since I mentioned how many spam emails I have
+04:52:58 <strcat[m]> in spam folder I mean - they rarely ever go to main one
+04:53:20 <strcat[m]> the only ones that sneak into my gmail inbox are the ones with university students, etc. doing surveys of people on github
+04:53:23 <strcat[m]> so I flag those as spam
+04:53:26 <strcat[m]> they can fuck off :P
+04:55:08 <strcat[m]> renlord: but yeah atm I have no blacklisting of any kind and no spam filtering on my own email server
+04:55:24 <strcat[m]> so I really need to switch opendmarc to enforcing asap just to contain spam, although avoiding spoofed emails is nice too
+05:09:24 <nickcalyx[m]> Postgrey is nice
+05:27:36 <strcat[m]> renlord: alright opendmarc enforcing we'll see what happens
+05:27:51 <strcat[m]> got too many of those spoofed SEO emails
+05:36:50 <strcat[m]> renlord: sad you can't enable it lol
+05:37:44 <renlord> what do you mean spoofed seo?
+05:43:50 <strcat[m]> renlord: these SEO companies scraping stuff from the site and sending emails
+05:44:00 <strcat[m]> with spoofed @gmail.com addresses so I can't even tell them to go fuck themselves
+05:45:25 <renlord> so if you block them, your sites get lower SEO rankings?
+05:45:30 <renlord> thats messed up
+05:45:43 <strcat[m]> renlord: nah they are just advertising bogus services
+05:46:49 <zxwayland> hmm
+05:49:15 <strcat[m]> renlord: I'll start tracking % of emails without DKIM signatures that are useful
+05:49:36 <strcat[m]> wonder if postfix can mark whether emails came in over TLS too
+05:49:50 <renlord> can append headers i think
+05:50:15 <renlord> EMAIL_RECEIVED_OVER_TLS: true
+05:50:29 <JTL> pretty sure gmail and protonmail do
+05:50:36 <renlord> do they stamp emails?
+05:50:42 <JTL> stamp?
+05:50:45 <strcat[m]>     smtpd_tls_received_header = yes
+05:50:46 <renlord> in the header
+05:50:56 * JTL shrug
+05:50:58 <renlord> oh there's an option to do so already?
+05:51:11 <JTL> renlord: Not sure what you mean by "stamp" in this context
+05:51:29 <renlord> just appending the header field in the mail header -- stamp
+05:51:32 <strcat[m]> renlord: no that's something else nvm
+05:51:40 <strcat[m]> it's about the received header it adds which we're removing anyway
+05:51:43 <strcat[m]> and that's for outbound mail
+05:51:45 <JTL> renlord: Yeah I think so
+05:52:06 <JTL> if we're thinking of the same thing
+05:52:25 <strcat[m]> renlord: hmm it MIGHT work
+05:52:27 <strcat[m]> let me try
+05:59:28 <strcat[m]> renlord: yeah that works
+06:00:43 <strcat[m]> gmail also sends MTA-STS TLS reports if you have TLS reporting enabled
+06:00:52 <strcat[m]> TLS reporting supports MTA-STS and DANE
+06:01:02 <strcat[m]> so far I only get reports from Google though
+06:14:27 <joshman[m]> Can someone tell me why latest version of Chromium is being considered as an outdated browser by soany websites?
+06:17:44 <joshman[m]> * Can someone tell me why latest version of Chromium is being considered as an outdated browser by so many websites?
+06:35:42 <c3po[m]> Do you know if we can deactivate all sensors to increase our privacy or there are some of them that are really needed? Sorry about my ignorance in this feature.
+06:58:31 <renor[m]> I'd like to know which *sensors* are disabled when switching off the sensors permission
+07:15:03 <strcat[m]> josh.man: which websites?
+07:15:49 <strcat[m]> renor: all of them
+07:16:45 <strcat[m]> I don't see any reason for it to be more granular than that, it's the same kinds of data
+07:27:03 <c3po[m]> Hi renor!
+07:30:26 <c3po[m]> strcat  thank you for all your work!
+07:37:49 <strcat[m]> https://github.com/GrapheneOS/platform_frameworks_native/commit/82aee39f91c2be302d39f356c0a34efdd7070695
+07:38:10 <strcat[m]> it's the baseline permission
+07:38:27 <strcat[m]> the only sensors not requiring it are ones that already have their own finer-grained permission like body sensors
+07:40:58 <strcat[m]> if we supported devices with step counters we might need to do something about the existing permission for that but we don't
+07:43:02 <strcat[m]> anyway can see there we set OTHER_SENSORS as the default for all sensors and then the other sensors not requiring it are those that override it with a more specific permission (body sensors - which has a toggle already, and step counters)
+07:43:09 <strcat[m]> I don't really see much reason for those being separate but it's how they already are
+07:43:31 <strcat[m]> the reason is that upstream acknowledges that not requiring permissions for sensors was a mistake
+07:43:55 <strcat[m]> so new sensor types were put in body sensors (heartbeat, etc.) / activity recognition (step counter)
+07:44:30 <strcat[m]> it might make sense for body sensors to be separate but it's hard to see how step counter being separate would make sense if it was done from scratch
+07:44:56 <strcat[m]> and I'd guess that you could use the accelerometer on a smartwatch to measure heartbeat...
+07:46:32 <c3po[m]> And does the phone app needs a sensor to know when ypur face is close to it?
+07:46:58 <c3po[m]> * And does the phone app needs a sensor to know when your face is close to it?
+07:47:02 <strcat[m]> apps built into the device don't have to follow the same rules
+07:47:06 <strcat[m]> they can be priv apps
+07:47:40 <strcat[m]> c3po: no reason a phone app needs to know the screen turns off at all
+07:48:19 <strcat[m]> the proximity sensor is one of these sensors
+07:48:33 <strcat[m]> https://developer.android.com/guide/topics/sensors
+07:48:46 <strcat[m]> everything other than microphone / camera falls under 'sensors' really
+07:48:49 <c3po[m]> Thanks!, so I could deactivate all sensor permissions...
+07:49:17 <strcat[m]> https://developer.android.com/guide/topics/sensors/sensors_overview
+07:49:22 <c3po[m]> Ah ok! :)
+07:50:06 <strcat[m]> accelerometer, ambient temperature, gravity, gyroscope, light, linear acceleration, magnetic field, orientation, pressure, proximity, relative humidity, rotation vector, temperature are the standard ones
+07:50:44 <strcat[m]> devices can add more and they're all covered by OTHER_SENSORS
+07:50:54 <strcat[m]> which is our added permission, a baseline for all sensors
+07:51:15 <c3po[m]> Gteat!
+07:51:20 <strcat[m]> so the only ones not covered by that are microphone / camera since they have their own permissions and aren't considered sensors
+07:51:26 <strcat[m]> body sensors since they have their own permission
+07:52:06 <strcat[m]> and step counter since it has a low-level permission (not a toggle) but we don't support devices with that so we have no reason to change it to use OTHER_SENSORS which would probably be the solution
+07:52:13 <c3po[m]> * Great!
+07:52:34 <strcat[m]> the microphone/camera/body sensors ones are superior since apps actually declare they need it and request it
+07:52:45 <strcat[m]> vs OTHER_SENSORS where we have to assume all apps require it and they don't know about it since we added it
+07:53:15 <strcat[m]> so even if it doesn't make SENSE for body sensors to be separate (it kinda does, hard to say) it's good that apps declare support for it and know how to request it
+07:57:56 <strcat[m]> ah nvm ACTIVITY_RECOGNITION has a toggle
+07:58:26 <strcat[m]> so, nothing to change
+08:01:00 <c3po[m]> Thanks for the explanation
+08:01:52 <dazinism> c3po: its just if an app actually uses the sensors for something that you need to give the permission
+08:02:57 <c3po[m]> <dazinism "c3po: its just if an app actuall"> I don't think so
+08:03:13 <dazinism> Like possibly some sat nav apps may use sensors to detect your motion,  so they can better predict your exact loacation
+08:03:58 <c3po[m]> I initially thought about the phone or camera... But I read now about it
+08:06:03 <c3po[m]> I'm new from yesterday in GrapheneOS and I saw that permission in hundreds of apps, so I was confused. And new apps also receive it.
+08:06:28 <nadine> Hello
+08:06:47 <c3po[m]> Do, thank you all to clarify me about this permission
+08:06:56 <c3po[m]> * So, thank you all to clarify me about this permission
+08:07:08 <nadine> I would need advice about an error that occurs at the very end of the installation of GrapheneOS
+08:07:40 <nadine> extracting vendor.img (477 MB) to disk...ziparchive W 05-09 10:04:50  2168  2168 Zip: unable to allocate 500478136 bytes at offset 0: No space left on device
+08:07:42 <nadine> fastboot: error:
+08:07:43 <nadine> failed to extract 'vendor.img': I/O error
+08:13:06 <dazinism> nadine: what operating system are you using to do the installation?
+08:13:21 <nadine> GNU/Linux Mageia
+08:13:43 <dazinism> Try
+08:15:03 <dazinism> fastboot --version
+08:15:48 <nadine> fastboot version 30.0.0-6374843
+08:17:23 <dazinism> Maybe you have a dodgy USB cable or port?
+08:17:55 <c3po[m]> <nadine "extracting vendor.img (477 MB) t"> Did you update fastboot? https://grapheneos.org/install#obtaining-fastboot
+08:18:29 <c3po[m]> <nadine "fastboot version 30.0.0-6374843"> Ah ok, sorry
+08:19:55 <nadine> I downloaded fastboot today from Google (platform-tools)
+08:20:02 <nadine> No pb
+08:20:47 <nadine> All commands in flash-all.sh run fine but the last one
+08:21:45 <dazinism> https://grapheneos.org/install#troubleshooting
+08:22:09 <nadine> I have read the troubleshooting
+08:23:02 <nadine> I don't think that I have a bad cable, but could this explain the error of "No space left on device"? I tried multiple times, same error.
+08:23:37 <nadine> I can of course change cable or USB port if there is a change that it helps
+08:25:30 <renor[m]> <strcat[m] "it's the baseline permission"> I see, thanks
+08:26:56 <dazinism> nadine: its complaining about lack of space
+08:27:11 <nadine> extracting vendor.img (477 MB) to disk...ziparchive W 05-09 10:04:50  2168  2168 Zip: unable to allocate 500478136 bytes at offset 0: No space left on device
+08:27:12 <nadine> fastboot: error:
+08:27:14 <nadine> failed to extract 'vendor.img': I/O error
+08:27:40 <nadine> preceded by
+08:27:42 <nadine> extracting vendor.img (477 MB) to disk...ziparchive W 05-09 10:04:50  2168  2168 Zip: unable to allocate 500478136 bytes at offset 0: No space left on device
+08:28:06 <nadine> oops, sorry for th repetition
+08:28:21 <dazinism> Have you tried the first bit of troubleshooting
+08:28:48 <nadine> Same problem right now with a shorter USB cable (50 cm)
+08:28:56 <dazinism> For sorting out size of /tmp
+08:29:48 <nadine> yes, I have typed the command indicated in the troubleshooting
+08:30:26 <nadine> [nadine@localhost sargo-factory-2020.05.05.02]$ echo $TMPDIR
+08:30:28 <nadine> /home/nadine/GrapheneOS/sargo-factory-2020.05.05.02/tmp
+08:31:29 <dazinism> How much spare space on that drive?
+08:32:51 <dazinism> Pixel 3a Install error: Not enough space on device
+08:32:51 <dazinism> https://www.reddit.com/r/GrapheneOS/comments/efgbiq/pixel_3a_install_error_not_enough_space_on_device/
+08:33:13 <nadine> 6.9 G free space
+08:33:37 <nadine> dazinism: I'll check the link you just provided
+08:36:14 <nadine> Excuse me: is it important to type 'TMPDIR="$PWD/tmp" ./flash-all.sh' as a single command and not as two?
+08:37:45 <dazinism> Not sure, imagine worth trying as its written
+08:38:49 <nadine> I'm tryong right now
+08:40:33 <nadine> GrapheneOS is installed!
+08:40:54 <dazinism> yay
+08:40:54 <nadine> Thank you gentlemen for your kind support!
+08:43:33 <strcat[m]> doing `A=B command` sets the environment variable `A` to `B` for that command
+08:43:33 <dazinism> nadine: this may be useful for you
+08:43:34 <dazinism> https://hub.libranet.de/wiki/graphene-os/wiki/Apps
+08:44:30 <strcat[m]> it won't work if you split it up since you weren't exporting the variable you were setting
+08:45:15 <dazinism> Ah, I see
+08:51:45 <nadine_> strcat[m]: thanks, understood
+08:56:29 <nadine> Now that the OS is installed, I seem to have only 5 apps? Phone, SMS, Galery, Chromium and Camera? Where are the Settings?
+08:58:16 <nadine> Oops, found
+09:05:55 <strcat[m]> make sure to lock the bootloader per the instructions too
+09:06:11 <nadine> Just did, but I was about to forget
+09:07:38 <strcat[m]> looks like I can remove python as a necessary build dependency too thanks to how the build sandbox works
+09:07:41 <strcat[m]> testing atm
+09:23:48 <joshman[m]> <strcat[m] "josh.man: which websites?"> On my Manjaro laptop. I tried kucoin.com binance.com and many media websites report I have outdated browser version. I'm on Chromium latest
+09:28:22 <fujita_[m]> Dark reader
+09:30:49 <strcat[m]> josh.man: where do they say your browser is out-of-date
+09:38:44 <fujita_[m]> I have been looking to migrate to chromium browser since Firefox is not recommended. Ungoogled is the most notable one and I know you guys don't recommend installing extensions so what are your adblock strategies
+09:39:25 <fujita_[m]> And I can't live without the dark reader extension :(
+09:43:55 <hitchhooker[m]> Dns adblocking
+09:45:04 <hitchhooker[m]> What's best way to get logs out of GOS for app crashing due hmalloc?
+09:53:31 <c3po[m]> I suppose you talked about this in the past, but is it good to connect from Vanadium browser to the google account domain  everytime it starts?, is it to act as "normal" as possible and so to maintain some "anonimity"?. Thanks!
+09:55:16 <c3po[m]> I blocked it with Netguard but maybe it's good to allow it again... IDN
+09:56:02 <c3po[m]> I am new and I wanted to avoid Google at all cost.
+09:58:12 <c3po[m]> <fujita_[m] "I have been looking to migrate t"> You can use Netguard app and download a host file to block ads. You can also allow/block apps to internet, even system apps. Netguard.me
+10:17:36 <nadine> Excuse me, is there a way of preventing the wi-fi MAC address from changing all the time?
+10:24:12 <k-sloth[m]> Has anyone use this and whats your experience?
+10:24:12 <k-sloth[m]> https://f-droid.org/app/io.github.nfdz.cryptool
+10:26:54 <fll[m]> nadine: yes. Look at WiFi settings > saved networks
+10:29:52 <nadine> thanks
+10:34:16 <sel[m]3> > <@k-sloth:matrix.org> Has anyone use this and whats your experience?
+10:34:16 <sel[m]3> > https://f-droid.org/app/io.github.nfdz.cryptool
+10:34:16 <sel[m]3> Has an issue posted https://github.com/nfdz/Cryptool/issues/19#issue-601581355
+10:35:46 <limitless0[m]> strcat (@strcat:matrix.org): in some countries in airports they require to unlock the phone and they plug it in and extract info like social media chat logs etc etc. Can  Profiles protect against this? Say the main profile has just useless apps and (New user) Profile is the real profile with day to day use apps used with strong passw?
+10:36:34 <limitless0[m]> Or wise versa as per profiles
+10:47:08 <strcat[m]> give access to a non-owner profile then
+10:47:41 <sel[m]3> > <@k-sloth:matrix.org> Has anyone use this and whats your experience?
+10:47:41 <sel[m]3> > https://f-droid.org/app/io.github.nfdz.cryptool
+10:47:41 <sel[m]3> It's pretty snappy besides this issue tho
+10:50:00 <strcat[m]> sel.: so, aside from it being totally insecure and misleading? :\
+10:50:19 * k-sloth[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/USWxJdJRqGSVdHTDAxwKfvyb >
+10:50:55 <strcat[m]> it's not well designed, don't use it, it can't be salvaged
+10:51:37 <sel[m]3> strcat well I'm just waiting for them to fix it
+10:51:47 <strcat[m]> sel.: it's fundamentally badly designed and implemented
+10:51:50 <sel[m]3> I don't use it personally
+10:51:58 <strcat[m]> fixing it == throwing it out and not using code from a developer who doesn't get crypto
+10:52:21 <strcat[m]> the app is fundamentally broken at doing what it's supposed to do
+10:52:24 <strcat[m]> it's not some minor issue
+10:52:35 <sel[m]3> Yeah I agree
+10:54:39 <strcat[m]> properly designing tools like this takes a lot of up front design and good implementation work
+10:54:46 <strcat[m]> and you are not going to get it from that
+10:54:54 <strcat[m]> it's bad and dangerous, don't use it
+10:57:41 <sel[m]3> Yes
+10:59:33 <strcat[m]> encryption should always provide integrity and almost always authentication too
+11:00:08 <strcat[m]> and should almost always be based on high entropy keys whether it's symmetric or asymmetric encryption - i.e. seed phrases generated by the app
+11:00:44 <strcat[m]> using passphrases is probably a bad idea and if something does use them it should be really clear how much weaker it is
+11:01:10 <strcat[m]> really important to do that right too i.e. scrypt / argon2 with properly chosen parameters
+11:01:49 <strcat[m]> the person making that app clearly doesn't know what they're doing
+11:02:33 <strcat[m]> and btw that lack of quality control / review where there's just a repository of terrible and dangerous software is why F-Droid is such a bad fit for GrapheneOS
+11:02:51 <strcat[m]> repo full of terrible, dangerous and largely abandoned / unmaintained software with delayed updates
+11:03:10 <strcat[m]> official F-Droid repo is total trash
+11:05:27 <c3po[m]> <strcat[m] "official F-Droid repo is total t"> Which store do you use?, only apk,s?
+11:06:45 <strcat[m]> no
+11:07:34 <c3po[m]> I only know Fdroid to install free apps
+11:07:54 <c3po[m]> I know the problems, but...
+11:08:13 <strcat[m]> yet plenty of them aren't available in the official F-Droid repos
+11:08:19 <strcat[m]> and many of those that are don't get prompt updates
+11:08:34 <strcat[m]> there are far, far more open source apps for Android than what's in the official F-Droid repo
+11:08:35 <k-sloth[m]> <strcat[m] "using passphrases is probably a "> but keepass uses passphase
+11:08:45 <strcat[m]> k-sloth: so what?
+11:08:48 <strcat[m]> k-sloth: what I said holds
+11:09:11 <strcat[m]> especially for a password manager using a user chosen passphrase is a horrifying design
+11:09:21 <strcat[m]> it should be a seed phrase in that case with not even an option to use a passphrase
+11:09:40 <strcat[m]> that's dumb as hell and I'm sure it uses bad crypto too but there is an excuse
+11:09:51 <strcat[m]>  * that's dumb as hell and I'm sure it uses bad crypto too but there isn't an excuse
+11:09:58 <k-sloth[m]> mmmm ok interesting
+11:10:08 <k-sloth[m]> i havent heard of see pharse
+11:10:22 <k-sloth[m]> *seed
+11:10:31 <c3po[m]> <strcat[m] "there are far, far more open sou"> Sometimes from Github and similar sites, but being careful with the apk before installing: virus, trackers, etc
+11:11:16 <strcat[m]> c3po: you're inferring things from what I said that I DID NOT SAY
+11:11:54 <k-sloth[m]> but in the case with keepass its a masterpassword sorry not passphase, but from what i have been taught in cyber is passphase is actuall strong
+11:11:58 <strcat[m]> c3po: and fact remains that F-Droid is buggy app with a very low quality first party repo
+11:12:00 <c3po[m]> <strcat[m] "c3po: you're inferring things fr"> No, sorry, it was me. What I do
+11:12:29 <strcat[m]> F-Droid won't ever be bundled with GrapheneOS and I can't recommend it in documentation without explaining how horrible it is
+11:12:45 <c3po[m]> Looking for answers
+11:12:50 <strcat[m]> doesn't mean it isn't useful but people need to be aware of how flawed it is
+11:13:17 <strcat[m]> and it doesn't offer the kind of review / vetting that people seem to think it does
+11:13:23 <renlord> have you given your feedback to fdroid developers?
+11:13:30 <strcat[m]> the usual imagined benefits of open source apply
+11:13:37 <k-sloth[m]> <strcat[m] "doesn't mean it isn't useful but"> i agree f-droid has alot of flaws, but whats the alternitive other then Dev apk
+11:14:19 <renlord> k-sloth[m]: work in progress, i've just been so busy with semester stuff
+11:14:31 <c3po[m]> Yes, even an app with a severe vulnerability could be without updates for weeks...
+11:15:15 <strcat[m]> the solution is making something that's not garbage and packaging only apps that are decent, not a bunch of unmaintained/abandoned stuff and total trash with no use
+11:15:39 <strcat[m]> don't care what F-Droid does they aren't capable of making decent software, broken culture / approach and goals incompatible with ours
+11:15:53 <strcat[m]> exists and is useful as a stopgap but that's it
+11:16:10 <renlord> with android R, did aosp make integrating gradle builds more seemless in aosp tree?
+11:16:25 <c3po[m]> But anyway I use Fdroid and if I see some problem I must find the apk in the free repository. I don't know what more to do...
+11:16:33 <strcat[m]> it presents the problem similar bad software does which is that people don't make a better version because they have something bad / insecure that 'works' (mostly)
+11:16:34 <limitless0[m]> strcat (@strcat:matrix.org): do you have fdroid on your phone? If so what repositories do you use? If it doesnt effect your privacy to say
+11:16:41 <k-sloth[m]> <strcat[m] "the solution is making something"> easier said then done though, time and money is involved and im sure you already know its mostly community backed,
+11:17:15 <strcat[m]> k-sloth: making a better replacement for the software isn't that hard
+11:17:23 <strcat[m]> it's not a very big project
+11:18:04 <strcat[m]> packaging only useful, sane software that's maintained massively limits the scope for a package repo too
+11:19:00 <strcat[m]> it is the way it is not because of lack of resources but bad priorities, culture and decisions
+11:19:09 <strcat[m]> you don't fix a problem like that with more resources
+11:19:24 <strcat[m]> that just gives them more resources to expand the code with more and more features, to make the repo bigger and bigger, etc.
+11:19:50 <strcat[m]> like throwing resources at openssl
+11:19:57 <strcat[m]> does not fix what's wrong
+11:21:10 <k-sloth[m]> Size of project doesn't mean anything. Time is Time, Money is Money. how is it possible to make something flawless when there's always going be flaws. the biggest HUMANS. i agree with you priorities, culture and decision cause problems. but in a company where hierarchy is involved and money its impossible to get the right thing done properly
+11:21:47 <k-sloth[m]> and with community base projects, good luck they doint have the funding or man power to do that
+11:21:51 <strcat[m]> not expecting something but rather an app and repo that's not thoroughly trash
+11:22:00 <strcat[m]> k-sloth: it's not a resource or manpower issue
+11:22:10 <strcat[m]> if they cared about quality they'd have quality and just far less quantity
+11:22:17 <strcat[m]> it's a culture and priorities issue
+11:22:28 <k-sloth[m]> <strcat[m] "if they cared about quality they"> agreed
+11:22:40 <strcat[m]> give them  more resources and quality is not going to go up
+11:22:45 <strcat[m]> quantity will increase
+11:23:00 <strcat[m]> more features, more UI, more attack surface, more complexity, far more packaged apps
+11:23:11 <strcat[m]> that is what more resources to a project like that brings
+11:23:16 <BallMonokuma[m]> What would you guys recommend for a mobile mail client? Fairmail or K9-mail? (Asking for a friend/random stranger)
+11:23:21 <k-sloth[m]> thats why i like MUSL library. thats a good community
+11:24:15 <strcat[m]> Ball Monokuma: there isn't really a decent option yet as there are in other cases like messaging, etc.
+11:26:02 <BallMonokuma[m]> <strcat[m] "Ball Monokuma: there isn't reall"> ah ok, but out of the two which one is less bad?
+11:26:16 <k-sloth[m]> but one thing i would like to say even if that made something  like your saying there would still be something wrong and people would still be happy. its hard to pleas everyone
+11:26:18 <strcat[m]> Ball Monokuma: don't know
+11:26:33 <strcat[m]> Ball Monokuma: requires review we haven't done
+11:26:44 <BallMonokuma[m]> ok
+11:26:52 <BallMonokuma[m]> <strcat[m] "Ball Monokuma: requires review w"> ok
+11:27:24 <k-sloth[m]> like you say as long as they put quality 1st and for most, on top of security and privacy, it would be much better
+11:27:58 <strcat[m]> it's just not good software and is part of what we have to replace from scratch
+11:28:06 <strcat[m]> we don't have to make a messaging app because there are good ones
+11:28:23 <strcat[m]> there are certain things that just have to be made from scratch
+11:28:45 <k-sloth[m]> mmmm yeah i totally understand
+11:28:45 <BallMonokuma[m]> ah ok
+11:29:19 <strcat[m]> we're going to need to make our own apps for many things and by we I mean a future broader project
+11:29:36 <strcat[m]> because the existing options are often not good
+11:29:51 <strcat[m]> can reuse existing software but there are many niches where there just aren't decent apps
+11:30:28 <strcat[m]> F-Droid is unacceptably bad and forking it is not a viable option, need to just start over, and a basic replacement is not a lot of work
+11:31:17 <k-sloth[m]> Thats why privacy and security come into play so everyone can get behind such good communities and back them to create a open free world were privacy and security are no an issue, but good luck that happing ever
+11:31:20 <BallMonokuma[m]> <strcat[m] "F-Droid is unacceptably bad and "> What's the issue with f-droid?
+11:31:31 <strcat[m]> already discussed above
+11:31:48 <BallMonokuma[m]> ok
+11:32:26 <k-sloth[m]> i try my best to raise awareness but its hard when people dont care or listen, to comfortable in their own little vulnerability world
+11:33:01 <nadine> <strcat[m]> can reuse existing software but there are many niches where there just aren't decent apps > examples beyond email apps and F-droid?
+11:33:47 <k-sloth[m]> top excuse: "i have nothing to hide!" "will i lose money?  then i dont care"
+11:33:53 <k-sloth[m]> lmao RIP humanity
+11:34:24 <sel[m]3> <strcat[m] "especially for a password manage"> KeepassXC has a password/phrase generator
+11:34:30 <sel[m]3> I've made mine using the diceware method though
+11:34:37 <BallMonokuma[m]> <k-sloth[m] "i try my best to raise awareness"> Knowing that almost everything they use is insecure is a big pill to swallow for most people (Especially linux and openBSD users)
+11:35:06 <strcat[m]> nadine: we need a bunch of apps made, lots are small little self-contained projects
+11:35:10 <strcat[m]> could make a list of them
+11:35:14 <strcat[m]> some are already started
+11:35:36 <strcat[m]> Auditor, PDF Viewer, Updater are started and need lots of work
+11:36:06 <strcat[m]> need people contributing to them
+11:36:23 <sel[m]3> strcat BTW, would suggest download open source apps from Play Store via Aurora instead of downloading from F-Droid?
+11:36:32 <sel[m]3> * strcat BTW, would you suggest download open source apps from Play Store via Aurora instead of downloading from F-Droid?
+11:37:03 <strcat[m]> I don't have a recommendation aside from the need for people to contribute
+11:37:08 <k-sloth[m]> My coding is not close to being good enough to help, but i will get better so i can help follow like minded people, got to stick togeather :)
+11:37:26 <strcat[m]> need to make replacements for a lot of things
+11:37:45 <sel[m]3> <strcat[m] "I don't have a recommendation as"> Yeah that's really important
+11:37:46 <strcat[m]> I could list out a bunch of app projects but the existing ones need major work already
+11:37:58 <nadine> strcat: is MuPDF bad? If so why?
+11:38:08 <strcat[m]> nadine: highly insecure
+11:38:23 <nadine> what type of risks?
+11:38:25 <k-sloth[m]> what about open store? cant we use that instead of F-droid
+11:38:40 <strcat[m]> nadine: a malicious PDF compromising the app and from there your device
+11:38:40 <k-sloth[m]> or same problem to many bad apps
+11:39:36 <strcat[m]> PDF spec is immensely complicated and includes a full programming language as part of it with a lot of complex functionality
+11:39:49 <sel[m]3> <strcat[m] "nadine: a malicious PDF compromi"> Wouldn't Android's SELinux help in this case?
+11:39:51 <sel[m]3> strcat BTW, would you suggest download open source apps from Play Store via Aurora instead of downloading from F-Droid?
+11:39:54 <strcat[m]> it's very comparable to web content with JavaScript
+11:40:42 <strcat[m]> sel.: security features existing does not make it a non-issue for an app to be full of remote code execution vulnerabilities
+11:41:24 <strcat[m]> PDF handling written in C and C++ code, especially a badly made legacy codebase with little maintenance/hardening, is not good
+11:41:48 <sel[m]3> Yeah that's no excuse for the app but I was mainly thinking about the strict sandbox
+11:41:53 <strcat[m]> it's like a web browser without all the focus on sandboxing / auditing / fuzzing / hardening to make it less bad
+11:42:09 <sel[m]3> I'm a noob so excuse some of my questions :P
+11:42:49 <strcat[m]> sel.:  having a strong app sandbox doesn't mean that an attacker having code execution within the app context isn't a huge step towards compromising the device
+11:43:05 <strcat[m]> and even if they don't compromise the device they have control over the app and anything you grant it access to
+11:43:45 <sel[m]3> Oh
+11:44:02 <sel[m]3> Yeah most people grant dangerous perms to the app
+11:45:26 <k-sloth[m]> strcat: whats your take on WebApps the sandbox browser app in f-droid??
+11:45:48 <strcat[m]> discussed earlier
+11:45:58 <k-sloth[m]> <strcat[m] "discussed earlier"> aw ok ill find thanks
+11:46:33 <sel[m]3> I really like that Graphene's secure PDF app doesn't require any permission <3
+11:47:10 <strcat[m]> many apps unnecessarily use permissions they don't need
+11:47:56 <strcat[m]> worth keeping in mind that the Storage permission is deprecated and apps should not be using it
+11:49:06 <sel[m]3> Almost all PDF apps has the storage permission 😂
+11:49:53 <strcat[m]> no app should use it anymore
+11:50:02 <strcat[m]> it's obsolete and doesn't exist for non-legacy apps
+11:50:13 <strcat[m]> if you target the latest stable API level it's not present
+11:50:16 <k-sloth[m]> Thats why i use My notes, no permissons at all
+11:50:45 <sel[m]3> <strcat[m] "if you target the latest stable "> Nice
+11:51:03 <strcat[m]> accessing files/directories in the user's home directory, external storage and other storage providers doesn't require a coarse permission - you ask the user to choose a file/directory and they give access to just that
+11:51:19 <strcat[m]> Storage also doesn't support external drives or other storage providers
+11:51:27 <strcat[m]> it has been obsolete since Android 4.4 / 5.0 really
+11:52:04 <k-sloth[m]> https://f-droid.org/app/com.aa.mynotes
+11:52:04 <sel[m]3> <strcat[m] "accessing files/directories in t"> Like using the system file manager/app?
+11:52:06 <strcat[m]> most developers don't care about privacy/security at all regardless of what they may say
+11:52:15 <strcat[m]> sel.: that's how the OS works
+11:52:25 <strcat[m]> you request a file from the user and the OS has them choose it from the system file manager
+11:52:27 <strcat[m]> for a directory
+11:52:31 <strcat[m]> works for storing / loading
+11:52:49 <sel[m]3> I really don't know why devs always has this permission
+11:52:51 <sel[m]3> Maybe convenience?
+11:52:57 <strcat[m]> the Storage permission is obsolete - it does not support external drives since Android 4.4, has never supported other storage providers (like a cloud storage service)
+11:52:59 <sel[m]3> Or they're dumb
+11:53:08 <strcat[m]> and in API 29 (Android 10+) it is removed
+11:53:29 <strcat[m]> sel.: they don't care about making good apps and especially not about privacy/security
+11:53:30 <strcat[m]> that's why
+11:54:05 <k-sloth[m]> agreed only some companies do care about this
+11:54:13 <k-sloth[m]> spideroak i one i can name
+11:54:16 <sel[m]3> I think they themselves don't know about the security compromises
+11:56:40 <c3po[m]> Do ypu consider we should change something in GrapheneOS or leave it like it already is?, I mean permissions or something like that. I suppose it's already secure at all by default... ?
+11:58:30 <c3po[m]> Even for example some connection to Google. It could make sense to act as a normal user and increase privacy in the crowd
+11:59:31 <c3po[m]> But I"m always paranoid about contacting Google
+11:59:42 <c3po[m]> So, IDN
+12:00:34 <c3po[m]> What do you recommend or do?
+12:06:31 <strcat[m]> don't know what you're talking about at all
+12:12:49 <nadine> :-D
+12:12:54 <c3po[m]> <strcat[m] "don't know what you're talking a"> When we just install GrapheneOS, the permissions or advanced permissions for example. Or Vanadium contacting with google accounts domain when I opem it  etc Is it better to leave it like that for privacy/security reasons?
+12:13:15 <strcat[m]> > When we just install GrapheneOS, the permissions or advanced permissions for example
+12:13:18 <strcat[m]> don't know what you're asking
+12:13:52 <strcat[m]> > Or Vanadium contacting with google accounts domain
+12:13:56 <strcat[m]> see the faq, etc.
+12:14:03 <strcat[m]> explains the connectivity checks
+12:14:06 <c3po[m]> Disabling sensor or other permissions to apps
+12:14:26 <strcat[m]> Vanadium also has to download static assets and you can see we have an issue on the tracker about hosting those - it is not a privacy issue
+12:14:38 <c3po[m]> Ok thanks :)
+12:15:12 <renlord> the received header does say if smtps was used
+12:15:30 <renlord> in fact, it shows for the entire relay chain
+12:15:33 <strcat[m]> renlord: enabling that option I found works well
+12:15:45 <c3po[m]> I had that doubt
+12:16:13 <renlord> even shows what cipher was used
+12:16:27 <strcat[m]> renlord: yeah that's the option
+12:16:36 <strcat[m]> the option does it for the last hop to postfix
+12:16:57 <renlord> other MTAs also insert if ESMTPS was used
+12:17:05 <renlord> while email gets relayed
+12:29:53 <nadine> What is safer? Vanadium through Orbot, or the Tor browser?
+12:30:04 <strcat[m]> define safer
+12:31:34 <strcat[m]> safest is probably not using Tor depending on what you're doing though
+12:31:39 <nadine> I don't know. Si let me reformulate the question: why Vanadium, based on Chromium, and why does the Tor project appear to make a different choice by basing their Tor browsr on firefox?
+12:32:12 <strcat[m]> https://grapheneos.org/usage#web-browsing
+12:32:43 <k-sloth[m]> Just use a VPN with what either browser you use
+12:33:23 <k-sloth[m]> tbh its safer to use a computer or laptop
+12:34:00 <k-sloth[m]> no matter what a mobile device is always going to be less safe, what ever you do
+12:34:17 <strcat[m]> k-sloth: you have it backwards
+12:34:18 <strcat[m]> bad advice
+12:34:27 <strcat[m]> why would a mobile device be less safe?
+12:34:39 <strcat[m]> unlike desktop and laptop operating systems it actually has a proper security model and mitigations
+12:34:48 <strcat[m]> and the hardware actually has proper isolation and firmware upgrades
+12:34:50 <BallMonokuma[m]> <k-sloth[m] "Just use a VPN with what either "> If you're looking for anonymity and fingerprinting protection, a VPN is not enough. Also VPN over tor is useless for almost every scenario (Except maybe while using onion browser on IoS, due to it not routing media through tor because technical limitations
+12:34:51 <strcat[m]> totally backwards.
+12:34:53 <k-sloth[m]> <strcat[m] "bad advice"> what so your saying my qubes set up is unsafe and my graphene is more safe
+12:35:13 <k-sloth[m]> i didnt say use tor
+12:35:13 <strcat[m]> how many people do you think use Qubes and what operating systems are you running in it?
+12:35:41 <strcat[m]> Qubes gives you VM-based isolation between guests - it doesn't make those guests any more secure
+12:35:42 <BallMonokuma[m]> <strcat[m] "and the hardware actually has pr"> I think he means privacy-wise, in which case mobile pretty bad
+12:35:50 <strcat[m]> Ball Monokuma: that's backwards too
+12:35:53 <strcat[m]> more bad advice
+12:36:04 <k-sloth[m]> <strcat[m] "how many people do you think use"> qubes is the operating system
+12:36:23 <strcat[m]> no, qubes is a meta-OS, what operating systems are you running in it?
+12:36:27 <strcat[m]> that's not an answer to the question
+12:36:45 <strcat[m]> Qubes lets you run assorted guests in different VMs - it does not make those guests any more secure
+12:36:50 <strcat[m]> what it gives you is isolation between them
+12:38:41 <k-sloth[m]> still unclear what your asking.
+12:39:05 <k-sloth[m]>  i have different OS in different VMs
+12:39:12 <strcat[m]> not unclear at all if you actually use it and are familiar with it
+12:39:38 <strcat[m]> so what makes those OSes any more secure than they would typically be? the security of those is what it would usually be, i.e. really bad
+12:39:39 <k-sloth[m]> yes i use it. im not a expert. still learning it
+12:39:44 <strcat[m]> what you have is isolation between them
+12:39:54 <nadine> <strcat[m]> safest is probably not using Tor depending on what you're doing though > Please elaborate?
+12:40:18 <strcat[m]> nadine:  don't feel elaboration is necessary
+12:40:22 <k-sloth[m]> <strcat[m] "what you have is isolation betwe"> yes and knowing what one is secure and whice one is not
+12:40:43 <nadine> fair enough
+12:51:07 <k-sloth[m]> <strcat[m] "why would a mobile device be les"> still able to be tracked by cellular, there no security to that only airplane mode or remove the Sim it self
+12:51:59 <k-sloth[m]> <strcat[m] "unlike desktop and laptop operat"> So Mac, Microsoft and linux dont have any of this?
+12:52:11 <strcat[m]> > still able to be tracked by cellular
+12:52:15 <strcat[m]> not relevant to this
+12:52:30 <strcat[m]> that has to do with the protocol itself and you can use wifi in airplane mode
+12:52:34 <k-sloth[m]> <strcat[m] "and the hardware actually has pr"> how is that different to to computers they also have
+12:52:49 <strcat[m]> not sure what the relevance is since you can use the same cellular protocol with a laptop too
+12:53:01 <strcat[m]> > how is that different to to computers they also have
+12:53:02 <strcat[m]> no, they don't
+12:53:07 <strcat[m]> > So Mac, Microsoft and linux dont have any of this?
+12:53:08 <strcat[m]> they don't have it
+12:53:55 <k-sloth[m]> <strcat[m] "that has to do with the protocol"> yes correct, but then what the point in having a sim? and if your not home you dont have wifi all the time
+12:54:15 <strcat[m]> there is wifi all over the place
+12:54:23 <strcat[m]> and this doesn't have to do with whether you use a phone or a laptop
+12:55:00 <strcat[m]> and it's not relevant to the topic, at all
+12:55:26 <k-sloth[m]> <strcat[m] "there is wifi all over the place"> wifi everywhere but not all is secure, so connecting to a public wifi defeats the perpose of having a secure mobile
+12:55:41 <strcat[m]> don't understand what you mean by that
+12:56:08 <strcat[m]> you're not supposed to be trusting networks
+12:56:10 <strcat[m]> network security is not relevant
+12:56:11 <strcat[m]> what do you connect to via the Wi-Fi network? the internet
+12:56:21 <strcat[m]> the internet is not a trusted network
+12:56:34 <strcat[m]> and regardless trusted networks are a legacy design mistake, it isn't an appropriate approach in 2020
+12:57:05 <k-sloth[m]> <strcat[m] "and regardless trusted networks "> then what is??? having nothing and not using internet at all
+12:57:16 <strcat[m]> k-sloth: not trusting the networjk
+12:57:20 <strcat[m]>  * k-sloth: not trusting the network
+12:57:31 <strcat[m]> there is no reason to trust the network
+12:57:35 <strcat[m]> that's why we have authenticated encryption, etc.
+12:57:46 <nadine> So the whole point is to be safe (whatever it meabs) while still using networks that are unsafe by design or by definition? Is my understanding correct?
+12:58:09 <strcat[m]> nadine: the internet is not a trusted network... there is no safety granted by connected to it from a "trusted" wifi network
+12:58:27 <strcat[m]> nadine: inherently trusting other devices on a local network is just a design flaw, and not good
+12:58:40 <nadine> yes, fully understood and agreed, I was just tryong to reformulate
+12:58:49 <strcat[m]> there is no trust placed in the local network - it's treated like the internet
+12:59:00 <strcat[m]> there is no security advantage from connecting to the internet via an open wifi network or an encrypted one
+12:59:09 <nadine> I am on the same line, I was trying to reformulate
+12:59:21 <strcat[m]> joining some wifi network with encryption gives you no extra security
+12:59:23 <BallMonokuma[m]> <strcat[m] "nadine: the internet is not a tr"> Connecting to the internet via a trusted network means less script kiddies snooping at your dns queries, though
+12:59:25 <nadine> understood and agreed
+12:59:40 <strcat[m]> Ball Monokuma: GrapheneOS has encrypted DNS
+12:59:46 <k-sloth[m]> Yes so thats why i said a computer is safer
+12:59:50 <strcat[m]> Ball Monokuma: and the internet is not a trusted network
+12:59:56 <k-sloth[m]> if correctly set up
+12:59:58 <strcat[m]> k-sloth: uh, why?
+13:00:00 <strcat[m]> k-sloth: it isn't
+13:00:07 <strcat[m]> k-sloth: and "correctly set up" means what exactly
+13:00:08 <k-sloth[m]> how many people use a mobile through a lan set up
+13:00:09 <nadine> I am currently using on purpose an unencryted wi-fi network, being fully convinced that it doesn't matter
+13:00:09 <BallMonokuma[m]> <BallMonokuma[m] "Connecting to the internet via a"> Though there are vpns and stuff, and encrypted networks just change the script kiddie with the ISP so yeah, It probably doesn't matter
+13:00:16 <strcat[m]> using an OS that doesn't exist?
+13:00:32 <k-sloth[m]> ok maybe i didnt explain properly
+13:00:41 <strcat[m]> k-sloth: what you're claiming doesn't make any sense, is totally backwards, and you're ignoring what I wrote
+13:01:06 <strcat[m]> Ball Monokuma: a VPN just trusts a VPN provider as a different ISP essentially
+13:01:15 <strcat[m]> anyway, the internet is not a trusted networks
+13:01:19 <strcat[m]> trusted networks do not make sense in general
+13:01:24 <strcat[m]> not a sane design for 2020
+13:01:33 <BallMonokuma[m]> <strcat[m] "Ball Monokuma: a VPN just trusts"> That is true. That's why I use tor
+13:01:33 <strcat[m]> use authenticated encryption, don't trust networks
+13:01:38 <k-sloth[m]> im not ignoring at all, i get you i know the internet is not safe and cant be trusted but everyone needs to use it
+13:01:51 <strcat[m]> no you're completely misunderstanding what I'm saying
+13:02:00 <strcat[m]> I suggest trying to read and understand it first
+13:02:09 <strcat[m]> and doing research BEFORE trying to make security claims and give advice
+13:02:50 <k-sloth[m]> i have study cyber security but yup thanks for blowing me of
+13:04:01 <strcat[m]> doesn't mean you understand it
+13:04:23 <strcat[m]> it makes no sense to trust networks
+13:04:25 <k-sloth[m]> haha ok yeah i dont understand any of it
+13:04:35 <k-sloth[m]> better study harder
+13:04:43 <strcat[m]> it is a bad thing to do and is regarded as such
+13:05:27 <nadine> it makes no sense to trust networks and it is not needed either, correct?
+13:05:58 <strcat[m]> nadine: should use authenticated encryption, which is how things are done in general at this point
+13:06:09 <strcat[m]> should not trust a network just because it is a local network
+13:06:13 <strcat[m]> it's a bad idea and is not how things are done
+13:06:24 <strcat[m]> AOSP doesn't trust anything about local networks more than the internet
+13:06:29 <nadine> I understand
+13:06:31 <strcat[m]> it doesn't leak anything more to them and doesn't trust them
+13:06:50 <strcat[m]> there is no more security connecting to the internet via an encrypted wifi network vs. an open wifi network
+13:07:01 <nadine> understood and agreed
+13:07:03 <strcat[m]> and normal WPA2 Wi-Fi encryption does not authenticate the Wi-Fi network in any way
+13:07:20 <strcat[m]> you are not connecting to the network in a way that proves to your device it is the expected network
+13:07:38 <strcat[m]> it doesn't provide additional security even against some local skiddie
+13:07:56 <strcat[m]> they can your device into connecting to theirs instead
+13:08:16 <strcat[m]> it doesn't authenticate when you connect, regular wi-fi networks don't use some kind of SSID PKI system
+13:08:57 <strcat[m]> WPA2 encryption is basically classic security theater and people who built technologies on trusting local networks are super irresponsible and misguided
+13:09:14 <strcat[m]> should be using authenticated encryption from host to host
+13:09:25 <strcat[m]> transport encryption is the bare minimum
+13:09:39 <strcat[m]> anyway AOSP does not trust local networks
+13:09:46 <strcat[m]> nothing sane trusts local networks
+13:10:23 <strcat[m]> your own Wi-Fi network does not really give you any security that connecting to the internet via a neighbour's open Wi-Fi network would take away
+13:10:45 <strcat[m]> and similarly
+13:11:00 <strcat[m]> worrying about imsi catchers / LTE encryption, etc. is just silliness
+13:11:18 <strcat[m]> it's (poorly) authenticating a connection to an untrusted network, who cares?
+13:12:15 <strcat[m]> traditional calls and texts aren't private, they're routed along with only point to point encryption across carrier networks, you don't have an encryption connection to the other end or even to a trusted server
+13:13:12 <strcat[m]>  * traditional calls and texts aren't private, they're routed along with only point to point encryption across carrier networks, you don't have an encrypted connection to the other end or even to a trusted server
+13:14:23 <joeri_poeri[m]> > worrying about imsi catchers / LTE encryption, etc. is just silliness
+13:14:23 <joeri_poeri[m]> not an expert on this at all, but does this mean that you consider using a vpn on an lte connection to be essentially pointless?
+13:15:01 <renor[m]> <strcat[m] "your own Wi-Fi network does not "> On an open network aren't there more (or potentially more) devices to not trust? In a local private network if i'm the only user there's only the Internet (which we know we can't trust) and me, so authenticating on a network limits potential threats on the network. Why you say there's no difference?
+13:15:31 <strcat[m]> renor: AOSP and anything else sane doesn't trust local networks
+13:15:39 <strcat[m]> there is nothing trusted about it based on it being a local network
+13:15:45 <strcat[m]> that doesn't make sense to do
+13:16:04 <strcat[m]> renor: you are not reducing attack surface by using a 'trusted' network because trust is not placed in the network
+13:16:08 <renor[m]> Oh, ok
+13:16:16 <strcat[m]> those extra machines are treated like any other machine on the internet
+13:16:24 <strcat[m]> there's nothing special about them just because they are on a local network together
+13:16:45 <strcat[m]> it's a horribly bad practice to trust things just because they are on the same local network
+13:16:52 <strcat[m]> that's a legacy, horrifying design approach
+13:17:04 <strcat[m]> and is considered a very bad practice now - not how proper corporate networks, etc. are designed
+13:17:18 <strcat[m]> you authenticate what you're connecting to doesn't matter where it is
+13:17:19 <renor[m]> What kind of systems don't follow the "AOSP way"?
+13:17:44 <strcat[m]> when Windows connects to a network it asks you if it's public or private, you should always say public, simple
+13:18:17 <k-sloth[m]> strcat: im reading about AE, weather its local or open network. if you connect you are trusting that network. how does AE protected you when you connect to that networK
+13:18:21 <renor[m]> Nice, thanks. Always learning a lot here
+13:18:38 <strcat[m]> k-sloth: no you do not need to ever trust networks
+13:18:49 <strcat[m]> you should NEVER trust networks and the whole concept of a 'trusted network' is wrong
+13:19:01 <strcat[m]> is is security malpractice
+13:19:05 <strcat[m]>  * it is security malpractice
+13:19:58 <strcat[m]> it's a nice example of the difference between some random business incompetent IT setup vs. a company like Amazon, Apple, Google, etc. with a sane approach to securing things
+13:20:15 <strcat[m]> which does not involve making the mistake of trusting networks
+13:20:39 <strcat[m]> it just shouldn't be done and doesn't make sense, authenticate the thing you want to talk to
+13:20:41 <strcat[m]> use encryption
+13:20:49 <strcat[m]> that's how all modern things are built
+13:21:50 <strcat[m]> no reason to reduce security to the weakest link on every local network, it's a really bad design to trust networks
+13:21:51 <strcat[m]> local or otherwise
+13:22:01 <strcat[m]> you authenticate things you connect to
+13:22:22 <strcat[m]> if you have something like an IoT device you have it display some pairing code
+13:22:37 <strcat[m]> it can make the connection locally, via the internet, via some server - whatever, doesn't matter, you need authenticated encryption
+13:22:43 <nadine> you illustrte very well the concept of eductation being based on repetition
+13:22:49 <strcat[m]> it should absolutely not just trust something because it's on the same network
+13:23:01 <strcat[m]> that's 1990s design
+13:23:09 <strcat[m]> and thoroughly debunked as a horrible approach
+13:23:46 <k-sloth[m]> strcat: OK im starting to understand what your talking about. we were talking about completely different topics
+13:24:04 <strcat[m]> you changed it to this totally different topic
+13:24:15 <strcat[m]> you cycled through several unrelated topics
+13:24:25 <strcat[m]> this is the one you wanted to argue most about
+13:24:26 <k-sloth[m]> Thanks for introducing me to Ae by the way
+13:26:04 <k-sloth[m]> Thats because i was talking about normal people in general not peoplr who use ASOP, i apologise
+13:26:34 <strcat[m]> the same things apply to stock Android and iOS
+13:26:44 <strcat[m]> and anything else sane
+13:27:07 <k-sloth[m]> Yes but most people dont know this and trust what ever they want
+13:27:12 <strcat[m]> I said AOSP to make it clear it applied to GrapheneOS and the stock OS
+13:27:22 <strcat[m]> the OS itself doesn't trust networks
+13:27:40 <strcat[m]> there is legacy technology based on trusting local networks
+13:27:49 <strcat[m]> and some new badly designed things based on it
+13:27:49 <k-sloth[m]> <strcat[m] "the OS itself doesn't trust netw"> Thats amazing, and happy i moved to it
+13:32:43 <strcat[m]> TheJollyRoger: why tf is it snowing
+13:43:03 <blindfool[m]> what you mean, is fucking sunny outside
+13:45:08 <renor[m]> What are your opinions on hardware wallets like Trezor?
+14:07:32 <seaclown> Snow in may, haven't seen that in a long time. Coming down pretty good too
+14:37:30 <joshman[m]> renor using it daily. Great addition to security
+14:44:35 <seaclown> I too have a trezor but use mobile wallet for daily shit. If you do go with a Trezor, use a password based wallet in addition to pin on device
+14:49:00 <joshman[m]> <strcat[m] "josh.man: where do they say your"> Here 😄
+14:49:24 * joshman[m] uploaded an image: signal-2020-05-09-184533.png (122KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/OWefnhkihmVzcoPRLlrTXtMQ >
+15:01:37 <joshman[m]> seaclown I do too. Trust and/or Coinomi my favs
+15:11:29 <cyborgninjaneer[> The above conversation leaves me wondering how best to secure my home WiFi network.
+15:18:04 <nadine> Was it not explained that it was pointless?
+15:21:25 <nadine> ... being both unfeasible and unnecessary
+15:23:32 <cyborgninjaneer[> Probably.
+15:34:42 <renor[m]> <joshman[m] "seaclown I do too. Trust and/or "> Which one you think is best? I'm looking for a good wallet and can't decide
+15:39:01 <renor[m]> I was taking a look at guarda.co also, idk if anyone knows about it
+15:39:01 <renor[m]> Currently I'm using paper wallets until I get a Trezor
+15:41:05 <joshman[m]> Guarda is terrible. Don't waste your time. Just use what I do or find something for yourself
+15:45:39 <renor[m]> Hmm, do those integrate with Hardware wallets?
+15:48:40 <joshman[m]> You don't need a hardware wallet for small purchases it will only make your life harder. You only need hardware wallet for storing substantial amount of assets
+15:48:49 <joshman[m]> * You don't need a hardware wallet for small purchases it will only make your life harder. You only need hardware wallet for storing a substantial amount of assets
+15:49:03 <renor[m]> <joshman[m] "Guarda is terrible. Don't waste "> Why is it terrible?
+15:50:04 <joshman[m]> Try to use them 3. You'll quickly pick your fav according to your needs
+15:54:20 <renor[m]> Ok
+15:57:57 <dallemon[m]> renor: I have a Trezor as well. Use it for crypto, password manager, U2F and looking into using it for SSH as well.
+16:00:10 <joshman[m]> Omg. Just tried to install Guarda to give it another shot after months of not using it. Booom. It won't work without playservices!! A big no-no!!
+16:21:39 <renor[m]> Oh, ok that's a no for me too
+16:22:37 <renor[m]> <dallemon[m] "renor: I have a Trezor as well. "> Nice! Looks like a useful tool to me
+18:02:46 <TheJollyRoger> strcat[m]: I... I have no clue.
+18:07:16 <TheJollyRoger> Crazy flurries, it was actually staying on the ground!
+18:16:02 <TheJollyRoger> renor[m]: I also want to second the Trezor Model T. I've been experimenting with it for GPG usage, and while it doesn't quite support subkey options at this moment, it works rather well!
+18:21:14 <TheJollyRoger> That's my only nitpick with it.
+18:21:57 <TheJollyRoger> I use it as an ssh dongle and I'm hoping it'll replace my smartcards and yubikeys.
+18:23:14 <BrokenCog> hellos.  I've succeeded in building Vanadium in the grapheneos-build tree.  it results in a bunch of apk files ... which of those need to be installed?  and, is there a way to bundle them into the graphene image files so that the flash-all.sh script includes Vanadium?
+18:23:55 <TheJollyRoger> Hey Brokencog, ah crud. I'm not quite sure yet >_<.
+18:24:00 <BrokenCog> I did:  "cp Vanadium/out/Default/apks/release/*.apk external/vanadium/prebuilt/arm64" ...
+18:24:13 <BrokenCog> hey there TheJollyRoger.  How goes it?
+18:25:44 <TheJollyRoger> Ahoy shipmate! Yarr, it be well! The tides, they be strange: at this time of the year, sixty moons ago, it would be sunny and mild, but shiver me timbers today it be snow!
+18:26:51 <BrokenCog> strange days indeed.
+18:40:16 <aeonsolution[m]> BrokenCog: when you were building Vanadium, did you download depot_tools too by any chance?
+18:40:27 <BrokenCog> yes.
+18:40:51 <BrokenCog> needed that for the 'fetch' and 'gclient' tools.
+18:40:55 <aeonsolution[m]> thanks, im rewriting my notes and trying to figure out what was unnecessary lol
+18:41:14 <BrokenCog> some of the paths are incorrect, but the concept was correct.
+18:41:35 <aeonsolution[m]> im at 67800/70445 at the moment
+18:41:36 <BrokenCog> also, haven't figured out what's wrong with my config that fetch and gsclient must run as root.
+18:41:49 <BrokenCog> close!!
+18:42:07 <aeonsolution[m]> oh wow, im been redoing steps with a vm
+18:42:23 <aeonsolution[m]> if i mess up, i restart from a checkpoint
+18:42:35 <aeonsolution[m]> that is weird :/
+18:42:38 <aeonsolution[m]> what distro are you using
+18:43:05 <BrokenCog> slackware.
+18:43:13 <aeonsolution[m]> nice
+18:43:34 <BrokenCog> I should probably do this in a VM, but I didn't want to download and build everything then find the USB wouldn't flash to the device.
+18:44:41 <aeonsolution[m]> yeah, im going to have that problem; hopefully theres a way i can move the files to the host and then flash from there
+18:44:55 <aeonsolution[m]> *fingers crossed
+18:47:22 <aeonsolution[m]> not getting my hopes up but the good thing is by the time i get there hopefully ill have a better picture of the whole workflow
+18:52:57 <TheJollyRoger> Arr!
+18:53:18 <TheJollyRoger> I'm still fighting with my computer at this moment >_<.
+18:53:41 <TheJollyRoger> Not the main one, now the other >_<.
+19:00:32 <aeonsolution[m]> dang
+19:00:39 <BrokenCog> ?
+19:00:40 <aeonsolution[m]> whats the issue
+19:00:56 <aeonsolution[m]>  * whats the issue TheJollyRoger
+19:01:52 <TheJollyRoger> Well it's kinda my fault, I decided I was going to go to python 3.7, then realized I might as well go to 3.8, figured I'd done this before for one computer, I just forgot how much work it was.
+19:02:33 <TheJollyRoger> It's not like... bad work, it's just, I have to find out which parts won't install with 3.8 and then I have to slowly and painfully add them one by one to the package.use directory, check to see if it worked, and then add the next one, little by little.
+19:03:51 <TheJollyRoger> Once again, my fault entirely, since I use the testing packages so I could have two systems that were more or less the same and at the time I did not know you could use keywords from the other architectures so I just got lazy and decided to use the testing keywords instead... and from time to time stuff like this does end up happening.
+19:04:49 <aeonsolution[m]> it be our own computers betraying us
+19:04:57 * TheJollyRoger chuckles
+19:05:13 <TheJollyRoger> Ehehe... well... it kinda did exactly what I told it to, just... I kinda told it to do the wrong thing :P.
+19:05:31 <aeonsolution[m]> case and point
+19:07:04 <TheJollyRoger> Yeah. the TLDR is that I got lazy and took a shortcut early on and I really shouldn't have.
+19:07:28 <aeonsolution[m]> hate when that happens
+19:07:52 <aeonsolution[m]> i cant tell you how many times i've run fetch in the wrong folder lol
+19:07:56 <aeonsolution[m]> XD
+19:07:57 <TheJollyRoger> Oh dear X(
+19:08:15 <TheJollyRoger> And then "error error error no more space left on the device" XP?
+19:08:23 <aeonsolution[m]> LOL
+19:08:28 <aeonsolution[m]> yeah
+19:08:38 <TheJollyRoger> XD Aaaaa I did that a few times too!
+19:09:33 <aeonsolution[m]> classic
+20:31:27 <aeonsolution[m]> the generate_release script just finished
+21:04:27 <TheJollyRoger> \o/
+21:04:32 <TheJollyRoger> Holy cow awesome!
+21:04:54 <aeonsolution[m]> thank you!
+21:05:01 <aeonsolution[m]> i know, its been a wild journey
+21:05:08 <TheJollyRoger> Damn!
+21:06:06 <TheJollyRoger> Wow, you got way further than I ever did! That's awesome!
+21:06:51 <aeonsolution[m]> i cant take most of the credit, you and everyone helped out a lot
+21:07:04 <aeonsolution[m]> ^^
+21:07:25 <TheJollyRoger> Well! I hope sometime when this is all fixed up we can sit down and I can try to take notes O_O.
+21:07:36 <JTL> aeonsolution[m]: Very nice
+21:08:08 <aeonsolution[m]> TheJollyRoger:  yes definitely!
+21:08:20 <aeonsolution[m]> JTL: thank you for the guidance!
+21:08:34 <aeonsolution[m]> im just thinking about the next step now
+21:08:38 <JTL> TheJollyRoger: I think writing some documentation on how best to use gclient, repo and submodules might be in-scope for the future
+21:08:47 <TheJollyRoger> Ack~
+21:08:54 <JTL> although in the context of GrapheneOS, submodules are only used for the kernel I think
+21:08:56 * TheJollyRoger starts unrolling fresh parchments.
+21:08:57 <cyborgninjaneer[> What exactly did you do?
+21:09:10 <JTL> aeonsolution[m]: Your welcome
+21:09:34 <aeonsolution[m]> cyborgninjaneer: followed the steps on https://grapheneos.org/build
+21:09:54 <aeonsolution[m]> and asked for help after doing my own due diligence
+21:10:01 <aeonsolution[m]> if i got stuck
+21:10:56 <cyborgninjaneer[> Built from source eh? Nice.
+21:11:19 <aeonsolution[m]> yeah
+21:14:02 <TheJollyRoger> Yeah! Not many people here have done that!
+21:14:39 <TheJollyRoger> emerge seems to be satisfied now, so I'll be able to jump in to start the journey myself soon X3.
+21:15:06 <cx2[m]> One could say, it was the aeon, * ahem, Solution?
+21:15:23 * TheJollyRoger hands cx2[m] the sunglasses.
+21:15:26 <TheJollyRoger> YEAAAAAAAAAHHHHH!!!
+21:15:44 <cx2[m]> hahaha
+23:21:49 <terminat0r> hey new to GrapheneOS excited to try it out.  Anyone have experience installing on a tablet device? I have a Nexus 7 (2nd gen)
+23:21:49 <terminat0r> This this would workout well for me, or maybe I should try a linux os
+23:22:00 <terminat0r>  * hey new to GrapheneOS excited to try it out.  Anyone have experience installing on a tablet device? I have a Nexus 7 (2nd gen)
+23:22:00 <terminat0r> Think this would workout well for me, or maybe I should try a linux os
+23:23:23 <renlord> no it wont work well for you
+23:23:37 <renlord> 1. there is no support. 2. the hardware is insecure
+23:24:35 <JTL> 2013, old...
+23:25:14 <JTL> Still slightly annoyed Nexus tablets don't really exist anymore
+23:25:15 <JTL> Ah well
+23:36:32 <terminat0r> ikr... my n7 is still kicking, but it's not great.  I'm thinking I might get some more life out of it if I try a linux distro on it
+23:36:33 <aeonsolution[m]> JTL: i share the sentiment
+23:37:02 <JTL> idneed
+23:37:05 <JTL> indeed
+23:38:00 <aeonsolution[m]> if you are looking for a hardened operating system for the nexus 7 you wont find much, you should check out this: https://grapheneos.org/faq
+23:38:15 <aeonsolution[m]> this will help you see the goals of the GrapheneOS project
+23:38:37 <renlord> flash latest aosp on it?
+23:38:44 <terminat0r> I won't be able to really try gOS until I get a new phone to replace my Pixel3 in a month or so... got too many other things happening atm. priorities
+23:39:36 <JTL> Gotcha
+23:43:50 <izymandias[m]> So is Riots encryption on by default now?
+23:44:44 <TheJollyRoger> izymandias[m]: doesn't look like it is.
+23:44:59 <JTL> Hi TheJollyRoger
+23:45:05 <TheJollyRoger> Ahoy!
+23:45:46 <izymandias[m]> TheJollyRoger: Is it coming? or is there another client where it is
+23:47:49 <TheJollyRoger> izymandias[m]: I know it's on the wishlist, but not all clients support E2EE on Riot.
+23:47:58 <TheJollyRoger> Er, on Matrix.
+23:48:09 <TheJollyRoger> **correction: I know it's on the wishlist, but ont all clients support E2EE on Matrix.
+23:49:08 <izymandias[m]> that sucks
+23:49:18 <TheJollyRoger> Even so, I would still recommend using Signal if you need security given that most people use the WebUI on Riot.
+23:49:24 <TheJollyRoger> *the Riot WebUI.
+23:50:10 <terminat0r> from what I understand there's kinda an issue with not being able to see chat history in channels for new members... so it wouldn't be great for public channels
+23:50:41 <JTL> Of course not
+23:51:35 <TheJollyRoger> Mhmm.
+23:54:00 <TheJollyRoger> (I'm assuming he meant "default via PM" since I know that was asked a long time ago. I don't think it'll happen until the clients are more feature-complete. Given the general experience with a fragmented ecosystem, this could take a very long time.)
+23:57:38 <terminat0r> I wonder if we'll see a robust Keybase intergration into Matrix.  I'm kinda new to Matrix, so I dont' really know what integration exists now, but we'd need to see wider adoption for it to be really useful.

@@ -1,0 +1,974 @@
+00:00:10 <jiibus[m]>  * So with FAT32 having a file size limit of 4GB, is it possible that the seed vault backup size could exceed that?
+00:02:07 <strcat[m]> jiibus: it's not a single file
+00:02:29 <jiibus[m]> Oh duh, that makes sense. For some reason I was envisioning a single archive
+00:02:55 <strcat[m]> it might make sense to design it differently than it is but atm it's a bunch of files
+00:03:16 <strcat[m]> it's a good initial proof of concept
+00:04:05 <jiibus[m]> Yea I like it for sure. How do ADB backups compare? I'm just thinking about having an off-phone back up just in case
+00:06:35 <jiibus[m]> Though I could just as easily buy a dedicated USB for backups
+00:06:52 <jiibus[m]>  * Though I could just as easily buy a dedicated USB for backups. but I worry about losing that lol.
+00:09:47 <strcat> jiibus[m]: adb backups uses the same underlying infrastructure
+00:10:06 <strcat> seedvault currently only backs up apps btw not your profile's home directory
+00:10:08 <strcat> worth noting that
+00:10:18 <strcat> adb backup has a way to include that as an option
+00:10:19 <jiibus[m]> Ah, good to know
+00:10:30 <strcat> -shared (shared storage)
+02:51:04 <jknsec[m]> how many strcats are there
+02:52:04 <jknsec[m]> Everyone rocking the duel matrix/irc accounts to get around limitations of the bridge
+02:53:57 <strcat> jknsec[m]: well it's an irc channel
+02:54:05 <strcat> I only have matrix because I have to manage stuff on matrix
+02:54:07 <strcat> for the channel
+02:54:16 <strcat> I'm in a single matrix channel - the one for this irc channel
+02:55:42 <jknsec[m]> Yeah, true.
+02:56:17 <TheJollyRoger> There's only one.
+02:56:42 <TheJollyRoger> Also, argh. I wasn't at my desk earlier >_<.
+02:57:14 <jknsec[m]> I know :P
+02:57:49 <jknsec[m]> Tbh I should probably switch to an IRC but Riot an mobile is pretty convenient.
+02:58:08 <jknsec[m]> *an IRC client
+03:00:40 <TheJollyRoger> yeah. I have to do both as well.
+03:37:06 <cyborgninjaneer[> It would be pretty cool to have the GrapheneOS community on Session, but I get not wanting to migrate again.
+03:38:13 <cyborgninjaneer[> Session is some cool tech. I read the whitepaper
+03:50:49 <jneplokh> I tried Session with someone I know and it was pretty buggy
+03:54:58 <qyo3462572445[m]> Session is pretty neat. I'm watching it closely
+03:59:30 <cn3m[m]> <qyo3462572445[m] "Session is pretty neat. I'm watc"> It's really not they are ridiculously attacking other Messengers with false and pseudo-intellectual attacks
+04:01:17 <jknsec[m]> Based in Australia too, but that's not the main issue. They seem arrogant and look like they're just trying to promote their crypto and stuff. I'm sure there are some smart people that work on some of the actual tech but for the most part, meh.
+04:02:05 <jknsec[m]> Always preferred Signal and Briar
+04:04:49 <cn3m[m]> https://reddit.com/r/privacytoolsIO/comments/haltiz/how_do_the_permissions_required_by_the_top/fv3l4e2?context=3
+04:08:56 <qyo3462572445[m]> Signal is based in the US, briar is cool, but pretty useless considering it's android only.
+04:13:43 <jknsec[m]> Limited, not useless. Signal is also the standard for encrypted messaging and has been proven to be reliable. Being based in the US kind of sucks but it's still good for the majority of use cases.
+04:17:56 <cyborgninjaneer[> It's difficult for the US to attack Signal in a meaningful way without straight up mandating a back door.
+04:18:15 <cyborgninjaneer[> For everyday users, it's quite sufficient.
+04:18:19 <jknsec[m]> ^
+04:18:47 <jknsec[m]> That was the goal of the EARN IT Act but that's stalled a bit.
+04:19:16 <cyborgninjaneer[> Session is an interesting innovation nonetheless. It remains to be seen how good it will be in the future. I'm not sure what the situation is with it being based in Australia.
+04:20:06 <cyborgninjaneer[> There's a new bill in the US in the senate judiciary committee. "Lawful Access to Encrypted Data" or some such nonsense. What they're asking for isn't possible.
+04:21:40 <cyborgninjaneer[> There's apparently some kind of reward up to develop a way of doing a secure, private back door, but that's like putting up a reward to figure out how to draw three perpendicular lines on a sheet of paper. It's meaningless and anyone claiming to do so is lying
+04:23:07 <cyborgninjaneer[> This kind of crap gas happened before and it will happen again.
+04:24:47 <cyborgninjaneer[> People just need to get it through their heads that back doors are like gun control. Someone will always want it. Fuckall will ever be done about it. Americans don't like that stuff.
+04:37:28 <LynnStephenson[4> <cyborgninjaneer[ "There's a new bill in the US in "> It is possible. Just nobody wants it
+04:38:05 <cyborgninjaneer[> It's not possible. The technology isn't the limitation.
+04:38:10 <icy-sprite[m]> US is like the last place I'm visiting at this point lmao
+04:38:33 <icy-sprite[m]> You people completely turned me off from it.
+04:38:56 <cyborgninjaneer[> Most of the internet flows through the US anyway.
+04:39:07 <icy-sprite[m]> Every time there is something new threatening privacy, Jesus Christ.
+04:39:41 <cn3m[m]> The US gets better every year
+04:40:07 <icy-sprite[m]> cn3m: Nope.
+04:41:08 <travankor_> @Icy-Sprite ;^): Canadian?
+04:41:40 <icy-sprite[m]> <travankor_ "@Icy-Sprite ;^): Canadian?"> African
+04:41:42 <cyborgninjaneer[> > > <@cyborgninjaneer:matrix.org> There's a new bill in the US in the senate judiciary committee. "Lawful Access to Encrypted Data" or some such nonsense. What they're asking for isn't possible.
+04:41:42 <cyborgninjaneer[> > It is possible. Just nobody wants it
+04:41:42 <cyborgninjaneer[> There's no way to have a backdoor, yet still have a secure system that is resistant to abuse. The keys to the backdoor have to be kept somewhere, and the potential for abuse is high even if the backdoor itself contains no CVEs. (And it inevitability will contain CVEs which by law cannot be fixed. I know bureaucracy.)
+04:42:18 <cyborgninjaneer[> Backdoored encryption is useless.
+04:42:34 <icy-sprite[m]> Wouldn't backdooring encryption hurt the people who want to backdoor it too if they want to encrypt shit
+04:42:42 <cyborgninjaneer[> Yes
+04:42:57 <jknsec[m]> Well they won't use the backdoored services
+04:43:19 <travankor_> IIRC encryption is still considered “military technology” in America
+04:43:45 <travankor_> so there’s arms restrictions and legislation banning it from export
+04:43:59 <jknsec[m]> The US military for example has its own communication network.
+04:43:59 <cyborgninjaneer[> Some of the same people consider plastic rifles "military technology" too
+04:44:10 <icy-sprite[m]> As long nobody touches AES
+04:44:14 <icy-sprite[m]> I still stands
+04:44:28 <jknsec[m]> Besides, you know, the NSA :P
+04:44:35 <icy-sprite[m]> no i don't
+04:44:48 <icy-sprite[m]> they know me
+04:44:52 <icy-sprite[m]> i don't know anyone there
+04:44:59 <icy-sprite[m]> slowly decends into hysteria
+04:45:06 <cyborgninjaneer[> As it stands now, the NSA is losing a lot of its teeth, or will soon.
+04:45:19 <icy-sprite[m]> cyborgninjaneer: Explain
+04:45:39 <jknsec[m]> Really? Haven't seen much of that. They still seem pretty strong.
+04:46:01 <cn3m[m]> Section 215 and huge transparency laws gains
+04:46:04 <icy-sprite[m]> This is why whenever I see a bold statement, I ask for an explanation
+04:46:10 <cn3m[m]> Huge leaps in security tech
+04:46:25 <cyborgninjaneer[> I'd have to go back and look over the details again, but the authority has been reduced over time. It's still a serious issue, but less insidious than before.
+04:46:42 <cn3m[m]> iPhones and Pixels both have insider attack prevention even make backdoors impractical
+04:46:48 <icy-sprite[m]> cn3m: Have you thought about the possibility of people not giving a shit about laws existing? you know. You seem to put everything in either a white or a black box.
+04:47:17 <icy-sprite[m]> Why can't someone be bribed
+04:47:24 <cyborgninjaneer[> Some of the powers aimed at lone wolf terrorists are gone, and I think the remaining ones are on the chopping block this year.
+04:47:26 <icy-sprite[m]> or someone abusing their power
+04:48:08 <jknsec[m]> FBI/CIA/NSA still kind of do whatever the fuck they want, though. It's a bit better but still, you know, kind of evil.
+04:48:30 <cyborgninjaneer[> In other words, people without a credible link to some organization, like ANTIFA or ISIS, won't be targets anymore.
+04:48:34 <cn3m[m]> You have to trust the fed
+04:48:37 <icy-sprite[m]> <jknsec[m] "FBI/CIA/NSA still kind of do wha"> Kind of ?? that's VERY evil.
+04:48:46 <jknsec[m]> What they publicly disclose and what they actually do are very different things.
+04:48:55 <cn3m[m]> To some degree
+04:48:56 <icy-sprite[m]> <jknsec[m] "What they publicly disclose and "> THIS
+04:49:03 <cn3m[m]> The broken root of trust of the internet
+04:49:08 <cyborgninjaneer[> > What they publicly disclose and what they actually do are very different things.
+04:49:08 <cyborgninjaneer[> Well duh. That's why activists like encryption.
+04:49:10 <icy-sprite[m]> Couldn't have put it in better words
+04:49:38 <icy-sprite[m]> what jknsec said is very important. It's why I find it hard to put trust on statements liek that
+04:49:42 <cn3m[m]> GrapheneOS and Tor and Signal won't help you when they SWAT team you, take over root certs, and use hidden cameras
+04:49:58 <cyborgninjaneer[> It's not meant to though
+04:50:06 <icy-sprite[m]> That's end game level, you better run lol
+04:50:41 <cyborgninjaneer[> The stuff people like us use is just meant to make the cost of violating our rights non-zero. It's deterrence.
+04:51:03 <cyborgninjaneer[> It also helps against everyday meanies with hax
+04:51:07 <cn3m[m]> This stuff was all made legal by bad laws
+04:51:11 <jknsec[m]> They help with fighting against mass surveillance. The general consensus for a targeted attack is "if they want you, they'll get you".
+04:51:14 <cn3m[m]> Good laws a win
+04:51:19 <cn3m[m]> We've had several
+04:51:28 <cn3m[m]> You have to trust the fed to some degree
+04:51:40 <cyborgninjaneer[> Laws are improving, slowly.
+04:52:54 <cn3m[m]> Dramatically
+04:53:08 <cyborgninjaneer[> Yes, but slowly.
+04:53:16 <icy-sprite[m]> Both peasants need to present their arguments :^D
+04:53:18 <cyborgninjaneer[> Progress is progress.
+04:53:20 <cn3m[m]> Google publishes NSLs and statistics
+04:53:32 <icy-sprite[m]> What's an NSL ? :3
+04:53:45 <jcpicard32[m]> National Security Letter
+04:53:52 <cyborgninjaneer[> The worst parts of the Patriot Act are either expired or on the chopping block.
+04:53:55 <cn3m[m]> National Security Letters
+04:54:09 <icy-sprite[m]> Where can I find those of Google
+04:54:25 <cyborgninjaneer[> Basically secret warrants that aren't really warrants because they violate due process.
+04:54:48 <jknsec[m]> However it is important to note that those who gain power do not often let go of it easily. Much of what they do has been moved around, outsourced, etc. and many "transparency" reports and disclosures are theater in order to appease law makers.
+04:54:50 <cyborgninjaneer[> They had a purpose at one point, but have been abused.
+04:56:28 <cyborgninjaneer[> IIRC, NSLs are part of FISA and the evidence soon will not be admissible in court against US citizens.
+04:57:14 <cyborgninjaneer[> Could be wrong about that. I'm too sleepy to double check. Feel free to check and post your findings.
+04:57:34 <jknsec[m]> A company is perfectly allowed to surveil and monitor those who use their product as long as the add a little provision "by continuing to use our services, you consent to" etc. etc. and it's perfectly legal. PRISM is still a thing. Five Eyes is still a thing.
+04:59:17 <cyborgninjaneer[> Corporate surveillance can be countered more readily than a global passive adversary. They just want money. PRISM is just another customer, whether they pay in cash or political favor.
+04:59:49 <jknsec[m]> The laws that govern what a government can do do not apply to corporations in the same way. Why surveil US citizens yourself when you can just have private corps do for you
+05:01:34 <cyborgninjaneer[> In the same thread, monetary motivation has limits, so resources used for tracking have limits too. Remember the discussion about using DNS or block lists to fingerprint users? It's more trouble than it's worth.
+05:01:53 <cn3m[m]> https://transparencyreport.google.com/user-data/us-national-security @Icy-Sprite ;^)
+05:01:54 <cn3m[m]> https://storage.googleapis.com/transparencyreport/legal/NSLs/18-460008/NSL-18-460008-request-redacted.pdf here's a PDF of one
+05:01:54 <cn3m[m]> <cyborgninjaneer[ "IIRC, NSLs are part of FISA and "> NSA spying really can't be used much against Americans in court anyway
+05:01:55 <cn3m[m]> You know most of the NSA programs abused the lack of HTTPS right?
+05:01:55 <cn3m[m]> Many others were exploits
+05:01:55 <cn3m[m]> And the rest is illegal now
+05:02:15 <cn3m[m]> The US is one of the better places for privacy
+05:02:22 <cyborgninjaneer[> And there you go.
+05:03:09 <cn3m[m]> Yeah not everything is well tracked
+05:03:14 <cyborgninjaneer[> Compare to the UK for example. Can't walk down the damn street without a personal cloaking device... Oh shoot those don't even exist so your face is pwned anyway.
+05:03:16 <jknsec[m]> <cyborgninjaneer[ "Corporate surveillance can be co"> Governments know this and use it to their advantage. The vast majority of people are still caught up in the machine and those who are not are the main focus of any remaining programs.
+05:03:23 <cn3m[m]> There's a lot of tracking left on the table
+05:05:26 <cyborgninjaneer[> Australia will clap you in irons if you don't unlock your phone for the fuzz
+05:05:36 <jknsec[m]> <cn3m[m] "We mostly won "> Do not be quick to assume that the battle is mostly won. The fed is not just going to give up their power because some "legislator" or "political official" told them to. Is it better? Sure. Is it good? Not really.
+05:06:07 <icy-sprite[m]> cn3m: thanks for the sauce btw
+05:06:12 <icy-sprite[m]> I don't get how these NSA programs work
+05:06:15 <icy-sprite[m]> it's just voodoo for me
+05:06:19 <icy-sprite[m]> specially optic nerve
+05:06:23 <icy-sprite[m]> wtf is that even
+05:06:26 <cyborgninjaneer[> Nothing is "good" by a privacy activist's standards.
+05:06:47 <cyborgninjaneer[> Better is a place to start.
+05:07:06 <jknsec[m]> Better than China? Definitely. Australia or the UK? Probably. Acceptable. Fuck no.
+05:07:26 <jknsec[m]> Don't get me started on China though tbh
+05:07:26 <cyborgninjaneer[> > Better than China? Definitely. Australia or the UK? Probably. Acceptable. Fuck no.
+05:07:26 <cyborgninjaneer[> Precisely.
+05:07:38 <icy-sprite[m]> China is cancelled anyway
+05:07:39 <icy-sprite[m]> next
+05:08:03 <cyborgninjaneer[> Don't get me started either... Damn body count outstrips Hitler and Stalin put together.
+05:08:33 <jknsec[m]> I couldn't even fathom something like IJOP in the US
+05:08:34 <cyborgninjaneer[> And hell if I know the half of it.
+05:08:46 <icy-sprite[m]> I hate how China treats blacks and uiyghurs
+05:08:53 <icy-sprite[m]> fucking scummy
+05:09:07 <jknsec[m]> I know we have some stuff like PredPol but fuck man
+05:09:13 <jknsec[m]> "Scummy"
+05:09:21 <cyborgninjaneer[> Anyone who isn't Han gets treated like dog crap.
+05:09:42 <icy-sprite[m]> Blacks and uiyghurs get a special kind of shitty treatment
+05:09:56 <jknsec[m]> Scummy is one word for it
+05:09:58 <cn3m[m]> <icy-sprite[m] "specially optic nerve"> Optic nerve is why we need HTTPS
+05:10:09 <icy-sprite[m]> I've seen a black woman literally not allowed on the store cause she was black wtf
+05:10:23 <icy-sprite[m]> cn3m: How did optic nerve work??
+05:10:45 <cyborgninjaneer[> Okay don't get me going any more on China. I'm angry enough already...
+05:11:01 <icy-sprite[m]> ME TOOOOOOOOOOOO fuck.
+05:11:31 <jknsec[m]> @Icy-Sprite ;^) You are familiar with the China Cables, correct?
+05:11:34 <cyborgninjaneer[> Okay HTTPS. We need it. Theyll try to backdoor that shit too
+05:11:57 <jknsec[m]> Of course they will.
+05:14:11 <icy-sprite[m]> <jknsec[m] "@Icy-Sprite ;^) You are familiar"> Gross. The leaked documents by some exiled uiyghurs
+05:14:36 <icy-sprite[m]> <cyborgninjaneer[ "Okay HTTPS. We need it. Theyll t"> HTTPS isn't always perfectly secure afaik
+05:15:56 <jknsec[m]> @Icy-Sprite ;^) Yeaaah. That's why I sort of laugh at you're usage of "scummy". It's disgusting.
+05:15:58 <icy-sprite[m]> I MAY BE WRONG OK
+05:16:36 <jknsec[m]> While I don't trust the US government that much I trust them more than China
+05:16:42 <jknsec[m]> Way more
+05:16:44 <icy-sprite[m]> <jknsec[m] "@Icy-Sprite ;^) Yeaaah. That's w"> Scummy, ratchet, trashy, poopy, cunty, assholy, ratty
+05:17:01 <icy-sprite[m]> <jknsec[m] "While I don't trust the US gover"> Ya'll have the best constitution out there
+05:17:07 <icy-sprite[m]> protect that shit
+05:18:15 <jknsec[m]> And then you have people on Reddit going "until we make some major revision s to the constitution bad things will continue to happen"
+05:18:23 * cyborgninjaneer[ sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/QuoKjfMtmbTqUKreFYRQsjEM >
+05:18:26 <icy-sprite[m]> <jknsec[m] "And then you have people on Redd"> lol what
+05:18:34 <jknsec[m]> Like what the actual shit
+05:18:45 <cn3m[m]> <icy-sprite[m] "cn3m: How did optic nerve work??"> Interception of unencrypted traffic
+05:19:01 <icy-sprite[m]> <cn3m[m] "Interception of unencrypted traf"> just http??
+05:19:10 <icy-sprite[m]> <jknsec[m] "Like what the actual shit"> I know, I know
+05:19:32 <cyborgninjaneer[> Unencrypted traffic of any form is a privacy nightmare. That's why I love Signal.
+05:19:53 <cn3m[m]> <icy-sprite[m] "just http??"> Yes
+05:20:19 <cn3m[m]> It was fixed when they switched to HTTPS on Yahoo Messenger
+05:20:36 <jknsec[m]> lol
+05:20:42 <cyborgninjaneer[> Fuckers still get a free list of domains you access from your ISP, probably. That's what a VPN is for.
+05:21:01 <cyborgninjaneer[> Makes it not free.
+05:21:10 <jknsec[m]> Shifting trust, IMO.
+05:21:18 <cyborgninjaneer[> That's exactly what it is.
+05:22:14 <cyborgninjaneer[> The idea is to pick a VPN that's going to cause a massive cat fight to get any information.
+05:22:44 <cyborgninjaneer[> It isn't to make you anonymous. It's to solve minimal-cost mass surveillance.
+05:22:58 <jknsec[m]> Tor's distributed trust model is much better, imo. Most VPNs are worse than most ISPs.
+05:23:07 <icy-sprite[m]> Well, PIA used to be great but they got bought
+05:23:08 <jknsec[m]> But I do agree
+05:23:22 <icy-sprite[m]> <jknsec[m] "Tor's distributed trust model is"> I like the concept behind tor too
+05:23:52 * wreck[m] cries in American
+05:24:03 <cyborgninjaneer[> Tor is less secure, and may not be reliable if your adversary is the US. A good VPN is better for everyday use by most people
+05:25:21 <cyborgninjaneer[> I don't know yet how the Loki network will measure up against Tor as it matures, but it might be another good tool in the box a few years down the line.
+05:25:44 <jknsec[m]> Is Tor compromised yet by the US gov or no? Ask that question and you'll get widely different answers depending on who you're asking. Wondering what you guys think.
+05:26:05 <jneplokh> <jknsec[m] "Tor's distributed trust model is"> Agreed, most of them are worst. There are a few which I would rather have my traffic than my ISP though
+05:26:11 <jneplokh> > <@jknsec:matrix.org> Tor's distributed trust model is much better, imo. Most VPNs are worse than most ISPs.
+05:26:11 <jneplokh>  * Agreed, most of them are worse. There are a few which I would rather have my traffic than my ISP though
+05:26:46 <cyborgninjaneer[> > Is Tor compromised yet by the US gov or no? Ask that question and you'll get widely different answers depending on who you're asking. Wondering what you guys think.
+05:26:46 <cyborgninjaneer[> Compromised? Not really, but it has been made unreliable for perfect anonymity.
+05:28:42 <cyborgninjaneer[> It's not terribly attractive for illegal activity now IMO, which is most of what they wanted anyway
+05:28:43 <icy-sprite[m]> Snowden uses Tor wtf are ya'll smoking
+05:28:52 <jknsec[m]> I mean. Not really sure what the current alternatives are, though.
+05:29:19 <cyborgninjaneer[> Snowden is just a guy who uncovered things. He's not some kind of cyber security god
+05:30:23 <jknsec[m]> Do criminals mostly use I2P now or some shit? Or have they gone back to the ways of old.
+05:30:53 <jknsec[m]> There's probably some obscure network I've never heard of.
+05:32:01 <jknsec[m]> Though I2P can't be used to browse clearnet and has its own issues anyway. Dunno how well it's fairing.
+05:32:32 <jknsec[m]> Monero is still digital cash, though. That much I know.
+05:33:16 <cyborgninjaneer[> Tor and I2P are valid for hiding embarrassing things. Wouldn't trust my life to either one.
+05:33:41 <jknsec[m]> Are there any that you would?
+05:33:45 <cyborgninjaneer[> No.
+05:34:43 <jknsec[m]> Only thing I would remotely trust is good ole analog, I suppose, but even that is liable to being compromised.
+05:35:42 <cyborgninjaneer[> If I were forced to trust my life to the security of a communications channel, I would use Signal with a burner number. Even then, I'd be looking over my shoulder a lot. I don't plan on doing anything that would put that kind of adversary on my ass though.
+05:37:15 <cyborgninjaneer[> Most people in the first world will never be in that situation. Most of those who are, are rather evil.
+05:37:28 <jknsec[m]> A conversation can not be deciphered by a government if it's had in person in a grassy meadow far away from any bugs or listening devices and conveyed entirely in notecards exchanged between two people. Signal is basically the digital equivalent.
+05:38:30 <jknsec[m]> In person you always risk being heard by the government pointing lasers at your lightbulb and listening to your conversations via vibrations.
+05:38:46 <jknsec[m]> Because that's a thing
+05:40:12 <cyborgninjaneer[> Someone in a situation like that beyond the first world, say in Iran or near China, has more to worry about than how many tor nodes the US fed owns. They'll use whatever works to try to survive a desperate situation. That's a big part of what tor is really for.
+05:42:15 <cyborgninjaneer[> If you are not an enemy of the US, tor is great. If you are, you should be afraid for a host of other reasons.
+05:42:25 <jknsec[m]> That I agree with. The US citizen at least does not yet have to worry about being tortured and murdered by the government for the things that they say or do. That is a good thing.
+05:43:43 <cyborgninjaneer[> All the US citizen has to worry about is who knows about a weird fetish or what news sites he reads.
+05:44:25 <cyborgninjaneer[> So if you're not doing  illegal stuff (don't do that), there's nothing wrong with using tor as a privacy tool
+05:44:58 <cyborgninjaneer[> Bottom line, nothing is perfect.
+05:48:19 <icy-sprite[m]> So Tor is like a gamble or smth?
+05:48:55 <cyborgninjaneer[> More or less, but I think the odds are still really good
+05:49:05 <LynnStephenson[4> <icy-sprite[m] "So Tor is like a gamble or smth?"> Basically Tor isn't a silver bullet, and it's easy to mis-use.
+05:49:22 <cyborgninjaneer[> ^
+06:30:30 <icy-sprite[m]> This is very frustrating
+06:33:26 <CWO[m]> <icy-sprite[m] "This is very frustrating"> Welcome to an internet that was never designed with privacy or security in mind, where all solutions are bolt-on hacks that are at best partially effective
+06:34:26 <CWO[m]> And at worst privacy/security snake oil (most things advertised or promoted as solutions to those problems)
+06:43:09 <icy-sprite[m]> <CWO[m] "And at worst privacy/security sn"> Yup I'm going insane.
+06:55:57 <cn3m[m]> Pixel 2 would be vastly safer on Stock than GrapheneOS would be after support is dropped right? With Project Mainline (the better one in Android 11), Chrome updates, and WebView updates it's no contest right? I know both are bad and shouldn't be used, but it's an interesting question
+06:59:10 <cn3m[m]> GrapheneOS mitigations are nice, but they only go so far. Won't make up for the lack of browser updates, WebView, and lack of Project Mainline updates in Android 11
+07:07:25 <dallemon[m]> <cn3m[m] "Pixel 2 would be vastly safer on"> Not sure if "vastly safer" because it would still be missing firmware updates and such.
+07:07:48 <privacy_based_li> <jknsec[m] "Always preferred Signal and Bria"> Jami too
+07:08:21 <cn3m[m]> <dallemon[m] "Not sure if "vastly safer" becau"> Right that's an accurate point. Someone shouldn't install GrapheneOS right now on a Pixel 2 is more my thought on this
+07:09:04 <anupritaisno1[m]> cn3m: that's bs
+07:09:22 <anupritaisno1[m]> Grapheneos has better exploit mitigation
+07:09:49 <dallemon[m]> <cn3m[m] "Right that's an accurate point. "> Depends on your threat model.
+07:10:35 <cn3m[m]> anupritaisno1: you would run an out of date GrapheneOS with an out of date Vanadium with an out of date WebView over a system getting Project Mainline updates?
+07:17:53 <anupritaisno1[m]> I need peter easton's contact BTW
+07:17:55 <anupritaisno1[m]> It's urgent
+07:18:04 <anupritaisno1[m]> Can somebody tell me where?
+07:21:31 <cn3m[m]> anupritaisno1: I don't have permission to give his number out. Can I pass a message along?
+07:21:42 <anupritaisno1[m]> cn3m: just give it
+07:21:47 <anupritaisno1[m]> It's really urgent
+07:31:41 <privacy_based_li> Isnt he theJollyRoger
+07:32:32 <cn3m[m]> Sent
+07:47:45 <xabi[m]> <dallemon[m] "Not sure if "vastly safer" becau"> Omnirom have started to build chrome, webview and other system apps through omnistore.
+07:57:23 <cn3m[m]> xabi: GrapheneOS will have it's own store when someone makes one
+07:57:24 <anupritaisno1[m]> It's grammar n*zi time
+07:57:28 <anupritaisno1[m]> > xabi: GrapheneOS will have it's own store when someone makes one
+07:57:28 <anupritaisno1[m]> its and not it's
+07:57:58 <cn3m[m]> You worked in medical, you're an English nazi, and you code. I gotta ask what you don't do
+07:59:04 <anupritaisno1[m]> Everything
+07:59:39 <cn3m[m]> Fun
+08:14:29 <dallemon[m]> <cn3m[m] "anupritaisno1: you would run an "> I'm sure people that are just "degoogling" their phone won't care
+08:51:26 <dazinism> cn3m: guess best would be to get the Pixel2 on an fork that still applies the monthly AOSP patches
+08:52:04 <dazinism> RattlesnakeOS is still supporting the Pixel 1 (until Android 11 drops)
+08:53:14 <cn3m[m]> That's true that would be a better solution, still would stuck
+08:53:24 <cn3m[m]> Suck*
+08:53:26 <dazinism> Guess they are likely to keep supporting the Pixel 2 also. Think theres also a suggestion that Calyx may keep supporting?
+08:53:38 <dazinism> Yeah its not ideal
+08:54:20 <dazinism> Guess it could be OK if theres no major vulns in firmware.
+08:54:56 <dazinism> Daniels suggested GrapheneOS could also do this while theres no firmware vulns
+08:55:16 <dazinism> If anyone is prepared to step up and do the maintenance
+08:56:00 <dazinism> Think it would be much more valuable for that effort to go into supporting maintenance for devices that still get full security updates
+08:56:26 <cn3m[m]> I highly doubt there would be a month without a firmware issue to some degree
+08:57:16 <dazinism> Not clear we got anyone as a maintainer yet?
+08:57:46 <dazinism> Or is anupritaisno1 now  doing the Pixel 4
+09:09:13 <anupritaisno1[m]> Probably
+09:20:15 <maneo[m]> cyborgninjaneer: https://www.xda-developers.com/android-nearby-share-file-sharing-chrome-os-windows-macos-linux-chrome/
+09:20:31 <maneo[m]> https://www.xda-developers.com/android-nearby-share-file-sharing-chrome-os-windows-macos-linux-chrome/
+09:21:21 <maneo[m]> While i understand it makes feature adoption more widespread, it's a shame that more and more new features are being bundled with google play services instead of android
+09:23:09 <sheruleeya[m]> <maneo[m] "While i understand it makes feat"> Yeah... Although it could be implemented without it, if it's open source...
+09:25:57 <sheruleeya[m]> <maneo[m] "While i understand it makes feat"> Google's a-hole design on software as always.
+09:26:13 <sheruleeya[m]> * Google's a-hole design on software as always, except for some open source projects
+09:28:53 <sheruleeya[m]> Not too sure about this, but isn't wired usually more secure than wireless?
+09:31:27 <sheruleeya[m]> * Google's a-hole design on software as always, except for some open source projects
+09:31:27 <sheruleeya[m]> Edit: I meant on closed source stuffs that's used for privacy invasion. Implemented in GMS/GSF is big red flag
+09:33:07 <sheruleeya[m]> * Not too sure about this, but isn't wired usually more secure than wireless?
+09:33:08 <sheruleeya[m]> Wired connection, wired data transfer, etc...
+09:45:11 <cn3m[m]> > <@sheruleeya:matrix.org> Not too sure about this, but isn't wired usually more secure than wireless?
+09:45:12 <cn3m[m]> > Wired connection, wired data transfer, etc...
+09:45:12 <cn3m[m]> It really depends
+09:45:32 <cn3m[m]> USB has a lot of issues Bluetooth has a lot as well(key extractions) https://span.ece.utah.edu/uploads/PID3181901.pdf
+09:45:53 <cn3m[m]> Something WiFi based is the best
+09:46:38 <cn3m[m]> USB would have to be the worst architecturally imo
+09:49:15 <cn3m[m]> For example on my iPad I bought the Magic Keyboard for the interface that was a security choice (beside it being awesome)
+10:36:36 <randolf[m]> is anyone able to install this app on their phone?
+10:36:36 <randolf[m]> https://play.google.com/store/apps/details?id=com.barclays.android.barclaysmobilebanking&hl=en_GB
+10:37:53 <the0[m]> It will fail SafetyNet attestation
+10:37:54 <the0[m]> there's some magisk modules that are designed specifically for banking apps
+10:37:57 <the0[m]> but it's a cat and mouse game
+10:38:14 <randolf[m]> how do you know it'll fail?
+10:38:33 <the0[m]> because i know barclays apps refuse to run if they think the device is rooted
+10:38:54 <randolf[m]> Magisk requires rooting right? I don't really want to root the device just for one app
+10:39:17 <the0[m]> It does yeah, there's an app that'll let you check your safetynet status, sec
+10:39:33 <the0[m]> https://play.google.com/store/apps/details?id=org.freeandroidtools.safetynettest&hl=en
+10:39:34 <the0[m]> this one perhaps
+10:39:44 <randolf[m]> thanks, I'll take a look
+10:40:03 <the0[m]> it could be something like your bootloader is unlocked
+10:40:59 <randolf[m]> the problem is with this COVID thing going on, I have to stand in a queue for 40 mins every week just to get paid. But the app lets me submit the checks directly there, so I was hoping to throw it into Shelter and just use that to save time
+10:41:08 <randolf[m]> My bootloader is locked, that much I know
+10:43:49 <randolf[m]> I failed on (Google play services missing)
+10:44:27 <randolf[m]> the only thing I can think of to solve that would be MicroG? but as Daniel said that would lower the security of my device significantly, which I don't want to do.
+10:44:31 <the0[m]> ah.
+10:44:45 <the0[m]> Yeah I wouldn't install that
+10:44:52 <randolf[m]> so I guess I'll just wait in line every week 😅
+10:45:02 <randolf[m]> it's not the end of the world at least
+10:47:46 <randolf[m]> I also have one last question. How "stable" is the Pixel4 build?
+10:48:08 <madaidan[m]> It's called experimental for a reason
+10:48:43 <randolf[m]> I have one laying around, I actually downgraded to a pixel3 just so I could use Graphene, but if it's tolerable I'd want to move to it and help submit bugs etc
+10:49:22 <the0[m]> :(
+10:49:26 <the0[m]> Wear a mask for sure
+10:49:51 <randolf[m]> I already do, it's a work requirement anyway.
+10:53:04 <cn3m[m]> <randolf[m] "the only thing I can think of to"> You can install the microG app safely on GrapheneOS, but it almost never does what you want it to without dangerous signature spoofing. It works for Google Camera. It breaks Reddit and Discord so YMMV
+10:54:41 <randolf[m]> yeah I probably won't risk it
+10:54:51 <randolf[m]> I'll just live without the app
+10:57:21 <jknsec[m]> One day GOS will be able to natively fake some stuff related to Google and improve app compatibility by pretending that Google no longer exists and that its servers are offline.
+10:58:43 <jknsec[m]> But you know
+11:01:03 <jknsec[m]> Still waiting for my improved gallery, camera app, calendar, and app store that includes updates for core system apps and Signal for some reason and that's it.
+11:04:52 <jknsec[m]> Then again in all seriousness if that aspect of the project ever picked up I'm sure OWS would be happy to cooperate. Of course we need app devs and os security is much more important.
+11:05:16 <cn3m[m]> <jknsec[m] "Still waiting for my improved ga"> Use the Simple apps and install Signal from their webpage
+11:06:31 <jknsec[m]> I have Signal, use Etar, Open Camera, and Simple Gallery.
+11:10:26 <jknsec[m]> One day that functionality can be included directly with the system and that process won't be necessary. Plus already signed versions of Signal and other highly used apps? Fuck.
+11:11:09 <jknsec[m]> One day
+11:13:13 <Alsatai[m]> <randolf[m] "yeah I probably won't risk it"> If you block all access of the microg core app it should be fine.. Also block gcam or whatever you are installing from accessing internet
+11:16:08 <Alsatai[m]> If I were to build my own graphene version with an inbuilt tracker blocker (I feel naked without it, although I am not sure about the efficiency of it) would it be less secure than official graphene? Besides the blocker app maybe?
+11:16:31 <Alsatai[m]> <Alsatai[m] "If I were to build my own graphe"> I would use "App Warden" from the aurora dev
+11:24:52 <jknsec[m]> Security theater? Need to go to bed to someone with more knowledge about it might be able to explain it better. Plus you should be doing tracker blocking at the DNS level tbh.
+11:25:10 <jknsec[m]> * Security theater? Need to go to bed but someone with more knowledge about it might be able to explain it better. Plus you should be doing tracker blocking at the DNS level tbh.
+11:31:21 <Alsatai[m]> <jknsec[m] "Security theater? Need to go to "> I'm using blahdns but how do I know it's blocking the trackers?
+11:32:08 <cn3m[m]> <Alsatai[m] "I'm using blahdns but how do I k"> It's all bypassable anyway
+11:33:06 <Alsatai[m]> <cn3m[m] "It's all bypassable anyway"> DNS or the blocker apps?
+11:34:20 <cn3m[m]> Anything really
+11:36:12 <randolf[m]> how could you bypass something like Pihole?
+11:37:45 <Alsatai[m]> Or the DNS?
+11:37:56 <cn3m[m]> <randolf[m] "how could you bypass something l"> Easy you set your own DNS in the app for one. There's a million other ways
+11:38:08 <cn3m[m]> Bromite set a secure DNS that unblocks a site you block
+11:38:17 <cn3m[m]> Perfect example
+11:38:51 <Alsatai[m]> So I can't block any trackers you mean?
+11:38:54 <cn3m[m]> You can also collect data on a first party domain and share it
+11:39:10 <cn3m[m]> <Alsatai[m] "So I can't block any trackers yo"> I mean you might block around half of tracking. Give or take
+11:39:38 <cn3m[m]> It's like an adblocker, but even worse
+11:40:31 <frenchieisverige> <cn3m[m] "I mean you might block around ha"> Still better than anything?
+11:41:00 <cn3m[m]> <frenchieisverige "Still better than anything?"> Depends
+11:41:06 <cn3m[m]> Do you use apps you wouldn't if you didn't have a blocker?
+11:41:21 <cn3m[m]> If the blocker changes your behavior ever that means it actively harmful
+11:43:47 <cn3m[m]> In the case of a firewall (even GrapheneOS's option which is best) app firewalls are actively harmful as they give a false sense of privacy. The less you change with a system and the more you rely on your OS provider services the better
+11:44:49 <cn3m[m]> Generally trying to constraint a trusted app more than the OS allows is generally bad
+11:47:12 <randolf[m]> Pihole works as a DNS provider though, so it's actually on a network level?
+11:47:13 <Alsatai[m]> <cn3m[m] "Do you use apps you wouldn't if "> One of my bank apps that I have to use, has trackers.. And I would use it with trackers but I prefer blocking them
+11:49:35 <cn3m[m]> <randolf[m] "Pihole works as a DNS provider t"> You can just set your own per app and it ignores network or system try it. That's also enumerating badness
+11:50:02 <cn3m[m]> <Alsatai[m] "One of my bank apps that I have "> Use Vanadium instead it's much better
+11:52:05 <sixBit[m]> Hi guys, was anybody able to successfully install Graphene on a Pixel4(XL)?
+11:52:25 <Alsatai[m]> <cn3m[m] "Use Vanadium instead it's much b"> It only has an app I'm afraid
+11:54:38 <cn3m[m]> sixBit: yeah a few
+11:56:14 <sixBit[m]> <cn3m[m] "sixBit: yeah a few"> Oh cool. Ive been trying to install it a few times today but always get stuck with a greeting message of "Cant find a valid operating system" right after I locked the bootloader. Tried stable and beta version.
+11:57:23 <cn3m[m]> anupritaisno1 thoughts?
+12:00:04 <sixBit[m]> the install log looks normal to me as well: https://privatebin.net/?39cad8be83c88d8f#GfqC16bQtYTU57myStdnd8L6qDzqHa5gGcNfPfUe6Xep
+12:01:57 <frenchieisverige> I guess it's not
+12:02:01 <frenchieisverige> writing 'system_a' 1/4... FAILED (remote: Partition should be flashed in fastbootd)
+12:02:33 <frenchieisverige> I have no clue, but it does not look good
+12:05:05 <frenchieisverige> <cn3m[m] "Generally trying to constraint a"> Well, what if you don't trust this app 100%? But you still need to use it. Example: WhatsApp, Facebook, all these data mining companies
+12:06:18 <sheruleeya[m]> <frenchieisverige "Well, what if you don't trust th"> Use PWA for fb.
+12:06:37 <sheruleeya[m]> * Use PWA/webapp wrapper for fb.
+12:06:37 <sheruleeya[m]> Isolate whatsapp on another profile
+12:06:37 <sheruleeya[m]> Isolate anything untrusted on other profiles, with some intrusive permissions denied
+12:06:48 <sheruleeya[m]> * Use PWA/webapp wrapper for fb.
+12:06:48 <sheruleeya[m]> Isolate whatsapp on another profile.
+12:06:48 <sheruleeya[m]> Isolate anything untrusted on other profiles, with some intrusive permissions denied
+12:07:05 <sixBit[m]> <frenchieisverige "writing 'system_a' 1/4... FAILED"> Techlore has been doing a guide a while back and he seems to get the same error while being able to properly boot the phone: https://i.imgur.com/IzxaUmi.jpg
+12:07:42 <sheruleeya[m]> <cn3m[m] "Something WiFi based is the best"> Well, guess I had to some research first. How come others prefer ethernet over wifi though? Different case?
+12:07:52 <sheruleeya[m]> * Use PWA/webapp wrapper for fb.
+12:07:52 <sheruleeya[m]> Isolate whatsapp on another profile.
+12:07:52 <sheruleeya[m]> Isolate anything untrusted on other profiles, with some intrusive permissions denied
+12:08:13 <sheruleeya[m]> * Use PWA/webapp wrapper for fb.
+12:08:13 <sheruleeya[m]>  Isolate whatsapp on another profile.
+12:08:13 <sheruleeya[m]> Isolate anything untrusted on other profiles, with some intrusive permissions denied
+12:08:39 <sheruleeya[m]> * Well, guess I had to do some research first. How come others prefer ethernet over wifi though? Different case?
+12:09:16 <cn3m[m]> <sheruleeya[m] "Well, guess I had to some resear"> I mean they both can have issues
+12:09:33 <cn3m[m]> WiFi is notably worse
+12:10:53 <cn3m[m]> I listed those 3 in context
+12:14:08 <sheruleeya[m]> Alright. Ethernet it is then. Probably bluetooth tether is even worse
+12:14:18 * Alsatai[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/UJpdCDOXDqFiciLElwxbwyTj >
+12:15:59 <sheruleeya[m]> <Alsatai[m] "> <@sheruleeya:matrix.org> Use P"> Yeah.
+12:16:50 <sheruleeya[m]> In fb, at least you would block camera and microphone permission
+12:16:55 <sheruleeya[m]> If you use it on browser.
+12:16:57 <Alsatai[m]> > <@sheruleeya:matrix.org> Yeah.
+12:16:57 <Alsatai[m]> > Well, then don't use it, not sure how would one actually block it if DNS block is bypassable.
+12:16:57 <Alsatai[m]> There are apps that disable the trackers.. Take a look at com.aurora.warden or com.merxury.blocker
+12:17:11 <sheruleeya[m]> * In fb, at least you could at least block camera and microphone permission
+12:17:43 <Alsatai[m]> > <@sheruleeya:matrix.org> Yeah.
+12:17:43 <Alsatai[m]> > Well, then don't use it, not sure how would one actually block it if DNS block is bypassable.
+12:17:43 <Alsatai[m]> And like I said before, some apps I do need to use and I would at least like to try and block the trackers
+12:17:43 <sheruleeya[m]> <Alsatai[m] "> <@sheruleeya:matrix.org> Yeah."> How can you be sure that it actually blocks the trackers and not being bypassed?
+12:17:59 <sheruleeya[m]> Just genuinely curious?
+12:18:55 <Alsatai[m]> <sheruleeya[m] "How can you be sure that it actu"> I think they disable that part of the app.. I know I can break apps if I block too much so I guess that the blockers work
+12:19:20 <cn3m[m]> <sheruleeya[m] "How can you be sure that it actu"> They can bypass that
+12:20:06 <sheruleeya[m]> <cn3m[m] "They can bypass that"> Seen and tested in MITM?
+12:20:06 <Alsatai[m]> <cn3m[m] "They can bypass that"> How could I check?
+12:21:38 <sheruleeya[m]> At first, I wanted to try pihole, but it seemed that they can just use other domains to bypass or something
+12:21:45 <Alsatai[m]> <cn3m[m] "They can bypass that"> Or do you have a link to read on it?
+12:22:10 <jiibus[m]> I mean couldn't one set a firewall rule to restrict all UDP:53 queries to the internal DNS resolver and keep apps from bypassing it?
+12:22:53 <sheruleeya[m]> (Hope I get some answers later... Will be back reading, and thanks)
+12:23:23 <Alsatai[m]> <sheruleeya[m] "At first, I wanted to try pihole"> But it does block a lot.. I use one and most ads are gone and I sometimes have to whitelist to enable some connections.. So just because it's bypassable doesn't mean it always does
+12:23:23 <cn3m[m]> <jiibus[m] "I mean couldn't one set a firewa"> *uses TCP big brain move* /s
+12:23:54 <jiibus[m]> Lop
+12:23:59 <cn3m[m]> Pihole works okay in browsers
+12:24:38 <cn3m[m]> <Alsatai[m] "Or do you have a link to read on"> First it's enumerating badness which is flawed
+12:25:47 <jiibus[m]> I haven't actually looked into it, but do DNS queries not on UDP:53 even work?
+12:26:02 <jiibus[m]> Ignoring DNSSEC for now
+12:26:45 <Alsatai[m]> <cn3m[m] "First it's enumerating badness w"> What does that mean? 😅
+12:27:29 <eglssm[m]> Hi guys, quick question, I have heard from other users that banking apps mostly work, Does anyone here have revolut? do the app works in GrapheneOS.
+12:33:49 <Alsatai[m]> <cn3m[m] "First it's enumerating badness w"> I don't quite get the argument, that because something might bypass the blocker that I shouldn't even try to block it.. 🤔
+12:35:22 <httplov3craft[m]> <eglssm[m] "Hi guys, quick question, I have "> Several of mine complain and claim they won't work without gapps, then all function fine despite their complaints. I don't use revolut though.
+12:37:21 <sheruleeya[m]> <cn3m[m] "First it's enumerating badness w"> Not too sure what does this mean? Is it about whitelisting vs blacklisting
+13:00:56 <sixBit[m]> any firewall you can recommend?
+13:02:45 <Alsatai[m]> <sixBit[m] "any firewall you can recommend? "> Graphene has an inbuilt firewall
+13:03:58 <sixBit[m]> Oh ok. How can I restrict certain apps from being able to pull data? Referring to sth like NetGuard in which I can restrict apps while on mobile
+13:10:57 <sheruleeya[m]> * Not too sure what does this mean? Is it about whitelisting vs blacklisting
+13:10:57 <sheruleeya[m]> Edit: It is somehow.
+13:11:10 <sheruleeya[m]> > <@sheruleeya:matrix.org> Not too sure what does this mean? Is it about whitelisting vs blacklisting
+13:11:10 <sheruleeya[m]> > Edit: It is somehow.
+13:11:10 <sheruleeya[m]> Prevention is better than cure sadly.
+13:11:22 <sheruleeya[m]> Something along those lines
+13:11:35 <sheruleeya[m]> * Something along those lines is the point of enumerating badness.
+13:12:01 <sheruleeya[m]> <Alsatai[m] "I don't quite get the argument, "> https://www.ranum.com/security/computer_security/editorials/dumb/
+13:21:54 <httplov3craft[m]> Oh lord. That 15+ year old rant really needs update and evolution.
+13:46:14 <aragorndr[m]> <eglssm[m] "Hi guys, quick question, I have "> https://www.reddit.com/r/GrapheneOS/comments/eh3u1y/any_way_how_to_run_gplayapps_on_grapheneos/fcflyf8/
+14:10:19 <Cyrinux[m]> <aragorndr[m] "https://www.reddit.com/r/Graphen"> It works
+14:18:39 <MysteriousWizard> Is there like a project that improves the AOSP apps?
+14:18:49 <MysteriousWizard> Google really have abandoned them
+14:19:31 <MysteriousWizard> Also boys, what's new about the not legacy build? I'm on a Pixel 2 XL so I can't test it lol
+14:23:55 <cyborgninjaneer[> Legacy means it soon will not be updated anymore.
+14:26:33 <MysteriousWizard> <cyborgninjaneer[ "Legacy means it soon will not be"> Oh no I get that, and honestly it's no loss to me
+14:26:39 <MysteriousWizard> I'm just wondering what's so cool about the new build
+14:27:51 <cyborgninjaneer[> Its the same.
+14:28:31 <fomijafi[m]> Does anyone know if its possible to use fingerprint unlock for apps but to disable for screen lock
+14:29:20 <cyborgninjaneer[> You can definitely use lockdown mode to shut off biometrics on the lock screen. Beyond that, not sure
+14:29:31 <fomijafi[m]> I would like to use a pin code on the lock screen but fingerprint for my keepass database
+14:29:34 <cyborgninjaneer[> I haven't tried it
+14:29:54 <cyborgninjaneer[> If anything, I'd do that the other way around
+14:30:07 <fomijafi[m]> Right I have that enabled but it turns off lockdown mode the next time you unlock
+14:30:48 <fomijafi[m]> Well I don't want to be able to be forced to use my fingerprint to open to phone but I want the convenience of not having to type my long keepass password
+14:33:24 <cyborgninjaneer[> Does keepass let you use a shorter pub?
+14:33:31 <cyborgninjaneer[> PIN? *
+14:35:32 <fomijafi[m]> Not that I can see, advanced unlock settings only show fingerprint
+14:44:16 <AdventureCommuni> <fomijafi[m] "I would like to use a pin code o"> Yeah this is something I wanted as well
+14:44:16 <AdventureCommuni> Though I use Bitwarden so I can just set a different pin for it too
+14:45:15 <fomijafi[m]> Do you self host bitwarden?
+14:47:54 <httplov3craft[m]> Use tasker or automate with a workflow to lock the screen and you'll have to enter the pin or password next time you unlock even with biometrics enabled.
+14:49:07 <fomijafi[m]> Interesting, thanks for the tip
+14:56:24 <cyborgninjaneer[> Does tasker use the device's actual lock screen or is it something weird? That sounds like a potential security risk
+14:57:41 <httplov3craft[m]> Actual lock screen. It just triggers a lock for you
+15:00:52 <httplov3craft[m]> Just checked, and you can check "is device unlocked" on state changed, and if "no" indicating the screen is already locked you can trigger a lock event which will put the device into "Device locked by admin" state which requires pin or password to open.
+15:01:14 <httplov3craft[m]> * Just checked, and you can check "is device unlocked" on state changed, and if "no" indicating the screen is already locked you can trigger a lock event which will put the device into "Device locked by admin" state which requires pin or password to open.
+15:02:13 <httplov3craft[m]> So basically use your power button as normal, and functionally disable bio on lock screen, but leave it available to apps once unlocked
+15:03:54 * httplov3craft[m] uploaded an image: IMG_20200627_110313.jpg (48KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/YlhCWWVZSXOGSstpMxMdRXHL >
+15:04:33 <httplov3craft[m]> Here is what it looks like in Automate. Only permission required is "lock device and monitor failed lock attempts"
+15:55:57 <thelearner[m]> Different coloured screens in the auditor app when audited, what do they all mean? Thank you.
+16:00:40 <faxing[m]> Is there any way to have my Pixel 3a running GrapheneOS erase all of the data on the device after a certain number of failed passcode attempts like you can do on an iPhone?
+16:03:58 <anupritaisno1[m]> faxing: an implementation by Qualcomm did exist
+16:04:06 <anupritaisno1[m]> That did destruction in hardware
+16:04:08 <anupritaisno1[m]> There's also apps that can use device admin to do so
+16:12:17 <faxing[m]> What do you mean there's an implementation by Qualcomm?
+16:12:53 <faxing[m]> Also I couldn't find any 3rd party apps on F-Droid that would offer than functionality without rooting the device
+16:26:02 <MysteriousWizard> <AdventureCommuni "Though I use Bitwarden so I can "> You use the F-Droid version, right?
+16:32:39 <strcat[m]> faxing: it's implemented by the OS
+16:32:44 <AdventureCommuni> Yeah, why?
+16:32:48 <strcat[m]> it's just not exposed in the Settings app ATM because no one has implemented that
+16:33:29 <strcat[m]> the throttling on failed attempts (exponentially jumps up to 1 day) is hardware-based
+16:33:57 <AdventureCommuni> Though Im pretty sure fdroid bitwarden is exactly the same as aurora bitwarden
+16:43:56 <faxing[m]> How many attempts until the data is deleted then?
+16:44:09 <faxing[m]> Since it sounds like its just forced in the OS
+16:46:13 <strcat[m]> as I said there's hardware-based throttling that's always enabled
+16:46:21 <httplov3craft[m]> You misunderstand. The Titan chip regulates the max number of times authentication can be attempted in a given timeframe. There is no autodelete, just throttling
+16:46:21 <strcat[m]> exponentially jumps up to 1 day very fast
+16:46:36 <strcat[m]> there is an OS setting for wiping after N attempts
+16:46:47 <strcat[m]> but it's not exposed in the Settings UI ATM because no one has implemented that
+16:46:52 <strcat[m]> it's already provided by AOSP though
+16:47:09 <strcat[m]> I think they just deemed it a bad idea for regular users so it's only available to device managers
+16:48:21 <anupritaisno1[m]> BTW
+16:48:24 <anupritaisno1[m]> What happens if you hit said limit?
+16:48:52 <strcat[m]> which
+16:48:56 <strcat[m]> the OS wipe limit? it wipes
+16:49:05 <strcat[m]> as I said thought it's not exposed in Settings by default
+16:49:14 <strcat[m]> but can be used by device managers
+16:49:49 <anupritaisno1[m]> The throttle limit
+16:59:37 <MysteriousWizard> <AdventureCommuni "Yeah, why?"> Ahh, that's fine then. The Google Play version has some nasty proprietary analytics embedded.
+16:59:43 <MysteriousWizard> <AdventureCommuni "Though Im pretty sure fdroid bit"> Nope.
+17:00:39 <MysteriousWizard> https://github.com/bitwarden/mobile/issues/649 Adventure Communist here
+17:01:57 <animalchin[m]> Hello and sorry to jump in here. I'm trying to get the Bromite repository and I keep getting error 403 forbidden. I read above someone said its on Aroura but I couldn't find it  Thanks for any help
+17:03:02 <MysteriousWizard> https://www.bromite.org/fdroid
+17:03:03 <MysteriousWizard> This doesn't work?
+17:03:04 <MysteriousWizard> Did you add the fingerprint?
+17:03:56 <animalchin[m]> That  link gives me the error
+17:04:05 <animalchin[m]> Fingerprint?
+17:04:18 <MysteriousWizard> Address: https://fdroid.bromite.org/fdroid/repo
+17:04:18 <MysteriousWizard> Fingerprint of the signing key: E1EE5CD076D7B0DC84CB2B45FB78B86DF2EB39A3B6C56BA3DC292A5E0C3B9504
+17:04:33 <MysteriousWizard> If you add an F-Droid repository, you'll want to add the fingerprint too :D
+17:04:58 <animalchin[m]> Will any repository do?
+17:05:19 <animalchin[m]> I'm new at this
+17:06:07 <animalchin[m]> Trying to download from that link but keep getting this error
+17:06:17 <MysteriousWizard> Wdym?
+17:06:19 <MysteriousWizard> Hang on
+17:06:50 <animalchin[m]> 403 Forbidden
+17:06:56 <animalchin[m]> Thanks
+17:09:00 * MysteriousWizard uploaded an image: Screenshot_20200627-180825.png (98KB) < https://matrix.org/_matrix/media/r0/download/privacytools.io/DxPzpFCjbmWomvrRLHiKlvRT >
+17:09:06 <MysteriousWizard> > <@resynth1943:privacytools.io> Address: https://fdroid.bromite.org/fdroid/repo
+17:09:06 <MysteriousWizard> > Fingerprint of the signing key: E1EE5CD076D7B0DC84CB2B45FB78B86DF2EB39A3B6C56BA3DC292A5E0C3B9504
+17:09:06 <MysteriousWizard> Basically, you put the (Address) in the first box (Repository address), then the (Fingerprint of the signing key) in the (Fingerprint) section
+17:09:30 <MysteriousWizard> So just copy-paste it in
+17:12:28 <animalchin[m]> lol. Still getting the Forbidden code when trying to access the page/ link
+17:12:54 <animalchin[m]> Could it be my VPN?
+17:13:07 <entos> I think you're supposed to type the link into where it says "Repository", not launch it in a browser
+17:13:07 <MysteriousWizard> It could be...
+17:13:27 <MysteriousWizard> Oh shit lol
+17:13:38 <MysteriousWizard> I didn't realise he was actually opening it
+17:13:44 <entos> yea i did the same thing lol
+17:13:53 <MysteriousWizard> No dude, I explained it above
+17:14:01 <MysteriousWizard> <entos "yea i did the same thing lol"> Hahah
+17:14:04 <animalchin[m]> I'll. Play around for a minute. I'll be back . thank you
+17:14:12 <MysteriousWizard> Address: https://fdroid.bromite.org/fdroid/repo
+17:14:12 <MysteriousWizard> Fingerprint of the signing key: E1EE5CD076D7B0DC84CB2B45FB78B86DF2EB39A3B6C56BA3DC292A5E0C3B9504
+17:14:12 <MysteriousWizard> Basically, you put the (Address) in the first box (Repository address), then the (Fingerprint of the signing key) in the (Fingerprint) section
+17:14:33 <MysteriousWizard> <MysteriousWizard "Screenshot_20200627-180825.png">
+17:18:37 <animalchin[m]> I can't get to that page^ Turned off my VPN and still no luck
+17:21:07 <nickcalyx[m]> animalchin you're not listening
+17:21:14 <animalchin[m]> Says this   "Sorry, but the page or resource you are trying to access is forbidden"
+17:21:44 <animalchin[m]> What am I missing
+17:22:19 <nickcalyx[m]> you're using a web browser instead of using fdroid
+17:22:45 <nickcalyx[m]> Re-read what MysteriousWizard1943 wrote above
+17:22:48 <animalchin[m]> Ha. Gotcha.
+17:28:20 <animalchin[m]> Thank you very much MysteriousWizard1943.
+17:28:48 <animalchin[m]> I didn't realize this was taking place inside of Fdroid
+17:29:30 <animalchin[m]> You as well nickalyx
+17:31:45 <MysteriousWizard> <animalchin[m] "Thank you very much MysteriousWi"> :D
+17:38:27 <animalchin[m]> I have another ignorant question. I just switched over from iPhone after reading about GOS. Amazed i t was so easy to put on this 3a as I've never used shell or even opened a bootloader before. Thanks and I will be donating to the cause. My question is, what's up with screenshots on Android. Everything is blocked. On iPhone I could SS all day. Is there a way to by pace the screenshot copyright block on web pages?
+17:39:13 <animalchin[m]> Bypass
+17:40:56 <cn3m[m]> What apps are you using? Many have a setting to block screenshots
+17:41:46 <thelearner[m]> Different coloured screens in the auditor app when audited, what do they all mean? Thank you.
+17:45:39 <animalchin[m]> I have open camera
+17:48:15 <animalchin[m]> I didn't think open camera was involved with the screenshot. Am I mistaken? I thought it was the pixel hardware
+17:48:46 <animalchin[m]> Software
+18:04:35 <animalchin[m]> If you meant browser app its Vanadium
+18:11:01 <nowbody[m]> If screenshots are generally disabled on Graphene OS, it is good thing
+18:11:22 <cn3m[m]> nowbody: it's not and it's not a good thing
+18:11:30 <animalchin[m]> Does that open a door?
+18:11:55 <nowbody[m]> It would protect against specific Trojans
+18:12:21 <animalchin[m]> Sweet! I didn't know that
+18:12:22 <nowbody[m]> Which are after your encrypted messages for example
+18:13:07 <cn3m[m]> <nowbody[m] "It would protect against specifi"> If you have an app that can take arbitrary screenshots you have bigger problems since Android 9
+18:13:15 <animalchin[m]> Ahh. Screenshots can go in the toilet then
+18:13:24 <cn3m[m]> Screenshots are not harmful
+18:13:31 <MysteriousWizard> I use screenshots all the time...
+18:13:35 <animalchin[m]> Confused
+18:14:16 <animalchin[m]> If they're not bad can I unblock them on my browser?
+18:14:38 <animalchin[m]> If not no worries
+18:14:43 <MysteriousWizard> You can, but it's up to you I guess
+18:15:39 <animalchin[m]> Does taking screenshots on a browser open up unnecessary risks?
+18:16:23 <httplov3craft[m]> Screenshots are bad. As is the ability of one application to monitor the display output of another. Convenient, yes; Good, not from an operational security standpoint.
+18:17:15 <strcat[m]> animalchin: GrapheneOS does not block screenshots
+18:17:22 <the0[m]> strcat: you never responded to my blahaj pictures
+18:18:09 <nowbody[m]> Same opinion. Some malware's do screenshots every minute or every second if they can not grab the keyboard directly
+18:18:16 <animalchin[m]> I can't take screenshots on the browser. Maybe its a setting I changed
+18:18:19 <strcat[m]> apps can choose to disable screenshots and showing content in recent apps if they want to make it hard to accidentally leak it
+18:18:25 <anupritaisno1[m]> Hey I need to really get in touch with jollyroger
+18:18:27 <strcat[m]> animalchin: which browser
+18:18:40 <anupritaisno1[m]> Did he share his gpg clearsigned contact with anyone?
+18:18:47 <animalchin[m]> Vanadium
+18:19:03 <anupritaisno1[m]> Please pm me
+18:19:20 <anupritaisno1[m]> If you have it
+18:19:24 <anupritaisno1[m]> It's really urgent
+18:19:26 <strcat[m]> animalchin: Chromium disables screenshots in Incognito mode by default
+18:20:04 <animalchin[m]> strcat:  that's it. Thank  you
+18:21:16 <strcat[m]> you can disable it
+18:22:51 <strcat[m]> but not via a simple setting toggle, it's basically a developer option
+18:22:58 <strcat[m]> which is quite annoying to enable
+18:23:11 <strcat[m]> you have to use adb
+18:23:29 <strcat[m]> just part of what incognito means - it stops having a persistent history / cache, etc. including screenshots
+18:23:41 <strcat[m]> since a screenshot is saved to storage
+18:23:50 <anupritaisno1[m]> strcat: ims registration works for you?
+18:23:57 <strcat[m]> anupritaisno1: haven't tried
+18:24:19 <animalchin[m]> httplov3craft:  That's good to know. I figured a screen shot was just an image of the screen and didn't intertwine with the browser or other app. Learn something new everyday on here
+18:24:51 <anupritaisno1[m]> Please check in *#*#4636#*#* > phone information > 3  dot menu > ims service status strcat
+18:24:59 <strcat[m]> animalchin: apps can choose to disable it, it can be bypassed if the app is debuggable
+18:25:17 <animalchin[m]> strcat:  that makes perfect sense
+18:25:20 <strcat[m]> so for example in Signal disabling screenshots is a preference
+18:25:46 <strcat[m]> and using the incognito keyboard mode is a preference (not support by the AOSP keyboard - we just have it stateless by default anyways)
+18:25:51 <strcat[m]>  * and using the incognito keyboard mode is a preference (not supported by the AOSP keyboard - we just have it stateless by default anyways)
+18:25:55 <animalchin[m]> strcat: so depending on what you want protected
+18:25:58 <animalchin[m]> ?
+18:26:16 <strcat[m]> Chromium uses the incognito keyboard mode and disables screenshots in Incognito mode
+18:26:24 <strcat[m]> it does more than just changing how the app itself behaves
+18:26:45 <strcat[m]> so for example incognito pages won't show up when viewing the app in recent apps
+18:26:53 <strcat[m]> try opening a regular tab, look at recent apps with that selected
+18:26:58 <strcat[m]> then open an incognito tab and look at recent apps
+18:27:10 <strcat[m]> that's the same feature which disables screenshots
+18:27:27 <strcat[m]> it disables the OS creating persistent images based off that app view
+18:27:55 <strcat[m]> if we wanted we could add control over it in the OS but meh
+18:28:02 <strcat[m]> doesn't seem worth the trouble
+18:28:27 <animalchin[m]> Totally not worth the trouble
+18:28:37 <animalchin[m]> Great explanation
+18:28:43 <animalchin[m]> Thanks again
+18:28:50 <animalchin[m]> Love this OS
+18:29:28 <nowbody[m]> <strcat[m] "doesn't seem worth the trouble"> It is worth the trouble, because Trojans do screenshots for accessing otherwise secure end2end commucation
+18:29:28 <strcat[m]> the Android feature lets an app mark a screen 'secure' so that the OS doesn't make persistent images of it basically
+18:29:34 <strcat[m]> recent apps, screenshots, other things
+18:29:48 <strcat[m]> nowbody: I don't think it's relevant to that
+18:30:49 <strcat[m]> if you go out of the way to install an app providing an accessibility service and go into the accessibility settings and enable it as one
+18:31:18 <strcat[m]> this doesn't make a difference
+18:31:36 <strcat[m]> and I'm not sure how else an app would capture the screen other than explicitly starting screen recording
+18:33:37 <AdventureCommuni> What are the benefits of Vanadium compared to Bromite?
+18:34:55 <strcat[m]> explained in the usage guide
+18:35:32 <AdventureCommuni> I will take a look thanks
+18:44:27 <animalchin[m]> Lots of great info
+18:52:53 <defconanon12[m]> Who uses Arch Linux here? Is Arch good to get into if I want to get into dev work and security? I want to put Arch on one of my laptops.
+18:55:17 <cyborgninjaneer[> Idk about security but it's a good way to teach yourself about the inner workings of systemd distros. You have to set everything up manually.
+18:55:32 <cyborgninjaneer[> Arch is the "do everything yourself" distro
+18:55:43 <cyborgninjaneer[> It's as secure as you know how to make it.
+18:58:22 <AdventureCommuni> If youve never used it before you might want to try something like Manjaro or Endeavor
+18:58:29 <AdventureCommuni> makes it easier to start off
+19:13:58 <animalchin[m]> Not that its that important but has anyone noticed a difference in battery consumption regarding Vanadium and Bromite?
+19:15:11 <defconanon12[m]> Adventure Communist: I was thinking of Manjaro KDE. I know Linux a good bit and quite enjoy it.
+19:16:43 <joshman[m]> <defconanon12[m] "Adventure Communist: I was think"> My daily driver. PITA to use with an external HiDPI display
+19:17:52 <AdventureCommuni> Manjaro KDE is probably one of my favorite setups
+19:17:59 <AdventureCommuni> Looks good, more stable than arch, still have access to the AUR
+19:18:05 <cn3m[m]> Manjaro has a terrible update script and has update delays. Linux is already bad for security, but Manjaro is Debian levels of bad
+19:18:35 <cn3m[m]> Use Fedora or Arch. If you can't go with Windows, macOS, or ChromeOS
+19:18:57 <AdventureCommuni> lol
+19:20:12 <defconanon12[m]> cn3m: Well I know Debian can be bad but I didn't know Arch Manjaro KDE edition is bad.
+19:20:27 <defconanon12[m]> On a security standpoint.
+19:20:33 <joshman[m]> Update delays is a feature. Unfortunately.
+19:20:41 <cn3m[m]> <defconanon12[m] "cn3m: Well I know Debian can be "> Yeah use Fedora KDE would be my recommendation in leui
+19:20:54 <EssentialChaos[m> <cn3m[m] "Yeah use Fedora KDE would be my "> Fedora's Chromium package is still on version 81
+19:21:26 <cn3m[m]> <EssentialChaos[m "Fedora's Chromium package is sti"> Yeah they couldn't care less about Chromium just install Chrome
+19:21:26 <AdventureCommuni> I guess we should just use windows 10 then
+19:21:51 <EssentialChaos[m> <cn3m[m] "Yeah they couldn't care less abo"> But Chromium-freeworld is 83
+19:21:59 <joshman[m]> 10 LTSB prolly better
+19:22:24 <cn3m[m]> I use regular Enterprise since the Sandbox is awesome
+19:23:11 <joshman[m]> Wasn't Enterprise monthly fee based?
+19:23:42 <defconanon12[m]> Enterprise is very nice so far. I enjoy it.
+19:25:08 <cn3m[m]> <joshman[m] "Wasn't Enterprise monthly fee ba"> You can run Education not activated it's the same thing
+19:25:50 <defconanon12[m]> cn3m: I was actually going to put Arch on Chromebook. Think of VM booting. Is that wise? Or I can use Fedora KDE. I just want a Linux distro to play around with for security, privacy, and dev work.
+19:26:08 <cn3m[m]> defconanon12: if you have a Chromebook use ChromeOS
+19:26:31 <cn3m[m]> It's a reasonable OS as far as sandboxing, privacy, verified boot, and the rest
+19:27:13 <EssentialChaos[m> > It's a reasonable OS as far as sandboxing, privacy, verified boot, and the rest
+19:27:13 <EssentialChaos[m> And it has Crostini for Linux apps
+19:27:24 <cn3m[m]> Yes and Android apps support in a container
+19:27:35 <cn3m[m]> There's very little I can't do and can't do well
+19:27:51 <cn3m[m]> It*
+19:28:40 <cn3m[m]> ChromeOS and macOS are definitely the closest to secure and private out of the box for the desktop. I wouldn't load anything else on a device with native support for verified boot much like I wouldn't put lineage on my Pixel
+19:28:43 <defconanon12[m]> cn3m: Well I know ChromeOS is Linux so it will be redundant to have another one on there?
+19:29:32 <cn3m[m]> <defconanon12[m] "cn3m: Well I know ChromeOS is Li"> Yeah just roll with stock you're good
+19:29:46 <EssentialChaos[m> > secure and private out of the box for the desktop
+19:29:46 <EssentialChaos[m> cn3m Is ChromeOS private out of the box, though?
+19:30:23 <cn3m[m]> EssentialChaos: just some minor tweaks needed all the invasive bits are opt out and even open source
+19:30:43 <defconanon12[m]> Yeah ChromeOS is really nice.
+19:30:53 <cn3m[m]> Android on it is likely invasive, but yeah please don't destroy your security model for no good reason
+19:32:31 <cn3m[m]> ChromeOS and macOS are the only devices you can buy and expect good out of the box sandboxing and reasonable verified boot. Neither are perfect, but they are actively trying unlike Linux Desktop
+19:33:22 <cn3m[m]> Windows generally you need to be more careful what you buy and how you set it up for security. GNU/Linux is a lost cause on the desktop
+19:35:55 <cn3m[m]> The best laptop style companion to GrapheneOS remains the latest iPad Pro
+19:35:56 <anupritaisno1[m]> BTW how to uninstall windows
+19:36:00 <AdventureCommuni> kill laptop
+19:36:02 <anupritaisno1[m]> I sent my PC in for upgrades
+19:36:03 <anupritaisno1[m]> Told the retard not to install windows
+19:36:18 <anupritaisno1[m]> Now idk how to even get out of windows do I pull the plug?
+19:36:29 <AdventureCommuni> Just delete the partition?
+19:37:09 <EssentialChaos[m> <anupritaisno1[m] "Now idk how to even get out of w"> Wdym?
+19:37:40 <AdventureCommuni> https://shop.nitrokey.com/shop/product/nitropad-x230-67 Mmm sexy
+19:41:09 <cn3m[m]> <AdventureCommuni "https://shop.nitrokey.com/shop/p"> That's a terrible laptop don't use it
+19:41:17 <cn3m[m]> Shipping with known security issues is a terrible idea
+19:43:23 <joshman[m]> <AdventureCommuni "https://shop.nitrokey.com/shop/p"> Old overpriced hardware
+19:45:27 <cn3m[m]> Pixelbook, MacBook, or Surface Secured Core are the way too go right now
+19:46:07 <joshman[m]> Why even so many distros exist and actively get developed if security is a lost cause with Linux..
+19:46:38 <cn3m[m]> That's actually offering you something security and usability wise for your money
+19:46:38 <joshman[m]> <cn3m[m] "Pixelbook, MacBook, or Surface S"> Arm Macs will lead this soon
+19:47:33 <cn3m[m]> Yes, but Windows 10 S on a Secured Core Surface Pro X is pretty awesome
+19:48:07 <cn3m[m]> Privacy and usability is crap compared to the Arm MacBook though
+19:49:50 <defconanon12[m]> anupritaisno1: What terrible customer service. Yeah wipe the partition like what Adventure Communist is saying.
+19:54:20 <sivuda1[m]> <joshman[m] "Why even so many distros exist a"> I wonder as well. Why? cn3m
+19:54:40 <sivuda1[m]> * I wonder as well. Why? cn3m
+19:56:06 <cn3m[m]> <sivuda1[m] "I wonder as well. Why? cn3m "> People working on Linux care about performance and compatibility. Security is not a focus. That wouldn't effect the number of distros
+20:02:09 <cn3m[m]> Google is the only large contributor that takes Linux security seriously and they are constantly getting pushback. ChromeOS and Android are the only system that could be considered competitive security wise. That's after a tremendous amount of work.
+20:02:10 <cn3m[m]> Grsecurity and GrapheneOS keep pushing forward for their smaller audiences. Linux scoffs at this with
+20:02:11 <cn3m[m]> Work*
+20:03:34 <CWO[m]> As far as the standard distros go only fedora/RHEL puts a significant amount of effort into security out of the box but it's still behind windows and macOS
+20:04:24 <CWO[m]> Linux desktop hasn't yet seen its security reckoning like microsoft did 20 years ago that encouraged them to start getting serious
+20:04:50 <cn3m[m]> I wouldn't call it significant, but yes RedHat deserves credit for their efforts no matter how small they truly lead the pack
+20:04:55 <CWO[m]> So very few people recognise it as an issue
+20:08:12 <cn3m[m]> It's so bad I got downvoted to the point a comment was hidden on PTIO for saying Linux security was over a decade behind. Which is pretty generous if you ask me
+20:09:39 <EssentialChaos[m> I just thought about someone making a kind of PoC by putting a deniable vulnerability into a popular Linux software, but then realized, that it would only lead people to believe that Debian is secure, because it wouldn't get the update in time
+20:11:30 <CWO[m]> <cn3m[m] "It's so bad I got downvoted to t"> I see that comment in your profile but not the thread
+20:12:18 <radixed9[m]> Search /u/cn3m by controversial
+20:16:39 <cn3m[m]> I don't even do that
+20:16:41 <defconanon12[m]> cn3m: Red Hat Linux Enterprise gets some praise.
+20:17:54 <cn3m[m]> <defconanon12[m] "cn3m: Red Hat Linux Enterprise g"> Fedora is better
+20:18:18 <defconanon12[m]> I really like the idea of KVM.
+20:18:27 <defconanon12[m]> Even if it is middle ground.
+20:19:42 <defconanon12[m]> cn3m: Huh so that is why it can be easy to crack databases.
+20:20:54 <defconanon12[m]> So most distros just have a lot of vulnerabilities that you can easily break it down?
+20:21:55 <CWO[m]> <defconanon12[m] "So most distros just have a lot "> There are probably tons of undiscovered ones because few people look at desktop linux
+20:21:59 <cn3m[m]> It starts getting really complicated comparing distros especially for server
+20:22:02 <CWO[m]> And there are few mitigations
+20:22:16 <cn3m[m]> If you have to trust one Linux provider it's going to be Fedora or Arch
+20:22:27 * sivuda1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/sQhrspUckAIwNZyOSqBJsbXY >
+20:22:52 <cyborgninjaneer[> Linux be like, "Security? Ain't nobody got time for that!"
+20:23:23 <defconanon12[m]> Yeah I see those are the ones who take security seriously at least but still behind corporations. Lol.
+20:23:43 <cyborgninjaneer[> How much of ChromeOS is open source? I know ChromiumOS is fully open and you can build it yourself.
+20:23:58 <cn3m[m]> <sivuda1[m] "> <@cn3m:privacytools.io> Google"> It's not substantially worse than other moderns OSes
+20:24:11 <defconanon12[m]> That is so weird. I wonder why people make firewalls with FreeBSD?
+20:25:07 <defconanon12[m]> I guess when you switch fully Linux there are definitely sacrifices you are going to make.
+20:25:34 <CWO[m]> <defconanon12[m] "Yeah I see those are the ones wh"> Corporations have customers who will leave them if they don't protect their data from hackers
+20:25:42 <TheJollyRoger> Coming up on 36 hours for the CTS stress test for "everything."
+20:25:50 <CWO[m]> That's why google, apple and microsoft are the leaders
+20:25:56 <cn3m[m]> <cyborgninjaneer[ "How much of ChromeOS is open sou"> ChromeOS adds a few things it's basically the same
+20:25:56 <cyborgninjaneer[> I wonder if you can use Darwin as a daily driver.
+20:25:59 <TheJollyRoger> AOSP and Factory will be next.
+20:26:30 <EssentialChaos[m> > ChromeOS adds a few things it's basically the same
+20:26:30 <EssentialChaos[m> The Android part and mayb some apps like Google Docs
+20:26:44 <cn3m[m]> <cyborgninjaneer[ "I wonder if you can use Darwin a"> You can I guess
+20:26:53 <EssentialChaos[m>  * > ChromeOS adds a few things it's basically the same
+20:26:53 <EssentialChaos[m> The Android part and maybe some apps like Google Docs
+20:27:53 <cn3m[m]> People build and run it it's pretty much just a GNU/Linux replacement but much too it
+20:27:54 <defconanon12[m]> So in the end people that use Linux security is not the main priority or not at all?
+20:28:17 <radixed9[m]> <defconanon12[m] "So in the end people that use Li"> Many people do not have a grasp of the implications. Developers included
+20:28:39 <defconanon12[m]> Very interesting.
+20:29:58 <CWO[m]> <defconanon12[m] "So in the end people that use Li"> Not for me
+20:30:00 <CWO[m]> From a usability perspective I find linux less annoying and I'm more familiar with it
+20:30:25 <CWO[m]> But I would recommend windows 2004 over it to most people
+20:30:37 <cn3m[m]> macOS was great when I was on that
+20:32:28 <defconanon12[m]> I like the idea of Linux and don't mind working with a CLI. I would prefer GUI and working with CLI in the background. I never really hardened a Linux distro besides Tails. Minor tweaks for Tails.
+20:33:08 <AdventureCommuni> I think whonix works on windows too
+20:33:42 <AdventureCommuni> If you wanted to try linux more
+20:33:51 <defconanon12[m]> Whonix plus Tor browser bundle is the way to go. From what I am told.
+20:33:56 <madaidan[m]> Whonix runs in a VM so the host OS doesn't matter.
+20:34:01 <defconanon12[m]> I never used Whonix.
+20:34:28 <radixed9[m]> If only Whonix supported Hyper-V I would use it
+20:34:41 <defconanon12[m]> I think the Host OS still matters in case of hyperjacking. That is just my opinion.
+20:34:48 <frenchieisverige> What about kubes os
+20:35:14 <defconanon12[m]> Xen is not up to par. If I remember right?
+20:36:00 <cn3m[m]> Qubes has insecure guests too much update trust in Fedora repos for dom0 and Xen isn't amazing
+20:36:24 <cn3m[m]> It's better than most Linux setups
+20:37:01 <CWO[m]> I prefer whonix in KVM to qubes
+20:41:19 <aeonsolution[m]> Hi everyone, does anyone know where to keep track of the Chromium stable branch release schedule for Android
+20:41:29 <aeonsolution[m]> There's this link: https://chromiumdash.appspot.com/releases?platform=Android
+20:41:49 <aeonsolution[m]> But it doesn't say when the next release comes out
+20:50:31 * bonerdose[m] uploaded an image: comedyheaven-hga2ma.jpg (110KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/SdEqwIOqIjQHwNPtpxfHyZkq >
+20:52:22 <AdventureCommuni> very satisfied
+21:00:27 <cn3m[m]> Somewhat
+21:00:31 <nickcalyx[m]> Granted, I haven't tried qubes in a while but when i did, it was too cumbersome. You couldn't really copy and paste between things
+21:00:59 <nickcalyx[m]> I could see that it was going to make everything I do harder
+21:01:51 <nickcalyx[m]> not that all I do is sitting around copying and pasting all day :)
+21:03:26 <cn3m[m]> <nickcalyx[m] "Granted, I haven't tried qubes i"> It's just an extra step too
+21:03:48 <twitx[m]> I kinda wonder would using an older Version of Qubes like 3.2 still be more secure then using Debian because Qubes then has missing security updates wouldn't it?
+21:04:58 <cn3m[m]> <twitx[m] "I kinda wonder would using an ol"> Qubes 3.2 is not worth using
+21:05:17 <twitx[m]> <cn3m[m] "Qubes 3.2 is not worth using "> Why not?
+21:05:35 <twitx[m]> * I kinda wonder would using an older Version of Qubes like 3.2.1 still be more secure then using Debian because Qubes then has missing security updates wouldn't it?
+21:06:02 <cn3m[m]> Too old
+21:08:47 <TheJollyRoger> twitx[m]: the thing about software security is that with large and complex projects like an operating system that were never built for security in the first place, the security depends on the developers' ability to mitigate exploits and address bugs in a constantly changing ecosystem.
+21:09:29 <eglssm[m]> > > <@aragorndr:matrix.org> https://www.reddit.com/r/GrapheneOS/comments/eh3u1y/any_way_how_to_run_gplayapps_on_grapheneos/fcflyf8/
+21:09:29 <eglssm[m]> > It works
+21:09:29 <eglssm[m]>  is there any feature not working in the app? With other bank I would not mind not having the app, but the only way to use revolut is through the app. So i just wanted to make sure
+21:09:47 <TheJollyRoger> Sure, there is stuff like QMail and the reentry program that ran on the Apollo Guidance Computers, but the program running on the Apollo Guidance Computer cost an estimated $100,000 per line of code in 1969.
+21:10:48 <TheJollyRoger> So by using old software, you're not gaining any security, you're essentially saying "I'm going to ignore roughly six or seven years of advances in exploits that attackers have made and give them a head start."
+21:11:11 * aragorndr[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/EwnmcPjVeiJmxbcOjeeoaNZr >
+21:15:50 <defconanon12[m]> TheJollyRoger: Jolly, what do you use? You seem to be an Arch user but I am not sure. I checked the logs and you seem to have a great Arch Linux guide of some sort? I read some of your guides before and let's just say I am a fan lol. I enjoy your writing and you saved me in the past when I was using Tails.
+21:17:17 <TheJollyRoger> Hi defconanon12[m], not quite.
+21:17:38 <TheJollyRoger> I don't run an x86 computer as my daily driver, I run a POWER9 RaptorCS Talos II.
+21:17:52 <TheJollyRoger> Heh, thanks, I'm really flattered to hear you've found my writings handy :)
+21:18:17 <TheJollyRoger> I do keep an x86 computer around, for some specific uses, one of which is GrapheneOS, but I run a very large amount of different (and hetrogenous) systems.
+21:22:03 <TheJollyRoger> My Talos II runs Gentoo, but the reasoning behind that is actually because back when I first got this computer, there were very very few of them in the wild, and binary release distributions did not support it well at the time. Fortunately, I had a number of friends that were in the same boat, and they were able to hold my hand through the process.
+21:22:18 <entos> Hello, I have a question.
+21:22:18 <entos> From what I understand, Signal messenger is self-updating if installed from the APK. Is this true for other applications installed via APK?
+21:22:36 <TheJollyRoger> Hi entos, no it will not be.
+21:22:39 <worldwideworld[m>  Hi guys i am looking to install crypto.com app and the chat app called line i can not find them on the Aurora store, I have the aurora store on my oneplus 6t as well and it can find crypto.com, maybe because it is already downloaded, any help would be great
+21:22:57 <cn3m[m]> > <@entos:matrix.org> Hello, I have a question.
+21:22:57 <cn3m[m]> > From what I understand, Signal messenger is self-updating if installed from the APK. Is this true for other applications installed via APK?
+21:22:57 <cn3m[m]> It could be, but usually isn't
+21:23:27 <TheJollyRoger> Signal has several different releases: one is for the Play Store App, and one is for the website app. Google Play is VERY particular in that self-updating apps that circumvent Google Play's policy of updating out-of-band will be ejected from the GPlay store.
+21:23:43 <entos> <TheJollyRoger "Hi entos, no it will not be."> OK, so to update, would I need to re-download the APK's when made available? Will the applications notify me when there is an update? Thanks
+21:24:19 <TheJollyRoger> (There is nothing nefarious about this; not even Google Play can undo the certificate pinning that the apps will do, so this means Google Play cannot do something like ship an update without the author's consent, unless the app authors have specifically requested Google Play take custody of their app)
+21:24:31 <TheJollyRoger> entos: the applications will not notify you, you will need to check yourself.
+21:25:05 <TheJollyRoger> Signal is one exception to this in that they realized that people were sideloading outside of Google Play Services, and released an official signed and self-updating app for those types as a precautionary measure.
+21:25:50 <TheJollyRoger> So most of the time, apps will NOT self update unless they have been specifically written to. Signal's website APK download is one such exception, but it is the only one I know of at this point in time.
+21:26:36 * georgeaux[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/kRXCTgIXLgQoXKbgOqqwyEGH >
+21:26:52 <TheJollyRoger> entos: yes, you will need to download new APKs when they are downloaded.
+21:27:36 <entos> <TheJollyRoger "entos: yes, you will need to dow"> OK, thank you for responding!
+21:28:16 <CWO[m]> Plus, Signal only did that grudgingly after lots of pressure to allow installation outside the play store
+21:28:41 <TheJollyRoger> Hello georgeaux[m], welcome aboard the ship.
+21:28:49 <CWO[m]> Moxie didn't want to compromise security
+21:28:55 <httplov3craft[m]> <TheJollyRoger "(There is nothing nefarious abou"> Except for apps that Google signs for the developer...
+21:29:07 <CWO[m]>  * Moxie didn't want to compromise security but eventually caved
+21:29:13 <TheJollyRoger> httplov3craft[m]: yep, that's why I said specifically, that the app authors have to opt into that.
+21:29:54 <TheJollyRoger> Although Google now encourages developers to let them sign their apps on their behalf, app authors are given the choice to take matters into their own hands on Google Play rather than rely on a Trusted Third party.
+21:30:15 <TheJollyRoger> That's why Moxie, as CWO[m] said, wasn't leaving anything up to chance, and eventually worked this out as a compromise.
+21:30:29 <defconanon12[m]> TheJollyRoger: Yeah I knew I read your Talos setup from somewhere. Cause I heard of that word. Gentoo, I heard of it. Arch users fight over Arch and Gentoo users. When I was younger I never thought I would ever talk to the man himself. Glad to see you here. ^^ You taught me why you should worry about bridges more than a VPN.
+21:30:45 <httplov3craft[m]> Yeah. So stupid to trust one central authority. I hate that most apps distributed on FDroid are signed by FDroid
+21:31:28 <TheJollyRoger> Heh, well... I don't really speak for Gentoo itself. I'm not affiliated with the Gentoo project, I just ended up stuck on Gentoo because it sort of fit my needs best for this particular one machine.
+21:32:27 <TheJollyRoger> Although binary release distributions have since gotten much better (Void has their own dedicated PPC64 maintainer, and he's REALLY good and really talented), I'm sort of stuck with this and it works, and I feel like walking away from it would be losing a lot of hard work I've put into it.
+21:32:28 <worldwideworld[m> <worldwideworld[m " Hi guys i am looking to install"> Any idea guys?
+21:32:48 <TheJollyRoger> hi worldwideworld[m, I missed your question, could you repost it?
+21:34:11 <worldwideworld[m>  Hi guys i am looking to install crypto.com app and the chat app called line i can not find them on the Aurora store, I have the aurora store on my oneplus 6t as well and it can find crypto.com, maybe because it is already downloaded, any help would be great
+21:34:36 <worldwideworld[m> looking for a way to download them both
+21:35:10 <httplov3craft[m]> Crypto.com is in Aurora... I see it. Maybe you need to spoof region?
+21:35:19 <TheJollyRoger> Oh, hmm. I don't use the Aurora store. I don't think I can help you there. In theory, you could use Seedvault to extract the APK and then transfer it to your GrapheneOS device, but I wouldn't recommend doing that unless you also have a way to update it later.
+21:35:35 <httplov3craft[m]> I see Line also
+21:36:55 <worldwideworld[m> which region are you spoofing in
+21:37:01 <worldwideworld[m> i see a line app
+21:37:08 <worldwideworld[m> its a business app
+21:37:14 <worldwideworld[m> not the chat app
+21:38:22 * httplov3craft[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/TBeMRKTYITZkRJRzpbtAZDzp >
+21:38:36 <defconanon12[m]> TheJollyRoger: That is how Arch and Gentoo usually is it seems. I used to know an Arch user who built Linux from scratch method. It was pretty unstable and they kept breaking it. Used Tor with it and everything.
+21:38:40 <worldwideworld[m> yes these
+21:39:17 <worldwideworld[m> the spoof in the Aurora store right?
+21:39:51 <httplov3craft[m]> I'd offer to send you the APKs, but you'd be foolish to accept. 😂 They're available to US network connections / locations...
+21:40:51 <worldwideworld[m> i am kinda in the uk region
+21:40:53 <defconanon12[m]> I used Aurora and you want to spoof your location? Is it not spoofing? It is not very good with proxys I don't think.
+21:41:29 <defconanon12[m]> * I used Aurora Store and you want to spoof your location? Is it not spoofing? It is not very good with proxys I don't think.
+21:41:42 <worldwideworld[m> yeah spoof to get them
+21:42:31 <defconanon12[m]> To get different APKs from different regions?
+21:43:35 <worldwideworld[m> if u can see them in the store why can't I?
+21:44:17 * worldwideworld[m sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/vboMMjyzlTQlXjzsjmVzTjwi >
+21:44:45 <worldwideworld[m> would this make a difference?
+21:45:10 <worldwideworld[m> i have this
+21:45:17 <httplov3craft[m]> Restrictions based on crypto exports or financial reasons, etc... Tons of reasons
+21:45:58 <worldwideworld[m> wouls a system wide add blocker make a difference?
+21:46:18 <worldwideworld[m>  * would a system wide add blocker make a difference?
+21:47:55 <jneplokh> A different DNS wouldn't "spoof" where you are
+21:48:20 <worldwideworld[m> i know but would it stop apps showing
+21:48:58 <jneplokh> Do you mean ads?
+21:49:27 <worldwideworld[m> just trying to work out why i can not see them in the store
+21:49:34 <worldwideworld[m> and how to get them
+21:51:32 <AdventureCommuni> Just spoof with Aurora to the US
+21:51:44 <AdventureCommuni> If other people are saying they can get them there
+21:52:51 <worldwideworld[m> i have tried that no luck
+21:52:58 <defconanon12[m]> Proxys don't work too well though with Aurora as far as I know.
+21:57:29 <worldwideworld[m> i have no proxy on
+21:57:34 <marquisderad[m]> Could anybody here help explaining for me how feasible it would be to develop a feature for GrapheneOS with the ability to repair/change the IMEI without compromising the security of the OS?
+21:58:44 <httplov3craft[m]> IMEI spoofing is illegal in many areas... Plus this is a low-level function of the cellular modem chip that might not always be exposed - in fact I'd be surprised if it was.
+21:59:18 <httplov3craft[m]> worldwideworld try a VPN
+22:00:49 <worldwideworld[m> it worked with protonvpn thanks
+22:02:18 <worldwideworld[m> Thanks for your help, does anyone know if there is a cloning app on the F-droid store?
+22:05:28 <worldwideworld[m> only 4 trackers with line but crypto.com has 14 trackers
+22:05:42 <worldwideworld[m> is there a way to sandbox it?
+22:09:24 <httplov3craft[m]> Why? If you're using centralized crypto wallets, what's the point... Why not use one of the MANY other wallets? They include what they include. If you don't like it, your best option is to avoid it... Anything you do to block it is cat and mouse
+22:11:20 <worldwideworld[m> ok fair engouh they just have everything all in one app and there earn and the syndicates are great
+22:12:48 <httplov3craft[m]> I mean you could always get a developer device without WiFi or GPS for just these applications and plug it in to a TOR router if its really that serious that you both NEED these apps and NEED to block tracking, but that sounds cumbersome.
+22:13:59 <worldwideworld[m> That does sound cumbersome
+22:14:03 <httplov3craft[m]> Personally, I use Signal for messaging. But if my threat model required I'd consider Briar, Jami, or Session... I don't crypto these days, but if I did I'd probably only use Monero.
+22:14:48 <qyo3462572445[m]> Briar works really well as long as the other person is also on android.
+22:15:15 <qyo3462572445[m]> Plus, I kinda really like their blog and forum feature. I think its an interesting take.
+22:15:49 <worldwideworld[m> Crypto.com offers better rates than any bank and they have there on bank cards that went down yesterday because of wirex
+22:16:36 <worldwideworld[m> Never heard of Briar, Jami or Session
+22:17:26 <qyo3462572445[m]> Session is a signal fork (no phone number required ). Briar is a p2p, live only on your device messenger that goes over Tor.
+22:17:47 <qyo3462572445[m]> Jami is p2p too if I recall correctly.
+22:18:03 <worldwideworld[m> They are on F-droid?
+22:18:20 <travankor_> who hosts the session server?
+22:18:58 <httplov3craft[m]> Yes, Session, Briar, and Jami are all decentralized except the seed servers
+22:20:07 <httplov3craft[m]> Session is questionable to me. Seems like they're trying to create an ecosystem around their own onion and block chain. I think it'll fail at some point, but the code can probably be ported to a proper anion like tor
+22:20:24 <httplov3craft[m]> * Session is questionable to me. Seems like they're trying to create an ecosystem around their own onion and block chain. I think it'll fail at some point, but the code can probably be ported to a proper onion like tor
+22:21:29 <qyo3462572445[m]> Briar has its own fdroid repository you can add. Jami is on it, and Session just DL their apk from github
+22:22:59 <worldwideworld[m> I only installed Graphene yesterday would installing crypto.com make it any more secure  than having it on a regular android phone?
+22:23:09 <worldwideworld[m> <qyo3462572445[m] "Briar has its own fdroid reposit"> Okay cheers
+22:24:34 <httplov3craft[m]> All 3 have  varied levels of technical competence required beyond that of a phone number based solution... Only use if you can get enough people on to make it worthwhile. E2EE when not applied globally just casts suspicion on the traffic you put through it. That's why I prefer signal. My threat model doesn't require detachment from my identity, and my communication partners don't have the technical competency for
+22:24:34 <httplov3craft[m]> made advanced platforms
+22:25:13 <httplov3craft[m]> IMHO, all people should use E2EE all the time these days
+22:26:01 <worldwideworld[m> What are your thoughts on telegram?
+22:26:53 <bonerdose[m]> When trying to flash Graphene onto my pixel 3a xl, I get an error saying fastboot is out of date, even though I downloaded the latest SDK platform tools from Google.
+22:26:53 <bonerdose[m]> Any ideas on what I'm doing wrong here? I extracted both SDK and the factory image, and pasted the contents of the factory image into the extracted 'platform-tools' folder, yet its still telling me that fastboot is out-of-date. The platform-tools zip is version 30.0.3-windows.
+22:27:33 <httplov3craft[m]> I don't like its operational model and its code transparency used to be worse. Like Riot, group chats are not E2EE by default, and I don't know anyone than uses it, so why bother
+22:28:27 * httplov3craft[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/bWBBuMKMZeCtTcWpElsLhirL >
+22:28:58 <worldwideworld[m> <httplov3craft[m] "I don't like its operational mod"> Is it not open sauce?
+22:29:38 <httplov3craft[m]> It is now... Most of it. I think there ?might? still be some closed source components
+22:30:22 <worldwideworld[m> I thought it was open sauce but goes through a server
+22:31:11 <httplov3craft[m]> Haven't been following it. Can't speak with authority one way or the other
+22:32:12 <worldwideworld[m> <httplov3craft[m] "> <@bonerdose:matrix.org> When t"> It will be you have more than one all other need to be removed i had to do it yesterday, watching techlore messed me up.
+22:32:34 <defconanon12[m]> It is not hard to enable E2EE on Riot. I personally use RiotX.
+22:33:39 <worldwideworld[m> Do you know an open sauce cloning app?
+22:34:19 <defconanon12[m]> Techlore does mess people up who follow his guide all the way through. Mainly the part where you install third party fastboot.
+22:34:31 <qyo3462572445[m]> Ideally I'd like to get more friends onto matrix, since e2ee is pretty standard now and it works cross platform and doesn't have a dumbed down desktop app like signal does.
+22:35:06 <worldwideworld[m> yeah running the flashboot through the folder with something that is outdated
+22:35:20 <defconanon12[m]> I really enjoy RiotX even if it buggy from time to time. It is based on Kotlin.
+22:36:22 <qyo3462572445[m]> Unfortunately its much easier to get people onto a new messaging platform that all they need to do is enter their phone number over a new username and password.
+22:36:46 <worldwideworld[m> If he wants to make a video using windows he should use powershell with the correct commands
+22:38:04 <defconanon12[m]> In my experience it is better to convince people to switch to Telegram rather than Signal. The problem with Telegram is centralized platform.
+22:40:01 <nickcalyx[m]> Signal is.centralized too
+22:40:19 <nickcalyx[m]> What makes telegram better
+22:40:38 <jneplokh> I'd much rather switch someone over to Signal
+22:40:47 <qyo3462572445[m]> I can say honestly I have way more contacts on signal than telegram. Majority I didn't even ask for them to get on signal
+22:40:51 <defconanon12[m]> worldwideworld: That is what I noticed he didn't even use Powershell.
+22:40:53 <jneplokh> And like telegram, it only requires the number which makes it easy
+22:42:04 <worldwideworld[m>  https://signal.org/android/apk/. in the danger zone it is is still centralized?
+22:44:32 <defconanon12[m]> Well a 0 day will get you on anything I suppose.
+22:44:46 <defconanon12[m]> * Well a 0day will get you on anything I suppose.
+22:47:53 <defconanon12[m]> nickcalyx: I know now and I think people are more likely to switch to Telegram cause of Messenger.
+22:48:31 <nickcalyx[m]> I don't feel good about those Durov brothers who own Telegram
+22:48:47 <defconanon12[m]> How so?
+22:50:06 <worldwideworld[m> crypto.com won't open on the os says need to install with the play store is there a work around?
+22:50:25 <nickcalyx[m]> I can't say there are specific reasons, they just seem sketchy to me.  I trust Moxie more.   But this could just be some bias of mine.  I don't see the Durov brothers inventing new crypto protocols and giving them away, or helping the big messenger services use strong crypto.  It's a different mindset
+22:50:55 <defconanon12[m]> Sounds bias but you do you.
+22:51:11 <qyo3462572445[m]> I also think its easier to switch android users onto signal since the app can be used as the default messaging app too.
+22:51:26 <defconanon12[m]> I never used Telegram myself but I like the idea behind it.
+22:52:24 <nickcalyx[m]> worldwideworld: run 'adb logcat' when you run the app and see exactly where it's going wrong.  then maybe complain to the authors that it's breaking on your OS
+22:52:36 <nickcalyx[m]> you can show them the logs
+22:52:46 <defconanon12[m]> qyo3462572445: Yeah what about IOS users though?
+22:53:26 <worldwideworld[m> <nickcalyx[m] "worldwideworld: run 'adb logcat'"> Okay cheers
+22:53:58 <qyo3462572445[m]> Either way, no matter what messaging app iOS uses, it will be different than their default app since Apple won't allow that to be changed  so its 6 of one, half dozen of the other for iOS.
+22:53:59 <nickcalyx[m]> maybe they'll fix it.. tell them there are 1.7 million users on lineageOS that don't have google frameworks
+22:54:29 <nickcalyx[m]> and you were about to recommend their app to all the lineage people and now you can't because it won't run
+22:55:44 <worldwideworld[m> Is there any open sauce cloning apps?
+22:56:16 <defconanon12[m]> worldwideworld: Uh Lucky Patcher I think?
+22:56:40 <greenmoon[m]> Appcloner have so much interessing features but it's closed source
+22:57:02 <worldwideworld[m> <defconanon12[m] "worldwideworld: Uh Lucky Patcher"> not on f-droid is it?
+22:57:30 <defconanon12[m]> worldwideworld: No it isn't. You have to get it from the Lucky Patcher site.
+22:58:02 <nickcalyx[m]> what does that clone
+22:58:22 <defconanon12[m]> I know you can clone just don't know if it is open source.
+22:59:25 <worldwideworld[m> on the site now no mention of open sauce
+23:00:03 <defconanon12[m]> Clones any APKs. I made backups before using LP incased I screwed up the app itself. You can do all types of stuff with LP. It used to be on Google Play until they removed it.
+23:00:32 <worldwideworld[m> there wording is for some 14-16 year old lol
+23:00:42 <defconanon12[m]> Lol.
+23:00:57 <radixed9[m]> It is not open source and it is primarily a piracy app. Filled with fakes and wants root
+23:01:33 <worldwideworld[m> sad reacts for you lol is what is written
+23:02:25 <worldwideworld[m> <radixed9[m] "It is not open source and it is "> Do you know any open sauce cloning app?
+23:03:40 <defconanon12[m]> radixed9: Fakes what do you mean? If you mean fake patches yeah and it doesn't force root onto you.
+23:04:04 <radixed9[m]> defconanon12: fake versions you have to be very careful
+23:04:14 <defconanon12[m]> Oh very true.
+23:04:19 <radixed9[m]> <worldwideworld[m "Do you know any open sauce cloni"> no, but I would trust AppCloner more than LuckyPatcher
+23:04:33 <worldwideworld[m> ok thanks
+23:05:18 <mxnorvak[m]> <nickcalyx[m] "worldwideworld: run 'adb logcat'"> Have you done this yourself? I'm interested to know more about why i shouldn't rely on Telegram
+23:05:55 <worldwideworld[m> <greenmoon[m] "Appcloner have so much interessi"> There are a few with the same similar names can point to the right one please
+23:06:55 <radixed9[m]> https://appcloner.app/ iirc
+23:07:03 <worldwideworld[m> <mxnorvak[m] "Have you done this yourself? I'm"> This was not for telegram it was for crypto.com
+23:07:06 <httplov3craft[m]> Shelter can let you run 2 instances - one in a regular profile, one in a work profile. They are blocked from seeing each other's data
+23:07:27 <worldwideworld[m> <radixed9[m] "https://appcloner.app/ iirc"> Great thanks
+23:07:48 <mxnorvak[m]> <worldwideworld[m "This was not for telegram it was"> Oh sry!
+23:09:07 <worldwideworld[m> <mxnorvak[m] "Oh sry!"> Telegram is in F-droid
+23:10:00 <nickcalyx[m]> > Have you done this yourself?
+23:10:00 <nickcalyx[m]> Run adb logcat to see why an app is breaking? Sure
+23:10:34 <worldwideworld[m> <worldwideworld[m "Great thanks"> Just installed it I remember this app am i correct that it got removed from the play store?
+23:10:44 <radixed9[m]> Yes
+23:11:31 <nickcalyx[m]> Those sound super sketchy
+23:11:59 * worldwideworld[m sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/bCUAOuMOCGPlAZsSHirkeTZq >
+23:12:35 <worldwideworld[m> <nickcalyx[m] "Those sound super sketchy"> It was not removed because of that
+23:13:11 <worldwideworld[m>  * Can this be done from the phone or command from the PC?
+23:13:39 <radixed9[m]> I never recommended that someone use that. It is a substantially better than LP
+23:14:52 <defconanon12[m]> Does anyone know if LP uses a Google API still even though they are taken off the Google Play Store?
+23:15:06 <defconanon12[m]> * Does anyone know if LP still uses a Google API still even though they are taken off the Google Play Store?
+23:16:42 <defconanon12[m]> I have no interest in using it really anymore just curious if that is the case.
+23:22:00 <worldwideworld[m> i can only run adb logcat on pc right?
+23:25:02 <mxnorvak[m]> <worldwideworld[m "Telegram is in F-droid "> So?
+23:26:34 <worldwideworld[m> it has to go through certain tests to show open sauce and secure right?
+23:28:45 <mxnorvak[m]> As far as i know an app needs to be open source to be able to be in F-droid, however this does has nothing to do with it being secure
+23:29:35 <mxnorvak[m]> *As far as i know an app needs to be open source to be able to be in F-droid, however this has nothing to do with it being secure
+23:30:16 <mxnorvak[m]> And no i don't think they check the app to make sure it's secure
+23:31:19 <georgeaux[m]> 7hr screentime and still 47% charge with pixel3a graphenos on 20200622 build. (Airplain mode only WiFi)
+23:31:30 <faxing[m]> You're 100% right iirc
+23:31:56 <faxing[m]> The only criteria for getting your app on F-Droid is being open source (essentially) iirc
+23:32:09 <worldwideworld[m> <mxnorvak[m] "As far as i know an app needs to"> Okay thanks
+23:36:48 <mxnorvak[m]> <worldwideworld[m "Okay thanks"> Np

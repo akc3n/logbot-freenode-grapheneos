@@ -1,0 +1,499 @@
+00:22:34 <adeus[m]> Why does the camera app crash if you do not give it microphone permission ?
+00:27:01 <louipc> for videos?
+00:27:23 <ninjahmeh> a logcat will help with things like that i woiuld imagine
+00:27:25 <louipc> i guess it shouldnt crash tho. just not have any audio
+00:27:42 <louipc> maybe give u a popup that says no audio
+00:28:54 <ninjahmeh> in any case knowing your device, and os version along with a logcat of the crashing a few times on pastebin will likely help to find the issue
+00:34:46 <adeus[m]> <ninjahmeh "in any case knowing your device,"> Pixel 3. Latest GrapheneOS update. Stock install.
+00:35:11 <adeus[m]> Other question is why can’t I change app permissions “run foreground service, run at startup” etc.
+00:35:30 <ninjahmeh> do you know how to run a logcat from your device using adb to a txt file on your computer?
+00:39:17 <adeus[m]> <ninjahmeh "do you know how to run a logcat "> No. But the error camera app crashes denied mic is reproducible on Pixel 3, Pixel 3XL and Pixel 3a
+00:43:23 <ninjahmeh> you on linux?
+00:56:02 <ninjahmeh> if so, open terminal, and run these
+00:56:02 <ninjahmeh> mkdir ~/logfiles
+00:56:02 <ninjahmeh> cd ~/logfiles
+00:57:54 <ninjahmeh> next on your phone in the dev options of system settings set debugging on usb on, and ensure you allow debuging from your linux box by plugging in the usb and tap allow on the screen of your phone when you connect
+00:58:10 <ninjahmeh> reboot the device
+00:58:43 <ninjahmeh>  use it to crash the camera a few times in a row
+00:59:36 <ninjahmeh> then in the terminal run
+00:59:36 <ninjahmeh> adb logcat -d > camera_perm_crash.txt
+01:03:30 <ninjahmeh> i think that should then print a txt file of your device logs into that directory with that filename, you can then load that up on pastebin or somewhere (redact any sensitive info if any) and then you can share the logs here so someone with better understanding could get an idea of where the crash stems
+01:04:20 <ninjahmeh> in my experience in the past crashes like that tend to be an issue with HAL specially after android source upgrade ports
+01:04:42 <ninjahmeh> i could be quite wrong but logs always help
+01:10:44 <adeus[m]> <ninjahmeh "in my experience in the past cra"> Thank you
+01:10:54 <adeus[m]> I have saved this I will try and do when homeZ
+01:11:07 <ninjahmeh> no worries
+01:12:50 <ninjahmeh> iv been slowly trying to get my macbook setup to run builds myself and start to relearn what i need to try and be of use here, i know the maintenance side of this sort of work is a pain in the arse and seems like that is something that would be useful to this project
+01:14:18 <ninjahmeh> sadly my knowledge has dwindled having spent a long time away from this kind of thing after zombi rom guys i used to play with all got busier lives
+03:12:08 <adeus[m]> Can someone give me the link to the CalyxOS F-Droid repo?
+03:18:55 <adeus[m]> <adeus[m] "Can someone give me the link to "> Never mind I got it looks like they no longer publish signal
+03:49:10 <strcat[m]> adeus: run foreground service, run at startup, etc. are not really 'permissions' it's just an implementation detail, you're looking at developer information
+03:49:16 <strcat[m]> there is a toggle for controlling background access in the app info page
+03:49:23 <strcat[m]> those "permissions" do not do what you think
+03:50:37 <adeus[m]> <strcat[m] "adeus: run foreground service, r"> Thank you
+04:49:55 <strcat[m]> adeus: those low-level 'permissions' are a way for the app to let the OS know it uses something, they aren't for users
+04:50:10 <strcat[m]> adeus: so for example those run in background, etc. ones are controlled by the toggle in app info, it's not considered a permission at a high level
+04:50:18 <strcat[m]> it's only an implementation detail that it works that way
+04:50:33 <strcat[m]> most of those low-level 'permissions' just give an app the ability to request something from the user, etc.
+04:51:08 <strcat[m]> like the unknown apps install one, which only allows requesting the ability to install apps (and even when granted, it requires user consent EACH time)
+04:51:20 <strcat[m]> those are for static analysis of what capabilities apps can gain
+04:51:35 <strcat[m]> so you can see does this app have the ability to ask the user to install apps?
+04:51:49 <strcat[m]> it's not a permission for the user to see / review / toggle
+04:52:11 <strcat[m]> F-Droid is doing the wrong thing by making them user-facing, and you shouldn't looking at them in the advanced dev info and drawing conclusions if you don't understand the purpose of them
+04:53:41 <strcat[m]> and similarly does this app have the ability to run for a long time in the background? but if it does you have a toggle for that in app info - it's not considered a permission because permissions are for access to sensitive information
+04:54:10 <strcat[m]> and also the toggle in app info does more than that
+04:54:18 <strcat[m]> it has an impact even if the app doesn't have that
+04:54:28 <strcat[m]> so you should really just go with the high level toggle that actually makes sense
+04:54:40 <strcat[m]> instead of trying to understand obscure things for developers
+04:54:53 <strcat[m]> which are largely misleading and not designed to be user-facing
+04:55:21 <strcat[m]> so for example if you think that not having that 'run in background' means it can't run in the background, you're wrong, and that's why you shouldn't even be looking at those
+04:55:38 <strcat[m]> not what it means
+05:37:55 <Iusearchbtw[m]> <strcat[m] "F-Droid is doing the wrong thing"> Fdroid does a lot of wrong things. What's new?
+05:59:37 <Ultron[m]> <strcat[m] "F-Droid is doing the wrong thing"> That's not an F-Droid problem. I mean users can make whatever interpretation they want of any given thing.
+06:01:46 <strcat[m]> Ultron: these things are explicitly not meant to be exposed in the UI
+06:02:00 <strcat[m]> they are low-level, highly misleading, and not part of the user-facing permission model
+06:02:04 <strcat[m]> they do not control access to sensitive data
+06:02:33 <strcat[m]> and there are other ways of exposing control over those things like just requiring user consent every single time, and the user to select things
+06:02:41 <strcat[m]> and separate toggles in app info like the background access one
+06:03:11 <strcat[m]> Ultron: F-Droid is doing the wrong thing, it's not supposed to be mixing these things up and displaying them together, and it's not supposed to be displaying the low-level ones without explicitly toggling on low-level information display
+06:03:15 <strcat[m]> it's doing it wrong
+06:03:21 <strcat[m]> it's not a user issue, it's an issue with F-Droid
+06:04:05 <strcat[m]> it hasn't adapted to modern API levels and the modern permission model where apps have to request permissions and there are toggles
+06:04:25 <strcat[m]> also now in Android 11 you can allow a permission temporarily for the current app session too, instead of having to manually turn it off after
+06:04:34 <strcat[m]> those low-level ones are a totally different thing
+06:20:25 <Lia[m]> Still wondering if it's useless to grant one-time storage permission
+06:21:54 <strcat[m]> seems pretty useless + storage permission is deprecated/obsolete and not available to apps targeting Android 11
+06:22:14 <strcat[m]> not entirely useless but a lot less useful than for the other stuff
+06:22:30 <strcat[m]> Lia: also I don't think it necessarily offers it for all permissions, just ones where it makes sense
+06:22:34 <strcat[m]> we'll see how it works
+06:30:50 <Lia[m]> Still stoked for it. Question, is porting a git patch from a Monochrome browser, let's say Bromite, should that be regenerated with other patches? (Probably off-topic, but I'll just ask an overview)
+06:31:07 <Lia[m]>  * Still stoked for it. Question, is porting a git patch from a Monochrome browser, let's say Bromite to Trichrome-based broswers, should that be regenerated with other patches? (Probably off-topic, but I'll just ask an overview)
+06:40:06 <Lia[m]> Deleted for off-topic reason (in matrix side)
+06:44:53 <strcat[m]> https://github.com/GrapheneOS/os_issue_tracker/milestone/2
+06:44:59 <strcat[m]> here's what is left to do for Android 11 port of GrapheneOS
+06:45:03 <strcat[m]> more help wanted
+07:48:23 <ninjahmeh> @adeus[m] did you get anywhere taking some logs of the camera crashing in the end
+07:50:14 <ninjahmeh> also @strcat[m] is there any side channels for graphene dev focused chatter, or do you just discuss anything related here
+07:50:47 <louipc> theres #grapheneos-offtopic
+07:51:09 <louipc> theres #grapheneos-dev
+07:53:21 <ninjahmeh> <3 great thanks loui i figured there likely was
+07:53:28 <strcat[m]> we're using a matrix room for the Android 11 migration
+07:53:54 <strcat[m]> using a public channel doesn't work well
+07:54:03 <strcat[m]> if people are involved in the migration they can be invited there
+07:55:17 <Iusearchbtw[m]> [strcat](https://matrix.to/#/@strcat:matrix.org): ah yes I know a guy who's eager to help with migration
+07:55:20 <Iusearchbtw[m]> I'll send him an invite
+07:59:45 <ninjahmeh> no that was my thoughts often times it leads to conversations getting somewhat confused. I've been in the process of finding the best way to have my music production macbook setup with a second drive and linux with as few issues as possible so i can begin to try and help, i am not at a high level for development knowledge wise, but once iv got a building environment going im looking to join somewhere like the more
+07:59:45 <ninjahmeh> focused channels and maybe hookup with some people who can help refresh my android porting brain cells
+08:01:03 <ninjahmeh> at the moment though got a load of deadlines looming for getting information ready and sent out to my emp;loyer over a tribunal court hearing i am taking them to which i have never had to do and is getting beyond stressful/annoiying also
+08:01:07 <strcat[m]> building on a laptop particularly one that's not geared for performance won't be a good experience
+08:01:19 <strcat[m]> incremental builds will still be reasonable but still, not a good experience
+08:01:33 <strcat[m]> building the linux kernel with CFI/LTO alone is really demanding
+08:01:35 <ninjahmeh> to be fair this model is actually pretty decent
+08:01:57 <strcat[m]> 32GB memory is pretty much bare minimum now for building the kernel
+08:02:06 <Iusearchbtw[m]> [strcat](https://matrix.to/#/@strcat:matrix.org): no
+08:02:08 <ninjahmeh> hmm
+08:02:28 <Iusearchbtw[m]> It goes to 38 on mine
+08:02:35 <ninjahmeh> xD
+08:02:35 <strcat[m]> yeah but you can have swap
+08:02:44 <strcat[m]> swapfile or swap partition either way
+08:02:45 <Iusearchbtw[m]> Can't xD
+08:02:56 <Iusearchbtw[m]> Shitty Kingston 128G ssd
+08:03:37 <Iusearchbtw[m]> But yeah you can if you have the storage
+08:03:43 <ninjahmeh> yeah i mean it taking a while isnt an issue and this iv putt a 1tb Samsung ssd in the original optical bay so things like that arent too concerning
+08:04:42 <ninjahmeh> im on a macbook 9,1 which while it is a bit of a misnomer to call it a laptop when under high workloads its basically a boiling hot peice of plastic and metal
+08:05:25 <Iusearchbtw[m]> Why is it always samsung when it comes to ssd
+08:05:28 <strcat[m]> ninjahmeh: I don't think it's going to be a good experience is all
+08:05:40 <ninjahmeh> they hav a monopoly on silicon
+08:05:42 <dazinism> adeus: for backups check out https://hub.libranet.de/wiki/graphene-os/wiki/Backups
+08:06:02 <strcat[m]> I need to get a much better workstation myself
+08:06:20 <Iusearchbtw[m]> Mail one to me jk
+08:06:23 <strcat[m]> 32GB memory is what I'd call bare minimum to be productive now, 64GB is more than enough
+08:06:38 <strcat[m]> need a fast, modern CPU with good single threaded performance for quick incremental builds
+08:06:39 <louipc> dang
+08:06:40 <ninjahmeh> @strcat[m] quite possible, i mean for the most part i am looking more into trying to help with getting things ported
+08:06:57 <strcat[m]> and a ton of cores to make clean builds fast and incremental builds where a lot has to be rebuilt
+08:07:00 <strcat[m]> which isn't uncommon
+08:07:11 <ninjahmeh> yeah for sure
+08:07:22 <Iusearchbtw[m]> Will 6 do the trick?
+08:07:25 <strcat[m]> ninjahmeh: it's just it's going to take a ridiculous amount of time for your initial build, you may have OOM problems especially with building the Linux kernel with CFI/LTO
+08:07:38 * ninjahmeh looks at the flies in his wallet as he checks it
+08:08:02 <ninjahmeh> wish i was able to say its all good ill just get some more WAM
+08:08:03 <ninjahmeh> sadly
+08:08:06 <ninjahmeh> lol
+08:08:08 <strcat[m]> Linux kernel build takes 32GB memory + some swap
+08:08:36 <strcat[m]> Chromium and AOSP peak at less memory (when not using a large number of build jobs at least - which you wouldn't be without a ton of cores)
+08:08:43 <strcat[m]> but you'll take so long to build
+08:08:51 <strcat[m]> and then you can be productive for some things doing incremental builds
+08:09:05 <strcat[m]> but as soon as something needs a lot to be rebuilt, which happens, there goes the rest of your day
+08:09:21 <strcat[m]> so depends what you're working on
+08:09:40 <strcat[m]> some things you can work on and always have quick incremental builds, 30s to a minute each or whatever
+08:09:54 <strcat[m]> other things are going to need to rebuild a ton of stuff
+08:10:08 <strcat[m]> and single threaded performance makes a huge difference for incremental builds
+08:10:09 <Iusearchbtw[m]> [ninjahmeh](https://matrix.to/#/@freenode_ninjahmeh:matrix.org): dare you to replace just one overlay
+08:10:15 <Iusearchbtw[m]> Then wait 2h as a result
+08:10:18 <strcat[m]> builds where you're doing a lot more
+08:10:23 <strcat[m]> really need MANY cores
+08:10:27 <strcat[m]> it scales really well to many cores
+08:10:36 <ninjahmeh> Iusearchbtw[m]:  lol
+08:10:39 <strcat[m]> 64 cores will cut build time of a lot in half vs. 32 cores
+08:10:57 <ninjahmeh> yeah
+08:11:03 <Iusearchbtw[m]> 64 cores you kidding
+08:11:04 <strcat[m]> so if you're building 4 cores that are quite old vs. someone building on 32 cores that are 40% faster each
+08:11:07 <strcat[m]> there's going to be a big diff in productivity
+08:11:16 <strcat[m]> anupritaisno1: no that's what I'm getting, either 32 or 64 core ryzen
+08:11:23 <strcat[m]> for my new build
+08:11:24 <strcat[m]> 128GB+ of memory this time around
+08:11:36 <strcat[m]> I want to actually be able to work on Chromium stuff productively
+08:11:48 <strcat[m]> Chromium takes longer to build than AOSP
+08:11:52 <strcat[m]> working on Vanadium is a huge pain atm
+08:12:07 <strcat[m]> I only have a 10 core CPU from 2016 atm, just haven't invested the time in making a new build since then
+08:12:10 <strcat[m]> it's just a pain
+08:13:42 <ninjahmeh> yeah like i say, being up shit creek with my work place who im on the line to go to court with in march and that meaning im not working
+08:13:51 <ninjahmeh> i just dont have the means atm,
+08:14:26 <ninjahmeh> once iv got a few things out of the way and means to save some wedge i will likely buy a new cpu and extra ram for my actual main rig
+08:15:00 <ninjahmeh> which is really just built for gaming, but has the compatability for some pretty good gear
+08:16:46 <ninjahmeh> i mean if i upgraded to a large pcie nvme drive on there thats one good thing as i have a small one from when they were first really released as my system drive
+08:17:38 <Lia[m]> <strcat[m] "building on a laptop particularl"> Chromium takes days to build on laptops, but less RAM peaks
+08:17:48 <Lia[m]> On low-end
+08:18:08 <ninjahmeh> but never really needed more than 16GB mem for decent gaming quality and the cpu is just an i5 with high OC capability, at some stage i would like to get a strong cpu with good cores too
+08:19:27 <ninjahmeh> maybe ill try going back to university xD that pretty much paid for me current rig and i could excuse it all because i was doing computer networking, so its like fine to spend 2-3 grand on a computer when its for "work" lol
+08:22:12 <ninjahmeh> yeah a quick look shows i can still chuck a pretty strong cpu in the 1151 socket i have so at some point something like that will get bought, its just a shit time for money for basically most people i know right now
+08:23:18 <dazinism> adeus: Signal blocks backups, but has its own backup mechanism. I found you have to grant signal a surprising number of permissions when you install it to get it to import a backup
+08:24:31 <dazinism> Also I'm not sure that it automatically brings the number over?? Maybe you have to register via SMS again?? I can check that...
+08:25:23 <ninjahmeh> hmmm seems still the highest amount of cores i would be looking at would be 16 with HT
+08:27:36 <dazinism> Yeah, looks like you probably have to verify the number again via sms when you restore a signal backup
+08:29:50 <dazinism> Just checked on a phone I set up a couple of months back and restored a signal backup, and I see the verification SMS from signal
+08:54:54 <Ultron[m]> Wow guys! Can finally see the use cases of more ram and cpu cores.
+08:55:15 <Ultron[m]> Can you do incremental builds for AOSP?
+08:56:03 <Ultron[m]> I am just getting my hands dirty today making my first build. LineageOS repo sync going on.
+08:56:37 <Ultron[m]> If there is a thing like incremental build then I assume it will save time rebuilding.
+08:56:39 <strcat[m]> of course I was just talking about incremental builds taking 30 seconds
+08:56:45 <strcat[m]> read what I wrote above
+08:57:04 <strcat[m]> if you make a change that only requires rebuilding a small component then of course that's fast
+08:57:15 <strcat[m]> if you make a large scope change then the incremental builds are not going to save you
+08:57:28 <strcat[m]> if you change some core library header or change compiler options, or the build system, it has to rebuild nearly everything anyway
+08:58:04 <strcat[m]> and incremental builds don't help at all when doing release builds or the final testing to make absolutely sure something works
+08:58:20 <Ultron[m]> Got it. Thanks! I was under the impression that a basic change like changing the webview will rebuild from scratch. So was writing down everything carefully.
+08:58:28 <strcat[m]> you need 32GB+ of memory simply to build the linux kernel with LTO/CFI
+08:58:42 <strcat[m]> Ultron: no that's not the case, not sure where you got that impression
+08:58:45 <strcat[m]> it NEVER rebuilds from 'scratch' unless you wipe out/
+08:59:07 <strcat[m]> it only rebuilds what has changed but if you change core things then of course it has to rebuild a lot based on those
+08:59:48 <strcat[m]> still need a powerful workstation to quickly rebuild whatever you have changed
+09:00:06 <Ultron[m]> Ah okay. Some relief. I have 16 GB RAM, 4c/8t (i7 6700k - Skype) and 1TB SSD. Do you think it's feasible for building lineageos? I don't plan to build chromium.
+09:00:28 <strcat[m]> the channel is about GrapheneOS
+09:00:37 <Ultron[m]> Yes. Sorry.
+09:01:01 <Iusearchbtw[m]> [strcat](https://matrix.to/#/@strcat:matrix.org): BTW why do you keep tagging ultron?
+09:01:24 <strcat[m]> because he's sending messages?
+09:01:41 <Iusearchbtw[m]> What
+09:01:49 <Iusearchbtw[m]> How come I don't see any
+09:01:56 <strcat[m]> maybe you blocked them
+09:02:57 <strcat[m]> I don't block people since then I can't see their messages
+09:03:13 <strcat[m]> On Twitter them blocking you stops you from seeing their messages when logged in so that's a bit different, might as well mutually block them
+09:03:25 <Iusearchbtw[m]> Nah don't want to see his anyway
+09:03:30 <Iusearchbtw[m]> Guess I do have reason to after being publicly doxxed and threatened by him
+09:03:42 <Iusearchbtw[m]> Just going to continue ignore the idiot
+09:04:06 <Ultron[m]> What? Threatened?
+09:04:21 <strcat[m]> 16GB is not enough memory to comfortable build Linux with LTO/CFI or to work on Chromium / AOSP comfortably / productively
+09:04:36 <strcat[m]> 16GB is bare minimum to build AOSP and Chromium with very few jobs thanks to ThinLTO
+09:04:49 <strcat[m]> Linux kernel? you would need 32GB+ of swap to build it with only 16GB memory
+09:05:01 <strcat[m]> to build Linux with CFI/LTO with no swap you need 48GB of memory pretty much
+09:05:03 <Iusearchbtw[m]> Can do it in 8gb
+09:05:13 <strcat[m]> probably really sketchy with 8
+09:05:14 <Iusearchbtw[m]> But it'll take 2 days for a full build
+09:05:21 <strcat[m]> 16 is what I consider bare minimum
+09:05:32 <strcat[m]> because otherwise you'll be swapping a ridiculous amount
+09:05:33 <Lia[m]> Did Chromium in 4 in 5 days before
+09:05:40 <Iusearchbtw[m]> I've done it in the past
+09:05:42 <Lia[m]>  * Did Chromium in 4GB RAM in 5 days before
+09:05:56 <Iusearchbtw[m]> With a lot of swap
+09:06:01 <strcat[m]> 48GB is what I would recommend for Linux kernel development with CFI+LTO
+09:06:11 <Ultron[m]> I will upgrade to 32 GB for now. If I go 32 gb then I need to sell my current sticks as have dual channel 8x2 right now.
+09:06:15 <M0xC0ncord[m]> strcat: I've been following the mailing list for kernel hardening and there's a lot of work on upstreaming LTO and CFI support. How long do you expect that to take?
+09:06:18 <M0xC0ncord[m]>  * strcat: I've been following the mailing list for kernel hardening and there's a lot of work on upstreaming LTO and CFI support. How long would you expect that to take?
+09:06:20 <strcat[m]> 64GB for building Chromium / AOSP with a huge number of jobs on many cores (don't need nearly that much if you have only 6 cores or w/e)
+09:06:20 <Ultron[m]>  * I will upgrade to 32 GB for now. If I go above 32 gb then I need to sell my current sticks as have dual channel 8x2 right now.
+09:06:31 <Iusearchbtw[m]> God damn why does the number keep increasing
+09:06:38 <strcat[m]> I have 64GB in my workstation from 2016
+09:06:57 <strcat[m]> 4x 16GB DDR4 sticks
+09:07:04 <Iusearchbtw[m]> Stop don't want to hear more
+09:07:05 <strcat[m]> quad channel RAM with this CPU
+09:07:12 <strcat[m]> it wasn't expensive
+09:07:15 <strcat[m]> the RAM I mean
+09:07:24 <strcat[m]> the CPU and SSD were expensive
+09:07:24 <Iusearchbtw[m]> What
+09:07:32 <Iusearchbtw[m]> How the hell is 64G of ddr4 ram not expensive
+09:07:42 <strcat[m]> it was like $300 in 2016 for 4x 64GB of DDR4
+09:07:54 <strcat[m]> er I mean
+09:07:56 <Ultron[m]> I didn't really thought that I will ever need more than 16GB. My use case was not exceeding that. Now I can see how 16gb can be limited for building or using multiple vms simultaneously .
+09:07:58 <strcat[m]>  * it was like $300 in 2016 for 4x 16GB of DDR4
+09:08:10 <Iusearchbtw[m]> That is pretty expensive
+09:08:13 <strcat[m]> Ultron: building scales to any # of cores
+09:08:30 <strcat[m]> so if you've got 4 cores then yeah 16GB is probably enough, but not if you're doing other stuff like web browsing
+09:08:40 <strcat[m]> if it's a pure build machine with 4 cores, then yeah 16GB is probably fine
+09:08:43 <inrdrna[m]> anupritaisno1: frequency can change the price by a lot
+09:08:46 <Ultron[m]> <strcat[m] "Ultron: building scales to any #"> Wished gaming and other things scaled linearly.
+09:08:48 <strcat[m]> used for other stuff? probably want 32GB
+09:09:07 <strcat[m]> many cores? then you start needing more and more and you want 64GB for say 32 core build + using it for other stuff at same time
+09:09:19 <strcat[m]> also if you have extra RAM then you can get everything for builds in cache
+09:09:57 <Ultron[m]> I see. Since I won't build frequently (just monthly once when new asb come) - I guess it will be fine for now.
+09:09:57 <strcat[m]> so 128GB lets you have it all in cache for incremental builds, 256GB everything that's used (toolchains, all sources, all outputs) in cache with 64+ cores all doing a job at the same time
+09:10:05 <strcat[m]> so yeah more memory + huge number of cores helps a lot
+09:10:13 <Ultron[m]> or can make a ramdisk out of it. :)
+09:10:21 <Lia[m]> (No wonder donations are very needed...)
+09:10:36 <strcat[m]> productivity building linux, chromium, aosp, etc.
+09:10:41 <strcat[m]> is often heavily limited by build times
+09:10:53 <Lia[m]> (Hard barrier to enter to have productive machine for contribution)
+09:10:58 <strcat[m]> not all builds can work well with incremental builds
+09:11:06 <strcat[m]> lets say I am narrowing down a bug to the change that uncovers it
+09:11:12 <strcat[m]> so I revert half the bionic commits
+09:11:18 <strcat[m]> well I basically have to rebuild 80%+ of the code now anyway
+09:11:21 <strcat[m]> so it's almost a clean build
+09:11:39 <strcat[m]> at that point might as well rm -rf out anyway just to help with being absolutely sure I'm testing what I think I am and nothing has gone wrong
+09:11:54 <strcat[m]> also often end up just testing production, signed builds for simplicity
+09:12:12 <strcat[m]> because I need 1 of each device running production + signed official builds
+09:12:22 <strcat[m]> so unless I have a 2nd of the device
+09:12:32 <strcat[m]> I don't have one that's unlocked and running test key signed dev builds
+09:12:46 <strcat[m]> and I'm not going to buy 2 of every supported device to have one for dev builds
+09:12:58 <strcat[m]> even aside from the money issue it's a huge pain to keep them all charged and remember which is which
+09:13:00 <strcat[m]> find one I need
+09:14:21 <Ultron[m]> Are there any plans to monetize GrapheneOS in the future?
+09:15:11 <strcat[m]> no
+09:15:17 <strcat[m]> read https://grapheneos.org/
+09:15:25 <strcat[m]> it's not a company and won't be one
+09:15:33 <strcat[m]> it will continue to work with companies
+09:15:37 <strcat[m]> but GrapheneOS is not one and won't be one
+09:45:38 <Ultron[m]> Nice to know that. I hope GrapheneOS scale to a much bigger platform. There are many use cases for government itself. I hope some government enforce using of pixels with gos. I have seen government officials, military, etc using crap chinese phones. GrapheneOS is a perfect fit for them.
+11:00:07 * benzen[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/NJHWHcPZFwyUzXrnnZehkPvB/message.txt >
+11:03:22 <benzen[m]> Thanks for all the great work btw !
+11:22:48 <Guest21290> Hey! I'm trying to follow the install guide & download a GrapheneOS release. All of the releases on https://grapheneos.org/releases return me a 404
+11:23:43 <Guest21290> Can anyone link me a Pixel3a release mirror?
+11:24:14 <jpds> Guest21290: The .zip links work fine for me for the 3a
+11:24:51 <Guest21290> Huh. Maybe it's my browser. Hold on I'll try curl it
+11:26:38 <Guest21290> Uh nope, 404 trying to get https://releases.grapheneos.org/sargo-factory-2020.08.03.22.zip
+11:28:33 <Guest21290> Oh right the page is populated by JS and I had that disabled
+11:28:53 <Guest21290> Ha. Just me being dumb after all
+11:29:28 <Guest21290> Thanks jpds
+11:50:14 <dazinism> benzen: search in settings for 'access point names'
+11:50:43 <dazinism> Maybe you can check on internet what APN settings your network requires
+11:51:29 <dazinism> You can create a new APN with the correct settings.
+11:52:10 <dazinism> Do some internet searches to find your SIM card providers settings
+11:57:18 <benzen[m]> <dazinism "benzen: search in settings for '"> Hey thanks for the quick reply , tried that but it seems the settings were right and the problem persists after creating a new apn file
+11:59:49 <dazinism> benzen: was all working OK on GrapheneOS before this update?
+12:38:17 <benzen[m]> <dazinism "benzen: was all working OK on Gr"> yes it happened within the last 48 hours
+13:05:15 <mastercakex[m]> Android system: charging connected device via USB
+13:05:47 <mastercakex[m]> This error message is with me for months. I'm explicitly charging wireless ever since
+13:06:13 <mastercakex[m]> Nor I can connect wired headphones
+13:06:25 <mastercakex[m]> Cleaning the port won't help
+13:12:50 <Lia[m]> Have you checked the settings > security > usb
+13:58:08 <derpy> having a hell of a time trying to copy WhatsApp directory back onto my new GOS device... I mounted with simple-mtpfs and I tried copying it with rsync & other apps... I get a lot of "invalid argument" output in the copy process
+13:58:24 <alex-resist> Hey, I noticed something odd. On the computer (Debian, Firefox ESR) https://grapheneos.org/releases#sargo-stable shows sargo-factory-2020.09.11.14.zip. On the phone (Tor Browser, no JavaScript) the same link shows sargo-factory-2020.03.03.22.zip. How is that possible?
+13:58:27 <derpy> used sudo for all copy & mount processes because otherwise it doesn't work
+14:00:50 <alex-resist> Apparently, without JS it shows the 2020.08.x version, with JS enabled it shows 2020.09.x
+14:23:28 <derpy> https://www.reddit.com/r/GrapheneOS/comments/dy5r1b/restore_whatsapp_backup_fails/ claiming I need to change permissions on the app... I wonder which permissions they're referring to
+14:25:27 <jpds> derpy: Storage?
+14:25:57 <derpy> ya will try that and reinstall and see if it asks to restore
+14:26:08 <derpy> whatsapp is such a steaming pile... I promise I would ditch it if I could
+14:32:21 <NorbertTretkows4> alex-resist: The page shows the 2020.09.11.14 release for me, but when reloading the page, for a short while I see the 2020.08.03.22 release.
+14:32:40 <alex-resist> Could you try the same thing with JS deactivated?
+14:32:58 <alex-resist> Then it is "stuck" with the 2020.08.03.22 release
+14:34:27 <NorbertTretkows4> Yes, with JS disabled, it stays at the 2020.08.03.22 release.
+14:35:19 <derpy> what do you guys use to copy files from your computer? I'm suing simple-mtpfs - and I'm getting lots of "invalid argument" errors on copying files (which is surprisingly slow)
+14:36:15 <NorbertTretkows4> derpy: I am old, hence I just use Nautilus, the GNOME Filemanager...
+14:36:34 <derpy> ya but the mounting of the device is the issue, shouldn't matter what file manager
+14:36:57 <derpy> however, copying make ROX-filer go crazy, and rsync is also having the same errors
+14:37:02 <NorbertTretkows4> That's some magic happening in the background, it just works for me :)
+14:37:30 <derpy> rsync: [receiver] mkstemp "/media/Pixel/WhatsApp/Databases/.msgstore-2020-09-10.1.db.crypt12.xPclD" failed:Invalid argument (22)
+14:37:48 <Hugh[m]> I just use adb from the cli, seems more reliable than trying to mount. Admittedly the ux is not quite as straightforward
+14:37:49 <derpy> (I did run rsync and mount as sudo, of course)
+14:38:23 <derpy> Hugh[m] oh so how would you copy files to it using adb?
+14:38:56 <derpy> I wasn't because I saw this post by Daniel saying now to: https://www.reddit.com/r/GrapheneOS/comments/go6q0o/transferring_files_between_grapheneos_and_computer/
+14:38:57 <Hugh[m]> Are we saying computer to phone, I may have missed some of the conversation context
+14:39:08 <derpy> correct, computer -> phone
+14:39:22 <derpy> previously copied the database files from phone -> computer successfully
+14:40:23 <Hugh[m]> I hadn't seen that comment and obviously if you are concerned about the threat posed by usb debugging it is not the best
+14:40:56 <Hugh[m]> But I am reasonably confident that my pc is secure and I turn usb debugging back off after I copy what I need
+14:41:05 <derpy> not concerned, just trying to copy files, which is taking me hours in 2020 0_0
+14:49:16 <Hugh[m]> You could try enabling developer options then, plugging to pc by usb and then run something like `adb push /path/to/file/to/copy /destination/folder`
+14:49:33 <Hugh[m]> there should be plenty of info online about using `adb push` commands
+14:49:45 <Hugh[m]> you'll the tools installed on your pc
+14:49:51 <Hugh[m]>  * you'll need the tools installed on your pc
+14:50:05 <Hugh[m]> You can also disable dev options once done if you want to
+14:50:38 <Hugh[m]> How many files are we talking about? Or is it just really big files
+14:51:49 <derpy> like 3 gigs
+14:51:54 <derpy> rrr now aurora store is broken
+14:52:03 <derpy> had to uninstall / reinstall whatsapp a few times
+14:52:06 <derpy> and it won't work anymore
+14:52:13 <derpy> I guess I'll try uninstalling aurora store itself
+14:52:20 <derpy> clearing its cache didnt fix it
+14:53:31 <derpy> ok that worked :)
+14:56:39 <derpy> great... "we are unable to restore any of your message history backups" and I have to wait a day to try again
+14:57:33 <derpy> too difficult for a software engineer 0_0
+15:05:16 <derpy> Hugh[m] tnx adb push actually works
+15:05:50 <Hugh[m]> No worries, glad it works
+15:30:57 <derpy> Anyone checking gmail on GOS here? Fairmail crashes immediately so gotta find another option. Only browser for now I guess.
+15:31:13 <derpy> (Yes I'll move off of gmail eventually, but it is just too much to do this month)
+15:35:47 <save2020[m]> Hello, please help me to make a Tor wifi hot-spot with QubesOS or MX Linux or Tails. For some reason the Tails hotspot starts and fails after 30 seconds and does not give me an IP. I need this tor hotspot so I can click "OEM unlock" button in developer settings without google fingerprinting my location(requires Internet access. I ve got the phone from ebay and I want to install GrapheneOS before getting my location
+15:35:47 <save2020[m]> fingerprinted by Google.
+15:41:03 <save2020[m]> I want to cover the phone in between a metal soup pot and a metal plate enough to loss gsm and wifi signals from my neighbours and run it through the Tor Wi-Fi hotspot. I know it sounds crazy but it is a valid security point.
+15:51:16 <Hugh[m]> Do you know whether the end point for oem unlock will even accept requests from a tor node?
+15:59:15 <mastercakex[m]> <Lia[m] "Have you checked the settings > "> Allow USB devices is set. Anything wrong with that?
+16:03:07 <Lia[m]> Not really
+16:03:26 <Lia[m]> Try plugging it (again) when unlocked
+16:03:50 <Lia[m]> Also, it could be a hardware problem
+16:26:10 <save2020[m]> Lia: the button is not lighted and when I try to unlock from adb it says I need to be connected to the Internet
+16:27:55 <Lia[m]> <save2020[m] "Hello, please help me to make a "> Oh, nevermind. I thought you were on GrapheneOS
+16:28:28 <save2020[m]> Hugh: I want to try, maybe it works
+16:29:00 <save2020[m]> Lia: right now its stock android
+16:29:33 <Lia[m]> Check your model first on about phone then regulatory labels
+16:31:05 <save2020[m]> Its a pixel 3a, just it might be tide to an Google account. I have just received the phone from ebay and I need to know in time if the phone its unlocked as the seller stated or its locked like the Verizon version.
+16:36:58 <Lia[m]> Also, you can check by restarting to bootloader, press volume up until Serial Code
+16:37:03 <Lia[m]> If it's G020E
+16:37:08 <Lia[m]> Too bad
+16:53:33 <save2020[m]> I have the serial, and checked the imei and its clean, but I still don't want to give to google my location fingerprint
+16:56:15 <Autopsy[m]> <save2020[m] "I have the serial, and checked t"> Then you're fucked, or just log onto a public WiFi.
+16:57:57 <save2020[m]> Not that easy at country side Autopsy
+16:58:14 <Autopsy[m]> Then suck it up.
+16:59:13 <save2020[m]> Autopsy: ignored
+16:59:26 <Lia[m]> Imagine using WiFi, this post is made by Ethernet users gang (I'm just soking, but it (Ethernet) works out of the box)
+16:59:41 <Lia[m]>  * Imagine using WiFi, this post is made by Ethernet users gang (I'm just joking, but it (Ethernet) works out of the box)
+16:59:59 <derpy> Any idea why WhatsApp (after importing) would not have names filled for phone numbers that are in the GOS phonebook?
+17:00:27 <Lia[m]> Ok, kidding aside, just grab a vpn apk from pc, transfer it there, set it up, profit (like CalyxVPN, no need for login)
+17:00:53 <Lia[m]> Location is now fuzzed a bit, and change SSID immediately
+17:00:58 <Lia[m]> (Maybe?)
+17:01:04 <Autopsy[m]> Exactly. Switch GPS off, use a VPN, set up a VLAN. The possibilities are endless.
+17:01:49 <Lia[m]> <derpy "Any idea why WhatsApp (after imp"> No idea, but try checking for permissions
+17:02:59 <save2020[m]> Lia: that might work, but not very guaranteed. I ll try this if I don t manage to make a Tor hotspot in OpenWRT on o spare router.
+17:03:50 <derpy> Lia[m] derp!
+17:03:59 <Lia[m]> Like, gotta connect them in offline first, setup the settings...
+17:03:59 <derpy> thanks... should always check perms before I ask here :)
+17:10:24 <adeus[m]> torbox.ch
+17:10:35 <adeus[m]> If you have an RPI
+17:10:54 <save2020[m]> adeus: i don't
+17:14:43 <save2020[m]> I have some old routers and I m trying to get OpenWRT to work on one. The first one I ve tried does not get and IP on WAN, even thou in DD-WRT it was working fine.
+17:31:23 <bypassbob[m]> Anyone know if it’s ok to install GrapheneOS via windows 7?
+17:40:09 <louipc> You'd be on your own if you go that route bypassbob[m]
+17:41:18 <rimugu[m]> Has anyone installed GrapheneOS on Blu phones (inexpensive unlocked phones)
+17:43:53 <louipc> only pixels i think
+17:44:38 <louipc> those are the only ones supported anyway
+17:56:41 <derpy> rimugu[m] no the supported hardware for GOS is very explicit
+17:57:07 <bypassbob[m]> <louipc "You'd be on your own if you go t"> So is it not recommended to install through windows 7?
+18:04:58 <Lia[m]> <bypassbob[m] "So is it not recommended to inst"> Possible but not recommended
+18:05:17 <Lia[m]> <rimugu[m] "Has anyone installed GrapheneOS "> https://grapheneos.org/faq#device-support
+18:35:16 <bypassbob[m]> I’ll wait till tomorrow and install from windows 10 then
+19:15:57 <redfoxblueeyes[m> Hi, I will install GrapheneOS on a Pixel 4 on the weekend. I will use a Mac. I have read the installation instructions. Any tips or things I should be aware of? Thank you!!
+19:33:43 <shawn_> hello, having an issue seeing if I could get help
+19:34:08 <dazinism> Whats up
+19:35:03 <shawn_> reinstalling android stock and trying to delete custom key stuck at waiting for device
+19:36:51 <shawn_> disregard, got it
+19:36:54 <shawn_> thanks
+20:18:22 <derpy> Is there a way to block numbers if the phone is using SIP mode?
+20:36:34 <yepodi[m]> <redfoxblueeyes[m "Hi, I will install GrapheneOS on"> idk about everyone else, but when installing on Mac, I can't do the signify step, so I just skip that. Other than that  just follow the instructions and you be fine.
+20:38:11 <adeus[m]> <redfoxblueeyes[m "Hi, I will install GrapheneOS on"> Some will say don’t but it works fine.... just download Manjaro in VMWare Fusion and make sure you follow instruction on GrapheneOS site to increase size of temp cache. I’ve flashed a few different GrapheneOS phones following this setup no problems
+20:49:41 <bypassbob[m]> Just plugged the pixel into windows 10 using the standard usb C cable that came with it and it came up straight away usb debugging
+20:50:13 <bypassbob[m]> It didn’t say that on windows 7 could of been the wrong usb cable though
+20:57:50 * bypassbob[m] uploaded an image: ima_f6eddac.jpeg (214KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/NRZonpawmnhSoXKYdhTxoObj/ima_f6eddac.jpeg >
+20:58:03 * bypassbob[m] uploaded an image: ima_0ee582e.jpeg (144KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/MZsBzpVWfVUxzqeHBNinomVZ/ima_0ee582e.jpeg >
+20:58:20 <bypassbob[m]> It’s not coming up with the prompt to confirm
+21:02:30 <derpy> easiest ways to share files over a network between linux & GOS?
+21:05:17 <dazinism> KDE connect or syncthing
+21:05:49 <bypassbob[m]> Anyone have a solution? It’s not letting me flash the pixel
+21:07:05 <dazinism> bypassbob: fastboot devices
+21:07:34 <dazinism> fastboot --version
+21:08:33 * bypassbob[m] uploaded an image: ima_066b568.jpeg (252KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/zjtjLZwGknQXiYTrpqYvczTk/ima_066b568.jpeg >
+21:11:56 <bypassbob[m]> It’s called minimal and fastboot I’m going off a YouTube video
+21:12:09 <bypassbob[m]> * It’s called minimal adb fastboot I’m going off a YouTube video
+21:12:49 <nightjar[m]> Use the PowerShell not the command prompt bypassbob
+21:13:35 <dazinism> And follow the website not videos
+21:13:42 <dazinism> The official install instructions
+21:14:20 <dazinism> Folks often run into issues following videos
+21:14:43 <bypassbob[m]> Ok will do
+21:26:22 <danielmigay[m]> What's the status of hardened_malloc in android11?
+21:31:34 <madaidan[m]> "strcat" (https://matrix.to/#/@strcat:matrix.org) "cn3m" (https://matrix.to/#/@cn3m:privacytools.io) troll
+21:36:25 <bypassbob[m]> I’m literally stuck the website Instructions are to complicated for an idiot like me
+21:39:01 <engulf[m]> bypassbob: Which part of the instructions did you not understood?
+21:40:54 <bypassbob[m]> I’ve enabled debugging booted the phone up the device state is still locked
+21:41:33 <bypassbob[m]> I went off a YouTube video the commands on the site aren’t working and I’m copying and pasting them
+21:41:50 <cn3m[m]> <madaidan[m] ""strcat" (https://matrix.to/#/@s"> done
+21:42:12 * bypassbob[m] uploaded an image: ima_1159ee0.jpeg (201KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/dLqneDiHNVGFNjoifBzAPoIp/ima_1159ee0.jpeg >
+21:42:39 <bypassbob[m]> Click enter now?
+21:44:29 <engulf[m]> You should use the commands for Windows
+21:44:50 <bypassbob[m]> The next command is this
+21:45:02 * bypassbob[m] uploaded an image: ima_5c7ffe5.jpeg (438KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/VtLfiozTgDqyCXaBufWmfxeZ/ima_5c7ffe5.jpeg >
+21:45:25 <engulf[m]>  * You should use the commands for Windows, not MacOS
+21:45:26 <bypassbob[m]> I copied that into the cmd prompt it just gave me an error message
+21:46:22 <engulf[m]> Calm down, read the instructions
+21:47:01 * bypassbob[m] uploaded an image: ima_0d28ce2.jpeg (398KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/KMhNXmMhpqabybfYHLxpQbWY/ima_0d28ce2.jpeg >
+21:47:54 * engulf[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/ecfELjhDmPVYsYHprxtOnDHv/message.txt >
+21:48:35 <bypassbob[m]> Yes I used that command I’ve done that
+21:49:04 <bypassbob[m]> Then it says next add the tools to your path
+21:49:12 <engulf[m]> Are you sure? Because in the picture above you used one for macOS
+21:49:36 * bypassbob[m] uploaded an image: ima_fb5a4e4.jpeg (234KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/spxzjrUcbBdFRZFMrVBPqlKq/ima_fb5a4e4.jpeg >
+21:51:11 <cn3m[m]> blueuser:
+21:51:15 <engulf[m]> Yes, run the command for Windows
+21:54:02 * bypassbob[m] uploaded an image: ima_fbabbfb.jpeg (387KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/FrUprIIkSWfwDBiqohRfMzuq/ima_fbabbfb.jpeg >
+22:01:39 <fritzzguy[m]> hello, i just have one question. Is Waze working on graphene? thanks
+22:03:07 <SEWaRybdALEy[m]> <fritzzguy[m] "hello, i just have one question."> Nope.
+22:03:33 <SEWaRybdALEy[m]> At least last time I tried
+22:03:33 <engulf[m]> <bypassbob[m] "ima_fbabbfb.jpeg"> Try this: `$env:Path = "C:\WINDOWS\system32\platform-tools;$env:Path"`
+22:03:36 <SEWaRybdALEy[m]> Best option is Google Go or OpenStreet
+22:03:55 <fritzzguy[m]> Ok thx
+22:05:16 <cn3m[m]> Don't personally insult people or be offensive about their family or I will ban you. Also don't use the offtopic chatroom to evade moderation you will be banned in both rooms
+22:07:04 * bypassbob[m] uploaded an image: ima_ec2ae8e.jpeg (287KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/MRxzAgcCayZunTOwhJAOgJZv/ima_ec2ae8e.jpeg >
+22:09:48 <engulf[m]> bypassbob: Can you move to somewhere else than system32? Like to your Downloads folder
+22:10:38 <Iusearchbtw[m]> <cn3m[m] "Don't personally insult people o"> What happened
+22:11:17 <cn3m[m]> someone was suggesting someone's family should get COVID and die(they were also being creepy as fuck). I banned them from both rooms
+22:11:24 <cn3m[m]> unacceptable
+22:13:21 <bypassbob[m]> <engulf[m] "bypassbob: Can you move to somew"> I’m in the platform tools directory now with the pixel 4 XL image inside
+22:13:39 * bypassbob[m] uploaded an image: ima_8f8755a.jpeg (284KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/NhmqahkosFCdPSPKEJdsEaOU/ima_8f8755a.jpeg >
+22:13:48 * bypassbob[m] uploaded an image: ima_3d1424d.jpeg (340KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/KUOTMDvPlcAsbPOSWNXCVGLd/ima_3d1424d.jpeg >
+22:15:34 <engulf[m]> Open a terminal as admin in that folder
+22:16:25 <bypassbob[m]> It’s already as admin mate
+22:16:42 * bypassbob[m] uploaded an image: ima_4946c5d.jpeg (412KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/gdyXsOUeyQOckNtQCcrQofob/ima_4946c5d.jpeg >
+22:17:28 <engulf[m]> This should work now: `$env:Path = "$pwd\platform-tools1;$env:Path"`
+22:18:19 <engulf[m]> Ohh, cd one up
+22:18:57 <engulf[m]> To your "Desktop" folder
+22:21:20 * bypassbob[m] uploaded an image: ima_2fde4d0.jpeg (343KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/FCpCMHYTmmtndZczdOQqjkDX/ima_2fde4d0.jpeg >
+22:21:30 <bypassbob[m]> Driving me crazy this haha
+22:21:59 <engulf[m]> <engulf[m] "This should work now: `$env:Path"> This*
+22:23:19 * bypassbob[m] uploaded an image: ima_c2e5638.jpeg (354KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/lyJCyIkepbOBEkjVomlZJcEL/ima_c2e5638.jpeg >
+22:24:02 <bypassbob[m]> Is this command essential? Can I not just skip this and do flash?
+22:24:10 <engulf[m]> Ok this no longer makes sense to me, maybe someone with more familiar with Windows should take over?
+22:25:40 <engulf[m]> You would have to make changes to the flashing script otherwise
+22:28:55 <engulf[m]>  * Otherwise you would have to make changes to the flashing script
+22:53:20 <bypassbob[m]> I’ve managed to unlock the bootloader
+22:53:52 <bypassbob[m]> I’ve copied the image files to the same directory and opened flash-all nothing’s happening
+22:58:43 <bypassbob[m]> Don’t it had to edit the flash-all script
+22:58:52 <bypassbob[m]> * Done it had to edit the flash-all script
+23:05:18 * bypassbob[m] uploaded an image: ima_722b5c3.jpeg (114KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/TMmAgcUyvEYVvEtOkwCNUIhq/ima_722b5c3.jpeg >
+23:05:25 <bypassbob[m]> Done. Thank god.
+23:06:14 <picadex[m]> congrats!
+23:07:07 <bypassbob[m]> <picadex[m] "congrats!"> Thanks I thought I spent £400 today for nothing. That’s was a head ache. 😂
+23:07:16 <bypassbob[m]> * > <@plain_dust:matrix.org> congrats!
+23:07:16 <bypassbob[m]> Thanks I thought I spent £400 today for nothing. That was a head ache. 😂
+23:07:31 <picadex[m]> xd, soon hoping to just dump google aswell
+23:07:58 <picadex[m]> is that the 3a xl?
+23:08:39 <bypassbob[m]> No 4 XL
+23:08:48 <picadex[m]> ahh
+23:09:21 <picadex[m]> waiting for the 4a to be supported, might just get the 3a xl though
+23:10:39 <picadex[m]> might even go for the 4 xl if i see a nice price
+23:11:19 <bypassbob[m]> I’ve been looking for about a week they seem to go fast at reasonable prices
+23:19:11 <lev[m]> that's not a bad price, though it is kinda annoying the 4/4xl was in production for under a year
+23:19:31 <lev[m]> though the 5 (and 4a 5G) is coming out in two weeks?
+23:28:08 <bypassbob[m]> When do you think the new graphene os for the 5 will be available
+23:30:11 <CaptainPicard[m]> bypassbob: Depends when people step up to work on it. The dev is busy enough as is and it will need its own maintainer when it comes out.
+23:31:11 <cn3m[m]> there are devs and testers, but maintainers aren't common even for devices already supported
+23:31:48 <IanB[m]> <bypassbob[m] "When do you think the new graphe"> And when in pixel 4a?
+23:32:11 <cn3m[m]> when there are maintainers
+23:33:03 <cn3m[m]> there is the expectation you buy a device to run GrapheneOS
+23:34:23 <cn3m[m]> This is a community run project and the focus is on the OS
+23:34:33 <cn3m[m]> ideally every compatible device would be supported
+23:34:38 <cn3m[m]> like the A2 was a candidate
+23:34:42 <cn3m[m]> but no one was interested
+23:34:44 <cn3m[m]> so it never happened
+23:40:03 <bypassbob[m]> A2?
+23:41:39 <CaptainPicard[m]> XiaoMi A2
+23:45:09 <bypassbob[m]> Ok do you know of any instant email apps on the graphene? There’s one called instaddr on iOS it allows you to create a custom email address instantly
+23:45:36 <bypassbob[m]> * Ok do you know of any instant email apps on the f-droid on graphene? There’s one called instaddr on iOS it allows you to create a custom email address instantly
+23:48:35 <lickidyspl1t[m]> If u can get an  invite to ctemplar 👍
+23:49:07 <lickidyspl1t[m]> If not tutanota is OK I think, besides the ddos attacks
+23:54:09 <bypassbob[m]> Ctemplar looks good

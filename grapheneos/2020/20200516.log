@@ -1,0 +1,1117 @@
+00:00:34 <JTL> yeah right
+00:00:44 <JTL> the naming to directory mapping isn't exact
+00:01:08 <JTL> (I was just using that repo as an example)
+00:02:27 <dazinism> Composition Kills: A Case Study of Email Sender Authentication https://www.usenix.org/system/files/sec20fall_chen-jianjun_prepub_0.pdf
+00:03:11 <JTL> BrokenCog: Hold on, what does git clone https://android.googlesource.com/platform/external/u-boot do?
+00:03:50 <dazinism> strcat renlord blacklight447 if you not already seen, thought you may be interested ^
+00:04:48 <BrokenCog> JTL:  clone's the repo.
+00:04:56 <JTL> ah kay
+00:05:02 <JTL> Just seeing if THAT works
+00:05:13 <JTL> repo sync still broken?
+00:05:13 <BrokenCog> right.
+00:05:37 <BrokenCog> for the existing grapheneos-10 tree, works in an empty dir.
+00:05:48 <JTL> Okay
+00:43:46 <strcat[m]> BrokenCog: there is throttling by IP for the AOSP repos
+00:43:56 <strcat[m]> maybe you triggered it or have an IP being used to DoS it
+00:45:19 <TheJollyRoger> Hey strcat, could I PM you for a sec?
+00:45:20 <BrokenCog> maybe.  on the clean/fresh sync I was getting a couple errors and changed to -j10 which seems to be running fine.  However, in the existing tree the sync fails even with -j1 ... maybe they have my IP blacklisted or osmething.
+00:45:38 <JTL> BrokenCog: Are you behind a CGNAT or similar?
+00:45:50 <JTL> strcat[m]: Surprised I never ran into that myself lol
+00:46:56 <BrokenCog> well, I wouldn't know what the provider has implemented in their NATs, but I don't have anything unusual in the LAN.  I'm not sure actually if this is the first sync I've done with an existing tree ... I guess I'll find out if something is wrong in the specific sync, or generally after this fresh sync completes and I re-try.
+00:47:33 <JTL> Moreso I was asking if your WAN IP is behind a NAT or not
+00:54:52 <BrokenCog> not the WAN IP, but the router's LAN holding it boviously.
+00:54:53 <strcat[m]> TheJollyRoger: yes
+00:56:39 <TheJollyRoger> OKay!
+01:29:45 <clathu[m]> What do you guys think about this project ?
+01:29:45 <clathu[m]> https://github.com/Gedsh/InviZible/blob/master/README.md
+01:34:29 <strcat> DNS-over-TLS is built into the OS
+01:36:44 <strcat> also worth noting that the normal i2p software is memory safe and PurpleI2P regresses that by switching to C++
+01:36:51 <strcat> so it trades security for lower memory usage
+01:37:26 <strcat> I think the OS supported DNS-over-TLS is what should be used
+01:37:34 <strcat> so this doesn't make sense
+01:37:54 <JTL> Agreed. I don't see why reinventing the wheel here is going to do any good
+01:38:20 <madaidan[m]> And there's already Orbot for Tor
+01:38:47 <strcat> it would make sense to have a new app to do Tor instead of Orbot that's more robust - but I'm not convinced that this will be, and it includes this other stuff which I don't think it should
+01:39:21 <strcat> also worth noting that Tor uses permissive licensing
+01:39:36 <strcat> these apps take it and wrap it up in more restrictive licensing
+01:39:55 <strcat> GPLv3 licensing terms forbid an OS like GrapheneOS from bundling it
+01:40:43 <strcat> GPLv2 is fine but it's better to have software where the code isn't incompatible with other projects
+01:42:38 <strcat> *BSDs consider GPLv3 non-free, as do a lot of others
+01:46:14 <TheJollyRoger> Sheesh.
+01:55:22 <TheJollyRoger> Maybe that's what Theo De Raadt meant when he was saying stuff about their code being wrapped in GPL stuff and then not being able to get it back.
+02:10:20 <aeonsolution[m]> hey everyone!
+02:18:16 <aeonsolution[m]> has anyone gotten this error building the development branch:
+02:18:17 <aeonsolution[m]> FAILED: out/soong/.intermediates/frameworks/base/test-api-stubs-docs/android_common/check_current_api.timestamp
+02:18:17 <aeonsolution[m]> ( rm -rf "out/soong/.intermediates/frameworks/base/test-api-stubs-docs/android_common/current-apicheck/srcjars" && ...
+02:18:43 * aeonsolution[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/rGmzAegXeYzqysrRouuouDJL >
+02:19:05 <JTL> Yeah
+02:19:25 <JTL> make test-api-stubs-docs-update-current-api usually fixes it, you can diff the changes it makes to make sure it's not doing anything strange
+02:20:15 <aeonsolution[m]> ok, where do i jump back to?
+02:20:33 <aeonsolution[m]> am i supposed to run `repo diff`?
+02:20:45 <aeonsolution[m]> oh
+02:21:01 <aeonsolution[m]> you mean `m test-api-stubs-docs-update-current-api`
+02:21:25 <aeonsolution[m]> sorry, my eyes got cross eyed
+02:23:06 <JTL> That should work
+02:23:20 <JTL> not usd to this "m" from "make" toolchange though
+02:24:07 <aeonsolution[m]> yeah, it clicked after i looked at it for a second
+02:24:13 <JTL> Okay
+02:24:20 <aeonsolution[m]> it looks like its working ^^
+02:29:43 <aeonsolution[m]> JTL: THAT FIXED IT
+02:30:03 <aeonsolution[m]> alright, lets flash this phone
+02:33:02 <aeonsolution[m]> lol i just noticed that command was in the log, nice
+02:34:22 <JTL> heh
+04:46:13 <strcat> renlord: btw you need to set adkim=s and aspf=s in DMARC policy to enforce exact domain matches for subdomains
+04:47:10 <strcat> renlord: so for example to enforce that foo.grapheneos.org can't send mail as grapheneos.org which is important if you use a CNAME for anything
+04:47:24 <renlord> does that mean that without the above settings someone can spoof foo.renlord.com?
+04:47:28 <strcat> no
+04:47:42 <strcat> renlord: but if you set foo.grapheneos.org as a CNAME pointing as a service foo
+04:47:58 <strcat> the service foo can probably send fake emails as grapheneos.org
+04:48:09 <renlord> but why'd an admininstrator be concerned that services in their zone would misbehave?
+04:48:42 <strcat> renlord: well for example bing has me set a CNAME to point at verify.bing.org to prove ownership and I don't want bing to be able to send email as grapheneos.org
+04:49:01 <strcat> renlord: adkim=s aspf=s just enforces that each subdomain has a separate spf / dkim setup
+04:49:17 <strcat> renlord: you probably do want it
+04:49:34 <strcat> all I had to do to support it was add a dkim record for mail.grapheneos.org and have it refer to that instead of the grapheneos.org one
+04:50:18 <renlord> alright thanks for letting me know
+04:50:22 <strcat> renlord: you probably don't want a subdomain to be able to send mail as the main domain basically
+04:50:30 <strcat> esp. if you point one at another service with a CNAME
+04:50:32 <strcat> that's all
+04:50:34 <strcat> it's a minor thing
+04:50:42 <renlord> i do use cnames with github.io pages
+04:51:01 <renlord> so i probably have to do it, but it's not intuitive to me why dkim policies take cnames into account
+04:51:20 <strcat> renlord: when you put a CNAME, you delegate SPF/DKIM to that CNAME
+04:51:35 <renlord> but its so obviously a different zone
+04:51:38 <renlord> @_@
+04:52:15 <strcat> renlord: so basically they could send email as the main domain without aspf=s
+04:52:45 <strcat> renlord: since they can add an spf policy for foo.renlord.com (since you delegated it to them) and allow their own mail server
+04:52:54 <strcat> renlord: so, you obviously delegated the ability to send mail as foo.renlord.com
+04:53:05 <strcat> but you may not realize you delegated the ability to send mail as bar.renlord.com or renlord.com
+04:53:09 <strcat> unless you set a strict DMARC policy
+04:53:42 <aeonsolution[m]> hey strcat,renlord when you flash the development branch, has it happened to you that when the script finishes running, fastd restarts without letting you select 'restart to fastboot'? i did a sanity check and flashed the previous qq2a.200405.005 release and was able to boot GrapheneOS
+04:53:54 <aeonsolution[m]> i cant boot my graphene-10 build
+04:54:17 <strcat> renlord: https://tools.ietf.org/html/rfc7489#section-3.1.1
+04:54:33 <strcat> renlord: next section is for spf
+04:54:53 <strcat>    For example, if a message passes an SPF check with an
+04:54:55 <strcat>    RFC5321.MailFrom domain of "cbg.bounces.example.com", and the address
+04:54:57 <strcat>    portion of the RFC5322.From field contains "payments⊙ec",
+04:54:59 <strcat>    the Authenticated RFC5321.MailFrom domain identifier and the
+04:55:01 <strcat>    RFC5322.From domain are considered to be "in alignment" in relaxed
+04:55:03 <strcat>    mode, but not in strict mode.
+05:04:26 <renlord> aeonsolution[m]: sometimes happens to me
+05:04:36 <renlord> but only happens if flashed incorrectly
+05:04:47 <renlord> just repeat the steps
+05:05:25 <aeonsolution[m]> the flashing or the entire process?
+05:05:45 <renlord> aeonsolution[m]: are you flashing a user build? or userdebug?
+05:05:48 <strcat> never experienced those kinds of issues
+05:05:52 <aeonsolution[m]> userdebug
+05:06:19 <renlord> if the flash-all step not done correctly, it could happen
+05:06:30 <renlord> but it only happened to me when i was still very new to the process
+05:06:42 <renlord> it almost never happens anymore.
+05:06:51 <renlord> i cant even remember what i did wrong back then
+05:07:13 <renlord> i should probably record these basic errors for quick reference in future
+05:07:26 <aeonsolution[m]> will do; another quick question
+05:07:54 <aeonsolution[m]> is the development build folder supposed to have an 'avb_pkmd.bin'
+05:08:48 <aeonsolution[m]> thats one difference i noticed in my working release and my development build
+05:09:01 <aeonsolution[m]> the development build doenst have that file
+05:09:11 <renlord> if you're doing development and dont use dm-verity
+05:09:14 <renlord> you can probably ignore that
+05:09:32 <renlord> are you looking at setting up for development only?
+05:09:36 <strcat> aeonsolution[m]: you're supposed to have avb_pkmd.bin if you're making signed builds
+05:09:43 <strcat> aeonsolution[m]: it sounds like you missed that step
+05:10:00 <strcat> aeonsolution[m]: you're not making it clear what you're talking about though
+05:10:02 <aeonsolution[m]> renlord: only development for now since it has less steps
+05:10:04 <strcat> be more specific
+05:10:17 <strcat> there are the same number of steps
+05:10:25 <renlord> aeonsolution[m]: very important that its completely unsafe to use dev build for production
+05:10:30 <renlord> its not the matter of cutting steps
+05:10:35 <strcat> aeonsolution[m]: there aren't fewer steps for one or the other
+05:10:48 <strcat> the only difference is whether you use the 10 branch or a tag for repo
+05:11:05 <strcat> tags *can be* verified via the signature but that's not mandatory
+05:11:51 <aeonsolution[m]> strcat: where I think I'm getting lost is after the `m` step
+05:12:10 <strcat> are you trying to make a development build that isn't signed
+05:12:14 <strcat> or a release build that is signed
+05:12:20 <aeonsolution[m]> https://grapheneos.org/build#faster-builds-for-development-use-only
+05:12:26 <strcat> m is the final step
+05:12:41 <aeonsolution[m]> i am making a development build that isn't signed
+05:12:50 <strcat> mkdir grapheneos-10
+05:12:51 <strcat> cd grapheneos-10
+05:12:53 <strcat> repo init -u https://github.com/GrapheneOS/platform_manifest.git -b 10
+05:12:55 <strcat> repo sync -j32
+05:12:57 <strcat> source script/envsetup.sh
+05:13:07 <strcat> choosecombo release aosp_sargo userdebug
+05:13:09 <strcat> m
+05:13:18 <strcat> aeonsolution[m]: well also building the kernel + android-prepare-vendor
+05:13:25 <DannyWorkOrderPr> Hey, since you all are here - where's everyone getting Windows LTSC, if you're using it?
+05:13:25 <DannyWorkOrderPr> Part II: possible for a small medical office to order it?
+05:13:28 <strcat> but that's most of the process
+05:13:38 <strcat> aeonsolution[m]: m is the final step - that runs the build - what are you trying to do after?
+05:13:53 <JTL> DannyWorkOrderPr: I know what you're asking, but I'm not sure either
+05:14:05 <strcat> (what I posted above will work for the emulator target just not a device requiring vendor files and a custom kernel build)
+05:14:50 <strcat> just use the normal Pro version
+05:15:42 <renlord> adkim=s; aspf=s;
+05:15:47 <renlord> i actually already do have them set
+05:16:45 <strcat> ah good
+05:17:32 <strcat> aeonsolution[m]: the stable tags and dev branch are the same code other than the stable tags being tags
+05:17:34 <aeonsolution[m]> <strcat "aeonsolution: m is the final ste"> then i tar xf ~/grapheneos-10/vendor/android-prepare-vendor/sargo/qq2a.200501.001.b2 and  ./flash-all.bat
+05:17:38 <strcat> the build process is identical
+05:17:55 <strcat> aeonsolution[m]: don't know what you mean
+05:17:58 <strcat> why are you doing that?
+05:18:32 <strcat> aeonsolution[m]: the final step is `m` to build a dev build - there is nothing after that, you aren't supposed to do anything with android-prepare-vendor afterwards
+05:18:40 <strcat> and there is no flash-all script
+05:18:52 <aeonsolution[m]> oh
+05:18:53 <strcat> because you aren't generating a signed release with an ota update and factory images
+05:18:58 <strcat> you're doing stuff not in the instructions
+05:19:05 <strcat> https://grapheneos.org/build#faster-builds-for-development-use-only
+05:19:06 <strcat> look
+05:19:09 <strcat> there's nothing after this
+05:19:21 <strcat> the other stuff listed after is about signing a release
+05:19:40 <strcat> if you do things not in the instructions it will go wrong - just follow them
+05:19:50 <strcat> there's nothing missing from the instructions, you don't need to invent your own process
+05:20:11 <aeonsolution[m]> ok, so then development is just for an emulator
+05:20:14 <strcat> no
+05:20:19 <aeonsolution[m]> you dont put that on a phone to test?
+05:20:21 <strcat> didn't say that
+05:20:30 <strcat> you're confusing different things
+05:20:43 <aeonsolution[m]> ok, yeah can you help me understand
+05:20:53 <strcat> stable tags vs. development branch are about which code you are syncing, the build / signing process is IDENTICAL for both, there is no difference - look at the instructions
+05:20:59 <renlord> just follow the instructions verbatim first, then understand later.
+05:21:38 <strcat> there are 2 ways to build: a signed release, or a development build, this is not tied to which device you are building for or whether you are building a stable tag or the development branch
+05:21:45 <strcat> the instructions cover both
+05:22:05 <strcat> for a signed release you need to build target-files-package, for a dev build you don't so you can use `m` by itself
+05:22:17 <strcat> that's the entire building step, there's nothing after aside from signing a release
+05:22:30 <strcat> the build process is 1 step: m, or m target-files-package if you need to sign it
+05:22:37 <strcat> for the OS
+05:22:50 <strcat> aeonsolution[m]: you need to do things in the order they are listed as the page and don't add your own steps
+05:22:56 <strcat> it covers the whole process, in order
+05:23:00 <strcat> there is no step to add
+05:23:13 <strcat> if you're EVER running a command not listed there, you're doing your own process, not what's there
+05:23:22 <strcat> it covers every single command that needs to be entered
+05:23:24 <DannyWorkOrderPr> strcat: You use Windows Pro? MS telemetry and all?
+05:23:24 <strcat> in order
+05:23:54 <strcat> DannyWorkOrderPr: I don't live in an alternate reality where there's invasive telemetry that can't be disabled
+05:24:07 <strcat> I know a lot of privacy activists live in an alternate reality in their head
+05:24:08 <strcat> I don't
+05:24:26 <renlord> i've been contemplating just using windows as my base OS
+05:24:31 <strcat> don't believe everything you read from uninformed and/or dishonest people
+05:24:35 <aeonsolution[m]> im going to process that, i got the steps for building the development branch; i just need to figure out the other workflows
+05:24:36 <renlord> they seem to have saner out-of-box security
+05:24:57 <renlord> without too much knob tinkering and all
+05:24:58 <aeonsolution[m]> thanks strcat and renlord
+05:25:18 <strcat> I have 2 monitors, one is hooked up to my workstation, the other to my Windows computer
+05:25:53 <strcat> workstation is basically strictly for work
+05:25:54 <renlord> thinking of just using a linux VM for all dev instead
+05:25:58 <renlord> fuck xorg really
+05:26:04 <strcat> I should probably swap the GPUs
+05:26:09 <strcat> my 1080 Ti is in my workstation atm
+05:26:11 <DannyWorkOrderPr> strcat: Oh, I definitely don't. But, in the age of big companies like Microsoft turning telemetry toggles back on with updates, Google being taken to court for collecting and working with location data from those with those settings turned off, it's... Pretty tough to trust those toggles.
+05:26:12 <strcat> but I want to rebuild both
+05:26:30 <renlord> 1080Ti abit too much for work no?
+05:26:32 <strcat> DannyWorkOrderPr: in both cases you're making misleading statements
+05:26:33 <renlord> lol
+05:26:39 <strcat> renlord: it wasn't strictly a work computer
+05:26:39 <renlord> so much TDP just to render text
+05:26:43 <strcat> I used to have windows on a separate drive
+05:26:46 <strcat> not a separate computer
+05:27:40 <strcat> the Pro version will give you better security than the frozen LTS releases
+05:27:42 <renlord> xorg gives me nightmares and wayland is a timesink
+05:27:51 <dan-v[m]> if you want crystal clear text on your terminals you need at least a 2080
+05:27:54 <renlord> ya, i will very likely just install windows as base
+05:27:57 <strcat> renlord: I used to dual boot with different drives, that's why
+05:28:15 <JTL> dan-v[m]: That font antialiasing is so graphically intensive eh?
+05:28:17 <strcat> and I was playing games that supported linux on linux, but you get lower fps and the graphics are worse so I stopped a while ago
+05:28:30 <dan-v[m]> JTL: haha
+05:28:48 <JTL> (Joking obviously)
+05:28:50 <strcat> renlord: also my windows computer doesn't have a good enough GPU for the 1080 Ti atm, probably
+05:28:53 <cn3m[m]> I use Damn Vulnerable Linux. Linux doesn't have malware /s
+05:28:58 <strcat> I need to rebuild both
+05:29:00 <JTL> ahahaha
+05:29:13 <renlord> LOL 2080 for font
+05:29:16 <renlord> nice
+05:29:21 <strcat> renlord: I don't dual boot anymore so I can use both at the same time
+05:29:21 * leohopper[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/NBqGoXXtLrilDSAUFEZJzWeD >
+05:29:28 <renlord> font with pretty shading also?
+05:29:30 <renlord> ray tracing?
+05:29:49 <JTL> lol
+05:30:28 <strcat> leohopper[m]: this is a dishonest article and shouldn't be posted here
+05:30:45 <strcat> it's misinformation
+05:30:56 <cn3m[m]> yeah that's a stupid article
+05:30:58 <JTL> Pavel Durov smoking from his crackpipe eh?
+05:31:16 <DannyWorkOrderPr> JTL: LMAO
+05:31:25 <JTL> Although the attack surface of various IM apps could be a valid discussion
+05:31:42 <DannyWorkOrderPr> strcat: The W10 telemetry turning back on is mostly reports from social media, and obviously I cannot verify. Troublesome "bug" to hear about, though.
+05:31:42 <cn3m[m]> an exploit is not a backdoor
+05:31:43 <strcat> leohopper[m]: I don't understand the relevance of GrapheneOS - you seem VERY confused
+05:31:51 <strcat> leohopper[m]: I'd suggest starting by no longer reading misinformation
+05:31:53 <JTL> (And not the shit that Durov talks about)
+05:32:13 <strcat> leohopper[m]: the article is just misinformation and full of inaccurate and dishonest claims
+05:32:16 <strcat> so throw away the article
+05:32:24 <strcat> if you have a question, ask the question, don't involve the misinformation post
+05:32:28 <JTL> strcat: I think he's asking if those known past vulnerabilities were exploitable with WhatsApp on a GrapheneOS device
+05:32:50 <renlord> strcat: do you use like a raptor for your workstation like TheJollyRoger?
+05:32:50 <DannyWorkOrderPr> strcat: I know OT, and will take your comments off the air, haha, but, this, regarding my Google comment: https://apnews.com/828aefab64d4411bac257a07c1af0ecb/AP-Exclusive:-Google-tracks-your-movements,-like-it-or-not
+05:32:53 <strcat> no I think he's asking what 'all data on the phone' means which is just a dishonest claim
+05:33:27 <strcat> DannyWorkOrderPr: this is an inaccurate article
+05:33:35 <strcat> DannyWorkOrderPr: doesn't demonstrate / prove what you said
+05:33:47 <strcat> it's not accurate and the people writing it and spinning the facts and making incorrect statements based on their misunderstandings
+05:33:50 <strcat> which is typical
+05:34:11 <strcat> as always, my suggestion is not to take the poor quality of information from mainstream journalists at face value and actually confirm what is or isn't true
+05:34:16 <DannyWorkOrderPr> Google tracking location, even with the preference indicating you'd like them not to? haha - maybe I'm missing something?
+05:34:19 <strcat> don't get your tech information from non-technical journalists
+05:34:31 <strcat> DannyWorkOrderPr: it's not accurate - it's either totally ignorant or dishonest
+05:34:32 <DannyWorkOrderPr> ^+1
+05:34:34 <strcat> take your pick
+05:34:49 <strcat> I think it's both
+05:34:54 <renlord> mostly clickbait
+05:34:56 <renlord> tbh
+05:35:02 <strcat> so now, move on, and stop posting misinformation here
+05:35:04 <renlord> an exercise in job security.
+05:35:19 <strcat> I suggest reading what the location history option says and what the other options say
+05:35:21 <JTL> renlord: Ahahaha
+05:35:36 <renlord> gotta up fkin click quotas
+05:35:37 <renlord> s/up/meet/
+05:35:47 <JTL> Gotta get that ad revenue
+05:35:48 <strcat> the location history option is about maps building a location history by regularly obtaining location
+05:35:57 <cn3m[m]> I get my information about privacy pretty much from my own MITMs and common sense. It works
+05:36:02 <leohopper[m]> > strcat: I think he's asking if those known past vulnerabilities were exploitable with WhatsApp on a GrapheneOS device
+05:36:02 <leohopper[m]> Yes exactly - sorry for not being clear on that
+05:36:09 <strcat> they never said disabling that doesn't mean there won't be location in web/app history
+05:36:13 <dan-v[m]> huh interesting, didn't realize there are actually gpu accelerated terminal emulators (e.g. https://github.com/alacritty/alacritty)
+05:36:26 <strcat> leohopper[m]: I am not going to answer what you posted because it is unclear and what I say can be twisted / misunderstood
+05:36:39 <strcat> leohopper[m]: I won't refer to a misinformation / propaganda piece that's totally inaccurate and dishonest
+05:36:42 <DannyWorkOrderPr> > leaving “Web & App Activity” on and turning “Location History” off only prevents Google from adding your movements to the “timeline,” its visualization of your daily travels. It does not stop Google’s collection of other location markers.
+05:36:42 <DannyWorkOrderPr> Seems a good summary of the dark patterns used in telemetry UI =[
+05:36:49 <strcat> leohopper[m]: if you want to ask a question, ask a clear and specific question without involving that
+05:36:56 <strcat> I won't answer or allow an answer to what you asked, try again
+05:36:57 <cn3m[m]> GrapheneOS won't let apps escape the sandbox
+05:37:18 <strcat> DannyWorkOrderPr: it isn't a dark pattern
+05:37:59 <strcat> DannyWorkOrderPr: turning off location history disables location history
+05:38:44 <strcat> DannyWorkOrderPr: if you just carry around the device and don't do anything with it, your location is no longer going to be recorded by a service, since you disabled the background / passive location history feature that's part of maps
+05:38:58 <strcat> that's a maps feature, not a Play Services or Android feature
+05:39:51 <strcat> leohopper[m]: anyway you need to ask a clearer question
+05:39:53 <DannyWorkOrderPr> Non-techheads don't see "Location History" as a service name. They see it as a type of data concept. So, yeah, when they open their phone and run a search, or use Duo to send a picture, or open the Gmail app, they're still expecting their location not to be stored and used for an ad profile. Buuut, it is.
+05:40:07 <strcat> leohopper[m]: it's not true that the vulnerability gives access to all data on the device, it's not true that it's a backdoor - those are dishonest/inaccurate claims
+05:40:28 <strcat> leohopper[m]: so, that is the only answer you'll get with what you posted - what the post claims to exist does not exist, and I cannot tell you about something that does not exist in terms of relevance to GrapheneOS
+05:40:54 <strcat> DannyWorkOrderPr: turning off location history turns off location history
+05:41:07 <strcat> DannyWorkOrderPr: I'm not saying that it's a service name
+05:41:09 <strcat> I'm sayiong it does that
+05:41:16 <strcat> as I already said
+05:41:18 <strcat> > if you just carry around the device and don't do anything with it, your location is no longer going to be recorded by a service, since you disabled the background / passive location history feature that's part of maps
+05:41:58 <strcat> DannyWorkOrderPr: I'm not sure what there is to misunderstand or spin like this
+05:42:49 <strcat> DannyWorkOrderPr: disabling location history is a maps / google account thing, has nothing to do with the location permission on the device, whether photos have a tagged location, whether various apps use location
+05:43:02 <strcat> it's not an OS configuration setting
+05:43:22 <strcat> go to https://myaccount.google.com/activitycontrols and look at it
+05:43:29 <strcat> Location History (paused)
+05:43:31 <strcat> Saves where you go with your devices, even when you aren't using a specific Google service, to give you personalised maps, recommendations based on places that you've visited and more. Learn more
+05:44:28 <strcat> what gives you the impression that disabling location history would disable using location for other things?
+05:44:50 <strcat> it disables actively monitoring and recording a location history - that's it
+05:45:00 <strcat> I think it maps well to what it does
+05:45:17 <DannyWorkOrderPr> Me? It doesn't. But, I'm not their target market (the other 95%+ of users).
+05:45:31 <strcat> so above that it has
+05:45:35 <strcat> Web & App Activity (paused)
+05:45:37 <strcat> Saves your activity on Google sites and apps, including associated information like location, to give you faster searches, better recommendations and more personalised experiences in Maps, Search and other Google services. Learn more
+05:45:45 <strcat> DannyWorkOrderPr: and disabling BOTH of these obviously doesn't mean location isn't used
+05:45:58 <strcat> it means that keep track of usage history and location history is disabled
+05:46:07 <strcat> so it won't keep a history of searches, etc.
+05:46:39 <strcat> DannyWorkOrderPr: if what you want to do is not give them location, that's an OS / browser setting, this is about what kinds of history gets recorded
+05:46:54 <strcat> > Choose which settings will save data in your Google Account.
+05:47:13 <strcat> DannyWorkOrderPr: I don't think anything is unclear about this
+05:47:18 <strcat> to anyone, technical or not
+05:48:08 <DannyWorkOrderPr> > obviously doesn't mean location isn't used
+05:48:08 <DannyWorkOrderPr> Being used would be cool with most, but stored against an ad profile, or given to people trying to find someone to match a crime based on proximity or something, are a bit different.
+05:48:40 <strcat> DannyWorkOrderPr: you're again making misleading statements
+05:48:42 <DannyWorkOrderPr> Definitely glad to have an OS I trust to do those OS-level toggles, these days =] A good opportunity to say, thanks again!
+05:48:49 <strcat> vague and misleading statements / spin
+05:49:18 <DannyWorkOrderPr> Misleading implies intent...of which I have none besides learning through discussion, mate
+05:49:33 <strcat> yeah it does imply intent
+05:50:12 <strcat> only because you keep doing it
+05:50:16 <strcat> otherwise it wouldn't
+05:50:43 <strcat> I can say something is misleading without that implying the author intentionally made it to be that way
+05:50:49 <strcat> but that is what those journalists intended
+05:51:23 <strcat> > The data saved in your account helps to give you more personalised experiences across all Google services. Choose which settings will save data in your Google Account.
+05:51:30 <strcat> i.e. these are toggles to control what HISTORY is saved
+05:51:38 <strcat> not what data is given to them and not saved
+05:51:39 <cyredanthem[m]> Is this about Windows 10 still?
+05:51:43 <cyredanthem[m]> Yes misleading isn't intentional necessarily
+05:51:52 <cyredanthem[m]> Misleading is essentially fake news
+05:52:29 <strcat> and I don't see anything misleading or deceptive about how they have 'Web & App Activity' as a global toggle for tracking usage history and a separate toggle for active monitoring / saving of location history
+05:52:51 <strcat> important to note location history is disabled by default
+05:52:56 <strcat> and always has been
+05:53:08 <strcat> if you have never EXPLICITLY enabled location history, it isn't enabled
+05:53:15 <strcat> it isn't something people have to go and disable
+05:53:50 <strcat> DannyWorkOrderPr: https://support.google.com/accounts/answer/3118687
+05:54:04 <strcat> and yes this is separate from the general Web & App activity history toggle - which is enabled by default
+05:54:44 <strcat> DannyWorkOrderPr: since this is an opt-in feature and they don't nag to you to enable it / bother you if you don't, I don't think it's particularly relevant to anything
+05:55:08 <strcat> Web & App activity is what people have to opt-out of having, that's the toggle people need to explicitly turn off after making an account
+05:55:41 <strcat> and it does not do involve anything that actively monitors / records location - it's an app / web (search mostly) history
+05:58:04 <DannyWorkOrderPr> Which includes location data from everything between Maps/messaging apps, to the weather widget, lol =\
+05:58:11 <strcat> and opting out of that is just opting out of history - it is a totally separate thing from whether you have your OS / browser configured to send them history
+05:58:25 <strcat> DannyWorkOrderPr: what else would you expect?
+05:58:53 <strcat> DannyWorkOrderPr: when you do a search on maps and you have history of searches enabled - what do you expect?
+05:59:01 <cyredanthem[m]> Google isn't the top privacy company exactly
+05:59:03 <cyredanthem[m]> They aren't as bad as people say
+05:59:25 <strcat> DannyWorkOrderPr: when you grant location access to the search engine in the browser, and you have search history enabled - what do you expect?
+05:59:50 <DannyWorkOrderPr> Again, this is a debate regarding the understanding of Google's market, the average user
+05:59:58 <DannyWorkOrderPr> whom we both agree needs better education and understanding into their daily tools
+06:00:02 <strcat> yeah and I don't think there's anything confusing for the average user
+06:00:07 <strcat> first of all location history is not enabled by default
+06:00:21 <strcat> there is a single unified web & app activity enabled by default and it prompts you to review that regularly
+06:00:33 <strcat> and you can see the data that's there, it clearly lists it all
+06:00:40 <strcat> so there's nothing secret about what it records
+06:00:57 <strcat> it regularly sends you an email to review it, and when you first go to that page you see the latest history
+06:01:09 <DannyWorkOrderPr> But the location-saving of other apps/onphone bits are recorded and stored - perhaps safely hashed and only used securely in ad profiles. Perhaps.
+06:01:09 <strcat> so you'll see your latest searches and if you have location enabled for the search engine it'll be there
+06:01:30 <strcat> DannyWorkOrderPr: I don't know what you mean by 'hashed' there...
+06:01:36 <strcat> and I don't know what you're trying to say
+06:01:41 <strcat> I think you're continuing to be misleading and spin this
+06:02:24 <strcat> it's perfectly valid to disagree with web & app activity being enabled by default, or the lack of granularity that's offered
+06:02:35 <DannyWorkOrderPr> I think we just have a difference of opinion on how easy it is for someone's mom to understand the metadata, and further, the importance of the metadata, they're giving their phone.
+06:03:00 <strcat> this is about a google account not settings on the phone
+06:03:33 <strcat> there is a big difference between disallowing location for google apps and disabling web & app activity
+06:03:47 <DannyWorkOrderPr> For people that aren't like us, Android == Google. It's wrong, in a hundred ways, but that's what they're presented (internationally) by Google/carriers, etc
+06:04:11 <strcat> I don't think there's anything misleading or confusing about these settings and people claiming there is are just being dishonest generally
+06:04:17 <strcat> and I won't permit that here
+06:04:45 <DannyWorkOrderPr> > lack of granularity
+06:04:45 <DannyWorkOrderPr> Big time. You should be able to turn off Location point storage for EVERY app and service, and if you can't do that, it should be explained why.
+06:04:47 <strcat> valid: criticism for the history that's enabled by default (the location history feature is an opt-in setting that is not nagged about)
+06:05:21 <DannyWorkOrderPr> Sorry for damaging the community.
+06:05:24 <strcat> valid: criticism for the lack of granularity (i.e. you can turn off history of searches, app usage, etc. everywhere but you don't have granular toggles such as if you WANTED to save your search history or certain app usage history)
+06:05:32 <DannyWorkOrderPr> Goodnight, all
+06:05:38 <strcat> valid: criticism for the nagging if you disable web & app activity
+06:06:13 <strcat> not valid: complaining about location history being enabled by default since it ISN'T and they NEVER try to trick you or nag you to enable it - I have had a device running stock as a reference for years, I know
+06:06:32 <strcat> not valid: claiming that it's misleading to have a separate toggle for location history
+06:06:34 <strcat> in fact
+06:06:48 <strcat> that complaint conflicts with complaining about the granularity
+06:07:29 <strcat> location history actively monitors and stores your location - that's super invasive, just carrying around the device builds a location history - there's a reason it's opt-in (not enabled by default) and separate
+06:07:54 <strcat> an app recording location when you have allowed it location access and have app usage history enabled is much less invasive, it requires actively doing something
+06:09:10 <strcat> basically people complaining about this separate are saying they want things to be less granular and they're ignoring that location history is off by default
+06:09:28 <strcat> I don't see how it's a bad thing that they actually kept it as a separate opt-in feature since they actually acknowledge how invasive that is
+06:09:41 <strcat> it would be good if MORE stuff was a separate opt-in feature
+06:10:20 <strcat> or if web & app activity was off by default and they didn't nag, then there wouldn't really be anything to complain about
+06:10:32 <strcat> in terms of this history
+06:11:13 <strcat> if people decide to opt-in to location history they can't act surprised about it
+06:11:26 <strcat> but it's valid to be surprised there is web & app history
+06:11:45 <strcat> it's not valid to pretend having the location history toggle is misleading, that's just stupid, and counter-productive
+06:11:55 <strcat> you want that merged with the enabled by default, much less invasive stuff? :|
+06:12:30 <strcat> I could see why someone would want to enable that - or why someone would want to enable search / app usage history
+06:12:46 <strcat> but I think it's wrong that it's enabled by default
+06:12:54 <strcat> location history is off by default - good
+06:13:06 <strcat> web and app usage history should be off by default too, and split up more
+06:13:20 <strcat> I seem to remember it was split up more and people found it confusing so they made it one big toggle
+06:13:37 <strcat> I remember having to separately disable search history and other things 10 years ago or something
+06:13:57 <strcat> I never disabled 'web and app activity', I disabled the more granular things that came before
+06:15:42 <renlord> strcat: ah yes
+06:15:47 <renlord> does nsjail work inside docker?
+06:15:55 <strcat[m]> renlord: probably not?
+06:16:01 <strcat[m]> don't know
+06:16:08 <renlord> i tried building yesterday inside docker and it complained that nsjail doesnt work
+06:16:13 <renlord> and i should report it
+06:16:15 <strcat[m]> yeah namespaces don't nest properly
+06:16:34 <renlord> ok, is the default docker namespacing adequate enough compared to nsjail/
+06:16:43 <strcat[m]> renlord: yes
+06:16:43 <renlord> or i should run in docker privilege and delegate to nsjail?
+06:17:10 <strcat[m]> renlord: the purpose of the build jail is to stop it from accidentally breaking the OS and deleting your data, and to stop it from having accidental dependencies on the outside environment
+06:17:17 <strcat[m]> it's not really a security feature
+06:18:01 <renlord> i see
+06:18:09 <strcat[m]> renlord: and the build jail is used for the main build itself - it isn't used for shell you source envsetup, building the kernel, android-prepare-vendor, etc.
+06:18:19 <strcat[m]> it's used for the soong build when you run `m`
+06:18:21 <strcat[m]> it enters the build sandbox
+06:18:26 <renlord> but i read it enables seccomp-bpf filters and all
+06:18:37 <renlord> so doesnt it count as a security sandbox?
+06:18:48 <strcat[m]> renlord: well nsjail can be used to make a sandbox for security
+06:18:57 <strcat[m]> but the way soong is using it is for what I said
+06:19:03 <renlord> oh ok
+06:19:08 <strcat[m]> it's not necessarily configuring it in a way that provides a security boundary
+06:19:15 <strcat[m]> and the build process doesn't make connections to the internet or anything
+06:19:19 <strcat[m]> so what exactly is the security boundary
+06:19:31 <strcat[m]> since you're running envsetup, etc. outside the build sandbox anyway
+06:50:58 <anupritaisno1[m]> <strcat[m] "renlord: the purpose of the buil"> So why is it broken?
+06:51:02 <anupritaisno1[m]> Using arch with the hardened kernel
+07:10:14 <strcat[m]> the purpose is just not implementing a security sandbox
+07:10:25 <strcat[m]> it isn't "broken"
+07:23:10 <vzlcn0[m]> Have anyone try to enable HDMI on the Pixel's phones?
+09:38:39 <M1eyejack[m]> https://amiunique.org/
+09:38:39 <M1eyejack[m]> Thus site works with vanadium,
+10:05:30 <cyredanthem[m]> > https://amiunique.org/
+10:05:30 <cyredanthem[m]> > Thus site works with vanadium,
+10:05:30 <cyredanthem[m]> Everything does
+10:07:10 <cyredanthem[m]> The modem web is not designed with anti fingerprinting in mind. However only a few methods are statically relevant and stable enough to encourage their adoption
+10:07:14 <cyredanthem[m]> Mozilla in there research found only around 3.5% of sites have fingerprinting and it's mostly just canvass
+10:07:32 <cyredanthem[m]> Their* sorry any soft keyboard
+10:18:51 <twitx[m]> Some Question should a "normal" user get rid of fingerprint unlock since it can be "stolen"?
+10:19:13 <twitx[m]> or not even use it in the first place
+10:19:40 <twitx[m]> * or not even use it in the first place?
+10:20:24 <cyredanthem[m]> Fingerprint lock is a very personal choice
+10:20:40 <cyredanthem[m]> Lockdown mode works, and it often means you have a better password
+10:20:44 <cyredanthem[m]> Though the risks are real
+10:20:46 <cyredanthem[m]> It's a balance
+10:21:33 <cyredanthem[m]> There's no right answer
+10:27:10 <twitx[m]> * Some Question should a person get rid of fingerprint unlock since it can be "stolen"?
+10:28:24 <cyredanthem[m]> If it helps I trust the Titan M chip to do the heavy lifting so I use a full length pin
+10:29:21 <cyredanthem[m]> No fingerprint
+10:32:30 <joeri_poeri[m]> I think it's more personal to what attacks you're expecting. if you're getting arrested for instance police can unlock your phone with your fingerprint in the Netherlands iirc. but if you have a pincode lock you can essentially plead the fifth
+10:32:58 <joeri_poeri[m]> I use the lockdown option every time I go somewhere where you might be required to unlock your phone. when I go through the passport check for instance it might be of use.
+10:34:45 <joeri_poeri[m]> the article is very much in Dutch though https://tweakers.net/nieuws/149740/agent-mag-vinger-verdachte-op-smartphone-plaatsen-om-deze-te-ontgrendelen.html
+10:34:59 <twitx[m]> <joeri_poeri[m] "I use the lockdown option every "> But if you for example cross the border (for example in the United States) won't you device get seized if you don't want to unlock the phone?
+10:35:16 <cyredanthem[m]> It's what you have vs what you know
+10:35:33 <cyredanthem[m]> What you have is not your right to withhold in investigation. What you know it's
+10:35:36 <cyredanthem[m]> Is*
+10:35:36 <twitx[m]> And another Question is it possible to use a Fingerprint only for Apps and not unlocking your phone?
+10:35:57 <cyredanthem[m]> > And another Question is it possible to use a Fingerprint only for Apps and not unlocking your phone?
+10:35:58 <cyredanthem[m]> With an app that requires too many permissions yes
+10:36:21 <twitx[m]> * And another Question is it possible to use a Fingerprint only for Apps and not for unlocking your phone?
+10:36:54 <cyredanthem[m]> I wouldn't use any device admin apps
+10:47:36 <twitx[m]> <twitx[m] "And another Question is it possi"> Okay it seems like that this is sadly not possible
+10:48:54 <cyredanthem[m]> It's possible, but more up to the user
+10:49:00 <cyredanthem[m]> I wouldn't recommend it
+10:49:17 <anupritaisno1[m]> BTW
+10:49:17 <cyredanthem[m]> However I would actively shun anyone who uses it
+10:49:25 <anupritaisno1[m]> Do you think I can run CTS over a network?
+10:49:47 <anupritaisno1[m]> Using adb over network
+10:50:41 <twitx[m]> <cyredanthem[m] "It's possible, but more up to th"> I haven't found such setting to only use it for apps and not for unlocking your phone?
+10:50:48 <cyredanthem[m]> Yeah I don't see why not?
+10:51:19 <cyredanthem[m]> > > <@cyredanthem:synapse.travnewmatic.com> It's possible, but more up to the user
+10:51:19 <cyredanthem[m]> > I haven't found such setting to only use it for apps and not for unlocking your phone?
+10:51:19 <cyredanthem[m]> It requires an app that can control your security measures it's risky
+10:53:40 * twitx[m] uploaded an image: Screenshot_20200516-125120_1.png (92KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/LfOUSNHQsBUqJaEZkdlfKLIW >
+10:53:48 <twitx[m]> ? And sorry for the bad screenshot
+10:56:55 <joeri_poeri[m]> <twitx[m] "Screenshot_20200516-125120_1.png"> I think this is left over from Google pixel phones with things like google pay
+10:57:56 <joeri_poeri[m]> <twitx[m] "But if you for example cross the"> wait really? that's terrible. I expect stuff like this from china and russia and stuff, not the usa
+10:59:33 <cyredanthem[m]> The US pretty much gives you rights if you're an American. If you're not well tough luck
+11:05:33 <twitx[m]> <joeri_poeri[m] "wait really? that's terrible. I "> Yes EFF has a couple of articels about it
+11:06:20 <joeri_poeri[m]> <cyredanthem[m] "The US pretty much gives you rig"> strange, last time I went to the USA was way before smartphones were really a thing, I guess the data on a feature phone weren't as interesting to the authorities back then
+11:06:24 <joeri_poeri[m]> guess that's one more country on the list of where I don't plan on going to...
+11:09:38 <twitx[m]> U could also wipe your things before you go to the U.S. (or take another phone with you that you just use in the U.S. for example)
+11:10:40 <joeri_poeri[m]> haha that might be the most practical solution then, haven't travelled outside of europe for a while now
+11:10:41 <joeri_poeri[m]> welcome to the new normal I guess
+12:49:03 <M11wtf11[m]> <cyredanthem[m] "The US pretty much gives you rig"> Like the right to have FEMA running your county on behalf of a now puppet president?
+12:51:49 <M11wtf11[m]> It's over.  The constitution was binned back in '72.  All youhave rightnow is the right to remain silent - and to take a chipped up vaccine when it all kicks off again by the end of the year.
+12:53:54 <M11wtf11[m]>  * It's over.  The constitution was binned back in '72.  All you have right now is the right to remain silent - and to take a chipped up vaccine when it all kicks off again by the end of the year.
+13:34:49 <M1eyejack[m]> i believe Graphene is working on the usage of fingerprint then passcode to unlock phone. But I could be wrong
+13:38:09 * M1eyejack[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/QqtVJfLWmMeQNsXWydAdXAhV >
+14:10:22 <schnenhcs[m]> So the fingerprint sensor in Bonito 3axl, is apparently connected to TEE and not Titan. As far as I know TEE can be extracted with the right access.
+14:10:22 <schnenhcs[m]> Now the interesting part ist what comes out of the device. Is it like with its own in device salt, that fprint measurements are worthless even when extracted or is the whole Un-Portability done by the TEE?
+14:11:39 <schnenhcs[m]> I mean those things are super convenient but I want to be sure it cant be dragnet farmed.
+15:15:48 <brenneke[m]> <TheJollyRoger "zazagx, I will test with a Yubik"> Do Yubikey 5NFC work with GrapheneOS? Would you recommend using them?
+16:40:24 <renor[m]> Why is it that the phone app doesn't show the Microphone permission?
+16:40:30 * renor[m] uploaded an image: Screenshot_20200516-183951.png < https://matrix.org/_matrix/media/r0/download/privacytools.io/gmocTkOVRFPmkGALzXWXhsgO >
+16:43:43 <renor[m]> strcat
+17:00:36 <matic_nick[m]> Any plans for built in password manager? One thing I love about iOS is how accessible securities are.
+17:02:05 <joshman[m]> What's wrong with Bitwarden or Keepass?
+17:06:32 <matic_nick[m]> <joshman[m] "What's wrong with Bitwarden or K"> I think built in managers would benefit from graphene's security enhancements.
+17:07:27 <matic_nick[m]> <matic_nick[m] "I think built in managers would "> For example Vanadium and pdf viewer are unique to GrapheneOS
+17:11:06 <cn3m[m]> <matic_nick[m] "Any plans for built in password "> GrapheneOS is pretty much iOS but with muh freedoms. I don't think it should add random stuff. iOS is good if you want the spoon fed setup. GrapheneOS is a tool to build your own setup on top of
+17:11:09 <cn3m[m]> I run KeePassDX personally
+17:11:11 <cn3m[m]> Bitwarden forcing the web app to manage your account which is very suspicious
+17:11:13 <cn3m[m]> I don't trust them. Selfhosting is fine too
+17:11:18 <cn3m[m]> choosing which KeePass to build into GrapheneOS would be challenging and controversial. It doesn't make sense
+17:18:11 <matic_nick[m]> I do use keepass across platforms but I feel like the whole password management experience could be better.
+17:19:56 <matic_nick[m]> While I'm no stranger to managing keys and such, I'm not overly comfortable having my password keyfile visible
+17:20:57 <matic_nick[m]> Hence I praise the password management of iPhones.
+17:22:51 <matic_nick[m]> I'm not sure how they(Apple) manage all the keys but afaik if iCloud is disabled then passwords are local only
+17:26:10 <cn3m[m]> it's e2ee or no?
+17:28:10 <matic_nick[m]> I believe so I have to check
+17:28:35 <matic_nick[m]> Yes https://support.apple.com/en-us/HT202303
+17:31:06 <DannyWorkOrderPr> <cn3m[m] "choosing which KeePass to build "> Not that this is likely, but, if this were a thing, I'd choose an inbuilt CLI with *pass*
+17:31:21 <headgas[m]> What linux distros are you guys using?
+17:31:35 <jalb> renor: If I remember well in Android One I could see that permission in the telephone. I can't undestand why the Settings is also a permission in the Camera but not in other apps, and I can't disable it.
+17:33:04 <bseeinu[m]> After 2 weeks, the other thing I'm noticing is how much Japanese font rendering is trash on AOSP compared to iOS
+17:33:12 <bseeinu[m]> Kanji are just horrible to read
+17:35:12 <bseeinu[m]> And apparently rendered with Chinese characters. No wonder then...
+17:38:03 * bseeinu[m] uploaded an image: Screenshot_20200516-123731.png (335KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/raNoEBVciggeMaxDBpRRBhOS >
+17:38:03 <bseeinu[m]> There are even apps to attempt to fix that
+17:38:04 <bseeinu[m]> Wth
+17:39:34 <cn3m[m]> <headgas[m] "What linux distros are you guys "> something that's not Linux
+17:39:56 <headgas[m]> Well those of you that do use linux haha
+17:40:46 <Kurai> arch linux seems to be the most popular around here
+17:41:12 <cx2[m]> Fedora....though I'm  trying to get ahead of the game and attempting to learn Silverblue
+17:42:48 <gervarouge[m]> <headgas[m] "Well those of you that do use li"> He makes a great point
+17:43:33 <headgas[m]> Yea I think I'm gunna switch from Pureos to Fedora, I heard arch is a little out of my league as far as experience
+17:44:01 <headgas[m]> I was just curious
+17:44:10 <cyredanthem[m]> Fedora is the least bad option on Linux imo
+17:45:02 <DannyWorkOrderPr> headgas: I'd evaluate which has faster package updates for what you rely on: Manjaro (a user-friendly Arch variant), or Fedora
+17:45:26 <cyredanthem[m]> Windows 10 LTSC, OpenCore Catalina, and ChromiumOS all are probably better. The security just isn't there
+17:45:54 <cyredanthem[m]> Manjaro is behind on Fedora updates wise
+17:45:54 <headgas[m]> I want to use linux
+17:45:55 <cyredanthem[m]> They are around a week behind
+17:46:48 <DannyWorkOrderPr> <cyredanthem[m] "They are around a week behind"> Are they that far behind upstream Arch, as well?
+17:46:55 <headgas[m]> I just want it to be secure and private as it can, run as smoothly and quickly as it can, and get all the updates quickly, and look good in the process haha
+17:47:18 <DannyWorkOrderPr> Pick ⅔ of those.
+17:47:19 <cyredanthem[m]> > I want to use linux
+17:47:19 <cyredanthem[m]> If a Google account doesn't freak you out a locked down ChromiumOS would be a decent Linux setup
+17:47:24 <jalb> headgas[m], maybe some people here are only looking for security but not for privacy
+17:48:06 <jalb> Linux is not secure but at least respect your privacy more than others
+17:48:13 <headgas[m]> i'm moving away from google completely
+17:48:25 <jalb> headgas[m], I did some time ago
+17:48:49 <TheJollyRoger-M> There is no privacy without security. It's a false dichotomy.
+17:48:52 <gervarouge[m]> <headgas[m] "I just want it to be secure and "> Yeah what Danny said
+17:49:00 <gervarouge[m]> Security Privacy and Usability pick one
+17:49:02 <jalb> TheJollyRoger-M, that's true, but the same otherwise
+17:49:21 <gervarouge[m]> * Security Privacy and Usability pick two
+17:49:35 <jalb> But your system can be very secure and inform about all what you do
+17:49:48 <jalb> Promising that all is disabled and it's not true
+17:49:50 <gervarouge[m]> <TheJollyRoger-M "There is no privacy without secu"> This 100%
+17:50:15 <jalb> SO, it's better to look for privacy and security, both
+17:50:19 <headgas[m]> Ok for sure so then i'll focus on security
+17:51:09 <headgas[m]> So I'll go with Fedora for now
+17:51:18 <headgas[m]> I need to learn a lot
+17:52:15 <bseeinu[m]> Is there a way to change the default system font family from Open Sans to Noto? Noto has CJK style that handles Han for Japanese and Chinese correctly
+17:53:09 <cyredanthem[m]> macOS is security and privacy, but no usability. Linux, is privacy and usability, but no security. Windows is security and usability, but no privacy in a very broad generalization
+17:53:31 <jalb> cyredanthem[m], Apple is privacy?...
+17:53:38 <nickcalyx[m]> Macos has no usability?
+17:53:50 <headgas[m]> Well I bought a librem 15 so I'm stuck with linux
+17:55:58 <bseeinu[m]> This OSs discussion happens once every 24hrs...
+17:56:25 <jalb> bseeinu[m], lol
+17:56:40 <bseeinu[m]> Just scroll above and you'll see history repeating itself with a strict cadence
+17:57:07 <cyredanthem[m]> > cyredanthem, Apple is privacy?...
+17:57:07 <cyredanthem[m]> Yes it is MITM baby
+17:57:19 <cyredanthem[m]> There's no discernable difference to a Linux desktop
+17:57:25 <bseeinu[m]> Fedora manjaro Linux sucks desktops are messy and someone asks about ChromeOS and someone recommends iPads
+17:58:04 <cyredanthem[m]> > Macos has no usability?
+17:58:04 <cyredanthem[m]> In the way Windows has no privacy and Linux has no security. It was a comparative thing
+17:58:15 <bseeinu[m]> "But LTSC is quite good"
+17:58:16 <bseeinu[m]> "Secure hardware doesn't exist etc etc"
+17:59:16 <TheJollyRoger> Just a heads up guys... I'd really like to congratulate the lot of you on not letting this turn into another one of those Toxic Power User infested "Privacy" communities that keep churning their old tirades; as this room continues to grow and take on new members, I'd really like to keep it that way.
+17:59:16 <headgas[m]> Well I sold my ipad pro
+17:59:18 <headgas[m]> And my pixelbook
+17:59:44 <jalb> cyredanthem[m], so you never read all the news and dicoveries about "privacy" in Apple all these past years....
+17:59:46 <gervarouge[m]> The whole security privacy and usability pick 2 is so apt
+17:59:50 <Kurai> ltsc has nothing special, you can set the telemtry to security on a regular enterprise/education install
+18:00:07 <Kurai> and be more up to date
+18:00:11 <TheJollyRoger> Something I'd like everyone to keep in mind is that security and privacy is at every step of the way, a process of harm reduction.
+18:00:28 <bseeinu[m]> Lol
+18:00:28 <bseeinu[m]> "Quotes"
+18:00:32 <cyredanthem[m]> > Just a heads up guys... I'd really like to congratulate the lot of you on not letting this turn into another one of those Toxic Power User infested "Privacy" communities that keep churning their old tirades; as this room continues to grow and take on new members, I'd really like to keep it that way.
+18:00:32 <cyredanthem[m]> Seconded it's pretty mature here
+18:01:18 <cyredanthem[m]> > cyredanthem, so you never read all the news and dicoveries about "privacy" in Apple all these past years....
+18:01:18 <cyredanthem[m]> Nothing is perfect I turn off iCloud. It's good practice to not use cloud services from anyone.
+18:01:35 <cyredanthem[m]> > ltsc has nothing special, you can set the telemtry to security on a regular enterprise/education install
+18:01:36 <cyredanthem[m]> No edge or store it's pretty cut down
+18:02:03 <headgas[m]> Well I appreciate all your guys knowledge
+18:02:28 <TheJollyRoger> Yeah. There's nothing worse than those toxic privacy rooms that have no concept of a threat model, and end up driving people to take steps /backward/ rather than forward because they've never actually dug into the code, nor set up interception and continue churning old myths based on reputation and hearsay. It's very harmful and it'd really break my heart to see this place become like that.
+18:03:29 <bseeinu[m]> Guys, side question when a dev gets a chance, related to Grapheme: what's the system font? Roboto? Open Sans?
+18:03:29 <bseeinu[m]> I'm trying to figure out how can I use one that doesn't cause problems with Japanese and Chinese characters and see if I can fix that with adb
+18:03:42 <bseeinu[m]> *graohene
+18:03:50 <bseeinu[m]> * *graphene
+18:04:55 <TheJollyRoger> Ah, hmm. I'm not sure, fingers crossed we'll find that. Let me see if there's anything under developer settings.
+18:05:18 <cyredanthem[m]> TheJollyRoger: I ran into a guy who said that Superfish was no big deal...
+18:05:20 <cyredanthem[m]> Other chatrooms are scary
+18:05:53 <JTL> DEAR GOD
+18:07:29 <TheJollyRoger> Aaaaargh X(
+18:08:11 <jalb> :-o
+18:08:13 * bseeinu[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/YfsrjSEMuUMBQUFyXxLJUxyU >
+18:08:32 <bseeinu[m]> Well, for the part that I care about which is Han characters
+18:08:49 <bseeinu[m]> I think I'm just going to keep the sucky rendering
+18:09:09 <cyredanthem[m]> TheJollyRoger: cn3m ran into a guy that said MITMs were downgrade attacks and you couldn't see contents
+18:09:23 <BrokenCog> hellos.  I'm getting a connection error trying to extract the vendor binaries with the command:
+18:09:25 <cyredanthem[m]> He said all software should be free software or I guess be deleted
+18:09:26 <BrokenCog> vendor/android-prepare-vendor/execute-all.sh -d bonito -b qq2a.200501.001  -o vendor/android-prepare-vendor
+18:09:29 <BrokenCog> I get the error:
+18:09:44 <BrokenCog> URL not found
+18:10:01 <BrokenCog> have I got the BuidlId wrong or something??
+18:11:38 <TheJollyRoger> cyredanthem[m]: *cringe*
+18:12:40 <TheJollyRoger> Hey BrokenCog, ah crud, you're way ahead of me here, I'll try and see if I get the same once I catch up X(
+18:12:57 <BrokenCog> okay :).
+18:13:30 <TheJollyRoger> It uh... it could be a while >_<.
+18:13:55 <BrokenCog> I hear you :).
+18:14:05 <BrokenCog> PM me your results?  I'll be in and out.
+18:14:21 <TheJollyRoger> That video of the wrestler jumping off the top of the cage and (accidentally?) landing flat on his face adequately describes my attempt to wrestle with the computer :(
+18:14:35 <TheJollyRoger> I will!
+18:16:03 <aeonsolution[m]> BrokenCog: did you find a fix for that error
+18:17:15 <aeonsolution[m]> this is dan-v's solution: <https://github.com/RattlesnakeOS/android-prepare-vendor/commit/32e6e21fda3347850f1a1cffc12e0350715c694c>
+18:17:36 <TheJollyRoger> \o/ Horay aeonsolution[m] and dan-v to the rescue!
+18:18:02 <aeonsolution[m]> run: `find -name download-nexus-image.sh`
+18:18:31 <aeonsolution[m]> and make the changes the file, DO NOT edit anything else
+18:18:32 <aeonsolution[m]> you'll have a bad time
+18:20:01 <dan-v[m]> i heard my name, what did i break
+18:20:27 <aeonsolution[m]> nothing, I was giving BrokenCog your solution to the URL not found error
+18:21:54 <DannyWorkOrderPr> > Seconded it's pretty mature here
+18:21:54 <DannyWorkOrderPr> Self-regulation, and a well-defined goal (Harden Android, understand and bolster threat models). Best communities practice these =]
+18:22:40 <DannyWorkOrderPr> bseeinu: Doesn't Japan use iPhone more than the US? Or is that a cognitive bias?
+18:24:26 <dan-v[m]> also worth mentioning on android-prepare-vendor side, cdesai  has the updated aospalliance fork (https://github.com/AOSPAlliance/android-prepare-vendor/) with pixel 4 support and with a few tweaks for stock aosp (https://github.com/AOSPAlliance/android-prepare-vendor/pull/3) was able to get it working for rattlesnakeos.
+18:27:10 <dan-v[m]> so in theory, there could be pixel 4 support now for graphene if those changes are pulled in and there was someone willing to maintain it etc
+18:28:10 <bseeinu[m]> <DannyWorkOrderPr "bseeinu: Doesn't Japan use iPhon"> I think that is correct, and I definitely can't blame them if fonts look like this to Japanese people
+18:28:58 <cyredanthem[m]> US and UK are both 50% iOS 50% Android right?
+18:29:12 <bseeinu[m]> US not really
+18:29:25 <bseeinu[m]> More androids but it becomes an income thing
+18:29:45 <bseeinu[m]> Over 65 middle to low income are basically 80% android
+18:29:57 <bseeinu[m]> Also low income in general are more android
+18:30:01 <aeonsolution[m]> Thanks! dan-v  I would be interested in doing that ✋, but I don't have the funds for the phone. strcat put a deadline too so I don't know where that leaves us.
+18:30:03 <bseeinu[m]> That's the real world
+18:30:30 <aeonsolution[m]> Is there a place to get the Pixel 4 refurbished or cheap on the secondary market?
+18:30:37 <bseeinu[m]> Swappa
+18:34:12 <headgas[m]> I posted on here that i'd sell mine but then I found out Calyxos is ready for the pixel 4 on monday so I'm gunna try that out
+18:35:10 <dan-v[m]> in the past i've bought phones from ebay that have severe screen burn in / cracks / etc if it's purely a phone for testing
+18:35:27 <dan-v[m]> generally you can get those for very cheap, but with pixel 4 still being pretty new, probably tough to find that
+18:35:42 <aeonsolution[m]> yeah, i figured as much :/
+18:35:51 <aeonsolution[m]> thanks dan, ill see what i can find
+18:36:12 <jalb> Well, maybe pixel 3a is the best phone you can buy now and it's cheaper
+18:36:32 <headgas[m]> But gotta get the 4 to get graphene on it haha
+18:36:42 <aeonsolution[m]> I have the Pixel 3a already, just wanted to pitch in to help with Pixel 4 support
+18:36:51 <jalb> We don't know if pixel 4 will get grapheneos yet
+18:37:07 <headgas[m]> I wanna start learning so I can help and not just be like is it ready yet?
+18:37:18 <TheJollyRoger> jalb: it'll only happen if someone is going to step up and put in the work for it, and that's what he wants to do.
+18:37:42 <jalb> Yes TheJollyRoger , I read what strcat said these last days about it
+18:38:06 <jalb> That's what I mean
+18:38:08 <cyredanthem[m]> Pixel 4 just doesn't have the developer interest
+18:38:59 <jalb> It's a pity...
+18:39:10 <jalb> But I understand strcat completely
+18:39:10 <aeonsolution[m]> it does, what is happening is not enough people are willing to pitch in to help
+18:39:35 <TheJollyRoger> cyredanthem[m]: it's not just the 4. We need help maintaining the devices we currently have. Right now, it's a full time job for our lead developer. Ideally, what would be the best would be if we had one dedicated maintainer for each device.
+18:40:11 <TheJollyRoger> As well as get contributions from the community at bringing back many of the past features that were lost during the split.
+18:40:48 <jalb> TheJollyRoger, that would be great, maybe talking more and more about GrapheneOS out there could be a solution to get it
+18:41:16 <cyredanthem[m]> Making a phone rom is hard since you need to devices
+18:41:16 <aeonsolution[m]> For now, I'll throw out there. If there is anyone that wants to start with maintaining a device from a completely no experience position, please reach out to me. I can help you get started.
+18:41:33 <cyredanthem[m]> I really have no interest for that reason
+18:41:47 <TheJollyRoger> If we could have at least one dedicated maintainer for each device, a large amount of community contributions like developing an application store, our lead developer could have more time doing things like making headway toward the features that he really sees the niche for GrapheneOS for, like improving the memory safety routines and low-level exploit mitigations to deal with the memory
+18:41:49 <TheJollyRoger> corruption vulnerabilities Linux is very vulnerable to.
+18:41:49 <cyredanthem[m]> I would love too since I worked on custom ROMs before
+18:41:51 <headgas[m]> Me
+18:42:05 <cyredanthem[m]> However, two devices isn't in the cards for me
+18:42:12 <TheJollyRoger> At this moment, the good news is for people who aren't doing device specific work (which there's still a lot of!)
+18:42:21 <TheJollyRoger> The good news is that GrapheneOS /can run in an emulator./
+18:42:45 <aeonsolution[m]> headgas: What device are you trying to maintain that is actively supported already?
+18:42:54 <TheJollyRoger> So this means if you're doing things like say, for instance, working on contributing a first-party appstore with a list of curated apps specifically for GrapheneOS, such as hey,
+18:43:00 <headgas[m]> I only own the pixel 4, but I want to learn
+18:43:06 <TheJollyRoger> maybe we could replace the old E-mail app with a modern, full-featured mail client!
+18:44:14 <TheJollyRoger> Maybe we could locate a full-featured media player that's got good, dependable, reliable upstream sources, and work with them to produce a GrapheneOS media player that also takes advantage of the sandboxing and such on GrapheneOS, and will work with the scoped storage that GrapheneOS may implement, and target the GrapheneOS versions of the Android API!
+18:44:23 <jalb> TheJollyRoger, what about FairEmail?
+18:44:35 <TheJollyRoger> All that is /entirely/ doable without even purchasing *one* phone!
+18:44:56 <nickcalyx[m]> I don't think fairemail supports pgp
+18:45:09 <dan-v[m]> nickcalyx: it does
+18:45:13 <jalb> I think so if I remember well when I used it
+18:45:33 <TheJollyRoger> Again, the pull request could be welcomed, especially if you're willing to maintain the port, or upstream is willing to play ball with us.
+18:45:49 <jalb> Anyway I continue with K-9
+18:45:55 <dan-v[m]> nickcalyx: it integrates with openkeychain
+18:45:58 <cyredanthem[m]> Theoretically I don't need two devices if I run an emulator?
+18:46:00 <cyredanthem[m]> I thought that wasn't recommended
+18:46:26 <TheJollyRoger> cyredanthem[m]: again, that's if you're doing device-specific work like backporting the kernel patches and out-of-tree code from upstream.
+18:46:55 <TheJollyRoger> Or if you're handling drivers, which again, are device-specific.
+18:47:01 <nickcalyx[m]> Nice, I am using k9 with open keychain
+18:47:35 <gervarouge[m]> I might be able to help with emulator stuff too would love to bring back old features
+18:47:41 <dan-v[m]> nickcalyx: the FairEmail developer is insane, never seen a dev so constantly committing code to a project.
+18:47:45 <TheJollyRoger> Another thing that could really help us, as well, would be to do something like work on developing an application store. It doesn't have to be fancy, or even offer a slick UI at this moment.
+18:47:45 <headgas[m]> Whats open keychain, i use k9 on my pixel
+18:47:56 <aeonsolution[m]> <headgas[m] "I only own the pixel 4, but I wa"> I don't know about porting, I want to help people maintain actively supported devices. Porting a device, is outside of my skillset at the moment.
+18:48:15 <TheJollyRoger> But what it does need to do is accomplish the goals of an application store, without being relied upon as a trusted third party.
+18:48:16 <headgas[m]> Ok
+18:48:21 <TheJollyRoger> This means we need upstream to play along with us.
+18:48:39 <TheJollyRoger> Oh yes.
+18:48:39 <jalb> TheJollyRoger, that's a dream come true :)
+18:48:45 <TheJollyRoger> Yep!
+18:49:04 <TheJollyRoger> Oh yes. Speaking of which, did any of you guys ask me if Yubikey 5NFCs work with GrapheneOS?
+18:49:13 <TheJollyRoger> Someone did, but I forget who...
+18:49:34 <TheJollyRoger> So I'll confirm right now Yubikey 5NFCs will work with OpenKeyChain for GPG signing and decryption operations.
+18:49:54 <TheJollyRoger> Just hold them onto the back of your phone next to the fingerprint sensor and enter the pincode.
+18:50:02 <TheJollyRoger> BUT!!!!
+18:50:06 <TheJollyRoger> And there's always a but --
+18:51:01 <dan-v[m]> yubikey 5c also works nicely with openkeychain
+18:51:05 <TheJollyRoger> On the regular Factory Google Android, the backend U2F functionality is actually provided by Play Services on behalf of the apps. Because Google Play is by design absent in GrapheneOS, this functionality theoretically exists,
+18:51:28 <TheJollyRoger> but it needs a bit of extra code to be added to the operating system to work with the apps.
+18:51:57 <jalb> TheJollyRoger, does it mean adding Google trackers or something like that?
+18:52:56 <jalb> Or an alternative?
+18:52:57 <TheJollyRoger> jalb, it doesn't. The code for U2F clients is freely available on Github and is permissively licensed. I see one way out of this going forward without needing Google Trackers:
+18:53:09 <jalb> Great!
+18:53:14 <TheJollyRoger> A) You add that code directly to the Vanadium patchset and patch it in.
+18:53:23 <TheJollyRoger> This is probably the most "direct" route.
+18:53:33 <TheJollyRoger> However,
+18:53:34 <schnenhcs[m]> Hmm ok. The last client RiotX was buggy af. Normal Riot works.
+18:53:38 <TheJollyRoger> There's option B:
+18:54:32 <TheJollyRoger> Option B: Someone stubs in the play services API for U2F, and writes the missing API to have GrapheneOS' own code provide the missing U2F functionality.
+18:54:39 <schnenhcs[m]> I asked about the fingerprint sensor in Pixel 3a XL, does it only output hashed data from the device itself?
+18:55:17 <TheJollyRoger> Option B would take more time and effort, but it would be a more permanent and more lasting solution, and it would allow other apps on the phone that aren't Vanadium to use U2F, which would be very nice.
+18:56:08 <TheJollyRoger> So Option A could be considered in interim. So if anyone's good with C and Java, check out the code from FIDO Alliance for U2F: the reference code is available.
+18:56:34 <TheJollyRoger> schnenhcs[m]: your fingerprint isn't stored on the phone, if I recall correctly, so I'm not actually sure what you mean by "output hashed from the device itself."
+18:56:42 <TheJollyRoger> Only the means to check it for correctness.
+18:58:25 <TheJollyRoger> dan-v[m]: wow. If there's a really good developer for FairEmail, maybe if we could get a first party app store, I wonder if it might be possible to work with him and work out a system where he could push updates to the app store directly without us needing to become a downstream trusted third party...?
+18:59:17 <jalb> TheJollyRoger, it's the same developer from Netguard
+18:59:50 <TheJollyRoger> Since I have to admit it would be REALLY nice to have an appstore model where the upstream app developers themselves sign their own packages, with their own certificates, and then `git push` to an app store update server so the updates can be distributed to the phones right away, the way Google does it.
+19:00:01 * TheJollyRoger whistles.
+19:00:05 <TheJollyRoger> Wow!
+19:00:41 <jalb> I uninstalled FairEmail because it was updating the app more than 2 times daily
+19:00:46 <cyredanthem[m]> NetGuard is kinda useless
+19:00:48 <jalb> He works a lot in the app
+19:00:57 <TheJollyRoger> This decentralized method of signing where each app is signed by a different certificate would beat the security vulnerabilities out of a "trusted third party" app store distribution model.
+19:01:04 <jalb> cyredanthem[m], wrong, it has many features you can use
+19:01:31 <TheJollyRoger> But first, I think we would need that appstore.
+19:01:32 <TheJollyRoger> FORTUNATELY!
+19:01:43 <TheJollyRoger> An appstore like that actually isn't device-specific!
+19:01:49 <jalb> An example: routing all your smartphone through Tor (ORbot) if you want, and only the apps you want to connect to internet
+19:01:59 <TheJollyRoger> So that's one of the "big ticket" items.
+19:02:06 <schnenhcs[m]> <TheJollyRoger "schnenhcs: your fingerprint isn'"> As far as I have read (found the vendor but not the datasheet) the sensor is not connected via Titan but Trustzone, which is imo way more malleable. Graphene supplies it as far as I know its prebuilt, isn't it?
+19:02:37 <cyredanthem[m]> > cyredanthem, wrong, it has many features you can use
+19:02:37 <cyredanthem[m]> Firewalls are bypassable
+19:02:55 <jalb> cyredanthem[m], but you can use some other features included
+19:03:07 <TheJollyRoger> jalb:  on GrapheneOS you might actually notice there's an existing Network Permission alongside the standard Android permissions. This actually complies with the Android security model in that nothing but netd should EVER talk to the networking stack.
+19:03:32 <TheJollyRoger> So breaking the Network permission on GrapheneOS would actually require a kernel or SELinux exploit.
+19:03:37 <schnenhcs[m]> I have one very specific usecase that nethuard just cant provide.
+19:03:37 <schnenhcs[m]> A HP printer App that is only allowed access to the local wifi subnet and not further.
+19:03:59 <jalb> TheJollyRoger, I know, but for example in Netguard I see many system apps I can't see in the Network permissions
+19:04:13 <jalb> And with Netguard I can also use other features
+19:04:30 <schnenhcs[m]> It works really well but I dont want my printjobs at HP or my printer to become unable to bear 3rd party ink.
+19:05:31 <jalb> TheJollyRoger, the fact is that it only uses the VPN service of Android and redirect some apps to a sink hole, nothing more. Even Daniel talked in the website some words about this app, I don't remember what
+19:05:39 <jalb> If it was good or bad
+19:06:25 <TheJollyRoger> sec
+19:06:54 <jalb> I use it with no problems
+19:07:27 <jalb> Using the VPN service to provide something other than a VPN also means that these apps need to provide an actual VPN implementation or a way to forward to apps providing one, and very few have bothered to implement this. NetGuard is an one example implementing SOCKS5 forwarding, which can be used to forward to apps like Orbot (Tor).
+19:07:34 <jalb> That's what he posted
+19:07:57 <jalb> And that's what I use with Netguard exactly
+19:08:34 <schnenhcs[m]> <TheJollyRoger "This decentralized method of sig"> Would be cool if android had attestation (only to the user) and a ledger for app signatures. For example I travel to another country and install a local bus plan app, then remove it. A year later I come back there and want to installit again...
+19:08:36 <jalb> Or only blocking all traffic except Tor browser when I want to browse in a private mode
+19:47:01 * bseeinu[m] uploaded an image: black_wallpaper.png (0KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/iorwZrgwxCGcDGiISILBamSi >
+19:47:02 <bseeinu[m]> The smallest possible pure black wallpaper image at native resolution for Pixel 3, if anyone wants it for their OLED display :) Stripped all metadata possible and at 1080x2160 so no need for resizing by Android :) Only 364 bytes, if anyone wants it :)
+19:47:34 <bseeinu[m]> I guess you could shorten the filename to make it smaller if you really wanted to :D
+19:47:48 <headgas[m]> How about for the pixel 4xl haha
+19:48:26 <bseeinu[m]> Would it be better to use native resolution, like this, or to make a 1x1 black square? Not that it makes any real impact, but I just didn't want it to have to do any stretching or tiling with a 1x1 PNG
+19:49:41 <bseeinu[m]> I'll share one for the 4XL once Graphene runs and is maintained on it :D
+19:52:40 <cyredanthem[m]> 1x1 vs native resolution doesn't matter
+19:52:41 <cyredanthem[m]> At all
+19:52:47 <bseeinu[m]> :D
+19:53:10 <bseeinu[m]> Then here's a 1x1 black png square. 82 bytes
+19:53:18 * bseeinu[m] uploaded an image: 1.png (0KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/cdXJQNLmydEUYIjVxcVqPNCB >
+19:54:38 <headgas[m]> bah
+19:55:19 <bseeinu[m]> My boredom bores you?
+19:55:35 <bseeinu[m]> I got to 67 bytes if that can generate one more yawn
+19:55:53 <bseeinu[m]> It's just me and compression right now :)
+19:56:19 <headgas[m]> No that you wont make a black background for the 4 until graphene os is running on it and maintained lol
+19:56:31 <bseeinu[m]> Haha
+19:56:36 <bseeinu[m]> Use the 1x1 pixel
+19:56:43 <bseeinu[m]> That's why I made it.
+19:57:02 * bseeinu[m] uploaded an image: 2.png (0KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/OctUBkKyPyoYjqCnDOtiLQpC >
+19:57:14 <bseeinu[m]> 67 Bytes. Last one as I don't want to clog the chat with this stuff. It's enough
+19:57:50 <headgas[m]> you didnt send it
+19:58:05 <bseeinu[m]> Uh, I see it as sent
+20:00:19 * bseeinu[m] uploaded an image: screenshot.png (119KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/LWsMOqKhsUxigJSyAuBlyNZe >
+20:01:39 <headgas[m]> Not on mine
+20:03:27 <headgas[m]> Ok got. On my laptop it didn't show. But my phone it did. Thank you!
+20:06:09 <bseeinu[m]> Np. Just trying to get the smallest possible 1x1 black pixel file. This is REAL boredom now.
+20:09:31 <bseeinu[m]> I got to 35 bytes but can't do any better.
+20:13:23 <bseeinu[m]> data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==
+20:13:52 <organella[m]> With NetGuard do you block wifi&mobile by default and is there a list for Graphene's system apps&services that should have net access for security updates and other essential functions?
+20:14:50 <organella[m]> * With NetGuard do you block wifi&mobile by default and is there a list for Graphene's system apps&services that should have net access for security updates and other essential functions if blocking by default?
+20:44:30 <jalb> organella[m], yes!
+20:45:36 <jalb> You can do it without Netguard too if you use Orbot in VPN mode but it's different to me, more options and easily.
+20:48:59 <jalb> You can only se 1 VPN service in Android, and Netguard uses 1 in mine, so I use it with Orbot sometimes to route the apps through Tor (only the apps i want, the rest are blocked to internet), or only Tor browser when I give it access. I block all system apps except DNS Daemon, root (it's not like Linux) and Seemless Update Client
+20:49:09 <jalb> *only use
+21:25:34 <aeonsolution[m]> renlord: were you able to fix the URL not found issue?
+21:29:39 <strcat[m]> jalb: you can see all the system apps in the regular permissions menu
+21:34:49 <jalb> straycat[m], I don't know why but in Netguard there are others I can't see in the permission menu. Maybe they are not so important.
+21:35:08 <strcat> you can see all apps in the permission menu
+21:35:11 <strcat> what you're saying isn't true
+21:35:14 <strcat> among other things
+21:35:14 <jalb> Sorry, strcat
+21:35:28 <jalb> Please clarify me those things
+21:35:31 <strcat> there is a toggle to show system apps in the permission menu
+21:35:37 <strcat> all apps are listed there
+21:35:39 <jalb> Yes, I click in it
+21:35:50 <strcat> there is nothing not listed there
+21:35:56 <jalb> And I counted the number of apps in both sides
+21:36:03 <strcat> forbidding permissions needed by system apps is not really a good idea though
+21:36:04 <jalb> It's different
+21:36:16 <strcat> so then Netguard ix broken/wrong which is not surprising
+21:36:18 <jalb> Is there a problem using Netguard?
+21:36:40 <strcat> I already know the way it does various things is wrong
+21:36:44 <jalb> Maybe it's not forbidding them, only says so
+21:36:46 <jalb> IDN
+21:37:32 <jalb> For example I can use only Orbot in VPN mode to route apps through Tor, but in Netguard I get more options and easily and it only uses the Android VPN service
+21:37:37 <jalb> Is it a problem?
+21:38:38 <strcat> not clear what you mean
+21:38:49 <strcat> but you don't need a third party app to see all the apps with the Network permission and toggle it off
+21:38:51 <strcat> it's not true
+21:38:56 <strcat> same goes for other things you said earlier
+21:39:12 <jalb> I know, I can only use the Network permission
+21:39:14 <strcat> and disabling permissions for system apps is not a good idea if you don't understand what you're doing
+21:39:36 <jalb> strcat, that's interesting
+21:39:44 <strcat> how are apps going to download things via DownloadManager if you disabled the Network permission for it?
+21:40:06 <jalb> You know, I was using Netguard before in an Android one full of Google services and apps, maybe I don't need it now in GOS
+21:40:25 <Kurai> strcat you should move "adkim=s; aspf=s;" at the end of the dmarc entry to have a syntactically correct policy
+21:40:27 <strcat> and I don't know what you mean by allowing network access for root since there are 0 processes running as root that access the network
+21:41:29 <jalb> Then root is a Netguard thing to use DNS too...
+21:41:31 <strcat> Kurai: per https://tools.ietf.org/html/rfc7489 that's not the case
+21:41:51 <strcat> there is no rule about order
+21:42:10 <jalb> So, in GOS, do you recomend to only route through Tor with Orbot in VPN mode?
+21:42:30 <jalb> And not using another app?
+21:42:37 <jalb> It's useful to me, thanks
+21:42:42 <strcat> Kurai: in fact I'm using the order they use in the RFC which is alphebetical
+21:42:49 <strcat> but you don't have to use a specific order
+21:43:11 <Kurai> uhm ok, I just noticed that mxtoolbox.com and internet.nl complain if they are in you order
+21:43:28 <Kurai> but it didn't read the documentation
+21:43:31 <Kurai> I*
+21:44:36 <strcat> I could put it at the end but I see no requirement to do that
+21:44:40 <strcat> seems like a bug in those sites
+21:56:41 <strcat[m]> Kurai: seems to be fine now
+21:56:47 <strcat[m]> can you look again
+22:04:52 <Kurai> strcat yep they are fine now, so there was no need to move them at the end like I did
+22:05:58 <strcat[m]> Kurai: p= has to be first, that's all
+22:06:04 <strcat[m]> the others can be in any order
+22:06:13 <strcat[m]> I don't really know why p= has to be first but that's implied in a sentence
+22:09:05 <Kurai> anyway thank you for the email knowledge
+22:18:33 <limitless0[m]> Netguard its not perfect but its very useful on blocking ads and trackers from apps
+22:19:25 <limitless0[m]> The doh or dot adguards or others i tried dont block all facebooks domains
+22:20:35 <limitless0[m]> If you want to block network use the system toggle,if you want to use it as adblocker then netguard it does what it says on the tin
+22:24:55 <limitless0[m]> To block all social media trackers with netguard change the hostfile download link to Steven Black including social blocking
+22:27:16 <strcat[m]> if an app is on your device and you're allowing it network access then that's everything it needs to export data
+22:27:25 <strcat[m]> blocking certain domains doesn't stop it from indirectly talking to those
+22:27:43 <strcat[m]> there's this fallacy that blocking client-side connections to a certain place like facebook stops it from talking to that
+22:28:07 <strcat[m]> people make the same mistake with the browser
+22:28:21 <strcat[m]> if the app can talk to the app developer's server it can talk to facebook, sorry
+22:28:25 <limitless0[m]> <strcat[m] "there's this fallacy that blocki"> Oh come on not again!
+22:28:47 <strcat[m]> facebook has server-side integration too
+22:28:49 <strcat[m]> there is no requirement that the app itself talks to them
+22:28:55 <strcat[m]> applies to anything
+22:29:00 <limitless0[m]> Pleasr dont say i been wasting my time with netguard
+22:29:22 <renor[m]> <strcat[m] "there's this fallacy that blocki"> So what's the most viable option to avoid being tracked?
+22:29:34 <strcat[m]> define tracked
+22:29:41 <strcat[m]> blocking client-side connections like that accomplishes little
+22:29:47 <strcat[m]> what do you think you're accomplishing and why?
+22:30:09 <strcat[m]> why would blocking direct connections to facebook from the client stop data from getting to fb?
+22:30:10 <limitless0[m]> Tracking like Graph.facebook
+22:30:12 <limitless0[m]> Etc etc
+22:30:15 <strcat[m]> it clearly doesn't, think about it
+22:30:16 <strcat[m]> define tracking
+22:30:19 <strcat[m]> not clear what you mean
+22:31:06 <renor[m]> By tracked I mean giving information about my usage, content, and other to third parties which I haven not given explicit consent to
+22:31:09 <strcat[m]> an app is code, obviously it has access to the data it owns
+22:31:25 <strcat[m]> if you give it network access then it can send that data somewhere
+22:31:31 <renor[m]> For sure
+22:31:36 <strcat[m]> blocking direct connections to certain sites doesn't stop the data from ending up there
+22:31:46 <strcat[m]> it doesn't have to go directly from the client... why would it? doesn't make sense
+22:31:58 <strcat[m]> if you allow the app to talk to the app dev's server you can assume they send the data to everyone they want to send the data to
+22:32:04 <strcat[m]> blocking stuff in the client doesn't change anything
+22:32:12 <strcat[m]> why would it? I don't understand where you get that idea
+22:32:15 <renor[m]> You're right
+22:32:51 <strcat[m]> if you don't want an app sending data somewhere don't give it the data
+22:32:55 <strcat[m]> don't give it access
+22:33:00 <limitless0[m]> Yes but the dev server maybe doesnt collect what letd day app-measurement collect
+22:33:01 <renor[m]> <strcat[m] "why would it? I don't understand"> I'm not saying this, I have never said it
+22:33:04 <strcat[m]> there's a permission model and you choose what data you enter into the app
+22:33:16 <strcat[m]> don't give the app data you don't trust it to have
+22:33:46 <limitless0[m]> But we need apps that connect to internet do its a losing battle?
+22:34:05 <strcat[m]> limitless0: you're misinterpreting what I'm saying
+22:34:18 <strcat[m]> limitless0: fine-grained filtering of client-side connections does not accomplish what you seem to think
+22:34:33 <strcat[m]> if the app wants to send data to facebook it can send the data from their server, it doesn't need to send it from the client
+22:34:43 <strcat[m]> why would it need to send it from the client?
+22:34:45 <strcat[m]> just think about it
+22:34:58 <strcat[m]> applies to browsers too
+22:35:10 <strcat[m]> what do you really think you're accomplishing with privacy/security theater approaches
+22:35:16 <renor[m]> <strcat[m] "limitless0: fine-grained filteri"> In fact it can make you more unique, am i wrong?
+22:35:28 <strcat[m]> well if you are breaking the app
+22:35:38 <strcat[m]> you can assume you are going to show up in app error logs for the dev
+22:35:57 <limitless0[m]> Do even apps that declare no tracking on exodus can still sell our data ?
+22:36:22 <strcat[m]> limitless0: scanning apps for tracking/malware is basically just theater
+22:36:26 <strcat[m]> you can identity known 'trackers'
+22:36:27 <limitless0[m]> Ok better question:
+22:36:50 <strcat[m]> an app not having known 'trackers' doesn't mean it doesn't do things you would consider privacy violating
+22:36:51 <strcat[m]> clearly that isn't a working approach
+22:36:56 <strcat[m]> it's like AntiVirus - how can that work?
+22:37:02 <limitless0[m]> Can an app without trackers Can* do same as app with trackers?
+22:37:08 <strcat[m]> you can enumerate all badness, it is not a working approach to privacy or security
+22:37:11 <strcat[m]> it's a bankrupt approach
+22:37:19 <strcat[m]>  * you can't enumerate all badness, it is not a working approach to privacy or security
+22:37:20 <renor[m]> <limitless0[m] "Do even apps that declare no tra"> I think so, you should read the code to make sure... I think that most times trusting words is trusting the common theater
+22:37:26 <strcat[m]> limitless0: I don't know what you mean
+22:37:35 <strcat[m]> limitless0: what you'
+22:37:40 <strcat[m]> what you're saying is nonsensical
+22:37:54 <limitless0[m]> Nevermind
+22:37:58 <strcat[m]> there is no 'tracking' privilege for apps
+22:38:15 <strcat[m]> there is no way to detect whether or not an app does 'tracking'
+22:38:27 <strcat[m]> that is fundamentally impossible to do
+22:38:35 <strcat[m]> you can only detect KNOWN code that is considered to do 'tracking'
+22:38:58 <strcat[m]> I really strongly suggest just thinking about these things
+22:39:13 <strcat[m]> I'm sure if you actually think about it you can see why what you are saying doesn't make any sense
+22:39:20 <limitless0[m]> In tracking i mean trackers that declare on aurora store for example when you domwload an app you can srr for google trackers facebook etc etc
+22:40:05 <strcat[m]> checking if an app includes obvious SDKs, etc. that are considered to do 'tracking' (whatever you're using to check that may not be accurate anyway) can only identity known things
+22:40:07 <strcat[m]> do you understand?
+22:40:24 <strcat[m]> lets say the app requests access to your contacts for local usage
+22:40:33 <strcat[m]> the app developers decides to send it off to their server without telling you
+22:40:37 <strcat[m]> they then send it to facebook
+22:40:45 <strcat[m]> that's not going to be detected as a 'tracker' by anything
+22:40:51 <strcat[m]> because it's code specific to that app
+22:41:32 <strcat[m]> absence of common SDKs that are considered to do 'tracking' obviously does not mean the app doesn't do stuff like that
+22:41:35 <strcat[m]> really, before saying more, just think about it
+22:41:40 <strcat[m]> think before writing
+22:41:56 <strcat[m]> it's a waste of time to state obvious things here and go through common sense reasoning
+22:42:07 <strcat[m]> people are more than capable of doing that on their own
+22:42:45 <strcat[m]> I can't be expected to go through every possible thing like this, people need to think for themselves
+22:42:51 <limitless0[m]> I understand and i knew that app devs can do this
+22:42:55 <limitless0[m]> But*
+22:43:20 <strcat[m]> you can control which permissions an app has and what access to data it has
+22:43:27 <strcat[m]> you can control what data you enter into the app and how you use it
+22:43:30 <strcat[m]> you're in control of that
+22:43:36 <strcat[m]> if you give an app data, you're trusting it with the data
+22:43:50 <limitless0[m]> I had the impression that just cos it has internet connection an app cant get all the which app im using when i lock my phone when im playing which app game etc
+22:44:08 <limitless0[m]> But now i see more clearly
+22:44:25 <strcat[m]> limitless0: ok now you're saying stuff I didn't say
+22:44:36 <strcat[m]> apps run in a sandbox
+22:44:45 <strcat[m]> apps obviously don't have access to all the information on your device and how you're using it
+22:45:08 <strcat[m]> they have access to their own data and the limited things that the system gives them access to
+22:45:10 <strcat[m]> and you control most of that via the permission model
+22:45:34 <strcat[m]> if you don't give an app access to usage stats (which you have to go far out of the way to do - it can't even directly prompt for it) it doesn't have access to that
+22:45:50 <strcat[m]> obviously the app can record data on how you use the app itself
+22:45:56 <limitless0[m]> <strcat[m] "apps obviously don't have access"> But they have access to what apps are installed on my phone without requiring permission?
+22:46:00 <strcat[m]> it can't record data on how you use other apps
+22:46:16 <strcat[m]> limitless0: they have access to which apps are installed in the profile, not on the phone
+22:46:21 <strcat[m]> limitless0: they do not have access to usage stats
+22:46:30 <strcat[m]> they can't see what's running on the phone
+22:46:50 <strcat[m]> or in the profile, at least directly
+22:47:02 <limitless0[m]> Ok thank you
+22:47:21 <limitless0[m]> So its better than i thought then
+22:47:21 <strcat[m]> there are a bunch of existing posts about these things on the subreddit and a fair bit of information in the FAQ and usage guide already
+22:48:14 <limitless0[m]> Last question:
+22:48:21 <strcat[m]> apps can't obtain usage data / process information / network connection information (net information restricted since Android 10 but GrapheneOS used to do it itself)
+22:48:40 <strcat[m]> you can explicitly grant access to usage stats
+22:48:42 <strcat[m]> via Settings
+22:49:13 <strcat[m]> apps can see which other apps are installed in the profile in various ways - not really any way around that since apps within a profile are designed to be able to communicate with each other
+22:49:18 <strcat[m]> like opening a page in the web browser
+22:49:19 <limitless0[m]> Can an app export the list of apps to its server if it has internet permission?
+22:49:32 <strcat[m]> limitless0: an app can export any data it has access to
+22:49:43 <strcat[m]> limitless0: it is not specific to different kinds of data
+22:49:54 <strcat[m]> if an app has access to data and network access, it can obviously send it over the network
+22:50:02 <strcat[m]> it doesn't need to be asked for each different thing
+22:50:11 <limitless0[m]> Thank you
+22:50:30 <miniblue[m]> Damn you strcat you answer questions so quickly. It takes me a few minutes to even draft a single response, lol.
+22:51:30 <renor[m]>  Has the storage permission been deprecated from Android?
+22:51:39 <strcat> yes
+22:52:46 <strcat> apps should have migrated to using SAF when it was introduced in Android 4.4, directory support added in Android 5.0
+22:52:59 <renor[m]> Interesting
+22:53:00 <miniblue[m]> I spent like five minutes trying to explain the concept of trust, open source, attack surface, permissions, etc.
+22:53:17 <strcat> it has been required to access external drives since Android 4.4 when the Storage permission was restricted to the profile's home directory
+22:53:40 <strcat> in Android 10, Storage is deprecated for accessing the profile's home directory and cannot be done by apps targeting Android 10 unless they opt into the legacy storage model
+22:54:11 <strcat> in Android 11 (the version coming out this year), apps targeting the current API level can no longer obtain legacy storage access when installed
+22:54:26 <strcat> in the long term it will fully go away even for legacy apps
+22:54:36 <strcat> it was supposed to fully go away for Android 10
+22:55:08 <strcat> but app developers ran a big negative campaign against the changes and lots of journalists helped them do it, and users got tricked into fighting against their own interests
+22:55:23 <renor[m]> <strcat "in Android 11 (the version comin"> Won't this make some legacy apps incompatible?
+22:55:25 <renor[m]> Well, maybe its better
+22:55:26 <strcat> so Google intervened and stopped the Android developers from doing it for Android 10
+22:55:29 <strcat> renor[m]: no, it won't
+22:55:34 <strcat> read what I said again
+22:55:58 <strcat> it doesn't change anything for legacy apps yet
+22:56:19 <strcat> and when it does change for legacy apps it won't break compatibility with them because there is ALREADY emulation of the legacy storage model in Android 10
+22:56:36 <strcat> it is just inconvenient and perhaps confusing for users for the emulation to be used
+22:56:45 <strcat> which is why this hasn't just been globally enabled in AOSP for all apps
+22:57:03 <renor[m]> Sorry, true
+22:57:03 <strcat> they want apps to migrate to officially supporting doing things properly
+22:57:10 <strcat> and once most apps support doing things properly
+22:57:25 <strcat> the switch can be flipped to remove the Storage permissions completely
+22:57:31 <strcat> and just use the emulation for legacy apps
+22:57:51 <strcat> there is an issue filed in our tracker about enabling this for all apps and relying on the emulation
+22:57:54 <strcat> it already exists in Android 10
+22:57:57 <strcat> we could be doing that
+22:58:02 <strcat> no one has been interested in working on it yet
+22:58:04 <renor[m]> Ahh this is great
+22:58:34 <strcat> this was a planned feature for GrapheneOS years before it landed in Android 10
+22:59:08 <renor[m]> Does the emularion have any efficency impact?
+22:59:11 <strcat> but yeah the Storage permissions are deprecated and modern apps (i.e. target current API level without opting into the legacy model) cannot use it
+22:59:14 <strcat> renor[m]: no
+22:59:41 <renor[m]> * Does the emulation have any efficency impact?
+22:59:48 <strcat> renor[m]: the modern storage model removes the permissions and apps can still access files the way they used to as if they have the permissions
+23:00:00 <strcat> renor[m]: but it just looks like the top-level profile home directory to them
+23:00:06 <strcat> it's  really an app-specific directory inside of it
+23:00:25 <strcat> and when the app is uninstalled their directories in the profile's home directory are removed, with the modern model
+23:00:41 <strcat> so they cannot persist files after being uninstalled without the user granting the ability to do that to them by giving them access to directories/files
+23:00:49 <renor[m]> Awesome
+23:01:00 <strcat> renor[m]: this is already all implemented
+23:01:15 <strcat> renor[m]: in the Android 10 dev previews, it was enabled for ALL apps, not just those targeting the current API level
+23:01:23 <renor[m]> This is really a great change
+23:01:30 <strcat> due to the backlash from developers and then the media/users, it was rolled back temporarily
+23:01:59 <strcat> so in the Android 10 stable release it is only done for apps targeting the current API level (29) and they also added a temporary opt-out for the time being
+23:02:08 <strcat> that's the result of the campaign that was run against the feature
+23:02:21 <strcat> renor[m]: in Android 11, this year, it will be forced for all apps targeting API 30 - no more opt-out
+23:02:37 <strcat> renor[m]: but that's still not as strong as it was originally going to be in Android 10
+23:02:55 <strcat> renor[m]: I think the way it will work upstream is once the vast majority of apps support it, they will finally force it on legacy apps
+23:03:24 <strcat> renor[m]: similar to how apps not supportung runtime permissions (API < 23) are not granted those permissions at install anymore but rather there's a screen to review it
+23:03:43 <strcat> renor[m]: apps can drag their heels or be abandoned and eventually the new privacy/security changes are forced on them anyway via emulation / workarounds like that
+23:03:53 <renor[m]> Most devs are lazy, if they're not forced they won't do it
+23:04:08 <strcat> renor[m]: Google Play requires new apps and updates to apps target modern API level
+23:04:14 <strcat> and they quickly raise the minimum API level
+23:04:26 <strcat> so devs for apps that aren't dead are forced to move to latest API level
+23:04:33 <strcat> renor[m]: F-Droid has no such restriction
+23:04:56 <strcat> they don't require that new apps or app updates target modern API level like Play
+23:04:59 <renor[m]> <strcat "renor: F-Droid has no such restr"> How strange..
+23:05:32 <strcat> renor[m]: btw the OS warns when you install an app targeting a very old API level
+23:05:41 <renor[m]> Thanks!!!
+23:06:08 <renor[m]> This is better than I thought
+23:09:21 <strcat> I think the current warning is for API < 23
+23:09:31 <limitless0[m]> strcat (@freenode_strcat:matrix.org): Thank you Daniel really!
+23:09:55 <strcat> [ro.build.version.min_supported_target_sdk]: [23]
+23:09:57 <strcat> yeah
+23:10:06 <strcat> renor[m]: so for apps targeting API < 23 it shows a warning
+23:10:09 <strcat> that could be raised higher
+23:10:30 <strcat> renor[m]: new API bring new privacy/security improvements
+23:10:34 <strcat> new API levels*
+23:11:00 <strcat> renor[m]: changes that don't horribly break backwards compat are just global, but changes that do break backwards compat are generally limited to a new API level
+23:12:33 <renor[m]> That's nice, AOSP devs are awesome
+23:13:24 <strcat> renor[m]: so for example
+23:13:39 <strcat> Android 6 started using SELinux for MLS, not just MAC
+23:14:20 <strcat> they separated each user profile into a different MLS level, to prevent most vulnerabilities allowing communication / sharing data across user profiles which is not allowed
+23:14:49 <strcat> renor[m]: Android 9 (API 28) extended this so that apps targeting API 28+ are each placed into their own MLS level
+23:14:59 <strcat> renor[m]: so apps no longer just run in the untrusted_app domain
+23:15:05 <strcat> they run in a *unique* security domain
+23:15:39 <strcat> renor[m]: this means that an app cannot chmod their app data to allow other apps to access it - they're fully isolated at the file system, etc. level whether they want it or not
+23:15:55 <strcat> renor[m]: so this prevents a lot of security vulnerabilities in apps that were doing dumb things
+23:16:00 <strcat> for API 28+
+23:16:24 <strcat> renor[m]: anyways some privacy/security improvements like this are only for newer API levels
+23:16:32 <strcat> so ideally you only use apps targeting the most recent 2 API levels
+23:16:35 <renor[m]> Beautiful.. I love hearing this nice things that AOSP has
+23:16:43 <strcat> it's reasonable for an app to still target API 28, but not lower than that
+23:17:11 <renor[m]> Are there many apps targeting older API levels?
+23:17:19 <strcat> yes especially on F-Droid
+23:17:31 <strcat> on Google Play there's a minimum API level requirement for all new apps and app updates
+23:17:41 <strcat> which fairly quickly moves most apps onto the latest API level
+23:17:42 <renor[m]> I've never seen the warning you said
+23:17:51 <strcat> renor[m]: because the warning is for < 23
+23:18:02 <strcat> so apps not supporting Android 6+
+23:18:18 <strcat> renor[m]: if I raised the warning to < 28 you would see it a lot
+23:18:55 <strcat> ifndef PLATFORM_MIN_SUPPORTED_TARGET_SDK_VERSION
+23:18:56 <strcat>   # Used to set minimum supported target sdk version. Apps targeting sdk
+23:18:58 <strcat>   # version lower than the set value will result in a warning being shown
+23:19:00 <renor[m]> Is there any way to know the api version an app is using?
+23:19:00 <strcat>   # when any activity from the app is started.
+23:19:02 <strcat>   PLATFORM_MIN_SUPPORTED_TARGET_SDK_VERSION := 23
+23:19:04 <strcat> endif
+23:19:07 <strcat> yes
+23:19:25 <strcat> part of basic app metadata
+23:19:27 <strcat> targetSdkVersion
+23:20:02 <strcat> renor[m]: apps do have incentives to move to newer target API versions since features that require backwards incompatible changes require it
+23:20:39 <strcat> but in general devs can stay on an old target API level forever - aside from Google Play forbidding them shipping any further updates or publishing a new app, unless they update the target API level to the latest
+23:20:48 <strcat> but F-Droid doesn't have a rule like that
+23:20:50 <strcat> they should
+23:21:04 <strcat> although we could just raise the minimum in the OS for the warning
+23:21:27 <strcat> renor[m]: it's a fairly arbitrary decision - although since the current API level is 29, the highest minimum we could sanely use is 28
+23:21:30 <renor[m]> <strcat "but F-Droid doesn't have a rule "> How bad.. Maybe someone shoud tell them about this 😅
+23:21:48 <strcat> 28 is the one that introduces per-app MLS level
+23:22:06 <strcat> renor[m]: you can look at the list of backwards incompatible privacy/security improvements
+23:22:08 <strcat> per API level
+23:22:28 <renor[m]> Then we would be seeing a lot of warnings
+23:23:48 <renor[m]> <strcat "renor: you can look at the list "> Yeah i was already taking a look into it
+23:24:24 <strcat> renor[m]: https://developer.android.com/about/versions/10/behavior-changes-10
+23:24:35 <strcat> https://developer.android.com/about/versions/pie/android-9.0-changes-28
+23:24:45 <strcat> https://developer.android.com/about/versions/oreo/android-8.0-changes
+23:26:49 <strcat> renor[m]: for Android 10 they split list of privacy changes into https://developer.android.com/about/versions/10/privacy/changes
+23:29:07 <strcat> renor[m]: most changes are for all apps
+23:29:17 <strcat> some changes are for API 29+ for backwards compat
+23:33:23 <strcat> renor[m]: https://developer.android.com/about/versions/oreo/android-8.0-changes#aaad
+23:33:30 <strcat> so for example here's an important privacy change tied to API 26+
+23:35:50 <strcat> GET_ACCOUNTS (part of Contacts toggle) no longer gives access to accounts other than the ones the app created or was explicitly granted access to
+23:35:58 <strcat> but if an app targets API 25 or earlier, that's not the case
+23:36:05 <strcat> for backwards compatibilility
+23:42:36 <strcat> https://developer.android.com/distribute/best-practices/develop/target-sdk
+23:42:40 <strcat> > When you upload an APK, it needs to meet Google Play’s target API level requirements. Both new apps and app updates must target at least Android 9 (API level 28).
+23:43:00 <strcat> renor[m]: I could raise it to API 28, which has the nice MLS security enhancement (secures the app itself better)
+23:43:19 <TheJollyRoger> Oh fantastic!
+23:43:20 <strcat> so it'd warn for < 28 instead of < 23
+23:43:22 <strcat> makes sense to me
+23:43:32 <TheJollyRoger> Wow. How soon do you think we could try this...?
+23:43:47 <strcat> and we could keep it aligned with Google Play Store which generally means apps much target the most recent or previous API level
+23:43:54 <strcat> which gives them over a year to migrate
+23:44:01 <strcat> since they can start migrating when the dev previews are available
+23:44:22 <strcat> and then after it's released they have a whole year to migrate before the next API level is released
+23:48:21 <strcat> TheJollyRoger: well I just changed it
+23:48:24 <strcat> it'll be in the next release
+23:48:26 <TheJollyRoger> Huh. Just one year off, but being able to get rid of the shared storage leakage and all those other sidechannels sounds like it would be a huge improvement over what we ha--
+23:48:28 <strcat> doesn't need testing
+23:48:29 <TheJollyRoger> Oh wow, awesome!!!
+23:48:47 <strcat> TheJollyRoger: well you can already just not grant the Storage perm
+23:49:01 <strcat> this doesn't change anything aside from warning when installing API < 28 apps
+23:49:27 <TheJollyRoger> Oh. But it'll give us more time and encourage people to stop holding out on old outdated apps, which sounds like a huge gain to me.
+23:57:04 <strcat> https://github.com/GrapheneOS/platform_build/commit/0ed05412e4d7045a18db447970e3915a988778f3
+23:59:30 <TheJollyRoger> Oh nice

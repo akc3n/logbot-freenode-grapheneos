@@ -1,0 +1,535 @@
+02:28:02 <izymandias[m]> overheadscallop: its not very clear
+02:51:53 <dazinism> izymandias: looks like you have a load of 'active' matrix sessions. I'd recommend getting rid of all the ones you don't use and verify the others.
+03:07:39 <izymandias[m]>  dazinism: im just curious if verifying these rooms is something that is safe to do
+03:15:35 <dazinism> Think you either verify your sessions with each other (eg. Phone & computer) or other peoples, ideally when you meet them in person
+03:15:44 <dazinism> Dont verify rooms
+03:17:35 <dazinism> izymandias: its generally a good thing to do. With your own devices, its for sharing end to end encryption keys.
+03:18:36 <dazinism> Between the devices that are verified. So you can read encrypted messages from any device.
+03:19:29 <dazinism> Verifying other people lets you know your e2ee hasnt been man-in-the-middled
+03:20:38 <dazinism> Also allows the client to let you know if your contact has new devices (which in some situations may be suspicious)
+03:21:06 <dazinism> Can set it up to only encrypt messages to devices you've verified
+03:22:21 <dazinism> Hopefully you can follow that - lol
+03:22:51 <izymandias[m]> ok
+03:23:09 <izymandias[m]> i get it
+03:23:23 <izymandias[m]> thNKS
+03:23:36 <dazinism> If you suspected one of your devices may be compromised, probably not a good idea to verify it
+03:41:10 <renlord> strcat[m]: this was just merged https://github.com/GrapheneOS/platform_bionic/pull/5
+03:41:18 <renlord> do you still want me to test with the last 2 commits?
+03:41:50 <strcat[m]> renlord: yes
+03:42:04 <strcat[m]> renlord: test without that commit and without the ASLR commit - just revert the most recent 2
+03:45:26 <renlord> ok
+04:21:55 <BalooRJ> Does anyone know if there is another public server for Konele available to test out the Speech to Text function?
+05:45:35 <mrmanpants[m]> is there a way to stop Graphene from re-promping the password every so often? (when setup with fingerprint)
+06:38:33 <greenmoon[m]> It is different from aosp? On aosp it just prompt after many hours, usually when you sleep it ask for password when u wake up, at least on my phone.
+06:44:19 <greenmoon[m]> Maybe you press the fingerprint multiples times without noticing it, but nowadays the sensor should be turned off if the screen is covered eg in your pocket, not sure if that feature is present on pixels.
+09:34:01 <renlord> strcat[m]: test pass at HEAD~2
+09:34:08 <renlord> 5cc8c34e60dbfeb1fd996bf83bb01a0443d93a8a
+09:34:26 <renlord> the 2nd stack ASLR was the commit that broke CTS test
+10:05:39 <zxwayland> hi
+10:53:05 <cdesai> renlord: CTS on emulator would catch this too in theory, right
+10:53:53 <cdesai> Wonder if it'd make sense to have an automated test just for the platform failures then. There can still be full device tests for proper verification, but it could still catch failures early
+11:17:25 <renlord> cdesai: yes
+11:27:17 <renlord> itd be good if it was possible to just run the tests directly in the bionic repo
+11:27:44 <renlord> i dont even know how the CTS gets compiled and how the source ends up in the CTS
+12:48:27 <renlord> wow, so few real irc users :(
+13:09:44 <snark> Hello everyone
+13:11:06 <f8sai[m]> <snark "Hello everyone"> Hello
+13:13:12 <snark> im using grapheneos with pixel 3a / pixel 3a xl - now installed on pixel 4
+13:13:56 <snark> looks like motions sense and smooth display are not supported - I tried to find info on this matter but no success
+13:14:44 <f8sai[m]> <snark "im using grapheneos with pixel 3"> Congrats ^^
+13:15:01 <f8sai[m]> * Congrats
+13:15:08 <f8sai[m]> can't help with that
+13:15:10 <renlord> snark: those things are only distributed via the google vendor images i think
+13:15:11 <f8sai[m]>  I'm on 3a
+13:15:11 <f8sai[m]> Maybe checking sensor permission?
+13:15:32 <renlord> if they dont exist on aosp, then you dont have those features
+13:16:09 <snark> mmmh, these features are missing in the settings
+13:16:25 <f8sai[m]> *  I'm on 3a
+13:16:25 <f8sai[m]> Maybe check the sensor permission?
+13:16:28 <snark> like the active edges on 3a
+13:17:44 <snark> thing is - they appear in google original firmware (never used it - wiped in favor of GrapheneOS immediately)
+13:17:46 <f8sai[m]> Yeah, those aren't implemented, for reasons "renlord" (https://matrix.to/#/@freenode_renlord:matrix.org) have stated
+13:17:58 <snark> "not in AOSP" arguement sounds legit
+13:18:30 <renlord> its not an argument, it is a fact.
+13:18:52 <snark> ok, can live with that fact as well :)
+13:19:43 <snark> thanks for clarification
+13:20:35 <renlord> no prob
+14:15:05 <RedNovember[m]> Hey lads, I'm looking to get the most out of my Pixel 4 with GrapheneOS installed, and I'm looking to install Gcam, Pixel launcher, and Pixel themes. Anyone know if there is any telemetry for these applications with Google and whether they work for Graphene?
+14:17:16 <LinusSexTips[m]> Google apps don't work without microG to my knowledge
+14:17:16 <MysteriousWizard> You can install a patch to get GCam working
+14:17:30 <LinusSexTips[m]> Which we don't have on Graphene
+14:17:31 <MysteriousWizard> Yes
+14:17:35 <MysteriousWizard> Which is why I said install...
+14:21:41 <RedNovember[m]> How can I get it to work?
+14:32:39 <SchismXL[m]> https://github.com/lukaspieper/Gcam-Services-Provider download and install this apk, then whatever gcam app you wish to use. It'll work then @rednovember:matrix.org
+14:39:29 <g65434-2[m]> <RedNovember[m] "How can I get it to work?"> use stock
+14:52:05 <f8sai[m]> CalyxOS?
+14:52:25 <f8sai[m]> <f8sai[m] "CalyxOS?"> RedNovember
+16:40:27 <f8sai[m]> Not really?
+16:40:49 <f8sai[m]> Or rather there is none for GrapheneOS
+16:41:43 <f8sai[m]> Due to it not meeting the hardware, firmware security requirements
+16:41:43 <f8sai[m]> I recommend searching the logs on freenode.logbot.info/grapheneos
+16:49:57 <strcat[m]> cdesai: any progress on Chromium?
+17:01:55 <anupritaisno1[m]> f8sai [GNU/GPL v3]: it doesn't support
+17:02:34 <anupritaisno1[m]> I guess if we support pinephone we might as well support every phone on the market
+17:02:46 <strcat> it doesn't meet the requirements
+17:02:56 <anupritaisno1[m]> Because pinephone isn't even CTS pass
+17:03:07 <anupritaisno1[m]> It was never designed to run android
+17:03:14 <strcat> it doesn't have the functionality needed to run the OS and certainly can't be secure
+17:03:21 <f8sai[m]> Yeah, thanks for confirming it further
+17:03:22 <f8sai[m]> * Or rather there is none (no Pinephone builds) for GrapheneOS
+17:03:50 <strcat> no verified boot, no hardware-backed keystore, no hardware encryption support and many other things
+17:03:55 <strcat> not a possible target
+17:04:06 <anupritaisno1[m]> f8sai [GNU/GPL v3]: also you need a development team
+17:04:27 <anupritaisno1[m]> We are just securing devices that have already been developed for
+17:04:47 <anupritaisno1[m]> You'd have to start from scratch for pinephone
+17:04:56 <anupritaisno1[m]> And really we don't have those kinds of resources
+17:05:05 <f8sai[m]> <anupritaisno1[m] "f8sai [GNU/GPL v3]: also you nee"> Yeah, just answering the question. Not interested in building it due to not meeting the requirements and not having one myself.
+17:05:32 <anupritaisno1[m]> We'd also need to create our own security bulletins
+17:05:49 <anupritaisno1[m]> And get security researchers to find issues
+17:05:59 <anupritaisno1[m]> Along with rolling out security patches ourselves
+17:08:55 <f8sai[m]> Anyways, thanks for an informative answer. A question, is it possible to tinker or build Android settings without building the whole OS due to limitations in RAM and CPU?
+17:09:08 <f8sai[m]> * Anyways, thanks for an informative answer. A question, is it possible to tinker or build Android settings without building the whole OS due to limitations in RAM and CPU of the computer itself?
+17:12:05 <f8sai[m]> Maybe that will not be feasible due to it having to be tested. Nvm
+17:12:07 <f8sai[m]> (the changes)
+17:14:49 <anupritaisno1[m]> f8sai [GNU/GPL v3]: sometimes
+17:15:38 <anupritaisno1[m]> But this is strictly developer only and assumes you have a build with your own keys in the first place
+17:16:45 <anupritaisno1[m]> If you have your own keys you can rebuild individual parts like apps and test them quickly instead of building a full system image
+17:19:49 <f8sai[m]> Figures, guess I can't do that just yet
+17:20:01 <f8sai[m]> Thanks for the info
+17:30:55 <cdesai> strcat[m]: I did a bunch of builds with different configs, need to check status. But haven't got it working yet unfortunately
+17:31:34 <cdesai> I compiled 85. And master too hoping that if they have a fix we can backport, need to recheck as I fired off the build before logging out on Friday
+17:52:16 <cn3m[m]> <lovesausage[m] "Hi! I just ordered my pixel phon"> that breaks verified boot
+17:52:26 <cn3m[m]> along with other weaknesses
+17:52:45 <cn3m[m]> that is not GrapheneOS if you install magisk
+17:53:08 <cn3m[m]> app ipc is too strong on Android anyway that adds a ton of attack surface even if you fully trust the app
+17:53:29 <nickcalyx[m]> <lovesausage[m] "Hi! I just ordered my pixel phon"> why do you need root so badly
+17:58:06 <theultron[m]> If you go with root then I will recommend you to set a tasker task which will verify important partitions on the boot. It will show if any files have been modified in last 24 hours before you enter your lock screen password.
+18:00:53 <cn3m[m]> <theultron[m] "If you go with root then I will "> that doesn't work
+18:01:07 <cn3m[m]> <lovesausage[m] "Well I use a lot of magisk stuff"> Just use PrivateDNS for blocking
+18:01:12 <cn3m[m]> works the same
+18:01:26 <theultron[m]> <cn3m[m] "that doesn't work"> Why won't it work? It works fine for me.
+18:02:00 <cn3m[m]> <theultron[m] "Why won't it work? It works fine"> you can very easily bypass that app if you get root and change what it is verifying
+18:02:06 <cn3m[m]> there is not physical root of trust
+18:02:14 <cn3m[m]> it is at the whims of the attacker
+18:02:31 <cn3m[m]> Verified Boot has to be in software
+18:02:53 <cn3m[m]>  * Verified Boot has to be in hardware*
+18:03:10 <cn3m[m]> even partially hardware solutions don't work well like CloudReady which has many holes in the implementation
+18:03:31 <theultron[m]> But if an attacker is so committed to hack into you then he will find any way. May be he buys an exploit for your device hardware.
+18:05:35 <theultron[m]> <lovesausage[m] "I also use root to change encryp"> You don't need root for that. You can set a long password.
+18:05:58 <cn3m[m]> <theultron[m] "But if an attacker is so committ"> The blobs and everything is verified with verified boot too
+18:06:00 <cn3m[m]> <lovesausage[m] "I also use root to change encryp"> that is not needed with the architectural changes on Android and Pixels
+18:06:01 <cn3m[m]> a 4 digit pin on a Pixel would take 650 years to crack with unlimited computing power
+18:08:40 <lovesausage[m]> I also use root to change encryption password/key from 4 digits to longer one, is this feature included in Graphene?
+18:08:40 <lovesausage[m]> nice, but the same pass for encryption and lockscreen . how come a 4 digit pin takes so long to crack on a Pixel when it goes a lot faster to bruteforce it on others?
+18:11:37 <theultron[m]> I think the Pixel have something called Titan M which makes brute forcing difficult. You still may go with a longer password to be on the safer side.
+18:13:17 <lovesausage[m]> ah , I never understood what the titan M did really
+18:13:31 <theultron[m]> I personally feel the Graphene community enlarges the risk of being rooted on your phone and totally neglect the benefits which come out of it.
+18:13:44 <cn3m[m]> The Titan M is extremely close to the Secure Enclave from Apple which has still secure after 7 years
+18:13:45 <cn3m[m]> The Titan M and Secure Enclave both offer Insider Attack Resistance and rollback protection
+18:13:45 <cn3m[m]> This means Google, GrapheneOS, or Apple could never make a backdoor to open a device after it was locked without your PIN. If they did before it would only work until the next update
+18:13:45 <cn3m[m]> lovesausage: it is very cool tech
+18:13:45 <rover1[m]> <cn3m[m] "The Titan M and Secure Enclave b"> researchers made work on sep, see Hao Xu abstract https://www.mosec.org/en/2020/
+18:14:57 <lovesausage[m]> Very cool :)
+18:15:34 <cn3m[m]> The other thing is even if you did attack these chips they have key derivation. For example on the default iPhone with a full SEP exploit would still take on the dedicated crypto hardware 4200 hours
+18:15:40 <cn3m[m]> to break a pin
+18:15:56 <cn3m[m]> if you had a password or a longer than default pin it would be even longer
+18:16:17 <cn3m[m]> <theultron[m] "I personally feel the Graphene c"> rooting breaks the security model of Android. It opens up your device to persistent threat
+18:16:39 <theultron[m]> It's not easy for any app to gain root access on your phone unless it finds an exploit (something like xhelper gained access on older android version but there were enough signs of you being infected)
+18:16:40 <cn3m[m]> if you want to break your remote security and physical security go for it
+18:17:07 <theultron[m]> or you root your phone and manually give access.
+18:17:12 <cn3m[m]> <theultron[m] "It's not easy for any app to gai"> why are you even looking for a secure rom then? There are a lot cooler roms if you don't care about security
+18:17:26 <theultron[m]> Clickjacking attacks in 2020 are dumb.
+18:17:49 <cn3m[m]> you don't need clickjacking
+18:17:55 <cn3m[m]> just an ipc attack
+18:17:59 <cn3m[m]> which is super common on Android
+18:18:11 <cn3m[m]> look at MRW Labs finding 11 to get persistence on Android without memory corruption
+18:18:30 <cn3m[m]> Firefox recently had a vulnerability that would let any app hijack it
+18:18:38 <theultron[m]> <cn3m[m] "why are you even looking for a s"> Ofcourse I care for security. I won't put any cool rom on my phone where I don't know what's inside.
+18:18:56 <cn3m[m]> <theultron[m] "Ofcourse I care for security. I "> you are not running GrapheneOS if you root
+18:18:59 <cn3m[m]> that is not GrapheneOS
+18:20:12 <anupritaisno1[m]> What the hell is going on here?
+18:20:53 <theultron[m]> You can isolate using User Profile for threats using IPC. 2 apps require to communicate for IPC.
+18:21:18 <anupritaisno1[m]> cn3m: apart from the 1M bounty are you describing Qualcomm TEE or Titan M because Qualcomm TEE does that as well
+18:21:40 <theultron[m]> <cn3m[m] "look at MRW Labs finding 11 to g"> Any link for the same?
+18:21:57 <anupritaisno1[m]> There are other reasons for the titan M to be used
+18:22:24 <cn3m[m]> theultron: https://labs.f-secure.com/archive/chainspotting-building-exploit-chains-with-logic-bugs/
+18:22:31 <cn3m[m]> <anupritaisno1[m] "There are other reasons for the "> yeah
+18:23:30 <theultron[m]> Even if your phone gets hijacked there will be something out of ordinary you notice - notifications? firewall log? check recently installed app?
+18:24:30 <anupritaisno1[m]> theultron: just get grapheneos?
+18:24:35 <cn3m[m]> you are missing the point we want to have secure devices here not ones you have to figure out when you are hacked
+18:24:41 <cn3m[m]> xD
+18:24:59 <cn3m[m]> Rooting GrapheneOS is impossible because then it is not GrapheneOS
+18:26:05 <anupritaisno1[m]> cn3m: *installs magisk on grapheneos*
+18:26:11 <cn3m[m]> <anupritaisno1[m] "cn3m: *installs magisk on graphe"> that is not GrapheneOS
+18:26:22 <anupritaisno1[m]> How so
+18:26:59 <TheJollyRoger> theultron[m]: all instances of GrapheneOS are signed, verified, built reproducibly, there are multiple levels of digital signature validation, and each installation is bitwise identical across each given instance of each device and traceable back to the release keys.
+18:27:09 <TheJollyRoger> This is why we say that "it's not GrapheneOS" if you modify it.
+18:27:15 <cn3m[m]> Daniel has clearly stated for something to be GrapheneOS it has to be locked and can't have play services or magisk
+18:27:19 <cn3m[m]> If it is not locked and has things like that you are running an OS that is not GrapheneOS
+18:27:44 <anupritaisno1[m]> Makes sense
+18:28:32 <theultron[m]> I am not on GrapheneOS as I am happy with my manufacturer's rom. I am not doubting GrapheneOS security at all. I am saying that the risk of being root is blown out of proportion.
+18:30:00 <anupritaisno1[m]> theultron: then recreate dm-verity and use external attestation, it's still weak BTW
+18:30:47 <cn3m[m]> if you have root you have a non immutable OS which is just not going to work with verification
+18:30:56 <fll[m]> > I am not on GrapheneOS as I am happy with my manufacturer's rom. I am not doubting GrapheneOS security at all. I am saying that the risk of being root is blown out of proportion.
+18:30:56 <fll[m]> For average use maybe....graphene is trying to be as secure as possible though.
+18:31:01 <TheJollyRoger> Android isn't built like a desktop operating system, but rather, it's built out of many mutually-distrusting and separate components. The attitude that upstream took is remarkably pragmatic: they realized that a perimeter security model breaks down the instant you run code that may not be 100% trustworthy. So what they did instead was attempt to design android as mutually-distrusting components
+18:31:04 <TheJollyRoger> that are constrained via mandatory access controls to be permitted to do only what they should be doing.
+18:31:15 <g65434-2[m]> but graphene isn't root lmao
+18:31:21 <anupritaisno1[m]> find /system | sort ->hashes
+18:31:21 <anupritaisno1[m]> assert (hashes=oldhashes) else git diff
+18:31:28 <anupritaisno1[m]> Or whatever diff you like
+18:31:34 <TheJollyRoger> This is why only init and a few other components have root-equivalent access.
+18:31:35 <anupritaisno1[m]> This isn't a replacement for dm-verity
+18:31:44 <TheJollyRoger> By rooting, you're essentially saying "screw good security design."
+18:31:49 <fll[m]> Also with root on your phone things like "check logs" become moot, since those could be altered too
+18:31:51 <cn3m[m]> <TheJollyRoger "This is why only init and a few "> init is restricted
+18:31:58 <anupritaisno1[m]> TheJollyRoger: iirc 5 processes have root on android
+18:32:09 <TheJollyRoger> cn3m[m], anupritaisno1[m] ah, okay.
+18:32:48 <anupritaisno1[m]> Time to add a 6th /s
+18:32:55 * TheJollyRoger snickers
+18:33:21 <anupritaisno1[m]> TheJollyRoger: you free?
+18:33:30 <TheJollyRoger> anupritaisno1[m]: a little. What can I do for you?
+18:33:49 <anupritaisno1[m]> TheJollyRoger: I sent 5 PRs
+18:33:55 <theultron[m]> cn3m: I saw the mwk labs findings. It uses samsung push service for ipc. It's not possible in my case as the only apps which have internet access is Bromite & Orbot. I have removed the updater component of my OEM. You need to plan a specific targeted attack for me.
+18:34:03 <anupritaisno1[m]> I did test them and I was running them for 2 weeks
+18:34:11 <anupritaisno1[m]> But if you can, test them one by one
+18:34:31 <TheJollyRoger> anupritaisno1[m]: ok, uh... might need a bit of help. Sec.
+18:34:31 <cn3m[m]> the only area Android gets an F on security is accessibility services and no easy way to check them. GrapheneOS mitigates this with the Auditor app and remote attestation
+18:34:35 <TheJollyRoger> I'll go get onto that in a bit.
+18:34:44 <cn3m[m]> <theultron[m] "cn3m: I saw the mwk labs finding"> that is not how it works at all
+18:35:14 <theultron[m]> <anupritaisno1[m] "theultron: then recreate dm-veri"> It's weak but works.
+18:35:23 <cn3m[m]> For example if you have any app with root it doesn't care about network permissions(Android apps can bypass virtually all firewalls without root even). Any app can be hijacked
+18:35:36 <cn3m[m]> <theultron[m] "It's weak but works. "> If it is weak that is the definition of not working
+18:36:15 <theultron[m]> <cn3m[m] "For example if you have any app "> How do you bypass AFWall+? Even my kernel is not able to do it.
+18:36:25 <anupritaisno1[m]> cn3m: BTW
+18:37:33 <cn3m[m]> <theultron[m] "How do you bypass AFWall+? Even "> uh no, the kernel absolutely can bypass AFWall. You can talk to other apps like browsers, you can use low level network sockets, you can side step it with root. Just to name a few methods
+18:37:39 <cn3m[m]> <anupritaisno1[m] "cn3m: BTW "> yeah?
+18:37:58 <cn3m[m]> <cn3m[m] "uh no, the kernel absolutely can"> AFWall is incredibly not robust
+18:38:01 <LinusSexTips[m]> Imagine using a third party firewall
+18:38:52 <theultron[m]> You have to plan a very specific attack in order to target me. If I am under any such threat of attack then I won't even use a phone.
+18:38:54 <anupritaisno1[m]> Riotx crashed on me
+18:39:15 <anupritaisno1[m]> Do you think the stock charging animation resembles grapheneos?
+18:39:24 * anupritaisno1[m] uploaded an image: IMG_20200720_000614.jpg (4757KB) < https://matrix.org/_matrix/media/r0/download/m.apex.to/YlCzABotmgyqIMzWvmEnuRIV >
+18:39:41 <cn3m[m]> <theultron[m] "You have to plan a very specific"> https://en.wikipedia.org/wiki/Security_through_obscurity
+18:40:02 <cn3m[m]> <anupritaisno1[m] "Do you think the stock charging "> yeah it looks pretty minimal(in a good way)
+18:40:38 <cn3m[m]> looks prettier than the one on mine
+18:41:49 <g65434-2[m]> element is basically riotX
+18:42:02 <g65434-2[m]> except that it crashes after a while
+18:43:07 <fll[m]> Did support riot.im and riotx stop now? No more updates?
+18:43:39 <cn3m[m]> <fll[m] "Did support riot.im and riotx st"> just renamed
+18:44:59 <LinusSexTips[m]> We Element boys now
+18:48:37 <youpie12> Hey any way to use dual apps on one account?
+18:51:03 <lovesausage[m]> well thanks for the info, I guess I will have to manage without root then :) Will feel weird :)
+18:54:19 <cn3m[m]> <lovesausage[m] "well thanks for the info, I gues"> fortunately unrooted Android is far better than it was
+19:00:19 <youpie12> I use shelter now for dual apps but someone mentioned a while ago that its not safe, someone might now why?
+19:00:39 <cn3m[m]> <youpie12 "I use shelter now for dual apps "> it is not that bad really
+19:01:00 <cn3m[m]> it does share clipboard and uses a device manager in the work profile
+19:01:06 <cn3m[m]> neither of which is ideal
+19:06:32 <youpie12> But in case of someone obtaining my device while i restarted it; it shouldn't become less harder to attack right?
+19:06:38 <youpie12> Its more of a privacy issue
+19:06:43 <youpie12> while on
+19:06:46 <youpie12> or am i mistaking
+19:06:56 <TheJollyRoger> If someone obtains your device after you restart it, that phone is encrypted.
+19:07:13 <cn3m[m]> no it wouldn't make it easier to break your phone physically
+19:07:38 <TheJollyRoger> Remember that each profile is encrypted with different keys, which need to be derived using a combination of access tokens contained in the HSM, information in the header partition, and your password.
+19:08:17 <cn3m[m]> <TheJollyRoger "If someone obtains your device a"> with restricted usb even not rebooted you should be fine. Apple hasn't had a Cellebrite like attack claimed since doing that and we just added that back a year ago
+19:08:28 <youpie12> Thanks, the phone still loads up in a second for me with a 20 character password which makes me sometimes think its not encrypted at all.
+19:08:40 <cn3m[m]> Ideally reboot, but GrapheneOS is holding on strong :)
+19:08:45 <TheJollyRoger> youpie12: Would you like to try a simple experiment?
+19:08:53 <youpie12> Cellebrite is my enemy atm
+19:08:56 <youpie12> Yeah
+19:09:14 <TheJollyRoger> Ok. Got a password set? A four digit pincode will do.
+19:09:20 <youpie12> yes
+19:09:22 <cn3m[m]> <youpie12 "Cellebrite is my enemy atm"> don't worry about them lol
+19:09:38 <youpie12> My ''attacker'' will probably try cellebrite ufed
+19:09:42 <youpie12> if got hands on my phone
+19:09:49 <youpie12> thats the reason im on graphen
+19:10:06 <youpie12> dont trust the standard android encryption
+19:10:21 <TheJollyRoger> You do realize those UFED devices when they list supported devices, are for extracting the images of already unlocked devices, correct? Only "lockscreen bypass" means they've got an exploit.
+19:10:29 <cn3m[m]> <youpie12 "dont trust the standard android "> you should it is fantastic
+19:10:50 <cn3m[m]> <TheJollyRoger "You do realize those UFED device"> they can't extract images with the security chips
+19:10:51 <youpie12> I've seen new iphones get hacked
+19:11:06 <cn3m[m]> they could but they are useless
+19:11:07 <youpie12> This pixel chipset shoudl safe
+19:11:18 <cn3m[m]> <youpie12 "I've seen new iphones get hacked"> not really ever since iOS 11 something
+19:11:26 <youpie12> They claim they can get in
+19:11:28 <youpie12> ios 13
+19:11:29 <TheJollyRoger> Ok, simple experiment coming up: reboot your phone, and then when you see "password required after reboot" at the lockscreen, hit 00000 (unless that is your password, in which case you should change it) and press return. Repeat this 50 times;
+19:11:31 <youpie12> in news pages
+19:11:38 <cn3m[m]> iPhones are generally more resistant to these things, but GrapheneOS closes that gap
+19:11:59 <youpie12> Same 000000
+19:12:06 <youpie12> or just similar
+19:12:09 <youpie12> and repeat that 50 times?
+19:12:21 <TheJollyRoger> Yes, or anything but your password. You'll notice that after the first five attempts, it's going to force you to time out 5 seconds, then after the first ten, it's going to force you to time out for 30.
+19:12:30 <youpie12> Ah theres a timer
+19:12:31 <TheJollyRoger> Once you hit 50, it's going to force you to time out for one minute.
+19:12:37 <youpie12> You cant get around a timer?
+19:12:38 <TheJollyRoger> After two weeks of this, it's going to reach 24 hours between attempts.
+19:12:39 <youpie12> Like an exploit
+19:12:50 <youpie12> Because android stock also
+19:12:52 <youpie12> Has one
+19:12:57 <TheJollyRoger> No, you can't. The Titan M contains an access token and its own internal incremental timer that doesn't answer to the host timer.
+19:13:06 <youpie12> Ah now i get it.
+19:13:21 <TheJollyRoger> So even if you found an exploit for the operating system, the Titan M is going to say "Sorry, but your timer doesn't match mine. Fifty seconds, by MY COUNT, and not yours."
+19:13:40 <cn3m[m]> youpie12: they can't get into iOS 13
+19:13:41 <TheJollyRoger> And remember, the Titan contains the access tokens which are needed to derive the keys from the password.
+19:14:10 <cn3m[m]> also key derivation so even if they bypass the timer they still have issues
+19:14:32 <TheJollyRoger> So, youpie12 -
+19:15:10 <TheJollyRoger> Let's say you set a four digit pincode and that four digit pincode is /perfectly/ random, like you used D&D dice to generate it and it's hard to guess. I know you probably are going to set a much longer password, but bear with me for the sake of a thought experiment.
+19:15:19 <youpie12> Yeah i know
+19:15:22 <youpie12> Mathematically
+19:15:26 <youpie12> This will take a long time for
+19:15:27 <youpie12> a brute froce
+19:16:01 <TheJollyRoger> Yep. After two weeks of getting to the maximum, it'll take 650 years to exhaust the keyspace.
+19:16:28 <TheJollyRoger> If you're not certain 650 years is enough for you or you want a little extra peace of mind or you want something to remember, you can use a diceware passphrase.
+19:16:38 <TheJollyRoger> *want something easier to remember.
+19:16:55 <cn3m[m]> It takes half a year for an iPhone encryption chip to break into itself if it were to bypass the timer for a default random pin. That is with bypassing the timer.. crazy hard. I don't know the key derivation on the Pixel though
+19:16:59 <youpie12> I'll shrink down my pass
+19:17:00 <cn3m[m]> it is probably close
+19:17:15 <cn3m[m]> even if you bypassed the timer the PIN would not be trivial to break
+19:17:29 <TheJollyRoger> youpie12: I prefer to use a word passphrase, but that's because I find them easier to memorize.
+19:17:35 <cn3m[m]> which is a big if
+19:17:39 <cn3m[m]> a really big if
+19:17:50 <youpie12> I have avery bigg passphrase
+19:17:54 <youpie12> 20 characters pass
+19:18:09 <youpie12> But by knowing this ill cut down half
+19:18:16 <TheJollyRoger> youpie12: size matters, but what matters more in this case, is secrecy, uniqueness, and difficulty of guessing.
+19:18:32 <youpie12> Have random symbols and a random numebr
+19:18:44 <TheJollyRoger> twenty characters' worth of passphrase accounts for zero security bits if it's your mother's maiden name and her year of birth.
+19:18:51 <cn3m[m]> 10 even might be overkill if it is random
+19:18:51 <youpie12> Use even longer password for ssd
+19:19:17 <youpie12> Yeah i'll use an easier pass
+19:19:19 <TheJollyRoger> Even though apparently password guesser thinks that that's ~65 bits if I enter it into the "password strength meter."
+19:19:23 <youpie12> Logging in any time took so much effort
+19:20:16 <youpie12> Someone any reccomendation to use instead of shelter, seems to not be working everytime i restart the pone fully i have to reinstall it.
+19:20:17 <cn3m[m]> even with just upper, lower, and numbers a 10 character password would be very strong even with a timer bypass
+19:20:20 <youpie12> Just noticed now again
+19:20:44 <youpie12> So using a 8 digit code
+19:20:46 <youpie12> Random
+19:20:54 <youpie12> Would be already more than enoug
+19:21:09 <youpie12> for no person to be able to get in to in a small timeframe
+19:21:22 <cn3m[m]> <youpie12 "So using a 8 digit code"> yes, but if you had a timer bypass that would eventually fall
+19:22:02 <TheJollyRoger> Yeah. That's why the Titan has its own timer that's sealed within the chip and it only answers to its own timer.
+19:22:05 <TheJollyRoger> Rather than the host's.
+19:22:20 <TheJollyRoger> Two randomly selected words from the pocket edition of the Oxford English Dictionary would give you enough brute force resistance to last probably until well after the Earth gets swallowed by the Sun.
+19:23:08 <TheJollyRoger> Since the pocket edition of the Oxford English dictionary has more than 50,000 words, that's more than 2.5 x 10^9 possible combinations.
+19:23:24 <youpie12> Well eventually there will be a way to still access the data of the phone
+19:23:56 <youpie12> With technology in 10 20 years i dont think the earth is swallowed then but we still dont know that much about computers
+19:24:08 <cn3m[m]> the iPhone has key derivation of ~150ms with dedicated crypto hardware. The Titan M must be similar that is impressive
+19:24:18 <cn3m[m]> that is of course with a timer bypass
+19:24:27 <TheJollyRoger> youpie12: the good news is, the devs already gave thought to that.
+19:24:42 <cn3m[m]> not enforced at all with hardware or software it is all math
+19:24:55 <youpie12> Yeah math
+19:25:01 <youpie12> Untill we discover another way
+19:25:11 <youpie12> to achieve information from a computer
+19:25:12 <cn3m[m]> derivation is very cool
+19:25:20 <youpie12> untill we discover bats and rats instead of bits
+19:25:28 <youpie12> Which already are there but we dont know
+19:25:53 <TheJollyRoger> The cipher on disk is AES-256-HEH for the metadata and AES-256-XTS for your actual data. The cipher was designed to live for more than a century and although there is the possibility of a sufficiently powerful quantum computer being invented in the far future, Grover's Algorithm will only reduce the key strength by its square, which still leaves you with ~128 bit equivalency against a brute
+19:25:55 <TheJollyRoger> force attack.
+19:26:40 <cn3m[m]> 128bit AES is insanely overkill still imo
+19:27:25 <cn3m[m]> it would need a flaw in the spec and an almost physically impossible quantum computer
+19:27:36 <cn3m[m]> to get through that AES 256
+19:29:14 <youpie12> thats what i mean with bats and rats we will discover the quantum pc and stuff and eventually get in all data in a completely data rich wor;ld
+19:29:38 <cn3m[m]> most crypto is highly quantum resistant at this point
+19:29:57 <youpie12> Yes and smoking cigarettes was considered healthy
+19:30:05 <youpie12> once a time
+19:30:49 <TheJollyRoger> youpie12 what are you trying to get us to say?
+19:31:04 <TheJollyRoger> I'm going to be frank here: what do you want to hear?
+19:31:34 <youpie12> Nothing just sharing my not so important opinion
+19:32:12 <cn3m[m]> there is really no better option(maybe marginally the secure enclave), but overall Titan M is basically our best option
+19:34:44 <TheJollyRoger> What cn3m[m] said. If you start to bog yourself down in "what could happen" you're honestly never going to be satisfied. Security is a complex and nuanced topic, and simple answers to complex and nuanced topics don't tend to get you very far outside of giving you a warm and fuzzy feeling.
+19:35:49 <youpie12> No i'm just sharing my opinion as in i dont think that we know enough now to be sure to not be able to not get hacked in 5 or 10 years. Overall i'm already satisfied with the answer that cellebrite cant get in the fking phone more than that i dont have any top nasa secret terrorist information
+19:36:12 <youpie12> And i dont think my ''attacker'' would wanna spend more than 5k 10k to get in my phone
+19:36:21 <youpie12> So for me i'm safe for what it is now
+19:36:29 <TheJollyRoger> Of course.
+19:36:58 <TheJollyRoger> Well, in three years, the Pixel 4 will end its support. What I would probably do then, would be to transfer all your data off to cold storage or back it up, then factory reset your phone once it becomes what we call a "pop tart."
+19:37:22 <youpie12> I certanily only use it for chatting
+19:37:29 <youpie12> No specific  data as photos or hwat
+19:37:29 <youpie12> what
+19:37:37 <TheJollyRoger> At that point, you can recycle it, or you can keep it as a souvenir.
+19:37:55 <youpie12> Buut even with end of support
+19:37:59 <youpie12> Will the chipset not be safe
+19:38:14 <TheJollyRoger> We call old phones that are no longer supported "pop tarts" because they're useful for supplying energy, but not much else.
+19:38:31 <TheJollyRoger> Kind of like how actual Kellog Pop Tarts are good at supplying calories, but they're about as nutricious as a slice of cardboard otherwise.
+19:39:30 <youpie12> Well they add
+19:39:34 <youpie12> Vitamins to it
+19:39:40 <youpie12> Vitamin powder ;)
+19:39:46 <TheJollyRoger> Ha! That's funny actually, I didn't know that XD
+19:39:53 <youpie12> I didnt know either but recently saw
+19:39:55 <youpie12> All these vitamins
+19:39:58 <TheJollyRoger> That's hilarious.
+19:40:00 <youpie12> But i dont think that my cholocate
+19:40:01 <youpie12> breakfast
+19:40:06 <youpie12> is helping me
+19:40:10 <TheJollyRoger> Ack XD
+19:47:58 <zugzwang[m]> <cn3m[m] "youpie12: they can't get into iO"> Its best to think that they can get into iphones or pixels. Cellebrite or Nso may have an os exploit to disable the delay timer.so the advice should be to use alphanumeric password cos i dont think the 4 digit passw is safe.
+19:48:39 <cn3m[m]> <zugzwang[m] "Its best to think that they can "> the exploits they use is just attacking the OS so they bypass the lockscreen
+19:48:45 <cn3m[m]> USB restricted mode on iOS and GrapheneOS are very effective
+19:50:34 <youpie12> Anyone in here who uses some app cloner app that works everytime? Shelter doesnt wanna do the trick
+19:51:30 <zugzwang[m]> <youpie12 "Anyone in here who uses some app"> There is a fork of island i read on github
+19:51:38 <zugzwang[m]> Island is like shelter
+19:52:11 <youpie12> https://github.com/oasisfeng/island
+19:52:14 <youpie12> this one?
+19:52:18 <riotuser1993[m]> <cn3m[m] "USB restricted mode on iOS and G"> Apparently having to press enter once your password is ready rather than it automatically taking it once the correct amount of characters are entered is a big help as well
+19:52:31 <zugzwang[m]> <cn3m[m] "the exploits they use is just at"> Still alphanumeric password is safer to use
+19:52:51 <zugzwang[m]> Thats island
+19:53:06 <zugzwang[m]> But there is a fork of it i cant seem to remember the name of it now
+19:53:21 <zugzwang[m]> The fork is maintained
+19:54:21 <zugzwang[m]> <riotuser1993[m] "Apparently having to press enter"> Not on ios
+19:56:27 <cn3m[m]> <zugzwang[m] "But there is a fork of it i cant"> Shelter
+19:56:37 <cn3m[m]> <zugzwang[m] "Still alphanumeric password is s"> sure
+19:57:09 <youpie12> I downloaded shelter from aurora store
+19:57:12 <youpie12> Might that cause problem
+19:57:29 <youpie12> doesnt wanna start up after restarting
+19:59:59 <zugzwang[m]> <youpie12 "I downloaded shelter from aurora"> Insular is the name of island fork
+20:00:31 <youpie12> Thankyou will try now
+20:00:36 <zugzwang[m]> <zugzwang[m] "Insular is the name of island fo"> Shelter from fdroid should work fine. Uninstall the aurora one and try the fdroid
+20:00:37 <youpie12> Download from apk online?
+20:00:43 <youpie12> Alrihgt
+20:00:48 <youpie12> will do now thanks
+20:01:05 <youpie12> Cant seem to remove
+20:01:06 <youpie12> Shelter
+20:01:13 <youpie12> Uninstall is greyed out
+20:02:56 <youpie12> Can remove any othe app even the aurora store itself
+20:06:07 <zugzwang[m]> <youpie12 "Uninstall is greyed out"> Cant uninstall from settings?
+20:06:42 <youpie12> Nope but was able via aurora app
+20:06:47 <youpie12> Think because of sandbox>?
+20:08:24 <zugzwang[m]> <youpie12 "Download from apk online?"> Download it from fdroid
+20:08:32 <zugzwang[m]> It should work
+20:08:58 <zugzwang[m]> Sometimes you have to force close it when adding app into shelter
+20:10:24 <youpie12> cant install because of unknownb error says fdroid
+20:10:28 <youpie12> i restart sec
+20:10:35 <zugzwang[m]> youpie12: best to use user profiles though  rather than shelter
+20:10:53 <youpie12> I have 3 telegram acounts
+20:10:55 <youpie12> Is hard to switch
+20:11:02 <youpie12> And 3 whatsapp
+20:11:10 <zugzwang[m]> Lol
+20:11:38 <youpie12> Yeah.. using app cloner on my prior android was easier
+20:11:59 <zugzwang[m]> Shelter is easy and works fine on graphene
+20:12:19 <youpie12> Still doesnt wanna install from f droid store
+20:12:23 <youpie12> Says unknown error while installing
+20:12:26 <youpie12> Is there an apk availabel
+20:12:30 <zugzwang[m]> Just sometimes have to force close it when its not sheltering apps
+20:12:51 <zugzwang[m]> Have you installed on another profile shelter aswell?
+20:14:53 <youpie12> Haveno other profiles i know of
+20:21:54 <zugzwang[m]> Have you uninstalled it or just removed it from the homescreen
+20:22:09 <youpie12> I went fdroid types in shelter
+20:22:17 <youpie12> It found the shelter i installed from aurora
+20:22:20 <youpie12> clikced uninstall
+20:22:24 <youpie12> And restarted phone now click install
+20:22:27 <youpie12> Still says unknown error
+20:22:36 <youpie12> First time using f droid
+20:23:12 <zugzwang[m]> Ok, when you used it from aurora
+20:23:21 <youpie12> yees
+20:23:24 <zugzwang[m]> What was the prbl
+20:23:37 <zugzwang[m]> How wasnt functioning
+20:23:39 <youpie12> app started
+20:23:45 <youpie12> havent tried using 2 whatsapp
+20:23:48 <youpie12> but the app worked
+20:23:54 <youpie12> but after restrating
+20:23:56 <youpie12> app wouldnt open
+20:24:01 <youpie12> i had to reinstall
+20:24:03 <youpie12> from aurora
+20:24:28 <zugzwang[m]> Which app wouldnt open shelter or the cloned app
+20:24:37 <youpie12> shelter itself
+20:24:45 <youpie12> havent tried cloning any app yet
+20:24:59 <zugzwang[m]> Hmm strange
+20:25:15 <zugzwang[m]> Working fine for me
+20:27:25 <youpie12> apk from site wouldnt install
+20:28:35 <zugzwang[m]> Even from aurora should work as its the same one as from google play
+20:29:30 <youpie12> Is there any way to see f droid errors
+20:30:15 <zugzwang[m]> I know its stupid but Check under the all apps settingst to see  if you havent uninstalled it cos sometimes
+20:30:49 <youpie12> yeah im stupid
+20:30:55 <youpie12> but still uninstall is greyed out
+20:31:13 <youpie12> it is gone from my app list
+20:31:23 <youpie12> thats not in settings
+20:32:25 <zugzwang[m]> youpie12: i said its stupid for me to suggest that cos sometimes i just remove apps from screen thinking i uninstalled them
+20:32:48 <youpie12> i couldnt uninstall from settings
+20:32:59 <youpie12> but i uninsylled via fdroid so thought
+20:33:04 <youpie12> now ist gone from ap pscreen
+20:33:27 <zugzwang[m]> What you mean STILL greyed out
+20:34:19 <zugzwang[m]> You said you uninstalled it from aurora store
+20:34:41 <youpie12> No if i go to settings
+20:34:44 <youpie12> then apps and
+20:34:46 <youpie12> shelter
+20:34:53 <youpie12> the button uninstall it not possibel to click
+20:34:55 <youpie12> greyed out
+20:35:10 <youpie12> Yes uninstalled from store but its apparently
+20:35:11 <youpie12> still in
+20:35:13 <youpie12> settigns
+20:35:25 <youpie12> even after restart
+20:35:44 <zugzwang[m]> So you havent uninstalled it thats why you cant install it from fdroid
+20:35:52 <youpie12> yep
+20:36:39 <zugzwang[m]> Thats why the error on fdroid
+20:37:15 <youpie12> yes im trying to find my way to uninstall it restarting phone again
+20:37:22 <zugzwang[m]> Its nit recommended here adb but thats the only option to uninstall if its a corrupt install i think
+20:37:40 <zugzwang[m]> Someone else can advise better if they know
+20:38:21 <youpie12> when i iinstalled shelter it said if you use any custom rom you should click quit the app but i continued to click conttinue
+20:38:25 <youpie12> might also be a reason for the issue
+20:38:48 <zugzwang[m]> No its not that
+20:38:49 <youpie12> As multiple people said shel;ter worked on grapehneos i though
+20:38:59 <zugzwang[m]> It does
+20:39:27 <zugzwang[m]> But under the apps notifications all apps and still cant uninstall?
+20:39:41 <zugzwang[m]> Even drag to uninstall
+20:42:13 <iocontr0l[m]> you need to remove it as an administrator first of all if you have enabled it.
+20:42:24 <iocontr0l[m]> Then you need to goto serttings and remove work profile
+20:42:36 <iocontr0l[m]> then and only then will Shelter uninstall
+20:52:44 <youpie12> That did the trick
+20:52:49 <youpie12> Now installing it again from fdroid
+20:52:54 <youpie12> Creating new work profile
+21:01:33 <youpie12> shelter is running but no main screen
+21:01:39 <youpie12> It is supposed to be like that
+21:02:51 <anupritaisno1[m]> cdesai
+21:03:16 <anupritaisno1[m]> Think you could help me get a device to support android-prepare-vendor?
+21:04:27 <cdesai> Sure, should just work as long as you can feed it a factory image, there's an option to give a path to the image and skip download
+21:04:42 <cdesai> But why? I'd justt use lineage extract tools
+21:06:08 <anupritaisno1[m]> cdesai (@freenode_cdesai:matrix.org): lineage extract tools do firmware?
+21:06:47 <cdesai> Not extraction afaik, but this doesn't do anything special for that either really.
+21:07:07 <cdesai> Worth checking gerrit if you don't see it in the source.
+21:10:41 <LinusSexTips[m]> Why would you want use Shelter?
+21:10:48 <LinusSexTips[m]> I just make new user profiles
+21:11:37 <cn3m[m]> <LinusSexTips[m] "I just make new user profiles "> that is much more robust
+21:12:00 <cn3m[m]> especially if you reboot before switching profiles
+21:12:17 <cn3m[m]> then you have an anti cold boot attack and AFU attack on the other profiles
+21:13:14 <LinusSexTips[m]> I usually reboot after switching. Is it better to do it before?
+21:13:41 <LinusSexTips[m]> Oh sorry it lagged just saw the last line you sent
+21:14:01 <anupritaisno1[m]> Don't use shelter
+21:14:07 <anupritaisno1[m]> Use island
+21:14:15 <cn3m[m]> <LinusSexTips[m] "I usually reboot after switching"> yeah even if you get exploited in one profile it can't jump like it normally would
+21:14:35 <cn3m[m]> multiple user profiles and rebooting before and after switching is ideal
+21:15:22 <LinusSexTips[m]> OK I will start rebooting before as well. Phone is pretty quick actually doesn't take long
+21:27:09 <strcat[m]> cdesai: maybe we can alter the build system to make an apk
+21:27:11 <strcat[m]> instead of an app bundle
+21:27:59 <cdesai> strcat[m]: it has been app bundle ever since trichrome launched right
+21:29:39 <cdesai> I can/will look into this tomorrow
+21:35:02 <strcat[m]> cdesai: yeah but we can prob generate apk instead
+21:35:08 <strcat[m]> like monochrome and the other targets
+21:35:27 <cdesai> Yeah good idea
+21:35:35 <strcat[m]> might be simple, dunno
+21:35:41 <strcat[m]> a lot of the build system is shared
+21:35:48 <strcat[m]> might be simpler than it seems to do apk
+21:35:55 <strcat[m]> most is templated
+22:04:31 <broda721[m]> <cn3m[m] "multiple user profiles and reboo"> What are the implications if you dont reboot at all between switching user profiles? Does that make it significantly les secure? Lets say you have a main user, and a certain app you want seperated (like facebook). Does not rebooting before switching profiles undo/affect the isolation? Or is the rebooting mainly for physical risks. I have not found instructions on how to go
+22:04:31 <broda721[m]> about user profile switching on the site/reddit
+22:16:14 <zugzwang[m]> <broda721[m] "What are the implications if you"> I would think it has to do with logging off the profile so apps dont run on background after you switch profiles
+22:54:17 <dazinism> broda721: zugzwang have a look at https://hub.libranet.de/wiki/and-priv-sec/wiki/user-profiles
+22:58:45 <anupritaisno1[m]> cdesai:
+23:19:24 <dazinism> <anupritaisno1[m] "Don't use shelter "> The shelter dev is working on it again. They got a test build out of the next release.
+23:20:01 <dazinism> Thinking they'll probably be addressing the issues they talked to you about?
+23:20:34 <dazinism> They also working on a new matrix client
+23:21:28 <dazinism> *they got a release candidate out
+23:21:56 <anupritaisno1[m]> Peter is?
+23:24:49 <dazinism> anupritaisno1: yeah, they also got a matrix room for shelter now...
+23:25:34 <anupritaisno1[m]> Send the link
+23:25:46 <anupritaisno1[m]> I know him
+23:26:19 <dazinism> #shelter:neo.angry.im
+23:45:51 <dazinism> cn3m: thinking the AFU worries are addressed if apps keep data encrypted with Titan when screen is locked?
+23:46:48 <dazinism> Pity not many do. Seen password stores and OTP apps
+23:47:45 <dazinism> Be nice to have other apps notes, contacts....
+23:48:15 <cn3m[m]> <dazinism "cn3m: thinking the AFU worries a"> well if the key is in memory that is the issue
+23:48:50 <cn3m[m]> there is nothing stopping you from fully owning and dumping a phone if you can exploit it while logged in
+23:59:03 <dazinism> cn3m: https://developer.android.com/reference/android/security/keystore/KeyProtection#isUnlockedDeviceRequired()
+23:59:18 <dazinism> This is done by titan
+23:59:31 <cn3m[m]> dazinism: thanks

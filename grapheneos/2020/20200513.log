@@ -1,0 +1,679 @@
+00:39:48 <nickcalyx[m]> Its sha256-rsa2048
+00:42:13 <strcat> yzernik: it's a secure signing system, not PGP
+00:42:28 <strcat> I recommend reading the official documentation
+00:42:36 <strcat> https://grapheneos.org/usage#updates
+00:43:02 <strcat> https://grapheneos.org/releases#about-the-releases
+00:43:11 <strcat> > The update packages have a internal signature verified by the update client (or recovery when sideloading). Downgrade attacks are also prevented, and downgrades cannot be done unless a special downgrade update package has been signed with the release key. The internal payload for update_engine is also signed, providing another layer of signature verification and downgrade protection. Verified
+00:43:13 <strcat> boot and the hardware-backed keystore also act as a final layer of protection.
+01:01:46 <headgas[m]> Did anyone see my message?
+01:02:37 <gervarouge[m]> Just ask again
+01:04:58 <headgas[m]> Ok so im back on my pixel 4 xl since you guys said it was safer than my Nexus 5 running Ubuntu touch. I have Google deleted and everything I can think of to de-google as much as I can. I know I can't delete play services. But I have fdroid and replaced everything I can think of with apps from there. Anything else I can do until grapheneos or something is available for my phone?
+01:08:02 <gervarouge[m]> You're probably good then
+01:16:54 <aeonsolution[m]> have successfully built the tmp branch and and flashed my pixel 3a for development; what! what!
+01:19:45 <strcat> aeonsolution[m]: why the tmp branch
+01:20:37 <strcat> that's just a temporary thing for making the stable releases
+01:20:40 <strcat> not intended to be used
+01:20:50 <strcat> I guess it does match the last stable release
+01:20:59 <JTL> aeonsolution[m]: tmp branch?
+01:22:02 <aeonsolution[m]> strcat: when i pulled the branch it was pointing at r36 and i noticed the tmp branch had r35
+01:22:32 <aeonsolution[m]> from the xml file
+01:22:37 <strcat> the 10 branch is the development branch
+01:22:49 <strcat> the tmp branch in the manifest repository is just a temporary scratch space I use, not intended for use
+01:22:57 <strcat> I use it to create the stable tags
+01:23:09 <strcat> both were using r36
+01:25:56 <aeonsolution[m]> thats good know, i was digging around trying to figure out why i was getting errors
+01:26:00 <strcat[m]> aeonsolution: either use the 10 branch or the stable tags from now on
+01:26:06 <aeonsolution[m]> got it
+01:26:08 <strcat[m]> 10 branch should work fine for you
+01:26:57 <aeonsolution[m]> yeah, the error ended up being something else that dan-v helped me with; will do that from now on. thanks for the guidance
+01:28:07 <strcat> aeonsolution[m]: you can init your sources to the 10 branch
+01:28:09 <strcat> with repo init
+01:28:12 <strcat> don't need to redownload it all
+01:28:25 <strcat> init and sync
+01:28:53 <aeonsolution[m]> got it; doing that now
+01:29:10 <aeonsolution[m]> do i need to add the branch or just `repo init`
+01:29:26 <aeonsolution[m]>  * do i need to add the branch or just `repo init` will do
+01:30:01 <JTL> repo init should be enough
+01:30:03 <strcat> aeonsolution[m]: put the full repo init command
+01:30:12 <JTL> should error out if there is any issues
+01:30:12 <strcat> not just `repo init` by itself - do what the build documentation says
+01:30:20 <aeonsolution[m]> got it
+01:30:31 <strcat[m]> https://grapheneos.org/build#development-branch
+01:30:36 <strcat[m]> https://grapheneos.org/build#updating-and-switching-branches-or-tags
+01:38:34 <aeonsolution[m]> strcat: since i was in the tmp branch, should I add the `--force-sync` option?
+01:38:56 <JTL> aeonsolution[m]: If you don't and it has an issue, it *should* error out
+01:39:24 <aeonsolution[m]> perfect, thanks
+01:39:37 <JTL> hold on I know an option here
+01:39:55 <JTL> --fail-fast
+01:40:15 <aeonsolution[m]> for repo sync thats valid?
+01:40:20 <JTL> yes
+01:40:31 <JTL> It'll abort the sync early if it errors out
+01:40:41 <JTL> rather then waiting for other threads to complete (I assume)
+01:40:42 <aeonsolution[m]> cool, the more you know
+01:40:49 <JTL> You're welcome
+01:41:04 <aeonsolution[m]> thank you
+01:42:20 <aeonsolution[m]> JTL: can you help me with the understanding the builds table https://source.android.com/setup/start/build-numbers#source-code-tags-and-builds
+01:42:42 <JTL> Er In what context?
+01:43:00 <aeonsolution[m]> Build 	Tag 	Version 	Supported devices 	Security patch level
+01:43:00 <aeonsolution[m]> QQ2A.200501.001.B3 	android-10.0.0_r36 	Android10 	Pixel 2, Pixel 2 XL 	2020-05-05
+01:43:00 <aeonsolution[m]> QQ2A.200501.001.B2 	android-10.0.0_r35 	Android10 	Pixel 3, Pixel 3 XL, Pixel 3a, Pixel 3a XL, Pixel 4, Pixel 4 XL 	2020-05-05
+01:43:19 <JTL> What about it?
+01:43:20 <aeonsolution[m]> when i'm pulling the vendor files
+01:44:21 <JTL> I usally just keep this link handy
+01:44:23 <JTL> https://developers.google.com/android/images
+01:44:30 <JTL> Becaues it lists the device and version by monthly patch level
+01:44:42 <JTL> But it's really the same data if you look closely
+01:45:21 <aeonsolution[m]> let me check it out, i just get confused because r36 points to pixel 2 and pixel 2xl
+01:48:14 <strcat> just use the 10 branch
+01:48:19 <strcat> it works for all the supported devices
+01:48:34 <strcat> we use android-10.0.0_r36 for all devices - not just the Pixel 2 and 2 XL
+01:48:40 <strcat> we use a unified source tree
+01:48:47 <JTL> Good to know
+01:48:54 <strcat> the only difference is that for some devices you need to use a different BUILD_ID for the factory images
+01:49:11 <strcat> and for tags, we include the appropriate upstream BUILD_ID, regardless of the tag we're using
+01:49:18 <strcat> so that people can get the factory images
+01:49:34 <strcat> our version is STOCK_BUILD_ID.OUR_BUILD_NUMBER
+01:49:55 <strcat> aeonsolution[m]: you're making things way more complicated than they need to be
+01:50:01 <aeonsolution[m]> ok that makes sense, i was mixing up the two things
+01:50:05 <strcat> you're overthinking it and that's what made it take so long
+01:50:15 <aeonsolution[m]> you're right
+01:51:18 <Guest693> hello guys
+01:52:49 <Guest693> can somone help me with this: I Enabling OEM unlocking, Unlocked the bootloader. What and how do i go form there?
+01:54:14 <aeonsolution[m]> Guest693: https://grapheneos.org/install#obtaining-factory-images
+01:55:37 <aeonsolution[m]> If you have a specific question on this part, please add it the chat and we'll try to help as best as we can.
+01:55:46 <Guest693> Hey, yes i read this of course but couldn't manage it. Can somone send me a private message and walp me through it?
+01:56:43 <Guest693> sure, so i need to be still in the "Fastboot Mode" right?
+01:57:15 <aeonsolution[m]> For these steps, don't worry about putting the questions on here. There maybe someone else with that same problem.
+01:57:53 <strcat> Guest693: first download the appropriate factory images
+01:58:05 <strcat> and if you have signify available via your distribution, verify them
+01:58:16 <Guest693> i did, they are on my computer
+01:58:31 <Guest693> called "sargo-factory-2020.05.05.02"
+01:58:41 <Guest693> correct?
+01:59:11 <Guest693> its a zip file
+01:59:25 <strcat> if you have a Pixel 3a
+01:59:29 <Guest693> yes
+01:59:44 <strcat> so move along to https://grapheneos.org/install#flashing-factory-images
+02:00:05 <strcat> it suggests using curl to download it so that it doesn't need to tell you to `cd` to the directory you downloaded it
+02:00:35 <Guest693> is the "bootloader " the same as the "Fastboot Mode"?
+02:01:01 <strcat> yes
+02:01:16 <strcat> the terms they use are not entirely accurate
+02:01:22 <strcat> the 'bootloader mode' is really 'fastboot mode'
+02:01:35 <Guest693> okey and the "sargo-factory-2020.05.05.02" is a zip file so i just unzip it right?
+02:01:47 <strcat> yes you unzip that
+02:02:01 <Guest693> okey and then i cd that path right
+02:02:06 <strcat> you're going to need to be in a terminal to set up PATH and run ./flash-all.bat
+02:02:13 <strcat> and you need to have up-to-date fastboot in your PATH from earlier
+02:02:31 <strcat> the reason the instructions stick to doing everything in the terminal is so you can simply copy-paste the commands as you go
+02:02:37 <strcat> and you don't need to do anything not listed there
+02:02:47 <strcat> if you download it in a browser and unzip, you'll need to cd to where you did that
+02:02:51 <strcat> then set up fastboot as it said earlier
+02:02:59 <strcat> there's a reason behind why the instructions are given how they are
+02:03:22 <strcat> I guess I do need to update the flashing section for Windows by saying to use `tar xf` instead of `unzip`
+02:04:17 <aeonsolution[m]> Guest693: what OS are you using?
+02:05:02 <strcat> can tell it's Windows because it defaults to hiding file extensions
+02:07:07 <MadCamel> might confuse the users, couldn't do that now could we
+02:07:30 <aeonsolution[m]> trial by fire
+02:07:38 <Guest693> well i think it worked, just said something like "File system type raw not supported." not bad is it?
+02:07:50 <strcat> Guest693: make sure to lock the bootloader after it finishes
+02:08:03 <strcat> https://grapheneos.org/install#locking-the-bootloader
+02:08:07 <Guest693> yeah i read
+02:08:33 <aeonsolution[m]> you'd be surprised how many people skip this part
+02:09:15 <Guest693> yeah really hard to miss. I read it a few times
+02:09:18 <Guest693> :)#
+02:09:37 <DannyWorkOrderPr> I've seen our obesity rate, nothing surprises me anymore.
+02:09:39 <Guest693> its locked so now i just boot for the first time?
+02:09:58 <aeonsolution[m]> yes
+02:10:32 <aeonsolution[m]> you'll get an information message about the os being different then it'll boot to GrapheneOS
+02:10:53 <Guest693> cool very nice, thanks a lot for your help
+02:10:59 <strcat> I've been working on making the instructions cover absolutely everything and to have them fully support macOS and Windows in addition to Linux
+02:11:12 <strcat> it would be simpler if Linux distributions used bsdtar instead of GNU tar
+02:11:34 <strcat> it's annoying trying to write instructions that work on 3 OSes as 1 document
+02:11:42 <strcat> I guess I could split it into 3 documents that are kept in sync
+02:11:50 <Guest693> so just for feedback. What was the largest challenge for me is that i couldn t unlock the bootloader for some reason it didn t take the command "fastboot flashing lock"
+02:12:17 <strcat> Guest693: the command failed? or fastboot wasn't in PATH
+02:12:26 <aeonsolution[m]> It would be easier to follow but i think harder to maintain because you'd might want to check with the other OS instructions
+02:12:46 <strcat> yes it's just kinda annoying to follow when it splits into different paths per OS
+02:12:49 <aeonsolution[m]> windows makes it hard to setup environment variables
+02:13:00 <strcat> aeonsolution[m]: I wouldn't really say that
+02:13:04 <strcat> I actually think it's better on Windows
+02:13:05 <Guest693> i did some research for a couble of hours then it turned out to be some windows drivers
+02:13:10 <Guest693> i found them there: https://usbdriverspie.com/google-pixel-3a/
+02:13:12 <strcat> they have a nice GUI for persistently configuring environment variables
+02:13:30 <gervarouge[m]> Honestly should people even use GrapheneOS if they can't figure out how to install it?
+02:13:49 <strcat> AFAIK Windows is supposed to auto install the drivers
+02:14:01 <strcat> I could give instructions on obtaining the proper first party drivers
+02:14:22 <aeonsolution[m]> finding it and knowing how to set it up correctly is kind of confusing, the syntax is hard for beginners on windows since they dont work with command line tools all that much
+02:14:43 <aeonsolution[m]> thats the angle im coming at it
+02:14:59 <strcat> aeonsolution[m]: there's a GUI for setting env variables persistently but the way these instructions work they have you download a temporary platform-tools
+02:15:11 <strcat> it doesn't have you install it or put it somewhere sensible and it's not going to update itself
+02:15:21 <strcat> since it's a specific release without the usual SDK package manager
+02:15:34 <strcat> proper instructions on setting up a self-updating SDK including platform-tools are in the build guide
+02:15:39 <strcat> but it'd be overcomplicated here
+02:16:08 <strcat> aeonsolution[m]: on Windows people could just install Android Studio - that may put fastboot in PATH for you - don't know
+02:16:13 <strcat> if it doesn't they could do it with the GUI
+02:16:26 <strcat> but ultimately they do need to open up a terminal to run fastboot flashing unlock and then fastboot flashing lock after flashing
+02:16:38 <strcat> it's easiest to just open up a terminal and copy paste the commands there one by one
+02:16:51 <strcat> I've set it up so that the commands can just be copy-pasted one by one with 0 manual intervention / changes
+02:17:09 <strcat> that's why I have people use curl and tar xf to extract
+02:17:47 <strcat> because if they do it via their browser I'd need to explain how to open a terminal and go to that directory and I don't know where they dl'ed it
+02:18:01 <strcat> and also I have people verify the hash of platform-tools
+02:19:20 <strcat> aeonsolution[m]: there could be a GUI program wrapping the entire thing but it'd throw away the trust chaining this does when the distro has signify available
+02:19:23 <strcat> and proper packages
+02:19:27 <Guest693> Uploaded file: https://uploads.kiwiirc.com/files/8ceafe9aa81f1af57d469f4992877b80/image.png
+02:19:29 <Guest693> well for me the windows USB C drivers where the largest problem
+02:19:55 <strcat> Guest693: you got them from some weird third party site though? that's odd
+02:20:01 <Guest693> when i downloaded them and put them in the devicemanager like on the screenshot then everything worked :)
+02:20:18 <strcat> afaik it's supposed to auto-detect a device was connected and dl the driver from MS
+02:20:23 <strcat> are you on Windows 10?
+02:21:09 <Guest693> yes MS 10 with a usb c port but the universal driver just let s you do a file transfer
+02:21:55 <strcat> maybe https://developer.android.com/studio/run/win-usb is what people need
+02:22:04 <strcat> but I thought it'd dl automatically once the device is in fastboot mode
+02:22:26 <Guest693> also when the phone was booted the fastboot tool could see it. But not when it was in "Fastboot Mode".
+02:23:17 <Guest693> Does that make sense? For that i needed the drivers which are now shown in the device manager called "Android Bootloader interface"
+02:24:43 <aeonsolution[m]> I think it does, I didn't download anything else to get it to flash the device on Windows
+02:25:09 <aeonsolution[m]>  * I think it does, I didn't download anything to get it to flash the device on Windows
+02:25:47 <strcat> yeah I don't think installing any driver should be required especially not a third party one
+02:26:07 <strcat> it does need to be installed but it's supposed to auto-detect and pull it via windows update automatically
+02:26:22 <Guest693> i understand
+02:26:28 <strcat> definitely not supposed to need to install any third party version
+02:26:40 <strcat> I can't easily test this
+02:26:56 <strcat> for the Linux install and build instructions I can spin up a new container and test that it works without any extra dependencies
+02:27:06 <strcat> but I can't do that for Windows
+02:28:26 <bseeinu[m]> Just boot a Linux live OS friends
+02:28:40 <bseeinu[m]> I gave up on dealing with Windows
+02:28:57 <aeonsolution[m]> i have a spare windows laptop im going to reformat soon, i can test and let you know later
+02:28:57 <bseeinu[m]> And all the WSL and etc
+02:30:28 <BalooRJ> GrapheneOS was the reason I installed Linux in the first place
+02:30:36 <BalooRJ> since then I've ditched Windows and just use Debian
+02:30:53 <strcat> and I can't test macOS at all
+02:31:20 <BalooRJ> even when I was dual booting, Windows 10 wouldn't even allow file transfer on my GrapheneOS flashed phone
+02:31:29 <BalooRJ> it recognized the device was plugged in...and that's about it
+02:55:24 <j3ghprjfo[m]> Hello
+02:55:46 <aeonsolution[m]> Welcome!
+03:18:22 <madaidan[m]> Hi
+03:41:38 <minimisk> Since installing GrapheneOS on my Pixel 2 XL a week ago, I am not receiving any notifications through SMS nor through Signal, even with battery optimizations disabled and with Signal's background connection enabled. Does anyone know what might be the problem?
+03:49:25 <aeonsolution[m]> Did you setup your network? Signal should still work with other users using Signal over WiFi.
+03:50:24 <nickcalyx[m]> What happens if you try sending a signal msg
+03:56:44 <minimisk> Please let me know if I'm missing the point, but I can send and receive messages properly, I simply do not receive notifications.
+03:57:09 <minimisk> I know that without Play Services notifications are expected to be delayed, but I'm not getting any at all.
+04:01:44 <aeonsolution[m]> I would say try checking out if its something with the app: https://github.com/signalapp/Signal-Android/issues
+04:02:04 <aeonsolution[m]> Which Pixel are you using?
+04:03:26 <DannyWorkOrderPr> aeonsolution they said Pixel 2 XL above
+04:04:48 <aeonsolution[m]> My bad, missed it by accident. Thanks for letting me know.
+04:06:10 <DannyWorkOrderPr> I searched the Signal Issues for kicks, didn't see anything device specific
+04:06:28 <minimisk> I have done this. However, this seems to be happening with all apps (Signal, QKSMS). What's more, in certain apps like Orgzly (an Emacs org-mode client), persistent notifications do not appear.
+04:07:18 <aeonsolution[m]> Yeah same here, there was a label for no-play-services Danny@WorkOrderPro but it's still an open issue
+04:07:39 <minimisk> For example, in Orgzly there's an option to enable a persistent notification to make a quick note. This worked with stock Android, but no notification appears when the setting is toggled.
+04:07:58 <minimisk> However, the app's other notifications still work
+04:08:04 <DannyWorkOrderPr> minimisk: have you opened the APN settings screen? Ensure your bubble radio button is filled for your carrier?
+04:15:12 <minimisk> Yes it is
+04:17:00 <jawsua[m]> minimisk Your problem is notifications not showing, correct? Not network or SMS issues?
+04:17:37 <minimisk> Correct, only notifications are not showing. Everything else is working great
+04:37:59 <minimisk> Sleep is important, but I'll be checking this thread in the morning. Thanks for your help
+05:06:39 <blacklight447[m]> strcat i case you are curious which of of our recommended providers support what implementation of dane, you can find the results here:https://github.com/privacytools/privacytools.io/issues/1911
+05:06:50 <blacklight447[m]> Mailbox.org and tutanota both do it properly
+05:07:23 <blacklight447[m]> The other skip dane for outgoing mail
+05:08:58 <brenneke[m]> <minimisk "Since installing GrapheneOS on m"> Settings > Accounts > Automatically sync data set to on?
+05:21:48 <aeonsolution[m]> Hey dan-v are you in the chat?
+06:10:33 <strcat[m]> would be useful if someone could figure out the build targets to build SDK repository packages
+06:11:02 <strcat[m]> so the platform-tools-30.0.0 tag, etc. are how they publish those releases via AOSP
+06:11:13 <strcat[m]> and I know how to build adb, fastboot, etc. by themselves of course
+06:11:21 <strcat[m]> (`m adb fastboot` and so on)
+06:11:33 <strcat[m]> but dunno the build target for the platform-tools package
+06:11:41 <strcat[m]> ./development/build/tools/sdk_repo.mk is relevant
+06:55:55 <mrarti[m]> <blacklight447[m] "strcat i case you are curious wh"> Thanks!
+07:09:13 <blacklight447[m]> ?
+08:37:18 <renlord[m]> MTA sts using postfix is there a milter for that?
+08:37:54 <renlord[m]> I suppose it already does opportunistic Dane.
+08:38:16 <renlord[m]> So it assumes STS at the start.
+08:39:40 <strcat> renlord[m]: MTA-STS enforces TLS with Web PKI
+08:40:17 <strcat> renlord[m]: for hosts with DANE, MTA-STS isn't really any use right now - although it would be useful if it was used to enforce that the certificates had SCTs
+08:40:39 <strcat> renlord[m]: there's an MTA-STS TLS policy service
+08:40:43 <strcat> I haven't set it up yet
+08:40:54 <strcat> it's more complex than I'd like...
+08:41:11 <renlord[m]> Alright I'll go check it out
+08:41:22 <strcat> https://pypi.org/project/postfix-mta-sts-resolver/
+08:42:30 <strcat> the attestation service gets to warn me when one of my 15 phones has run out of power
+08:42:38 <strcat> amuses me
+08:42:48 <strcat> The following devices have failed to provide valid attestations before the expiry time:
+08:42:50 <strcat> * F9C7-289E-888D-0054-C079-07F7-F0D0-008A-DF75-B10B-1F9A-431E-54CB-6D10-D76B-8928
+08:42:52 <strcat> Log in to https://attestation.app/ for more information.
+08:43:06 <strcat> oh look my 2nd Pixel 3 has had a dead battery for 32 hrs
+08:43:19 <renlord[m]> 15?
+08:43:23 <renlord[m]> Whoah
+08:43:26 <strcat> I have a lot of phones
+08:43:33 <strcat> esp if you include the obsolete ones I keep in my closet
+08:43:55 <strcat> Nexus 5, Nexus 6, Nexus 7, Nexus 10, Nexus 5X, Nexus 6P, Pixel, Pixel XL, Pixel 2, Pixel 2 XL, Pixel 3, Pixel 3 XL, Pixel 3a, Pixel 3a XL
+08:43:57 <strcat> Galaxy S4
+08:44:08 <renlord[m]> Is this for nostalgia or can't be bothered to dispose properly?
+08:44:08 <blacklight447[m]> Lol
+08:44:13 <strcat> and I have 2x Pixel 3 and 2x Pixel 3 XL rather than 1 of each
+08:44:21 <blacklight447[m]> :p
+08:44:21 <blacklight447[m]> <strcat "amuses me"> High security battery monitoring
+08:44:29 <gervarouge[m]> What's the best phone to buy for building graphene on a non daily driver?
+08:44:35 <gervarouge[m]> Cheap ideally
+08:44:36 <strcat> gervarouge[m]: Pixel 3a
+08:44:38 <strcat> for now
+08:44:47 <strcat> til Pixel 4a is supported - hopefully people can help with that
+08:44:57 <strcat> we didn't get the help we needed for the Pixel 4 and maybe at this point we will just skip it
+08:45:17 <gervarouge[m]> Pixel 4 would be expensive for a second device no?
+08:45:36 <gervarouge[m]> I have a 3a I'm hanging onto right now. Don't have a lot of spare cash due to corona
+08:45:55 <gervarouge[m]> I guess 2 3as will be the way to go
+08:47:03 <gervarouge[m]> * Pixel 4a would be expensive for a second device no?
+08:47:11 <cx2[m]> Given that its going to be supported for the next two years, at least by google, I would thumbs up that decision for sure.
+08:48:55 <gervarouge[m]> Yeah Pixel 3 is a lot cheaper since you can get a screen burned in one on eBay in decent shape for under $100
+08:49:01 <gervarouge[m]> I am on the fence
+08:50:14 <strcat> valldrac: btw I forgot to actually merge your VPN lockdown patches into the production branch... it's fixed now for the next release
+08:50:16 <strcat> sorry about that
+08:50:21 <strcat> not sure how that got lost
+08:51:27 * TheJollyRoger wonders if he should donate one of those multicharging blocks that allow a whole pile of phones to be charged all at once to the project...
+08:53:00 <gervarouge[m]> I think I'll go Pixel 3 it's a lot more affordable. Pixel 3as are too expensive unless they are totally smashed up which I don't trust much. Thanks for the input
+08:53:03 <cx2[m]> Also a good choice, condition notwithstanding. I'd look at swappa.com if you haven't already.
+08:53:35 <cx2[m]> And support is officially not much shorter
+08:54:22 <gervarouge[m]> Thanks
+08:54:54 <BallMonokuma[m]> <gervarouge[m] "I think I'll go Pixel 3 it's a l"> aren't "3 A"s cheaper?
+08:55:10 <strcat> gervarouge[m]: Pixel 3a is the cheap one
+08:55:14 <strcat> Pixel 3 is higher end
+08:55:15 <gervarouge[m]> The other option is I could switch to an iPhone due to the affordable used market here and turn my Pixel into a dev device. I dunno if I want to upgrade my phone yet though
+08:55:23 <strcat> if you can get a Pixel 3 for cheaper than a Pixel 3a then yeah get a Pixel 3
+08:55:26 <strcat> but I think you're mixing them up
+08:55:49 <gervarouge[m]> I see Pixel 3 with pink screen burn in for $90 and Pixel 3a with cracked screen for $120
+08:56:23 <gervarouge[m]> Either is fine for a Dev device I guess
+08:56:25 <gervarouge[m]> Both unlocked
+08:57:14 <gervarouge[m]> I should make sure my GrapheneOS build works on my daily driver first
+09:07:27 <valldrac> strcat: np
+09:07:41 <strcat> valldrac: really not sure how it got dropped, need to check that other patches weren't dropped :\
+09:08:06 <strcat> I think I just never pulled it after merging on github
+09:08:12 <strcat> and then when rebasing onto the next security patch it was lost?
+09:08:18 <strcat> something like that
+09:08:49 <strcat> I have a tree for testing and then the actual reference tree
+09:08:56 <strcat> make mistakes sometimes :(
+09:10:56 <valldrac> happen even in the best families :P
+09:11:46 <valldrac> today I'll take a look at the camera crashes in Pixel 3. It seg faults in the vendor libraries... so I'm going to attach a debugger and see what's going on
+09:13:40 <gervarouge[m]> If I understand correctly the best way to help GrapheneOS(beside coding) is to run beta and report any bugs. Does submitting an auditor sample help at all on a supported device?
+09:17:35 <strcat> valldrac: if my workaround in hardened_malloc is disabled it won't start at all
+09:23:06 <valldrac> strcat: even with the workaround, it crashes when switching the front and rear cameras
+09:25:23 <strcat> valldrac: yeah because it has multiple bugs or it's the same bug manifesting in diff ways
+09:25:30 <strcat> I just reduced how often it catches the bugs
+09:25:36 <valldrac> true, there maybe more than one bug in play here
+09:25:57 <strcat> valldrac: https://github.com/GrapheneOS/hardened_malloc/commit/e4619af0bb8fc38d19bfa0be86e0b733e756db97
+09:26:06 <strcat> the way I worked around it doesn't guarantee it avoids finding the bugs
+09:26:16 <strcat> I just disabled some of the sec features for it
+09:26:24 <strcat> it sucks having to do this
+09:28:24 <gervarouge[m]> I apologise for the dumb question, but how serious are camera vulnerabilities?
+09:30:12 <gervarouge[m]> I have seen several mentioned in Google blogs and such
+09:37:54 <valldrac> gervarouge[m]: I guess in the worst case scenario an App with access to the camera can elevate privileges locally
+09:38:34 <valldrac> I don't know if any of the current camera bugs have security implications, we'll see
+09:38:52 <strcat> valldrac: they tend to be use-after-free bugs and are a pain to debug
+09:38:59 <strcat> especially with how hardened_malloc finds them
+09:39:03 <strcat> although some of that is disabled atm
+09:39:08 <strcat> you may want to build it without any features disabled
+09:39:16 <strcat> just revert that commit in the 10 branch
+09:39:55 <valldrac> gervarouge[m]: anyway, better strcat that to answer that. I'm new to aosp
+09:40:40 <valldrac> strcat: yup that was my idea
+09:41:57 <strcat[m]> valldrac:  afaik all this code in vendor has symbols
+09:41:59 <strcat[m]> but not all is open source
+09:42:17 <strcat[m]> and of the code that is open source, we aren't building most from source even though we could be
+09:42:19 <strcat[m]> just due to lack of time investment in it
+09:42:33 <strcat[m]> valldrac: so you can debug it because it has symbols
+09:42:38 <strcat[m]> and you can see all the function names etc
+09:42:55 <valldrac> strcat: for use-after-free bugs, is it supposed to crash before returning from the 2nd free() call?
+09:43:00 <strcat[m]> but there aren't necessarily sources that we can build - it'd be hard to fix the bugs in some cases
+09:43:31 <strcat[m]> valldrac: that would be a double-free - a double-free is detected reliably as a double-free
+09:43:49 <strcat[m]> although it's possible that the extra free gets delayed past the point that it has been allocated again
+09:44:00 <strcat[m]> but that's not usually what happens
+09:44:07 <strcat[m]> valldrac: use-after-free is when it keeps being used after being freed
+09:44:13 <strcat[m]> that's what tends to be happening with these bugs
+09:44:17 <strcat[m]> most common issue we encounter
+09:44:31 <strcat[m]> valldrac: so it's found in multiple ways
+09:44:31 <valldrac> true, sorry. I was thinking on that kind of bugs
+09:44:46 <strcat[m]> valldrac: zero-on-free, write-after-free check on alloc, and various other features
+09:44:50 <strcat[m]> valldrac: virtual memory quarantine
+09:44:55 <gervarouge[m]> <valldrac "gervarouge: I guess in the worst"> Thanks. Yet another reason to not allow camera permissions
+09:45:02 <strcat[m]> the fact that the allocator actually releases memory
+09:47:40 <valldrac> the main issue to me is those proprietary libraries without source code. Bugs are everywhere, but if we cannot fix them and just place workarounds... bad
+09:47:51 <strcat> valldrac: well we could fix it but it's painful
+09:48:00 <strcat> luckily there are not closed source kernel drivers
+09:48:25 <strcat> but there are these closed source libraries - although the issue is mostly that we are using prebuilt vendor code instead of building it from source due to lack of time investment
+09:48:37 <strcat> valldrac: it's painful to fix it in the existing assembly code if it's complicated
+09:49:23 <valldrac> strcat: lovely, binary patching xD
+09:51:37 <valldrac> strcat: btw building the primary hw audio library from source is in my TODO list
+09:53:34 <gervarouge[m]> What's the advantage of building from source?
+09:53:47 <strcat> being able to harden and change the code
+09:54:26 <strcat> can't realistically do that without building it all
+09:54:34 <strcat> so we need to work towards building all the vendor image
+09:54:39 <strcat> like we do with the rest
+09:56:36 <gervarouge[m]> Then everything would be hardened or HAL sandboxed on Graphene
+10:02:02 <renlord> isnt the hal already kinda sandboxed since its managed by system server?
+10:02:20 <renlord> and i assume system server inherits the native android sandboxing
+10:02:31 <strcat> renlord: the HALs are sandboxed, they don't run in system_server since Treble
+10:02:32 <renlord> unless the idea is to further modularise system server?
+10:02:44 <renlord> ok
+10:02:54 <strcat> but they are still relevant to security
+10:14:54 <dazinism> gervarouge: last camera vuln I saw was a malicious app
+10:15:56 <dazinism> Which IIRC sent an intent to Gcam
+10:17:36 <dazinism> Gcam would happily take a photo. The malicious app needed storage permission to grab the photos
+10:18:40 <dazinism> Google patched Gcam, I guess to stop it acting on that intent
+11:14:28 <renlord> there's also another pending issue
+11:14:37 <renlord> cfi issue
+11:14:51 <renlord> but strcat added a workaround
+11:15:04 <renlord> vanadium video issue
+11:15:52 <renlord> https://github.com/GrapheneOS/os_issue_tracker/issues/175
+11:16:48 <renlord> turning on cfi diagnostics didnt help much
+12:07:50 <limitless0[m]> Therr are some statements on R/Privacy about hoe its safer yo download apps rather than use in browser if its possible, is this true is using an app safer than the browser version of it?
+12:08:00 <limitless0[m]> Herr are the comments
+12:08:18 * limitless0[m] uploaded an image: Screenshot_20200513-140254_1.png (75KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/FnnUGaQHKbvUwFbjkOzibwGV >
+12:08:26 * limitless0[m] uploaded an image: Screenshot_20200513-140324_1.png (328KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/SVSkTBBYFGwwHdWaQvZLgWVd >
+12:08:38 * limitless0[m] uploaded an image: Screenshot_20200513-140350_1.png (130KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/waOHEqCcLpQqePUncFYnBMOa >
+12:08:44 * limitless0[m] uploaded an image: Screenshot_20200513-140420_1.png (309KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/XKPqRMitrimxWmJwlqrctwdh >
+12:34:58 <dazinism> limitless0: there are many things that need considering - app for what how much do you trust the service provider. What permissions do you give to the app.
+12:35:16 <dazinism> What browser and how is it set up.
+12:36:00 <dazinism> What do you consider safer (what are you worried about)
+12:39:45 <dazinism> As far as running the code that the service provider intends. The genuine app from Play has to give best guarantee.
+12:41:09 <dazinism> Also with an app they can give a pretty high guarantee that you are connecting to the service you intend, rather than a malicious fake.
+12:43:52 <dazinism> But I'd look to many other ways of using Facebook,  before I ever install their app. As they've repeatedly abused user trust / data.
+13:09:58 <MadCamel> better to poison the well. Give their app access to a contact list containing all 1 billion US phone numbers ;)
+13:14:05 <renlord> limitless0[m]: why do you even use a screenshot?
+13:14:12 <renlord> was it not possible to share a link?
+13:14:43 <renlord> our eyeballs have to work doubly hard to read the text
+14:04:52 <bseeinu[m]> <valldrac "strcat: even with the workaround"> I just live with it, though it's pretty comedic when I try to take a mundane pic and everyone around patiently waits between the crashes :D
+14:12:30 <organella[m]> Re contact lists, I'd love a sub-contact-list feature where you can pick a few contacts only and show that to untrusted apps like whatsapp instead of all or nothing
+14:13:00 <organella[m]> Would even be interested in implementing it, just that I don't know the first thing about Android programming
+14:19:51 <organella[m]> But if someone is interested in doing the overall setup, I'm happy to do the actual coding and testing, writing Java is not a problem
+15:38:38 <nickcalyx[m]> https://twitter.com/cBekrar/status/1260543284008456192?s=19
+15:40:58 <nickcalyx[m]> Hiya
+15:43:30 <xabierd[m]> Hello!
+15:43:30 <xabierd[m]> I just got myself a cheap pixel 3, will be installing it as soon as it gets home
+15:44:00 <dazinism> xabierd: nice
+15:44:41 <xabierd[m]> One step further, leaving microg behind.
+15:51:19 <dazinism> organella: the best way to isolate apps, that require permissions to to function, from sucking up all your data is to use profiles.
+16:01:27 <organella[m]> profiles are a good way and i use them, but for some things like messengers i find it more hassle than it's worth, and some extra permission features would add both extra privacy and convenience
+16:02:09 <organella[m]> another feature i'd love to add is to have network permission off by default and apps have to ask to get it
+16:03:20 <xabierd[m]> Can messengers run in a non active profile and access them via web?
+16:06:33 <organella[m]> I don't know but it's certainly less convenient than going to Contacts, selecting 'new list', adding the 10 people I expect to chat with initially, and feed that to the app
+16:16:43 <dazinism> <organella[m] "another feature i'd love to add "> The way permissions work I think the app would have to be written in a way to call for this permission. As network permission is normally always on, no apps support this.
+16:17:15 <dazinism> organella: https://hub.libranet.de/wiki/and-priv-sec/wiki/user-profiles
+16:18:16 <dazinism> The ideal would be able to have user profiles sharing the same UI like work and personal profiles do with shelter.
+16:20:50 <MadCamel> only slightly related but a good way to manage/backup contacts is etesync. client-side encryption before the data is sent out. can run your own sync server for free or pay to use the authors.
+16:21:01 <dazinism> Being able to have more than two profiles on the same UI would be amazing.
+16:21:56 <dazinism> Theres someone working on multiple user profiles for their GSI of lineageOS
+16:22:17 <dazinism> Also was some custom profiles thing back on the Blackphone
+16:23:57 <dazinism> The folks who developed that also released their own custom OS that offered multi profiles, which I think shared some UI stuff, although I never tried it...
+16:24:48 <limitless0[m]> <dazinism "What do you consider safer (what"> Just in general apps that you can usr in browser aswell,lets take twitter for example
+16:26:05 <limitless0[m]> <renlord "our eyeballs have to work doubly"> Sorry ,im used to screenshots
+16:27:46 <organella[m]> Thanks for the link. Indeed it would be great to have multiple profiles on the same UI, maybe with the possibility for a bit better isolation so the clipboard doesn't leak for example and is maybe Qubes-style instead
+16:28:47 <organella[m]> Multiple profiles will also allow multiple app installation without depending on an extra app, which would be nice
+16:29:53 <organella[m]> As I said I'd be happy to contribute to Graphene, but can only do so as a 'junior' programmer with someone else taking the lead, even if they don't do much/any of the coding
+16:32:55 <nickcalyx[m]> > The folks who developed that also released their own custom OS that offered multi profiles, which I think shared some UI stuff, although I never tried it...
+16:32:55 <nickcalyx[m]> Weren't they Czech or Romanian or something
+16:35:13 <dazinism> https://forum.xda-developers.com/google-nexus-5/development/secure-spaces-android-rom-t3251299
+16:35:56 <dazinism> Their site is down but the © holder at the bottom leads to
+16:36:12 <dazinism> https://cismobile.com/
+16:37:38 <dazinism> Looks like they branded it as altOS
+16:39:07 <dazinism> Sorry meant someones working on support for multiple work profiles on their LineageOS GSI builds
+16:40:59 <cdesai> https://cismobile.com/solutions/ - they have this thing where you can switch between "containers"/users/profiles? using a fingerprint
+16:48:34 <dazinism> Mainly looking like a bit of shine ontop of user profiles and MDM
+16:49:25 <dazinism> https://f-droid.org/app/org.flyve.mdm.agent.mqtt
+16:51:16 <dazinism> Moving to a different user profile by presenting a different finger to the scanner is nice shine, if thats what it does
+16:53:45 <dazinism> organella: thinking that working on user profiles rather than permissions may be less likely to get broken between android updates.
+16:55:23 <dazinism> They've been changing how  permissions work with each new version. To try to satisfy demands for privacy.
+16:56:17 <dazinism> While I imagine that the way user profiles are implemented will remain fairly stable.
+16:58:18 <dazinism> By comparison.
+16:58:42 <mxnorvak[m]> With LOS i tried to take a screenshot while i wasn't in my owner profile and i noticed the pic gets saved to the owner profiles storage,does that happen with Graphene?
+17:18:40 <dazinism> mxnorvak: screenshots stay in the user profile where they were taken.
+17:20:25 <dazinism> Except when I take in a work profile app, they end up on main profile storage>pictures>screenshots
+17:26:53 <dazinism> limitless0: with Twitter, if you are worried about someone taking control of your account or reading your DMs, I think youd be safer with their app than a browser.
+17:28:35 <dazinism> If you are worried about twitter collecting data on you - probably best with a 3rd party client, or a webview based browser just for twitter.
+17:28:52 <limitless0[m]> <dazinism "limitless0: with Twitter, if you"> Im not worried of anything specific.just general privacy.just had the idea that web apps are safer than apps
+17:29:10 <limitless0[m]> Yea thats what i was gonna say now you typed it beforee
+17:29:40 <gervarouge[m]> Webapps are always safer
+17:30:00 <limitless0[m]> Thats what i thought aswell
+17:30:22 <gervarouge[m]> Keep in mind apps see your real ip
+17:31:33 <gervarouge[m]> Apps have a lot of privacy implications, but Android and Graphene have been making a lot of progress there
+17:32:06 <gervarouge[m]> I always use Vanadium or sometimes Bromite for apps when I can
+17:32:22 <gervarouge[m]> The security of your device is much stronger since they generally need to break through your browser and then attack your OS
+17:33:05 <limitless0[m]> The conversation started cos on r/privacy someone said that apps are safer than webapps
+17:33:37 <gervarouge[m]> Of course IPC/XSS means tabs and apps can attack each other so they are likely pretty close in that way. Use a separate profile or browser to kill that though
+17:33:56 <limitless0[m]> And they go on detail about it so i askef here since i trust this community
+17:34:29 <limitless0[m]> I use twidere for twitter and whenever i can webapps
+17:34:41 <gervarouge[m]>  /r/privacy is terrible
+17:35:08 <gervarouge[m]>  /r/privacytoolsio is meh. /r/netsec is awesome
+17:36:03 <limitless0[m]> <gervarouge[m] " /r/privacytoolsio is meh. /r/ne"> Netsec is out of my basic knowledge
+17:37:14 <gervarouge[m]> One cool thing I see recommended here. If you want to learn something you can search. https://www.redditcommentsearch.com/ Topic DanielMicay
+17:37:59 <limitless0[m]> <gervarouge[m] "One cool thing I see recommended"> Lol, Already have and saved as pdf
+17:38:59 <gervarouge[m]> Good good
+17:39:14 <gervarouge[m]> Other guys I trust are thegrugq and madaidan
+17:39:17 <gervarouge[m]> I follow them a bit
+17:39:52 <limitless0[m]> Who is madaidan?
+17:41:21 <gervarouge[m]> Whonix security guy
+17:41:49 <gervarouge[m]> Zdziarski was a guy I followed closely, but he went quiet after Apple hired him
+17:42:10 <limitless0[m]> Me too on zdiarski
+17:42:24 <limitless0[m]> He' very good on ios security
+17:42:46 <limitless0[m]> Its said all the latest changes on ios on privacy its cos of him
+17:43:12 <limitless0[m]> Since they hired him all this privacy on ios have been upscaled
+17:43:12 <gervarouge[m]> Tim Cook completely changed my view of Apple. Decisions like hiring this guy are huge
+17:43:21 <gervarouge[m]> Steve Jobs just wasn't it for me
+17:43:55 <gervarouge[m]> iOS privacy features have been pretty epic since iOS 8
+17:44:28 <gervarouge[m]> Relatively*
+17:44:32 <limitless0[m]> Zdiarski was talking of disabling the charging port after period of time before he joined apple and then it was introduced when he joined them
+17:45:26 <limitless0[m]> He had a blog site on how to lockdown iphone with apple configurator
+17:47:21 <mxnorvak[m]> <dazinism "mxnorvak: screenshots stay in th"> Tnx
+17:47:35 <gervarouge[m]> Google should hire Daniel Micay then they'll get them back
+17:50:28 <limitless0[m]> <gervarouge[m] "Google should hire Daniel Micay "> Im surprised they havent, android would wipe the floor with ios if they did
+17:58:48 <dazinism> <gervarouge[m] "Webapps are always safer "> Not sure. An app can just use an API, no need to have the huge functionality of a browser exposed to the web.
+17:59:21 <cam_> limitless0[m]: it would def improve android security, but with their main business being surveillance, i doubt they will. it would be like a weapons company hiring a pacifist to work on bombs
+17:59:49 <dazinism> Also have certs hardcoded
+18:00:43 <dazinism> Daniel was offered a job at Google after he split from Copperhead
+18:01:08 <dazinism> Decided not to take it.
+18:01:41 <cam_> dazinism: did he say why?
+18:02:46 <dazinism> Mmm... if I'm not getting confused, recently mentioned that he did go for an interview, but didnt like the culture he saw
+18:04:02 <cam_> dazinism: given his work, i'd think he'd be opposed to their business model
+18:04:30 <cam_> dazinism: i'd think that alone would be an inherent dealbreaker
+18:04:37 <limitless0[m]> If they hire him now they will have to accept hos conditions on why they hiring him
+18:04:57 <limitless0[m]> He wont join google to make cups of tea for staff
+18:07:00 <cam_> limitless0[m]: ofc. but him joining at all would seem like $starWarsHero going over to the dark side
+18:08:15 <limitless0[m]> cam_: why would it? If they give him the  freedom he needs on his work
+18:09:32 <cam_> limitless0[m]: it only would if his principles are what i assume them to be. but i don't know him so my assumptions could be totally wrong
+18:09:39 <limitless0[m]> <cam_ "limitless0: ofc. but him joining"> If cellebrite tried to hire him then this would be true
+18:10:47 <limitless0[m]> I dont know him either but from what i can make out is that his principles are in the right place
+18:11:23 <cam_> in any case, i def appreciate his work
+18:11:40 <dazinism> Guess the split was hectic time. I could see how the offer of a decent wage, set hours, potentially stable job with big company, compared to what Daniel was dealing with previously.
+18:12:16 <dazinism> ....and also what he still has to deal with
+18:12:22 <cam_> google def has the resources to make a lucrative offer
+18:12:33 <dazinism> Could be attractive
+18:12:48 <organella[m]> I concur on the Google culture, from at least their Zürich office. My impression was it was very boring and lacking style
+18:14:34 <cam_> slightly OT, but what would someone with wide but shallow IT knowledge and basic programming skill need to learn to be able to contribute to grapheneos?
+18:15:13 <organella[m]> Also I imagine Google don't want Android becoming too private, goes directly against their main revenue channel
+18:15:25 <dazinism> cam_: I think so. If you wanted to code, think the easiest place to start would be the apps
+18:16:11 <limitless0[m]> Anyone knows if Chromium on fdroid by same developer of Bromite is ok to use?
+18:16:16 <dazinism> https://hub.libranet.de/wiki/graphene-os/wiki/Helping-graphene-os
+18:16:24 <limitless0[m]> I mean if its degoogled?
+18:17:28 <gervarouge[m]> <limitless0[m] "I mean if its degoogled?"> It's just regular Chromium
+18:17:32 <cam_> thanks. i prob should've searched before i asked
+18:19:35 <limitless0[m]> <gervarouge[m] "It's just regular Chromium"> Thanks
+19:48:36 <cx2[m]> Define Irony: Gets phone and installs GrapheneOS to provide oneself the utmost privacy and security available on a any phone not named iPhone..... requests information on how to privately record someone else...
+19:58:15 <c3po[m]> Should we trust completely that our camera is not recording us if we deny the camera and microphone permission?, it always has the settings permission, do you know why?. Thanks!
+19:58:19 <MadCamel> Not really ironic. There's lots of reasons to record a conversation to protect oneself from fraud.
+20:04:42 <M1eyejack[m]> Excatly. Actual anything a individual say can be held up on Court. So recording a conversation can be beneficial evidence
+20:05:10 <M1eyejack[m]> *In court
+20:06:26 <M1eyejack[m]> I understand microphone can be insecure but on sure there's a work around
+20:06:39 <M1eyejack[m]> Kill switch maybe
+20:08:03 <TheJollyRoger-M> <c3po[m] "Should we trust completely that "> It's trustworthy. Breaking the permissions would require breaking the mandatory access controls enforced by the kernel. In short, breaking the camera permissions would require breaking Linux.
+20:11:55 <c3po[m]> And why the settings permission always enabled?, couldn't it bypass some restrictions?
+20:13:06 <TheJollyRoger> They're not allowed in background. When apps are first installed, they're actually installed in a "stopped" state, meaning they require user action to launch.
+20:14:28 <TheJollyRoger> Permissions usually end up being granted by default because people generally expect their apps to do what they request them to. If you don't want that, you're free to simply switch off those permissions prior to launch. The app cannot launch itself after being installed, because until you deliberately go tap on it to and launch it, it's considered "stopped."
+20:16:39 <cx2[m]> <M1eyejack[m] "*In court"> Fair.
+20:17:43 <c3po[m]> I thought that maybe that setting enabled in camera permission permission could own the system, as it control all the settings.
+20:17:52 <TheJollyRoger> No.
+20:18:37 <c3po[m]> <TheJollyRoger "Permissions usually end up being"> Thanks a lot!
+20:19:31 * M1eyejack[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/EqGrdIpElLLKlnaLvJQzBITO >
+20:20:23 <TheJollyRoger> Android is not like a desktop operating system that relies a "perimeter" based security system, where root = god, and user = everything in one. Instead, Android is comprised of many different processes, all which are constrained to do only what they are specifically designed to do by mandatory access control policies.
+20:21:13 <TheJollyRoger> It's quite an elegant design.
+20:21:49 <c3po[m]> So, it could only be if our phone is compromised with malware and that permission enabled by the attacker and also launching the camera.
+20:22:56 <TheJollyRoger> Yes.
+20:23:01 <TheJollyRoger> Well,
+20:23:06 <TheJollyRoger> If YOU enable that permission.
+20:23:17 <c3po[m]> And we avoid many attacks using GOS 👍
+20:23:33 <TheJollyRoger> If you disable that permission, then it can't access the camera without being granted it again.
+20:24:48 <TheJollyRoger> GrapheneOS is designed to improve on the security of the AOSP by trying to mitigate exploits. This is sort of its raison d'etre.
+20:25:11 <c3po[m]> Good to know, thx
+20:25:55 <TheJollyRoger> TLDR: if you deny the application the ability to access the camera, it can't use the camera without breaking Linux or breaking the operating system. There are multiple layers of security in place to prevent this from happening.
+20:26:40 <TheJollyRoger> Each app is individually sandboxed within its profile. Each profile is itself individually sandboxed.
+20:28:49 <c3po[m]> That's great!
+20:29:05 <TheJollyRoger> Apps cannot "give themselves" permission.
+20:29:45 <gang718[m]> Guys, random question. I set up scheduled remote verification and I got an email "Devices failed to provide valid attestations within 36 hours". What does this mean exactly?
+20:32:06 <c3po[m]> <TheJollyRoger "Apps cannot "give themselves" pe"> Installlng malware from some app maybe?
+20:33:00 <mxnorvak[m]> I'm wondering, if the Linux kernel has many problems and so its mostly recommended in here that using a linux based OS is not secure at all, why is android using it for its kernel and why is lets say selinux or breaking the linux kernel of android counted as a tough thing to do?
+20:33:35 <c3po[m]> Like when you hide the webcam in your pc...
+20:34:21 <mxnorvak[m]> And another one, by linux not being secure ,why do so many ppl in here prefer   using it rather than other desktop OSes?
+20:35:10 <TheJollyRoger> c3po[m]: Apps can't install other apps unless you give them special permission to. Even then, they can't change the permissions of those apps.
+20:36:31 <MadCamel> mxnorvak[m]: Well, I think it's because Linux isn't secure-by-design, nor does it follow good development practices for secure software. But it's still a great OS that is free and easily customized. Many people prefer something they can tinker with/improve vs a black-box that isn't easily examined or modified.
+20:36:35 <TheJollyRoger> mxnorvak[m]: Android uses it for its kernel but at this moment Google's hoping to move away from it and if so, this project will follow them away from it since a microkernel has been on the wishlist.
+20:37:30 <TheJollyRoger> What he said -- and another thing that bears keeping in mind as well is largely, the discussion on that vein is in response to the security misconceptions people build up after spending too much time in reddit echo chambers.
+20:37:42 <TheJollyRoger> *what MadCamel said
+20:39:47 <mxnorvak[m]> <MadCamel "mxnorvak: Well, I think it's bec"> So would you say if a user knows the limitations and is knowledgeable enough, they're better of using a Linux distro?
+20:39:52 <mxnorvak[m]> Off*
+20:41:58 <mxnorvak[m]> I personally have wanted to switch from windows to linux but i changed my mind once i started reading what ppl had to say about it in here
+20:43:23 <MadCamel> well.. that's tough to say
+20:43:32 <c3po[m]> <TheJollyRoger "c3po: Apps can't install other a"> You gave some peace of mind, I appreciate it 👍
+20:43:52 <MadCamel> in my personal opinion windows is more secure out of the box. But linux can be made more secure than windows if you know what you are doing.
+20:44:15 <MadCamel> For example windows enables the iommu by default to help mitigate DMA attacks. Linux distros do not ship with these features enabled - you have to do it manually
+20:44:54 <mxnorvak[m]> <TheJollyRoger "mxnorvak: Android uses it for it"> Aha, honestly I've been confused that ppl have turned down linux phones as a fail promise and then use that same linux kernel as the boss the app can't beat to do something shady
+20:48:33 <BalooRJ> So what is considered a decently hardened Linux distro to use for better security
+20:48:37 <TheJollyRoger> It's... it's a little weird. I think when people on those circles say "Linux Phones" they mean porting the desktop stack (perimeter based security model, etc) to a mobile device.
+20:49:29 <mxnorvak[m]> <MadCamel "in my personal opinion windows i"> Does this require you to be very knowledgeable or can a normal guided user start to make these adjustments and not have to worry about further modifications and possibly breaking stuff?
+20:49:35 <TheJollyRoger> Porting the desktop stack to a mobile device is... argh. I think that's a doomed exercise because the desktop security model is supposed to allow applications unlimited interoperability and to communicate with each other.
+20:49:45 <TheJollyRoger> But that's the exact opposite of what we want to do for security.
+20:49:54 <TheJollyRoger> c3po[m]: glad I could help!
+20:51:52 <mxnorvak[m]> <TheJollyRoger "It's... it's a little weird. I t"> So the linux kernel used in android is a different compared the ones used in linux desktop distros?
+20:52:07 <MadCamel> mxnorvak[m]: You have to be somewhat a nerd :) But if you haven't tried linux yet I would suggest you do. It may not be extrodinarily secure but nothing is. It's good enough for casual/personal use.
+20:53:10 <TheJollyRoger> mxnorvak[m]: if I recall right, the SoC used by the phones need a specific LTS version of the kernel, and then security fixes from upstream are backported to it.
+20:53:36 <TheJollyRoger> (Long Term Support)
+20:53:40 <TheJollyRoger> But otherwise it's still Linux underneath.
+20:55:30 <TheJollyRoger> The rest of the software stack is different though. The libraries for Android is Bionic. On the desktop, usually you see glibc and (rarely) musl libc. The design of the stack is also going to be different because of this.
+20:55:33 <MadCamel> mxnorvak[m]: we're all privacy/security nuts here so when we say something isn't secure we mean it has issues that make us uncomfortable. We don't mean that it's not generally considered mostly safe to use.
+20:56:26 <TheJollyRoger> MadCamel: I love that quote.
+20:56:50 <mxnorvak[m]> <MadCamel "mxnorvak: You have to be somewha"> Well tbh i too was convinced based on the over hyped linux community that linux is the future and everyone should switch and finally be in control and stuff, spending some time in here made me question that belief but i got confused as the users who used it were talking about it not being secure and a MacOS and windows being far better ,but yeah i like to try it
+20:58:53 <TheJollyRoger> There's also some nuances to it: some distributions (not going to name-and-shame right off the bat, though!) have prioritized things like usabilitiy, feature-richness, and accessibility over security. Often there's not enough time to do review of code or the packages from their upstream providers. Some don't even ship those updates at all, and that's where certain distros indeed become
+20:58:56 <TheJollyRoger> horrifying dumpster fires.
+20:59:54 <mxnorvak[m]> <TheJollyRoger "mxnorvak: if I recall right, the"> that's nice to know, Does GrapheneOS also make any security adjustments or hardening to the kernel?
+21:00:07 <TheJollyRoger> Again, I don't want to name-and-shame, but there have been instances in the past where meddling around with packages and settings, and especially code from upstream in the name of usability and convenience has resulted in Very Bad Things Happening
+21:00:12 <TheJollyRoger> mxnorvak[m]: yes.
+21:01:03 <TheJollyRoger> The sources for the hardened Bionic LibC and the kernel patches are in the Github, but unfortunately, I wouldn't be able to tell you exactly what they do, I'm not pro enough for that just yet :P.
+21:02:51 <mxnorvak[m]> <MadCamel "mxnorvak: we're all privacy/secu"> Haha well it was kinda hard to tell for me , thanks for clearing that up
+21:03:08 <hitchhooker[m]> how you folks sync images between profiles?
+21:10:31 <mxnorvak[m]> <TheJollyRoger "There's also some nuances to it:"> But can you name a few good ones?
+21:12:13 <TheJollyRoger> mxnorvak[m]: currently, Fedora.
+21:13:25 <mxnorvak[m]> <TheJollyRoger "The sources for the hardened Bio"> It's really nice to know the project does care about all aspects of a secure phone
+21:14:55 <TheJollyRoger> Yep! Actual, meaningful security with clear, defined threat models are what the project strives for, much more than "Advanced Security Centers" or "Advanced Privacy Shield Settings" or theatrics, knobs, buttons and tunables.
+21:15:35 <mxnorvak[m]> <TheJollyRoger "mxnorvak: currently, Fedora."> Thanks, is it a good ditro to start with as someone who hasn't had any experience with linux ?
+21:15:41 <TheJollyRoger> VERY good.
+21:15:55 <TheJollyRoger> What I love about Fedora...
+21:16:52 <TheJollyRoger> First off, the defaults when it comes to security are usually set very conservatively while they still allow you to do more or less what you want and not interfere with what /we usually expect out of/ a desktop.
+21:17:35 <TheJollyRoger> Stuff is up to date, and they don't futz around too much with stuff from upstream or try to hold out on old versions.
+21:18:27 <TheJollyRoger> I would absolutely recommend it as a starter distribution:
+21:18:42 <propertype> If only silverblue would be stable by now.
+21:19:20 <TheJollyRoger> It's got an all-graphical installer that will warn you in *plain English* if it believes you're making a mistake. While it won't stop you from doing what you want, if you believe you know better, if it thinks you're making a mistake, it'll go "hey, stop, did you think of this?"
+21:20:06 <mxnorvak[m]> <TheJollyRoger "Yep! Actual, meaningful security"> Yeah ,this clear defined threat models with reasonable and realistic answers to em like some that can be found in FAQ is what makes it stand out for a normal user like me compared to others that want you to believe their product is the only thing you need for 100% security and privacy
+21:21:07 <TheJollyRoger> Once you get the operating installed, many of the administration tools for it, are in fact, graphical! Obtaining software updates, changing basic settings, all of that can usually be done on Fedora via point-and-click UIs, rather than having to delve into .config files in a text editor or through the console.
+21:21:36 <TheJollyRoger> mxnorvak[m]: yarr! :)
+21:23:26 <TheJollyRoger> Last but certainly not least I've found Fedora's hardware support to be very good, even on things like laptops.
+21:24:02 <TheJollyRoger> So if you need wifi, usually Fedora packs everything you need to get started.
+21:25:26 <blacktwig[m]> So, somewhat in the same vein, when y'all say that Firefox is insecure, should that also be understood in the context of a reaction to Reddit echo chambers, or should its alleged vulnerabilities really make it unusable for even an average, not incredibly techy user?
+21:26:02 <TheJollyRoger> Well, legitimately, Firefox on Android doesn't utilize sandboxing.
+21:26:16 <TheJollyRoger> Not to the same extent Chromium does.
+21:26:47 * jacksonpollock19 sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/eAtKdoMsOeAIbEUpVpHleKwq >
+21:27:57 <TheJollyRoger> Hi jacksonpollock19, I'm not getting this error. I don't think he'll need to submit sample attestation data for the 3a, since the 3a is already supported :)
+21:28:13 <mxnorvak[m]> <TheJollyRoger "Last but certainly not least I'v"> This all sounds great, I'll definitely give it shot, is it ok to try it on a vm?
+21:28:46 <TheJollyRoger> With respect to the "X" in mobile signal, quick sanity check, did he turn data on (and is his mobile carrier giving him service?)
+21:28:57 <TheJollyRoger> mxnorvak[m]: of course it's okay to try Fedora in a VM!
+21:29:12 <blacktwig[m]> TheJollyRoger: gotcha
+21:29:12 <blacktwig[m]> I've been using Bromite on my phone for a while now. Should I really switch from Firefox on, say, Windows though?
+21:30:53 <mxnorvak[m]> <TheJollyRoger "mxnorvak: of course it's okay to"> Thanks for all the explanations once again :)
+21:31:07 <TheJollyRoger> Firefox on the desktop, I haven't done as much looking into. You'll have to ask someone more knowledgeable than I, sadly.
+21:31:13 <TheJollyRoger> mxnorvak[m]: anytime!
+21:32:13 <TheJollyRoger> There is one really awesome feature Fedora does have though that won't be accessible in a virtual machine, but if you don't need it or don't install it, you won't notice it's there: Fedora includes support for KVM and virt-manager, so you won't need any third party virtualization software if you want to run virtual machines on Fedora at a later date.
+21:32:24 <TheJollyRoger> *you won't notice it's not there:
+21:34:08 <blacktwig[m]> > Firefox on the desktop, I haven't done as much looking into. You'll have to ask someone more knowledgeable than I, sadly.
+21:34:08 <blacktwig[m]> No worries man! Thanks a lot for the info, abt the Fedora stuff as well. Very very helpful
+21:34:17 <TheJollyRoger> Anytime :)
+21:34:25 <TheJollyRoger> I have to go for a bit, I will see you guys soon!
+21:34:33 <jacksonpollock19> <TheJollyRoger "Hi jacksonpollock1993, I'm not g"> No data is going from the auditor to the attestation account.
+21:35:51 <mxnorvak[m]> <TheJollyRoger "There is one really awesome feat"> i guess this is more for users who plan on having it as the main OS right?
+21:49:53 * jacksonpollock19 uploaded an image: VectorImage_2020-05-13_104934.jpg (672KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/jzxchKfTYkOMlEzFUfsEFDoY >
+21:51:35 <TheJollyRoger> jacksonpollock19: just hurrying back to see if I can help you out... I can't see that screenshot very well, can you get me a better image? At first glance, if you're getting a CERTIFICATE INVALID error, can you check your clock and make sure it's correct?
+21:53:15 <TheJollyRoger> mxnorvak[m]: yeah, KVM/QEMU and libvirt and virt-manager is if you want to use Fedora as a host, or to access and manage virtual machines on another host.
+21:54:59 <TheJollyRoger> If it's enough days out of whack, then it may cause a "Certificate not Valid" error and refuse to connect. All connections to and from GrapheneOS.org are made over TLS via HTTP Strict Transport Security, so if your operating system's clock/date and GrapheneOS.org's clock/date don't agree, and the difference is larger than the lifetime of the SSL certificate, they won't connect.
+21:55:26 <TheJollyRoger> I think YouTube is the same way.
+21:57:25 <TheJollyRoger> Wonder if your mobile service provider is also not allowing you to connect because of a clock mismatch.
+22:00:08 <TheJollyRoger> jacksonpollock19: I have to go again, but check your operating system's time and date.
+22:02:54 <jacksonpollock19> Thank you I will get it checked
+22:03:38 <jacksonpollock19> Its for a friend I will try and get him on this channel but he's struggling to even get online.
+22:10:05 <jacksonpollock19> <TheJollyRoger "jacksonpollock1993: I have to go"> His network is saying there is signal but it has a small X in the signal strength icon in the top right of the screen ..
+22:17:25 <jacksonpollock19> <TheJollyRoger "jacksonpollock1993: just hurryin"> He sent me that photo of the YouTube cert fail at 10:43 but on the photo his time on the phone is 10:10.. Hopefully this is the problem.. Is it as simple as changing the time and date? Just waiting on a reply.
+22:51:48 <strcat[m]> jacksonpollock1993: date / time is wrong
+22:52:01 <strcat[m]> jacksonpollock1993:  will cause certificate verification to fail in many cases
+22:52:06 <strcat[m]> the date is probably wrong too...
+22:52:24 <strcat[m]> should be updating itself via network time
+22:52:28 <strcat[m]> unless they disabled that
+22:55:18 <strcat[m]> organella: there is a 'sub-contact-list' feature
+22:55:33 <strcat[m]> organella: apps don't have to be implemented using the Contacts permission
+22:56:11 <strcat[m]> it's a similar issue as the Storage permission where the Storage permission has been removed for modern apps because it was used instead of case-by-case selection by the user which has been fully supported for many years
+22:56:31 <strcat[m]> don't confuse apps choosing to do things in an invasive way with the OS not supporting a good way to do it
+22:57:20 <strcat[m]> also we can't make features that overly complex / confusing and hard to use correctly, people ALREADY struggle to use the existing systems
+22:58:32 <strcat[m]> so having some Settings menu to configure which subset of information is exposed to each app granted a bulk access permission is not really a viable approach especially since people will need to keep going there and editing it - which is something they never needed to do outside GrapheneOS, etc.
+22:58:38 <strcat[m]> it's not a viable approach
+22:59:03 <strcat[m]> not intuitive that it needs to be done and people will keep asking us questions when it doesn't work as they expect
+22:59:45 <strcat[m]> there is already support for apps to pick contacts without needing the Contacts permission - and we are not really in a position to force apps to do things better
+23:00:00 <strcat[m]> like the Storage permission
+23:00:19 <strcat[m]> and note even though we could have enabled Scoped Storage for every app already via the emulation support we haven't due to lack of contributions
+23:27:04 <k3tan> was an update pushed that affects VPN connectivity? when my screen is turned off my VPN turns off. some new battery setting?
+23:30:04 <rwarr627[m]> strcat: explain hardened_malloc issue #23? https://github.com/GrapheneOS/hardened_malloc/issues/23
+23:30:25 <strcat> k3tan: no
+23:30:52 <strcat> rwarr627[m]: malloc_object_size as a whole needs to be implemented basically
+23:31:09 <strcat> that's about calculating the offset from start of alloc to say how much space is actually available at the place the pointer points to
+23:31:29 <strcat> rwarr627[m]: malloc_object_size is a custom extension in hardened_malloc and is not implemented yet beyond a stub minimal implementation
+23:31:44 <k3tan> zerotier just drops out randomly
+23:31:52 <k3tan> nothing changed from their end
+23:31:57 <k3tan> nothing changed from grapheneOS perspective
+23:32:03 <k3tan> happened overnight
+23:32:15 <strcat> what do you mean by drops randomly
+23:32:29 <strcat> does the OS still keep the VPN active with always on + block connections enabled?
+23:32:31 <k3tan> the VPN connection just drops
+23:32:36 <k3tan> yep, even with the always on
+23:32:37 <strcat> your carrier is capable of doing that
+23:32:39 <strcat> to any connections
+23:32:50 <strcat> and they WILL do it for IPv4
+23:32:53 <k3tan> nah im on my home internet
+23:33:20 <strcat> make sure you VPN connection is IPv6
+23:33:31 <rwarr627[m]> strcat: are there any resources you recommend I look into to learn how it should be done?
+23:33:56 <strcat> rwarr627[m]: look at our old implementation for openbsd malloc in bionic in AndroidHardeningArchive tags perhaps
+23:35:06 <rwarr627[m]> Will do
+23:42:53 <strcat[m]> k3tan: could be your router, could be your ISP
+23:42:55 <jacksonpollock19> <strcat[m] "jacksonpollock1993: date / time "> Yes time change has fixed the problem by the looks of it, I'm just waiting for him to let me know he's managed to submit data to attestation app.
+23:43:01 <strcat[m]> any NAT / stateful firewall drops connections
+23:43:03 <strcat[m]> once it's full
+23:43:18 <strcat[m]> jacksonpollock1993: it's enabled by default
+23:43:47 <strcat[m]> factory reset doesn't wipe the time - it's strange for the time to be wrong unless they JUST installed and it hasn't had time to do an update yet
+23:44:21 <strcat[m]> I can see time.grapheneos.org getting HTTPS requests in real time and afaik the code still works properly
+23:45:26 <jacksonpollock19> <strcat[m] "factory reset doesn't wipe the t"> Right I think I know why it has done it then,
+23:45:36 <strcat[m]> I guess it's possible it broke when the time is out of sync but it's intended to still work
+23:45:48 <strcat[m]> jacksonpollock1993:  but it's supposed to fix the time via the network
+23:45:56 <strcat[m]> it should fix itself in an hour or less or something
+23:46:06 <strcat[m]> if it's not fixing itself and that's enabled something seems wrong
+23:46:55 <jacksonpollock19> He's had network issues I don't think he's had any network until today but as you say it should OTA right away?
+23:47:19 <strcat> jacksonpollock19: well if he's had no network til today maybe it just hasn't had time to do a time check yet
+23:47:26 <strcat> but it's supposed to do a time check regularly for network time
+23:48:01 <strcat> we switched it to use time.grapheneos.org instead of the sketchy as hell unauthenticated NTP protocol via the ntp.org pool which is a bunch of random third party time servers too
+23:48:12 <strcat> anyone can join ntp.org pool and serve invalid times
+23:48:25 <strcat> clearly a sane system?
+23:48:41 <strcat> yet what most operating systems use particularly nearly every Linux distro including Android
+23:48:50 <JTL> strcat: I've had similar concerns as well
+23:49:04 <strcat> since it's unencrypted/unauthenticated
+23:49:09 <strcat> a MITM attacker can set people's time back
+23:49:15 <strcat> and then use an expired certificate
+23:49:31 <strcat> or just break it setting it to the future so they get cert errors on everything
+23:49:41 <strcat> there is a sanity check that at least stops it being set back before the OS build date
+23:49:56 <strcat> but it can be set into the future -> cert errors on everything -> user can be tricked into ignoring cert errors
+23:50:24 <strcat> we use HTTPS-based network time
+23:56:46 <jacksonpollock19> <strcat "jacksonpollock1993: well if he's"> Yes mate the system updated just now hopefully that's the issues behind us.

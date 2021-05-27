@@ -1,0 +1,490 @@
+00:05:37 <brockin042[m]> gonner11: yes, I have a google fi pixel 2. The only issue is trying to send or receive MMS text messages. Doesn't work.
+00:27:21 <cant_unlock> I can't unlock my pixel 2. I'm in the bootloader, device state: locked
+00:27:37 <cant_unlock> I followed the instructions and OEM unlock is on, USB debuging is on...
+00:27:49 <cant_unlock> anyway has suggestions? This is a project fi phone
+00:28:11 <aeonsolution[m]> <i_am_your_device "I have a pixel 4a and would like"> we need people to help us test building GrapheneOS, this is step 0 to help us out https://grapheneos.org/build#development-branch
+00:28:58 <aeonsolution[m]> once you can do that, then you can up us test the kernel for the new version of Android for your specific device family
+00:29:01 <cant_unlock> my other device is pixel4a btw
+00:29:13 <cant_unlock> is this works on my pixel 2... I'd be happy to help
+00:29:53 <aeonsolution[m]> we dont have enough people to support moving the Pixel 2 family to Android 11
+00:30:24 <aeonsolution[m]> for GrapheneOS, its a lot of work and not enough people willing to pitch in
+00:31:13 <aeonsolution[m]> as per the website, GrapheneOS supports Pixel 3 and Pixel 4 family devices
+00:31:53 <cant_unlock> is this a bot?
+00:36:31 <dazinism> sandroteem: Auditor can give some guarantees. Guess it depends what you are worried about, what you want to prove & to who...
+00:36:39 <cant_unlock> Someone here have experience with this: if the device says "device state: locked" in boot loader, does that mean the phone cannot be unlocked?
+00:36:45 <cant_unlock> This is a porject fi pixel 2 phone
+00:37:04 <dazinism> How big the threat is...
+00:37:45 <dazinism> If you are really worried using a device, which you don't know the history of isn't great...
+00:41:14 <dazinism> cant_unlock: check the website. Need to go into android settings on device, enable developer options, enable OEM unlocking
+00:41:51 <cant_unlock> @dazinism thanks, I followed all of that. I'm after these steps. developer mode is one. OEM is unlocked.
+00:41:52 <dazinism> and aeon isnt a bot!
+00:42:19 <dazinism> ...well if they are they are a very helpful one  😆
+00:42:23 <cant_unlock> running the fastboot command just says it's waiting for a device to connect
+00:43:02 <dazinism> Probably means you need to try a different usb lead or port
+00:43:18 <dazinism> Or you have an ancient version of fastboot
+00:43:43 <cant_unlock> dazinism did this too - this is a USB cable that is verified to work for data transfer when the phone is booted normally
+00:43:48 <dazinism> fastboot --version
+00:43:54 <cant_unlock> it is also my third USB cable attempted, the other two were power only
+00:44:17 <cant_unlock> fastboot version 30.0.4-6686687
+00:45:02 <dazinism> fastboot is a bit more demanding of good quality lead and/or port
+00:45:27 <dazinism> Can fail when data transfer and adb don't
+00:45:29 <cant_unlock> @dazinism - OK, and it has to be able to transfer data right?
+00:45:53 <cant_unlock> asking because my good thick cable is power only.. anyway ok I am trying another cable
+00:46:03 <dazinism> fastboot flashing unlock
+00:46:46 <dazinism> You using a usb A - C lead?
+00:47:01 <cant_unlock> Yes
+00:47:05 <aeonsolution[m]> <dazinism "and aeon isnt a bot!"> i might as well be to the drones lol
+00:47:07 <cant_unlock> I don't need sudo right?
+00:47:11 <cant_unlock> (I'm on Debian)
+00:47:28 <cant_unlock> another cable, same result
+00:47:33 <aeonsolution[m]> dazinism:  ♥️
+00:47:36 <cant_unlock> trying another USB port
+00:47:59 <dazinism> Depends if you've followed the instructions on the website properly
+00:48:21 <cant_unlock> this instructions say no sudo... I tried both
+00:48:28 <dazinism> If you've set PATH dont need sudo
+00:48:29 <cant_unlock> it does not work with another port on the computer either
+00:48:43 <cant_unlock> ah, but I didn't set path. I had an issue
+00:48:56 <cant_unlock> I changed to dir and I'm doing ./fastboot
+00:49:01 <cant_unlock> shoudl work just the same though
+00:49:02 <dazinism> If you tried sudo, think probably might as well continue with that
+00:49:13 <cant_unlock> sudo gives me a permission issue
+00:49:31 <cant_unlock> "sudo ./fastboot flashing unlockFAILED (remote: 'Flashing Unlock is not allowed')fastboot: error: Command failed"
+00:49:46 <dazinism> Think you need udev rules for debian
+00:49:56 <dazinism> I've not had to set them up
+00:50:01 <cant_unlock> udev?
+00:50:11 <dazinism> Have you done that?
+00:50:20 <cant_unlock> I don't know what udev rules is
+00:50:25 <cant_unlock> so no, I guess I haven't :)
+00:50:51 <dazinism> Its something to do with usb security
+00:51:11 <dazinism> Opens things up so you can communicate down usb
+00:51:16 <cant_unlock> hmmmm
+00:51:38 <dazinism> Hang on I'll find something....
+00:51:41 <aeonsolution[m]> https://github.com/M0Rf30/android-udev-rules
+00:52:01 <aeonsolution[m]> the ubuntu rules should work
+00:52:04 <aeonsolution[m]> for debian
+00:52:20 <aeonsolution[m]> gl cant_unlock
+00:52:48 <cant_unlock> interesting. ok I'm cloning one sec
+00:52:53 <cant_unlock> and thanks for the help
+00:54:07 <dazinism> Actually, thinking about it,  if you using sudo think you wont need udev...
+00:54:24 <aeonsolution[m]> they might not have sudo installed
+00:54:35 <aeonsolution[m]> its easier to get them to use the udev rules
+00:54:50 <aeonsolution[m]> its up to the user to get their distro to recognize their device
+00:55:16 <aeonsolution[m]> or use to arch 😛
+00:56:11 <cant_unlock> Eh well I'm tryng to follow the instructions there I get some commands not found
+00:56:19 <cant_unlock> some Path issues Debian has these damn
+00:56:25 <dazinism> No need for the ./
+00:56:31 <dazinism> Just
+00:56:43 <dazinism> sudo fastboot flashing unlock
+00:56:58 <cant_unlock> it won't find it but I'll try
+00:57:22 <cant_unlock> yep. command not found
+00:57:26 <cant_unlock> fastboot is not in my path
+00:59:50 <aeonsolution[m]> when you set the path following the instructions on the website
+00:59:51 <aeonsolution[m]> do not open up new windows
+01:00:15 <aeonsolution[m]> the path does not get carried over, because you only set it temporarily
+01:02:09 <aeonsolution[m]> <gonner11 "I turned on developer options as"> this assumes you have fastbooth on your path, https://source.android.com/setup/build/running#unlocking-the-bootloader
+01:04:26 <cant_unlock> If I set the path it forgets what is on the path before and I lose other commands
+01:04:44 <cant_unlock> doesn't matter ./ should work if it's not on the path. something else is off
+01:05:43 <aeonsolution[m]> you are doing it wrong if you losing your commands
+01:05:57 <aeonsolution[m]> dont edit any .profile or .bashrc files if you dont know what your doing
+01:06:10 <aeonsolution[m]> just follow the instructions on the website
+01:06:13 <aeonsolution[m]> https://grapheneos.org/install#obtaining-fastboot
+01:06:22 <cant_unlock> I just did it. Same issue.
+01:06:32 <aeonsolution[m]> if you lost all your commands, restart your computer
+01:06:38 <cant_unlock> "< waiting for any device >"
+01:07:02 <cant_unlock> oh I see what I did wrong before with the path command. ok my bad. but I still have the same issue
+01:07:06 <aeonsolution[m]> yes, because your distro doesnt let you use the usb to connect your device as a local user
+01:07:11 <cant_unlock> that is, fastboot is in my path now, still doesn't work
+01:07:17 <cant_unlock> ah ha.
+01:07:23 <aeonsolution[m]> yes, that is another problem
+01:07:34 <aeonsolution[m]> that why you use android udev rules
+01:07:42 <aeonsolution[m]> to avoid having to use sudo
+01:07:56 <cant_unlock> wouldn't sudo work...? I did try to clone and install udev rules
+01:08:29 <aeonsolution[m]> i cant help you troubleshoot that issue because i dont use a distro that makes me do that, i just install the udev rules
+01:08:43 <aeonsolution[m]> again, setup the rules https://github.com/M0Rf30/android-udev-rules
+01:09:34 <cant_unlock> ok. I will look more into that, I ran into some issues installing (following their instructions) but that looks more promising
+01:10:08 <aeonsolution[m]> gl
+01:10:41 <cant_unlock> one question. when I do run fastboot with sudo, I get "FAILED (remote: Flashing Unlock is not allowed)"
+01:10:55 <cant_unlock> is that the same issue with the udev tools, or, something is wrong with the phone?
+01:10:57 <aeonsolution[m]> because of your distro rules
+01:11:01 <cant_unlock> ok. got it.
+01:11:19 <cant_unlock> Thanks aeonsolution[m] I'm going to work on this.
+01:11:21 <aeonsolution[m]> if you dont know how to fix that then there's is no point jumping down the system administration rabbit hole
+01:11:32 <aeonsolution[m]> just setup android udev rules
+01:13:43 <birdie[m]> <aeonsolution[m] "just setup android udev rules"> I've been curious about that, is that only for some distros? Cause I didn't have to do that for manjaro. Just used this easy install script https://github.com/Peter-Easton/grapheneos-easy-installer
+01:14:39 <aeonsolution[m]> birdie: https://wiki.archlinux.org/index.php/Android
+01:17:01 <inthewaves[m]> How does porting work? Is it, for the most part, cherry-picking GrapheneOS-related commits from the old `10` branch into the `11` branches and testing them?
+01:17:33 <inthewaves[m]> I've noticed the site switched over to mention the 11 branch now: https://grapheneos.org/build#development-branch
+01:17:36 <aeonsolution[m]> high level overview yes
+01:18:35 <aeonsolution[m]> you have to checkout the kernel from google
+01:18:50 <aeonsolution[m]> what device do you have
+01:19:05 <inthewaves[m]> 3a
+01:19:14 <aeonsolution[m]> oh nice
+01:21:09 <aeonsolution[m]> each device has a kernel that is provided by google as a prebuilt
+01:21:17 <aeonsolution[m]> go here https://android.googlesource.com/kernel/msm/
+01:21:20 <aeonsolution[m]> find your device
+01:21:31 <aeonsolution[m]> clone the project
+01:22:10 <aeonsolution[m]> and cherry-pick everything from GOS github for your corresponding device kernel
+01:22:54 <aeonsolution[m]> you start with commits that dont come from google, you get them from the project
+01:23:38 <dazinism> Hey inthewaves nice to have you here!
+01:24:01 <dazinism> Noticed on github all the stuff you've been doing
+01:24:37 <dazinism> Some interesting things you been upto
+01:24:41 <aeonsolution[m]> anu and i have a kernel for the beta, anu may have a new one now. what you would do in that case, is instead of doing that manual work you would clone our projects and put the our kernel where the prebuilt one is put
+01:24:56 <aeonsolution[m]> here https://grapheneos.org/build#kernel
+01:25:11 <aeonsolution[m]> and then build out the os and see if it works on your device
+01:26:11 <aeonsolution[m]> https://github.com/theaeonsolution/kernel_google_crosshatch/tree/11-preview-4
+01:26:27 <aeonsolution[m]> here is an oldish kernel
+01:26:43 <birdie[m]> <aeonsolution[m] "birdie: https://wiki.archlinux.o"> Thanks I'll read that
+01:27:21 <anupritaisno1[m]> cdesai: the entire "guide" could be shortened quite a fair bit
+01:28:43 <anupritaisno1[m]> Tbh I ignored the binary stage. Building without a vendor for now
+01:43:01 <aeonsolution[m]> oh nice, the kernel for the beta is the same as 11 🕶️
+02:00:02 * lickidysplit[m] uploaded an image: Screenshot_20200909-115951.png (81KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/jfnLDKWWJkuYrNnVIZUkmuTs/Screenshot_20200909-115951.png >
+02:00:11 <lickidysplit[m]> Does anyone know wot this is
+02:00:47 <inthewaves[m]> <aeonsolution[m] "you start with commits that dont"> Thanks, I'll look into it
+02:01:05 <aeonsolution[m]> inthewaves: send me a message if you need help
+02:01:16 <aeonsolution[m]> glad to have you checking this out!
+02:02:32 <anupritaisno1[m]> aeonsolution: you can invite him to that chat
+02:19:35 <inthewaves[m]> ls
+02:41:00 <anupritaisno1[m]> kryptonymous stop spamming reactions
+02:58:38 <kryptonymous[m]> didn't know that was spamming anupritaisno1:. Was just catching up on the thread and reacting. BTW, I appreciate all you do for the community. 🙂
+03:33:08 <mmcblk0[m]> Please, how can i works alarm on GOS?
+03:38:18 <strcat[m]> use the standard alarm clock app?
+03:49:37 <dan-v[m]> strcat: do you happen to know off top of your head if we are going to run into our usual chromium webview incompatibility issue
+03:49:49 <dan-v[m]> otherwise i'll go take a look
+03:51:00 <mmcblk0[m]> <strcat[m] "use the standard alarm clock app"> yes, but not works
+03:54:21 <lickidysplit[m]> Works fine for me
+03:54:21 <lickidysplit[m]> Did u set it for correct AM/PM? 😂
+03:59:51 <dan-v[m]> strcat: look like v86+ has sdk set to R
+04:05:21 <strcat[m]> dan-v: yes and current version is 85
+04:05:28 <strcat[m]> so unless we use beta, similar issue
+04:05:31 <strcat[m]> I'll just use stock WebView temporarily
+04:05:33 <strcat[m]> save trouble
+04:06:28 <dan-v[m]> sounds good strcat - i'll probably do the same initially until things are working and then give beta a shot
+04:07:48 <strcat[m]> cdesai: seedvault and setupwizard will need to be ported
+04:08:03 <strcat[m]> setupwizard breaks the build atm
+04:08:40 <strcat[m]> Vanadium itself (browser only) works
+04:24:38 <strcat[m]> https://github.com/GrapheneOS/platform_external_chromium-webview
+04:24:42 <strcat[m]> should be done with that for now
+04:24:58 <strcat[m]> also doing the Vanadium update to the new release
+04:24:59 <strcat[m]> so much to do
+04:25:23 <strcat[m]> so tomorrow or in the next few days when they release the Android 10 security update
+04:25:31 <strcat[m]> plan is to do a final release based on that for Android 10 branch
+04:25:40 <strcat[m]> along with switching over to the Android 11 kernels
+04:25:51 <strcat[m]> to get the kernels shipped / tested early as a starting point
+04:25:58 <strcat[m]> goal is to get the kernels ready today
+04:30:29 <strcat[m]> testing Android 11 Pixel 2 kernel atm
+04:30:39 <strcat[m]> need help with Pixel 3/3a and 4 still
+04:34:01 <strcat[m]> I might just do a release tonight if we get the kernels done
+04:34:07 <strcat[m]> before they release security patch tags
+04:34:10 <strcat[m]> we'll see
+04:34:13 <dan-v[m]> strcat: have you validated if prebuilt vendor works with stock 11 AOSP?
+04:34:15 <strcat[m]> okay Pixel 2 kernel works
+04:34:19 <strcat[m]> dan-v: no
+04:34:30 <strcat[m]> I'm working on Android 11 kernels with the last Android 10 tag
+04:34:38 <strcat[m]> along with porting very basic stuff to Android 11 via emulator
+04:34:48 <strcat[m]> I'm not touching Android 11 device support, letting you and cdesai do that
+04:34:49 <strcat[m]> and others
+04:35:03 <strcat[m]> kernel stuff is not that bad so far
+04:35:03 <dan-v[m]> strcat: ok, sounds good
+04:35:12 <strcat[m]> Pixel 2 doesn't have many changes, 3 and 4 do
+04:37:14 <strcat[m]> one thing to note is for qcacld Google applied a similar change as what I did disabling build tag
+04:37:24 <strcat[m]> they backported a ton of stuff so there may be issues with other changes
+04:37:27 <strcat[m]> need to figure that all out
+04:41:00 <strcat[m]> this android-10.0.0_r46 tag they pushed... really fucking weird
+04:41:14 <strcat[m]> it's from 2019 lol
+04:41:24 <dan-v[m]> lol wtf
+05:55:11 <strcat[m]> BTW
+05:55:12 <strcat[m]> it's not going to impact many people
+05:55:22 <strcat[m]> but if you installed GrapheneOS before the first stable release in 2019, there may be issues updating to Android 10
+05:55:40 <strcat[m]> because I am not going to port the code for handling the old encryption format from before the first stable release
+05:56:01 <strcat[m]> i.e. people who installed it when it was Android Hardening may be forced to factory reset
+05:56:25 <strcat[m]> it would be too much work to continue supporting the old format especially since it's difficult to test
+06:01:32 <strcat[m]> https://grapheneos.org/releases#2019.03.05.03
+06:02:03 <anupritaisno1[m]> Deletion: 100
+06:02:44 <strcat[m]> installations that were made at some point before the 2019.03.05.03 release of the Android Hardening project will be forced to factory reset after updating to GrapheneOS based on Android 10
+06:03:18 <strcat[m]> 2019.03.05.03 was the only tagged release under the Android Hardening name, so this only applies if you installed before there were even official releases
+06:03:26 <strcat[m]> i.e. one of the early testing builds
+06:03:34 <strcat[m]> if you've factory reset at any point since then it's already handled
+06:04:03 <strcat[m]> I'm not willing to continue porting the backwards compatibility handling forwards and it would be far too much work to actually do a forced migration (which is why it was never done)
+06:07:48 <lickidysplit[m]> Thanks strcat (=
+08:07:56 <atasuke[m]> Hey I’m still having issues generating signed build. I get this « warning » https://pastebin.com/k22iYA2N
+08:07:56 <atasuke[m]> The signing process complete but it must be badly signed because auditor fail at verified boot
+10:53:00 <strcat[m]> atasuke: Auditor just doesn'
+10:53:07 <strcat[m]>  * atasuke: Auditor just doesn't know about your keys
+10:53:26 <strcat[m]> you need to fork Auditor and add your verified boot key to the database
+10:53:53 <strcat[m]> and set the debug / release keys for Auditor (that it uses to verify Auditor on the other device) to the keys you use to sign Auditor
+10:54:17 <strcat[m]> it won't be interoperable with the official Auditor and AttestationServer builds
+10:54:25 <strcat[m]> they don't trust your keys for signing the OS or for signing Auditor
+10:54:49 <strcat[m]> if you use a modified build of Auditor, it won't pass attestation, since it isn't signed with the correct keys
+10:54:55 <strcat[m]> the whole point of it is that you can't trick it like that
+10:55:03 <strcat[m]> you can try
+10:55:05 <strcat[m]> it won't work
+10:55:16 <strcat[m]> the hardware-based attestation includes the signing key of the app from the OS
+10:55:20 <strcat[m]> and the signing key of the OS
+10:55:48 <strcat[m]> (it gets signing key of the OS in early boot before the OS is booted up and reads persistent state)
+11:00:36 <atasuke[m]> Thanks you a lot for the detailed information. This should be added to the website
+11:06:45 <atasuke[m]> Is there any resources on how to run your own attestation service ?
+11:06:50 <d64qoc8432li8p9o> I have tried building Vanadium trichrome before and renamed it in different package in args.gn
+11:07:11 <d64qoc8432li8p9o> Despite doing so, I can't install the apk in an official GrapheneOS phone
+11:08:05 <cn3m[m]> @d64qoc8432li8p9ouijtv:matrix.org: the apk needs the library apk installed first
+11:08:13 <d64qoc8432li8p9o> <cn3m[m] "@d64qoc8432li8p9ouijtv:matrix.or"> I did that
+11:08:16 <d64qoc8432li8p9o> Even in adb
+11:08:21 <d64qoc8432li8p9o> But some error came
+11:08:24 <d64qoc8432li8p9o> Gotta check later
+11:09:14 <d64qoc8432li8p9o> Library -> Chrome apk
+11:09:41 <strcat[m]> testing Android 11 kernel for Pixel 3 atm
+11:10:05 <strcat[m]> atasuke: it's covered in the attestation server README
+11:10:33 <strcat[m]> atasuke: server needs the same adjustments: add your verified boot key and perhaps give the OS a name like GrapheneOS (atasuke's build) for the database
+11:10:52 <strcat[m]> atasuke: and set the keysit checks for Auditor to your debug / release keys
+11:10:59 <strcat[m]>  * atasuke: and set the keys it checks for Auditor to your debug / release keys
+11:11:14 <strcat[m]> then you can just launch it on the server - you only need to do setup to configure it being able to send emails
+11:11:42 * d64qoc8432li8p9o sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/NVgiadpegidhsitUtplsQUsf/message.txt >
+11:11:44 <d64qoc8432li8p9o> Iirc
+11:12:48 <d64qoc8432li8p9o> The package name is there
+11:13:02 <d64qoc8432li8p9o> But, not sure if I did something wrong in building process
+11:15:41 <d64qoc8432li8p9o> Just followed the instructions and downloaded the dependencies.
+11:16:26 <atasuke[m]> strcat: thanks you but where do I add the keys in the app and server ? Where is the database ?
+11:20:19 <kmart> Guys, I'm looking for a developer that could port graphene to a device I'm working with. Will pay of course
+11:20:52 <kmart> I do have sources (AOSP) for that device, so shouldnt be too hard I Guess?
+11:22:02 <cn3m[m]> kmart: https://grapheneos.org/faq#future-devices The expectation is you buy a device for GrapheneOS. The issue is that other devices don't meet the standards of the project otherwise they likely would be supported or at least considered
+11:22:15 <cn3m[m]> if it doesn't meet the criteria it is not GrapheneOS
+11:24:42 <kmart> This device wont be used for any kind of media playback, deleted the TZ truslets for that, as they are full of bugs usually, No need BT or NFC, browser or google store to install crapware. I think I can be made secure
+11:26:10 <blacklight447[m]> <strcat[m] "testing Android 11 kernel for Pi"> The hero we don't deserve, but the hero we need
+11:26:44 <strcat[m]> atasuke: in AttestationProtocol.java
+11:26:48 <strcat[m]> look at commits adding devices
+11:27:04 <atasuke[m]> strcat: ok thanks a lot
+11:27:42 <kmart> cn3m[m]: its why I said I would pay for this anyway, I understand that some devices are better targets for this, but I really want soemthing more secure than a basic AOSP code
+11:28:09 <cn3m[m]> <kmart "cn3m: its why I said I would pay"> you are better with a locked bootloader
+11:28:40 <kmart> the bootloader will be locked, I woen full license of the code, and will write my own root key to them
+11:28:50 <kmart> own*
+11:30:29 <Ultron[m]> kmart: Which device you got if you don't mind sharing?
+11:31:29 <kmart> and while I am busy rewriting the entire boot chain up to the point kernel is booted (scrapped the MTK code of that part), I would prefer to replace the upper part with something better than AOSP
+11:32:33 <kmart> its an unbranded ODM device manufactured in china of course :) but at least I have all the source
+11:32:37 <Ultron[m]> Why not just buy a supported device?
+11:33:13 <kmart> because then I wont be able to rewrite the bootchain, incl, WiFi FW and cellular modem fw?
+11:34:09 <kmart> I understand all Graphene devices use modem/wifi fw blobs as they are, with all the bugs
+11:34:15 <Ultron[m]> Okay. But I have not heard good things about the Mediatek SOCs.
+11:34:38 <kmart> the SoCs are fine honestly, its the code that has a backdoor within a backdoor
+11:34:38 <Ultron[m]> <kmart "I understand all Graphene device"> They are isolated.
+11:35:11 <kmart> isolated how?
+11:35:21 <cn3m[m]> I am going to have to ask you to switch to offtopic chat. This has nothing to do with GrapheneOS and I can't see this device being supported
+11:37:06 <inrdrna[m]> lmfao
+11:37:45 <inrdrna[m]> "unbranded ODM" :curi
+11:37:49 <inrdrna[m]>  * "unbranded ODM" :curious:
+11:38:25 <kmart> No stress cn3m[m], just noting the reason why not grapheneOS-device, because I cant upgrade other parts of the FW on those. And AFAIK, aside from one custom phone form kickstarter, no retail devices have the modem isolated in a real way, they all share some memory and are vulnerable to modem->kernel exploitations
+11:38:57 <kmart> inrdrna[m], yes, look it up, you have to order like 5000 units, pay source code fee and you can start your own phone project
+11:39:08 <cn3m[m]> yeah no
+11:39:16 <cn3m[m]> iPhones have been doing that for years very well
+11:39:25 <cn3m[m]> and lately Pixels have been doing just as well
+11:39:31 <cn3m[m]> IOMMU can and does work
+11:39:52 <cn3m[m]> also MTK is absolutely shit at handling security issues
+11:39:59 <cn3m[m]> remember the root exploit for the kindle?
+11:40:08 <cn3m[m]> that effected every MTK chip
+11:40:12 <cn3m[m]> after a year of not patching
+11:40:23 <cn3m[m]> Google said fuck it and mitigated it themselves
+11:40:32 <cn3m[m]> Google doesn't do that!
+11:40:50 <kmart> sure, I know those issues, and many many more, every piece of boot chain has tons of bugs that are still unpatched to this day
+11:41:36 <kmart> while preparing to this project I must have found like 10 different ways to bypass secure boot on MTK
+11:42:03 <kmart> incl. unpatchable romcode bugs
+11:42:20 <kmart> but that isnt an issue
+11:42:29 <cn3m[m]> Save yourself the time and effort and buy a device every few years and don't worry about upgrades
+11:42:34 <kmart> since I scrapped all that code and rewrite it from scratch
+11:42:39 <cn3m[m]> it is not worth anyone's time
+11:43:21 <kmart> cn3m[m], I'm making my own phone bruh :P I'm not here to upgrade my personal device or somthing
+11:43:32 <cn3m[m]> that is assuming your code is flawless which is a huge assumption. Again if this could be moved to the offtopic chat I would apperciate that
+11:45:49 <kmart> well, then back to the core issue at hand - I would like to swap the AOSP delivered within the deal, with soemthing else, preferably GrapheneOS
+11:46:13 <kmart> and I would pay for this -- thats about it
+11:46:47 <cn3m[m]> "/join #grapheneos-offtopic"
+11:47:05 <kmart> but thats on the graphene topic, isnt it ?
+11:47:12 <kmart> device porting topic
+12:01:12 <cn3m[m]> kmart: to supported devices
+12:01:13 <cn3m[m]> that is not a supported device
+12:07:02 <kmart> thx for the clarification :P
+12:14:05 <cn3m[m]> kmart: yeah if a device is going to meet the criteria of the project then it is on topic
+12:16:58 <kmart> well it would be hard to judge that, as in the end the device will be indeed on the MTK chip but will run little to none of actual MTK code
+12:21:44 <cn3m[m]> you have the criteria
+12:21:53 <cn3m[m]> make your case why it meets every point of it
+13:42:53 <derpy> anyone use m.uber.com on graphene?
+13:43:24 <derpy> As far as I can tell it doesn't allow one to add stops or change destination... Maybe there's a way to use the app without google services?
+13:43:31 <derpy> or another work around I don't see?
+13:50:38 <d64qoc8432li8p9o> <derpy "anyone use m.uber.com on graphen"> Try using desktop mode?
+13:50:39 <d64qoc8432li8p9o> Not sure
+15:30:00 <derpy> d64qoc8432li8p9o I made a support ticket with them... Doubt they'll be helpful though
+15:30:09 <derpy> No way to do using uber.com or m.uber.com
+15:31:35 <jpds> I really doubt Uber will work without Google MAps
+15:44:36 <alzxjm[m]> Not sure about adding stops or changing destination but m.uber.com seems to work OK for requesting a ride.
+15:44:59 <alzxjm[m]> (I'm on CalyxOS w/microG disabled so this might not be 100% comparable to Graphene, but it seems to work OK)
+15:58:40 <leonidas164[m]> <derpy "anyone use m.uber.com on graphen"> adsfasf: so far i doesn't work at all. Same goes for most mobility apps of course
+16:44:31 <strcat[m]> btw I would greatly appreciate if people could send more PayPal and GitHub Sponsors donations to help cover the costs of defending the project
+16:44:54 <strcat[m]> legal fees for defending against the BS lawsuit filed against the project and for filing our own lawsuits are very expensive
+16:45:11 <strcat[m]> I'm going to be primarily using Bitcoin donations for funding other developers
+16:45:27 <strcat[m]> been using PayPal to cover legal fees and it's entirely out atm
+16:45:34 <strcat[m]> it's ~2k/month, need more donations
+16:46:15 <strcat[m]> atm Bitcoin -> being used to fund other developers and hardware for them, PayPal -> legal fees, server costs, domain registration costs, GitHub Sponsors -> my income
+16:46:26 <strcat[m]> not 100% but that's approximately how it's used
+16:47:24 <strcat[m]> this way I don't need to deal with handling the complexity of capital gains on Bitcoin as income since the project isn't for me atm, keeps things simpler
+16:48:06 <strcat[m]> a site that had my credit card info was compromised and my bank hasn't sent the replacement yet so I have to use PayPal to pay for stuff atm which is really annoying, had to move over various recurring payments to it and deal with hassle beyond that
+16:48:31 <strcat[m]> they gave me a new number but didn't send the card, they fucked up somehow, really annoying, been a month since I can conveniently pay for stuff
+16:48:51 <strcat[m]> and I had a backup card that's unused but they never sent a replacement when it naturally expired, good stuff
+16:49:17 <strcat[m]> and they aren't responding to my messages via their site atm, and they won't give me a number for calling them about this, the regular credit card number is 'disputes' and they won't deal with it
+16:49:42 <strcat[m]> I only need it so I can easily pay for stuff, I don't run a balance on it
+16:50:27 <strcat[m]> so like atm OVH payments for GrapheneOS, domain registration and all my personal bills had to be moved to paypal or getting someone else to pay for it with a credit card and sending them cash
+16:50:31 <strcat[m]> super annoying
+16:51:01 <strcat[m]> banks always causing me problems
+16:51:11 <strcat[m]> how hard it is to just send something in the mail?
+16:51:50 <ThomCat[m]> strcat lawsuit is in US or Canada?
+16:54:10 <strcat[m]> Canada
+16:54:45 <strcat[m]> PayPal is the easiest way to pay those invoices right now so I'd appreciate if people can donate via PayPal, I need a lot more than I'm getting right now
+16:55:17 <strcat[m]> I can pay via eTransfers or a credit card - but I haven't received either of the new renewed credit cards in the mail due to some bureaucratic problem
+16:55:26 <strcat[m]> and eTransfers are a real hassle
+16:55:35 <strcat[m]> so I guess I could start withdrawing money from my bank account into PayPal
+16:55:51 <strcat[m]> it would be nice if donations would cover these ongoing substantial costs though
+16:55:59 <strcat[m]> in order to continue development I really need these costs covered
+16:56:09 <strcat[m]> not getting enough donations recently
+16:56:39 <strcat[m]> I also want to start paying other developers so they can spend more time on the project so the BTC will start being used up for that
+17:05:54 <ThomCat[m]> Would you take venture capital money if someone could find a firm willing to 'invest'?
+17:07:23 <ThomCat[m]> [(i.e. how Matrix.org raised some money last year)](https://matrix.org/blog/2019/10/10/new-vector-raises-8-5-m-to-accelerate-matrix-riot-modular)
+17:18:21 <Lallerz> hello
+17:19:11 <atasuke[m]> Hello
+17:19:45 <Lallerz> after having found netflix.service, amazon.service amazon.apphandler facebook.manager and tons of analytics packages on my damned xiaomi, I decided to choose other. That's the short story why I am here
+17:21:16 <Lallerz> and I am pleased to find such a populated chan, wow
+17:24:35 <jcpicard32[m]> Welcome!
+17:25:06 <Lallerz> and, may I ask if the next release will support the pixel 4a ?
+17:41:42 <githerazi[m]> <Lallerz "and, may I ask if the next relea"> Yes. Yes you may ask.
+17:41:57 <Lallerz> Thanks
+17:42:21 <Lallerz> will the next release support the pixel 4a ?
+18:00:17 <derpy> you guys have an auto-updater for F-Droid? Or you always do them manually by clicking 'install' on each app?
+18:14:31 <Nikos[m]> <derpy "you guys have an auto-updater fo"> For auto update functionality you need the f-droid privileged extension (because that functionality requires system access). It s not included in GrapheneOS though.
+18:15:26 <derpy> Do people in this community generally use & trust it (the priviledged extension)?
+18:15:38 <ThomCat[m]>  * @strcat Would you take venture capital money if someone could find a firm willing to 'invest'?
+18:16:42 <cn3m[m]> <derpy "Do people in this community gene"> no it is not supported(due to blindly trusting 3rd party repos) and needing root
+18:16:53 <derpy> ok
+18:17:12 <derpy> will just click with the ol fingers for now :)
+18:17:20 <fll[m]> <Lallerz "will the next release support th"> That will probably take some time, since the phone is not even out yet and someone needs to step up to be the maintainer of the 4a
+18:18:51 <Lallerz> thanks for the reply
+19:19:12 <lev[m]> I've dug around a bit in the logs and didn't really find anything definitive, but: what are people's thoughts on using biometrics (particularly the fingerprint reader) ?
+19:19:38 <lev[m]> it seems like it's viewed favorably, but it seems like having that sort of data recorded would be a risk to the user
+19:20:24 <lev[m]> I assume that data is never transmitted at all, and should be hard to access by apps that aren't meant to access it?
+19:21:49 <jpds> lev[m]: The biometric data is stored in the Titan M security chip
+19:22:57 <cn3m[m]> stored fuzzy not evn google or grapheneos can reverse it
+19:24:32 <lev[m]> what about the hardware itself?  would it be impossible to intercept data being reported from a 'read' ?
+19:27:17 <cn3m[m]> your camera would be a much easier method
+19:28:13 <cn3m[m]> I don't know if they are using encrypted memory or what(the SEP does for TouchID), but at some point the effort required to man in the middle the fingerprint sensor would be really high
+19:29:50 <BalooRJ> is there a way to use only biometric and not have to use the pin or a password? Or can they only be used in tandem
+19:30:10 <cn3m[m]> just use a 4 digit PIN
+19:30:26 <cn3m[m]> if it is truly random it would take roughly 650 years to bruteforce
+19:30:45 <cn3m[m]> the fingerprint times out after 48 hours
+19:30:50 <BalooRJ> good to know.
+19:31:01 <cn3m[m]> so making a fake in that time would prove challenging if it was stolen
+19:31:12 <lev[m]> or if you restart
+19:31:22 <cn3m[m]> sure
+19:31:30 <lev[m]> so if you're nabbed, restarting the phone is a good move
+19:31:46 <cn3m[m]> yes, especially for AFU avoid lockdown
+19:34:53 <cn3m[m]> Pixel 4 with IR scanner + a good length truly random PIN + practicing a fast restart is probably the ideal setup
+19:35:14 <cn3m[m]> shoulder surfing and CCTV are dead in the water since you don't enter your password often
+19:35:56 <lev[m]> it's also depends on when you restart though, to be fair
+19:36:12 <atasuke[m]> If my device is stolen and I couldn’t reboot. Is the data at risk ?
+19:36:16 <lev[m]> if you get picked up, and instantly restart, you'll probably turn your phone back on to look up a number unless you have your emergency contact memorized
+19:36:23 <lev[m]> at which point you'll definitely enter it in, while on camera
+19:36:56 <cn3m[m]> <atasuke[m] "If my device is stolen and I cou"> um, not really
+19:37:06 <cn3m[m]> the 48 hour timeout on biometrics is good enough
+19:37:19 <cn3m[m]> and AFU is tricky on GrapheneOS
+19:38:35 <atasuke[m]> Ok
+19:38:43 <cn3m[m]> people know they are going to have to deal with no usb attack vector and layers upon layers of hardening on iOS. On a Pixel that may come as a real shock to see you also have that here. Not to advocate security through obscurity at all, but yeah
+19:38:54 <salbutamol[m]> emergency contact number on the lockscreen sounds like a wise move
+19:39:01 <cn3m[m]> Pixel with GrapheneOS is pretty tough
+19:39:12 <atasuke[m]> Dope
+19:40:18 <atasuke[m]> Just an idea, why isn’t there a way to wipe the phone after a number of failed password attempts ?
+19:41:05 <cn3m[m]> I really don't think that is a necessary
+19:42:08 <cn3m[m]> You can already junk a Pixel effectively by trying to unlock it too many times(a DOS basically) an iPhone has this feature since the timeouts are shorter(but the minimum PIN is far far longer)
+19:42:19 <cn3m[m]> so if you want for instance to use an iPhone with a 4 digit PIN
+19:42:49 <cn3m[m]> it is meant for a 6 digit PIN so it wouldn't be as strong as a Pixel 4 PIN vs 4 PIN
+19:43:12 <cn3m[m]> an iPhone with 4 digit PIN and the 10 tries makes some more sense there
+19:43:52 <salbutamol[m]> there's a program on FDroid called Wrong PIN Shutdown which will turn off your device after X retries if that gives you some peace of mind
+19:44:29 <cn3m[m]> not recommended
+19:44:31 <salbutamol[m]> oh no?
+19:45:11 <atasuke[m]> salbutamol: you have to register the app as a device admin which is not really good
+19:45:13 <cn3m[m]> device manager
+19:45:17 <cn3m[m]> and correction
+19:45:31 <cn3m[m]> the time out on Pixels is not as aggressive as I remember
+19:45:38 <cn3m[m]> it is pretty hard to disable the device
+19:45:48 <cn3m[m]> but still it is very strong
+19:45:50 <salbutamol[m]> oic - what's the risk there, that the app could be shady / exploited?
+19:46:03 <atasuke[m]> Yes shady
+19:46:04 <cn3m[m]> yes
+19:46:19 <cn3m[m]> if it was exploited it would have full ownership of your profile
+19:46:39 <salbutamol[m]> gotcha
+19:47:27 <lev[m]> huh, apparently pixel 4/xl are already out of stock, and not available from google any more
+19:47:59 <cn3m[m]> in general the iPhone system is not as refined. Requires 6 digit PINs(which are long, but less likely to be easily guessed), shorter timeouts(which can be nice), but the wipe after failed attempts only make sense if you have a bad PIN imo
+19:48:08 <cn3m[m]> it opens you up to more damage if someone wipes your phone
+19:48:28 <cn3m[m]> than expecting someone to guess your nigh unbreakable PIN(on either phone)
+19:48:37 <cn3m[m]> if someone did bypass the hardware timer
+19:48:49 <cn3m[m]> they would bypass the wipe limit too
+19:48:54 <echotunnelriver[> Does Graphene have a pin scramble feature? I haven't seen this mentioned anywhere.
+19:49:01 <cn3m[m]> though a hardware timer bypass is extremely unlikely
+19:49:04 <cn3m[m]> <echotunnelriver[ "Does Graphene have a pin scrambl"> it does
+19:51:10 <cn3m[m]> basically if you PIN is 1234 iPhone will protect you by at least making it longer. People don't really carry 6 digit easily guessable combos in their head like SSN, birthday(you could add year though), and years like 1787. iPhones with the wipe after 10(optional) makes it way more appealing if you have a really bad PIN
+19:51:54 <cn3m[m]> Pixels on the other hand the 4 digit PIN makes more sense if you have it fully random it will be very strong and you don't need to worry about data loss and on top of it the PIN is shorter
+19:53:53 <nickcalyx[m]> > Does Graphene have a pin scramble feature? I haven't seen this mentioned anywhere.
+19:53:53 <nickcalyx[m]> Do you mean rearranging the keypad?
+19:54:16 <jpds> Yeah, it's in the settings, somewhere
+19:55:02 <atasuke[m]> <cn3m[m] "in general the iPhone system is "> iPhone doesn’t require 6 pin
+19:55:20 <cn3m[m]> I mean you can set it to 4 if you customize it
+19:55:28 <cn3m[m]> but the default PIN is set to 6
+19:55:36 <jpds> nickcalyx[m]: Under Security
+19:57:21 * echotunnelriver[ sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/zPXPQNGjMMBiPsclAZezydxn/message.txt >
+20:07:26 <Guest82> Hey! I'm female 23 and I'm so horny right now. Wanna trade pics with cute man. Add me here >> http://NUDY.FUN << :
+20:07:38 <atasuke[m]> Lmao
+20:08:01 <tu30> I know there are no deadlines / don't want to pressure anyone but what's the current state for android 11
+20:08:19 <tu30> Not that I really care to be fair it hasn't added anything relevant to us
+20:08:21 <tu30> But still
+20:10:16 <cn3m[m]> Kernel is the current goal
+20:10:17 <cn3m[m]> Pixel 2 is done
+20:10:25 <cn3m[m]> Pixel 3 is development
+20:10:45 <cn3m[m]> then I believe after the kernels are done a release on Android 10 will be out to test the new kernels
+20:11:58 <Guest82> Hey! I'm female 23 and I'm so horny right now. Wanna trade pics with cute man. Add me here >> http://NUDY.FUN << :
+20:12:31 <lev[m]> rofl
+20:12:37 <lev[m]> what minimal effort
+20:13:05 <lev[m]> (re: now deleted spam, not the comments about testing the new kernel)
+20:13:08 <cn3m[m]> bait 10/10
+20:13:13 <cn3m[m]> clap
+20:13:27 <lev[m]> I genuinely pity anyone who would click on that
+20:14:32 <Autopsy[m]> Pity me pls
+20:15:16 <lev[m]> you poor sad man
+20:30:45 <derpy> https://www.davx5.com/tested-with jeez they should at least recommend some top ones they know function well... paradox of choice!
+20:32:30 <derpy> just spent over an hour trying to move a damn address book... I don't see how this could possibly be a recommended app; such a waste of time.
+20:32:45 <derpy> Is there an android function where you can import / export just the address book to grapheneOS?
+20:32:58 <derpy> DAVx5 is way overcomplicated
+20:33:34 <Autopsy[m]> FastMail works flawlessly. It's not complicated. Anyways, is off topic, my man.
+20:34:10 <derpy> "best way to migrate contacts to GOS" is off topic?
+20:34:11 <derpy> ok
+20:35:57 <Autopsy[m]> Type all the numbers in individually if you can't figure it out.
+20:36:22 <Autopsy[m]> These sorts of questions shouldn't be asked here. It's an internet search away.
+20:37:44 <Autopsy[m]> How difficult is it to just make a fucking csv file of your contacts and import them into Android?
+20:38:27 <Autopsy[m]> Or a vCard
+20:39:43 <jpds> derpy: I like https://www.etesync.com/
+20:40:52 <derpy> jpds tnx
+20:43:13 <Guest35> Hey! I'm female 23 and I'm so horny right now. Wanna trade pics with cute man. Add me here >> http://NUDY.FUN << :
+20:44:02 <Autopsy[m]> Yes, I'll add you.
+20:44:12 <Autopsy[m]> Jesus Christ lol
+20:50:16 <atasuke[m]> Again
+20:56:06 <lev[m]> is she like the 23rd female in her line of genetically engineered chatbots?
+20:56:19 <lev[m]> or is her first name "female" and last name "23"
+21:07:47 <derpy_online> Is it offtopic to ask about the phone app... I have a SIM and also a SIP account. It is supposed to ask first, but it does not ask and just defaults to the SIM.
+21:08:05 <derpy_online> Also, every time bluetooth disconnected I have to repair - it never remembers... Is this a known issue?
+21:17:06 <derpy_online> got the call selecting working
+22:07:23 <lev[m]> nice
+22:07:36 <lev[m]> is this with the stock dialer?  I was thinking about looking at others, for no particular reason
+22:22:44 <adeus[m]> Hey I heard that the next update will force some people to do a factory reset ???
+22:22:52 <adeus[m]> Please tell me it’s not true
+22:22:57 <jpds> adeus[m]: No
+22:59:11 <KE0VVT> Last time I bought a device with the hopes of putting a custom OS on it, the bootloader was locked and the radio was not supported. I just want to buy something that will definitely work with GrapheneOS.
+22:59:54 <KE0VVT> (I bought a Galaxy Nexus. Little did I know, it’s a different piece of hardware when you get it from Verizon, and few ROMs supported it.)
+23:20:56 <nickcalyx[m]> > Hey I heard that the next update will force some people to do a factory reset ???
+23:20:56 <nickcalyx[m]> Where did you hear that
+23:21:37 <d64qoc8432li8p9o> It depends on what version you first flashed the OS and if you factory reset after some update
+23:41:54 <strcat[m]> only people who installed GrapheneOS before it was called GrapheneOS
+23:42:00 <strcat[m]> and before the first Android Hardening stable release
+23:42:14 <strcat[m]> i.e. people who installed before https://grapheneos.org/releases#2019.03.05.03
+23:42:18 <strcat[m]> I was very clear about that
+23:42:19 <dazinism> KE0VVT: its still the same, dong buy a Verizon Pixel as the bootloader can not be unlocked
+23:42:40 <dazinism> *dont buy a

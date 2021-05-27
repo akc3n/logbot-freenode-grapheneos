@@ -1,0 +1,1158 @@
+00:07:50 <oj> Hello
+00:14:45 <dazinism> Hey oj
+00:14:53 <jacksonpollock19> <brenneke[m] "Screenshot_20200418-125404.png"> So you do need an application still thanks everything's seriously confusing and one person tells you one thing and an other completely different will have to take a couple hours reading tomorrow.
+01:00:32 <brenneke[m]> <jacksonpollock19 "So you do need an application st"> You don't necessarily need an app but it gives you some nice options. With app you can set up auto connect. With app you van set up multiple servers fir different purposes then just select server you want to hook up to.
+01:02:06 <DannyWorkOrderPr> <DannyWorkOrderPr "Unless your needs require the ri"> re: the above, Less than 6 hrs ago, lol
+01:05:59 <DannyWorkOrderPr> The Wireguard app allows the functionality you mentioned above, as well
+01:13:38 <brenneke[m]> <DannyWorkOrderPr "The Wireguard app allows the fun"> Cool, thanks.
+02:09:29 <renlord> https://developer.android.com/reference/android/content/pm/PackageInstaller.SessionParams#MODE_FULL_INSTALL
+02:09:51 <renlord> re: mode_full_install vs existing, does full mean that it'll replace all userdata in the existing apk package?
+02:10:11 <renlord> if the package name is identical.
+02:10:36 <renlord> and for update purposes, do i use MODE_INHERIT_EXISTING?
+02:10:41 <renlord> strcat[m]: ^?
+02:11:32 <strcat[m]> I think that's about split apks not data
+02:11:34 <strcat[m]> dunno how it works
+02:11:42 <strcat[m]> haven't uses that API
+02:12:02 <renlord> ok i'll test when i run it during prototyping
+02:12:19 <renlord> cdesai: do you know?
+02:12:50 <strcat[m]> decided just to implement brotli support in nginx by hand because I don't want to deal with compiling a third party extension
+02:13:07 <strcat[m]> it's super verbose :\
+02:13:33 <strcat[m]> https://paste.xinu.at/KqqPoK such a huge pain
+02:13:37 <renlord> https://github.com/google/brotli?
+02:13:48 <strcat[m]> yeah browsers all support it
+02:13:55 <strcat[m]> it's substantially better than gzip
+02:14:01 <renlord> how many % savings?
+02:14:24 <strcat[m]> I can show you the output dir for grapheneos.org
+02:15:06 <renlord> is it something the app update service should support?
+02:15:30 <strcat[m]> well here's one example
+02:15:32 <strcat[m]> -rw------- 1 strcat strcat  3722 Apr 18 22:14 donate.html
+02:15:33 <strcat[m]> -rw------- 1 strcat strcat  1084 Apr 18 22:14 donate.html.br
+02:15:33 <strcat[m]> -rw------- 1 strcat strcat  1475 Apr 18 22:14 donate.html.gz
+02:15:46 <renlord> that
+02:15:51 <renlord> 's pretty good
+02:15:56 <strcat[m]> renlord: apks do need transport compression
+02:16:18 <strcat[m]> also keep in mind that's minified html (mostly just whitespace tho atm, don't have aggressive settings that drop tags, etc. on)
+02:16:30 <renlord> i assume its abstracted in URLConnection? the java package will upgrade to HTTP2 or something?
+02:16:42 <strcat[m]> renlord: I doubt it but dunno
+02:16:52 <renlord> anyways, i'll worry about that later.
+02:17:02 <strcat[m]> I'd imagine you have to pass Accept-Encoding: br, gz  and then handle decompressing
+02:17:11 <strcat[m]> when you get Content-Encoding: br
+02:17:18 <strcat[m]> or gz if you want to support both
+02:17:18 <renlord> does okhttp handle that instead?
+02:17:23 <strcat[m]> dunno
+02:17:30 <strcat[m]> it's not hard to do it by hand tho
+02:17:33 <strcat[m]> probably adds 5 lines of code
+02:17:37 <strcat[m]> 6
+02:17:50 <strcat[m]> renlord: I use static compression for static files
+02:17:58 <strcat[m]> i.e. there are just .gz / .br files
+02:18:15 <strcat[m]> for each static file type where external compression makes sense
+02:18:34 <strcat[m]> so for grapheneos.org, which is all static, nginx's dynamic 'gzip on' support is actually not enabled
+02:18:35 <renlord> do we use brotli with OTA updates now?
+02:18:47 <strcat[m]> those don't need external compression
+02:19:02 <strcat[m]> they have better internal compression
+02:19:24 <strcat[m]> renlord: apks need external compression because some things inside them are aligned to page size and left uncompressed so that they can be memory mapped from the apk directly
+02:19:36 <renlord> i see, interesting. TIL
+02:19:44 <strcat[m]> apks are designed to minimize disk usage by compressing what they can but not forcing extraction of data
+02:20:04 <strcat[m]> so for example the modern way to handle libraries is to map them directly from the apk, bionic supports mapping libraries from paths into a zip
+02:20:35 <strcat[m]> the old way was having them get auto-extracted, so they were compressed inside the apk, and extracted by the package manager to a directory the app can't write to
+02:20:46 <strcat[m]> still how native executables have to be handled
+02:21:14 <strcat[m]> renlord: anyway apks are designed for efficient compression on disk, and need transparent compression for efficiency
+02:21:35 <strcat[m]> renlord:  so for example Vanadium
+02:21:41 <strcat[m]> renlord: look at unzip -v Vanadium.apk
+02:21:56 <strcat[m]> well
+02:22:05 <strcat[m]> TrichromeLibrary.apk
+02:22:34 <strcat[m]> renlord: https://paste.xinu.at/rAqDL/
+02:22:48 <strcat[m]> renlord: "Stored" means uncompressed, "Defl" means DEFLATE, zips have optional per-file compression
+02:23:13 <strcat[m]> renlord: anyway the reason for not compressing stuff is because they use transparent extensions to the zip format such as page aligning things so that they can be mapped directly from it
+02:23:26 <renlord> i see ok
+02:23:41 <renlord> and transport compression removes this alignment
+02:24:04 <strcat[m]> apks are a lot like an executable but with support for a lot more than just compiled ELF code
+02:24:13 <strcat[m]>  * apks are a lot like an executable but with support for a lot more than just compiled ELF binaries
+02:24:25 <strcat[m]> so you can put the entire application's data inside it in a way that's most efficient for disk storage
+02:24:42 <strcat[m]> renlord: well anything with Stored is not compressed
+02:24:48 <strcat[m]> so there a LOT to be compressed when transferring an apk
+02:25:45 <strcat[m]> renlord: https://paste.xinu.at/IxxAj/
+02:25:48 <strcat[m]> there is TrichromeLibrary.apk
+02:26:01 <strcat[m]> libmonochrome.so is the entire browser engine
+02:26:16 <strcat[m]> it's what's shared between TrichromeWebView and TrichromeChrome apks
+02:26:32 <strcat[m]> it's 99.9% of the native code
+02:27:02 <strcat[m]> renlord: and note since it's a library mapped from the apk it's stored uncompressed (and aligned to page size, which doesn't waste much space really)
+02:27:25 <strcat[m]> renlord: you *can* store it compressed - that just makes android's package manager extract it and put it in the library dir for the app
+02:27:35 <strcat[m]> waste of space, now you have both compressed and uncompressed copies on disk
+02:28:22 <strcat[m]> and apks are not meant to be compression for network transfer just storing it for use
+02:28:49 <strcat[m]> renlord: for apk data transfer we should probably just use LZMA2 / xz
+02:29:02 <strcat[m]> you just can't do that for a website because decompression is slow
+02:29:23 <strcat[m]> gzip == ridiculously fast decompression and very fast compression
+02:29:55 <strcat[m]> brotli == ridiculously fast decompression and moderate compression speed (brotli -4 or so does beat gzip -9 at compression ratio and has lower compression time tho so gzip is useless aside from compat)
+02:30:06 <strcat[m]> brotli goes to 11 instead of 9 :P
+02:30:16 <strcat[m]>   -Z, --best                  use best compression level (11) (default)
+02:30:51 <strcat[m]> renlord: anyway for apks we can just use xz or something more modern - the OTA compression uses a lot of xz internally
+02:31:47 <strcat[m]> renlord: https://chromium.googlesource.com/aosp/platform/system/update_engine/#delta-vs_full-update-payloads
+02:32:02 <strcat[m]> renlord: we could support deltas for apk updates too - but don't worry about that at the start
+02:33:19 <renlord> do you want an activity to visualize the apps that are being maintained by this application?
+02:34:38 <strcat[m]> not initially probably
+02:34:43 <strcat[m]> just start with only system apps
+02:36:03 <strcat[m]> renlord: anyway the point of brotli is largely that it cheats
+02:36:31 <DannyWorkOrderPr> postmarketOS on an iPhone7. Huh.
+02:36:46 <strcat[m]> > Unlike most general purpose compression algorithms, Brotli uses a pre-defined dictionary, roughly 120 KiB in size, in addition to the dynamically populated ("sliding window") dictionary. The pre-defined dictionary contains over 13000 common words, phrases and other substrings derived from a large corpus of text and HTML documents
+02:37:09 * strcat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/gqmlZkRywXjTTyNHiQQsVDJm >
+02:37:20 * strcat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/VXzlslsHVozPPkEOiEOKzMrp >
+02:37:32 <strcat[m]> renlord: it actually beats xz for that
+02:39:07 <strcat[m]> and look at decompression time
+02:39:16 <strcat[m]> gzip -dc TrichromeLibrary.apk.gz > /dev/null  0.39s user 0.00s system 99% cpu 0.391 total
+02:39:23 <strcat[m]> brotli -dc TrichromeLibrary.apk.br > /dev/null  0.31s user 0.01s system 99% cpu 0.321 total
+02:39:24 <strcat[m]> xz -dc TrichromeLibrary.apk.xz > /dev/null  1.44s user 0.01s system 99% cpu 1.459 total
+02:39:52 <strcat[m]> renlord: so for stuff that is STATICALLY compressed once and decompressed many times brotli is insanely good
+02:39:59 <strcat[m]> compression times for this:
+02:40:03 <strcat[m]> gzip -k9 TrichromeLibrary.apk  3.16s user 0.02s system 99% cpu 3.179 total
+02:40:11 <strcat[m]> xz -k9 TrichromeLibrary.apk  22.43s user 0.25s system 99% cpu 22.713 total
+02:40:13 <strcat[m]> brotli -k -Z TrichromeLibrary.apk  171.48s user 0.13s system 99% cpu 2:51.73 total
+02:40:49 <strcat[m]> and shows how useless bzip2 is
+02:41:17 <strcat[m]> bzip2 -k9 TrichromeLibrary.apk  5.33s user 0.04s system 99% cpu 5.384 total
+02:41:20 <strcat[m]> bzip2 -dc TrichromeLibrary.apk.bz2 > /dev/null  2.30s user 0.01s system 99% cpu 2.314 total
+02:41:32 <strcat[m]> renlord: anyways brotli at 11 is unusable for dynamic compression :P
+02:41:49 <strcat[m]> but at around 4 it beats gzip time and still somewhat beats the ratio for many things
+02:41:52 <strcat[m]> it's not meant for that tho
+02:41:57 <strcat[m]> meant for static compression
+02:42:18 <strcat[m]> and this is a binary without the vast majority of the string resources - not what brotli is actually tuned to compress well...
+02:43:36 <strcat[m]> renlord: anyway it probably does make sense to use HTTP compression and then it's up to the web server if it wants to do it dynamically or statically
+02:44:59 <strcat[m]> renlord: issue that annoys me with nginx is they don't have brotli module upstream, there's https://github.com/google/ngx_brotli, and it lacks stable tags so distros don't package it
+02:45:21 <strcat[m]> but it's simple enough to do it myself because I don't need dynamic compression with brotli
+02:45:55 <strcat[m]> the only place where dynamic compression has any use is the attestation.app JSON API and gzip is fine for that, brotli wouldn't help much when tuned to be fast enough
+02:47:28 <strcat[m]> TheJollyRoger: did you know that SVGs can contain code and run code
+02:47:36 <strcat[m]> SVGs can have XSS vulnerabilities
+02:48:00 <strcat[m]> every day my faith in humanity drops lower
+02:48:12 <JTL> strcat[m]: I've seen that before
+02:48:19 * JTL screams inside
+02:48:34 <renlord> flamegraphs svg runs code
+02:48:35 <renlord> kek
+02:48:46 <JTL> Good day renlord
+02:48:58 <renlord> if it couldnt, i doubt it'd be useful
+02:49:04 <renlord> you can search symbols
+02:49:07 <renlord> so useful
+02:49:49 <strcat[m]> yeah basically svg is a document format with JS support
+02:50:07 <strcat[m]> I wonder if svgs can make network connections
+02:50:08 <strcat[m]> lemme see
+02:50:12 <madaidan[m]> Lmao
+02:50:13 <renlord> LOL
+02:50:28 <renlord> scalar vector graphics ++
+02:50:29 <madaidan[m]> People like to pack as much stupid shit into 1 thing as they can
+02:50:55 <madaidan[m]> It's like windows' web server in the kernel
+02:50:56 <renlord> s/scalar/scalable/
+02:52:37 <strcat[m]> madaidan.: https://www.kernel.org/doc/html/latest/networking/tls.html
+02:53:07 <JTL> strcat[m]: I've seen that too, and went "why?"
+02:53:36 <strcat[m]> JTL: so you can use sendfile with TLS probably
+02:53:36 <madaidan[m]> I saw that in my kernel config before and was really confused
+02:53:41 <strcat[m]> it's not a whole TLS implementation in the kernel
+02:54:51 <strcat[m]> it's an implementation of just record transfer once a connection is established with a symmetric key and only supports aes128-gcm
+02:55:02 <strcat[m]> JTL: it's pretty stupid
+02:55:09 <strcat[m]> JTL: look at 'man sendfile'
+02:55:14 <JTL> Only good thing about that I can see is the sensible cipher choice
+02:55:16 <JTL> else ugh
+02:55:20 <strcat[m]>        sendfile()  copies  data between one file descriptor and another.  Because this copying is done within the kernel, sendfile() is more efficient than the combina‐
+02:55:20 <strcat[m]>        tion of read(2) and write(2), which would require transferring data to and from user space.
+02:55:40 <JTL> yeah I know about sendfile
+02:56:01 <strcat[m]> JTL: with sendfile you give an input and output fd and the kernel transfers the data in one go - no copies through your application memory, 1 system call
+02:56:07 <JTL> right
+02:56:13 <strcat[m]> the issue with this is it doesn't work anymore
+02:56:18 <JTL> why?
+02:56:23 <strcat[m]> because everything is encrypted
+02:56:25 <strcat[m]> so nginx's sendfile support is totally useless these days
+02:56:31 <JTL> ah
+02:56:38 <strcat[m]> JTL: because you don't send the data unencrypted
+02:56:53 <JTL> Makes sense now
+02:56:55 <strcat[m]> it's only useful over localhost / sockets / pipes these days
+02:57:14 <strcat[m]> JTL: so for reasons like this they made that kernel implementation of the TLS record format
+02:57:26 <strcat[m]> JTL: just endless bloat of functionality forever
+02:57:36 <JTL> Agreed
+02:57:50 <strcat[m]> JTL: CPU side channel vulns have made this substantially worse since system calls are now much slower
+02:57:58 <strcat[m]> so there is much more motivation to avoid system calls
+02:58:07 <strcat[m]> much more motivation to shove more and more into the kernel
+02:58:19 <JTL> I was wondering about the performance difference between userland and kernel for some applications
+02:58:31 <strcat[m]> CPU side channel vulns hurt fine-grained sandboxing a lot due to the mitigations making the overhead far more
+02:58:41 <JTL> I know that much
+02:58:47 <strcat[m]> JTL: kernel code isn't faster, in general
+02:59:17 <strcat[m]> JTL: in fact you can't use stuff like AVX in the kernel - at least normally - since it doesn't save/restore all those registers
+03:00:06 <JTL> right
+03:00:55 <strcat[m]> JTL: the issue is just that the kernel is used for certain things and the transitions are expensive
+03:01:24 <JTL> I remember the whole shitstorm about kernel_fpu_begin no longer being "GPL" exported by the kernel and causing problems with ZFS
+03:01:33 <strcat[m]> JTL: the reason for putting a web server in the kernel would be avoiding system calls - it would not be faster, it would actually be harder to implement it efficiently there
+03:01:39 <JTL> CAm
+03:01:42 <strcat[m]> you just avoid the overhead of switching kernel <-> userspace
+03:01:44 <JTL> Can't say I'm surprised
+03:01:54 <strcat[m]> including copies in and out of buffers
+03:02:43 <JTL> I remmeber Microsoft did some kernel "acceleration" for their IIS webserver and they've had some pretty epic vulnerabilities in the past leading to kernel RCE
+03:02:57 <JTL> (on Windows obviously)
+03:03:15 <JTL> (Probably going to eat soon, nice chatting with you)
+03:06:00 <strcat[m]> the linux kernel added this horrifying POSIX AIO nonsense
+03:06:11 <strcat[m]> and it's horribly designed, horribly implemented and basically useless
+03:06:22 <strcat[m]> serves 1 purpose: adding attack surface for people to exploit
+03:06:32 <strcat[m]> now there's actually going to be proper support for AIO
+03:07:36 <strcat[m]> sendfile is a wrapper around splice in the linux kernel btw
+03:07:48 <strcat[m]> will finally have proper AIO on linux soon
+03:09:21 <strcat[m]> io_uring is the first time linux has buffered async I/O at all, and it actually works... unlike the useless horrible "POSIX" AIO nonsense
+03:10:18 <madaidan[m]> Spender seems to hate io_uring
+03:10:28 <strcat[m]> well it's bad for security
+03:10:39 <strcat[m]> as is AIO
+03:10:51 <strcat[m]> and it's bad adding more and more while explicitly disallowing removing anything ever
+03:11:06 <strcat[m]> linux is a trash fire doomed to become more and more insecure
+03:12:46 <renlord> strcat[m]: what kernel projects do you find interesting and moving in the right direction from a security standpoint?
+03:13:06 <rutxonboard[m]> bUt iTs OpeN SoUrcE
+03:13:56 <madaidan[m]> <rutxonboard[m] "bUt iTs OpeN SoUrcE"> BuT i UsE kAlI
+03:14:08 <JTL> Running as root I assume? :)
+03:14:25 <madaidan[m]> <JTL "Running as root I assume? :)"> Of course
+03:14:35 <madaidan[m]> UID 0 means 0 vulnerabilities
+03:15:39 <renlord> barrelfish?
+03:15:49 <renlord> ^_^
+03:16:16 <renlord> every cpu core with their own kernel
+03:17:07 <renlord> userspace message passing to request for mem allocs
+03:22:31 <renlord> barely any context swtiching happening since the only time it happens is when the scheduler interrupts the process
+03:23:26 <renlord> and i think when you ask permission from the kernel to gain capabilities to do I/O
+03:35:06 <rutxonboard[m]> > UID 0 means 0 vulnerabilities
+03:35:06 <rutxonboard[m]> I didn't see you mention that on your insecurities site. Can you add that??
+03:36:26 <renlord> you need a sarcastic emoji to accompany that.
+03:36:33 <renlord> a naive person really cant tell.
+03:36:59 <renlord> and would proceed to root every owned device and run as root on their PCs.
+03:37:21 <rutxonboard[m]> Whoops I can't edit it
+03:37:22 <rutxonboard[m]> Sarcasm
+03:40:59 * madaidan[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/OKuLXAXFGgksMkolhsEmjQDE >
+03:42:00 <rutxonboard[m]> bows
+04:04:43 <TheJollyRoger> strcat[m]: OH GOOD GRAVY SVG EXECUTABLE CODE? Oh man. Oh man Aaaaaargh T_T
+04:10:16 <JTL> TheJollyRoger: I knew about it before strcat mentioned it.
+04:10:23 <JTL> My first thought "Uh, totally safe /s"
+04:10:57 <TheJollyRoger> We should take a leaf out of Ahnuld's book: "If it executes, we can exploit it!"
+04:11:00 <strcat> TheJollyRoger: yeah svg is kinda insane so android originally had a simple android-specific vector graphics format with compatible paths
+04:11:53 <strcat> TheJollyRoger: https://developer.android.com/reference/android/graphics/drawable/VectorDrawable.html
+04:12:03 <strcat> can manually convert these to svg pretty trivially
+04:12:21 <strcat> TheJollyRoger: https://stackoverflow.com/a/46350218 is an example
+04:15:58 <TheJollyRoger-M> Woah
+04:26:05 <TheJollyRoger> Wow, very different format.
+04:28:05 <strcat> TheJollyRoger: without the insane stuff
+04:28:11 <strcat> but they're moving to just using a subset of svg
+04:28:21 <strcat> but svg is more dangerous for sure
+04:28:43 <TheJollyRoger> Jeez >_<.
+04:35:18 <strcat[m]> https://twitter.com/loweringthebar/status/1251523163474649089
+04:36:07 <JTL> A nonsensical government at work
+04:36:20 * TheJollyRoger puts on a mask in New York
+04:36:34 <JTL> Ticket sir
+04:36:35 * TheJollyRoger watches as the judge turns blue and says "ERROR DIV BY ZERO MACHINECHECK ERROR"
+04:36:54 <JTL> My thought too
+04:37:05 <strcat> going outside is illegal
+04:37:07 <strcat> that's what it means
+04:37:16 <strcat> because you simultaneously must wear a mask and must not wear a mask
+04:37:31 <JTL> Can't say I'm surprised given how they have ~200k known cases :|
+04:37:38 <strcat> part of making everything illegal so that anyone can legally be arrested at any time
+04:37:43 <strcat> since everyone is always in violation of some laws
+04:37:50 <JTL> Disgusting
+04:38:33 * TheJollyRoger grumbles.
+05:10:03 <strcat[m]> nginx try_files is really annoying
+05:12:19 <JTL> I've had my share of issues there too
+05:15:24 <joshman[m]> There are always holes in these laws
+05:15:25 <joshman[m]> You mustn't wear face cover, wear a medical mask it is legal
+05:15:25 <joshman[m]> Or. You can't ride skateboard outside, yet you're allowed to exercise, so do what Moxie just tweeted, roller skates
+05:16:27 <rutxonboard[m]> Firefox fans are the worst
+05:17:26 <joshman[m]> I have Firefox yet I have to use it for some finance websites, because they think latest Chromium is OUTDATED BROWSER
+05:17:44 <joshman[m]> * I hate Firefox yet I have to use it for some finance websites, because they think latest Chromium is OUTDATED BROWSER
+05:18:36 <rutxonboard[m]> I run it on a DispVM
+05:20:31 <strcat> JTL: I can't figure out the final finishing touch for my brotli-without-brotli-module
+05:20:58 <strcat[m]> the issue with try_files is that it directly serves the file
+05:21:01 <strcat[m]> it doesn't rematch
+05:21:23 <strcat[m]> and rematching would be problematic...
+05:22:31 <JTL> nginx module?
+05:32:28 <strcat> yeah
+05:32:40 <strcat> don't want to use a third party module with no actual releases
+05:32:50 <strcat> and no existing packages for distros due to that
+05:32:57 <strcat> first party ones I mean
+05:33:15 <strcat> JTL: what I did works for all non-html stuff and for /
+05:33:30 <strcat> works for other directories too I assume
+05:33:38 <strcat> JTL: it doesn't work for /releases etc. due to try_files
+05:33:44 <strcat> just annoying
+05:34:38 <JTL> right
+05:34:58 <JTL> what's the use case of the broti module, do browsers support it, or is it for the updater?
+05:37:27 <strcat> browsers support it
+05:37:38 <strcat> the OS updates are already compressed internally
+05:37:42 <JTL> got it
+05:42:22 <strcat> almost have it working
+05:42:30 <strcat> just need a new way to redirect .html -> non-.html
+05:42:35 <strcat> what a pain
+05:42:41 <JTL> :/
+05:43:19 <strcat> it's real messy to do this
+05:43:49 <strcat> especially since you're not supposed to use 'if' with anything but return or rewrite which I'm carefully avoiding
+05:43:56 <strcat> since it's broken
+05:45:04 <JTL> Yup
+05:45:15 <JTL> The docs say not to use it
+05:45:54 <strcat> yeah they specifically say if is fine but only with rewrite/return
+05:45:56 <strcat> and nothing else
+05:46:07 <JTL> I'm aware
+05:46:09 <strcat> https://grapheneos.org/
+05:46:11 <strcat> well
+05:46:16 <strcat> should all use brotli now
+05:46:25 <strcat> without using the third party module for it
+05:46:28 <strcat> just configuration rules
+05:46:31 <strcat> it's a fucking mess
+05:46:52 <strcat> can they please just add support for it...
+05:47:03 <strcat> JTL: a brotli_static module doesn't require brotli lib even
+05:47:04 <strcat> :\
+05:47:09 <JTL> :/
+05:47:11 <strcat> basically the same thing as gzip_static
+05:47:25 <strcat> but different extension (.br) and encoding name (br)
+05:47:27 <strcat> that's it
+05:47:38 <TheJollyRoger> Ay carumba >_<.
+05:48:45 <strcat> JTL: https://paste.xinu.at/Ei16a/
+05:49:03 <strcat> ah last bit can be deleted
+05:49:52 <strcat> JTL: https://paste.xinu.at/i01g/
+05:49:58 <strcat> JTL: hope you can agree that's a huuuge pain
+05:50:03 <strcat> I can use snippets to make it a bit less bad
+05:50:05 <strcat> but still
+05:50:37 <strcat> JTL: this saves me building a third party module from source every time I update nginx using the distro's nginx sources with EXACT matching configure that they use
+05:50:41 <strcat> JTL: that's really annoying
+05:50:53 <strcat> means I can't update it via OS updates without it breaking this every time
+05:50:57 <strcat> so that's why I did it via configuration
+05:50:59 <strcat> :\
+05:51:17 <strcat> arch linux actually has a package... but it's of a dead fork that actually did releases
+05:51:26 <strcat> https://www.archlinux.org/packages/community/x86_64/nginx-mod-brotli/
+05:51:30 <strcat> https://github.com/eustas/ngx_brotli
+05:51:32 <strcat> that's dead
+05:51:41 <strcat> https://github.com/google/ngx_brotli doesn't tag releases
+05:52:28 <strcat> in other news I replaced Symbola with noto's emoji font and... these things I configured to use unicode symbols as icons look terrible now
+05:55:15 <strcat> JTL: https://paste.xinu.at/72hwxC/ this is a screenshot of vim
+05:55:30 <strcat> weird as hell looking font
+05:58:29 <JTL> Yeah
+06:00:35 <strcat> I thought noto would be material icons but it's some horrible stuff
+06:01:25 <strcat> might use https://github.com/google/material-design-icons/tree/master/iconfont
+06:01:39 <strcat> and just hard-wire their extension block code points
+06:01:49 <strcat> since this is how I display icons in i3 titles / status bar
+06:13:41 <TheJollyRoger> There goes the tide.
+06:34:36 <strcat> JTL: https://paste.xinu.at/S7PC4f/
+06:34:39 <strcat> calling that done
+06:34:47 <strcat> gonna just refactor it into a snippet...
+06:35:24 <strcat> super annoyed rn
+06:36:14 <JTL> aw
+07:07:27 <strcat> html is so dumb these days
+07:07:38 <strcat> well it always was dumb
+07:08:01 <strcat> I hate all the optional tag nonsense
+07:08:06 <strcat> optional tags and optional closing tags
+07:08:20 <strcat> https://github.com/GrapheneOS/grapheneos.org/commit/168405e1d7fa780df59099eba3b36c83c2870757
+07:08:24 <strcat> https://github.com/GrapheneOS/grapheneos.org/commit/3fae4fe19e974be4807103cebc316a85dd42bd4a
+07:08:53 <strcat> it shouldn't allow that, it can make the structure of the document become nonsensical without realizing
+07:09:01 <strcat> and makes parsing slower etc
+07:09:26 <strcat> the whole point of validating it is to find mistakes but they've made pretty much ANYTHING valid html now
+07:10:12 <strcat> it was always really permissive but now it's valid to have &, >, < unescaped along with tons of other weird things
+07:10:35 <JTL> I think it's so HTML by people and badly written programs parses to something "correct"
+07:10:51 <JTL> "be liberal in what you accept yada yada"
+07:11:00 <strcat> JTL: https://github.com/kangax/html-minifier/issues/969
+07:11:28 <JTL> > It’s a parse error and thus technically invalid HTML, but it still successfully triggers standards mode
+07:11:32 <JTL> Not surprised at all
+07:11:41 <strcat> save 1 byte
+07:11:59 <strcat> JTL: they went through nearly everything people could fuck up and defined it
+07:12:07 <strcat> so html has 'parse errors' but has defined how to handle them
+07:12:18 <strcat> so... they have a well-defined meaning and it continues onwards
+07:12:22 <strcat> not really an error now is it?
+07:12:27 <JTL> 00:12 <@strcat> so html has 'parse errors' but has defined how to handle them
+07:12:29 <JTL> 00:12 <@strcat> so... they have a well-defined meaning and it continues onwards
+07:12:31 <strcat> and over time they've decided to just stop making stuff errors
+07:12:31 <JTL> Exactly :/
+07:12:42 <strcat> JTL: so for example you could point the html people at this html-minifier change
+07:12:47 <strcat> and they'd happily just stop calling it an error
+07:12:56 <strcat> because they will happily make anything with real world usage not an error
+07:12:58 <strcat> that's how it works
+07:13:03 <JTL> My question is how old of a browser can you use before this becomes a problem?
+07:13:08 <JTL> (i.e legacy cruft)
+07:13:11 <strcat> so yeah it's really easy to make little mistakes that can cause serious issues, even security issues
+07:13:17 <strcat> forgetting to close tags can open up security issues
+07:13:18 <JTL> Although probably a nonsensical question, because we aren't all using IE6 anymore
+07:13:19 <strcat> like XSS
+07:13:23 <JTL> I'm aware
+07:13:28 <strcat> but you can't find it anymore with html validators
+07:13:44 <strcat> so from now on I've just enforced that the html is all 'valid' xml
+07:13:45 <JTL> Doesn't surprise me
+07:13:47 <strcat> per xmllint
+07:14:05 <JTL> Is xmllint more strict then other validation?
+07:14:19 <strcat> well it's checking that it parses as valid xml
+07:14:20 <strcat> not html
+07:14:23 <JTL> ah okay
+07:14:33 <strcat> so stops omitting tags, leaving off </> for lone tags
+07:14:47 <strcat> JTL: I'm not enabling DTD validation
+07:14:58 <JTL> I was more asking if it's less tolerant of things that browsers ignore
+07:14:59 <strcat> it would not pass that and I'm not going to add DTDs, there's no point, and it doesn't actually work anymore
+07:14:59 <JTL> ah okay
+07:15:05 <strcat> XHTML is no longer a real thing anymore it doesn't exist
+07:15:14 <JTL> Yeah I know
+07:15:39 <strcat> they tried to just say "xhtml5 is html5 serialized as xml" but it's broken because you cannot actually do it and it's invalid xml
+07:15:50 <JTL> I heard something about that
+07:15:55 <strcat> so now the spec basically hand waves and says hey in theory it's that but it's not well defined so whatever
+07:16:11 <JTL> Yup...
+07:16:32 <strcat> JTL: https://html.spec.whatwg.org/multipage/xhtml.html#the-xhtml-syntax
+07:16:38 <strcat> This section describes the relationship between XML and the DOM, with a particular emphasis on how this interacts with HTML.
+07:16:40 <strcat> An XML parser, for the purposes of this specification, is a construct that follows the rules given in XML to map a string of bytes or characters into a Document object.
+07:16:43 <strcat> At the time of writing, no such rules actually exist.
+07:17:00 <strcat> JTL: "At the time of writing, no such rules actually exist." is what you always want to see in a standard describing the rules for something
+07:17:18 <JTL> Pretty sure I've seen RFCs that awful
+07:17:48 <strcat> JTL: this is a 'living standard' and is what defines html now
+07:18:01 <JTL> Jesus
+07:18:04 <strcat> JTL: just a rough draft of what html is that's updated day to day based on real world practices
+07:18:06 <strcat> there is no html spec
+07:18:18 <strcat> unless you consider this to qualify as a spec
+07:18:32 <strcat> > When an XML parser would append a node to a template element, it must instead append it to the template element's template contents (a DocumentFragment node).
+07:18:36 <strcat> > This is a willful violation of XML; unfortunately, XML is not formally extensible in the manner that is needed for template processing. [XML]
+07:18:50 <strcat> JTL: how can you say this is how html serialized as xml works
+07:19:05 <strcat> JTL: and say you are willfully violating the xml spec in a serious way
+07:19:08 <strcat> *shrug*
+07:19:12 <strcat> JTL: anyway xhtml does not exist
+07:19:28 <JTL> Another non sequitur from the spec writers
+07:19:45 <strcat> at one point it existed and if you actually served content as application/xhtml+xml the browser used the xml parser and it let you do some neat things like importing other xml namespaces like svg and using them directly
+07:20:00 <strcat> so what they did is hard-wire support for svg and mathml in html when they killed this
+07:20:11 <JTL> I'm not surprised
+07:20:30 <strcat> JTL: a neat thing about it was it parsed faster but a downside was it had to have the entire content to start displaying anything and if there was any error it would just display an xml error page
+07:20:32 <strcat> which is good, really
+07:20:51 <JTL> Seems any aspect at improving web/webdev in general that makes sense gets killed off for vague techincal reasons or similar
+07:20:54 <strcat> JTL: tons of sites said "we use xhtml" and marked it as such in doctype but never served it as application/xhtml+xml and if they had they'd have realized it was all totally broken
+07:20:57 <JTL> Think I've seen those XHTML error pages before
+07:21:18 <strcat> xhtml never really existed in the real world, just super rare niche sites by certain web enthusiasts
+07:21:26 <strcat> xhtml was mostly just a virtue signalling thing
+07:21:44 <strcat> mark xhtml doctype, put half assed effort into it, validate it and fix it at SOME POINT but never actually serve it as xhtml so it never mattered
+07:21:47 <strcat> and now there is NO SUCH THING
+07:22:30 <strcat> JTL: xml problematic enough but html is so much worse since the parsing is so loose and guesses what you mean per the official, vague / underspecified rules
+07:22:50 <strcat> JTL: the spirit of the 'spec' now is to define how to handle all previously 'invalid' stuff seen in the wild
+07:22:56 <strcat> to make it fully compatible across browsers
+07:23:10 <strcat> so essentially they want there to be NOTHING that's really invalid
+07:23:22 <strcat> they basically want to define how to parse any arbitrary set of bytes as html
+07:23:38 <strcat> because people will serve that shit and for whatever reasons they are opposed to ever having a fatal error for any reason
+07:23:57 <strcat> JTL: makes issues like XSS worse
+07:24:28 <JTL> I'mnot surprised at all
+07:24:49 <strcat> JTL: I don't ever dynamically generate html/css/js for any reason so doesn't impact me ever
+07:25:25 <strcat> but if you do dynamically generate html through anything but pure DOM manipulation with 0 handling of it as text
+07:25:26 <JTL> Meanwhile "that guy" over there generates HTML without proper newlines, lack of balanced brackets, all from a buggy PHP library
+07:25:35 <JTL> "that guy" is just a metaphore
+07:25:42 <strcat> yeah basically EVERYTHING is like that
+07:25:50 <strcat> JTL: want to know how mediawiki parses
+07:26:15 <JTL> I mean some people claim mediawiki is well written, but what did they fuck up?
+07:26:17 <strcat> JTL: they have a fucked up as hell php parser that's ENORMOUS, extensible with a million addons bolted on, and all around terrifying
+07:26:20 <strcat> it's unspecified
+07:26:28 <TheJollyRoger> OH GOD.
+07:26:29 <JTL> JESUS
+07:26:29 <strcat> JTL: so do you know how you parse mediawiki
+07:26:34 <strcat> JTL: you run the php parser
+07:26:35 <TheJollyRoger> I was just looking at wikis X(
+07:26:36 <strcat> ok
+07:26:38 <strcat> now you run it again
+07:26:40 <strcat> and again
+07:26:42 <strcat> and again
+07:26:44 <JTL> You mean the template markup?
+07:26:48 <strcat> yes
+07:26:54 <strcat> it iteratively turns it into something resembling html
+07:27:00 <JTL> I knew there was something fishy about that
+07:27:01 <strcat> and then they run it through an html auto-fixing tool
+07:27:09 <strcat> tidyhtml or w/e it'
+07:27:13 <strcat> it's called
+07:27:28 <strcat> JTL: I once tried to deal with this shit as part of doing natural language processing training
+07:27:31 <JTL> `// FIXME: FIX HTML header tags later`
+07:27:37 <strcat> i.e. training an ML model
+07:27:41 <JTL> I thought this was going to be about your time at Arch for a sec
+07:27:42 <JTL> heh
+07:27:48 <strcat> JTL: it's impossible to parse mediawiki syntax
+07:27:49 <strcat> it cannot be done
+07:27:52 <strcat> even their parser does not do it
+07:28:01 <JTL> It just evals it and hopes for the best?
+07:28:05 <strcat> and they use a hundred or so extensions too
+07:28:11 <strcat> JTL: well it ITERATIVELY parses it sort of
+07:28:14 <JTL> Ah
+07:28:18 <strcat> it just sort of incrementally translates it to html
+07:28:22 <JTL> What are extensions in this context?
+07:28:25 <strcat> JTL: note you can embed html inside mediawiki syntax
+07:28:33 <strcat> so the way the parser works is gradually turning more and more of it into html
+07:28:41 <strcat> you choose how many iterations you want
+07:28:47 <strcat> and this limits people who use templates and extensions
+07:28:51 <strcat> because it limits how deep you can nest them
+07:29:01 <strcat> you can write recursive templates in standard mediawiki syntax with no extension
+07:29:08 <JTL> I was going to ask...
+07:29:10 <strcat> JTL: mediawiki basically supports 'addons' like a browser that extend the syntax
+07:29:23 <strcat> JTL: you can have recursive templates without any addons tho
+07:29:33 <JTL> Assumed as much, just seeing that we're on the same page
+07:29:34 <strcat> JTL: so it is impossible to parse this shit
+07:29:52 <strcat> JTL: the parser just makes it closer and closer to html each time you run it
+07:30:07 <strcat> JTL: in your final pass, it can error out about certain things it hasn't fully gotten rid of yet
+07:30:15 <JTL> Jesus
+07:30:16 <strcat> JTL: but if you do a few more passes maybe it's no problem
+07:30:18 <strcat> you can configure this
+07:30:24 <strcat> for your instance of it
+07:30:29 <JTL> As in number of passes?
+07:30:31 <strcat> JTL: and it doesn't really output valid html
+07:30:33 <strcat> JTL: yeah
+07:30:36 <JTL> What a joke
+07:30:43 <strcat> JTL: cause first of all people can put invalid html in the mediawiki syntax itself
+07:30:48 <strcat> like markdown (ugh)
+07:31:00 <strcat> anyway it's fucked up
+07:31:00 <JTL> Is this a markup language designed by a bunch of 10 year olds learning PHP from W3schools?
+07:31:03 <JTL> </snark>
+07:31:20 <strcat> JTL: https://www.mediawiki.org/wiki/Manual:Parser some of their own POSITIVE sounding docs
+07:31:26 <JTL> I just saw that
+07:31:38 <JTL> > The MediaWiki parser is not really a parser
+07:31:39 <JTL> Yeah no shit
+07:31:58 <strcat> > For some time, it was unclear whether the MediaWiki parser would continue to exist in the long term, or whether it would be deprecated in favour of Parsoid. Current thinking is that at least the preprocessor component of the MediaWiki parser will be retained. Parsoid lacks a complete preprocessor implementation, and relies on remote calls to MediaWiki to provide this functionality.
+07:32:17 <strcat> got to love a parser that makes REMOTE CALLS to an instance of your wiki to parse stuff
+07:32:23 <strcat> also it does not parse things the same way
+07:32:49 <strcat> JTL: markdown was a similar, but far, far smaller scale mess
+07:33:07 <strcat> JTL: GitHub, StackOverflow, Reddit, etc. got together and made a spec for markdown
+07:33:23 <JTL> I'm vaguely aware of the some of the past issues with regards to standardization of markdown
+07:33:50 <strcat> JTL: the original creator of markdown (if you can really call him that - all it did is very vaguely standardize existing practicing for syntax in plain text email, etc.)
+07:33:54 <strcat> JTL: he flipped out
+07:34:02 <strcat> JTL: that they made a formal grammar for it
+07:34:12 <strcat> and he made them rename it to commonmark from common markdown
+07:34:28 <JTL> ugh
+07:34:42 <strcat> JTL: https://blog.codinghorror.com/standard-markdown-is-now-common-markdown/
+07:34:59 <strcat> John then made three requests:
+07:35:01 <strcat> Rename the project.
+07:35:03 <strcat> Shut down the standardmarkdown.com domain, and don't redirect it.
+07:35:05 <strcat> Apologize.
+07:35:07 <strcat> JTL: this was post launch
+07:35:16 <strcat> and quite fucked up adoption of an actual formal grammar for it
+07:35:34 <JTL> Can't say I'm surprised
+07:36:12 <strcat> JTL: I think he got mad about 'common markdown' too
+07:36:17 <strcat> that's why it's commonmark now
+07:36:19 <strcat> JTL: https://twitter.com/i/status/508957733811265537
+07:36:40 <strcat> how is it easier for users to have no grammar and each tool having their own dialect and erroring on stuff that works with other markdown parsers
+07:36:43 <strcat> and handling it differently
+07:36:48 <strcat> markdown is totally fucked
+07:37:08 <JTL> I'm not happy about the differences in standards/parser implementations either
+07:37:15 <strcat> JTL: not to mention that the URL syntax in markdown is super irritating
+07:37:24 <strcat> because () are valid characters in URLs
+07:37:28 <JTL> Yup
+07:37:43 <strcat> proper syntax for URLs is <https://grapheneos.org/> because those can't occur in an RFC standard URL unescaped
+07:37:59 <JTL> right
+07:38:17 <strcat> in fact I think it even suggests to do that
+07:38:30 <strcat> but no they used [some text](https://grapheneos.org/)
+07:38:38 <JTL> In a similar vein, which also makes me laugh is the non standard "BBCode" of legacy forum software
+07:38:43 <JTL> (which is a dumpsterfire for other reasons)
+07:39:00 <strcat> and that's super irritating because the ) will be considered part of the URL unless the program hard-wires the hack of matching () around URLs or only considering balanced URLs
+07:39:14 <JTL> And when a community migrates forum software and it claims to support BBCode, but the formatting ends up broken, becuase it was never a documented standard
+07:39:30 <strcat> https://en.wikipedia.org/wiki/Pixel_(1st_generation)
+07:39:37 <strcat> urls do not have to have balanced parens like that tho obviously
+07:39:40 <strcat> and not all do
+07:39:56 <strcat> it's not hard to use <> around them in text
+07:40:01 <strcat> as the rfc recommends
+07:40:17 <strcat> JTL: that's also essentially the only syntax markdown added...
+07:40:31 <JTL> right
+07:40:36 <strcat> the rest like > for quotes, * or + for lists, 1. for ordered lists, indents for code blocks is pretty standard stuff
+07:40:52 <strcat> _also_ *these* things
+07:41:29 <strcat> **bold** *italic* ***bold_italic*** is their extrapolation but not really their own thing
+07:41:32 <strcat> JTL: btw
+07:41:38 <strcat> rst can't do bold and italic at the same time
+07:42:00 <JTL> Can't say I'm surprised
+07:42:15 <strcat> so if you have like **some bold warning with something *italic* in it**
+07:42:20 <strcat> that cannot be represented in rst
+07:42:57 <strcat> rst is better overall
+08:00:55 <TheJollyRoger> strcat, to retrieve the cts results and my notes, should I just put them on my cloud server and let you retrieve them via rsync?
+08:01:12 <strcat[m]> dunno
+08:03:42 <TheJollyRoger> Can you send me an ssh key to "strcat⊙jc" ? I can give you access to the box.
+08:08:26 <ilikegos[m]> Hi there! Been using GOS for some time now and I really like it. Does anybody know how to go online with the 3a and a LAN/Ethernet cable adaptor. Tried several things and had no success(just posted a rather long description  on the reddid GOS page). I have an USB C to Ethernet adaptor now and it is not working (should be the chipset that normally works with most pixel 3 phones ) so is it mayebe a software issue? I
+08:08:26 <ilikegos[m]> tried every single USB option in the settlings menu .
+08:19:58 <joshman[m]> Holly smokes. Edward, is that you?
+08:22:22 <rutxonboard[m]> bows he decided to use a phone
+08:23:09 <rutxonboard[m]> Is it weird that I trust strcat more then Snowden?
+08:24:04 <strcat[m]> ilikegos: unsure, I'd expect it to work
+08:24:34 <strcat[m]> ilikegos: is there any chance you have USB accessories fully disabled, or perhaps you connected it while the screen was locked (without booting with it plugged in)?
+08:30:45 <rutxonboard[m]> Snowden's recommendations seem a little inconsistent in theory
+08:32:32 <renlord[m]> He said if he had to use a phone.
+08:38:10 <rutxonboard[m]> Regarding services. I am not sure why Signal would be trusted as a US service to not keep metadata which is in his threat model
+08:41:34 <TheJollyRoger> rutxonboard[m]: I have a couple theories on why he uses Signal, actually.
+08:41:42 <TheJollyRoger> Let me just fix a few things here and I'll run over them with you.
+08:45:38 <TheJollyRoger> strcat[m]: the CTS test results shouldn't contain anything from my phone in particular, right...?
+08:45:46 <TheJollyRoger> Except for the serial number, etc..?
+08:46:01 <TheJollyRoger> But they won't contain anything like, say... personal information, or files from my phone...?
+08:46:13 <ilikegos[m]> @syrcat thanks for the answer. I had USB accesoiries enabled and just tried it again.
+08:47:06 <ilikegos[m]> In the USB preferences I cannot switch to USB controlled y this device , its always controlled by the connected
+08:47:46 <ilikegos[m]> Tried connecting it with and without the screen unlocked.
+08:48:48 <TheJollyRoger> strcat, can you try ssh'ing to "strcat⊙jc" and see if it lets you in?
+08:48:55 <TheJollyRoger> I used your public key from github.
+08:49:04 <strcat[m]> in a bit
+08:49:25 <TheJollyRoger> Okay thanks!
+08:50:33 <rutxonboard[m]> > rutxonboard: I have a couple theories on why he uses Signal, actually.
+08:50:33 <rutxonboard[m]> Sounds good
+08:54:43 <TheJollyRoger> rutxonboard[m]: I think the TLDR about why he uses Signal can best be summed up as that because it's probably done most of everything right and he's more concerned about actual security than ideology.
+08:55:33 <TheJollyRoger> This takes away a whole lot of the worry of his recipients or senders messing up.
+08:56:09 <TheJollyRoger> But the threat model of Signal is already "We don't trust the server so just encrypt everything including sender metadata."
+08:57:12 <TheJollyRoger> So unless Signal gets forced to break its own products, then the security of past communications don't really matter because the sender address is still encrypted via sealed sender.
+08:59:18 <TheJollyRoger> Even if Signal *was* to record all this metadata, it'd still end up being far less than any other service because sender still ends up being encrypted and the contact list isn't sent to the server.
+09:02:10 <rutxonboard[m]> > Even if Signal *was* to record all this metadata, it'd still end up being far less than any other service because sender still ends up being encrypted and the contact list isn't sent to the server.
+09:02:10 <rutxonboard[m]> I didn't know how advanced Signal's anti metadata measures went. I thought they just promised no logs. I'm mistaken thanks
+09:03:42 <TheJollyRoger> Yeah. Sealed Sender is a gamechanger.
+09:04:18 <TheJollyRoger> This kind of thing just isn't possible in a distributed/federated architecture, not without opening up a massive pandora's box for abuse.
+09:07:46 <rutxonboard[m]> > This kind of thing just isn't possible in a distributed/federated architecture, not without opening up a massive pandora's box for abuse.
+09:07:46 <rutxonboard[m]> I thought that was the appeal of Briar. If signal does that too that's great
+09:08:57 <TheJollyRoger> Briar takes the sledgehammer approach of just using Tor hidden services, so it's entirely reliant on the Tor network for its anonymity, sender authentication, and confidentiality properties.
+09:10:36 <TheJollyRoger> It works, but it's something of a sledgehammer approach and its sessioning isn't deniable like Signal's is.
+09:11:42 <rutxonboard[m]> Interesting. Very cool what they have been able to do. I love the service
+09:12:31 <TheJollyRoger> Indeed, it is! It's just unfortunately not something I'm able to use at this moment since I spend long periods of time with my phone switched off or disconnected, or I need to close the app to save battery power.
+09:12:37 <TheJollyRoger> So it's not quite practical for me.
+09:13:13 <TheJollyRoger> I do however, have a public-facing Signal number on my github that I give away freely with PGP-signed safety numbers.
+09:14:59 <TheJollyRoger> I also do have a very sophisticated GPG setup, but anyone who sends me a PGP-signed and encrypted Email I simply direct them to contact me via Signal, because too many people end up shooting themselves in the foot when using it.
+09:16:30 <rutxonboard[m]> Interesting, that's a good setup. I try to use my phone as a PC for security reasons
+09:16:50 <TheJollyRoger> Yarr, most secure approach!
+09:17:44 <TheJollyRoger> I observe a strict "No phones in the car" rule, so that's why I very often will have my phone switched off.
+09:18:26 <TheJollyRoger> Lost a friend to a vehicle accident during my formative years so I'm kinda paranoid.
+09:19:00 <rutxonboard[m]> I respect that. I'm sorry for your loss
+09:19:11 <TheJollyRoger> Heh, thanks :). All is alright though!
+09:19:29 <rutxonboard[m]> That is an oversight I have little respect for. People using phones in vehicles
+09:19:31 <TheJollyRoger> I don't mind if other people in my car use their phones, I just won't do it if I'm behind the wheel. Too tempting if my phone's on :P.
+09:19:34 <rutxonboard[m]> People*
+09:19:42 <TheJollyRoger> Yeah >_<.
+09:19:43 <rutxonboard[m]> Right
+09:20:00 <rutxonboard[m]> Driving and phones don't mix
+09:20:08 <TheJollyRoger> Aaargh... yeah.
+09:20:09 <rutxonboard[m]> Not in car mode or anything
+09:25:22 <cx2[m]> I deal with some pretty serious traffic at times.... couldnt agree more....If you want to get my blood boiling, text and drive.
+09:25:22 <cx2[m]> Not that I can do much about it other than be extra cautious. But it drives me up the wall.
+09:25:33 <TheJollyRoger> Yeah >_<.
+09:25:43 <TheJollyRoger> Sooo irresponsible!
+09:26:00 <cx2[m]> I TOO share a no phones policy.... I just stuff it in this neat bag... makes it pretty easy
+09:26:30 <TheJollyRoger> Nice!
+09:26:35 <cx2[m]> besides.... "Android-Auto"? Nice try assholes
+09:27:26 <rutxonboard[m]> It's a fine line
+09:27:39 <TheJollyRoger> Oh cripes X(. I've heard about that, like, make your phone pair with your car so you can play the music and then use Google Maps and voice commands and such. Bad business, I want to be looking at the road when I drive, not fiddling with gadgets!
+09:28:01 <rutxonboard[m]> Implement things to make people safer who take too high of risks? Or encourage people to use their phones when they normally wouldn't
+09:28:43 <cx2[m]> really good point... never thought of it that way
+09:28:51 <cx2[m]> probably the latter?
+09:29:00 <TheJollyRoger> Sheesh >_<.
+09:29:10 <cx2[m]> If someone doesn't give a fuck... they will probably continue not giving a fuck.
+09:29:33 <rutxonboard[m]> Maybe they will not give a fuck safer?
+09:30:02 <cx2[m]> All that is left is to get the rest of the herd on board.... and by marketing it as some form of "Safer Use"
+09:30:09 <renlord> how do i limit cts to running only arm64 stuff?
+09:30:20 <renlord> do we even care about running the arm32v7 cts modules?
+09:30:54 <TheJollyRoger> OH
+09:30:57 <TheJollyRoger> Uh.
+09:31:09 <TheJollyRoger> Renlord, could you send me your ssh public keys, please...?
+09:31:22 <rutxonboard[m]> > All that is left is to get the rest of the herd on board.... and by marketing it as some form of "Safer Use"
+09:31:22 <rutxonboard[m]> It's best to avoid such things. It depends on views of responsibility in this age however
+09:32:41 <renlord> TheJollyRoger: i pm-ed you on matrix.
+09:32:51 <TheJollyRoger> Whoop! Okay!
+09:34:44 <TheJollyRoger> Er... hum... wonder if Matrix is being a derp again.
+09:35:54 <TheJollyRoger> Might've gotten dropped.
+09:36:58 <renlord> do you still use TheJollyRoger[m]?
+09:37:34 <joshman[m]> Google maps work without GSM. A Honeypot? 🍯
+09:37:36 <TheJollyRoger> I er... It should be TheJollyRoger-M ?
+09:38:47 <kohntree[m]> I'm phone shopping. It's between the iPhone SE and the Pixel 3a(GrapheneOS). My question is regards app distribution. Is F-Droid safe? That's my only GrapheneOS concern the app store
+09:39:14 <kohntree[m]> Thanks to you in advance
+09:39:21 <cx2[m]> Get both. Dead serious
+09:39:52 <kohntree[m]> Could you explain?
+09:40:50 <TheJollyRoger> Hi kohntree[m], I have a bit of a tirade on F-Droid, give me a minute and I'll get back to you.
+09:41:03 <cx2[m]> The new iPhone SE seems pretty powerful, while being nearly the size of an iPod... It's also extremely affordable.
+09:41:03 <cx2[m]> And Graphene? Well, It's pretty great, and needs more flks like you
+09:42:20 <cx2[m]> While we wait for TheJollyRoger 's Tirade....
+09:42:30 <cx2[m]> Which I am waiting to hear as well...
+09:43:22 <cx2[m]> New iPhone SE in particular has a really small footprint. Pixel 3a also has a small footprint.
+09:43:41 <limitless0[m]> TheJollyRoger: so in theory if used a burner number for signal you could call it anonymous service as well as secure then
+09:43:46 <cx2[m]> SO, kohntree
+09:45:37 <TheJollyRoger> Okay, here we are...
+09:45:46 <TheJollyRoger> Sorry about that. Had to fix some stuff.
+09:46:17 <TheJollyRoger> limitless0[m]: Yes, you can use burner numbers for signal, VOIP numbers... they aren't picky about what numbers get used for the service.
+09:46:37 <rutxonboard[m]> grabs popcorn
+09:46:48 <cx2[m]> The short version of the *My* answer to your questions is this:
+09:46:48 <cx2[m]> iOS is realllllly secure..... and you'll likely hear the same from a lot of folks here. You dont' even need to sign up with an apple ID anymore. Further, there are a few services that I personally use that I believe contributes to privacy, that rely on iOS only.
+09:46:48 <cx2[m]> GOS? Daily driver, without a SIM. Hotspot / wifi only.
+09:47:24 <kohntree[m]> Yes
+09:47:39 <kohntree[m]> I use VoIP only right now. I can survive without cellular on iPhone or GrapheneOS
+09:47:53 <kohntree[m]> I do see large improvements from iOS lately
+09:48:23 <TheJollyRoger> cx2[m]: kohntree[m] : With respect to F-Droid, I should preface this rant by saying first off that while the situation with F-Droid is far from ideal, we also recognize that a lot of people will end up using it simply because it's there and there aren't always great alternatives to it. At this moment this is one of the reasons GrapheneOS has been described as being "not production ready;" it's
+09:48:25 <TheJollyRoger> a purely pragmatic choice because we don't have a curated app store with specially curated apps specifically for GrapheneOS
+09:48:50 <kohntree[m]> Store requires apple id, do you just sideload?
+09:49:07 <kohntree[m]> <TheJollyRoger "a purely pragmatic choice becaus"> Very understandable thanks, go on
+09:50:17 <TheJollyRoger> So with that in mind, let's go onto the subject "Is F-Droid Safe?" and my eternal cliche applies: I usually end up often giving the same retort for it, and that's "Do you consider it safe?" but I figure most people will want to know the shpiel on it. First up, one of the reasons why the GrapheneOS developers didn't include F-Droid built in with GrapheneOS and avoided the privileged extension is
+09:50:20 <TheJollyRoger> because F-Droid contains a large amount of legacy code in the application itself, some of which may be insecure. This is especially true for the F-Droid Privileged extension.
+09:51:50 <TheJollyRoger> Now... F-Droid itself also contains a VERY large number of apps that are no longer updated, or have been abandoned by their owners. Some of these apps are insecure and may present additional and unnecessary attack surface, or being years out of date, may target older versions of the Android API and are also liable to either break silently in odd ways that aren't readily apparent until they fail
+09:51:52 <TheJollyRoger> unexpectedly.
+09:54:16 <TheJollyRoger> Secondly, this is a tad bit controversial, but F-Droid also in some cases needs to act as a trusted third party for apps that don't have reproducible build harnesses and cannot be reproduced.
+09:54:41 <TheJollyRoger> And this is a double whammy.
+09:57:29 <TheJollyRoger> The Android security model assumes that the operating system cannot trust the app repository and that each app must be signed with its own certificate which is pinned for the lifetime of the app. Future installations and app upgrades MUST be signed with a certificate that matches the previous one, which in turn matches the previous one, which in turn matches the previous one all the way back to
+09:57:31 <TheJollyRoger> when the app was installed. This trust-on-first contact arrangement ensures that the application store doesn't end up being trusted with application signing after an app has been installed and this decentralized mode of signing is what Google Play uses to ensure that one application developer cannot push updates for another developer's apps, and Google Play services itself cannot push updates
+09:57:33 <TheJollyRoger> for an app that its developers chose to sign.
+09:58:38 <TheJollyRoger> Secondly, this also ensures that once a developer signs an app, no trusted middleman is needed to push the updates: they're already checked and can be updated immediately, so there's no package management downtream.
+10:00:05 <TheJollyRoger> F-Droid contravenes both these design goals because it uses a centralized signing model for applications that do not build reproducibly, and must do its own building in house and signs them with its own keys where it can't. Although F-Droid has claimed that they do their signing on an airgapped workstation, some various doubts have been raised around its security claims. I don't know at this
+10:00:08 <TheJollyRoger> moment.
+10:00:48 <kohntree[m]> I could download Signal from the play store and update it with the website no problem. Not with F-Droid
+10:01:07 <kohntree[m]> If I understand correctly
+10:01:09 <kohntree[m]> Do they warn if an app is not reproducible?
+10:01:17 <cx2[m]> TheJollyRoger: Regarding the privileged extension specifically, why not explicitely just state that for now, don't allow. We know that there aren't many options. So really the options are 1) Use only the stock apps... but alienate a huge potential userbase.... without which GOS would be even slower to grow. 2) FDroid / Aurora, etc.
+10:01:17 <cx2[m]> SO, my question would be, how difficult would it be to share a set of guidlines when reviewing an app... be it Git, the code itself etc., then snag a few folks and have them work on a side project - GOS App Repo - where they begin by going through the laundry list of apps on F-Droid, evaluate them based on the agreed upon criteria, then either add them to this new repo, or discard and caution against their use.
+10:01:56 <TheJollyRoger> Yep, you can and SHOULD download Signal via the official website APK. That's been signed by the Signal developers, it will self-update, and more importantly, this means that should F-Droid be compromised, they can't compromise your Signal installation.
+10:03:20 <TheJollyRoger> cx2[m]: The F-Droid privileged extension allows F-Droid to do unattended installs and would need to be incorporated into the operating system.GrapheneOS deliberately elects not to do this. The only side effects of this is that you'll get that confirmation of "Do you want to install" even after you've tapped install.
+10:03:23 <kohntree[m]> Basically if you use GrapheneOS stock and no third party repos you only have to trust the firmware, GrapheneOS, and F-Droid. The latter two which is one person each?
+10:03:33 <cx2[m]> TheJollyRoger: Care to explain why signal cautions against downloading directly?
+10:03:34 <TheJollyRoger> Since the Privileged extension is there to bypass the security policies of not allowing unattended installation.
+10:04:21 <TheJollyRoger> cx2[m]: Ok, it's going to require a bit of context as to why Signal cautions against downloading directly except as a last resort and calls it a harm reduction strategy...
+10:04:34 <TheJollyRoger> So give me a sec to cover this:
+10:06:14 <TheJollyRoger> The first one is, Moxie, Myself, and quite a number of others are of the opinion that when you have users downloading executables off the internet and just running them, you've essentially lost the battle for securing your users' device because that essentially normalizes that type of behaviour, when you really should be getting your apks from a curated repository that does allow for pushing
+10:06:17 <TheJollyRoger> updates without needing a trusted third party and are end to end verified.
+10:06:25 <TheJollyRoger> *securing your users' devices
+10:07:12 <TheJollyRoger> Aside: How many of us have added an apt-key on Debuntu? How many of you realize that adding an apt-key essentially gives the key holder the ability to push rogue updates to any software package -- including the kernel -- of your operating system?
+10:07:18 <cx2[m]> ....seems like a reasonable assessment
+10:08:03 <kohntree[m]> <TheJollyRoger "Aside: How many of us have added"> That's one thing I never do. I already don't trust Linux packages
+10:08:18 <TheJollyRoger> We've seen so many places encourage adding their own apt-keys rather than trying to get things upstreamed, that this behaviour's normalized now. To be fair, Debian dug this hole for themselves, and that's what's ended up with this situation.
+10:08:35 <TheJollyRoger> kohntree[m]: Yep!
+10:09:46 <TheJollyRoger> So when it comes to regular users... Signal is and always has been intended for the masses, and for those masses, keeping the "Disallow this app to install APKs" is probably the BIGGEST security measure that will benefit them.
+10:10:03 <TheJollyRoger> *to install APKs" setting set to "disallow"
+10:10:57 <TheJollyRoger> Most people aren't us. Most people don't deliberately seek out and obtain direct web-of-trust connections and secure backchannels to their respective developers, and for them, that's probably the best defense they've got.
+10:11:07 <cx2[m]> Makes sense in a way.... although it seems to be a bit of a stretch consider the promotion of downloading Signals APK a "slippery slope". In fact, simply adding a small educational blurb about it could potentially be helpful.... its an oportunity to bend someones ear that might not even put much thought into privacy to begin withl
+10:11:18 <TheJollyRoger> Yeah.
+10:11:50 <kohntree[m]> It seems F-Droid would need to be clearer what is reproducible and what's not. The user needs to be careful to only install recently updated apps
+10:11:53 <TheJollyRoger> I've actually become very grateful for it, because most of the people I communicate with are definitely not very tech-savvy, and it's chilling to think that most people end up getting socially engineered into compromising themselves by installing rogue apps.
+10:12:17 <cx2[m]> kohntree:
+10:13:04 <kohntree[m]> I'm not sure how concerned I should be. It seems the iPhone (or both) is the better fit. My concern is I live in the US. If privacy apps get pulled from the App Store I'm toast. GrapheneOS earn it doesn't seem like a serious concern
+10:15:29 <cx2[m]> kohntree:  Right... so to my earlier point, get a set of criteria for apps that are "safer-ish" and make it public. It would encourage more adoption because it's more upfront information that the average user (someone like me) can digest, understaind, and realise that this "alternate OS lifestyle" is pretty great actually.
+10:17:34 <rutxonboard[m]> GrapheneOS vs iOS with EARN IT becomes very tricky. First if the feds force Apple to backdoor they can force Google and Qualcomm firmware too. iOS can also sideload apps. At face value it is simple that GrapheneOS would be 10x better compared to iOS post EARN IT
+10:17:43 <rutxonboard[m]> It's not so clearcut
+10:19:06 * cx2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/OldPlQoVrSMuAeQSbNjecRTF >
+10:19:12 <kohntree[m]> <cx2[m] "kohntree:  Right... so to my ear"> I'm sorry, could you explain that in a different way?
+10:20:56 <kohntree[m]> That's a good point on Graphene having some EARN IT issues rutxonboard. I'm not sure I could counter that at all
+10:21:26 <kohntree[m]> That's a complicated setup. Wouldn't it be better to just only use Apple? You have double the attack surface with iOS and GOS
+10:23:45 <cx2[m]> Sorry.... In the initial stages, put a bit of effort into combing through FDroid and highlighting the apps that are "probably ok to be used" on GOS because of this set of criteria. In the same vein, a list of Apps that I would NOT use. I think it would be benificial in a number of ways.... one of them would be to clean up this channel a bit.
+10:25:37 <cx2[m]> Unfortunately, there are a few services that I require that are iOS only..... post EARN IT? In addition, iPod, iPad do not have GSM ... which is pretty big in my book.
+10:26:27 <cx2[m]> well, iPad optionally doesn't.... and I would optionally not but the "cellular" version
+10:27:45 <kohntree[m]> The EARN IT bill if passes would force American companies and companies doing business in the US to essentially do whatever the feds want for protecting kids. Signal already said they would leave the US and presumably the App Store
+10:29:10 <cx2[m]> I'll say this.... Signal / Wickr would be your friends in that scenario. And if it really started to come to light that the Fed was over stepping that horribly? I would simply have those two apps on a handset, and those two apps only
+10:29:36 <rutxonboard[m]> I'd recommend the new Huawei phone. It's pretty much zero American stuff and Android so you can sideload what you need
+10:29:36 <cx2[m]> well... i guess standard notes as well.
+10:29:49 <cx2[m]> They all encrypt data at rest
+10:30:31 <rutxonboard[m]> Only if EARN IT passes
+10:30:31 <cx2[m]> you can backdoor into the phone all you want.. at that point... would just be shitty for convenience.
+10:30:57 <kohntree[m]> <cx2[m] "I'll say this.... Signal / Wickr"> You mean sideload them with Xcode?
+10:31:48 <rutxonboard[m]> > you can backdoor into the phone all you want.. at that point... would just be shitty for convenience.
+10:31:48 <rutxonboard[m]> If the US forced Qualcomm under gag to backdoor firmware for Pixels so GrapheneOS was compromised they could grab anything they wanted
+10:31:53 <rutxonboard[m]> Unlikely
+10:32:11 <rutxonboard[m]> From my understanding
+10:32:31 <cx2[m]> if you're in the US, you're going to have make a drug deal to get a new Huawei phone. hahah
+10:32:31 <cx2[m]> kohntree not at all.... if Signal does indeed move overseas.... and I believe they would, I would just download the APK like normal
+10:33:03 <kohntree[m]> I mean if I get an iPhone am I screwed?
+10:33:42 <kohntree[m]> Since Signal and everything would be gone
+10:34:21 <cx2[m]> rutxonboard: True....they can grab my signal messages all they want.... but given that it's encrypted at rest, it won't provide them much of anything. NOT....
+10:34:21 <cx2[m]> Telegram, Viber, Whatsapp, etc..... THEY would a different story... not encrypted at rest, right along with plain ole' SMS
+10:35:32 <rutxonboard[m]> > rutxonboard: True....they can grab my signal messages all they want.... but given that it's encrypted at rest, it won't provide them much of anything. NOT....
+10:35:32 <rutxonboard[m]> > Telegram, Viber, Whatsapp, etc..... THEY would a different story... not encrypted at rest, right along with plain ole' SMS
+10:35:32 <rutxonboard[m]> Your encryption key is stored in memory
+10:36:46 <rutxonboard[m]> If the backdoor phones home that is. It could also modify Signal in memory
+10:37:27 <TheJollyRoger> Hmm.
+10:37:51 <TheJollyRoger> With respect to "what if" honestly, here's my thought on it: I don't buy for "what if in the future" Down that path lies insanity.
+10:38:11 <TheJollyRoger> I try to focus on here and now, because I have no crystal ball.
+10:38:56 <rutxonboard[m]> It's pretty realistic. The Senate and White House seem pretty heavily in favor. It's not like iPhone or GOS have a clear winner. I think it is a fair question
+10:39:27 <rutxonboard[m]> If one is better against EARN IT that's worth noting
+10:39:42 <rutxonboard[m]> I'm not sure one practically is
+10:40:05 <cx2[m]> Then it really comes down to is, you'd have to be REALLY fucked up for the FED to dedicate that time to specifically.
+10:40:05 <cx2[m]> And if i'm being completely open, even the USG is not in my threat model....that part is more for hobby. Its the googles, amazons, and microsofts of the world that make my skin crawl.
+10:40:05 <cx2[m]> yeah the USG has had some issues in the past . with data breaches, etc, but they at least are not actively selling off my information
+10:40:06 <TheJollyRoger> Yeah. That's the thing >_<.
+10:40:50 <rutxonboard[m]> That's true. I read too much 1984
+10:40:53 <TheJollyRoger> The Pixels do have Insider Access Protection, which does lend some help there,
+10:41:21 <TheJollyRoger> But Insider Access Protection is only designed for the contingency of "if the adversary confiscates the phone and wants an update to that specific phone."
+10:41:35 <kohntree[m]> <TheJollyRoger "The Pixels do have Insider Acces"> The what?
+10:42:12 <TheJollyRoger> kohntree[m]: Pixels starting with Generation 2 and later have Insider Access Protection, where the phone has a chip that will not allow the phone's firmware to be updated unless the user enters the pincode.
+10:42:19 <TheJollyRoger> This is to ward off a very specific scenario:
+10:43:28 <TheJollyRoger> If your phone is confiscated by an Extremely Determined Adversary, who then takes it to Google, and uses legal, or extralegal pressure to force Google or Qualcomm to roll out and sign a rogue firmware update which they will then load onto your phone that will break the phone, they can't do it without *also* knowing your password.
+10:44:03 <kohntree[m]> <TheJollyRoger "This is to ward off a very speci"> Wouldn't EARN IT then consider it best practice to have all phones have backdoored firmware shipped over OTA?
+10:44:25 <rutxonboard[m]> > If your phone is confiscated by an Extremely Determined Adversary, who then takes it to Google, and uses legal, or extralegal pressure to force Google or Qualcomm to roll out and sign a rogue firmware update which they will then load onto your phone that will break the phone, they can't do it without *also* knowing your password.
+10:44:25 <rutxonboard[m]> I take it Apple doesn't have this?
+10:44:52 <TheJollyRoger> You got a bit ahead of me there -- yes. If this update went into the wild and was pushed, then this is outside of the threat model of IAP.
+10:45:03 <hitchhooker[m]> what happent to openpush, did it ever got to point that you could use it replacing firebase push notifications?
+10:45:52 <TheJollyRoger> rutxonboard[m]: I don't think so. However, it's important to note that IAP has an important limitation in its threat model, and whether or not the DoJ would be willing to break everyone's devices all at once instead of making a targeted attack only against persons of interest remains to be seen.
+10:46:33 <TheJollyRoger> I have to pass out.
+10:46:39 <TheJollyRoger> I'll see you guys later.
+10:46:40 <kohntree[m]> <TheJollyRoger "You got a bit ahead of me there "> GrapheneOS also would be powerless. They would have to decide between security patches and fed backdoor
+10:46:48 <TheJollyRoger> It's really late >_<
+10:46:55 <kohntree[m]> Much like Apple
+10:47:00 <TheJollyRoger> Yep.
+10:47:01 <kohntree[m]> Thanks for the advice
+10:47:16 <kohntree[m]> Tough call really
+10:47:45 <TheJollyRoger> So... in the end, really, I would just have to ask you what your threat model would be. I'm sticking with GrapheneOS through and through because I like this project, I like my phone, and my friends and community are here. It's easier for me to trust people I know.
+10:48:14 <TheJollyRoger> But, that's just me :)
+10:48:54 <kohntree[m]> Right, I just want to keep advertisers and dragnet feds/hackers off my back
+10:49:02 <TheJollyRoger> So, this is why I'm going to say if you're unable to decide, just focus on your needs for here and now, and worry about that bridge for when it comes.
+10:49:13 <kohntree[m]> GrapheneOS is very cool, but I'm not sure I even understand enough of it
+10:49:23 <kohntree[m]> Thanks
+10:49:40 <kohntree[m]> Sleep well
+10:50:16 <TheJollyRoger> I used to start worrying about "What if I get a bad microcode update! What if I get attacked by ninjas!" but... while it did get me to consider a lot of things that I normally wouldn't have and that's very educational in the process... it didn't do me many favours when it came down to what I needed at the present time, and actually in a few cases I ended up getting so hyperfocused on the "what
+10:50:19 <TheJollyRoger> if" I forgot the "now."
+10:50:40 <TheJollyRoger> Thanks :). I'll see y'all tomorro--er, later today!
+10:51:54 <cx2[m]> there's a massive difference when comparing "adverts" vs "dragnet / feds" , and "hackers".....if you're threat model encompasses nation states, ESPECIALLY the single most powerful one regarding the ability to conduct these sorts of things.... then a phone in general is probably not for you.
+10:53:32 <Biv[m]> What do you guys think of this?
+10:53:41 <Biv[m]> https://tozny.com/
+10:54:54 <kohntree[m]> <cx2[m] "there's a massive difference whe"> Right I think I'll pick up an SE and look into getting a Pixel for funsies after
+10:55:16 <kohntree[m]> Thanks
+11:00:13 <cx2[m]> kohntree: Sure! I'd still consider both if I were you... GOS needs support.... even if the Pixel isn't you're daily driver.... load it with beta, and report bugs would be immense.
+11:02:31 <kohntree[m]> Yes, that's true. I love the idea
+11:02:47 <kohntree[m]> It all adds up though
+11:03:31 <Biv[m]> I mean your threat model could encompass big countries its just you want to increase difficulty
+11:03:50 <Biv[m]> Seven year old android or gos pixel
+11:04:09 <cx2[m]> yeah, it does... no doubt. Money on trees and such.... I'd check craigslist.... be willing to bet you could find a few pixels there that are dirt cheap.
+11:05:18 <rutxonboard[m]> Pixel 3a is still pretty expensive
+11:05:23 <rutxonboard[m]> It's a good phone
+11:06:56 <Biv[m]> pixel 2 is sub $100 if you go used
+11:06:58 <kohntree[m]> I'll keep an eye open. The idea behind countering government backdoors is mainly ideological. They aren't going to use my data against me
+11:07:10 <kohntree[m]> Pixel 2 is supported only to October though
+11:07:23 <Biv[m]> it can go longer
+11:07:28 <Biv[m]> that's just guaranteed
+11:07:50 * cx2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/figpketGdquLlAxaRsFTUPZH >
+11:08:45 <Biv[m]> I just want to make it as difficult as possible without sacrificing too much convenience
+11:08:58 <kohntree[m]> It's all ideological to me. I don't want to make it easy or even possible for them
+11:09:09 <kohntree[m]> The USG doesn't need more power
+11:09:39 <Biv[m]> I host my own services but that's more to keep my data from being harvested quite as easily
+11:10:41 <cx2[m]> I get it, i get it... promise... and like I said, if you have a real "threat model" I wouldn't tell the world. That was just more of one of those, "look at yourself and actually ask, 'have I really modeled my threat? or am I just randomly using the phrase 'threat model'...."
+11:11:33 <kohntree[m]> I threat model that my phone has to survive a nuke since my cooking recipes are that good
+11:11:34 <cx2[m]> with you there.... that's what boils my fucking blood.... having my data harvested...really REALLY gets me going and that's why I'm personally here...
+11:12:15 <kohntree[m]> I don't like browsing knowing I'm leaving fingerprints everywhere
+11:12:28 <kohntree[m]> It's all being harvested
+11:12:46 <cx2[m]> wear gloves
+11:12:55 <cx2[m]> ;)
+11:13:00 <kohntree[m]> Haha
+11:13:22 <kohntree[m]> My Bromite gloves
+11:14:13 <cx2[m]> there you go!
+11:14:13 <cx2[m]> Really, Tails... Tails is so great, just a bit inconvenient at times.
+11:14:13 <cx2[m]> Tails on a machine that only sees the internet when you're using Tails.
+11:15:33 <kohntree[m]> Tails is a security nightmare
+11:15:48 <kohntree[m]> That's my only concern
+11:16:12 * cx2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/HXEcqoQghMxrrALLgmmKujZw >
+11:16:58 <kohntree[m]> And use a PC smelted from beard hairs of RMS
+11:17:11 <cx2[m]> <kohntree[m] "Tails is a security nightmare"> see, you can't do that... I mean you can, but it simply doesn't add anything to the disucssion.....
+11:17:54 <joshman[m]> I don't see how tales is better than Debian
+11:18:08 <joshman[m]> It's not hardened Debian in any case
+11:18:23 <kohntree[m]> Debian and Firefox have serious issues
+11:18:30 <kohntree[m]> That's what I am going off of
+11:18:42 <kohntree[m]> I don't trust Tails compared to running Whonix for example
+11:19:26 <cx2[m]> I would say, if you're truly concerned: live operating system in general is better...... from there you can let the discussion rage on about Tails, vs Whonix, vs. whoever else.
+11:20:45 <kohntree[m]> Can't a root exploit just mount your main drive. Replace firmware all that?
+11:22:15 <cx2[m]> I would imagine that if you're the type that REALLY needs a live operating system, you're also probably the type that hasn't let your machine out of reach.... ever.... and if you did? you'd probably switch machines.
+11:23:58 <kohntree[m]> That's true
+11:27:32 <cx2[m]> once again... the amount of resources that would need to be dedicated to you would have to be pretty large... and for you to be conducting business in such a way that would necessitate the Fed to allocate those resouces to you: you are 1. Doing something wildly fucked up, 2. Are probably going to get nailed, almost no matter what.... unless you pull a snowden
+11:35:39 <site404> Getting 404 Not Found with https://attestation.app
+11:37:32 <nscnt> strcat: ^
+11:40:46 <cx2[m]> yup
+11:42:50 <cx2[m]> "successfully submitted one hour ago..."
+11:55:59 <site404> TheJollyRoger, how would you go about PGP-signing safety numbers for signal?
+12:00:42 <nscnt> site404: He said he would just go into an audio (+ video) chat and read out the safety number to the other person.
+12:07:09 <site404> that's not really an option for me. It's something I've been wanting to do, but lack a concrete idea of how to go about doing it
+12:12:22 <renlord> you just sign the safety numbers with a pgp key
+12:12:41 <renlord> and then you verify the safety number with the sender's pub key
+12:13:07 <renlord> so you know the safety number provided by TheJollyRoger is actually authentic
+12:14:18 <renlord> but how do you know where to get TheJollyRoger's public key reliably? and how do you actually know its actually TheJollyRoger's real public key?
+12:14:28 <renlord> rabbit hole.
+12:16:13 <site404> so that scheme is only workable if your contacts are willing to use PGP?
+12:16:29 <site404> that's.....yeah, out of reach
+12:20:28 <nscnt> site404: Which scheme? Verifiying the safety numbers?
+12:22:11 <nscnt> You get nothing by just using PGP. ~renlord explained its issues.
+12:24:06 <nscnt> I gave you one example how to solve it. Best thing is, of course, if you can meet them in real life. PGP is absolutely not the only thing to get this "scheme" working.
+12:29:03 <site404> Meeting physically isn't an option either. What about email without PGP?
+12:31:20 <strcat> nscnt: site404: the attestation.app issue is fixed, hadn't quite finished a change
+12:34:25 <strcat> guess I tested everything but the index page
+12:35:12 <nscnt> :]
+12:35:43 <site404> Going through the logs on https://freenode.logbot.info/grapheneos/20200418, there was a question about whether setting up attestation for profiles is redundant. I would love to know too
+12:36:22 <site404> queryc "rephrase: Should I just setup attestation in the owner profile? Are theere any benefits to setting it up on every user profile? Or is that completely redundant?"
+12:36:36 <strcat> site404: it's redundant in terms of monitoring device integrity
+12:36:56 <strcat> some of the settings it monitors once it has chained trust to the app are per-profile though
+12:37:22 <strcat> site404: I wouldn't bother with that
+12:37:27 <strcat> you can do manual local checks too
+12:38:20 <strcat> for what the service provides (automated scheduled checks) I don't think there's much point in enabling it on secondary user profiles
+12:40:52 <site404> I've read https://attestation.app/about but am still very confused
+12:41:57 <site404> What are the fields I should be paying close attention to, from the output of remote attestation?
+12:42:13 <strcat> site404: if it validates at all
+12:42:45 <strcat> 'Information provided by the verified OS' is supplementary information
+12:42:51 <strcat> that's why it's in a separate section
+12:42:54 <strcat> it's not the core functionality
+12:43:02 <strcat> the core functionality is the hardware-based attestation / verification
+12:43:27 <site404> incredibly retarded question....but how do I know if it validates successfully?
+12:43:38 <strcat> site404: the main things are if it passes verification (for the service, failed attestations are currently just discarded, since it can't currently attribute them to the device)
+12:43:53 <strcat> site404: for the service, it only shows successful attestations
+12:44:00 <strcat> if it didn't pass verification it can't attribute it to a device
+12:44:19 <strcat> it will warn you if it doesn't receive a successful attestation within the configured time period
+12:44:23 <strcat> if you set an email
+12:44:28 <cx2[m]> which is where the alert comes in, right?
+12:44:32 <strcat> yes
+12:44:42 <strcat> ideally it could attribute SOME failures to devices and I started writing the code for it
+12:45:00 <strcat> not finished and honestly not particularly useful since I don't imagine it will actually be able to attribute it to a device most of the time
+12:45:08 <site404> There are the "verified boot hash" and "verified boot key fingerprint" fields. Do these supposed to be comparted to something to check for matches?
+12:45:23 <strcat> you don't have to check those manually
+12:45:24 <site404> Are these supposed to be compared*
+12:45:28 <strcat> it enforces that the verified boot hash cannot change
+12:45:33 <strcat> if it changed, it wouldn't pass verification
+12:45:42 <strcat> site404: you don'
+12:45:50 <strcat> don't need to manually check any fields for the core functionality
+12:46:11 <strcat> advanced information section is not anything users would ever need to care about
+12:46:22 <site404> will the verified boot hash/verified boot key fingerprint ever change? Such as across updates?
+12:46:29 <strcat> it's just to show you the raw attestation data (certificate change)
+12:46:34 <strcat> the verified boot hash can never change
+12:46:44 <strcat> it's the hash of the verified boot key, it can't change
+12:47:00 <strcat> I mean the verified boot key hash, can never change
+12:47:03 <strcat> the one hidden in advanced
+12:47:55 <strcat[m]> site404: you don't need to compare any of this manually
+12:48:29 <strcat> site404: verified boot key fingerprint (hash) == hash of verified boot key (never changes)
+12:48:48 <strcat> site404: verified boot hash never changes for a given OS version, it's the hash of the entire OS basically
+12:49:11 <strcat> it's the hash of the vbmeta image which has hashes of the other images (or hashes of the dm-verity trees to verify them) so verified boot hash == hash of the OS basically
+12:49:55 <strcat> verified boot key fingerprint is hidden in advanced because that's not interesting - it's unique to OS + device combination, it's already showing you that implicitly above in human readable form
+12:50:09 <strcat> Device: Google Pixel 3 / Pixel 3 XL
+12:50:11 <strcat> OS: Stock
+12:50:16 <strcat> 61FDA12B32ED84214A9CF13D1AFFB7AA80BD8A268A861ED4BB7A15170F1AB00C
+12:50:25 <strcat> site404: that fingerprint will ALWAYS be that for that device + OS combo
+12:50:32 <strcat> Device: Google Pixel 3 XL
+12:50:34 <strcat> OS: GrapheneOS
+12:50:38 <strcat> Verified boot key fingerprint: 06DD526EE9B1CB92AA19D9835B68B4FF1A48A3AD31D813F27C9A7D6C271E9451
+12:50:44 <strcat> site404: same for that, etc.
+12:50:48 <strcat> that's why it's hidden in advanced
+12:51:23 <strcat> site404: look in show history
+12:51:47 <site404> Can I have the verified boot key fingerprint on a blueline device on grapheneos?
+12:52:00 <strcat> site404: there's no point of manually checking it
+12:52:12 <strcat> it's hard-wired in the Auditor / AttestationServer sources
+12:52:28 <strcat> it has a lookup table of devices per OS
+12:52:38 <strcat> and it figures out what OS / device it is based on the key
+12:52:46 <site404> ah, I'm getting it
+12:53:31 <strcat> site404: https://github.com/GrapheneOS/AttestationServer/blob/master/src/main/java/app/attestation/server/AttestationProtocol.java#L427
+12:53:38 <strcat> assuming it's using StrongBox which it does for all new pairings
+12:53:44 <site404> so if it doesn't match whatever value is defined in the lookup table, attestation will fail?
+12:54:14 <strcat> site404: yeah it will fail it's not a valid OS
+12:54:27 <strcat> site404: and once a device is paired it pins all this stuff
+12:54:29 <site404> When that happens, it won't show up on attestation.app?
+12:54:37 <site404> I'm roughly getting it, thanks!
+12:54:45 <strcat> site404: https://github.com/GrapheneOS/AttestationServer/blob/master/src/main/java/app/attestation/server/AttestationProtocol.java#L821
+12:55:02 <strcat> site404: if you've paired it, it is permanently on your attestation.app account unless you delete it
+12:55:09 <strcat> site404: you can see when it last verified
+12:55:16 <strcat> verified == success
+12:55:30 <strcat> site404: if you set an alert email it will email you if it fails to verify in the chosen time period
+12:55:32 <strcat> you can test this
+12:55:50 <strcat> site404: pair with attestation.app and then disable remote attestation on the device
+12:56:07 <strcat> site404: in 48hr or whatever is configured it will send you an alert email since it didn't send attestations
+12:56:38 <strcat> then delete the old entry and pair again (each time you pair from scratch it will be a new device there since it made a new hardware backed key)
+12:56:49 <site404> is failed attestations on a grapheneos device an accurate indicator of a compromise? Aside failing due to not having network connections, etc
+12:57:03 <site404> aside from failure*
+12:57:38 <strcat> if it actually *fails* it's probably compromised or seriously fucked in some way
+12:57:53 <strcat> site404: more likely your phone had a dead battery for 2 days
+12:57:56 <strcat> or no internet
+12:58:05 <strcat> so it couldn't send a successful attestation to the service
+12:58:19 <strcat> and the service can't know that
+12:59:15 <strcat> site404: the hardware-backed key in the HSM + the attestation / verified boot integration provides a strong assurance of device identity + OS integrity
+12:59:41 <strcat> site404: also in early boot before any persistent OS state is used, etc. it retrieves patch level / OS version from the OS
+12:59:57 <strcat> site404: so that information is hardware attested (that's why it's not in the OS provided info section)
+13:00:39 <strcat> site404: so important information == did it successfully validate (you can always just check using the local functionality too), and is the patch level right (is it actually receiving OS updates)
+13:01:04 <site404> got it
+13:01:16 <strcat> site404: and then from there, Auditor chains trust through the OS to itself via attestation (this can't be bypassed by using a fake Auditor app, etc. - the OS passes the signing key of the app to the keystore to put in the attestation info to chain trust to it)
+13:01:52 <strcat> site404: so unless an attacker compromised the OS deeply AFTER booting (since verified boot provides strong assurance nothing went wrong during boot, and is attested to), the app can perform meaningful checks
+13:01:59 <strcat> site404: that's the supplementary OS provided info section
+13:02:34 <strcat> site404: so Auditor can check settings or whatever else we feel like putting in it in a way that can't be faked without OS exploits - and since the hardware attests to the patch level, those OS exploits would need to work on the latest patch level
+13:03:33 <strcat> site404: the threat model for this is basically that Auditor assumes an attacker got root access at SOME POINT in the past via exploitation
+13:04:00 <strcat> site404: Auditor provides strong assurance that they did not use that to totally take over the device, and it tries to uncover signs of an attacker that has persisted somehow on the device with a high level of privileges
+13:04:04 <site404> another incredibly retarded question, what kind of attacks does the 'deny new USB peripherals' feature protect against?
+13:04:59 <strcat> site404: when you unlock a profile, it's largely decrypted, other than stuff encrypted by apps using the keystore and set to be at rest when locked
+13:05:22 <strcat> site404: so when the screen is locked, after that point, the deny USB peripheraps feature blocks attaching new USB devices
+13:05:32 <site404> "it tries to uncover signs of an attacker that has persisted somehow on the device with a high level of privileges
+13:05:35 <strcat> to substantially reduce physical attack surface and make it more difficult to exploit the device locally
+13:05:55 <strcat> Auditor is an app designed to detect past / current compromise of the device
+13:05:56 <site404> That's probably highly unlikely for most users, but would the only recourse be to get a new device if that happens?
+13:06:38 <strcat> site404: well that's probably the best option but you could also just factory reset if you trust that verified boot stopped them from doing more than persisting via OS state
+13:07:38 <strcat> the point of Auditor is supplementing verified boot by having a strong assurance way to get info on device identity, integrity/authenticity of the OS and the OS version / patch level
+13:08:05 <strcat> and also extending that with high security querying of OS state, with trust chained from that, so it can't be faked without an attacker exploiting the OS during the *current* boot
+13:08:31 <strcat> site404: if you reboot the device, the attacker's current control is gone - verified boot prevents them from modifying the firmware / OS
+13:08:40 <strcat> site404: so, lets say they persisted through some evil app they installed
+13:09:05 <strcat> site404: if they want root again they're going to have to exploit the OS again - and you have a hardware verified patch level to check, so exploiting the OS is a moving target to do this long term
+13:09:24 <strcat> site404: they can't just pretend an update went through, you have a hardware verified way to confirm the device is updated
+13:09:45 <strcat> site404: so, most likely what attackers will do, they won't try to keep exploiting the OS again on each boot
+13:10:08 <strcat> they'll just use their temporary root privs from exploiting a chain of vulnerabilities to install some evil app, granting it all the permissions, give it an accessibility service, w/e
+13:10:32 <strcat> site404: so next time you boot up, their peak access is gone, but they've persisted like that
+13:10:47 <strcat> that's why Auditor has the OS verified info - to find suspicious stuff
+13:11:16 <strcat> an accessibility service can HIDE itself in the UI on the device, but of course it can't hide from Auditor, only an attacker with kernel / root / system access can hide from Auditor, and that implies they exploited the OS *this boot*
+13:11:50 <strcat> site404: you know when devices have some security panel that shows you security status of various things - but if an attacker pwned the device they can fake all that shit
+13:11:58 <site404> Would periodic factory resets offer protection against the scenario outlined above?
+13:12:01 <strcat> site404: the point of Auditor is that it's an actually meaningful / useful take on that
+13:12:22 <strcat> site404: yeah if you do factory resets it wipes all OS persistent state
+13:12:37 <strcat> site404: so the only way an attacker could persist through that is bypassing verified boot with a verified boot exploit
+13:12:55 <strcat> highly unlikely they would do that since they don't normally need it, and it makes things much harder than just exploiting the OS
+13:14:47 <site404> There hasn't been a single public verified boot exploit for the Pixel 3 lineup, am I right?
+13:15:07 <site404> maybe not
+13:15:39 <site404> probably not
+13:30:28 <strcat> ideally we would have our own device
+13:30:41 <strcat> and we could regularly increment the firmware rollback index since we'd control the firmware keys and rollback index
+13:45:36 <nuttso[m]> strcat can read what I wrote u in private chat
+13:45:43 <nuttso[m]> Can u*
+14:28:22 <strcat> JTL: http://www.alohci.net/text/html/malformed.htm.ashx
+14:28:28 <strcat> JTL: http://www.alohci.net/application/xhtml+xml/malformed.htm.ashx
+14:28:32 <strcat> is an example of what that looks like
+14:28:54 <strcat> halts rendering after an error
+14:29:34 <strcat> but yeah xhtml doesn't exist anymore it's just the xml serialization of the html living standard
+14:33:33 <DannyWorkOrderPr> Hey strcat, can you briefly explain why it's a bad idea to remove the (what seems to a lay-ish person) to be a ridiculous amount of trusted certs that shows up not just in GrapheneOS/Vanadium, but most things?
+14:34:33 <strcat> because you will break things without realizing it and you cannot predict what will break
+14:34:41 <strcat> and it doesn't really make you any better off so why do it?
+14:35:05 <strcat> DannyWorkOrderPr: they aren't 'trusted certs' they are the top-level CAs considered valid
+14:36:09 <strcat> DannyWorkOrderPr: there are hundreds (thousands?) of CAs not included in that list because they are cross-signed by the top-level ones
+14:36:26 <strcat> for example, Let's Encrypt is currently not a top-level CA, it is cross-signed
+14:36:50 <strcat> they got a top-level root included in every major OS but haven't moved to actually serving the certificate chains using that yet
+14:39:27 <DannyWorkOrderPr> <strcat "and it doesn't really make you a"> This is the part I could use a quick "sanity check" on, haha
+14:40:05 <strcat> DannyWorkOrderPr: so you don't want to break Let's Encrypt, right? so you can't disallow the CA that cross-signed them and probably 100 other CAs so why are you bothering at all with this, doesn't accomplish anything
+14:40:16 <strcat> DannyWorkOrderPr: you do not want to silently break tons of things
+14:40:30 <strcat> there is nothing you can accomplish like this really
+14:40:47 <strcat> if you want to be secure from evil CAs, pinning is needed
+14:40:57 <strcat> what you are talking about is not really useful or viable
+14:42:13 <DannyWorkOrderPr> > so why are you bothering at all with this
+14:42:14 <DannyWorkOrderPr> Not something I was setting out to achieve, just saw the list while reviewing all settings in GrapheneOS, and wanted to clarify why these are considered trusted, that's all! 😊 Thanks, sir.
+14:42:29 <strcat> DannyWorkOrderPr: those are the standard top-level CAs
+14:42:33 <strcat> they can cross-sign other CAs
+14:42:43 <strcat> so there are probably like 2000+ CAs
+14:43:07 <strcat> apps are supposed to pin the keys they trust
+14:43:38 <strcat> Web PKI does not offer much assurance
+14:43:55 <strcat> DannyWorkOrderPr: do you understand how a CA like Let's Encrypt validates a cert in the first place?
+14:45:50 <strcat> DannyWorkOrderPr: for DV, CAs validate that someone controls the DNS for the domain (verifying DNSSEC recommended for CAA checking but not required), OR certain email accounts for the domain (no authentication / encryption required), OR an HTTP server on the domain (no authentication / encryption required)
+14:46:12 <strcat> DannyWorkOrderPr: it just establishes someone controls the domain from the perspective(s) of the CA including someone doing a MITM
+14:46:33 <strcat> DannyWorkOrderPr: so, why are you concerned which CAs are trusted? they aren't expected to do any strong validation anyway
+14:47:32 <strcat> DannyWorkOrderPr: if you are some employee of the ISP used by my server hosting and you can mess with some router on the way out, i.e. MITM, you can just pretend to have an HTTP server on my domain and get LE certs on my behalf
+14:47:45 <strcat> a state actor or ISP can alter routing with BGP and MITM anything anywhere
+14:48:54 <strcat> DannyWorkOrderPr: anyway there is no use in toggling those off you will just break who knows what for no reason and then wonder why things don't work
+14:51:13 <strcat> DannyWorkOrderPr: I don't like that browsers removed HPKP so there isn't even a TOFU model for authentication anymore
+14:51:44 <strcat> DannyWorkOrderPr: https://github.com/GrapheneOS/Auditor/blob/master/app/src/main/res/xml/network_security_config.xml is what apps can do, easy
+14:52:23 <strcat> can pin only your leaf keys if you want, or whitelist CAs
+14:52:24 <DannyWorkOrderPr> <strcat "Danny@WorkOrderPro: so, why are "> My question comes from a pure place of ignorance. My CertAuthority knowledge/experience is embarrassingly lacking.
+14:52:27 <strcat> per domain
+14:53:19 <DannyWorkOrderPr> Thanks for the breakdown, excellent summary.
+14:54:27 <strcat> grapheneos.org etc. still have HPKP but browsers don't implement it
+14:54:38 <strcat> browsers don't implement DANE so no point setting that up for HTTPS
+15:05:22 <strcat[m]> our mail server does DANE verification when sending mail and has DANE records but that's cause some mail servers actually use DANE
+15:05:38 <strcat[m]> just not a thing for HTTPS in practice, nothing checks it
+15:06:06 <strcat[m]> barely a thing for mail either, a lot of domains (not major providers) have DANE records we can check but nearly no one actually checks email DANE records
+15:06:19 <strcat[m]> people just set up the records for others to check but no one checks lol
+15:06:26 <strcat[m]> but yeah DANE is a thing for email, not HTTPS
+15:06:47 <strcat[m]> and by I think I mean it's possible to use it not that people do
+15:07:26 <strcat[m]> you trust your domain registrar + the TLD + the root with DNSSEC/DANE
+15:07:29 <strcat[m]> so still trusted parties
+15:07:51 <strcat[m]> HPKP is nice since it's just an independent trust-on-first-use model
+15:07:53 <strcat[m]> but browsers deprecated it and it's now removed
+15:08:08 <strcat[m]> was nice while it lasted
+15:10:47 <strcat[m]> apps can still do https://github.com/GrapheneOS/Auditor/blob/master/app/src/main/res/xml/network_security_config.xml and it's nicer since an update can fix it
+15:40:19 <esdrus[m]> Hello, having trouble with USB file transfer on latest public beta (QQ2A.200405.005) on a Pixel 2 . Options are greyed out in USB preferences window. I've tried multiple data cables , restarting phone and host device (thinkpad), physically clearing debris and cleaning contacts under microscope from usb port on the phone . Any ideas?
+16:00:21 <esdrus[m]> I'm also not getting ' charging over USB' notification . Though the phone is charging successfully
+16:13:06 <DannyWorkOrderPr> Have you tried another PC? Another USB port on current PC?
+16:30:40 <esdrus[m]> <DannyWorkOrderPr "Have you tried another PC? Anoth"> Hmm, I went to my neighbors and it worked on their laptop (win 10) .,the problem must be with my manjaro Linux laptop
+16:38:56 <DannyWorkOrderPr> Check BIOS settings, and other security features. Depending on where you got the Thinkpad, port could either be disabled, or destroyed.
+16:53:36 <cx2[m]> well... they kicked me... haha
+17:21:54 <joshman[m]> https://blog.xot.nl/2020/04/19/google-apple-contact-tracing-gact-a-wolf-in-sheeps-clothes/
+17:22:33 <joshman[m]> Good read regarding GACT. Seems like HW Switches will be a thing in 2021
+17:30:57 <joshman[m]> According to this Custom mobile OS devices will stand out from the crowd like beacons in the middle of the sea
+17:44:13 <JTL> 07:28 <@strcat> is an example of what that looks like
+17:44:15 <JTL> 07:28 <@strcat> halts rendering after an error
+17:44:17 <JTL> Yeah I know
+18:04:37 <gm1k[m]> <esdrus[m] "Hmm, I went to my neighbors and "> Hey buddy, check the installed drivers. I had a similar issue and Windows had installed ADB drivers, but it should be this driver: https://developer.android.com/studio/run/win-usb
+18:28:18 <Cruft> Anyone having trouble switching between camera and gallery sometimes as well as rotation edit flaws?
+18:35:42 <TheJollyRoger> Hi Cruft, are you having trouble switching between front and rear cameras? I am as well, I think there's an upstream driver bug that's been causing it.
+18:35:53 <TheJollyRoger> *On  some platforms
+18:36:25 <Cruft> No. If I take a picture, and use the in device gallery to switch back and forth between old pictures, it flashes both pics together over and over
+18:36:47 <TheJollyRoger> Oh. Let me give that a shot.
+18:36:50 <Cruft> Or, If I edit then rotate and then crop before saving
+18:37:04 <Cruft> it clips horizontally
+18:37:16 <TheJollyRoger> Are you using the built in gallery app?
+18:37:19 <Cruft> yup
+18:37:39 <TheJollyRoger> Let me give that a try...
+18:37:52 <Cruft> I can try to duplicate the exact steps again hold up
+18:38:49 <Cruft> Ok here we go: Take a picture(back camera). Click the circle to go to view in gallery. Scroll to the next pick then back to the first can click screen.
+18:39:48 <TheJollyRoger> Sure, I'll give that a shot...
+18:41:44 <Cruft> Also in the latest version the pre edit button (menu rotate in gallery) doesn't seem to work at all
+18:42:13 <Cruft> From the single selection view, not outward and highlight view
+18:42:45 <TheJollyRoger> Hmm. I can't seem to reproduce this error. But if I recall correctly, the gallery app is a tad bit old and it needs to be replaced soon, just a matter of whan. I've had some luck with OpenCamera and Simple Gallery, though.
+18:46:03 <Cruft> I would use those if I could disable them in such a way where it doesn't get installed to the user at all, sort of like NoExtract in pacman or dpkg --path-exclude for apt
+18:46:23 <Cruft> But since i'm already paying the space price i just dealwithit.jpg
+19:39:53 <flabbergasted> https://isbgpsafeyet.com/
+19:40:02 <flabbergasted> my vpn host failed, my isp passed
+20:07:38 <cx2[m]> <TheJollyRoger "Hmm. I can't seem to reproduce t"> Open Cam / Simple Gallery are a pretty great combo... I will say had sort of a funny glitch with Open Camera. When using a flash, for some reason the flash itself and the shutter werent synced up. So the flash would go, then the shutter.... comeplete black photograh. hahaha
+20:07:44 <cx2[m]> seems to have worked it self out though
+20:09:14 <Cruft> Open camera needs better UI and defaults
+20:09:28 <Cruft> Simple Camera will probably get to the sweet spot first
+20:10:17 <Cruft> right now its emacs but it needs to be sublime or vscode, not intelli-J or eclipse
+20:23:59 <cx2[m]> TheJollyRoger: Another encryption question along the same lines from yesterday.... I think I vaguely understood what you were saying. Given that:
+20:23:59 <cx2[m]> If I am using a cloud provider, But that cloud provider offers client side encryption, and I then place a veracrypt volume into that folder, given that it's being encrypted prior to ever making it to the cloud should mitigate traffic analysis.
+20:24:03 <cx2[m]> Or do I need to go back to the drawing board.
+20:44:07 <TheJollyRoger> If that cloud provider offers clientside encryption, such as tarsnap, then putting a veracrypt volume into it is not necessary.
+20:48:35 <cx2[m]> Whoa whoa whoa.... no one said anything about necessity...🤓
+20:49:04 <TheJollyRoger> Could you explain your use case to me?
+20:49:38 <TheJollyRoger> (I'm trying to avoid the XY problem since I'm not sure what you're asking)
+20:50:26 <TheJollyRoger> Are you just trying to keep a copy of a veracrypt volume backed up, in case say, you lose your USB drive at a later date?
+20:51:18 <cx2[m]> I guess I don't really have one. Although I do keep multiple small-ish volumes on my machine, so i could see simply dragging and dropping / replacing on a regular basis
+20:52:31 <cx2[m]> As far as usb goes... would be kind of neat to create a hidden volume to backup GOS to....
+20:57:18 <TheJollyRoger> cx2, I have an article for you...
+20:58:50 <TheJollyRoger> https://sockpuppet.org/blog/2014/04/30/you-dont-want-xts <- this is a slightly more in depth discussion about XTS.
+21:00:31 <cx2[m]> Thanks!
+21:01:24 <TheJollyRoger> The TLDR is: use age (which wasn't around when this article was written) if you want to put your files on a cloud server. Use Veracrypt if you are worried about your hard drive/usb thumb drive being stolen.
+21:01:38 <TheJollyRoger> They're different tools, for different threat vectors.
+21:03:51 <Cruft> He's removing a variable in trusting the cloud provider at all
+21:04:00 <Cruft> by defining the variable client side
+21:04:37 <Cruft> This isn't odd at all and is done with cloud backup services all the time in industry
+21:04:46 <TheJollyRoger> Cruft: If your client is doing the encryption, it should be using a different mode of functioning besides XTS.
+21:04:54 <TheJollyRoger> It should be using an AEAD mode.
+21:04:54 <Cruft> True
+21:05:05 <Cruft> Correct
+21:05:19 <TheJollyRoger> This is why I am extremely clear on "Don't put veracrypt volumes on your nextcloud. Use AGE"
+21:12:33 <TheJollyRoger> To analogize, I would be very upset if I ever saw someone use my good-quality, hand-sharpened wood-carving chisels for prying out a nail instead of using a clawhammer. Programs I often hold in the same regard.
+21:14:22 <Cruft> I think in this case his point is more like Johnny Depp in Pirate of the Caribbean; "[...] But you have heard of me?"
+21:15:01 <Cruft> "If it works it ain't stupid", Even when it is.
+21:15:43 <miniblue[m]> If it works it's stupid by definition
+21:16:12 <TheJollyRoger> You can use a claw hammer for sheetmetal work instead of a ball peen hammer and it will likely work. Doesn't mean it's the right thing to do - at least when the head chips.
+21:16:49 <TheJollyRoger> You shouldn't be backing up XTS volumes anyways, but instead backing up the contents on them encrypted with a mode of functioning appropriate to your use case.
+21:33:41 <miniblue[m]> Are the Simple series of apps actually relatively trustworthy? Been trying to find a decent calendar and already use their gallery.
+21:34:09 <miniblue[m]> Along with Open Camera
+21:36:41 <cx2[m]> They seem pretty good.... I prefer Etar....offers a bit more functionality, but Simple Calender has a widget which is nice. File manager is good with support for fingerprint/password protect. You can change the color scheme as well from that horrible orange color haha
+21:37:37 <cx2[m]> as for wether they are trust worthy? just dont' give them access to anything they don't need access too. I can attest to them myself.... but I certainly haven't heard anyone screaming to high heaven about them either.... and they have been around for quite some time.
+22:06:22 <cx2[m]> does anyone have both the 3a and 3.... and are there noticable differences between the two? For what it is, I DO like the 3a.... so much that I have a few of them just for GOS.... BUT if this is going to be my daily, I'm naturally going to spring for the one with the best performance if able.
+22:10:50 <mrxx_0[m]> cx2 I have a 2Xl and 3A XL and the major diffrenec is speed. The 2XL is faster than my 3A, so this difference will be more present by comparing 3/3a
+22:10:58 * mrxx_0[m] uploaded an image: Screenshot_20200420-000822.png (99KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/QUvyefJcceFckZJtPaLDBIgi >
+22:11:08 <mrxx_0[m]> My GOS homscreen setup !
+22:12:23 <cx2[m]> sick...and all that real-estate
+22:13:13 <mrxx_0[m]> <cx2[m] "sick...and all that real-estate"> Not sure that I understand
+22:14:19 <cx2[m]> you have a lot of room on that screen
+22:16:05 <TheJollyRoger> Hi cx2[m], I don't have a 3a, but I do have the 3 and I've seen the 3a. From what I understand, the 3 has a slightly brighter screen, and a better camera, and it's also a little heavier because the body of the 3 is made of glass but the 3a is made of polycarb.
+22:17:33 <cx2[m]> T
+22:17:36 <cx2[m]> h
+22:17:38 <cx2[m]> at
+22:17:40 <cx2[m]> '
+22:17:43 <cx2[m]> s
+22:17:45 <cx2[m]>  
+22:17:48 <cx2[m]> o
+22:17:50 <cx2[m]> n
+22:17:52 <cx2[m]> e
+22:17:55 <cx2[m]> d
+22:21:21 <Zenithium[m]> <TheJollyRoger "Hi cx2, I don't have a 3a, but I"> Is the 3 water resistant? GSMArena says it's IP68 but I saw someone in chat say it's not true lol
+22:21:44 <TheJollyRoger> Zenithium[m]: yes it's water resistant but I've had a bad experience with its "water resistance" because of the USB slot.
+22:22:19 <Zenithium[m]> :/
+22:22:34 <TheJollyRoger> The problem seems to be that the water ends up damaging the chip in the USB slot and then that kills it, or it corrodes the little wire contacts in the slot.
+22:22:45 <TheJollyRoger> This problem is not covered by warranty.
+22:22:47 <cx2[m]> <cx2[m] "h"> Soooo my computer decided to eat itself....sorry about that.
+22:26:17 <TheJollyRoger> heh. All okay there?
+22:26:47 <Zenithium[m]> <cx2[m] "Soooo my computer decided to eat"> Can relate
+22:27:36 <Zenithium[m]> Yesterday pamac bugged out and went into some loop where it was perpetually downloading packages until my / partition was full and my PC froze after swap and RAM got full
+22:27:49 <Zenithium[m]> That was fun
+22:27:53 <Zenithium[m]> not
+22:27:55 <JTL> apt-get eat-computer --force
+22:28:06 <TheJollyRoger> XD
+22:31:18 <cx2[m]> I think we recovered.....I don't know what bugged out....but zsh was certainly not having it. Blame you @TheJollyRoger ....was in the middle of  rage download....seems fitting. Haha
+22:31:28 <JTL> lol
+22:31:31 <TheJollyRoger> XD
+22:31:57 <TheJollyRoger> I need to get rage to build on ppc64le. No luck so far yet.
+22:34:05 <cx2[m]> Could also be that I'm using zsh....unlike most of you dorks who are probably on some home build fork of freeBSD or something
+22:34:34 <cx2[m]> Juuuuussssst kidding. But seriously. I'm learning mountains
+22:35:56 <TheJollyRoger> Hehehe X3.
+22:36:14 <TheJollyRoger> Naw, if anything, I want to avoid homebuilding as much as possible.
+22:37:35 <TheJollyRoger> Since I don't know what I don't know, and in many cases I'd be better off simply trusting people who know what I don't know, and know what I don't know I don't know, ya know? :)
+22:38:21 <cx2[m]>    you stole my motto
+22:39:34 <cx2[m]> speaking of which.... OK Joplin vs Standard Notes.... Open to other suggestions but first...
+22:47:33 * cx2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/nZLGwMoYbgKsNiiUTXdvuJFA >
+22:48:03 * cx2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/aRejwzlLSXDbKkebdkdXjLNl >
+22:49:45 <cx2[m]> And yeah I know this is a graphene channel.... but no one is talking about it and you all seem like relatively trustworthy individuals.... so I figured I would ask... what's the worst that could happen? Already been banned by MilkMan today 😁 🤣
+22:59:33 <Zenithium[m]> I don't think encrypting and decrypting it would break it unless the thing you're doing it with is janky but you could try with a new file just to be safe
+23:02:07 <cx2[m]> Yeahhh.... I just had a thought though.... first I think that method is a bit far fetched. Those documents are already encrypted.... its just a matter of keeping Joplin from seeing them. Sort of a backwards app lock. But the bigger issue is that once Joplin is happy, you don't fuck with it.... If I were to make a modification to a markdown file on my phone.... and it tries to sync... it's going to be all sorts of fucked up
+23:02:07 <cx2[m]> I think.
+23:03:46 <cx2[m]> Yeah the app in terminal cant decrypt the folder and in turn explose the conetents, but when I manually do it, then the app tries to sync, I feel like it would open the flood gates for all sorts of corruption.
+23:03:46 <cx2[m]> App Lock on macOS... there has to be something or a way that isn't shady, right?
+23:18:21 <TheJollyRoger> heh. I actually was thinking sometime I'd want to start a GrapheneOS-OffTopic channel if things get a bit too noisy. I'm going to park a name but I don't think it'll be necessary unless things get really loud in here.
+23:21:31 <Zenithium[m]> Well the room has tripled in size since I was last active lol
+23:21:55 <TheJollyRoger> A bit :). That said, I still like to have some amount of offtopic-ness in here, for community building!
+23:22:13 <Zenithium[m]> Yeah, I feel the same way
+23:22:44 <Zenithium[m]> This room is more like a community built upon GrapheneOS but not exclusively about it
+23:23:38 <TheJollyRoger> Yarr ^_^.
+23:25:03 <Zenithium[m]> Though I imagine when Daniel's trying to get work done, having to scroll through chat and filter through multiple conversations happening at the same time it might be troublesome
+23:25:31 <TheJollyRoger> Got it. OK I'll park a name.
+23:26:09 <TheJollyRoger> But I'm going to put it in +s so people can't end up there by accident.
+23:28:10 <strcat> it sucks that matrix kicks people that are idle though
+23:29:59 <TheJollyRoger> Ahoy captain!
+23:31:22 <TheJollyRoger> I added your ssh public keys to my server at jollyrogers.ca and I left my CTS results and notes in /home/common/ . Renlord put them into a .tar.gz file for easier downloading.
+23:32:09 <TheJollyRoger> so I think strcat⊙jc:/home/common/cts.tar.gz should be where they're at. Let me know if you have any trouble, since I've been fighting with this dumb server for the better part of the afternoon.
+23:32:24 <Zenithium[m]> Trusty shipmate arr ye
+23:32:35 <TheJollyRoger> I hope I done well! :D
+23:38:07 <TheJollyRoger> I'm going to have to get something besides Deadbian on that thing >_<.

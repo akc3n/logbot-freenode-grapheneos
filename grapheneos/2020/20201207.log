@@ -1,0 +1,1176 @@
+00:01:58 <dwkr[m]> Let us know when you make it to the other side!
+00:41:19 <brenneke[m]> <treesa24[m] "no because it just infinitely sa"> Don't think you need to use adb at all to install.
+01:03:28 <brenneke[m]> Just use hardware keys to enter bootloader mode.
+01:13:53 <TheJollyRoger> treesa24[m]: if you don't use Powershell, the script will hit an error, stop, and exit. Both Techlore's videos for installing GrapheneOS are somewhat dated at this point, and one of them advises erasing the safety check which prevents an incorrect or obsolete version of fastboot from softbricking the device.
+01:14:28 <TheJollyRoger> So be sure to follow only the official instructions on GrapheneOS.org.
+01:57:43 <naribia> what is BUILD_ID supposed to be in the "vendor/android-prepare-vendor/execute-all.sh -d DEVICE -b BUILD_ID -o vendor/android-prepare-vendor" step in the build process ?
+02:24:25 <naribia> nevermind, i figured it out
+02:24:36 <naribia> its the build ID for the google factory image
+03:40:05 <sine> New here. (very new, apologies in advance) Nice to meet you all.  Whats the best w
+03:40:26 <somenerd[m]> ?
+03:40:56 <sine> ..ay to update to Android 11 on an unlocked pix3 w/o a connected Google account?
+03:41:15 <joehandcockandja> the best work of art? Lots of people like starry night by van gogh
+03:41:30 <somenerd[m]> > ..ay to update to Android 11 on an unlocked pix3 w/o a connected Google account?
+03:41:30 <somenerd[m]> unlocked bootloader?
+03:41:37 <somenerd[m]> nvm
+03:41:40 <somenerd[m]> normally
+03:41:40 <TheJollyRoger> sine: download the OTA update from Google and sideload it.
+03:41:51 <TheJollyRoger> You can do this over a VPN or even Tor if you prefer.
+03:42:00 <TheJollyRoger> You will not need to unlock the bootloader to do it, even.
+03:42:07 <sine> Mmmm, i like the ear portrait best, but Starry Night is good
+03:42:12 <TheJollyRoger> (in fact, leave the bootloader locked while you sideload the update.)
+03:42:30 <sine> OK, thanks Jolly.
+03:42:40 <TheJollyRoger> Anytime!
+03:42:50 <TheJollyRoger> If you need help, some people here, myself included have done it.
+03:43:05 <TheJollyRoger> There is *zero* risk of bricking, because you're not unlocking the bootloader, you're just updating the phone offline.
+03:44:12 <TheJollyRoger> When the bootloader is locked the phone will automatically verify the authenticity of the incoming OTA update on the device itself, and only if it's authentic, will it accept them. The keys are permanently set (by blowing e-fuses) into the chip at the factory.
+03:44:22 <TheJollyRoger> So you don't have to worry about a GPG signature or anything.
+03:52:52 <sine> Done and done, thanks again man!  I'm doing a step by step GraphOS install rn (I've read the official install guide but am using Techlore
+03:53:27 <sine> 's video as it seems to hit the main points well.
+03:53:41 <somenerd[m]> The Techlore video isn't that preferred
+03:53:55 <TheJollyRoger> Aaaargh... be careful, don't be using a third party version of fastboot or delete the safety check.
+03:54:08 <TheJollyRoger> Because doing those two things together /can/ end you up with a softbricked device.
+03:54:42 <sine> Both of you are exactly why I'm here! Thank you!
+03:57:20 <TheJollyRoger> Arr, anytime!
+03:59:45 <sine> Techlore skips over verifying signature of the ROM. ThatinstaIling ADB and Fastboot a can take a look at GraphOS's install guide, but does anyone know offhand of reliable ur
+04:00:28 <sine> sorry...not used to carriage return posting my messages.   As I was asking...
+04:00:55 <strcat> strongly recommend against using that video
+04:01:03 <TheJollyRoger> Hi sine; for getting adb and fastboot you're going to want to get adb and fastboot the way we do it.
+04:01:16 <strcat> adb is not used by the official installation process
+04:01:29 <TheJollyRoger> Er, platform-tools, sorry.
+04:01:34 <strcat> sine: use the official install guide
+04:02:31 <TheJollyRoger> Techlore's guide will likely end you up with a non-install, a difficult time cleaning up a third party fastboot, and likely, if you do go through with it, you'll probably softbrick.
+04:02:38 <sine> Thanks for that info strcat.  BTW, is there a consensus among this channel about Techlore's reliability, information, etc?
+04:03:13 <TheJollyRoger> The consensus in this channel on those installation videos is,
+04:03:16 <TheJollyRoger> if you want a brick, follow them.
+04:03:22 <TheJollyRoger> *want a softbrick,
+04:03:27 <strcat[m]> it's not a proper install guide and shouldn't be used
+04:03:34 <TheJollyRoger> ie: "why is my phone booting and fastboot saying "no operating system found?"
+04:03:39 <strcat[m]> it's not a video version of the official instructions
+04:04:07 <strcat[m]> we only support using the official install guide
+04:04:27 <TheJollyRoger> sine: I cannot understate this enough, only follow that guide if you want to know what fastboot displays for a corrupted/unbootable OS.
+04:05:06 <somenerd[m]> > Thanks for that info strcat.  BTW, is there a consensus among this channel about Techlore's reliability, information, etc?
+04:05:06 <somenerd[m]> heavily unreliable when it comes to GrapheneOS
+04:05:27 <sine> Quoting the TheJollyRoger: "Hi sine; for getting adb and fastboot you're going to want to get adb and fastboot the way we do it."  How do you do it? ...ah, I see, I think you mean: "READ THE MANUAL" ;-)
+04:06:42 <TheJollyRoger> sine: phrased slightly more diplomatically! Yes, you'll want to follow the instructions on obtaining platform tools for your operating system as they are for the official latest release, direct from Google; they offer a precompiled, self-contained version of Platform tools that needs no installation, and is simply run from wherever you extract the director yto.
+04:07:10 <TheJollyRoger> On the official project website: https://grapheneos.org/install
+04:07:13 <sine> somenerd: I'm getting that impression. Care to chime in about his philosophy/information overall? Or should I keep the conversation relegated to GrapheneOS?
+04:07:32 <TheJollyRoger> Yes, please keep the conversation here topical to GrapheneOS.
+04:07:38 <somenerd[m]> there's an offtopic channel for things other that grapheneos
+04:07:44 <somenerd[m]> #grapheneos-offtopic:matrix.org
+04:09:40 <sine> TheJollyRoger is TRULY jolly! I saw that offtopic channel, thanks somenerd. And to all, thanks for putting up with a beginner here. I'll do my best to pay it forward once I get a handle on things.
+04:09:47 <somenerd[m]>  * there's an offtopic channel for things other than grapheneos
+04:09:53 <somenerd[m]>  * There's an offtopic channel for things other than grapheneos
+04:10:17 <TheJollyRoger> Yarr, glad to hear sine! Welcome aboard the ship!
+04:10:19 <somenerd[m]> Welcome.
+04:11:07 <sine> Thanks guys, I really appreciate you keeping me from creating a nice soft brick for my desk this evening!
+04:11:56 <TheJollyRoger> Yarr-harr! I think indeed everyone prefers not to have a corrupted OS! :D
+04:15:17 <sine> 11 is almost downloaded so while I have a few moments more 2 general questions for the channel: What was your motivating factor for installing gOS and How has it most impacted your phone usage?
+04:16:13 <sine> The answers may seem obvious to many but I'm wondering if there are outlier answers that could inspirational.
+04:19:17 <TheJollyRoger> For me, I use GrapheneOS for personal reasons; I consider the lead developer to be a good friend and he does high-quality, good work.
+04:21:32 <TheJollyRoger> There are other reasons I do, but that's probably the biggest one.
+04:28:26 <sine> Personal reasons: I think that's what's it's all about. Thanks Jolly. I think I remember seeing talk of a guy named Daniel who's been leading the develop. Very cool.  (And is likely why anyon
+04:29:33 <somenerd[m]> yeah strcat's the lead dev of the project
+04:31:15 <sine> OK, thanks for all your word on this strcat!
+04:35:02 <TheJollyRoger> Arr
+04:44:12 <somenerd[m]> you might want to join the offtopic room as well
+04:44:20 <somenerd[m]> #graphene-offtopic
+04:46:22 <somenerd[m]>  * #grapheneos-offtopic
+05:18:35 <naribia> Little confused on the previous conversation, sine is updating android 11 with grapheneOS ?
+05:19:45 <TheJollyRoger> naribia, I think he bought an older Pixel, and is updating the current operating system on it to the latest release, so as to having all the bootloader and firmware updates prior to installing GrapheneOS.
+05:20:19 <leonid> Hello all.
+05:20:25 <TheJollyRoger> Ahoy!
+05:20:39 <sine> More accurately i'm updating a pix3 OTA to the latest stock OS as per the instructions @ https://grapheneos.org/install
+05:20:56 <leonid> Has anybody had SIM card issues with the P4a?
+05:21:20 <TheJollyRoger> leonid: I haven't had any issues with SIM cards in my Pixel 4.
+05:21:25 <leonid> It worked flawlessly until a day or so ago, when it started to show an "x" in the UI and displayed text messages intermittently
+05:21:29 <leonid> It's rather odd
+05:21:35 <leonid> I can use the web too, and receive phone calls just fine
+05:21:40 <naribia> sine: from a gapheneOS install?
+05:22:13 <naribia> oh no, just now read TheJollyRoger's comment
+05:22:16 <sine> no from an unlocked a data wiped Pixel3
+05:22:27 <naribia> gotcha
+05:22:34 <naribia> pixel 3 is a great phone
+05:22:50 <naribia> I got the pixel 5 and hoping to somehow get GOS on it
+05:23:34 <sine> I'm learning that...it's really great. No showboating designs BS, just the right size, etc
+05:27:15 <Tweak> Hi there, i'm trying to install GrapheneOs on mu Mac Catalina but i'm getting stuck in the first line of code.
+05:27:34 <Tweak> curl -O https://dl.google.com/android/repository/eabcd8b4b7ab518c6af9c941af8494072f17ec4b.platform-tools_r30.0.5-darwin.zipecho 'SHA256 (eabcd8b4b7ab518c6af9c941af8494072f17ec4b.platform-tools_r30.0.5-darwin.zip) =  e5780bad71a53cf9d693e1053a0748f49e4a67cc1f71d16a94ab4c943af3345f' | shasum -ctar xvf
+05:27:35 <Tweak> fbad467867e935dce68a0296b00e6d1e76f15b15.platform-tools_r30.0.5-darwin.zip
+05:27:50 <TheJollyRoger> Ahoy Tweak, give me a couple moments and I will try and help you out.
+05:28:00 <Tweak> error code:
+05:28:04 <Tweak> shasum: standard input: no properly formatted SHA1 checksum lines foundtar: Error opening archive: Failed to open 'fbad467867e935dce68a0296b00e6d1e76f15b15.platform-tools_r30.0.5-darwin.zip'
+05:30:03 <Tweak> Hi TheJollyRoger
+05:32:34 <naribia> I got a question. My main interest is to get android on this device without any google services and also able to lock the bootloader, can I do this with "vanilla" android?
+05:37:22 <strcat[m]> Tweak: that's not a line, it's 3 separate ones
+05:38:34 <Tweak> sorry about that, i'm new and never used the terminal
+05:39:01 <Tweak> the first ne works
+05:39:11 <Tweak> but afther that i'm getting errors
+05:39:30 <dwkr[m]> <leonid "Has anybody had SIM card issues "> I have not that problem on my 4a.
+05:41:17 <strcat[m]> Tweak: try from https://grapheneos.org/install#standalone-platform-tools again, updated the example
+05:42:06 <Tweak> ok i will try
+05:42:57 <Tweak> shasum: standard input: no properly formatted SHA1 checksum lines found
+05:43:02 <TheJollyRoger> Sorry about that, had to be away from the computer.
+05:43:08 <TheJollyRoger> Tweak, you're in good hands.
+05:43:31 <Tweak> thanks @TheJollyRoger
+05:43:43 <Tweak> hope to get grapheneos running
+05:43:58 <TheJollyRoger> follow strcat's instructions, he'll fix you up.
+05:44:33 <Tweak> yes i tried, however i'm stuck at the second command line
+05:46:53 <TheJollyRoger> can you list the directory contents for me? ("ls *.zip" no quotes)
+05:47:36 <Tweak> how do i do that?
+05:47:48 <Tweak> sorry i'm very new
+05:47:55 <TheJollyRoger> Please type into the terminal: "ls *.zip" (without the quotes) and press return.
+05:48:37 <Dylanger[m]> It's the 7th of December - should there be an update from Google soon?
+05:48:47 <Dylanger[m]> Don't know how consistent they are with dates
+05:49:25 <Tweak> without qoutes: eabcd8b4b7ab518c6af9c941af8494072f17ec4b.platform-tools_r30.0.5-darwin.zip
+05:51:22 <Tweak> thats the message what i received in the terminal
+05:51:47 <TheJollyRoger> Great. We're on track. Can you try for me:
+05:52:55 <TheJollyRoger> tar xvf eabcd8b4b7ab518c6af9c941af8494072f17ec4b.platform-tools_r30.0.5-darwin.zip
+05:53:27 <TheJollyRoger> It's going to spew a bunch of random gibberish into the terminal.
+05:53:34 <strcat[m]> the verification command should work fine
+05:53:37 <Tweak> ow my god, its working
+05:53:44 <strcat[m]> `echo 'SHA256 (eabcd8b4b7ab518c6af9c941af8494072f17ec4b.platform-tools_r30.0.5-darwin.zip) = e5780bad71a53cf9d693e1053a0748f49e4a67cc1f71d16a94ab4c943af3345f' | shasum -c`
+05:53:45 <Tweak> its doing some thng hahahah
+05:53:46 <strcat[m]> should work fine
+05:53:56 <TheJollyRoger> strcat[m]: ah crap, sorry.
+05:54:18 <TheJollyRoger> Tweak - once you see the prompt again, can you do what strcat says and try the verification command?
+05:55:23 <Tweak> @strcat[m]
+05:55:24 <Tweak>  with your code i'm getting: shasum: standard input: no properly formatted SHA1 checksum lines found
+05:55:37 <TheJollyRoger> (don't copy the backticks ` though! )
+05:55:43 <Tweak> ow sorry
+05:55:52 <Tweak> hahaha
+05:56:02 <Tweak> think you guys having a great time now hahhaa
+05:56:03 <Tweak> lol
+05:56:07 <TheJollyRoger> Ahahahaha XP.
+05:56:42 <TheJollyRoger> Ohhh wait a second. strcat[m], is the version of shasum on MacOS catalina expecting a sha1 sum?
+05:56:56 <Tweak> still the same message
+05:57:08 <Tweak> shasum: standard input: no properly formatted SHA1 checksum lines found
+05:57:15 <TheJollyRoger> Just a sec. Let me check something.
+05:57:44 <strcat[m]> I don't have macOS, this command was verified by someone who has it in the past
+05:57:48 <strcat[m]> no one has reported issues
+05:59:45 <strcat[m]> I don't have macOS, I can't test or update the documentation across versions of it
+05:59:54 <TheJollyRoger> Ah, crap.
+06:00:04 <Tweak> bummer
+06:00:16 <TheJollyRoger> OK, I've got an idea.
+06:00:23 <TheJollyRoger> Tweak, can you try:
+06:00:46 <TheJollyRoger> openssl dgst -sha256 eabcd8b4b7ab518c6af9c941af8494072f17ec4b.platform-tools_r30.0.5-darwin.zip
+06:01:09 <TheJollyRoger> And see what that spits out?
+06:01:45 <Tweak> SHA256(eabcd8b4b7ab518c6af9c941af8494072f17ec4b.platform-tools_r30.0.5-darwin.zip)= e5780bad71a53cf9d693e1053a0748f49e4a67cc1f71d16a94ab4c943af3345f
+06:02:39 <TheJollyRoger> Ok. You see that part after the equals sign? Compare it to the big block of jumbled numbers and letters in line after the equals sign where it says "SHA256"
+06:02:40 <sine> Question 4 of many: This Pix3 has no SIM installed but is connected to WiFi. I've engaged developer mode, but the OEM unlocking toggle is grayed out. It says " Connect to the internet or contact your carrier". Before I installed Android 11 the OEM button was toggable (I believe).  Any thoughts?
+06:02:58 <TheJollyRoger> Oh. SHOOT.
+06:03:03 <somenerd[m]> oh no
+06:03:22 <TheJollyRoger> sine: call whoever sold that handset to you and ask for a return.
+06:04:28 <TheJollyRoger> I think we just hit a case of a shady seller using an exploit to sell a locked handset as if it were unlocked, and the exploit stopped working when the phone was updated.
+06:04:59 <strcat[m]> doubt it
+06:05:33 <strcat[m]> have they given any indication that they could ever toggle on OEM unlocking?
+06:05:34 <sine> Gotcha. This means that it's locked to a carrier? Interesting. Any other method to veryify phone is locked?
+06:05:42 <strcat[m]> if it was toggled on before it would still be on
+06:05:55 <strcat[m]> sine: look at the package
+06:06:05 <strcat[m]> sine: does it say it's a Verizon Pixel?
+06:06:23 <strcat[m]> TheJollyRoger: btw I just checked and that command appears to work just fine
+06:06:25 <strcat[m]> TheJollyRoger: for verifying the zip
+06:06:37 <strcat[m]> with perl shasum
+06:06:40 <strcat[m]> which is what macOS has
+06:06:47 <strcat[m]> so, that shouldn't be skipped
+06:06:49 <TheJollyRoger> strcat[m]: I... I see.
+06:06:51 <strcat[m]> something is wrong if that's not working
+06:07:38 <TheJollyRoger> We can't use LibreSSL to obtain the hash?
+06:07:48 <strcat[m]> why?
+06:07:49 <strcat[m]> this works
+06:08:02 <strcat[m]> if it says `shasum: standard input: no properly formatted SHA checksum lines found` this means it wasn't pasted right
+06:08:06 <TheJollyRoger> Oh.
+06:08:06 <Tweak> @TheJollyRoger
+06:08:06 <Tweak> : there was an extra space after SHA256
+06:08:09 <TheJollyRoger> OHHHHHH
+06:08:15 <strcat[m]> I've confirmed that the command in the documentation works
+06:08:33 <TheJollyRoger> Tweak: as long as the letters match, it should be OK but let's try to do this the official way - it looks like there may be an incorrect paste.
+06:08:58 <strcat[m]> it has to match exactly for shasum to be happy, it's a stupid command
+06:09:05 <strcat[m]> it doesn't let you add more whitespace
+06:09:11 <TheJollyRoger> Ohhh
+06:09:15 <TheJollyRoger> That explains it.
+06:09:16 <Tweak> thanks, i will let you guys know how it ends up
+06:09:20 <TheJollyRoger> Okay!
+06:09:24 <Tweak> keep you updated
+06:10:57 <strcat[m]> ideally the commands across OSes would be more similar
+06:11:01 <strcat[m]> so it wouldn't need to be so different
+06:11:03 <TheJollyRoger> Yeah...
+06:11:36 <strcat[m]> anyway `shasum` is a perl thing
+06:11:49 * TheJollyRoger rubs his head ruefully.
+06:11:57 <strcat[m]> we could technically use it on Linux distributions too for consistently but I'd rather not
+06:12:12 <strcat[m]> we could use something else instead of the terrible coreutils one though
+06:12:22 <strcat[m]> maybe we should use the `openssl` command
+06:12:26 <TheJollyRoger> Sheesh. Yeah... I just uh... I just used OpenSSL.
+06:12:56 <strcat[m]> TheJollyRoger: only if it has a way to verify though
+06:13:00 <TheJollyRoger> Yeah.
+06:13:01 <strcat[m]> don't want to make custom error reporting
+06:13:27 <strcat[m]> which we'd have to do for Windows if we wanted it to give a clear error users will understand
+06:13:30 <TheJollyRoger> I just compared it to the hash on the website and hoped for the best.
+06:14:22 <strcat[m]> TheJollyRoger: you know what's fun?
+06:14:28 <strcat[m]> OpenSSL uses a variant of the BSD checksum file format
+06:14:32 <strcat[m]> which `shasum` considers invalid
+06:14:40 * TheJollyRoger buries his head in his hands.
+06:14:52 <TheJollyRoger> Oh good gravy, so much for interoperability and avoiding vendor lock in.
+06:15:04 <strcat[m]> TheJollyRoger: `shasum` is unhappy that it doesn't put a space
+06:15:16 <strcat[m]> try `openssl dgst -sha256 some_file | shasum -c`
+06:15:19 <TheJollyRoger> All for want of a friggin' space.
+06:15:44 <somenerd[m]> wow
+06:15:45 <strcat[m]> then try manually taking the output from `openssl` and add a space between `SHA256` and the `(` and another between `)` and `=`
+06:15:46 <strcat[m]> and it works
+06:15:52 <somenerd[m]> rigid formatting
+06:16:01 <TheJollyRoger> Tweak: it looks like shasum is really picky about where you put the space, I think that may be it.
+06:16:05 <TheJollyRoger> Sheesh >_<.
+06:16:05 <JTL> I guess "Be liberal in what you accept" went over someones head
+06:16:28 <strcat[m]> coreutils `sha256sum` understands what `openssl` outputs
+06:16:33 <strcat[m]> so yeah it seems that `shasum` tool just sucks
+06:16:37 <JTL> imo, shasum should handle some common variations, and then give up if it doesn't match some predefined cases
+06:16:47 <strcat[m]> I don't know if macOS has a nicer command available though
+06:18:32 <TheJollyRoger> yeah. I just tried querying it by openssl and asking him to manually verify it since I had this problem in the past, didn't know shasum was that awful.
+06:18:40 <Tweak> Got another question: export PATH="$PWD/platform-tools:$PATH" i need to change the path, the pathe were de zip file is located, how do i know where its located?
+06:19:05 <sine> Lol, purchased off Offerup, boxless. But that's the only explanation: no OEM toggle = Verizon Phone. There wouldn't be a Verizon logo anywhere on the phone itself? Returning the phone to Android 10 isn't a possibility? And, frankly, I don't even know the meaning of "exploit" )  One day...I might. )
+06:19:23 <TheJollyRoger> Hi Tweak, hold up a sec, did you change the working directory?
+06:19:35 <TheJollyRoger> Tweak: can you do for me:
+06:19:49 <Tweak> sure
+06:20:08 <TheJollyRoger> pwd ; ls platform-tools
+06:20:36 <Tweak> ahhh its in mt parent dir under users
+06:21:00 <TheJollyRoger> This is a command to print your working directory, and list out "platform-tools" or if platform-tools is a directory, to list out its contents.
+06:21:22 <TheJollyRoger> If you can see the contents of platform-tools by asking the computer to list platform-tools, you're in the right place.
+06:23:01 <TheJollyRoger> sine: I er, I hate to be the bearer of bad news but... unfortunately, there's no way we can downgrade that phone back to Android 10.
+06:23:34 <Tweak> zsh: command not found: ls
+06:23:42 <TheJollyRoger> o.O What the--
+06:23:47 <TheJollyRoger> Oh.
+06:23:50 <TheJollyRoger> You typed 1 as in the letter 1.
+06:24:03 <TheJollyRoger> type in "ls" as in the letter L, and then the letter S, in lowercase.
+06:24:19 <TheJollyRoger> it stands for "List Segments" or something like that.
+06:24:40 <sine> No worries I'll sell it at a lowball price and purchase a Pixel3a and check the OEM status before purchase. Lesson learned )
+06:24:57 <arpysco[m]> Get a 4a my guy
+06:24:59 <TheJollyRoger> sine: yeah... :( It's... it's really unfortunate, but,
+06:25:03 <arpysco[m]> It's awesome
+06:25:07 <TheJollyRoger> yeah, get a 4a and buy it direct from the G Store.
+06:25:13 <TheJollyRoger> I'll explain why:
+06:25:13 <strcat[m]> sine: you should verify that it's actually a Verizon Pixel
+06:25:18 <arpysco[m]> Can't believe it's available for such a low price too
+06:25:20 <strcat[m]> sine: this has nothing to do with Android 10 vs. Android 11 at all
+06:25:28 <strcat[m]> sine: it has nothing to do with you upgrading it
+06:25:43 <sine> I believe you're correct Sine.
+06:25:56 <strcat[m]> sine: right now, you haven't confirmed what's happening, and assumptions are being made
+06:26:09 <Tweak> i copied your text line as ls (LS)
+06:26:30 <TheJollyRoger> Once the Google Store runs out of stock and de-lists a device, then what happens is a whole lot of resellers then try to quickly shift their inventory of Verizon locked pixels before they become worthless.
+06:26:44 <strcat[m]> TheJollyRoger:  they broke their PATH by doing that command wrong somehow
+06:26:48 <TheJollyRoger> Often this has the result of flooding the market with these locked Pixels that cannot be unlocked
+06:26:49 <strcat[m]> they'll have to start over in a new terminal
+06:26:59 <TheJollyRoger> strcat[m]: oh. whoop.
+06:27:06 <strcat[m]> important to use the commands exactly as is in the instructions
+06:27:16 <strcat[m]> seems what's happening is errors in transcribing what's in the documentation
+06:27:26 <TheJollyRoger> Sorry >_<.
+06:28:28 <TheJollyRoger> sine: I believe there is a way to see if it's a verizon pixel or not based on what your IMEI number your handset has, but I'm not sure. Give me a moment to read.
+06:28:29 <sine> Hmmm...my VPN enabled fastrouter which is how the phone is connected to the internet wouldnt be the issue, would it? It's....problematic
+06:29:21 <TheJollyRoger> I think the first couple digits of a Verizon device are different, but I don't know the details.
+06:30:12 <strcat[m]> sine: could be the issue if it's blocking it from connecting
+06:33:26 <sine> Phone connects to the internet, but on my S9 some apps don't like the server I'm connected to (craigslist, offerup for instance) and won't allow a connection.  I have a feeling this isn't the issue, but I'll try my using my non-VPN router and check
+06:33:46 <TheJollyRoger> Tweak: You ok over there?
+06:34:21 <arpysco[m]> Narrator: Tweak was never seen or heard from again...
+06:34:47 <TheJollyRoger> *dramatic chord*
+06:34:58 <strcat[m]> TheJollyRoger: could probably use the simpler syntax for shasum but then it can be screwed up
+06:35:06 <strcat[m]> if people delete a second space
+06:35:12 <TheJollyRoger> Sheesh.
+06:36:11 <Tweak> can i skipp the verification step?
+06:36:14 <strcat[m]> % echo 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  foo' | shasum -c
+06:36:14 <strcat[m]> foo: OK
+06:36:18 <Tweak> en install it? hahahah
+06:36:22 <Tweak> and
+06:36:25 <strcat[m]> echo 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 foo' | shasum -c
+06:36:25 <strcat[m]> shasum: standard input: no properly formatted SHA checksum lines found
+06:36:35 <strcat[m]> Tweak: didn't you already do it successfully? you said the issue was an extra space
+06:36:37 <somenerd[m]> > en install it? hahahah
+06:36:37 <somenerd[m]> not preferred afaik
+06:36:39 <strcat[m]> Tweak: you shouldn't skip that
+06:36:49 <Tweak> ok
+06:36:50 <strcat[m]> Tweak: if you copy the command as is it will work fine
+06:37:02 <strcat[m]> if you're not copying commands correctly there could be more severe problems later on
+06:37:13 <strcat[m]> looks like that's what happened with `PATH` too
+06:37:24 <strcat[m]> you need to be entering it exactly the same way it's provided
+06:37:41 <strcat[m]> making a single character mistake is a big problem, it won't guess what you really mean
+06:37:48 <Tweak> i'll start over again
+06:38:21 <strcat[m]> TheJollyRoger: the GNU-style syntax has 2 spaces between the hash and the file name (and it assumes what kind of hash it is based on the length)
+06:38:31 <strcat[m]> TheJollyRoger: if you delete one space, it's invalid
+06:38:41 <TheJollyRoger> Sheesh.
+06:38:53 <TheJollyRoger> Tweak: yeah, might as well. Remove any files that we created, just in case.
+06:38:56 <strcat[m]> TheJollyRoger: also it is hard-wired to only work for certain kinds of hashes because it assumes based on length what it is
+06:39:01 <strcat[m]> so it doesn't even work for all of SHA-2
+06:39:10 <TheJollyRoger> Oh for the love of... wow.
+06:39:18 <strcat[m]> SHA-512/256 for example is the same length as SHA-256
+06:39:21 <TheJollyRoger> So it could have a perfectly valid input, and then just say "Nope, not valid!"
+06:39:23 <TheJollyRoger> ?
+06:39:29 <strcat[m]> yes
+06:39:40 <somenerd[m]> what
+06:39:42 <strcat[m]> the BSD format is nicer but `shasum` (the perl tool) implements it incorrectly
+06:39:54 <TheJollyRoger> Good gravy that's sloppy.
+06:40:38 <strcat[m]> anyways not much I can do about that
+06:40:57 <strcat[m]> signify uses a proper implementation of the BSD format for the signed file lists
+06:41:22 <strcat[m]> link https://releases.grapheneos.org/sunfish-factory-2020.11.27.15.zip.sig
+06:42:48 <Tweak> i got stuck here: Obtaining signify
+06:43:12 <strcat> Tweak: it says to skip it on an OS without packages for it
+06:43:15 <Tweak> how do i know which one to download?
+06:43:19 <strcat> you don't
+06:43:25 <Tweak> ow sorry
+06:43:43 <strcat> it explains why it would make no sense to download it without verifying a signature for it
+06:43:51 <strcat> in order to use it to check the factory images signature
+06:44:08 <strcat> also you're already just trusting this install guide which comes from our first party servers just like the factory images
+06:46:07 <TheJollyRoger> Tweak: if you don't have signify and can't use signify to verify the installer package, what you can do is instead use the Attestation server, or if you have another Android phone, you can use Auditor, but that has to be done /after/ the installation is finished.
+06:46:59 <Tweak> no unfortunatly i only have an Iphone
+06:47:33 <TheJollyRoger> Got it. You'll need to use the Attestation Server then. But this is the last step, so we'll worry about this later.
+06:47:38 <Tweak> english is not my native language
+06:48:09 <TheJollyRoger> Okay, I will try to understand!
+06:48:12 <Tweak> thats why the install manual is a bit difficult for me to read
+06:48:51 <Tweak> so i'm now at Obtaining factory images
+06:49:32 <TheJollyRoger> `fastboot --version` returns "fastboot version 30.0.5-6877874" for you?
+06:51:31 <Tweak> zsh: command not found: fastboot
+06:52:28 <Tweak> i typed : fastboot --version
+06:52:41 <TheJollyRoger> Tweak: it looks like platform-tools and fastboot has not been obtained and set up yet, so you will need to go back to that step to get them and add them to your command path.
+06:53:04 <Tweak> :')
+06:53:24 <TheJollyRoger> It looks like you were able to download platform-tools for mac, it looks like, so the next step is to verify the installation and extract them.
+06:54:11 <TheJollyRoger> Correction:
+06:54:31 <TheJollyRoger> It looks like you were able to download platform-tools for mac, so the next step is to verify the download and extract the .zip
+06:54:35 <TheJollyRoger> (Sorry about that)
+06:55:03 <TheJollyRoger> echo 'SHA256 (eabcd8b4b7ab518c6af9c941af8494072f17ec4b.platform-tools_r30.0.5-darwin.zip) = e5780bad71a53cf9d693e1053a0748f49e4a67cc1f71d16a94ab4c943af3345f' | shasum -c
+06:55:48 <Tweak> i've done that part
+06:56:02 <Tweak> now i need to export
+06:56:08 <TheJollyRoger> Great! Ok:
+06:56:21 <Tweak> now i need to: export PATH="PWD/platform-tools:$/Users/name"
+06:56:23 <TheJollyRoger> This time, you DO have to type the quotation marks.
+06:56:28 <TheJollyRoger> Hold it!
+06:56:29 <TheJollyRoger> Stop!
+06:56:34 <Tweak> ow ok
+06:57:31 <TheJollyRoger> You haven't changed the working directory?
+06:58:16 <Tweak> that is written way below on the page as were i am right now
+06:58:19 <TheJollyRoger> The thing is you'll need to add it to your existing command path, that's why we have :$PATH at the very end, otherwise it's going to not have *any* commands except the ones in a folder it thinks is called "PWD/platform-tools" and your home directory.
+06:58:34 <TheJollyRoger> Or rather, a variable called it.
+06:58:44 <TheJollyRoger> The '$' indicates to the computer that that's a variable.
+06:58:47 <TheJollyRoger> So try:
+06:58:58 <TheJollyRoger> export PATH="$PWD/platform-tools:$PATH"
+06:59:30 <Tweak> it doesnt give me an output
+06:59:34 <strcat[m]> have to enter the commands as they are in the install guide
+06:59:37 <strcat[m]> Tweak: that's correct
+06:59:39 <Tweak> just a new line
+06:59:41 <Tweak> ok
+06:59:47 <TheJollyRoger> Yes, this command will produce no output, but if you want to check that it did something, try:
+06:59:52 <TheJollyRoger> echo $PATH
+07:00:36 <Tweak> it returns my path: PWD/platform-tools:$/Users/name
+07:00:44 <TheJollyRoger> Great. OK. Now try,
+07:00:54 <TheJollyRoger> fastboot --version
+07:00:54 <Tweak> i changed real name to name
+07:01:14 <TheJollyRoger> Yep, of course.
+07:01:22 <Tweak> Installed as /Users/name/platform-tools/fastboot
+07:01:30 <Tweak> looking good
+07:02:02 <TheJollyRoger> Excellent!
+07:02:03 <Tweak> if this works i'm going to ditch all my apple products
+07:02:33 <TheJollyRoger> Alright, pick up your phone.
+07:02:52 <Tweak> its already in bootloader
+07:03:04 <Tweak> device state = unlocked
+07:03:10 <TheJollyRoger> Great!
+07:03:31 <TheJollyRoger> Alright, what device is it? 4a, 4, 4XL?
+07:03:43 <Tweak> 4a
+07:03:53 <TheJollyRoger> (if it is a 4a5G, or a 5, STOP! Those aren't supported at the moment, only 4a)
+07:04:04 <TheJollyRoger> Ok, great!
+07:04:09 <TheJollyRoger> Into terminal, type:
+07:04:40 <TheJollyRoger> curl -O https://releases.grapheneos.org/sunfish-factory-2020.11.27.15.zip
+07:05:04 <TheJollyRoger> This can take a while, depending on how fast your internet speed is.
+07:05:37 <Tweak> i've typed: curl -O https://releases.grapheneos.org/sunfish-factory-2020.11.27.15.zip
+07:05:45 <Tweak> zsh: command not found: curl
+07:06:13 <Tweak> copy pasted
+07:06:19 <strcat[m]> you screwed up the PATH again
+07:06:19 <TheJollyRoger> ...did you mess up your command path again?
+07:06:25 <strcat[m]> yeah
+07:06:26 <TheJollyRoger> Yeah, I think you messed up the command path :(
+07:06:33 <strcat[m]> not entering commands exactly as they are in the documentation
+07:06:36 <TheJollyRoger> Close the terminal window.
+07:06:53 <TheJollyRoger> You need to enter the command to export PATH exactly as it's typed in the documentation, you're entering it to a different location.
+07:06:53 <Tweak> done
+07:07:00 <TheJollyRoger> Ok. Open up terminal again.
+07:07:12 <TheJollyRoger> Exactly as typed:
+07:07:16 <TheJollyRoger> export PATH="$PWD/platform-tools:$PATH"
+07:07:21 <TheJollyRoger> Note the positioning of the $ signs.
+07:07:24 <TheJollyRoger> And the : s
+07:07:26 <sine> Is there a way, with Android 11, to emulate what the scam artist did: unlock a verizon pixel 3?
+07:07:35 <TheJollyRoger> sine:  I... I don't know.
+07:07:38 <TheJollyRoger> I'm sorry.
+07:07:52 <arpysco[m]> It's not certain it was a scam artist, I thought
+07:07:53 <Tweak> done i typed: export PATH="$PWD/platform-tools:$PATH"
+07:07:56 <TheJollyRoger> Not all hope is lost yet... we have to verify indeed it's a Verizon pixel.
+07:08:17 <TheJollyRoger> Tweak, OK, great, now try the following:
+07:08:33 <TheJollyRoger> ls && pwd && fastboot --version
+07:08:42 <sine> Well I installed my non-VPN wifi and i'm still getting not able to unlock the OEM toggle..
+07:09:23 <Tweak> i'm seeing all my files in the terminal
+07:09:42 <Tweak> fastboot version 30.0.5-6877874
+07:10:04 <TheJollyRoger> Great!
+07:10:06 <TheJollyRoger> OK!
+07:10:19 <TheJollyRoger> curl -O https://releases.grapheneos.org/sunfish-factory-2020.11.27.15.zip
+07:10:37 <Tweak> its downloading
+07:10:48 <Tweak> 3 min left
+07:10:55 <TheJollyRoger> Great. You're on the right track!
+07:13:30 <Tweak> done
+07:14:01 <TheJollyRoger> Great.
+07:14:06 <TheJollyRoger> tar xvf sunfish-factory-2020.11.05.18.zip
+07:14:09 <TheJollyRoger> Oops
+07:14:11 <TheJollyRoger> Sorry.
+07:14:13 <TheJollyRoger> One sec.
+07:14:16 <Tweak> ok
+07:14:16 <TheJollyRoger> Ignore that.
+07:14:20 <Tweak> ok
+07:14:38 <TheJollyRoger> tar xvf sunfish-factory-2020.11.27.15.zip
+07:15:02 <TheJollyRoger> That one should be it.
+07:15:04 <Tweak> done
+07:15:26 <Tweak> output = x sunfish-factory-2020.11.27.15/x sunfish-factory-2020.11.27.15/flash-base.shx sunfish-factory-2020.11.27.15/avb_pkmd.binx sunfish-factory-2020.11.27.15/radio-sunfish-g7150-00018-200701-b-6643937.imgx sunfish-factory-2020.11.27.15/image-sunfish-2020.11.27.15.zipx sunfish-factory-2020.11.27.15/flash-all.batx
+07:15:26 <TheJollyRoger> cd sunfish-factory-2020.11.27.15.zip
+07:15:27 <Tweak> sunfish-factory-2020.11.27.15/flash-all.shx sunfish-factory-2020.11.27.15/bootloader-sunfish-s5-0.2-6539975.img
+07:15:29 <sine> Well i was told (and told and told and told :-)  that the Pixel3 was unlocked. Next time I buy locally I just check as a "developer" if the OEM unlocking is greyed out.  And if it's not I may not update to Android 11.  BTW, what was the terminology called that the seller may have used to unlock his Verizon called?
+07:15:53 <Tweak> cd: not a directory: sunfish-factory-2020.11.27.15.zip
+07:15:57 <TheJollyRoger> Whoops.
+07:16:05 <TheJollyRoger> Sorry Tweak, guess I'm a bit more tired than I thought:
+07:16:08 <TheJollyRoger> cd sunfish-factory-2020.11.27.15
+07:16:10 <TheJollyRoger> Sorry. That one.
+07:16:12 <TheJollyRoger> D'oh.
+07:16:18 <TheJollyRoger> We're on the home stretch!
+07:16:57 <Tweak> done, no worries, i'm so glad your helping me
+07:17:08 <TheJollyRoger> sine: I'm not sure so I don't want to be levelling accusations, but I have heard anecdotes about "exploits" being used to unlock phones with locked bootloaders, but these exploits are known to stop working without warningh.
+07:17:26 <TheJollyRoger> But the problem is once they stop working, that's it, they're patched, and will never work again.
+07:17:46 <TheJollyRoger> Tweak: ok, great, plug your phone in.
+07:17:58 <strcat[m]> sine: you still haven't confirmed that the device is a locked Verizon variant
+07:18:06 <Tweak> done
+07:18:06 <TheJollyRoger> Tweak: make sure the phone is plugged in very securely, and put it someplace it won't fall.
+07:18:18 <Tweak> yes its on my desk
+07:18:23 <TheJollyRoger> take a deep breath and enter:
+07:18:25 <TheJollyRoger> ./flash-all.sh
+07:18:32 <TheJollyRoger> Don't disturb the phone until it's done
+07:18:49 <Tweak> ok
+07:18:59 <Tweak> i can see its doing its stuff
+07:19:01 <sine> strcat, what else would cause the OEM unlocker toggle to be greyed out?
+07:19:23 <TheJollyRoger> Tweak: your phone may turn on and off repeatedly, or display weird text, just let it finish. The terminal will let you know when it's done.
+07:19:29 <strcat[m]> sine: enable adb and run `adb shell getprop ro.boot.cid`
+07:19:41 <Tweak> thanks @TheJollyRoger
+07:19:43 <strcat[m]> if that is `00000000`, it's not a locked variant
+07:19:44 <TheJollyRoger> Tweak: Just *do not* disturb the phone!
+07:19:51 <Tweak> yes i wont
+07:20:11 <strcat[m]> sine: and if it's not `00000000` you got ripped off and should get a refund
+07:20:36 <strcat[m]> either way strongly recommend getting a Pixel 4a (or 4, or 4 XL), not a Pixel 3
+07:21:44 <sine> strcat, is that comman run in powershell within cd platform-tools?
+07:21:59 <strcat[m]> sine: set up PATH again and run it
+07:22:07 <sine> copy
+07:22:22 <strcat[m]> need to enable adb in developer options on the phone
+07:23:06 <TheJollyRoger> strcat[m]: oh wow, I didn't know about this trick.
+07:23:27 <Tweak> Finished. Total time: 94.998sRebooting into bootloader                          OKAY [  0.000s]Finished. Total time: 0.000s
+07:23:34 <Tweak> is it ready?
+07:23:54 <strcat[m]> no
+07:23:56 <strcat[m]> lock it
+07:24:18 <TheJollyRoger> One last step, Tweak
+07:24:24 <TheJollyRoger> fastboot flashing lock
+07:24:37 <TheJollyRoger> Your phone should display the confirmation to lock.
+07:24:38 <Tweak> done
+07:25:04 <strcat[m]> Tweak: now it should be done
+07:25:11 <strcat[m]> can boot it up, should say booting another OS with a yellow icon
+07:25:12 <TheJollyRoger> OK. Reboot the phone once it's locked. It should display a yellow screen to say "Your device is loading a different operating system" in yellow letters.
+07:25:57 <TheJollyRoger> If you see the yellow "your device is loading a different operating system" that means it worked - you should see that screen each time your phone reboots.
+07:26:17 <TheJollyRoger> If your phone stops displaying this screen, or worse, displays it in orange with "SOFTWARE INTEGRITY IS NOT GUARANTEED" then something has gone terribly wrong.
+07:26:23 <Tweak> ok i can toggle tru the menu
+07:26:25 <Tweak> options
+07:26:33 <Tweak> do not lock the boot loader
+07:26:39 <TheJollyRoger> lock the boot loader.
+07:26:41 <Tweak> and lock the bootloader
+07:26:54 <TheJollyRoger> Yeah. Lock the bootloader.
+07:27:15 <Tweak> now i have the option: start
+07:27:30 <Tweak> or should i toggle?
+07:27:37 <TheJollyRoger> Start it.
+07:27:46 <TheJollyRoger> Let us know if you see "Your device is loading a different operating system"
+07:28:38 <Tweak> holy shit, its starting graphene
+07:28:44 <sine> yay!
+07:28:47 <TheJollyRoger> Welcome aboard!
+07:28:49 <Tweak> i'm so happy right now
+07:29:01 <TheJollyRoger> Congratulations and welcome to GrapheneOS, Tweak.
+07:29:11 <Tweak> i think you've had the worst programmer here
+07:29:17 <Tweak> Thanks a lot goys
+07:29:39 <TheJollyRoger> Anytime! If you find GrapheneOS useful, send a donation at https://grapheneos.org/donate ! Donations keep the project going!
+07:29:41 <somenerd[m]> nice
+07:30:00 <Tweak> i will donate
+07:30:02 <TheJollyRoger> Tweak:  if you'd like to do the verification now, you can try out Remote Attestation at https://attestation.app
+07:30:11 <strcat> just make sure you actually locked it Tweak
+07:30:31 <strcat> should have displayed the booting another OS message (not a message about it not being verified)
+07:30:49 <strcat> can also verify with attestation.app as TheJollyRoger is suggesting
+07:30:55 <TheJollyRoger> Yeah. You can also turn off OEM unlocking again in developer options, if you so prefer.
+07:34:12 <sine> strcat I dont see where I can: "need to enable adb in developer options on the phone
+07:35:26 <TheJollyRoger> sine: Look for an option labelled "USB Debugging"
+07:36:06 <Tweak> i dont see the option: develeper option anymore
+07:36:20 <Tweak> Settings ➔ System ➔ Advanced ➔ Developer
+07:36:32 <Tweak> is that good?
+07:36:42 <sine> k, toggled that option
+07:36:55 <TheJollyRoger> Tweak:  Yeah. It just basically means your phone was reset. You can enable it again the same way by tapping on build number.
+07:37:09 <TheJollyRoger> (I think tapping on it rapidly eight or ten times is what does it)
+07:37:44 <TheJollyRoger> Sine - ok plug your phone in.
+07:38:06 <Tweak> done
+07:38:13 <TheJollyRoger> You should get a notification "USB charging this device" tap on that and there should be enable file transfer.
+07:38:25 <TheJollyRoger> Tweak - great! You should be able to go in and turn off OEM unlocking now, if you prefer.
+07:38:44 <Tweak> don it
+07:39:02 <sine> strcat plugged in
+07:39:02 <TheJollyRoger> Great. You can switch off developer options if you like, we generally don't advise using those day to day unless you are doing testing or development.
+07:39:19 <TheJollyRoger> sine OK go and bring up that menu, and select "file transfer"
+07:39:43 <TheJollyRoger> once you have, leave your phone plugged in and go back to your computer, and run `adb devices`
+07:40:49 <TheJollyRoger> sine: you should be able to see your phone appear there (provided you have platform tools in your command path!)
+07:41:00 <sine> copy
+07:41:19 <Tweak> now i'm done right?
+07:41:35 <TheJollyRoger> Tweak: yep! You're done, and if you feel you want the extra reassurance you got it right and confirm,
+07:41:54 <TheJollyRoger> you can try Attestation to verify your OS is genuine:
+07:42:03 <TheJollyRoger> https://attestation.app/tutorial This step is optional.
+07:42:16 <TheJollyRoger> The phone's now ready for you to use.
+07:42:17 <Tweak> i should do this on the phone?
+07:42:21 <sine> strcat here's the output from that command: 'adb : * daemon not running; starting now at tcp:5037At line:1 char:1+ adb devices+ ~~~~~~~~~~~    + CategoryInfo          : NotSpecified: (* daemon not ru...now at tcp:5037:Strin    g) [], RemoteException    + FullyQualifiedErrorId : NativeCommandError * daemon started successfullyList of devices
+07:42:21 <sine> attached8A4X0LMP4	unauthorized'
+07:42:33 <TheJollyRoger> Tweak: you'll need to visit that on your computer first.
+07:42:46 <TheJollyRoger> sine: ok, great, look at the phone again?
+07:42:53 <TheJollyRoger> A prompt should say something like "trust this computer's fingerprint?"
+07:43:29 <d0001> hey, what would be the recommended device atm for graphene os?
+07:43:38 <sine> Yes Jolly
+07:43:53 <TheJollyRoger> Tweak: what this does is you can use GrapheneOS' attestation server to challenge the phone. The phone must respond with a challenge code and information on the
+07:43:58 <TheJollyRoger> d0001: Pixel 4a
+07:44:10 <d0001> I'm thinking of upgrading from a blueline device and would like to explore my options
+07:44:12 <TheJollyRoger> The phone must respond with a challenge code and information on the verified boot keying and verified boot hash.
+07:44:24 <sine> strcat, the OEM unlock is still greyed out (
+07:44:41 <TheJollyRoger> d0001: Hey, I'm on Blueline as well too! I hear the 4a is good, it's the newest device supported at the moment.
+07:44:53 <TheJollyRoger> sine: can you please tell us whether you get 000000 for that carrier ID?
+07:45:13 <TheJollyRoger> We need to know this first so we can confirm indeed you got ripped off.
+07:45:53 <d0001> TheJollyRoger: What are the main benefits of the 4a over the 4? Aside from longer battery life and device support further into the future?
+07:46:13 <sine> Yeesh, finding that information is above my paygrade w/o additional consultation. If you're up for it I'm a quick study )
+07:46:14 <TheJollyRoger> d0001: well... it's got a fingerprint sensor (no Face Unlock), and a 1/8" phone jack.
+07:46:17 <TheJollyRoger> Er, headphone jack
+07:46:30 <neopetsarecool[m> Cheaper new
+07:46:34 <TheJollyRoger> sine: hang on a moment.
+07:46:46 <TheJollyRoger> sine, did you approve the computer's fingerprint on your phone?
+07:47:06 <TheJollyRoger> And does your device show up when you do `adb devices`? I'm trying to help you get that information.
+07:47:15 <sine> I did, yes.
+07:47:25 <TheJollyRoger> Ok. One moment, searching through the scrollback:
+07:47:40 <TheJollyRoger> sine:
+07:48:02 <TheJollyRoger> adb shell getprop ro.boot.cid
+07:48:11 <TheJollyRoger> Try that out.
+07:48:20 <TheJollyRoger> This should tell us without a doubt.
+07:48:49 <d0001> Are there any active Pixel 4 owners here? I have some generic questions
+07:49:03 <TheJollyRoger> d0001: Yep!
+07:49:06 <TheJollyRoger> Right here.
+07:49:16 <TheJollyRoger> (I have both 3 and 4)
+07:49:31 <TheJollyRoger> However the 3 is my "daily use phone" and the 4 is my testing phone.
+07:49:55 <sine> TheJollyRoger outout is 00000001
+07:50:03 <arpysco[m]> F
+07:50:03 <TheJollyRoger> sine:  oh SHOOT!
+07:50:08 <TheJollyRoger> That's a locked phone.
+07:50:24 <neopetsarecool[m> F
+07:50:41 <TheJollyRoger> The seller must have used an exploit to make it appear that it was unlockable.
+07:50:46 <TheJollyRoger> I'm sorry. There's nothing I can do for you.
+07:51:12 <d0001> TheJollyRoger: Any known issues unique to the Pixel 4? Also, is the battery life really that abhorrent?
+07:51:36 <TheJollyRoger> If the seller will not take the phone back and give you a refund, if you paid for it via a credit card, you can threaten a chargeback.
+07:51:58 <TheJollyRoger> d0001: Nope, no issues at all, runs great except the back of the phone is VERY slippery if your hands are damp or it's rainy.
+07:52:00 <sine> Damn. Yeah its crazy, they ran out of unlocked phones on CL and Offerup etc so unlocked Pix3's are going for $300-$350
+07:52:50 <d0001> TheJollyRoger: Snap! Any casing recommendations? I'll prefer something on the slimmer end
+07:52:52 <TheJollyRoger> The battery life on the Pixel 4 isn't bad at all, actually. GrapheneOS is lighter weight than the regular operating system, so it uses less battery when idle.
+07:52:54 <sine> TheJollyRoger I'll track him down this week and demand my $ back (cash trans)
+07:53:19 <arpysco[m]> You gonna bring a baseball bat?
+07:53:39 <TheJollyRoger> However, your mileage may vary SIGNIFICANTLY because different apps will tend to run differently, without Google Play Services it's common for some to run in the foreground. I haven't noticed any real shortcomings with it.
+07:53:56 <TheJollyRoger> sine: yeah, getting a refund for this is probably your best option now :(
+07:54:27 <Tweak> TheJollyRoger, i dont have a extra android phone to verify the code
+07:54:29 <d0001> How much on screen time do you usually get? I get that it's dependent on man factors, but a brief estimate will do
+07:54:36 <TheJollyRoger> d0001: I actually really like the Spigen Armor cases! They're made of a kind of black polyurethane rubber which is very shock absorbent and is very grippy.
+07:54:51 <TheJollyRoger> They're also really cheap, you can get them for like $7-8 depending on where you shop.
+07:55:05 <TheJollyRoger> Tweak: that's OK! You can use the attestation server, you will need to register an account with attestation.app.
+07:55:18 <TheJollyRoger> Tweak: Look at the part that says "Scheduled Remote Verification"
+07:55:26 <neopetsarecool[m> <TheJollyRoger "d0001: I actually really like th"> 2nd that have used their normal and thin cases on most phones, can't really do better for the price
+07:55:33 <TheJollyRoger> Yeah!
+07:56:13 <sine> I'm an (ex) boxer apropos of nothing (coach instilled in us never to use boxing out of the ring)
+07:56:27 <TheJollyRoger> I like the heavy duty ones that have the carbon fiber inlay (since it's "Graphene!"), the case and a stick-on glass screen protector has saved my phone on one occasion after I ran out to catch a bus, my phone slipped from my pocket and smashed down the concrete steps out front my apartment.
+07:56:38 <TheJollyRoger> Picked it up, dusted it off, replaced the screen protector when I got home that night, good as new.
+07:56:59 <TheJollyRoger> sine: whew, sounds like you're all set then!
+07:58:02 <d0001> Got it. Would it be wise to invest in a privacy screen protector to opportunisticall deter shoulder surfing in public places? Its it security theatre?
+07:58:08 <sine> lol, yup. All set is exactly what I am. (not at all) G'night friends. Thanks so much for the crash course!
+07:58:13 <d0001> opportunistically*
+07:58:16 <TheJollyRoger> d0001: Huh. You know I never really thought about that...
+07:58:31 <TheJollyRoger> sine: good luck! I hope you get your money back.
+07:58:41 <sine> thanks man
+07:58:43 <TheJollyRoger> Let us know, we can help you back through the installation process when you get a new one.
+07:58:54 <TheJollyRoger> Worst comes to worst, get a 4a, that'll be better value for your money.
+07:59:09 <TheJollyRoger> And you can get it directly from Google Store, and you can order the unlocked one direct, no funny business there.
+07:59:23 <TheJollyRoger> Fingers crossed for you, shipmate!
+08:00:03 <Tweak> Successfully submitted sample data
+08:00:05 <TheJollyRoger> d0001: I haven't ever used those polarized screen protectors before, but I do like the Gorilla Glass ones.
+08:00:06 <Tweak> that it?
+08:00:11 <TheJollyRoger> Tweak oh hehehe no no no...
+08:00:17 <TheJollyRoger> Just a sec, let me walk you through the process.
+08:00:22 <sine> Yeah seems like 4a gets strcat highest recommendation
+08:00:49 <TheJollyRoger> Tweak: first, you'll need to go here:
+08:01:17 <d0001> Are bluetooth mac addresses randomized?
+08:01:18 <TheJollyRoger> https://attestation.app/ Click on "Create account" and create a Username and Password.
+08:01:25 <Tweak> done
+08:01:28 <TheJollyRoger> DO NOT forget the password! If you lose the password, you cannot get back in!
+08:01:47 <TheJollyRoger> (If you do lose the password, unpair all your devices from remote attestation, and eventually the account will be auto-deleted)
+08:02:14 <Tweak> ok
+08:02:31 <TheJollyRoger> Ok. Go ahead and log in when you're ready.
+08:02:33 <Tweak> i see a QR code apparing
+08:02:38 <TheJollyRoger> I'm going to just go get my 4 and we'll do this together.
+08:02:57 <Tweak> super
+08:03:20 <TheJollyRoger> Ok, pick up your phone and open up Auditor.
+08:03:33 <TheJollyRoger> Tap the "..." and then do you see "Enable Remote Verification?"
+08:03:40 <TheJollyRoger> Tap it and let it access the camera.
+08:03:48 <TheJollyRoger> Scan the QR code on your screen.
+08:04:14 <Tweak> done
+08:04:30 <Tweak> got now 2 options:
+08:04:37 <Tweak> 1. auditee
+08:04:42 <Tweak> 2. Auditor
+08:05:20 <TheJollyRoger> Put the phone aside, we're finished with this part. Go back to your computer screen?
+08:05:52 <TheJollyRoger> Scroll down and you should see something like "Verified device information"
+08:05:59 <TheJollyRoger> (On the computer)
+08:06:46 <TheJollyRoger> It should say something like "Device: Google Pixel 4a" "OS: GrapheneOS"
+08:07:13 <Tweak> yes
+08:07:31 <Tweak> i can see it
+08:07:45 <TheJollyRoger> If you got that, you're done, and it's verified, and Attestation Server is telling you "Your phone is running GrapheneOS" plus some relevant information on the device.
+08:08:04 <Tweak> nice nice nice
+08:08:09 <TheJollyRoger> Attestation server will challenge your phone every so often (you can set the number of hours)
+08:08:20 <Tweak> thank you
+08:08:22 <new_user_lol> hello all. quick question.  Just install Grapheneos on Pixel3xl.  Verizon USA.  Just rotated my sIm card into this phone.  When someone leaves a voice mail message  I am not getting a notification.  I do see the missed call.  Is this the expected behavior ?  TIA
+08:08:40 <TheJollyRoger> If the phone fails to respond after a certain number of hours you've specified ,or it returns an incorrect answer, Attestation Server can send you an alert E-mail to say "Something is wrong!"
+08:08:44 <TheJollyRoger> Ahoy new_user_lol!
+08:09:04 <TheJollyRoger> Huh, odd. I don't think so?
+08:09:29 <TheJollyRoger> I unfortunately don't have the 3xl, I have the 3, I'm on a local carrier, I get voice mails... very strange.
+08:09:55 <TheJollyRoger> Stick around, I think there are some other people here who are also on Verizon, but it's REALLY late at night and graveyard hours for a lot of people in this channel.
+08:10:02 <somenerd[m]> > Attestation server will challenge your phone every so often (you can set the number of hours)
+08:10:02 <somenerd[m]> so we have to reaudit?
+08:10:05 <Tweak> i left it on 4 hours
+08:10:23 <TheJollyRoger> somenerd[m]: nope, you won't, it'll do this until you ask it to stop.
+08:10:38 <TheJollyRoger> It'll check in automatically, and only alert you if it detects a problem.
+08:10:49 <Tweak> copy
+08:10:56 <somenerd[m]> > It'll check in automatically, and only alert you if it detects a problem.
+08:10:57 <somenerd[m]> oh ok nice
+08:11:41 <TheJollyRoger> Yeah. The remote attestation is done via the device's hardware security module. Even if the operating system gets compromised, it can't lie to the hardware security module, because the chip exists outside the operating system.
+08:11:56 <somenerd[m]> that's nice
+08:12:21 <new_user_lol> TheJollyRoger , thanks.  I will see if it straightens out by morning.  I have 2 pixel3xl and rotate the sim cards between the 2 of them.  sometimes it takes awhiile to get straightened out.  I will check back in the morning.  thanks for the quick response.  I am Liking grapheneos.
+08:12:23 <TheJollyRoger> So in this way, even if the operating system gets compromised and someone attempts to modify the system image, Auditor can actually catch it.
+08:12:47 <TheJollyRoger> new_user_lol: Yarr! Welcome aboard the ship! I hope you enjoy the voyage!
+08:13:16 <TheJollyRoger> If you find GrapheneOS useful, please sling the devs a donation, which funds the project! https://grapheneos.org/donate !
+08:14:07 <TheJollyRoger> somenerd[m]: yeah it's really nice. Auditor is actually able to detect the presence of rootkitware or software that might function similarly to it; one thing I was especially surprised to learn was that Auditor can detect the presence of Magisk, even though Magisk is capable of lying to android debug bridge.
+08:14:27 <TheJollyRoger> *of some rootkitware
+08:14:29 <new_user_lol> will consider it.  just rung the bell for fairemail 2night.
+08:14:40 <TheJollyRoger> Yarr, awesome!
+08:14:53 <d0001> I've given up looking for a decent email client :/
+08:14:57 <somenerd[m]> Wow, even Magisk.
+08:15:08 <somenerd[m]> > I've given up looking for a decent email client :/
+08:15:08 <somenerd[m]> Fairemail and k9mail?
+08:15:53 <TheJollyRoger> new_user_lol: my carrier's voice mail is done via this really annoying dial-in menu where you have to navigate through the menus with that irritatingly slow voice... drives me up the wall. So far I haven't had any problems with getting the notifications, but it's like pulling teeth trying to get the messages out of my carrier >_<.
+08:16:15 <new_user_lol> yea my degoogle been fairemail, own smtp,imap, nextcloud ,plex
+08:16:19 <d0001> somenerd: ended up with protonmail
+08:16:36 <somenerd[m]> the default client?
+08:17:27 <d0001> I think that's the only option on mobile
+08:17:56 <TheJollyRoger> Yeah, I don't think Protonmail Bridge is available for mobile, sadly!
+08:18:03 <somenerd[m]> yeah
+08:18:10 <d0001> I'm using mutt + bridge on the desktop though
+08:18:11 <new_user_lol> yea I was on lineage before and the dialer would get a 4th lower tab that said voicemail.  then I would hit play and could listen to the message.  that was the android 10 version.  I notice grapheneos is on android 11.  anyway I dont mind dialing in and all but I would like to have the notification they left a message.  like I said it could be sim
+08:18:12 <new_user_lol> card related.  I loved that I was able and advised to relock my bootloader
+08:18:44 <TheJollyRoger> Yeah. I very much like lockable bootloaders, full hardware security features, and over the air updates as well, haha!
+08:19:28 <new_user_lol> yea the past OS I used warned against relocking the loader ,if I recall
+08:19:35 <TheJollyRoger> Yeah... maybe it's something with the carrier's end? Give it some time, I think there's bound to be someone else here that has voicemail.
+08:19:37 <TheJollyRoger> Yikes >_<.
+08:19:43 <TheJollyRoger> *voicemail and Verizon.
+08:20:17 <d0001> What device identifiers are applications able to obtain on graphene?
+08:20:29 <TheJollyRoger> Er, what do you mean device identifiers?
+08:21:07 <d0001> hardware addresses, ESIM, etc
+08:21:12 <somenerd[m]> https://grapheneos.org/faq#hardware-identifiers
+08:21:18 <somenerd[m]> https://grapheneos.org/faq#non-hardware-identifiers
+08:21:21 <somenerd[m]> these may help
+08:21:55 <TheJollyRoger> Since Android ~10, Apps aren't allowed to extract non-resettable hardware identifiers. GrapheneOS is no different; only privileged system components that need them to actually connect to the cell network can know your IMEI, SIM number, etc.
+08:22:34 <TheJollyRoger> There are some non-hardware identiifers such as Android ID, this is resettable and varies according to profile, if I recall right - somenerd[m] awesome, hah, beat me to it!
+08:23:27 <TheJollyRoger> d0001: Note that GrapheneOS does not have Advertising ID.
+08:23:35 <new_user_lol> The install went smooth and the phone has been flawless.  took me a bit to find my phone on my network with the random mac and all.  I got the straightened out though.  DId switch out for 'open launcher'.  I like the text below the icons.  One app I couldnt get to work with grapheneos/ android 11 was Konole.  It is a speech to txt app.  you have to
+08:23:36 <new_user_lol> setup your own server for it to work. anyway it said 'insufficient privileges'  although they all were granted.  not  big deal, it didnt work very well in noisy environments.  anyway I am just rambling.  thanks again
+08:23:38 <somenerd[m]> The FAQ was extremely helpful for me (not sure if it's extensive though)
+08:24:12 <d0001> somenerd: Thanks for the link!
+08:24:18 <TheJollyRoger> Yeah. I think I'm gonna have to add some of my old drafts to it when the new layout arrives, heh.
+08:24:19 <somenerd[m]> welcome
+08:24:23 <TheJollyRoger> Yarr!
+08:24:32 <TheJollyRoger> new_user_lol: hope you like GrapheneOS!
+08:25:30 <TheJollyRoger> Well, speaking of it being late for me, I'd best be off.
+08:25:35 <TheJollyRoger> bed-time for pirates.
+08:26:24 <new_user_lol> TheJollyRoger g'night.  thanks again
+08:26:45 <TheJollyRoger> Yarr, sleep well, me hearties!
+08:32:07 <d0001> Im off to bed too. Cya!
+09:29:51 <abumubarak[m]> https://github.com/GrapheneOS/os_issue_tracker/issues/153
+10:00:36 <weblogic[m]> Hey
+10:00:36 <weblogic[m]> Is using Google gboard and blocking it's network address safe enough?
+10:03:31 <weblogic[m]> * Hey
+10:03:31 <weblogic[m]> Is using Google gboard and blocking it's network access safe enough?
+10:07:10 <r0tt0r[m]> can someone with actual inkscape installed, check
+10:07:11 <r0tt0r[m]> inkscape --help | grep png
+10:07:11 <r0tt0r[m]> as i get -e as export to png, is that correct?
+10:09:06 * r0tt0r[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/aVgbcApBXazUhwyQFopcCkSz/message.txt >
+10:09:16 <r0tt0r[m]> * inkscape --version
+10:09:16 <r0tt0r[m]> 0.92.5
+10:09:40 <jpds> weblogic[m]: "Probably"
+10:10:12 <shurke> r0tt0r[m]: --export-type=[...]                        File type(s) to export: [svg,png,ps,eps,pdf,emf,wmf,xaml]
+10:10:22 <shurke> Inkscape 1.0.1 (3bc2e813f5, 2020-09-07)
+10:10:35 <shurke> ubuntu 20.04 default
+10:11:50 <r0tt0r[m]> <shurke "r0tt0r: --export-type=[...]     "> thx a lot for that info
+10:15:09 <r0tt0r[m]> strcat the current branding tools favicon etc are not working anymore due commandline changes in inkscape. i can send updated scripts if wanted
+10:19:48 <weblogic[m]> <jpds "weblogic: "Probably""> Why only probably and not direct yes/no?
+10:21:36 <r0tt0r[m]> <r0tt0r[m] "strcat the current branding tool"> pls ignore, im made a mistake in the folder
+10:21:39 <jpds> weblogic[m]: It's a closed-source app so noone can give you a yes/no
+10:22:44 <jpds> weblogic[m]: Ultimately, you have to choose whether you trust it or not
+10:23:33 <arpysco[m]> FWIW openboard is pretty nice, I find it better than simple kb or the aosp kb
+10:23:53 <jpds> It is, shame it doesn't have emoji search
+11:03:00 <kopolee11[m]> <Dylanger[m] "It's the 7th of December - shoul"> Yep there will be an update later today. The policy is a security update is released the first Monday of the month at 11 AM PDT unless it is a holiday.
+11:03:36 <Dylanger[m]> 👍
+11:03:53 * Dylanger[m] updates build PC
+11:12:43 <aye_papi[m]> ^ you won't become a maintainer for pixel 5. You are scured Dylanger  😫😁
+11:13:26 <Dylanger[m]> I am skewered?
+11:13:32 <weblogic[m]> <jpds "weblogic: Ultimately, you have t"> In using grapheneos firewall/permission to disable network access to the app
+11:13:48 <weblogic[m]> * In using grapheneos firewall/permission to disable network access to the Gboard app.
+11:13:49 <weblogic[m]> Can't I trust that?
+11:13:56 <aye_papi[m]> Like a shish kebab
+11:14:23 <aye_papi[m]> ❤
+11:15:55 <arpysco[m]> > <@weblogic:matrix.org> In using grapheneos firewall/permission to disable network access to the Gboard app.
+11:15:56 <arpysco[m]> > Can't I trust that?
+11:15:56 <arpysco[m]> The issue might be more that gboard doesn't run stably if you deny it permissions or if it can't find play services, but I wouldn't know because I haven't tried it personally
+11:17:14 <weblogic[m]> I'm using it right now
+11:17:14 <weblogic[m]> Works perfectly being denied network access.
+11:17:14 <weblogic[m]> The question was if I can trust that graphene truly block of network access and nothing transmitted
+11:17:46 <jpds> If you ever clear its storage, the permissions reset
+11:18:34 <weblogic[m]> I've taken Into account that each update I'll have to check for permissions that is if I'll ever update as it is sufficient
+11:18:45 <weblogic[m]> * I've taken Into account that each update I'll have to check for permissions that is if I'll ever update as it is sufficient as it is now
+11:23:44 <weblogic[m]> Honestly I was hoping to get more positive concrete answer that this network permission 100% doing the trick by safely blocking the network. Didn't know it would be so mystical and that it'll be maybe yes maybe no type of thing and no one will know for sure.
+11:23:44 <weblogic[m]> I'll take that into Consideration and maybe just remove it as seems its the only way to know it's safe.
+11:26:42 <arpysco[m]> Wait for an answer from Daniel then
+11:27:17 <arpysco[m]> Personally, I'd trust it
+11:27:49 <arpysco[m]> But I also won't get black helicopters hovering above my house if it doesn't work
+11:47:21 <nscnt> weblogic[m]: Network permission works 100 %. The point is: Apps can communicate with each other. If you have another app that has network permission, this app could act as a transmitter. You fully trust every app with network permission, that it won't act on such an intent from app X, e.g. Gboard (if there's one).
+11:48:47 <nscnt> weblogic[m]: You didn't know it. Others did. That's why you didn't get a concrete answer, because there is one. You trust. That's it.
+11:48:59 <nscnt> *there is none
+13:07:32 <somenerd[m]> I believe that the INTERNET permission does work, but apps without the INTERNET perm can communicate through IPC or send an intent to another app with the INTERNET perm.
+13:07:45 <somenerd[m]> However, you trust the other app with the perm
+13:08:09 <somenerd[m]> because you gave it to the app
+13:09:37 <somenerd[m]> An analogy would be you gave app A permission to access contacts. But you revoked it for B. What's to say app B won't ask app A for access to contacts?
+13:10:32 <somenerd[m]> App A is trusted with contacts and is trusted to not give any other apps contacts.
+13:10:49 <somenerd[m]> Now replace contacts with network.
+13:12:33 <somenerd[m]> Or even with other permissions (camera, microphone)
+15:27:47 <fomijafi[m]> I'm having trouble with Calls in a secondary user profile. I can make and receive the call, but no audio to/from. Has anyone dealt with this? Pixel 3, btw
+16:16:41 <eelworm[m]> I don't get it. Why would an app which has access to my contacts pass my contacts info to a different app that doesn't have access to it without my consent if the app I trusted wasn't intentionally malicious to begin with? Or in case of Gboard is it an actual concern that Google make apps that actively try to exploit vulnerabilities in others to gain extra permissions?
+16:24:08 <anupritaisno1[m]> eelworm: because
+16:24:27 <anupritaisno1[m]> If you grant a permission to the app you trust it with that permission
+16:38:09 <eelworm[m]> So? If I trust an app it is expected that said app will abuse that trust? If that's the "threat model" then why even use a third party device and OS.
+16:39:41 <nscnt> eelworm[m]: It's not an exploit. Apps being able to communicate with each other is intentional.
+16:42:42 <somenerd[m]> > I don't get it. Why would an app which has access to my contacts pass my contacts info to a different app that doesn't have access to it without my consent if the app I trusted wasn't intentionally malicious to begin with? Or in case of Gboard is it an actual concern that Google make apps that actively try to exploit vulnerabilities in others to gain extra permissions?
+16:42:42 <somenerd[m]> if it was malicious, you'd have trouble from the beginning
+16:43:02 <nscnt> All what was said is, that app B does not need permission P if app A has permission X and just acts on an intent of app B
+16:43:35 <nscnt> That's why we are talking about *trusting* with permissions
+16:44:15 <somenerd[m]> also, you trust the app not to act on the permission
+16:44:21 <somenerd[m]>  * also, you trust the app not to act on the permission
+16:44:36 <somenerd[m]>  * also, you trust the app not to act maliciously using the perm
+16:46:06 <somenerd[m]>  * You trust the app not to act maliciously using the perm
+17:07:02 <eelworm[m]> Evidently. Wasn't my question though but all this is offtopic anyway.
+17:09:34 <somenerd[m]> I don't think it is, it's a permission related to GrapheneOS
+17:17:34 <somenerd[m]>  * I don't think it is, the INTERNET permission is a permission related to GrapheneOS
+18:13:57 <cyborgninjaneer[> Does the Fairphone 3 lack the security capabilities needed for GrapheneOS support?
+18:14:30 <cyborgninjaneer[> I'd much rather support Fairphone than Google.
+18:15:07 <cyborgninjaneer[> In term of purchasing their products I mean. I don't like having to give Google money to get free of their dominion.
+18:18:04 <arpysco[m]> Yes it lacks it
+18:18:52 <naribia> which security capabilities specifically?
+18:19:35 <arpysco[m]> How about giving google money for a top notch device?
+18:19:38 <cyborgninjaneer[> That's unfortunate.
+18:21:39 <naribia> ya know, I appreciate google much more after re-discovering the closed environment apple forces onto their users
+18:21:39 <cyborgninjaneer[> Google making any money irks me. I'd rather pay a smaller, less toxic company for hardware.
+18:22:31 <cyborgninjaneer[> I don't like either Google or Apple.
+18:23:47 <arpysco[m]> It's possible to hate google's ad business and like its hardware
+18:24:11 <arpysco[m]> If google didn't make pixels, android would be worse off
+18:24:33 <cyborgninjaneer[> I distrust both, though I would rather use Apple given the choice of only those two. Both exploit the user, but Apple is all of easier to escape from. Google is just... Friggin everywhere.
+18:24:46 <arpysco[m]> So by supporting google's hardware you're supporting security and privacy
+18:24:57 <naribia> why do pixels make android better off?
+18:25:21 <arpysco[m]> Better security, easy flashing things like gos
+18:25:58 <arpysco[m]> <naribia "which security capabilities spec"> Look up the titan m chip
+18:26:05 <arpysco[m]> It's nice
+18:26:17 <naribia> yes, is that chip designed by google?
+18:26:59 <naribia> is the titan m chip the thing that holds the keys for checking os image signatures?
+18:28:00 <strcat[m]> it stores a copy of the bootloader lock state, custom OS verified boot key, etc.
+18:28:18 <strcat[m]> used to enforce it alongside the functionality on the SoC
+18:30:00 <cyborgninjaneer[> I'm really hoping to see a more ethical company come up with a similarly secure device that GrapheneOS could adopt.
+18:32:04 <cyborgninjaneer[> I mean, I know I'm sacrificing a bit of my fingerprint resistance by not using Safari on an ubiquitous iPhone, but hey. I don't have to trust an ethically questionable mega corporation not to serve me malware. Apple is arguably in the best place to do that if things go sideways.
+18:33:18 <arpysco[m]> how is google supposed to serve malware to a gos pixel?
+18:33:30 <cyborgninjaneer[> They can't. Lol
+18:33:52 <cyborgninjaneer[> You'd have to trust Google and use their software to get pwned
+18:34:37 <cyborgninjaneer[> Well, there is one way, technically. They'd have to poison AOSP without getting caught, in a way that isn't blocked by any of the GOS hardening.
+18:34:44 <cyborgninjaneer[> That's damn hard to do.
+18:37:17 <strcat[m]> they're one of the biggest contributors to the Linux kernel and do most of the work on security there
+18:37:21 <strcat[m]> along with substantial roles in other projects
+18:45:21 <naribia> eh
+18:45:47 <naribia> I'm trying to create a signify key, as per the build instructions
+18:46:09 <naribia> I typed: "signify -G -n -p keys/blueline/factory.pub -s keys/blueline/factory.sec"
+18:46:11 <naribia> and get:
+18:46:11 <anupritaisno1[m]> naribia: you don't need to
+18:46:13 <anupritaisno1[m]> You are building locally
+18:46:23 <naribia> "Signify: Unknown parameter '-G'"
+18:46:43 <hypokeimenon[m]> cyborgninjaneer: Same, something like a Fairphone but with properly implemented security and GrapheneOS would be ideal
+18:47:40 <naribia> anupritaisno1[m]: I'm not sure what you mean, don't I need signing keys to lock the bootloader?
+18:48:03 <strcat[m]> signify is just to sign the factory images zip
+18:48:04 <strcat[m]> for publishing it
+18:48:07 <strcat[m]> has no use for your own local usage
+18:48:37 <naribia> ah, I see
+18:48:44 <anupritaisno1[m]> naribia: signify is something we decided to use for our distribution
+18:48:56 <naribia> ok I see
+18:48:56 <anupritaisno1[m]> You can read the script yourself
+18:49:04 <arpysco[m]> I'm happy GOS went with signify
+18:49:07 <naribia> I'm still trying to figure all this out, first time doing it
+18:49:09 <arpysco[m]> gpg is a pain
+18:49:14 <anupritaisno1[m]> If factory.sec is not there it will skip signing that
+18:50:28 <naribia> currently I do not see a factory.pub or factory.sec in my keys/blueline folder
+18:50:32 <naribia> is that normal?
+19:00:33 <anima[m]> you have to download it in the guide
+19:01:26 <naribia> I don't see where in the guide it says I need to download it or where to get it from?
+19:13:31 <anon[m]1> Hello
+19:19:21 <anon[m]1> I have a question concerning the use of Vanadium: I wont make any changes to resist fingerprinting, but I asked myself whether it is useful to have ddg as a search engine by default. If youre visiting a news website and loading ads, wont Google Ads be able to determine that I didnt use Google and will it therefore be easier to be fingerprinted? But when I use Google every thing I type in gets sent to Google and they can
+19:19:21 <anon[m]1> identify me by this manner as well. So how do I get out of this? And should I delete all Browsing data from time to time?
+19:33:24 <anon[m]1> when having ddg as standard search engine I also feel a bit uncomfortable to enable search suggestions by default
+19:42:22 <teeq> Evening all, im looking for a developer who can help build me a branch of graphene
+19:53:02 <cyborgninjaneer[> Does DDG use Google ads?
+19:53:13 <cyborgninjaneer[> Look into Qwant as another alternative.
+19:54:50 <cyborgninjaneer[> I'm not seeing any connections to google from the Duckduckgo desktop site. I don't think there's a way for Google to exfiltrate data, especially if you have search suggestions off.
+19:57:43 <cyborgninjaneer[> OK, question. I know Tor browser is less secure, so would it be better to use it on a different user profile? How much of a difference does that make in terms of guarding my main profile against exploits?
+19:59:41 <cyborgninjaneer[> Second question: Firefox is weakly sandboxed, but wouldn't GrapheneOS' hardening grant the application sandbox a bit of security-by-obscurity in terms of what could potentially break out of it?
+20:00:44 <cyborgninjaneer[> Final question for now: If I use Tor browser specifically and exclusively for visiting .onion sites, what is the security implication if any?
+20:01:15 <cyborgninjaneer[> (Versus Tor browser for general use)
+20:03:17 <cyborgninjaneer[> (I know Tor has been discussed before, but I'm hoping to get some new details here)
+20:07:56 <strcat[m]> it totally lacks an internal sandbox and modern mitigations
+20:08:11 <strcat[m]> any compromise is a full compromise of the app
+20:08:25 <strcat[m]> so all your data available via the browser including in the future
+20:08:46 <strcat[m]> since they trivially allow attacker persistence too without an exploit
+20:10:29 <anima[m]> cyborgninjaneer:  fdroid build also has trackers, so you should simply use vanadium or bromite
+20:10:31 <anima[m]> nothing else
+20:11:46 <naribia> for finding apps?
+20:23:14 <justanotherlurke> <anima[m] "cyborgninjaneer:  fdroid build a"> Is Vanadium available outside of GOS?
+20:23:45 <anima[m]> if you compile it by yourself, probably
+20:23:49 <anima[m]> but what's the point >?
+20:24:03 * Golli[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/AfhtREuENhqPIMqcCFNbWwZN/message.txt >
+20:25:10 <strcat[m]> Firefox doesn't have a sandbox on Android
+20:25:17 <strcat[m]> and there's no such thing as sandboxing a tab due to how the web works
+20:25:29 <strcat[m]> it doesn't have a sandbox containing sites on any platform
+20:29:23 <cyborgninjaneer[> So does putting a non-sandboxed browser in a different android user profile do anything to protect the main user profile?
+20:30:23 <cyborgninjaneer[> I'm concerned mainly with the OS getting compromised. When using Tor browser, I effectively assume the browser is compromised.
+20:31:43 <cyborgninjaneer[> (At the moment I'm using Vanadium exclusively.)
+20:33:15 <strcat[m]> profiles provide semantic isolation between apps, each profile is an isolated workspace
+20:33:34 <strcat[m]> apps can't communicate across them, and there aren't ways to grant access to shared data across them
+20:33:37 <strcat[m]> that's what they are
+20:33:52 <strcat[m]> they aren't a way to sandbox apps, apps are already sandboxed
+20:34:26 <strcat[m]> running an app in another profile stops it from communicating with apps in your other profiles
+20:34:34 <strcat[m]> and data is specific to profiles
+20:34:41 <strcat[m]> it does not change anything about how the app sandbox works
+20:34:55 <abumubarak[m]> <sine "Damn. Yeah its crazy, they ran o"> I got my 3aXL from Swappa.com, mint condition for $275
+20:34:57 <strcat[m]> does not mean the OS is more protected from app, it's another profile, not some kind of more isolated environment
+20:35:53 <strcat[m]> doesn't matter which profile you run an app in when it comes to protecting the OS itself from compromise, why would it?
+20:36:15 <strcat[m]> other than it potentially not being able to exploit some other app to get access to more attack surface
+20:36:22 <cyborgninjaneer[> That makes sense - so if the app sandbox is broken and the OS is pwned, the other profiles dont have meaningful protection from the pwned one, right?
+20:36:41 <strcat[m]> the OS is what implements the isolation
+20:36:54 <strcat[m]> so how would it make a difference? other than profiles that are logged out being at rest
+20:36:58 <TheJollyRoger> Hey strcat[m], I'm going to send in a PR for a little bit of minor cleanup on the installation page with steps and numbering.
+20:37:03 <strcat[m]> profiles are isolated workspaces
+20:37:10 <cyborgninjaneer[> OK. I see. Crack the OS and the isolation is potentially gone.
+20:37:13 <strcat[m]> apps are always sandboxed
+20:37:26 <TheJollyRoger> This will be a few minor formatting changes, I won't change the instructions themselves.
+20:38:51 <strcat[m]> profiles are not another layer of sandbox, they're an isolated workspace
+20:39:13 <cyborgninjaneer[> Yeah, I know they are. My other question was in regards to the GrapheneOS sandbox in particular - does it potentially resist exploits that are meant for stock AOSP?
+20:39:24 <strcat[m]> of course, that's the point of GrapheneOS
+20:39:55 <strcat[m]> if you're concerned about being compromised, don't use a particularly insecure browser
+20:40:24 <cyborgninjaneer[> So assuming I'm dumb enough to use Tor browser and get my browser pwned, I still have something to gain from GrapheneOS versus a stock pixel.
+20:40:48 <cyborgninjaneer[> Well duh... And don't visit sketchy sites.
+20:40:57 <strcat[m]> suggest looking at https://grapheneos.org/features
+20:41:14 <cyborgninjaneer[> OK. I've seen it before but I'll look through it again.
+20:41:35 <strcat[m]> one of the main reasons for GrapheneOS to exist is making apps and the OS harder to exploit
+20:41:55 <strcat[m]> doesn't mean it's a good idea to run a particularly insecure app that does things negating a lot of the app defenses too
+20:42:24 <strcat[m]> if you're concerned about being compromised, don't run an app that's particularly prone to that and makes you a target
+20:42:26 <strcat[m]> that's the answer
+20:42:28 <cyborgninjaneer[> I'm certainly not going to assume that GOS will protect me from everything, especially with an app known for poor security.
+20:43:33 <cyborgninjaneer[> Shitty browsers aside, how good is AOSP and GOS protection against persistent exploits in general?
+20:45:10 <TheJollyRoger> cyborgninjaneer[: The Pixel handsets have verified boot. Every time you restart your phone, the late bootloader and the security chip work together to check your entire system partition matches a digital signature to cryptographic keys provisioned at the time of installation OR the keys permanently fused into the chip.
+20:45:20 <TheJollyRoger> If it doesn't match, the bootloader will try to revert it to a condition it does.
+20:45:36 <strcat[m]> cyborgninjaneer: lot of documentation on the exploit mitigations in AOSP and GrapheneOS
+20:45:36 <TheJollyRoger> If it can't restore it back to a condition it will pass verification, your phone won't boot.
+20:45:36 <strcat[m]> suggest reading what's written
+20:45:53 <TheJollyRoger> **the late-stage bootloader
+20:45:57 <strcat[m]> cyborgninjaneer: not going to write an essay in response to overly broad questions on IRC/Matrix
+20:45:59 <br_led[m]> so what is the recommended method to access TOR on GOS if tor  browser is insecure? apologies if this should be in off-topic
+20:46:00 <strcat[m]> read what's available
+20:46:32 <strcat[m]> br_led: what is your goal in using Tor anyway? define your goals
+20:46:58 <strcat[m]> the project doesn't make generic recommendations on something like that
+20:47:24 <br_led[m]> <strcat[m] "br_led: what is your goal in usi"> anonymity
+20:47:34 <strcat[m]> from who?
+20:47:43 <strcat[m]> going around between networks using Tor doesn't seem particularly anonymous
+20:48:33 <TheJollyRoger> br_led[m]: anonymity from your ISP? hiding your IP address from the site you're visiting?
+20:49:08 <cyborgninjaneer[> I hide my use of For from networks I connect to using either Tor-over-VPN or some serious obfuscation. There's no link between my phone and Tor.
+20:49:23 <br_led[m]> hiding address from site visiting and anyone monitoring the network.
+20:49:47 <strcat[m]> if they're monitoring the network then you aren't making yourself anonymous by using Tor
+20:50:04 <strcat[m]> simply the fact that you're using it makes you stand out quite a lot
+20:50:13 <br_led[m]> I also use tor over vpn
+20:50:15 <cyborgninjaneer[> I would use Tor to better hide from certain sites that are not compromised, but use some shitty analytics.
+20:50:18 <strcat[m]> and you'll be targeted via exit nodes too
+20:50:52 <TheJollyRoger> I think I'm going to just say do as what makes you happy; you guys seem to be determined to want to do what makes you happy, I don't think there's much I can say that will convince you otherwise.
+20:51:13 <cyborgninjaneer[> Currently I do not use Tor on my phone.
+20:51:23 <ephemeralang[m]> Has anyone experienced (a bug?) In OSM where when you select a destination, it doesn't load the directions? I also don't seem to be able to look up specific addresses either, just streets and intersections...
+20:52:17 <br_led[m]> I understand that timing attacks by nation states could potentially de anonymize someone.
+20:52:52 <cyborgninjaneer[> The main reason to use Tor would be to better hide the fingerprint of a particular device - that is still somewhat questionable though.
+20:54:30 <ephemeralang[m]> Does anyone know why OSM would just flat out not work?
+20:54:58 <cyborgninjaneer[> Does Tor browser actually hide the fact that I'm on a Pixel? Depends on the adversary's tools. It may or may not.
+20:55:50 <ephemeralang[m]> Does anyone know why / have good reason to believe that the for browser is compromised?
+20:57:00 <TheJollyRoger> Hey guys. I don't want to get to fingerpointing but I'd really like to remind everyone in this case of rule 2(D).
+20:57:19 <cyborgninjaneer[> <ephemeralang[m] "Does anyone know why / have good"> No. It's just a piece of shit.
+20:58:06 <cyborgninjaneer[> <TheJollyRoger "Hey guys. I don't want to get to"> What does this mean?
+20:58:39 <ephemeralang[m]> <cyborgninjaneer[ "No. It's just a piece of shit."> How so / what do you mean exactly?
+20:59:11 <cyborgninjaneer[> Look above at what strcat said. Tor browser is Firefox, which is shit.
+20:59:55 <TheJollyRoger> cyborgninjaneer[: Rule 2 is the "please avoid bikeshedding" rule. Item D in it is essentially, I really don't want to get into discussions about attackers with theoretical and unlimited capabilities, since these topics always seem to go in the same direction and it's one that plagues subreddits like r/privacy and the like.
+21:00:38 <Golli[m]> Isn't there an Android alternative for the Tor Browser called Foxy Browser or something like that?
+21:00:43 <Golli[m]> From the folks that made Orbot or something.
+21:01:27 <Golli[m]> Nvm, it's called Orfox and it's still based on Firefox.
+21:02:16 <TheJollyRoger> They don't really add much productive at best, but at worst they end up perpetuating doubt, or ending up as ego-driven "mine is bigger than yours" contests, which really isn't something I'd like to have here.
+21:04:10 <cyborgninjaneer[> My threat model is a snoopy ISP and common analytics tools on websites, like google and facebook analytics tools. The only thing theoretical about it is that I don't know what tools google analytics uses. My government doesn't have resources to waste on attacking me, especially when they can just buy data from the data giants (or receive it gratis)
+21:05:48 <cyborgninjaneer[> If there's a global passive adversary, either the same tools will work, or resistance is futile. In either case, it's not very useful to worry about that possibility.
+21:11:20 <cyborgninjaneer[> <Golli[m] "Isn't there an Android alternati"> You wouldn't want to use an alternative anyway, since it might have a different fingerprint from other Tor users. The goal is for nearly all Tor users to have identical or indistinguishable fingerprints. I don't know whether or not the Android Tor browser holds up to common analytics tools, but I know it has some resistance. I'd definitely run with js off though,
+21:11:20 <cyborgninjaneer[> because as Daniel said above, the app sandbox is the only thing protecting your device. That's very not ideal.
+21:11:49 <pacman37[m]> U can route Vanadium over Tor using Orbot and disable JavaScript, I mean in case u want to open onion sites but I am not sure if that way is the best to go with
+21:12:06 <TheJollyRoger> Hinky homebrewing never ends well.
+21:12:09 <TheJollyRoger> Honestly.
+21:12:43 <cyborgninjaneer[> With tor browser and js off, you look a lot more like other non-js tor users, plus there are far fewer options to try to pwn you.
+21:13:17 <cyborgninjaneer[> I would not bother using any other browser with tor because you'll be easy to identity
+21:13:21 <Golli[m]> <pacman37[m] "U can route Vanadium over Tor us"> Different browser engine though. You can tell if it's Chromium based or Firefox based by how it renders stuff.
+21:13:29 <pacman37[m]> But I think u will appear as a chrome user not Firefox
+21:13:49 <cyborgninjaneer[> It's imperative to blend into the crowd to get any utility out of Tor, so you're stuck with a shitty browser.
+21:13:51 <joehandcockandja> Just use the official browser lmao
+21:13:54 <pacman37[m]> <Golli[m] "Different browser engine though."> Yes u r right
+21:14:29 <joehandcockandja> The official one is pre-tuned to be very private
+21:14:45 <joehandcockandja> More private than a chromium browser routed through Tor
+21:14:45 <cyborgninjaneer[> For general use, it's better to go with Vanadium or Bromite plus a common VPN that's been proven under live fire from government adversaries
+21:15:31 <joehandcockandja> Yeah or Icecat
+21:15:37 <cyborgninjaneer[> If you feel you must use Tor, use only the official Tor browser, and accept that you are more vulnerable.
+21:16:05 <cyborgninjaneer[> I'd use tails, personally.
+21:16:39 <cyborgninjaneer[> your ISP will see you using it though
+21:17:20 <joehandcockandja> You can use a relay
+21:17:26 <joehandcockandja> Then they can't
+21:17:33 <Golli[m]> That's where the argument of using a VPN then connecting to Tor through that comes into play.
+21:17:57 <joehandcockandja>  Bridge, I mean
+21:18:38 <joehandcockandja> Honestly no one here needs to be *that* concerned about this stuff. Just use Tor or a VPN
+21:18:59 <cyborgninjaneer[> Yeah, a bridge might work. Maybe.
+21:20:29 <entry1[m]> <cyborgninjaneer[ "your ISP will see you using it t"> They would see you connected to a tor node, not your OS or anything else etc correct? This should probably be in OT btw
+21:21:05 <cyborgninjaneer[> If you want to do something more novel, maybe use a second GrapheneOS device (in case it gets pwned) a common VPN, and then run the official Tor browser with js off
+21:21:44 <cyborgninjaneer[> I would bet you'd be the most secure Tor user on the web, other than amnesiac operating systems like tails
+21:22:37 <pacman37[m]> I don’t think using both is a good idea
+21:23:19 <TheJollyRoger> It isn't, but generally when topics go this way of people essentially going "more is better" I just kinda smile and nod.
+21:23:28 <cyborgninjaneer[> Why? The tor connection originates from a VPN server instead of your device. That's the only difference. At worst it is redundant.
+21:24:15 <cyborgninjaneer[> People act like that somehow harms you, but never have I heard a valid argument for that.
+21:24:28 <joehandcockandja> It does harm you
+21:25:00 <cyborgninjaneer[> <joehandcockandja "It does harm you"> Take this to off-topic and explain why, please.
+21:25:13 <joehandcockandja> No
+21:25:38 <cyborgninjaneer[> Then I don't believe you.
+21:25:44 <TheJollyRoger> Yeah, honestly offtopic is a better place for it.
+21:25:54 <TheJollyRoger> But once it gets to mudslinging, neither channel is.
+21:26:33 <cyborgninjaneer[> I'm looking for a valid argument, bit I don't want to clutter the main channel.
+21:27:10 <cyborgninjaneer[> You can also DM me if you'd rather.
+21:27:23 <joehandcockandja> Just trust me dude
+21:27:30 <cyborgninjaneer[> No.
+21:27:38 <joehandcockandja> That's all I'll say
+21:28:42 <TheJollyRoger> Then I've had enough. You two, take it to direct messages.
+21:28:56 <ephemeralang[m]> Is there any benefit to using an http(s) proxy server in addition to a VPN+tor? Either to connect to the VPN, to connect to tor, or from for to a proxy?
+21:29:08 <joehandcockandja> I feel like the conversation just kind of ended anyway Mr Jolly Roger
+21:29:33 <TheJollyRoger> Good, let's leave it here.
+21:29:50 <manjaroi3> Hi everyone
+21:29:53 <TheJollyRoger> Ahoy!
+21:30:00 <ephemeralang[m]> Could a conventional https proxy be mitm'd anyway since there are no certificates?
+21:30:09 <joehandcockandja> Holy shit is it really the famed manjaroi3
+21:30:16 <joehandcockandja> Man's a legend
+21:30:35 <manjaroi3> I'm trying to flash grapheneos to pixel 4a right now and getting this error at the end of the flash-all.sh:
+21:30:59 <manjaroi3> Device version-bootloader is 's5-0.3-6835615'.
+21:30:59 <manjaroi3> Update requires 's5-0.2-6539975'.
+21:30:59 <manjaroi3> fastboot: error: requirements not met!
+21:30:59 <manjaroi3> Rebooting into bootloader                          OKAY [  0.012s]
+21:30:59 <manjaroi3> Finished. Total time: 0.063s
+21:31:21 <joehandcockandja> You have to update the firmware!!!!!!!!!
+21:31:22 <TheJollyRoger> Hi manjaroi3, you need to update the operating system on your 4a before running flash-all.sh.
+21:31:38 <TheJollyRoger> The easiest way to do this is connect the device to wifi and leave it until it updates.
+21:31:45 <manjaroi3> I did..
+21:31:54 <manjaroi3> all the updates are done...
+21:32:14 <TheJollyRoger> What's the build number on your 4a?
+21:32:55 <TheJollyRoger> You can check this by going to Settings -> About Phone, and scrolling all the way to the bottom.
+21:33:25 <manjaroi3> let me get out of fastboot and boot..
+21:33:47 <manjaroi3> just a sec
+21:35:29 <manjaroi3> RQ1A.201205.008
+21:36:05 <TheJollyRoger> Yeah, that's on Android Q. It's out of date.
+21:36:48 <manjaroi3> Can I flash the bootloader included in the zip manually ?
+21:37:06 <TheJollyRoger> I know that the Google OS often says it's downloading updates after you get through the launcher, but typically those end up being updates for the apps on it, not updates for the system.
+21:37:20 <TheJollyRoger> manjaroi3: this safety check's in place for a reason. I would not recommend circumventing it.
+21:37:43 <TheJollyRoger> It's hard to brick pixels, but it can be done, and messing with the bootloader is probably the easiest way to do it.
+21:37:58 <manjaroi3> I did all the system updates and checked over and over again to make sure...
+21:38:02 <TheJollyRoger> So what I would suggest is, if you want that phone updated now, you could simply sideload the OTA update.
+21:38:13 <TheJollyRoger> You're on the Google OS now, correct?
+21:38:17 <manjaroi3> yes
+21:38:22 <TheJollyRoger> Ok. Hang on a moment.
+21:38:59 <TheJollyRoger> manjaroi3: the build ID says that it's still on an older version of Android.
+21:39:43 <TheJollyRoger> Are you familiar with the process of sideloading an update?
+21:39:59 <manjaroi3> never done it
+21:40:12 <manjaroi3> lots off flashing stuff but never done sideload
+21:40:34 <TheJollyRoger> Ok, then I'll walk you through the process. This is very safe - can you lock the bootloader for me, please?
+21:41:19 <TheJollyRoger> Let me just check something.
+21:41:40 <TheJollyRoger> Actually, my bad.
+21:41:47 <TheJollyRoger> Looks like it is up to date -- I'm smoking crack.
+21:41:56 <TheJollyRoger> Sorry about that.
+21:42:14 <manjaroi3> No worries
+21:42:30 <manjaroi3> Security update shows december 5th
+21:42:43 <TheJollyRoger> Yeah, I misread the Build ID, D'oh.
+21:42:59 <manjaroi3> Dont know why I didnt get the firmware update..
+21:43:01 <manjaroi3> Grrr.
+21:43:08 <manjaroi3> What can I do ??
+21:43:29 <TheJollyRoger> Let me do a quick bit of reading first.
+21:44:06 <TheJollyRoger> We'll get you on GrapheneOS, not sure why the firmware on the device wasn't updated...
+21:44:30 <rinni> Isn't the bootloader _newer_ than required? s5-0.3-6835615 (device) vs. s5-0.2-6539975 ?
+21:45:36 <manjaroi3> you are right
+21:45:37 <TheJollyRoger> Hi rinni yeah I'm not seeing anything in my troubleshooting notes -- I think we should wait on someone more knowledgeable than I am here >_<.
+21:45:50 <TheJollyRoger> Sorry guys.
+21:46:16 <TheJollyRoger> I still wouldn't recommend bypassing the check though, JIC.
+21:46:47 <TheJollyRoger> Since if the bootloader of the phone gets messed up, I don't know how you would get it back.
+21:46:49 <manjaroi3> Should I just run flash-base.sh script included in the zip and try to downgrade ?
+21:46:55 <anupritaisno1[m]> TheJollyRoger: he can just start flashing
+21:47:05 <TheJollyRoger> anupritaisno1[m]: got it. Could you take this one, please?
+21:47:13 <anupritaisno1[m]> manjaroi3: run ./flash-all.sh
+21:47:22 <manjaroi3> I did
+21:47:28 <anupritaisno1[m]> Graphene's ./flash-all.sh
+21:47:29 <rinni> Well there is just no GrephenOS release with security updates for december - you just ahve to qait I guess
+21:47:41 <manjaroi3> it fails at the end because the bootloader is newer
+21:47:57 <rinni> *just have to wait I guess
+21:48:04 <anupritaisno1[m]> manjaroi3: I don't think you followed the instructions though
+21:48:28 <anupritaisno1[m]> If you ran ./flash-all.sh it should have flashed the bootloader
+21:48:53 <manjaroi3> I did, connected the device to internet first as its recommended in the website, and let run the stock updates first
+21:49:29 <anupritaisno1[m]> TheJollyRoger: k then do that thing I told you about
+21:49:48 <anupritaisno1[m]> Flash grapheneos through the recovery
+21:49:49 <anupritaisno1[m]> I'm busy with something else
+21:49:57 <anupritaisno1[m]> What's probably the case is
+21:50:12 <anupritaisno1[m]> Bootloader has set an update flag he didn't clear
+21:50:18 <TheJollyRoger> anupritaisno1[m]: wait wait wait you want me to walk him through a process you've only told me about but never actually attempted live?
+21:50:27 * TheJollyRoger is hastily turning pages.
+21:50:30 <anupritaisno1[m]> And now it is refusing to flash the bootloader
+21:50:44 <anupritaisno1[m]> He didn't read that part
+21:50:47 <anupritaisno1[m]> TheJollyRoger: yes
+21:50:55 * TheJollyRoger starts breaking out in a cold sweat.
+21:51:43 <TheJollyRoger> Well, I can transcribe my notes I took on it here.
+21:52:13 <TheJollyRoger> manjaroi3: I've got my notes here and I can read them out to you on the process, but I haven't attempted this before myself.
+21:52:20 <TheJollyRoger> So I'll walk you through it as best as I can.
+21:53:38 <manjaroi3> What are we gonna do exactly ? Flash the system zip manually ?
+21:54:05 <TheJollyRoger> Once the bootloader's unlocked, it says here what we could do is flash the avb custom key first, extract the image, extract the zip within the factory image, and flash boot first, reboot to fastboot, then wipe data, then apply the update from ADB.
+21:54:14 <manjaroi3> I can just wait untill graphene os gets an update.. Open an issue at github...
+21:54:28 <TheJollyRoger> I have a spare handset here, and if you give me a bit of time I can try the process out on this end first.
+21:55:35 <anupritaisno1[m]> TheJollyRoger: avb key already flashed I think
+21:55:40 <TheJollyRoger> Well... you're in luck, I think there may have an update later tonight, if not tomorrow?L
+21:55:43 <anupritaisno1[m]> He ran the script
+21:56:45 <manjaroi3> Yes
+21:56:55 <manjaroi3> keys are flashed
+21:57:20 <TheJollyRoger> Ok, hang on. Let me dig up a spare handset and try the workflow here so I have an idea what to expect before trying to show someone else.
+21:57:21 <manjaroi3> But I can wait for a few days untill the update is there
+21:58:26 <manjaroi3> Very nice of you mate. I thought it would be a quick process.. It's pretty late here and gotta work tomorrow..
+21:59:04 <TheJollyRoger> Ah shoot, >_<. Well, this is a bit of an odd situation, I just don't want to advise someone to do a process that I haven't tried out here on my own yet.
+21:59:55 <manjaroi3> Thanks mate. I understand and its very nice of you wanting to prove the process first, taking your time.. Should I open an issue at github ?
+22:00:16 <TheJollyRoger> Ah, not yet. There may be an update out very soon.
+22:00:27 <manjaroi3> alright
+22:00:30 <manjaroi3> Thanks a lot
+22:00:32 <TheJollyRoger> If the update doesn't fix it, we could try to flash boot and then sideload via recovery.
+22:00:39 <TheJollyRoger> Good luck, shipmate!
+22:00:43 <TheJollyRoger> Sleep well.
+22:01:05 <manjaroi3> Alright. I'll bother you again in a few days
+22:01:07 <manjaroi3> Thanks!
+22:03:38 <TheJollyRoger> Look out everyone on the IRC side here comes the tide!
+22:03:38 <TheJollyRoger> Freenode must be having problems, sit tight, we'll ride it out.
+22:03:38 <TheJollyRoger> The rest of the channel should return shortly.
+22:12:02 <pacman37[m]> Is any official recommended apps to use except Bromite?
+22:12:20 <pacman37[m]> * Is there any official recommended apps to use except Bromite?
+22:12:49 <pacman37[m]> Or not officially
+22:13:13 <pacman37[m]> I mean recommended by the project
+23:06:15 <vsinghsanwal[m]> <a4ve3ryl1e3e3t7[ "Magisk :)))))))"> Yeah, no. Sarcasm doesn't do well here, so please don't.
+23:09:30 <vsinghsanwal[m]> Hey, I am having a 4a brought to me from the US by a friend. How do I have them check whether or not the device is truly unlocked?
+23:09:30 <vsinghsanwal[m]> Is there a sure shot easy way of doing this within the device itself? My friend cannot install platform tools etc for sure.
+23:13:08 <jpds> vsinghsanwal[m]: Just do the OEM unlock under developer settings
+23:16:00 <Adam17761776> hi
+23:16:09 <Adam17761776> I just bought a Google Pixel 4A device
+23:16:15 <Adam17761776> I havent even turned it on, its fully charged
+23:16:33 <Adam17761776> Can/Should I flash Graphne os usning the 'Flasher tool' found in Calyx OS Reddit
+23:16:40 <Adam17761776> Or do i need to enable OEM unlock first?
+23:17:15 <Adam17761776> Running Trisquel, and going to use 'device.flasher.linux'
+23:23:40 <Adam17761776> Hey can somebody help me install Graphene OS really quick
+23:23:44 <Adam17761776> just s step by step guide
+23:24:00 <Adam17761776> I have a Google Pixel 4A and 'Delivice-flasher.linux' from Calyx OS subreddit
+23:24:16 <Adam17761776> 1st. unlock OEM unlock,
+23:24:56 <mrxx_0[m]> Adam17761776 here is the official install guide : https://grapheneos.org/install
+23:26:13 <Adam17761776> can I use the device flasher tool?
+23:26:20 <mrxx_0[m]> <Adam17761776 "Can/Should I flash Graphne os us"> No. If you do that you won't find any support here. Follow the official install guide from GrapheneOS website. You need nothing more.
+23:26:48 <Adam17761776> Great thanks
+23:28:15 <mrxx_0[m]> Follow step by step the guide, it's not really complicated as long as you take your time and read simply the instruction.
+23:28:38 <Adam17761776> Im running a custom OS
+23:28:42 <Adam17761776> Trisquel OS
+23:28:49 <Adam17761776> So Im concerned Ill get out of date software
+23:28:56 <Adam17761776> If I brick the Pixel how do i restore it
+23:29:28 <Adam17761776> Has anybody reported using "device-flasher.linux" successfully?
+23:30:02 <mrxx_0[m]> <Adam17761776 "If I brick the Pixel how do i re"> You can't brick your device if you follow the guide.
+23:30:22 <mrxx_0[m]> <Adam17761776 "Has anybody reported using "devi"> You won't find support for that here.
+23:30:29 <anima[m]> <Adam17761776 "Has anybody reported using "devi"> this is not CalyxOS channel
+23:30:46 <Adam17761776> I know,
+23:30:46 <Adam17761776> ..
+23:30:53 <Adam17761776> I cant see my device verison
+23:31:01 <Adam17761776> "fastboot --version" = fastboot version debian
+23:31:27 <mrxx_0[m]> Did you add fastboot to your env path ?
+23:31:55 <Adam17761776> How do i do that?
+23:32:07 <mrxx_0[m]> You read the guide.
+23:32:22 <mrxx_0[m]> And I assume you didn't.
+23:32:40 <mrxx_0[m]> > Adam17761776 here is the official install guide : https://grapheneos.org/install
+23:32:41 <mrxx_0[m]> I said it here.
+23:33:36 <Adam17761776> I read it and installed fastboot but I dont know how to add the env variable
+23:33:47 <Adam17761776> "Next, add the tools to your PATH in the current shell so they can be used without referencing them by file path, enabling usage by the flashing script."
+23:33:54 <mrxx_0[m]> <Adam17761776 "How do i do that?"> It's in the guide
+23:34:11 <Adam17761776> sudo: export: command not found
+23:34:19 <Adam17761776> If you could take 5 minutes and write up a step by step
+23:34:25 <Adam17761776> that would help a lot
+23:35:39 <jpds> export isn't a command, it's a shell builtin
+23:35:43 <Adam17761776> sudo export PATH="$PWD/platform-tools:$PATH"sudo: export: command not found
+23:35:52 <Adam17761776> so how do I run export
+23:35:52 <mrxx_0[m]> There is no sense of using sudo for that.
+23:36:04 <Adam17761776> ok
+23:36:21 <Adam17761776> "fastboot --versionfastboot version debian"
+23:36:22 <mrxx_0[m]> <jpds "export isn't a command, it's a s"> And yes it's a builtin
+23:37:10 <mrxx_0[m]> Please read the guide.
+23:37:17 <Adam17761776> I am
+23:37:26 <Adam17761776> Im literally copy pasting commands
+23:39:04 <Adam17761776> I cant figure this out
+23:39:09 <Adam17761776> can somebody just spend 5 minutes helping me
+23:39:15 <Adam17761776> I type commands "export PATH="$PWD/platform-tools:$PATH"" and
+23:39:16 <Adam17761776> then
+23:39:22 <Adam17761776> "fastboot version debian"
+23:39:28 <Adam17761776> When I should be seeing a version number
+23:39:41 <Adam17761776> So how do I check my verison number?
+23:39:43 <mrxx_0[m]> <Adam17761776 ""fastboot version debian""> Where did you see that command ?
+23:39:52 <Adam17761776> "fastboot --version"
+23:39:55 <Adam17761776> "fastboot version debian"
+23:40:05 <Adam17761776> Its supposed to say verison 39+.0x
+23:40:24 <mrxx_0[m]> What "fastboot --version" gives ?
+23:40:26 <Adam17761776> Should I just install the Standalone tool from google?
+23:40:26 <Adam17761776> Yes
+23:40:32 <Adam17761776> "fastboot --version" =="fastboot version debian"
+23:41:01 <mrxx_0[m]> Did you download platform tools with curl?
+23:41:12 <Adam17761776> Standalone tools you mean?
+23:41:13 <Adam17761776> Doing so now
+23:41:46 <mrxx_0[m]> Why you don't follow the guide ? I am not gonna waste my time if you don't follow the guide.
+23:41:56 <Adam17761776> I am
+23:42:04 <mrxx_0[m]> It's the 3rd time at least I am telling you that.
+23:42:37 <Adam17761776> I'll donate to Graphene After this as a thank you
+23:42:48 <mrxx_0[m]> <Adam17761776 "I am"> Apparently not
+23:42:54 <Adam17761776> yes I am
+23:43:06 <Adam17761776> Should I update my Android Firmware for default Google Pixel 4A
+23:43:18 <Adam17761776> Then enable OEM Unlock right?
+23:43:55 <mrxx_0[m]> Yes it is said in the guide as the prerequisites
+23:43:56 <mrxx_0[m]> https://grapheneos.org/install#prerequisites
+23:44:40 <Adam17761776> Great Thanks!
+23:44:45 <mrxx_0[m]> > Yes it is said in the guide as the prerequisites
+23:44:45 <mrxx_0[m]> > https://grapheneos.org/install#prerequisites
+23:44:45 <mrxx_0[m]>  "It's best practice to update the stock OS on the device to make sure it's running the latest firmware before proceeding with these instructions. This avoids running into bugs, missing features or other differences in older firmware versions. You can either update the device via over-the-air updates or sideload a full update, which for Pixel phones can be obtained from the full update package page."
+23:45:33 <Adam17761776> Yes beautiful
+23:45:49 <mrxx_0[m]> Classic rtfm situation here
+23:46:20 <Adam17761776> Haha
+23:46:26 <Adam17761776> Do I need " sunfish-ota_update-2020.11.27.15.zip"?
+23:46:31 <Adam17761776> red team field manual?

@@ -1,0 +1,1263 @@
+00:01:07 <valldrac> I’d revert it so we can work in the proper fix without hurry. But up to you
+00:02:22 <valldrac> Anyway I’ll be focus on this during the weekend
+00:03:40 <strcat[m]> valldrac: could you maybe figure out which processes this is used in
+00:03:47 <strcat[m]> and we can just disable SLOT_RANDOMIZE for those as a quick workaround
+00:03:52 <strcat[m]> SLOT_RANDOMIZE is not important
+00:04:19 <renlord> woohoo, coral support soon?
+00:05:46 <strcat[m]> renlord: don't think so just added some empty repos
+00:06:00 <strcat[m]> someone did some work on it but there are major issues
+00:06:09 <strcat[m]> and I don't own the devices to do releases
+00:07:40 <renlord> strcat[m]: do you think it'll be appropriate to include the mocked gapi for cam provider?
+00:08:18 <strcat[m]> don't want to do stuff like that atm
+00:08:31 <strcat[m]> got a lot of issues that need to be addressed and the Android 11 migration not that far away
+00:09:03 <strcat[m]> I think emulating Google Play needs to have a per-app toggle and should be a separate project we can rely on that's focused on minimalism / security
+00:09:03 <strcat[m]> not microG
+00:09:09 <strcat[m]> off by default and not the way they do it
+00:09:20 <strcat[m]> just stub things out, pretend services aren't available, all of it
+00:09:22 <strcat[m]> stub out all the APIs
+00:09:29 <strcat[m]> and must be opted into per app
+00:09:37 <renlord> the mocked gapi is not microg
+00:09:41 <strcat[m]> so it doesn't trigger apps like Signal to try using GCM instead of their own push
+00:09:42 <renlord> its actually stubbing out the API
+00:10:09 <renlord> https://github.com/LumenReaper/Gcam-Services-Provider/blob/master/app/src/main/java/com/google/android/gms/GServicesProvider.kt
+00:10:11 <renlord> lulz
+00:10:23 <strcat[m]> renlord: well that makes more sense just not ready to do this atm and needs to be optional / opt-in
+00:10:29 <JTL> > 17:09 <strcat[m]> I think emulating Google Play needs to have a per-app toggle and should be a separate project we can rely on that's focused on minimalism / security
+00:10:31 <JTL> Agreed
+00:11:02 <strcat[m]> valldrac: try to figure out which process this happens in tho so we can just disable SLOT_RANDOMIZE there
+00:11:07 <strcat[m]> so I can just put this into the next release
+00:11:14 <strcat[m]> revert your attempted fix + work around it like that
+00:12:09 <valldrac> okay, I’ll tell you
+00:15:46 <strcat[m]> I just want it to work for now like stock
+00:16:01 <strcat[m]> if they removed it in master we don't even need to ever fix it
+00:16:05 <strcat[m]> hopefully gone in ANdroid 11
+00:16:28 <strcat[m]> I'll work on the hardened_malloc change
+00:19:46 <strcat[m]> valldrac: https://github.com/GrapheneOS/hardened_malloc/commit/c525803921e622cd50e7556911f339e76c00bff9
+00:19:51 <strcat[m]> just need exe path to plug into to that
+00:20:01 <nickcalyx[m]> > I think emulating Google Play needs to have a per-app toggle and should be a separate project we can rely on that's focused on minimalism / security
+00:20:01 <nickcalyx[m]> Microg does have a per-app toggle for gcm registration allow
+00:20:23 <JTL> nickcalyx[m]: I think he's talking for more then just that
+00:20:23 <strcat[m]> nickcalyx: want more than just for that tho
+00:20:34 <strcat[m]> nickcalyx: and also an app can decide to use GCM just because it sees Playu
+00:20:37 <strcat[m]>  * nickcalyx: and also an app can decide to use GCM just because it sees Play
+00:20:43 <JTL> I've noticed that oo
+00:20:44 <strcat[m]> nickcalyx: usually what will happen
+00:20:53 <strcat[m]> nickcalyx: so for example if Signal sees Play
+00:20:57 <strcat[m]> I think it will try to use GCM
+00:20:58 <renlord> as a permission toggle?
+00:21:04 <strcat[m]> I don't think it will fall back if GCM doesn't work
+00:21:10 <renlord> like Network?
+00:21:14 <strcat[m]> they have Play and non-Play paths, they don't handle GCM being unavailable
+00:21:31 <nickcalyx[m]> Makes sense, why would they
+00:21:36 <strcat[m]> nickcalyx: and we never want to actually have GCM in GrapheneOS just fake always down GCM
+00:21:53 <strcat[m]> we just want a toggle to enable stubbed out Play Services where it pretends everything is down / unavailable
+00:22:05 <strcat[m]> so instead of app not running it's just like it can't connect to Google services
+00:22:13 <strcat[m]> so some won't work still
+00:22:15 <strcat[m]> but many will work
+00:22:20 <strcat[m]> with partial functionality
+00:22:26 <strcat[m]> mostly just push notifications missing, etc.
+00:22:30 <strcat[m]> unless they use Google for login or w/e
+00:22:34 <strcat[m]> then it just won't work but w/e
+00:37:49 <valldrac> strcat[m]: libaudiopolicyservice.so, and is loaded by audioserver, let me search the full path
+00:38:08 <strcat[m]> valldrac: need the executable not the library
+00:38:10 <strcat[m]> so audioserver
+00:38:14 <strcat[m]> path to audioserver
+00:38:32 <strcat[m]> SLOT_RANDOMIZE is really unimportant so it's not a big deal to temporarily disable it for a process
+00:38:45 <strcat[m]> probably easiest way to deal with this if it works around the problem enough to wait for their upstream fix
+00:43:12 <valldrac> strcat[m]: /system/bin/audioserver
+00:44:54 <strcat[m]> valldrac: try pulling the frameworks/av and external/hardened_malloc changes
+00:44:58 <strcat[m]> and just trying with that workaround
+00:45:28 <strcat[m]> not pretty but...
+00:45:29 <strcat[m]> it is what it is
+00:46:36 <strcat[m]> maybe I'll do a release tomorrow with this
+00:46:58 <valldrac> valldrac: okay, but let me check the fix first
+00:47:10 <strcat[m]> yeah
+00:47:28 <strcat[m]> valldrac: also could try working around camera bugs with more nonsense like this
+00:47:34 <strcat[m]> there's already an attempt
+00:51:16 <strcat[m]> C++ is such a shit language
+00:51:30 <strcat[m]> layer on all this complexity and nonsense abstraction while it still being totally unsafe everywhere
+00:51:31 <strcat[m]> not good
+00:51:49 <renlord> legacy codebase, what do?
+00:52:07 <renlord> cant just ask everyone to upgrade to c++14 today.
+00:52:39 <strcat[m]> C++14 isn't any safer tho
+00:52:41 <strcat[m]> they just add more
+00:52:46 <strcat[m]> and people just abstract more and more
+00:52:49 <strcat[m]> but it can't do safety
+00:53:10 <strcat[m]> so you have this mix of layers and layers of weird abstractions, using a fucked up type system that's not based on actual type theory stuff
+00:53:18 <strcat[m]> with unsafety everywhere
+00:53:24 <strcat[m]> also class inheritance is a horrifying thing
+00:53:32 <strcat[m]> it's hard to unravel what code is being called and what's happening
+00:53:51 <strcat[m]> hard to debug this crap
+00:54:06 <renlord> you have gripes with runtime vtable resolutions
+00:54:24 <strcat[m]> renlord: mostly just class inheritance
+00:54:31 <strcat[m]> it doesn't make sense
+00:54:54 <renlord> if it can be resolved statically in compile-time, class inheritance is OK imo
+00:55:10 <strcat[m]> I think it's a weird, illogical thing
+00:55:20 <strcat[m]> and hard to follow or do correctly
+00:55:25 <valldrac> strcat[m]: the problem with the camera is that there are some proprietary libraries in place, with no source code
+00:55:38 <strcat[m]> valldrac: yeah but they have symbols at least
+00:55:39 <valldrac> strcat[m]: so it's even harder
+00:55:45 <strcat[m]> and we can just work around bugs and report upstream
+00:56:21 <strcat[m]> don't really feel like trying to fix device-specific bugs all the time rather than just reporting them
+00:56:51 <strcat[m]> valldrac: going to start building a release
+00:56:55 <strcat[m]> needs to be tested first ofc
+00:57:19 <strcat[m]> but this workaround + revert of the attempted fix is progress
+00:57:31 <strcat[m]> as long as it's for the right process and works
+00:57:52 <strcat[m]> building now
+00:58:00 <strcat[m]> can use beta to test
+00:58:04 <aeonsolution[m]> <strcat[m] "don't really feel like trying to"> its hard for you to do it all, it might be the best option right now with how the little contribution is coming in
+00:59:06 <valldrac> strcat[m]: my build is sooo slow
+00:59:07 <renlord> dont know if relevant, but encountering camera error on gcam is significantly less of an occurance compared to opencam
+01:00:04 <renlord> valldrac: what sort of HW spec?
+01:01:29 <aeonsolution[m]> question for the group:
+01:01:29 <aeonsolution[m]> should we be testing with the beta when strcat makes a new release?
+01:01:47 <valldrac> renlord: one thinkpad with external hdd
+01:02:34 <renlord> valldrac: compiling using external hdd?
+01:02:48 <renlord> thats a very huge io penalty hit
+01:03:04 <valldrac> renlord: I know, but the internal ssd is not big enough
+01:03:40 <valldrac> renlord: I plan to upgrade soon
+01:03:50 <aeonsolution[m]> are you using a vm valldrac?
+01:04:05 <renlord> and pay hypervisor penalty on top of io?
+01:04:07 <renlord> lol
+01:04:12 <valldrac> aeonsolution[m]: no way! xD
+01:04:41 <aeonsolution[m]> how much memory you got on your main? maybe try 7zips some files
+01:04:48 <cn3m[m]> > <@aeonsolution:matrix.org> question for the group:
+01:04:48 <cn3m[m]> > should we be testing with the beta when strcat makes a new release?
+01:04:48 <cn3m[m]> I am always on beta
+01:05:46 <renlord> i still havent received my refund for spectre mitigation on intel machines
+01:06:01 <renlord> they should at least refund me 30% of the price of the CPU I paid for.
+01:06:32 <travankor_> you can turn the mitigations off?
+01:06:33 <renlord> amd too
+01:06:47 <renlord> travankor_: then what? leave my front door open?
+01:06:56 <renlord> that's not a very reasonable thing to do
+01:07:02 <cn3m[m]> I have Intel something or another
+01:07:20 <travankor_> how many real world spectre exploits are there?
+01:07:25 <aeonsolution[m]> <cn3m[m] "> <@aeonsolution:matrix.org> que"> thanks
+01:07:28 <valldrac> renlord: no worries, we won't tell anyone, try https://make-linux-fast-again.com
+01:07:38 <renlord> its analagous to a builder giving you a broken toilet installation with untinted bathroom windows.
+01:07:40 <cn3m[m]> travankor: hey I have some beachfront property in Arizona to sell you. I will throw a librem 13 in with it
+01:07:54 <renlord> and builder just asks you to shower naked exposed to everyone, refusing to replace the window.
+01:08:01 <JTL> cn3m[m]: lol
+01:10:11 <renlord> maybe an airgapped computer can run with those mitigations off
+01:10:57 <renlord> its not a realistic option for me right now, since i have multi-use purposes for my pC.
+01:12:07 <cn3m[m]> I run Windows 10 Enterprise now. I love all the VMs
+01:12:24 <cn3m[m]> It is like Qubes with anti exploitation
+01:13:32 <travankor_> you should also disable hyperthreading if you want to pedantic with the mitigations but w/e
+01:13:50 <travankor_> to be*
+01:27:26 <renlord> good point, but at that point, i really need a 50% refund or more.
+01:27:54 <renlord> should just use an ARM SBC as my main computer at that point
+01:29:53 <cn3m[m]> <renlord "should just use an ARM SBC as my"> 2021 macbook
+01:41:17 <cn3m[m]> <strcat[m] "not microG"> how would that work? isn't that a huge project
+01:41:27 <strcat[m]> no
+01:41:31 <strcat[m]> just stubbing out all the APIs
+01:41:33 <strcat[m]> not implementing them
+01:57:34 <strcat[m]> valldrac: initial build seems fine but I can't test much
+01:57:37 <strcat[m]> don't have BT audio devices
+01:57:41 <strcat[m]> just other BT devices
+02:18:17 <RageLtMan> strcat: is the build in beta chan by chance?
+02:19:53 <strcat[m]> not yet
+02:19:55 <strcat[m]> takes a while to get it rdy
+02:20:36 <strcat[m]> only 3a build is done
+08:27:03 <highupper[m]> Are there any plans to support Pixel 4 or future 5 devices? I'm aware that Daniel Micay doesn't want to add more devices, but maybe when Pixel 2 support is dropped it could be replaced with newer Pixels? Personally I was thinking about buying a Pixel 3 (3a is only like 20€ cheaper), but only one year of support (October 2021, considering it's release date) is not enough for such an expensive phone (compared to e.g.
+08:27:04 <highupper[m]> Xiaomi devices). Speaking of Xiaomi: I think I read that Xiaomi Mi A2 support was considered at some point. What about supporting a newer Mi A model (Mi A4?). It would probably expand Graphene's userbase, as Mi A devices are much more affordable than Pixels.
+08:27:22 <highupper[m]> * Are there any plans to support Pixel 4 or future 5 devices? I'm aware that Daniel Micay doesn't want to add more devices at the moment, but maybe when Pixel 2 support is dropped it could be replaced with newer Pixels? Personally I was thinking about buying a Pixel 3 (3a is only like 20€ cheaper), but only one year of support (October 2021, considering it's release date) is not enough for such an expensive phone
+08:27:22 <highupper[m]> (compared to e.g. Xiaomi devices). Speaking of Xiaomi: I think I read that Xiaomi Mi A2 support was considered at some point. What about supporting a newer Mi A model (Mi A4?). It would probably expand Graphene's userbase, as Mi A devices are much more affordable than Pixels.
+08:28:13 <RageLtMan> from what i understood of the post about new devices: developers need to sign on as maintainers for each device tree
+08:28:27 <fujita_[m]> No, there is a lack of community support at he moment
+08:28:42 <fujita_[m]> the*
+08:29:41 <dazinism> highupper: the Mi A2 was a viable device, but they dropped verified boot support for alternative OS
+08:29:51 <fujita_[m]> daniel is doing most of the work by himself so any chance of other devices getting supported would require the help of the community
+08:29:53 <dazinism> When they moved from Oreo
+08:30:27 <highupper[m]> <RageLtMan "from what i understood of the po"> Yeah, I think the reason behind this is that Daniel can't maintain lots of devices alone. But when Pixel 2 support is dropped isn't there room for a new device?
+08:30:31 <nickcalyx[m]> The pixel 3a is currently on sale at least in the US for 279
+08:30:32 <RageLtMan> Is there any appetite in the community to do something like kickstarters or bounties of some sort to compensate would-be developers for the work required?
+08:31:15 <highupper[m]> <dazinism "highupper: the Mi A2 was a viabl"> Oh ok. Maybe we can reconsider it when the Mi A4 is released.
+08:31:17 <RageLtMan> when you say "room for a new device," you realize that the statement expands to "an entirely new set of software and hardware problems to address" compared to maintenance functions for a legacy device
+08:32:10 <fujita_[m]> please read up on daniel's past reddit comment
+08:32:54 <RageLtMan> Which one?
+08:33:07 <dazinism> Also Daniel wants to stop, maintaining devices. The project needs other people to do this.
+08:33:46 <highupper[m]> <RageLtMan "when you say "room for a new dev"> Well yes, but I don't think the Pixel 2 will be supported forever (it'll run out of vendor updates). And supporting a new (series) of device(s) always requires work (so did the Pixel 3 series).
+08:34:16 <dazinism> When the Pixel2 devices are dropped, I dont imagine he will take on new devices.  Needs other people doing that work
+08:34:29 <RageLtMan> Yes, requires work, and there being only one guy doing ALL of the work, means burdening him more
+08:34:47 <fujita_[m]> use reddit comment search type in his name and Pixel 4
+08:35:03 <fujita_[m]> that should answer most of your questions
+08:35:28 <fujita_[m]> he mainly needs development help at the moment
+08:35:53 <highupper[m]> Is there some sort of documentation which hardware features are required for GrapheneOS to use it's full potential? Also is there a documentation on which device specific changes need to be done to Graphene's source code?
+08:36:20 <RageLtMan> Right, but if nobody is stepping up to do that gratis, are there financial incentives that the community could provide to hire them? I'm in no position time-wise to get spun up and consistently maintain a tree
+08:36:29 <fujita_[m]> its on grapeheneOS's github/ website
+08:37:14 <fujita_[m]> <RageLtMan "Right, but if nobody is stepping"> you will have to talk to the mods for that
+08:38:30 <highupper[m]> <fujita_[m] "its on grapeheneOS's github/ web"> Well he mainly talks about IOMMU in the FAQ page, but I'm looking for more specific stuff like Titan M requirements etc.
+08:40:24 <dazinism> RageLtMan: Daniel accepts donations, but doesnt want all to take on the task of finding and employing devs
+08:40:28 <RageLtMan> is there anyone on the moderation team who functions as a community coordinator? Who would be the person to talk to about trying to set up a non-corporate funding model (bypass any pitfalls of prior endeavors) to help offload Daniel and ensure some longevity to the project by reducing rate of roast for the most valuable developer?
+08:40:37 <dazinism> The community could take that all on though
+08:40:46 <renlord> RageLtMan: just donate directly using paypal/bitcoin
+08:40:52 <renlord> or github sponsors
+08:41:13 <RageLtMan> i do the paypal bit, but i cant fund a TEAM of developers without having to underwrite it somehow, and this isnt tax deductible
+08:41:32 <renlord> you fund daniel, daniel can decide how to spend the project monies
+08:41:45 <renlord> he knows what's best for the project.
+08:42:10 <dazinism> Daniels has said he doesnt want to take on the task of hiring devs
+08:42:12 <RageLtMan> renlord, as stated above, this is a staffing issue, and i get the sense that daniel has had more than his share of dealing with humans
+08:42:28 <valldrac> strcat[m]: the patch looks good, I cannot reproduce the BT audio issues, so go ahead with the release
+08:42:43 <renlord> ok. Alternatively, you can sponsor a talented contributor on the side.
+08:43:07 <RageLtMan> thats why i was asking if there's anyone officially responsible for community coordination
+08:43:09 <renlord> it does not necessarily have to concern Daniel personally
+08:43:24 <RageLtMan> talented contributor. have you ever hired developers?
+08:43:28 <renlord> RageLtMan: nope
+08:43:32 <valldrac> yeah, I also accept donations to break the releases lol
+08:43:34 <dazinism> Sounds good valldrac (pun intended)
+08:43:37 <RageLtMan> try it for a C/C++ project nowadays
+08:44:09 <RageLtMan> valldrac: thanks for contributing in the first place. breakage is just another form of incremental progress :)
+08:44:23 <renlord> RageLtMan: does it sound like you want to volunteer to be in that position ;)
+08:44:26 <RageLtMan> (i'm sempervictus on gh by the way, so one of the affected)
+08:44:33 <valldrac> the project is missing many things, but nothing proper funding cannot fix
+08:45:16 <RageLtMan> renlord: many moons ago i fell into a similar role in the metasploit world. i now run two companies and currently operate as head of security for a healthcare co in a psuedo-consulting role. literally 16h days, 6-7 days a week.
+08:45:57 <RageLtMan> hence almost no time on IRC, my github looks like a warmed over corpse, and i'm behind on bassically all open source projects i touch
+08:46:05 <renlord> RageLtMan: keeping busy, i like it
+08:46:46 <RageLtMan> infosec people are in high demand right now. unfortunately a lot of that demand is utterly frivlous crap where they just want a consult to tell them that all their problems are actually N/A and its totally fine to vent all your healthcare data to the wind
+08:48:36 <renlord> likes like management consulting.
+08:48:46 <renlord> basically just finding a 3rd party to blame when shit hits the fan
+08:49:33 <RageLtMan> so if there isnt really someone running the show as a community coordinator, then is there appetite to delegate such function to someone who's done it for lineage or whatever other popular roms out there? (sorry, i've been on copperhead/graphene for ages, not up to date on what the cool kids use these days to get data-slurped)
+08:51:23 <RageLtMan> renlord: in the current situation with covid, its the wirld west for liability, indemnification, surcharges, rate hikes, and other bad behavior in a time of need. You'd expect force majeure clauses to come into effect right now, but there are so many having nothing to do with this where people just want to reneg a contract on favorable terms and see that they can squeeze people suffering from liquidity or supply issues
+08:51:45 <renlord> we kinda experimented that with reddit didnt we? and the conclusion was that there was too much misinformation occuring and moderation deprived a lot of time from actual technical work.,
+08:52:22 <JTL> > 01:45 <RageLtMan> renlord: many moons ago i fell into a similar role in the metasploit world. i now run two companies and currently operate as head of security for a healthcare co in a psuedo-consulting role. literally 16h days, 6-7 days a week.
+08:52:27 <JTL> Interesting background :)
+08:52:59 <RageLtMan> for instance: a lot of HC firms did an "emergency term change" on contracts from net30->net90 for consultants who had already invoiced. For places which sub out at high rates, thats deadly. One of our co's had to take a PPP loan to pay subs to cover "the spread" on their randomly modified terms. The co is an f500, in the media daily right now
+08:53:45 <RageLtMan> JTL: got lucky - started in the digital world in the 90s, security happened to be what i found interest in, and the rest is sorta history. been very lucky to find people who know more and are willing to teach (Daniel being one of them)
+08:53:57 <JTL> Of course
+08:55:07 <dazinism> RageLtMan: as I guess you know GrapheneOS is mainly Daniels work. Hes suggested that due to past problems he wouldnt be quick to delegate significant 'official' power
+08:55:59 <RageLtMan> So on the topic of getting some sort of delegation and non-voting-rights-hierarchy going (my personal take is that Daniel always remain tyranical overlord of all project direction, we saw what happens when other people have their own ideas about how to subvert his efforts)
+08:56:49 <dazinism> RageLtMan: also suggested that theres nothing to stop another (sister?) project funding dev work on GrapheneOS
+08:56:55 <renlord> so as long as community does not get in the way of technical work or misrepresent/misinform about the technical work. They can be separate responsibilities
+08:57:14 <cg_droid> And... will Daniel trust in what other developers will do, or he'll need to check all the code made too?
+08:57:33 <renlord> the problem arises when people misinform about technical details without a good understanding of the technical work.
+08:57:48 <RageLtMan> That would probably require someone working full time for a bit to set up the organization which would deal with device support, non-security features which Daniel doesnt want to touch, etc
+08:57:56 <renlord> and there are not many people qualified to moderate these items.
+08:58:15 <RageLtMan> which is why i'm suggesting we leverage the standard method for acquiring talent: money
+08:58:21 <renlord> for example, I'm not entirely across the full android ecosystem, I can probably comment on very specific things I personally have touched on.
+08:58:29 <RageLtMan> that would require pledges or lump sum donations
+08:59:12 <RageLtMan> so the role would require community management + project management tier2 with all the tier1 priorities still being defined by Daniel?
+09:00:45 <RageLtMan> everyone i know with those qualifications is paid a decent salary with benefits, and even though it may not be an FT role once the org is "configured" and set to run smoothly, it still requires a talented person just to coordinate it all for some amount of time every day
+09:01:57 <RageLtMan> i need deeper pockets, or we need to identify users who depend on this technology for their privacy with reasonably deep pockets and pool our efforts. this project dies and anyone using this for any finserv/pii access could stand to lose far more by theft from their next insecure device than donating to this project
+09:02:46 <renlord> i guess that was kinda what copperheados was setup to do
+09:02:50 <renlord> but it just imploded.
+09:02:53 <RageLtMan> heh
+09:03:05 <RageLtMan> that was human element, greed, stupidity
+09:06:02 <dazinism> I've been wondering if could maybe facilitate the fundraising and contracting (rather than direct hire) through a third party org. To avoid a load of admin/bureaucracy
+09:07:17 <dazinism> As it doesnt need to be a for-profit corp different channels are open
+09:07:30 <RageLtMan> Semper Victus (my co) works on the contractor-per-project semantic already, we could technically be the vehicle for it, but the problem we'd all have it taxable overhead. in the US anyway, it would ideally be done through a proper non-profit. not sure how canada works in this regard
+09:07:34 <renlord> people can always just start a foundation
+09:07:42 <renlord> that's dedicated to grapheneos
+09:07:51 <RageLtMan> starting a non-prof in the US is not easy
+09:08:02 <renlord> foundation member can write up a constitution that defines how funds get solicited and spent.
+09:08:20 <renlord> it does not have to concern/trouble daniel
+09:08:41 <RageLtMan> it needs to involve him to delegate all "final say" rights to him and him alone
+09:09:12 <renlord> kinda like how bitcoin foundation and actual bitcoin technical work has nothing to do with each other. Though, arguably you can also say taht model does not work since the foundation is more or less useless now
+09:09:47 <RageLtMan> this effort can't fragment, just like grsec couldnt, because it is pinned to the talent pool contained in one man's head. Since the actual effort is technical, the architect needs to be at the head of decision making.
+09:09:53 <dazinism> Can find an org with somewhat aligned aims to act as fiscal sponsor for the project. To avoid having to set up a not for profit corporate.
+09:10:04 <renlord> otherwise, other infosec people can license grapheneos from Daniel and then rebrand it as a commercial product to sell (maybe a more "supportive" version of the OS on top of the base graphene os)
+09:10:15 <renlord> then follow the red hat model to contribute back upstream -- graphene os
+09:10:41 <RageLtMan> dont go there, will put us all in the x-hairs of law enforcement who have to deal with such things being sold to serious asshats
+09:11:07 <dazinism> A side note - is tax an issue if you are spending all your income?
+09:11:23 <RageLtMan> yes, income tax, property tax, etc
+09:11:31 <renlord> RageLtMan: why is it us all though, the Graphene OS license makes clear you cannot hold any contributor/daniel responsible
+09:11:49 <renlord> a commerical entity might want to go a bit further than the project's license
+09:12:04 <renlord> but the liability is on them wholely
+09:12:34 <RageLtMan> the FBI has some really misinformed notions about criminal responsibility when it comes to who wrote code
+09:12:42 <renlord> if red hat explodes, you sue red hat, you dont complain to the fedora project
+09:12:49 <renlord> or you dont complain to Linus
+09:12:49 <RageLtMan> umm
+09:13:34 <RageLtMan> A: i complain to linus as required, B: fedora is derived from RHEL, C: this isn't about civil liability, this is about handcuffs and a human booster shot from a guy named molly
+09:13:55 <RageLtMan> :)
+09:13:59 <renlord> but we're not even doing anythign criminal?
+09:14:01 <renlord> @_@
+09:14:24 <RageLtMan> hutchins (SP?) got arrested for code he wrote and put on a forum which bad people incorporated into their malware
+09:15:00 <renlord> is there somewhere i can read more to get context?
+09:16:21 <RageLtMan> this is a more salient issue for people on the red-side of the field, but given that i've seen accusations of CH being sold to the mob and such, and i dont have a real social media presence or read anything but whats pertinent to my tasking most of the time, i imagine LEOs have too.
+09:16:22 <RageLtMan> https://www.cnbc.com/2017/08/04/marcus-hutchins-wannacry-arrested-for-banking-virus.html
+09:17:32 <RageLtMan> the point is tangential: there are added considerations when having for-profit functions which might upset the powers that be.
+09:18:44 <RageLtMan> regardless of modality, if an effort to offload Daniel does materialize, we can provide some amount of funding, some resources in our private clouds for builds and such, and hopefully as we cycle talent and tasking, some actual development work down the line
+09:19:19 <RageLtMan> if it can be built in a manner where donations are tax deductible, we can donate more, and can probably get a bunch of our clients to donate as well
+09:19:31 <JTL> One point. I think strcat wants to use local hardware under his physical control for production builds.
+09:19:40 <dazinism> RageLtMan: thats nice to hear
+09:20:09 <JTL> Also he (and a bunch of other people) are in Canada, so in the case of a Canadian non profit/foundation, how that would affect things.
+09:20:19 <RageLtMan> by all means, zero trust is a concept i fully support. Theres a lot of builds which never hit release though, and should be built with their own signing keys specifically to avoid accidental release
+09:20:26 <JTL> Of course
+09:20:34 <renlord> the foundation needs to be incorporated in literally every jurisdiction for it to be tax-deductible
+09:20:43 <RageLtMan> yike
+09:20:48 <renlord> for example, i cant get a tax-deduction when donating to a canadian non-profit
+09:21:13 <renlord> it needs to be specifically an Australian Registered Non Profit
+09:21:37 <renlord> that's just not an optimisation that's viable at this point
+09:21:39 <RageLtMan> Anyone connected to the EFF or other global orgs with a potential interest in having some semblance of privacy and security on their mobile device?
+09:22:02 <JTL> EFF is mainly US focused
+09:22:08 <RageLtMan> balls
+09:22:40 <JTL> As I know off the top of my head, the canadian equivalents are either very small (think underfunded academic type orgs) or "abandoned"
+09:22:55 <renlord> JTL: there's the vancouver privacy thingy
+09:23:01 <renlord> open privacy initiative?
+09:23:03 <JTL> That's a more recent development
+09:23:13 <JTL> and I think their funding is a bit shakey atm
+09:24:01 <renlord> sarah's work on the swiss voting stuff was a good read
+09:24:11 <JTL> I'm aware she did some work in that area, but haven't read it
+09:24:26 <renlord> in collaboration with an academic from my instiution
+09:24:37 <JTL> neat
+09:24:47 <JTL> swiss? about the voting stuff?
+09:25:27 <renlord> https://www.itnews.com.au/news/second-flaw-found-in-swiss-e-voting-system-522869
+09:25:37 <renlord> many problems
+09:25:38 <JTL> right
+09:25:54 <renlord> at the end, they gave up on evoting
+09:25:56 <renlord> llol
+09:26:18 <renlord> and the company went bankrupt
+09:26:23 <renlord> just recently
+09:26:25 <renlord> LOL
+09:26:33 <JTL> *sad trombone noises*
+09:26:59 <renlord> https://www.netzwoche.ch/news/2020-05-20/post-kauft-e-voting-system-und-erntet-dafuer-kritik
+09:32:21 <valldrac> dazinism: you inspired me https://github.com/GrapheneOS/os_issue_tracker/issues/217#issuecomment-635874702
+09:37:16 <dazinism> valldrac: always available for bad puns
+09:38:12 <renlord> valldrac: is it still a problem?
+09:38:19 <renlord> i can build and test on the 3a
+09:38:24 <renlord> with 2 BT audio devices
+09:40:42 <valldrac> the more tests, the better, try pulling frameworks/av and external/hardened_malloc changes
+09:44:15 <valldrac> or apply commit ac26b532 to frameworks/av and ce6a2122 to hardened_malloc
+09:45:02 <RageLtMan> well lets see if the hardened_malloc changes break anything on Linux, our CI should pick that up in ~16m
+09:47:37 <RageLtMan> so "if (strcmp(audio_service, path) == 0)" can be expanded to handle an array of these things to provide built-in exclusions, possibly even passed as an env var at compile time
+09:47:46 <renlord> break anything in userland?
+09:47:53 <renlord> what applications do you run against?
+09:48:28 <RageLtMan> its a bit scattershot: CI will build it, then push it to a current Arch linux instance in the cloud, set it up for ld preload system wide, and reboot
+09:49:00 <RageLtMan> it'll then start nginx, php, ruby with passenger, and i think a couple other things
+09:49:43 <RageLtMan> right now its only wired to a grsec test image, CI actually builds our linux-hardened kernels for places where we cant use grsec, so i should wire that in too
+09:51:18 <neothechosenone[> F droid just popped up with a warning about it being made for an older version of android etc, normally an update follows straight away after refreshing the app but it is not happening now for some reason.
+09:51:18 <neothechosenone[> Is anyone else having the same issue?
+09:55:10 <dazinism> neothechosenone: that warning was added for apps with a target apk earlier than 28
+09:55:57 <dazinism> neothechosenone: https://hub.libranet.de/wiki/graphene-os/wiki/Apps#Target_SDK
+09:57:21 <dazinism> Think you'll see this warning first time you run any app (after latest GrapheneOS update) with an older target SDK
+09:58:51 <dazinism> If Fdroid isnt updating their list of apps, thats something else.
+09:59:34 * neothechosenone[ sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/zNWQMSuYKNAKcDOgBbHkJnRi >
+10:00:29 <dazinism> Worth noting that Aurora Droid (an alternative app client for accessing Fdroid apps) targets APK29
+10:01:06 <dazinism> Made by the same dev as Aurora Store
+10:01:34 <neothechosenone[> Must be an f droid issue I just read on calyx room someone having issues with f droid today ..
+10:01:34 <neothechosenone[> Aurora droid is a safer app store than F droid then?
+10:02:38 <dazinism> Noticed that it still makes loads of non-tor connections if you use the proxy settings in Aurora Droid. May be worth considering for some people.
+10:04:06 <dazinism> neothechosenone: maybe there just hasnt been any apps updated on Fdroid since last you checked? Or you dont see any apps?
+10:07:12 <neothechosenone[> I see loads of apps just no update for f droid initially after downloading the apk..
+10:07:12 <neothechosenone[> Thanks for the info though aurora droid sounds good.
+10:07:24 <dazinism> Sometimes Newpipe breaks because if changes Google makes. The Newpipe devs have to work around the changes.
+10:08:41 <neothechosenone[> Thanks a lot I'm sure they will sort it.
+10:08:57 <dazinism> If you dont see an update for Fdroid, it just means that they have updated their website so that you've downloaded the latest version
+10:09:08 <dazinism> Thats a good thing
+10:10:01 <neothechosenone[> But the warning saying f droid was built for an older version of android etc must mean their latest version is still behind ?
+10:10:01 <neothechosenone[> I understand
+10:11:39 <dazinism> > Aurora droid is a safer app store than F droid then?
+10:11:39 <dazinism> Hard to say for sure. There is a lot to consider. Its probably a fair choice though. Possibly even more so if you already use Aurora Store
+10:12:41 <dazinism> neothechosenone: yeah the Fdroid app targets SDK25
+10:13:04 <pravez[m]> <dazinism "pravez: I think most things here"> thank you :)
+10:13:37 <dazinism> It doesnt use all the security / privacy features added in the latest versions of android
+10:14:06 <neothechosenone[> Thanks for the info..
+10:14:18 <dazinism> pravez: pleasure
+10:21:39 <stuux[m]> strcat: I can´t test remote attestation with a debug build, can I?
+10:32:34 * bobfett says hello in order to continue lurking
+10:32:53 * bobfett-alt[m] says hello in order to continue lurking here too
+10:37:01 <renor> Regarding the Bluetooth problems, I enabled the "Disable bluetooth A2DP hardware offload" from the Developer options and is all working nice and fine on all of my devices (even in my car)
+10:38:46 <cg_droid> renor, interesting...
+10:39:28 <cg_droid> It's disabled in my smartphone
+10:39:40 <cg_droid> Maybe that's why it doesn't work
+10:39:49 <renor> Comes disabled by default
+10:39:54 <cg_droid> Oh yeah
+10:40:03 <renor> Try it out enabling the option
+10:40:57 <renor> I mean, enabling the option. Which results in disabling Bluetooth A2DP hardware offload
+10:40:58 <cg_droid> But someone said that sometimes some people has problem with it and rebooting more than 1 time it worked
+10:40:59 <cg_droid> IDN
+10:41:08 <cg_droid> renor: ok, thanks
+10:41:34 <cg_droid> If it's the only problem with Bluetooth driver then it works ok...
+10:41:47 <cg_droid> Maybe all devices could try it
+10:42:23 <cg_droid> I'll try when I can
+10:43:30 <jalb> renor, yes, it worked for me in my car when I tested it enabling this option. It wasn't working before and the sound was only received from the smartphone and not the speakers
+10:43:38 <jalb> Now it works ok, thanks! :)
+10:45:27 <cg_droid> strcat[m], did you read this?, could this be the problem?
+10:45:49 <cg_droid> By default GOS comes with this option disabled
+10:47:43 <dazinism> cg_droid: thats been known about as a long time, and does fix things for some.
+10:47:53 <dazinism> *for a long
+10:47:56 <cg_droid> dazinism, ok
+10:48:46 <cg_droid> THanks
+10:49:02 <cg_droid> So, some other people, with this option enabled, continue with the problem
+10:49:29 <dazinism> Theres been work recently to try and fix the problem properly. Its proven to be a complex problem (actually possibly a number of issues)
+10:51:34 <cg_droid> dazinism, I thought that maybe the people with the problem has the option disabled like me
+10:51:46 <cg_droid> I"ll try anyway
+10:53:26 <dazinism> cg_droid: yeah possibly, enabling it has been known to sort out problems for quite some time. Its been spoken about here and on the GrapheneOS reddit for months. It doesnt fix the underlying issue that causes the problems though.
+11:00:41 <cg_droid> dazinism, thanks
+11:01:00 <cg_droid> Anyway I´ll post here when I test it with my Pixel 3a
+11:33:47 <dazinism> If I'm following along properly the problem is due to GrapheneOS hardening hitting problems due to poorly written code in AOSP
+11:34:30 <cg_droid> it works ok 🙂
+11:34:39 <dazinism> The hardening is going to be disabled. And the problematic code will be replaced in Android R
+11:34:41 <cg_droid> Enabling that option renor posted in my Pixel 3a
+11:35:09 <cg_droid> dazinism, good move
+11:35:33 <cg_droid> Maybe it's only in Pixels 3a, IDN
+11:35:44 <dazinism> So questionable if its worth spending loads of time trying to fix it properly when theres so much else to do.
+11:36:00 <cg_droid> Yes..
+11:36:57 <dazinism> No it effects other phoned also.
+11:53:13 <kernelpaniker[m]> I enabled a2dp on pixel 3 and restarted. Bluetooth headset still isnt working during calls
+11:58:02 <cg_droid> kernelpaniker[m], ok... so, the problem persists
+12:09:30 * spaceinfinite[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/UcevppAQPkuawIzyRfOpEhSR >
+12:10:32 <cg_droid> spaceinfinite[m], and using ORbot in vpn mode?, it must work
+12:10:47 <cg_droid> Choose this app and that's it
+12:10:55 <spaceinfinite[m]> Not on vpn mode
+12:11:03 <spaceinfinite[m]> It has a socks option
+12:11:09 <cg_droid> Ah ok
+12:11:11 <spaceinfinite[m]> And it doesnt work
+12:11:16 <cg_droid> You could use it in vpn mode
+12:11:37 <cg_droid> If it doesn't work with socks
+12:11:40 <spaceinfinite[m]> I have vpn
+12:11:45 <cg_droid> Oh ok
+12:12:08 <cg_droid> AT least you are using it through a VPN if you want to hide your ip
+12:12:16 <cg_droid> Why Tor?
+12:12:45 <spaceinfinite[m]> Cos vpn for specific apps and orbot for very few selection
+12:12:59 <spaceinfinite[m]> And the rest normal traffic
+12:13:09 <cg_droid> ok
+12:13:16 <cg_droid> And AuroraDroid?
+12:13:21 <cg_droid> Have you tried it?
+12:13:24 <cg_droid> Ah sorry
+12:13:28 <cg_droid> It's like F-droid
+12:13:33 <cg_droid> Not to install from Google apps
+12:13:36 <cg_droid> My bad
+12:13:40 <spaceinfinite[m]> Aurora store works via orbot
+12:13:49 <spaceinfinite[m]> Auroradroid doesnt
+12:13:57 <spaceinfinite[m]> Fdroid works
+12:14:03 <cg_droid> I get it
+12:14:11 <cg_droid> Must be a bug
+12:19:43 <dazinism> spaceinfinite: yeah, I noticed that.
+12:23:02 <spaceinfinite[m]> And they dont have a room here to report to them
+12:58:23 <fishingtackle[m]> I love grapheneos.
+14:18:31 <strcat[m]> cg_droid: A2DP offload is not the issue
+14:18:34 <strcat[m]> we're working on an actual solution
+14:18:44 <strcat[m]> please be patient
+14:20:26 <DannyWorkOrderPr> Thanks for spending time digging into this, strcat and valldrac - I do not use, but, know it's super important to a lot of Graphene's user base
+14:22:08 <cg_droid> strcat[m], no problem, it works fine in my smartphone, I was only trying to help from the renor comment ;)
+16:28:11 <DannyWorkOrderPr> furofuro_01: Someone can correct me if I'm wrong, but, pretty sure Verizon's the only ones locking these things, right?
+16:29:08 <xabierd[m]> <furofuro_01[m] "Hello. I am interested on gettin"> Aliexpress has them for 240€
+16:55:25 <dlm-johannes[m]> A basic question but difficult for me: pixel3a+graphene or librem?
+16:55:44 <strcat[m]> see past posts
+16:56:18 <strcat[m]> yes you can look at past posts on the subreddit
+16:56:25 <JanPenfrat[m]> <furofuro_01[m] "Hello. I am interested on gettin"> Not sure where you need them to be shipped to but clevertronic.de has a good selection refurbished phones some even with 12-24 months warranty.
+16:56:39 <strcat[m]> wasn't in response to you
+17:09:29 <kernelpaniker[m]> <fluoridatedsheeple[m] "ah"> You can read the history log of thus channel. Watch the description of the channel
+17:09:44 <kernelpaniker[m]> * You can read the history log of this channel. Watch the description of the channel
+17:14:11 <kernelpaniker[m]> <fluoridatedsheeple[m] "bc im not trying to end up with "> I heard that Verizon pixel's imei starts with 34..something
+17:16:39 <kernelpaniker[m]> <fluoridatedsheeple[m] "Ah, i was hoping to not have to "> You just search factory unlocked pixels or if youre buying used one, ask to screenshot the developer options page in setting
+17:16:56 <kernelpaniker[m]> * You just search factory unlocked pixels or if youre buying used one, ask to screenshot the developer options page in settings
+17:17:39 <kernelpaniker[m]> Yes, and then scroll to OEM unlocking toggle
+17:18:30 <kernelpaniker[m]> Then you should check if it is possible to turn on like this
+17:19:08 * kernelpaniker[m] uploaded an image: Screenshot_20200529-211843.png (165KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/CfZycBqwdMfZdOqmkXoQtZUv >
+17:19:36 <kernelpaniker[m]> Yes
+17:24:24 <strcat[m]> just note it can be greyed out because it hasn't been connected to the internet or w/e
+17:24:40 <strcat[m]> from the factory reset protection feature in the stock OS
+17:28:07 <cg_droid> Do you know if some webview browser like "Privacy Browser" uses Vanadium webview in GOS and also some protection from it?
+17:29:50 <fluoridatedsheep> damn, so thats not even a solid indicator..
+17:38:07 <cn3m[m]>  @freenode_cg_droid:matrix.org yes it's mixed
+17:38:22 <cg_droid> cn3m[m], thanks
+17:38:28 <cn3m[m]> Bromite vs Vandium webview has a lot of security trade-offs
+17:38:39 <cn3m[m]> Vanadium has better hardening for the whole Trichrome
+17:38:55 <cn3m[m]> WebView has one sandbox and no site isolation
+17:39:55 <cg_droid> So, Vanadium browser has isolation and another browser using Vanadium webview doesn't
+17:40:29 <cg_droid> Vanadium browser has some more security included
+17:40:54 <cn3m[m]> yes Bromite has better isolation and WebView anti exploit
+17:41:30 <cn3m[m]> Vanadium mixes both and is recommended
+17:41:39 <cg_droid> Ok, interesting
+17:42:34 <cg_droid> Thanks
+17:43:54 <cn3m[m]> you're welcome it's all covered on the new web browsing section
+17:44:25 <cg_droid> Yes, I read about it but I have these doubts yet
+17:44:35 <cg_droid> Yes, I read about it but I had these doubts yet
+17:45:04 <cg_droid> I also read Daniel posts in Twitter
+17:46:11 <cn3m[m]> I am was ad developer I know a lot about privacy especially on mobile. Madaidan knows a lot about security he works on Whonix development and research. Two very smart people and Daniel we both would admit knows more than our respective field
+17:47:00 <cn3m[m]> he's really a diamond in the rough a genius who shares his opinions and an excellent free project. Trust him if you can find him talking about it
+17:47:07 <cn3m[m]> Daniel is a genius in security and privacy
+17:48:21 <cg_droid> Yes, I know
+17:48:43 <cg_droid> I also search in reddit and follow in Twitter Grapheneos and his profile
+17:49:27 <fujita_[m]> I was reading post cn3m and you mentioned that you didn't use a sim card, how do you contact your friends and family
+17:50:02 <fujita_[m]> Did you manage to convince them all to switch?
+17:51:13 <cn3m[m]>  @freenode_cg_droid:matrix.org redditcommentsearch.com
+17:51:18 <cn3m[m]>  @fujita_:matrix.org I currently use VoIP
+17:51:22 <cg_droid> yes, that link
+17:51:35 <cg_droid> Today I was reading about LineageOS and DanielMicay
+17:51:46 <cg_droid> And also about verified boot
+17:52:25 <cg_droid> Some people says it's not a problem using a non verified boot because it's only a issue with a local attacker
+17:52:39 <cg_droid> I said it was also with remote attacks
+17:52:42 <cn3m[m]> that's categorically false
+17:52:54 <cg_droid> So, I found about it
+17:53:52 <cn3m[m]> https://nm.reddit.com/r/CopperheadOS/comments/917yab/can_anyone_technically_explain_why_lineageos_as/
+17:53:57 <cn3m[m]> here's a deeper dive on Lineage issues btw
+17:54:24 <cn3m[m]> <cg_droid "So, I found about it"> good work
+17:54:37 <cg_droid> Thanks
+17:57:40 <joshman[m]> <fujita_[m] "I was reading post cn3m and you "> I don't use SIM either
+17:57:50 <furofuro_01[m]> Thanks for the response (currently looking at them)
+17:59:31 <cg_droid> cn3m[m], https://hub.libranet.de/wiki/and-priv-sec/wiki/verified-boot
+18:00:30 <fujita_[m]> > > <@fujita_:matrix.org> I was reading post cn3m and you mentioned that you didn't use a sim card, how do you contact your friends and family
+18:00:30 <fujita_[m]> > I don't use SIM either
+18:00:30 <fujita_[m]> Same here but its not by choice, I PUKed my sim and I can't unlock it atm. I was looking to port the number over another carrier but I don't have enough documents to sign up for one at the moment
+18:02:06 <fujita_[m]> I have fully adjusted to not having a sim but I think I will still need it since where I live WhatsApp is the main form of communication for everything even for work
+18:02:11 <furofuro_01[m]> <JanPenfrat[m] "Not sure where you need them to "> Somewhere around Philippines btw
+18:03:00 <fujita_[m]> josh.man: how do you get around not having mobile data and a phone number for daily use
+18:03:07 <joshman[m]> fujita_ why do you need sim for WhatsApp. You communicate on wifi just fine
+18:03:22 <fujita_[m]> Sign in process
+18:03:28 <fujita_[m]> Same with signal
+18:04:56 <joshman[m]> fujita_ traditional calls are long gone for me. I don't need not want to call anyone using GSM from early 1980s. Texts is even worse. I hate traditional texts. Super insecure and old
+18:05:12 <joshman[m]> * fujita_ traditional calls are long gone for me. I don't need nor want to call anyone using GSM from early 1980s. Texts is even worse. I hate traditional texts. Super insecure and old
+18:05:57 <fomijafi[m]> Does anyone have a preferred VOIP provider? I've been looking into going the no SIM route just unsure how it will play with GOS
+18:06:12 <fujita_[m]> Same here
+18:06:31 <cg_droid> Jitsi?
+18:06:37 <joshman[m]> I received signup text on another device the. Threw that Sim in the waste. I would never use same number for Signal and GSM
+18:07:08 <joshman[m]> * I received signup text on another device then threw that Sim in the waste. I would never use same number for Signal and GSM
+18:07:15 <fomijafi[m]> Oh, you no SIM folks don't have a phone number you consistently use?
+18:08:02 <fomijafi[m]> I was looking at trying to get a twilio number and using Linphone but don't know if it'll work
+18:08:10 <joshman[m]> By phone number you mean 2G calls from 1980s? No. Trully hate that technology
+18:09:18 <fomijafi[m]> I guess I was thinking of something a la google voice
+18:10:27 <joshman[m]> Ok. That is a tiny bit better. There's hundreds of services providing you phone number. Skype, Viber, Linphone. I personally don't use either
+18:15:36 <furofuro_01[m]> <fluoridatedsheep "im finding cheaper than that on "> Unfortunately it is somehow unavailable on my country
+18:15:57 <furofuro_01[m]> But thanks for the suggestion still
+18:26:51 <strcat[m]> need people to step up as device maintainers for existing devices and to develop and maintain Pixel 4 and 4 XL support
+18:27:16 <strcat[m]> it's important to support the 4 and 4 XL so that the 4a can be added later (which would share a lot of the work) and to move things forward to current generation device support code
+18:27:21 <strcat[m]> very problematic to not have support for it
+18:27:31 <strcat[m]> the project needs help in a lot of different areas, device support is one crucial area
+18:27:46 <strcat[m]> need to get these basic reference devices supported to enable other things
+18:27:55 <strcat[m]> Pixels are the AOSP reference devices
+18:28:20 <strcat[m]> if we don't support the current reference devices, GrapheneOS is not in a good position to be ported to other devices
+18:47:29 <TheJollyRoger> Argh. Trying >_<.
+18:50:57 <aeonsolution[m]> I am working on helping out with Pixel 3a. I am going to volunteer to be a device maintainer for that so if there are others in the channel that need help getting started please reach out. I also ordered a Pixel 4 to help with porting. I can't help those with Pixel 4 already because porting is very new to me and I am going to be learning it as a I go.
+18:53:10 <fomijafi[m]> <aeonsolution[m] "I am working on helping out with"> I know this is not helpful now but I'm very interested in gettkng set up to help. Zero development experience but would love to learn anything I can to at least contribute to the issue trackers
+18:53:10 <aeonsolution[m]> If you are building the development branch, learning the steps is very important-and I will help you out with that. Everything is clearly spelled out by strcat on the website <https://grapheneos.org/build> and it is very counter-productive to ask for advice when you did not follow the steps.
+18:55:09 <aeonsolution[m]> That being said, learning from your mistakes is a big part of the process.
+18:55:36 <aeonsolution[m]> fomijafi: reach out to me in a message and I'll try to give you advice on where to start
+18:59:25 <cn3m[m]>  @fujita_:matrix.org WhatsApp and Signal don't care what number you use. you can even use one of those free services.
+18:59:30 <cn3m[m]> porting your number over is an option too
+19:04:45 <dazinism> aeonsolution: nice one on stepping up maintaining the 3a :-)
+19:05:15 <dazinism> *for maintaining
+19:06:07 <strcat[m]> Signal says they'll be supporting non-phone-number identifiers soon
+19:06:30 <strcat[m]> I hope they fix the new PIN feature to let you set a registration lock without enabling recovery of your profile/contacts though
+19:06:35 <strcat[m]> old way was better
+19:08:31 <TheJollyRoger> I'm hoping to follow in aeonsolution[m]'s steps as the maintainer for Blueline. I'll order a new phone for it soon.
+19:08:59 <nuttso[m]> <strcat[m] "I hope they fix the new PIN feat"> I use Molly with GrapheneOS.
+19:09:09 <TheJollyRoger> Hey nuttso[m]!
+19:09:10 <nuttso[m]> Would also recommend it to everyone
+19:09:16 <nuttso[m]> Hi
+19:09:18 <nuttso[m]> Roger
+19:09:24 <joshman[m]> I contribute to Signal as a translator. As far as I know Registration PIN will restore user profile 😕
+19:09:56 <TheJollyRoger> Hey nuttso[m]! Sorry about the debugging cables >_<. Turns out I've been lower on stock than I normally am. I'm still waiting for the serial TTL cables to arrive but they haven't yet.
+19:10:27 <TheJollyRoger> The border is closed, which may explain the delays.
+19:10:40 <dazinism> > I'm hoping to follow in aeonsolution[m]'s steps as the maintainer for Blueline.
+19:10:52 <dazinism> Nice TheJollyRoger
+19:10:59 <nuttso[m]> It's all good man
+19:11:21 <cg_droid> nuttso[m], what is Molly?
+19:11:33 <nuttso[m]> Hey strcat can we have a private irc room only for beta testers
+19:11:49 <nuttso[m]> https://molly.im/
+19:12:01 <nuttso[m]> Valldrac has an fork with true password encryption
+19:12:05 <cg_droid> Thanks
+19:13:00 <nuttso[m]> He also started contributing here but needs more resources
+19:13:15 <TheJollyRoger> I've uh... got another IRC channel parked.
+19:13:32 <TheJollyRoger> I'll maintain the other IRC room.
+19:14:46 <valldrac> strcat[m]: Signal's PIN feature will also support multi-device sync. I don't think they will make it optional
+19:15:16 <valldrac> basically it'll become a core feature
+19:17:00 <nuttso[m]> <valldrac "strcat: Signal's PIN feature wil"> I'm think he told me he will make it optional
+19:17:08 <nuttso[m]> Will ask him.again
+19:17:32 <valldrac> nuttso[m]: who?
+19:18:42 <nuttso[m]> Hey valldrac
+19:19:02 <nuttso[m]> Not sure though you once said in our group it would become optionally
+19:19:34 <valldrac> Ah! I was talking about the PIN reminder. And actually, now it's optional
+19:19:51 <nuttso[m]> Ah ok
+19:19:56 <joshman[m]> PIN is mandatory. Reminder is optional
+19:35:30 <soliquid> PAIN is mandatory. Suffering is optional
+19:35:52 <spaceinfinite[m]> <cn3m[m] "I am was ad developer I know a l"> Curious to know your phone setup  and how you deal with ads.
+19:35:59 <strcat[m]> https://www.reddit.com/r/privacytoolsIO/comments/gs4uv7/i_dont_fully_trust_grapheneos/
+19:36:31 <strcat[m]> endless attempts to spread misinformation about all kinds of topics by that moose guy and his sockpuppets
+19:36:33 <strcat[m]> look at all the BS he keeps posting
+19:36:49 <strcat[m]> he clearly lacks an understanding of most of what he tries to talk about too and he suddenly changes the topic
+19:37:05 <strcat[m]> and can't follow a consistent thread of conversation
+19:37:10 <TheJollyRoger> Rrrgh.
+19:37:30 <strcat[m]> I talk about the monolithic design of the Linux kernel and he interprets that as a criticism of the desktop Linux stack and replies with some nonsense wrongly comparing sudo / su transitions from a user account to ADB
+19:37:57 <strcat[m]> these people just know how to write a whole bunch of nonsense / bullshitting that makes it seem like there is some kind of debate or that something is rebuted
+19:38:08 <strcat[m]> they are just dishonest charlatans writing nonsense and tricking non-technical people
+19:38:10 <strcat[m]> really, look at his posts
+19:38:13 <strcat[m]> what is that BS
+19:38:32 <strcat[m]> reddit is infested with this and they just make echo chambers of bullshitting
+19:38:39 <strcat[m]> such a terrible platform
+19:38:41 <TheJollyRoger> Fuck.
+19:38:52 <strcat[m]> I think reddit is even worse than facebook
+19:40:31 <strcat[m]> some 60 year old qanon supporter saying 5g is giving people coronavirus and bill gates wants to microchip them with a fake vaccine is basically on the same level as discourse on subreddits like this
+19:40:49 * TheJollyRoger buries his head in his hands.
+19:40:55 <strcat[m]> people are so easily fooled by people bullshitting like this
+19:40:58 <strcat[m]> just depressing
+19:41:01 <strcat[m]> never ends
+19:41:01 <TheJollyRoger> Yeah...
+19:41:03 <dallemon[m]> <strcat[m] "some 60 year old qanon supporter"> Lol Nice comparison
+19:41:11 <strcat[m]> got some people incredibly obsessed with me and just going on and on with their bullshitting
+19:43:25 <dallemon[m]> Saw a weird article on Forbes yesterday that, kind of, claimed "Chrome bad cuz c++, Firefox good cuz rust"
+19:43:51 <strcat[m]> yet Firefox is like 8% Rust
+19:44:04 <strcat[m]> and that brings in the whole rust compiler / stdlib as added unsafe / trusted TCB
+19:44:40 <strcat[m]> and their C++ is objectively much less audited / fuzzed / hardened and in a code style more prone to vulnerabilities
+19:45:17 <strcat[m]> safe rust code relies on the compiler and unsafe rust code - of which they have written a ton
+19:45:25 <strcat[m]> and unsafe rust code relies on safe rust code for correctness
+19:46:14 <TheJollyRoger> Wow. What a dirty secret.
+19:46:26 <dallemon[m]> Yeah, it was a total BS article posted in a local security group on Facebook.
+19:46:34 <strcat[m]> not clear that they reduced the amount of code that needs to be trusted to assure memory safety even for those components yet
+19:46:48 <cn3m[m]> exactly I was just writing about the libraries yesterday
+19:46:49 <cn3m[m]> rust doesn't help much if it is calling untrusted non hardened libraries
+19:47:06 <dallemon[m]> Even claimed that Firefox has a "3 year headstart"
+19:47:07 <strcat[m]> cn3m: when you expose C APIs from a rust library
+19:47:10 <strcat[m]> that is an unsafe API
+19:47:17 <EssentialChaos[m> <cn3m[m] "exactly I was just writing about"> Can you give a link please?
+19:47:24 <strcat[m]> and you're building backwards from an unsafe API
+19:47:39 <strcat[m]> and on the other end is more unsafe code (compiler, stdlib, etc.)
+19:47:48 <strcat[m]> there is still plenty of unsafe code trusted to assure memory safety
+19:47:51 <cn3m[m]> Firefox has done good work with rust and the PDF Viewer. I'm not going to dismiss that, but 92% of the browser is unhardened and Chrome is 100% hardened
+19:48:05 <cn3m[m]> relatively speaking
+19:48:16 <strcat[m]> the PDF viewer works just as well elsewhere and honestly it is pretty fucked up how it has like 600 dependencies
+19:48:20 <cn3m[m]>  @essentialchaos:tchncs.de I'll check it was a huge comment
+19:48:22 <strcat[m]> and is incompatible with sane Content Security Policy
+19:48:49 <dallemon[m]> The main take away from the article imo is that Google is looking to use more memory safe languages going forward
+19:49:05 <cn3m[m]> I do trust the Firefox PDF viewer more than the Chrome one personally. I don't like either.
+19:49:10 <strcat[m]> look at how much of the Android Chromium is already written in Java
+19:49:20 <cn3m[m]> however the Chrome one is much safer through other measures
+19:49:30 <strcat[m]> cn3m: pdf.js works fine in Chrome
+19:49:51 <strcat[m]> you have the choice
+19:50:08 <strcat[m]> on mobile they don't include pdfium
+19:50:09 <strcat[m]> anyway
+19:50:25 <cn3m[m]> true, but I'm grasping at straws for nice things to say about Firefox
+19:50:44 <strcat[m]> pdf.js is a distinct project that Firefox bundles
+19:51:01 <cn3m[m]> there's not much good there
+19:51:11 <strcat[m]> it is by Mozilla sure but I don't think it makes sense to consider it part of Firefox just like Rust is not part of Firefox just used by it
+19:51:22 <strcat[m]> others are just as capable of using both
+19:51:25 <cn3m[m]>  @strcat:matrix.org right
+19:51:33 <strcat[m]> you know what would be nice is if someone forked pdf.js and made it sane
+19:51:47 <strcat[m]> and threw substantial development resources into it
+19:51:55 <strcat[m]> I don't really think it has a long term value though
+19:52:14 <strcat[m]> there are other approaches now
+19:52:22 <strcat[m]> like compiling a native renderer to wasm
+19:52:36 <strcat[m]> and then you don't need to use JS or the npm ecosystem
+19:53:53 <strcat[m]> cn3m: so for example pdfium can be compiled to wasm
+19:54:27 <strcat[m]> there are some projects doing that
+19:54:41 <cn3m[m]> That is the way forward for sure
+19:54:58 <cn3m[m]> thanks for the explanation
+19:55:14 <strcat[m]> pdf.js is not just about running it in the web env but is based around the concept that writing that kind of code in JS actually makes sense
+19:55:17 <strcat[m]> and I don't think it makes much sense
+19:55:23 <strcat[m]> it is useful not a fundamentally good approach
+19:56:26 <strcat[m]> you would ideally be writing that in a saner, typed language with solid type system, not relying on CSP to disable dynamic code eval (especially when the pdf.js devs actually like it and basically oppose using CSP that way), etc.
+19:56:53 <strcat[m]> cn3m: pdf.js is useful since it's around right now and  mostly works
+19:57:01 <strcat[m]> cn3m: easy to deploy it in a web context
+19:57:14 <strcat[m]> easier than using something via wasm atm unless someone makes a good project for that
+19:58:23 <cn3m[m]> Thanks that is helpful
+19:59:55 <cn3m[m]> just got an update will be back
+20:00:05 <cn3m[m]> #betatest
+20:00:25 <kernelpaniker[m]> <strcat[m] "people are so easily fooled by p"> Isn't it more rational just to ignore these incompetent kind of posters?
+20:02:48 <kernelpaniker[m]> Your energy and health costs more that trying to convince him
+20:03:08 <cn3m[m]>  @kernelpaniker:matrix.org we as a community need to be active on Reddit educating
+20:03:37 <cn3m[m]> I do this for hours a day I'll help anyone who needs help getting started
+20:04:06 <cn3m[m]> security and privacy snake oil salesmen rule the web, but it's not hard to educate them
+20:04:43 <kernelpaniker[m]> But strcat says that reddit is trash, so why try to work in this field?
+20:04:44 <boniek[m]> Interesting blog that explains security changes in upstream linux kernel versions: https://outflux.net/blog/
+20:04:50 <spaceinfinite[m]> <cn3m[m] "I do this for hours a day I'll h"> And that is why good will triumph over evil
+20:05:09 <TheJollyRoger> Although there's not much we can do about the actively malicious people, we /can/ do a lot about the people they con into absorbing their nonsense and then repeating it as "fact" ad populum, or whatever I think it's called.
+20:05:18 <cn3m[m]>  @kernelpaniker:matrix.org Reddit is where the misinfo starts
+20:05:21 <TheJollyRoger> Yarr, thank ye cn3m[m]!
+20:05:24 <cn3m[m]> it's worth my time to improve it
+20:05:28 <cn3m[m]> PTIO is improving a lot
+20:05:56 <kernelpaniker[m]> PTIO?
+20:06:16 <cn3m[m]> privacytoolsio Reddit
+20:06:26 <cn3m[m]> they have real conversations about issues with lineage and Firefox now
+20:06:36 <TheJollyRoger> \o/
+20:06:37 <cx2[m]> <kernelpaniker[m] "Isn't it more rational just to i"> The problem is, it’s easy to label OP incompetent. Indeed, they either likely are, or are trolling/trawling.  BUt it’s the user that tomes for information that is likely not incompetent, and it’s imperative to stop the spread of either intentional or unintentional information
+20:06:38 <cn3m[m]> that's the only place I have time to work
+20:06:46 <spaceinfinite[m]> Can Anyone tell me if the Riotx dbg is the same as normal riotx?
+20:06:52 <cn3m[m]> 2-6 hours a day
+20:07:12 <spaceinfinite[m]> I asked on riot room but no one seems to respond
+20:07:52 <cn3m[m]> I could spend my time coding open source projects, yet I am the only one on every discussion on Reddit I can. I need help if you can't code this is the best way to help the project
+20:09:40 <cn3m[m]> I've said many times if people replace my work on Reddit I'll code more on related projects. Especially for privacy areas which is my forte. I think misinform is more of an issue right now
+20:10:06 <cn3m[m]> I can't work, fight misinformation, and contribute to open source projects
+20:10:26 <nuttso[m]> <kernelpaniker[m] "Isn't it more rational just to i"> It's the only way. Hope strcat understands this one day. What a waste of energy
+20:10:56 <cn3m[m]> strcat time is too valuable
+20:11:03 <cn3m[m]> it has to be us
+20:11:28 <cn3m[m]> I'll roleplay debates with me playing the malicious person to teach the community
+20:11:31 <strcat[m]> nuttso: no because people follow / believe them and they cause immense harm
+20:11:36 <kernelpaniker[m]> <cn3m[m] "that's the only place I have tim"> This community is really great, if a person doesn't recognize it and trying to troll/spread shitthoughts, so be it. I don't think you can change his mind. And the others...they'll understand who is right and who is wrong, if they gave at least minimum education
+20:11:41 <cn3m[m]> I'll help people do what I do
+20:12:06 <nuttso[m]> <strcat[m] "nuttso: no because people follow"> This is a battle that can't be won. Impossible. Even with 1000 people just dedicated to that
+20:12:18 <strcat[m]> I've received dozens of threatening emails because of what this person and a couple others are doing posting threads aimed at directing harassment  / attacks at me
+20:12:22 <kernelpaniker[m]> <nuttso[m] "This is a battle that can't be w"> Agreed
+20:12:32 <cn3m[m]>  @kernelpaniker:matrix.org I'll convinced an adversarial person this stuff matters and now they are working on GlassROM
+20:12:46 <cn3m[m]> anything is possible if you are clear and persistent
+20:13:01 <strcat[m]> they turn people away from the project and cause very real harm
+20:13:10 <cn3m[m]> I'll keep doing what I do
+20:13:14 <strcat[m]> they are actively waging a war against it and myself for unclear reasons
+20:13:18 <kernelpaniker[m]> * This community is really great, if a person doesn't recognize it and trying to troll/spread shitthoughts, so be it. I don't think you can change his mind. And the others...they'll understand who is right and who is wrong, if they have at least minimum education
+20:13:20 <strcat[m]> it is a huge problem
+20:13:27 <cn3m[m]> that's why education matters
+20:13:28 <cn3m[m]> that's our job
+20:13:29 <nuttso[m]> <strcat[m] "they turn people away from the p"> Uneducated for us uninteresting people
+20:14:15 <strcat[m]> and they build on what the others do, you can see they create mountains and bullshit and then link back to it etc
+20:14:29 <strcat[m]> and claim stuff has been refuting or whatever because they posted a pile of false claims / spin before
+20:14:33 <strcat[m]>  * and claim stuff has been refuted or whatever because they posted a pile of false claims / spin before
+20:14:42 <strcat[m]> non-technical people are very easily tricked by them
+20:14:47 <strcat[m]> they are actively tricking lots of people
+20:14:58 <nuttso[m]> <strcat[m] "non-technical people are very ea"> And this is something that we can't change
+20:15:10 <nuttso[m]> No matter whaz
+20:15:10 <strcat[m]> most people are not technical enough to see that these people have no clue what they're talking about and are just BSing
+20:15:20 <nuttso[m]> <strcat[m] "most people are not technical en"> Bingo
+20:15:25 <strcat[m]> nuttso: the harm they are doing can be greatly reduced
+20:15:33 <cn3m[m]> these bad people educate the community which doesn't research. we need active knowledgeable people here
+20:15:34 <cn3m[m]> active in the community
+20:15:37 <strcat[m]> once the thread reaches the point that it's super deep into threads
+20:15:44 <strcat[m]> it isn't important anymore
+20:15:55 <strcat[m]> at that point can stop dealing with them and they can't do anything else relevant
+20:16:09 <strcat[m]> but until then they are successfully causing harm
+20:16:14 <strcat[m]> and letting them do that enables them to do more harm
+20:16:59 <cn3m[m]> I'd love to mind my own business and be able to work on projects and not get harassed for it. I know how Daniel feels. His work is more valuable than mine
+20:17:01 <nuttso[m]> <strcat[m] "nuttso: the harm they are doing "> Only by educating the sheep's. Lol I know people paying 1200 ever 6 months to companies that claim signal shares data with police. Tell me how to stop them. Educate the fools?
+20:17:12 <cn3m[m]> I don't want him to deal with that
+20:17:33 <cn3m[m]> Reddit matters an educated reader base helps
+20:18:11 <spaceinfinite[m]> <nuttso[m] "Only by educating the sheep's. L"> Thats not why people pay that !
+20:18:39 <strcat[m]> privacy/security companies, advice, guides, etc. is largely a scam by people trying to make money, promote themselves or things they support
+20:18:46 <strcat[m]> it is a problem
+20:19:07 <strcat[m]> and it's a problem that they start trying to harm people creating things that aren't scams like accurate documentation
+20:19:24 <cn3m[m]> People need to be educated or they will keep attacking serious projects
+20:19:35 <strcat[m]> look at how well received that guy's bullshit guide was received on /r/privacy
+20:19:52 <strcat[m]> and even the main moderator treats him as if he's an 'expert' for some reason, lol
+20:19:57 <strcat[m]> just sad
+20:20:07 <nuttso[m]> <spaceinfinite[m] "Thats not why people pay that !"> No they pay them because they believe the nonsense they talk. If you try to convince such a guy that gos with signal is more secure than anything else the tell u know it doesn't cost money. Can't be. If you try to explain it technically after 20 seconds they don't listen
+20:20:07 <cn3m[m]> yeah /r/privacy is bad I can't operate there alone. I haven't even tried much
+20:20:19 <kernelpaniker[m]> <strcat[m] "look at how well received that g"> Can you give the link?
+20:20:23 <strcat[m]> they want to be scammed
+20:20:51 <cn3m[m]>  @kernelpaniker:matrix.org it's bullshit about Huawei is the ideal phone
+20:20:54 <strcat[m]> this guy pushes insecure Android devices and claims iPhones are bad
+20:20:58 <cn3m[m]> it's of no consequence
+20:21:03 <spaceinfinite[m]> <nuttso[m] "No they pay them because they be"> Its a different market and different purpose
+20:21:10 <cn3m[m]> I need help with this stuff
+20:21:14 <cn3m[m]> before it's an issue
+20:22:30 <cn3m[m]> I've been offering to help people learn how to study what Daniel has written and start fighting this, but almost no one took me up on it and all start drifting
+20:22:39 <strcat[m]> nuttso: cn3m reduces my workload and what I have to worry about
+20:22:41 <strcat[m]> it helps in a tangible way
+20:22:49 <cn3m[m]> It's not fun, but the more people doing it the easier it is
+20:22:53 <strcat[m]> if a bunch more people became as educated on the topics and did that kind of work
+20:22:54 <nuttso[m]> <spaceinfinite[m] "Its a different market and diffe"> Bullshit. Seems you know who I'm talking about. Encrochat and skyecc.
+20:22:57 <strcat[m]> I would not have to deal with it much
+20:23:23 <kernelpaniker[m]> <cn3m[m] "I need help with this stuff"> I'd love to be helpful for the project, but my language is bad
+20:24:00 <spaceinfinite[m]> > <@nuttso:matrix.org> Bullshit. Seems you know who I'm talking about. Encrochat and skyecc.
+20:24:00 <spaceinfinite[m]> > Skyecc talks about 521 bits of ecc to separate them from signal..lol. ecc is broken with quantum no matter what
+20:24:00 <spaceinfinite[m]> Of course i know who you talking about but its a different market like i said
+20:24:43 <cn3m[m]> Message me if you want to help I'll teach everything I know
+20:25:00 <cn3m[m]> if I have to spend 10 hours teaching you and then you do a few hours a week that pays off
+20:25:07 <spaceinfinite[m]> nuttso: you cant talk to juan pablo on signal though.there is a market and everyone is on that market
+20:25:16 <cn3m[m]> this is open to anyone who is willing to learn and follow through
+20:25:32 <nuttso[m]> <strcat[m] "if a bunch more people became as"> I follow you since the beginning. Research and check everything you write before accepting it. Not following blindly.
+20:26:02 <strcat[m]> the way I see things atm
+20:26:05 <nuttso[m]> <spaceinfinite[m] "nuttso: you cant talk to juan pa"> Because he is fooled b such companies
+20:26:16 <strcat[m]> is that due to the current environment with James Donaldson attacking the project
+20:26:19 <cn3m[m]>  @nuttso:matrix.org Practice it's in the way you deliver it
+20:26:21 <strcat[m]> along with people like these
+20:26:28 <cn3m[m]> I was downvoted a lot in the beginning
+20:26:29 <cn3m[m]> it's a fact of life
+20:26:32 <strcat[m]> and tons of other bad things that have happened / are happening
+20:26:39 <strcat[m]> it is just not possible to accomplish all that much right now
+20:26:44 <cn3m[m]> I learned and didn't give up
+20:26:48 <strcat[m]> I am not too worried about it anymore
+20:27:02 <strcat[m]> I am perfectly capable of just taking something else as the base at any point and starting over again too
+20:27:31 <boniek[m]> <cn3m[m] "Message me if you want to help I"> Just write it somewhere, some blog, that way instead of spending 10 hours teaching some one person you can spend 10 hours writing and teach many more
+20:27:36 <cn3m[m]> strcat's time is worth 10x as much as mine that's means any time I can save him is worth it
+20:27:41 <strcat[m]> trying to build a community of developers and other people who care about these things and want to do stuff right
+20:27:56 <strcat[m]> that is priority #1 right now
+20:27:59 <strcat[m]> building support for the concept
+20:28:04 <strcat[m]> of actual privacy and security
+20:28:13 <spaceinfinite[m]> <nuttso[m] "Because he is fooled b such comp"> Im noy saying that you are wrong, i too believe what you say and that signal and threema are way more secure.But skyecc and encrochat have a specific customers and its like people from whatsapp to change to threema.its hard
+20:28:14 <strcat[m]> making it possible to actually do things right
+20:28:16 <cn3m[m]>  @boniek:matrix.org people want easy that's why I write long posts and have chat conversations
+20:28:23 <strcat[m]> make hardware actually aimed at providing privacy/security
+20:28:23 <cn3m[m]> I need to make this easy
+20:28:27 <cn3m[m]>  @boniek:matrix.org I'm not going to make some blog
+20:28:28 <strcat[m]> rather than yet another kickstarter scam
+20:28:36 <cn3m[m]> that doesn't help
+20:29:07 <strcat[m]> imagine if just one of those kickstarter things had actually been interested in truly making a more private / secure phone for real
+20:29:11 <strcat[m]> and putting in the work to actually do that
+20:29:24 <cn3m[m]> my dms are always open, but I've spent too much time here and no one really seems interested I need to go back to reddit
+20:29:30 <nuttso[m]> <spaceinfinite[m] "Im noy saying that you are wrong"> I know the CEO over at encro. We had a bad clinch. He threatened me with murder. Lol fool
+20:30:05 <strcat[m]> IME those companies are actually heavily involved with criminals and organized crime
+20:30:27 <strcat[m]> that is essentially the path James wanted to take while pretending otherwise
+20:30:47 <nuttso[m]> <strcat[m] "IME those companies are actually"> They are. Don't estimate gos isn't used by more educated criminals
+20:30:49 <strcat[m]> he signed deals with criminals who were later arrested / shut down and tried to make deals with others
+20:31:01 <dazinism> On beta, wired audio is working again
+20:31:04 <nuttso[m]> Also what is a criminal is country depending in some cases
+20:31:08 <dazinism> On 3xl
+20:31:30 <strcat[m]> nuttso: I'm saying it to mean organized crime type stuff
+20:32:15 <nuttso[m]> <strcat[m] "nuttso: I'm saying it to mean or"> Even better for us if organized crime uses the os. We can see what forensic is capable to do
+20:32:23 <dazinism> Possibly better behavior on plugging / unplugging headphones than before when it recently broke
+20:33:05 <strcat[m]> it should havei mprovements over before when it broke
+20:33:07 <strcat[m]> for bluetooth etc
+20:33:10 <strcat[m]> from the new workaround
+20:33:17 <strcat[m]> the previous attempt at truly fixing it just didn't pan out
+20:33:25 <strcat[m]> it made some things better but broke others
+20:33:37 <strcat[m]> valldrac found what was wrong with bluetooth, etc. tho
+20:33:40 <strcat[m]> and that led to this new workaround
+20:33:40 <chani1> nuttso[m]: speaking as a non-technical "sheep" myself, education is possible. it's also true that the sea of contradicting information on reddit isn't helpful, particularly when it's over the head of the average user
+20:33:42 <strcat[m]> just a bumpy road to it
+20:33:48 <strcat[m]> and it's not really fixed
+20:33:49 <spaceinfinite[m]> <strcat[m] "IME those companies are actually"> Those companies have moved over to iphone now
+20:33:54 <strcat[m]> apparently the code goes away in master tho
+20:34:18 <strcat[m]> spaceinfinite: encrochat etc.?
+20:34:24 <nuttso[m]> <spaceinfinite[m] "Those companies have moved over "> With mdm based on blackberry
+20:34:44 <strcat[m]> at least they don't try to provide their own OS anymore then
+20:34:53 <nuttso[m]> <strcat[m] "at least they don't try to provi"> Haha
+20:34:53 <spaceinfinite[m]> <strcat[m] "spaceinfinite: encrochat etc.?"> Yes, skyecc etc
+20:35:37 <spaceinfinite[m]> <nuttso[m] "With mdm based on blackberry"> Yes
+20:36:28 <nuttso[m]> I know them all. The only company that really does what they promise and is more advanced than what we have here is GSMK
+20:37:40 <spaceinfinite[m]> <nuttso[m] "I know them all. The only compan"> I personally believe they sell the server i dont believe their encryption is any thing special than lets sat threema
+20:37:48 <spaceinfinite[m]> Gsmk?
+20:38:04 <nuttso[m]> I know Karsten Nohl and Frank Rieger personally. Lately I talked to srlabs about snoopsnitch and this is here
+20:38:22 <nuttso[m]> Gsmk hardens the device and lately produced their own
+20:38:22 <dazinism> <strcat[m] "it should havei mprovements over"> I've not got any Bluetooth devices to test, but wired appears good
+20:38:46 <cn3m[m]>  @freenode_chani1:matrix.org that's not true. There's a monoculture of privacy and security theater right now
+20:38:59 <cn3m[m]> if we push good ideas that helps GrapheneOS
+20:39:22 <cn3m[m]> when I started everyone in PTIO thought Lineage was more secure now. Now PTIO is researching modifications to the listing
+20:39:37 <spaceinfinite[m]> <nuttso[m] "I know Karsten Nohl and Frank Ri"> You seem to know the right people.i read a bit about Nohl
+20:39:38 <nuttso[m]> <spaceinfinite[m] "Gsmk?"> https://www.cryptophone.de/
+20:39:46 <cn3m[m]> there's posts everyday discussinh these security issues
+20:39:50 <nuttso[m]> I grew up with them
+20:39:55 <cn3m[m]> it can be fixed and it directly helps
+20:40:02 <cn3m[m]> if you can't or don't want to code this is the way to make a difference
+20:41:12 <ducky2> Hey all. I'm trying to install GOS on a new Pixel 3a XL and have some issues unlocking the bootloader. I've enabled OEM unlocking in the system settings and I can boot into fastboot mode, but when I type "fastboot flashing unlock" nothing happens. Any ideas?
+20:41:25 <spaceinfinite[m]> <nuttso[m] "I grew up with them"> Nohl is the guy who did the experiment on ss7 with that goverment guy?
+20:42:02 <madaidan[m]> I love how strcat makes massive walls of text ripping any argument the other guy had to shreds
+20:42:07 <nuttso[m]> Nohl is big player over at chaos Computer Club. He is a genius at mobile security
+20:42:07 <madaidan[m]> It's refreshing
+20:42:44 <nuttso[m]> Sadly they don't have time to dedicate here. He is aware of the project.
+20:43:00 <spaceinfinite[m]> <nuttso[m] "Nohl is big player over at chaos"> He'd a legend i know. Good for you that you can learn from him
+20:43:52 <nuttso[m]> <spaceinfinite[m] "He'd a legend i know. Good for y"> Both these companies are in Berlin. I visit them a lot
+20:43:59 <strcat[m]> ducky2: perhaps a permission issue - which OS are you flashing from
+20:44:11 <strcat[m]> ducky2: make sure to try the troubleshooting advice about USB ports, cables, etc.
+20:44:32 <spaceinfinite[m]> <nuttso[m] "Both these companies are in Berl"> So you are german ?
+20:44:38 <strcat[m]> ducky2: and note what it says about udev rules - i.e. that Linux distributions specifically don't allow access to local USB devices that don't fit into some narrow classes of devices
+20:44:41 <nuttso[m]> I'm trying very hard to find someone to sponsor gos. I'm close to accomplish this
+20:44:48 <strcat[m]> ducky2: without root access, or udev rules set up for each additional class of device
+20:44:54 <nuttso[m]> <spaceinfinite[m] "So you are german ?"> No. But I live there
+20:45:04 <strcat[m]> nuttso: the ideal would be a company that wanted to make hardware
+20:45:09 <strcat[m]> nuttso: that's private/secure
+20:45:15 <nuttso[m]> <strcat[m] "nuttso: the ideal would be a com"> Htc
+20:45:22 <strcat[m]> nuttso: and they want to ship a fork of GrapheneOS as their OS
+20:45:24 <strcat[m]> and make it available to us
+20:45:26 <strcat[m]> for our use
+20:45:28 <nuttso[m]> Only company I would go with
+20:45:56 <strcat[m]> nuttso: was contacted by them before but they wanted too much from me without giving anything
+20:46:03 <ducky2> I'm running fedora 32. Connected to a USB 3 port on the mother board. The cable... well, it's the only one I have at the moment.
+20:46:24 <strcat[m]> nuttso: potentially still on the table
+20:46:26 <spaceinfinite[m]> Wow
+20:46:27 <strcat[m]> requires having people willing / able to deal with them
+20:46:27 <strcat[m]> to write proposals and so on
+20:46:38 <strcat[m]> I'm not really interested in jumping through any hoops
+20:46:40 <strcat[m]> others have to do it
+20:46:44 <nuttso[m]> <strcat[m] "nuttso: was contacted by them be"> Afaik they are the only company that can guarantee the integrity of the supply chain
+20:46:55 <strcat[m]> I just want to work on the project and manage the technical aspects of it
+20:47:01 <spaceinfinite[m]> <strcat[m] "requires having people willing /"> I read somewhere they ate about yo comeback into market with new phone
+20:47:05 <cn3m[m]> if you need an Enterprise phone buy a Pixel or iPhone and use their support
+20:47:06 <cn3m[m]> secure and privacy focused devices are a sham
+20:47:08 <EssentialChaos[m> <nuttso[m] "Htc"> Aren't they half-dead?
+20:47:08 <strcat[m]> partnerships with companies, etc. require having people to work on that
+20:47:10 <nuttso[m]> <strcat[m] "I just want to work on the proje"> I know. I listen to what I write
+20:47:14 <cn3m[m]> they take old features from Google, Apple, and GrapheneOS and sell them as the big new thing for much more
+20:47:15 <analog[m]> <cn3m[m] "secure and privacy focused devic"> 🍎
+20:47:15 <aeonsolution[m]> ducky2: try unplugging the cable and connecting it back again
+20:47:23 <nuttso[m]> <EssentialChaos[m "Aren't they half-dead?"> No
+20:47:44 <strcat[m]> nuttso: I know just saying that the problem ends up being these companies just message me
+20:47:49 <strcat[m]> and they misunderstand GrapheneOs
+20:47:53 <strcat[m]>  * and they misunderstand GrapheneOS
+20:47:59 <strcat[m]> it's an open source project / community
+20:48:01 <strcat[m]> not a company
+20:48:42 <cn3m[m]> exactly
+20:48:52 <strcat[m]> I want to collaborate, they want to pay for something / license something
+20:48:59 <strcat[m]> so requires people who understand and support the project
+20:49:04 <strcat[m]> to deal with this aspect of it
+20:49:07 <ducky2> already tried reconnecting the cable several times.
+20:49:20 <spaceinfinite[m]> Nutsso can be the middleman
+20:49:33 <strcat[m]> ducky2: if you're on a linux distribution it probably just doesn't allow you to use USB devices as non-root
+20:49:47 <madaidan[m]> Inb4 "what about Purism"
+20:50:18 <EssentialChaos[m> <madaidan[m] "Inb4 "what about Purism""> Bad, bad company
+20:50:24 <nuttso[m]> <madaidan[m] "Inb4 "what about Purism""> No
+20:50:34 <strcat[m]> madaidan.: btw I have personal experience of trying to get them to fix things, etc. and all they wanted was to get me to give my name to be used to claim I was a partner
+20:50:36 <strcat[m]> to push their stuff
+20:51:04 <ducky2> hm... it should. I just sideloaded the latest update of android 10 without any issues.
+20:51:06 <strcat[m]> madaidan.: they reach out to ppl to get them to say they are partners and make it seem like there's all this collaboration, etc. that there isn't
+20:51:07 <aeonsolution[m]> ducky2: try the `fastboot devices` once you sort out what strcat is asking you to do. if at that point it doesn't work, your cable is unfortunately the issue.
+20:51:19 <strcat[m]> ducky2: fastboot is different than adb
+20:51:23 <strcat[m]> different class of USB device
+20:51:32 <strcat[m]> so you may have udev rules that work for adb but not fastboot
+20:51:41 <EssentialChaos[m> Hmmm, HTC could market this as a secure OS for government organizations...
+20:51:41 <strcat[m]> the udev rules are just to make it work as non-root
+20:51:43 <madaidan[m]> <strcat[m] "madaidan.: they reach out to ppl"> I didn't know that. That's even more shitty.
+20:52:10 <strcat[m]> madaidan.: I spend substantial time trying to talk with them, raising concerns, suggesting things, telling them what would be needed to support the device
+20:52:26 <strcat[m]> all they wanted to do is sweet talk + convince me to let them use the name of the project / my name to promote their product
+20:52:26 <madaidan[m]> Btw that anonymousejoker guy is on his last chance in r/privacy. That recent discussion might get him banned.
+20:52:44 <madaidan[m]> He probably fucked himself over by pinging the mods
+20:52:54 <cn3m[m]> fuck
+20:52:59 <cn3m[m]> I don't want him banned
+20:53:00 <cn3m[m]> his name is known to be bs
+20:53:01 <cn3m[m]> fuck
+20:53:12 <strcat[m]> cn3m: doesn't seem that way
+20:53:20 <EssentialChaos[m> cn3m: Don't worry, he'll make a new account
+20:53:28 <ducky2> ok, "fastboot devices" says I've got no permissions. Any way to change that?
+20:53:34 <strcat[m]> people seem to support him even though he's clearly a bullshitter
+20:53:45 <cn3m[m]> on PTIO at least he's known as a clown especially debating me
+20:53:46 <strcat[m]> ducky2: use root or set up udev rules for it
+20:53:50 <strcat[m]> either way requires using root
+20:54:06 <cn3m[m]> I will have to start all over on arguing with his alt
+20:54:15 <strcat[m]> ducky2: just an issue on Linux distributions - they don't allow access to local USB devices from a local session without root unless they are within certain narrow classes
+20:54:26 <strcat[m]> they need udev rules for each kind to make it work
+20:54:45 <cn3m[m]> I wish I could get on /r/privacy, but the site is too fast and has too much misinfo and misdirected paranoia
+20:54:48 <EssentialChaos[m> <cn3m[m] "I will have to start all over on"> Not really, because you already established a name for yourself
+20:54:50 <cn3m[m]> I need help
+20:54:55 <cn3m[m]> if I want to move to /r/privacy
+20:55:12 <ducky2> ok, I'll look into the udev rules. New concept for me... thanks.
+20:55:26 <cn3m[m]> either help me maintain the grounds gained on ptio or help with /r/privacy
+20:55:26 <strcat[m]> btw pls let me know if there are any issues with the beta releases
+20:55:36 <madaidan[m]> <strcat[m] "people seem to support him even "> He does have some supporters who are just as irritating. People like CDr0m, ubertr0_n etc. are all big supporters that I have past experience with.
+20:55:49 <strcat[m]> ducky2: or just run fastboot as root - if you're using sudo from your account regularly it makes no real difference
+20:55:56 <madaidan[m]> All spread the same bullshit.
+20:55:59 <strcat[m]> madaidan.: if they are really different people
+20:56:25 <inquiree> strcat: that mouse guy is fucking annoying, just ask madaidan, cn3m, etc
+20:56:26 <strcat[m]> I have experience with some of these people (not that one specifically) from before GrapheneOS
+20:56:27 <strcat[m]> back in 2013
+20:57:31 <madaidan[m]> <strcat[m] "madaidan.: if they are really di"> I think the ones I listed are different people. They've been there for a long time and they act very differently.
+20:57:43 <madaidan[m]> u/Kyxrn has to be an alt though.
+20:57:55 <madaidan[m]> <strcat[m] "I have experience with some of t"> What do you mean?
+20:58:11 <inquiree> spreads bullshit and retarded "rebuttals" all over, slanders others pointing out his logical inconsistencies / conspiratorial fearmongering, plays victim all the time, etc
+20:58:11 <strcat[m]> madaidan.: I mean I dealt with the same kind of tactics when working on Rust
+20:58:57 <madaidan[m]> <strcat[m] "madaidan.: I mean I dealt with t"> Ah. Those type of people are common.
+20:59:06 <strcat[m]> madaidan.: and I know their strategy of trying to ostracize someone, play the victim, take offense to being called out on dishonest / manipulative tactics
+20:59:15 <strcat[m]> madaidan.: some of them are the *same people* now
+20:59:27 <inquiree> He's one report away from a permanent ban from that particular subreddit though. I don't know if that's actually a good thing. He'll probably go on a vengeful crusade on other subreddits spreading more bullshit
+20:59:35 <inquiree> I don't know what to do with that guy lol
+21:00:12 <madaidan[m]> <strcat[m] "madaidan.: some of them are the "> Some people are just forever lost causes :(
+21:00:28 <inquiree> He's just parroting the same "rebuttals" over and over, along with promoting whatever shitty guides he has authored
+21:00:45 <madaidan[m]> <inquiree "He's one report away from a perm"> I expect a large post on r/privatelife once he's banned
+21:01:48 <madaidan[m]> It's his own personal echo chamber
+21:01:57 <EssentialChaos[m> <madaidan[m] "I expect a large post on r/priva"> "How r/Privacy censored my completely accurate guides"?
+21:03:33 <madaidan[m]> <EssentialChaos[m ""How r/Privacy censored my compl"> Probably something more flamboyant
+21:03:42 <madaidan[m]> Maybe "trai is a shill"
+21:03:45 <inquiree> just look at this awesome post! https://old.reddit.com/r/privatelife/comments/f26qsc/threat_models_indoctrination_bias_and_criticism/
+21:04:29 <madaidan[m]> <inquiree "just look at this awesome post! "> I got banned because of that thread :(
+21:05:05 <inquiree> The best we can do atm is to point out his BS on a more quantifiable scale
+21:05:34 <inquiree> so it'll be evident that he's full of shit, even to casual subscribers
+21:06:05 <nuttso[m]> <spaceinfinite[m] "Nutsso can be the middleman"> I'm spending a lot of energy to promote and educate people about gos. I do this mainly because I have lots of respect for strcat. When he was the only developer at copperhead he still took the time to educate us in the channel. His answers where always on point and matched my own research. I really believe in him as a person. This work is important. I would only mess with
+21:06:06 <nuttso[m]> a company that could guarantee the whole supply chain. Which is not easy.
+21:06:50 <EssentialChaos[m> <inquiree "just look at this awesome post! "> > if you are from anywhere in the world except China, use:
+21:07:17 <EssentialChaos[m> As if China doesn't have allies...
+21:07:34 <inquiree> if you think /r/privacy is bad, wait till you see /r/privatelife lol
+21:07:40 <inquiree> it's really in a different league
+21:09:04 <mxnorvak[m]> This Joker guy is just an attention seeker bagging to be seen as someone who knows what he's talking about
+21:09:45 * spaceinfinite[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/LfTjaiLItxbZYYoGgcpWnITS >
+21:09:47 <mxnorvak[m]> Begging*
+21:12:17 <nuttso[m]> <spaceinfinite[m] "> <@nuttso:matrix.org> I'm spend"> I don't feel offended. just wanted to make clear why I spent my time with this. He deserves it
+21:12:19 * spaceinfinite[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/AUHxDMIjwgRSHUMIcAihBDUn >
+21:13:29 <inquiree> mxnorvak: yea, but unfortunate he's one of the most prolific individuals spreading misinformation against the project, and cannot be left unattended :(
+21:15:03 <nikoleos[m]> Hi, i hope i don't disturb but i'm planning to sideload GrapheneOS on a Pixel 3a but in the installation guide it says to update to newer stock ROM before, but i fear becaue as far as i know graphene is Pie based and the latest Google ROM is android Q. Isn't there any anti roll back stuff ? Or is it as simple as update the stock rom from Pie to latest Q and then fallow the guide ? Thanks already
+21:15:06 <spaceinfinite[m]> <nuttso[m] "I don't feel offended. just want"> I thought you took it the wrong way. All good then
+21:15:37 <nuttso[m]> But I still think arguing with uneducated sheep's is waste of time
+21:16:03 <inquiree> nikoleos: graphene is on Android Q at the moment
+21:17:08 <spaceinfinite[m]> <nuttso[m] "But I still think arguing with u"> We are all sheep one way or the other though
+21:17:34 <inquiree> nikoleos: on a fresh supported pixel device, all you have to do is to follow https://grapheneos.org/install carefully
+21:19:04 <nikoleos[m]> > nikoleos: graphene is on Android Q at the moment
+21:19:05 <nikoleos[m]> Oh good news, i haven't know that untill now, i have missed this on the gos website
+21:21:56 <nuttso[m]> <spaceinfinite[m] "We are all sheep one way or the "> Yes. I know what u want to say. But educating the masses about mobile security is not possible. And this would be the only way to effectively stop misinformation
+21:23:30 <nikoleos[m]> <inquiree "nikoleos: on a fresh supported p"> I have read carefully, thanks inquiree sounds clear now that i shall update to Q before sideloading grapheneOS
+21:23:33 <spaceinfinite[m]> <nuttso[m] "Yes. I know what u want to say. "> In a way strcat is right there is so much missinformation out there
+21:23:40 <inquiree> nikoleos: you may want to consult https://grapheneos.org/faq too
+21:24:06 <nuttso[m]> I really want this project to succeed and raise the bar for mobile security. And I think the only important people are the ones that can recognize it on their own.
+21:25:01 <nuttso[m]> <spaceinfinite[m] "In a way strcat is right there i"> So what? Like I said it can't be battled by the way it is approched now.
+21:25:04 <spaceinfinite[m]> The future is bright the future is orange*
+21:25:05 <inquiree> Graphene is definitely filling a void
+21:25:13 <inquiree> I'll weep tears of blood if I ever had to go back to stock pixel
+21:25:32 <nikoleos[m]> <inquiree "nikoleos: you may want to consul"> I will read it again
+21:25:47 <spaceinfinite[m]> <nuttso[m] "So what? Like I said it can't be"> Exactly this
+21:25:55 <nuttso[m]> <inquiree "I'll weep tears of blood if I ev"> Same here. So please guys if you can't code help in what ever way is possible.
+21:27:48 <paintedman[m]> > need people to step up as device maintainers for existing devices and to develop and maintain Pixel 4 and 4 XL support
+21:27:48 <paintedman[m]> strcat (@strcat:matrix.org) recently I've sent email to contact⊙go with links to repos which I used to run GrapheneOS on Pixel 4 XL. Hope it helps.
+21:28:41 <strcat[m]> paintedman: try to keep working towards resolving the issues + rebasing the changes to fit the same pattern of commits as the existing repos
+21:29:03 <strcat[m]> noticed some were merged into a single one - try to match the existing split / order for the most part, meant to be a series of independent patches
+21:29:12 <strcat[m]> we'll need to resolve issues like whatever the wifi problem is, etc.
+21:29:20 <nuttso[m]> I remember strcat writing at least 5 times that he would end it. Always got a heart attack when reading this. In some way I can understand his frustration. Especially with James. But also lots of what James is capable to do know is strcats own fault. He should have be CEO of the company also. He trusted james with it. James fucked up and strcat lost his faith in humanity
+21:30:50 <strcat[m]> there was an amazing opportunity
+21:30:58 <strcat[m]> a much friendlier environment with far fewer scammers
+21:30:58 <paintedman[m]> <strcat[m] "noticed some were merged into a "> It's in kernel repo?
+21:31:27 <strcat[m]> paintedman: I think so just try to have 1:1 commits lining up
+21:31:32 <strcat[m]> other than things that must be different due to newer branch
+21:31:45 <strcat[m]> atm most of the past kernel hardening, etc. is missing anyway
+21:32:22 <strcat[m]> nuttso: I think there was an amazing opportunity then and we could have had our own custom hardware by now where we control far more of it and wouldn't be so screwed by stuff like a migration to a new major release
+21:32:35 <inquiree> Who's behind the GrapheneOS account on reddit? Is it solely Daniel?
+21:32:42 <strcat[m]> nuttso: the space was much less crowded by charlatans then
+21:32:57 <strcat[m]> inquiree: it represents the project, not just me
+21:33:05 <strcat[m]> inquiree: and it will probably be used more often now
+21:33:15 <strcat[m]> because I am tired of being personally targeted / harassed
+21:33:24 <strcat[m]> so especially when dealing with people like that guy
+21:33:54 <strcat[m]> it makes sense to use a project account, he keeps wanting to go back to trying to target me as an individual over collaboratively written / edited content anyways though
+21:33:56 <strcat[m]> like the docs on the site
+21:34:23 <strcat[m]> which other people like TheJollyRoger have contributed to a lot
+21:34:29 <inquiree> strcat: sorry for the confusion
+21:34:36 <inquiree> I meant to ask if you're the only one with access to that account
+21:34:45 <strcat[m]> nuttso: I feel the opportunity is fading away - the space is increasingly crowded with misinformation, scams, etc.
+21:35:21 <strcat[m]> nuttso: and people can see that substance doesn't count for anything
+21:35:33 <nuttso[m]> <strcat[m] "nuttso: the space was much less "> Doubt so. It's not that James is only a charlatan. He has some kind of mental illness. Maybe narcissism. Such people exist since the first human. You were the leader for us as a community no matter if James was the CEO.
+21:35:46 <strcat[m]> nuttso: we also largely lost the connections we had with AOSP, Pixels, etc.
+21:36:08 <strcat[m]> nuttso: and connections that could have gotten custom hardware done for real
+21:36:20 <nuttso[m]> <strcat[m] "nuttso: we also largely lost the"> Can be recovered
+21:36:21 <strcat[m]> James was screwing things up and sabotaging what I wanted to make long before he pushed me out
+21:37:12 <strcat[m]> he got fed up of not being able to pursue totally unethical things totally outside what had been agreed upon
+21:37:22 <strcat[m]> and just decided to pull a completely illegal and unethical takeover
+21:38:26 <nuttso[m]> <strcat[m] "James was screwing things up and"> I know. I talked to this guy one time via email in copperhead times. He is a joke. I can show the email.
+21:38:31 <strcat[m]> he is actually a very evil person, and totally deluded
+21:39:25 <strcat[m]> how did he think it would benefit himself to pull what he did
+21:39:27 <nuttso[m]> <strcat[m] "he is actually a very evil perso"> Narcissism. Read about it. More deeper. I had the same experience.
+21:39:51 <strcat[m]> he totally fucked over my life and the work I put into this for years
+21:39:55 <strcat[m]> it is totally screwed up now
+21:40:00 <strcat[m]> I continue working on it but it's not the same
+21:40:17 <paintedman[m]> <strcat[m] "paintedman: I think so just try "> Ok, I got it
+21:40:20 <strcat[m]> I don't have much hope about it now and am just not particularly motivated to pursue these partnerships with companies, etc.
+21:40:28 <strcat[m]> been screwed over and used/manipulated too much by too many of these people
+21:40:31 <strcat[m]> don't trust any of them
+21:40:48 <nuttso[m]> <strcat[m] "he totally fucked over my life a"> I offered you multiple times help with this. My only wish was to talk about it over a secure channel. You have my Signal number. Never reached out to me
+21:41:18 <strcat[m]> nuttso: send me your number again in a PM
+21:41:24 <strcat[m]> not promising to reach out
+21:42:00 <strcat[m]> nuttso: I already tried to have 2 other people deal with the non-technical aspects of it and James drove one of them away and then ruinedi t all
+21:42:11 <strcat[m]>  * nuttso: I already tried to have 2 other people deal with the non-technical aspects of it and James drove the other away and then ruined it all
+21:43:13 <strcat[m]> I need to be able to delegate all that stuff to someone else that I can trust while having more failsafes
+21:43:20 <nuttso[m]> <strcat[m] "not promising to reach out"> You see. You're not willing to try anything to end this.  But at the same time you whine about his behavior.
+21:43:38 <strcat[m]> how am I supposed to end it?
+21:43:48 <nuttso[m]> <strcat[m] "I need to be able to delegate al"> You don't trust anyone anymore
+21:43:51 <strcat[m]> he is going to continue
+21:44:33 <strcat[m]> nuttso: I trust TheJollyRoger
+21:45:08 <strcat[m]> nuttso: what I really want is for other people to do stuff
+21:45:13 <radixed9[m]> I am working on an early stub implementation of Google Play Services based on some basic network failure data from Google Play Services for GrapheneOS. I am testing on a spare test system with signature spoofing enabled for development purposes right now. Is there any resources on how the project is looking to do this beside https://github.com/AndroidHardeningArchive/legacy_bugtracker/issues/649 and
+21:45:13 <radixed9[m]> https://grapheneos.org/build#development-guidelines? I can use applications it should be tested with. Is there an applicable list or design goals? The project is a very early Kotlin mockup designed on a standard signature spoofing system. It needs a lot of work
+21:45:50 <nuttso[m]> Jollyroger asked me if I would go to court with my real name for u as a witness. I would.
+21:45:51 <nuttso[m]> He is a good guy
+21:46:15 <BalooRJ> Is anyone else with newpipe having an issue with browsing files in the newpipe file browser?
+21:46:38 <nuttso[m]> But stop whining about James please if you don't take all opportunities available to u ending this
+21:47:15 <nuttso[m]> <radixed9[m] "I am working on an early stub im"> Nice
+21:47:49 * TheJollyRoger feels very flattered!
+21:48:00 <BalooRJ> Just noticed with the newest version of Newpipe that the "Import history and settings" button that it defaults to folder "/storage/emulated/0" that shows up blank, possibly because the last / is missing at the end
+21:48:02 <cn3m[m]> <nuttso[m] "But stop whining about James ple"> why are you so aggressive?
+21:49:04 <BalooRJ> doesn't seem to read the content in folders anymore in GrapheneOS, probably an app issue but just curious if anyone else has run into it
+21:52:21 <radixed9[m]> If I can receive any assistance on the specific goals of the implementation or if there is a more important first project I am open to exploring that information.
+21:52:58 <cn3m[m]>  @nuttso:matrix.org chill the fuck out man. Daniel is doing what's best for his project. Don't be so pushy
+21:57:27 <strcat[m]> my priority right now is just getting by
+21:57:32 <strcat[m]> not really focused on the project
+21:57:33 <kernelpaniker[m]> New update solved the issue with Bluetooth headset during calls. Well done, thank you so much
+21:57:59 <nuttso[m]> <cn3m[m] " @nuttso:matrix.org chill the fu"> Man I know. But I have to make him somehow stronger. He still gets his energy drained by this fool. I see Daniel as someone that has integrity. Having integrity means you are real. And not writing someone that offers u help with a problem woth somebody, but still writing that nobody helps is not integrity.
+21:58:09 <strcat[m]> I need all the nonsense with James / Coppperhead resolved and out of the picture
+21:58:49 <cn3m[m]> Daniel is found a great job doing a lot of jobs let him speak his mind and work in the background. don't go around telling him why you should be in charge of stuff since you don't like how he's doing it
+21:59:10 <strcat[m]> GrapheneOS succeeding doesn't get rid of James or repair my life
+21:59:46 <nuttso[m]> <cn3m[m] " @nuttso:matrix.org chill the fu"> Maybe it is nonsense what I have to offer maybe not. He doesn't know until he talks with me about it. Neglecting an offer for help and still stating nobody cares is not right.
+22:00:03 <nuttso[m]> <strcat[m] "GrapheneOS succeeding doesn't ge"> Only you can repair it
+22:00:03 <cn3m[m]>  @nuttso:matrix.org what's nonsense is how hard you're pushing
+22:00:10 <cn3m[m]> make your case and take his response at face value
+22:00:11 <inquiree> chill everyone
+22:00:12 <xabierd[m]> > GrapheneOS succeeding doesn't get rid of James or repair my life
+22:00:12 <xabierd[m]> It means that you are able to recover from shit situations, i think it s very positive
+22:00:24 <inquiree> btw, how is copperhead still float?
+22:00:29 <inquiree> afloat*
+22:00:50 <nuttso[m]> <cn3m[m] " @nuttso:matrix.org what's nonse"> No. Somebody presenting himself as a person with integrity will always be questioned
+22:00:50 <cn3m[m]> <inquiree "btw, how is copperhead still flo"> sick dishonest people
+22:01:34 <cn3m[m]>  @nuttso:matrix.org This is his/our project and he's doing work. He doesn't have to trust or bend to your every whim when you want him too.
+22:01:42 <xabierd[m]> Training companies in security habits is a good bussiness idea, probably thats how it s still alive
+22:02:10 <cn3m[m]> if he wants your help he can get it. Criticizing the only person getting real work done on this project over BS is not helpful and you know it
+22:02:18 <inquiree> shame they don't hold workshops on stealing donations :(
+22:02:39 <cn3m[m]> real full time work*
+22:03:42 <ducky2> I solved the issue I had with unlocking the bootloader on fedora. Had to run the command in the fastboot folder (even though I added it to my PATH) like this: sudo ./fastboot flashing unlock
+22:03:53 <nuttso[m]> <cn3m[m] "if he wants your help he can get"> You don't get it. Criticism is a good thing as long as it is true. Sure if he wants my help he can get it.
+22:04:36 <cn3m[m]>  @nuttso:matrix.org help in the ways he's already clearly said he is comfortable with
+22:04:48 <brenneke[m]> Just got another update, was that the Bluetooth fix by chance?
+22:05:12 <strcat[m]> brenneke: it rolls back the previous bluetooth fix (which broke other things) and has a new approach
+22:05:27 <nuttso[m]> <cn3m[m] " @nuttso:matrix.org help in the "> We don't know if what I can offer as help he would be uncomfortable with. It never got to the point of evaluating this
+22:05:49 <cn3m[m]>  @nuttso:matrix.org don't push him to accept your solution and criticize him for not wanting to rush into it
+22:06:10 <cn3m[m]> you can go to Twitter or new sites and check updates where there's misinformation
+22:06:14 <cn3m[m]> you can go to Reddit
+22:06:27 <cn3m[m]> Theres many ways to limit the damage James has done
+22:06:55 <cn3m[m]> You fixate on the one that puts you in a position of authority
+22:06:59 <strcat[m]> the problem is he has bet everything on this takeover, pushing me out and ostracizing me
+22:07:06 <nuttso[m]> <cn3m[m] " @nuttso:matrix.org don't push h"> I don't push nobody. I don't criticize nobody for accepting a solution. I criticize for not taking all opportunities available. Not even hearing them
+22:07:06 <strcat[m]> he is not going to stop
+22:07:15 <strcat[m]> he has bet his whole life on this
+22:07:21 <strcat[m]> he has no fallback plan
+22:07:32 <cn3m[m]>  @nuttso:matrix.org he said he might reach out to you
+22:07:33 <cn3m[m]> end of story
+22:07:44 <strcat[m]> he thought he would succeed at coercing me into giving over control and ownership of everything to him
+22:07:45 <cn3m[m]> be available if he wants it
+22:08:06 <strcat[m]> and he has deluded himself into thinking he is some fancy CEO with business skills and capability to do more than scam people and stealing their money without delivering
+22:08:16 <strcat[m]>  * and he has deluded himself into thinking he is some fancy CEO with business skills and capability to do more than scam people and steal their money without delivering
+22:08:35 <strcat[m]> I don't see any way he will stop
+22:09:00 <cn3m[m]> we need to get ahead of misinformation by propogating good information as a community
+22:09:13 <cn3m[m]> it's time intensive
+22:09:19 <cn3m[m]> roll up your sleeves this isn't a fair fight
+22:09:29 <cn3m[m]> we need to work harder then they do
+22:10:46 <nuttso[m]> <cn3m[m] " @nuttso:matrix.org he said he m"> Yes I can read thanks. I offered him this some time ago. And later I had to read on this channel statements like nobody helps. I don't care if you get the point I'm talking about.
+22:11:12 <cn3m[m]> Work on something else for him that he asks for
+22:11:19 <cn3m[m]> you are asking for him to trust you
+22:11:19 <nuttso[m]> <cn3m[m] "Work on something else for him t"> I do
+22:11:28 <nuttso[m]> More than other guys here
+22:11:33 <nuttso[m]> <cn3m[m] "you are asking for him to trust "> No
+22:11:34 <cn3m[m]> being aggressive isn't a good way to build trust
+22:11:49 <nuttso[m]> <cn3m[m] "you are asking for him to trust "> I'm asking him to keep his integrity
+22:12:40 <nuttso[m]> And would like to free I'm from james
+22:12:48 <nuttso[m]> U assume I have bad intentions
+22:12:59 <nuttso[m]> But this is not the case.
+22:13:42 <cn3m[m]> If you ask him something he has to think if he's comfortable with that's in his right to think about. That's not in scope of him turning it down help. He's not turning down simple things he's not turning down you at all
+22:14:53 <nuttso[m]> I don't know how you think about this. But when someone offers me help and I don't even listen to what he has to say but still make the statement nobody helps me, it's simply not the truth
+22:15:25 <cn3m[m]> That's not the situation and you know it
+22:15:38 <nuttso[m]> <cn3m[m] "That's not the situation and you"> That's the situation
+22:15:45 <cn3m[m]> What you're asking for is complicated
+22:15:48 <cn3m[m]> give him time
+22:15:51 <nuttso[m]> Wtf
+22:16:29 <nuttso[m]> He doesn't have the possibility to evaluate my solution without even knowing it. Lol what have you done hahahaha
+22:18:01 <cn3m[m]> You're talking about getting a bunch of outside involvement and money. He has to make a decision if he's comfortable with it and you. If your read his reddit he's focused on getting help from the community. He can make his own decision how to go forward. it's not my place or your place to judge his call
+22:18:03 <cn3m[m]> If he wants your help occasionally remind him
+22:18:07 <strcat[m]> no need to fight about this
+22:18:18 <cn3m[m]> like you started out doing
+22:18:19 <nuttso[m]> Yes let's end this please
+22:18:31 <cn3m[m]> fair enough. I rest my case
+22:18:51 <nuttso[m]> I'm sorry if you think I'm aggressive cn3m
+22:19:28 <cn3m[m]> <nuttso[m] "I'm sorry if you think I'm aggre"> I appreciate you saying that. I hope we are all good
+22:22:27 <nuttso[m]> <cn3m[m] "I appreciate you saying that. I "> We are good. But u missed the point
+22:22:54 <fomijafi[m]> If I switch to the beta release channel from stable in the system update settings, is that all I need to do to be able to contribute to beta testing or do I need to reflash thedevice?
+22:23:04 <cn3m[m]> I think we both made our points clear
+22:23:05 <spaceinfinite[m]> nuttso: you are on the right track my friend
+22:23:07 <cn3m[m]>  @fomijafi:matrix.org yes you're good
+22:25:43 <fomijafi[m]> Thanks, switching over now
+22:26:30 <nuttso[m]> Good night guys
+22:26:44 <nuttso[m]> <spaceinfinite[m] "nuttso: you are on the right tra"> Thx try to be
+22:26:50 <TheJollyRoger> fomijafi[m]: yes, you can switch from stable to beta at any time you like, but if you want to switch back, you will need to select "stable" and then wait until the next update is pushed, that's all.
+22:27:35 <fomijafi[m]> Got it
+22:27:40 <TheJollyRoger> This is by design; the Titan M will only allow upgrades, but it won't allow you to downgrade to an earlier version, to prevent a rollback attack.
+22:29:04 <radixed9[m]> Are there any resources for my stub development question beside those previously linked?
+22:30:57 <spaceinfinite[m]> Btw anyone using riot? Do you have the font on normal/large/larger?
+22:31:13 <spaceinfinite[m]> Or am i getting old ?
+22:31:51 <spaceinfinite[m]> On normal fomt size is too small and cant read
+22:32:55 <xabierd[m]> It s big enough stock size pixel 3 5.5"
+22:35:19 <brenneke[m]> <strcat[m] "brenneke: it rolls back the prev"> Thank you!
+22:42:08 <xabierd[m]> <radixed9[m] "Are there any resources for my s"> What parte of google services are you planning to replicate?
+22:42:24 <boniek[m]> is modem in pixel 3 isolated?
+22:48:40 <TheJollyRoger> boniek[m]: yes, the modem in all modern android handsets is isolated via SMMU. Pixels are the best for this.
+22:49:36 <TheJollyRoger> The modem can only read from or write to locations in memory that the driver in the kernel specifically allows it to.
+22:52:08 <boniek[m]> <TheJollyRoger "boniek: yes, the modem in all mo"> thanks!
+22:52:43 <radixed9[m]> <xabierd[m] "What parte of google services ar"> The goal is to make it appear as google play services are available offline. Unbreak apps right now. There is more I am interested in down the road.
+22:52:51 <TheJollyRoger> Yeah. Even if the modem gets compromised, it can't access host memory. Since the host loads the firmware when it boots, rebooting your phone should reset it to a known good state. It doesn't save state.
+22:54:14 <radixed9[m]> I can stub a basic implementation of as simple code I can and allow the user to opt apps into using. This will help with compatibility
+22:58:56 <radixed9[m]>  * I can stub a basic implementation of as simple code I can and allow the user to opt apps into using it. This will help with compatibility
+23:01:06 <radixed9[m]> I am looking for more information regarding exactly what the project wants as I am working to bring this beyond a half baked POC
+23:08:51 <frloonie[m]> <cn3m[m] "I've been offering to help peopl"> Id love the ability to study. I lack a proper device to develop anything for this project but i am on reddit every day
+23:11:16 <cn3m[m]>  @frloonie:privacytools.io message me and I can give you resources and mock debates with me
+23:19:37 <spaceinfinite[m]> cn3m: what other rooms are useful her
+23:19:46 <spaceinfinite[m]> Here*?
+23:20:08 <cn3m[m]>  @spaceinfinite:matrix.org don't use matrix or Reddit for information on security
+23:20:11 <cn3m[m]> follow who Daniel follows on Twitter
+23:20:29 <cn3m[m]> Twitter is where all the real research happens
+23:20:39 <cn3m[m]> or is shared rather
+23:20:47 <spaceinfinite[m]> Hmm but questions are more answere here than twitter
+23:20:57 <spaceinfinite[m]> On twitter is general knowledge
+23:21:11 <spaceinfinite[m]> I find this room much more informative
+23:21:18 <cn3m[m]> this matrix room is worth searching
+23:21:20 <cn3m[m]> yes
+23:21:37 <cn3m[m]> it's the only exception
+23:22:07 <spaceinfinite[m]> There is always an exeption in every field of life
+23:22:09 <cn3m[m]> this room and Twitter is the only areas I don't see a ton of security and privacy theater on
+23:22:32 <cn3m[m]> I'm in others to fight misinformation, but I don't recommend it
+23:22:57 <spaceinfinite[m]> Yes i see the spite room, ptivacytools room asweel
+23:23:20 <cn3m[m]> spite is the second most decent room here
+23:23:56 <cn3m[m]> still not a reliable source
+23:24:20 <spaceinfinite[m]> I can see from comments
+23:24:27 <spaceinfinite[m]> This room is growing
+23:24:27 <cn3m[m]> Reading nm.reddit.com/u/DanielMicay is a good idea too
+23:24:55 <spaceinfinite[m]> Yea i know,I followed daniel a long time
+23:25:05 <cn3m[m]> you can also read the comments from me and madaidan at /u/madaidan and /u/cn3m if you feel you have to read Reddit
+23:25:35 <spaceinfinite[m]> You and madaidan also on reddit i seen you are very active
+23:26:13 <chani1> dazinism: on the wiki, do you have to be a registered user to add pages? I can edit them just fine, but can't seem to add a new page.
+23:26:14 <spaceinfinite[m]> Reddit is good for science and history nothing else
+23:26:42 <cn3m[m]> Twitter is what you're looking for
+23:27:21 <cn3m[m]> less better information is better than more bad information
+23:27:43 <spaceinfinite[m]> Already on twitter on daniels list and some more but thought worth asking  you
+23:28:40 <spaceinfinite[m]> <cn3m[m] "Twitter is what you're looking f"> I understand buy on twitter you cant get answers you can get on this room,specially when daniel answers
+23:28:58 <cn3m[m]> Ask here
+23:29:16 <cn3m[m]> unless it's offtopic then wait until you see madaidan or I active on Spite?
+23:30:14 <spaceinfinite[m]> So are you the mod on r/graphene?
+23:30:36 <cn3m[m]> that's correct
+23:31:10 <spaceinfinite[m]> Nice
+23:31:39 <spaceinfinite[m]> You are very active on reddit and here
+23:32:00 <cn3m[m]> That's the best tool I have to help the community
+23:32:52 <cn3m[m]> If our community steps up I can start developing on open source projects with my free time. For now I do what I have to do
+23:32:55 <spaceinfinite[m]> From what i read before you were are in advertising so you have the knowledge
+23:34:00 <spaceinfinite[m]> <cn3m[m] "If our community steps up I can "> I feel there is nit enough people with knowledge here to step up as required
+23:34:11 <cn3m[m]>  @spaceinfinite:matrix.org Yes, my strength is in privacy research. I am not a security expert, but there's an overlap
+23:34:19 <cn3m[m]> threat modeling and spotting theater
+23:34:37 <cn3m[m]>  @spaceinfinite:matrix.org I offered time and time again to help anyone who needs it to get up to speed
+23:34:49 <cn3m[m]> I'm an open door
+23:35:21 <cn3m[m]> if I have to spend 10-20 hours training 6 people that are able to all able to do half the work I do and spread it to 3 subs that's worth it for me
+23:35:23 <TheJollyRoger> Huh. I wonder if I should distill down my GrapheneOS Knowledge base? I could try adding some more of that as well, I've kinda left it unmaintained...
+23:36:02 <spaceinfinite[m]> <cn3m[m] "if I have to spend 10-20 hours t"> 20 hours training at what?
+23:36:04 <cn3m[m]>  @freenode_TheJollyRoger:matrix.org no one seems willing to read blogs and such. I just have to sit down and explain it all to everyone over and over again with this tl;dr society
+23:36:21 <spaceinfinite[m]> How to maintain privacy?
+23:36:36 <cn3m[m]>  @spaceinfinite:matrix.org sharing my knowledge and mock debates so they can help on Reddit
+23:36:37 <cn3m[m]> a few hours per person
+23:36:43 <cn3m[m]> if they stay on topic
+23:37:27 <spaceinfinite[m]> But i doubt it will work or depends on subject or person
+23:37:59 <cn3m[m]> if you look back to my first posts my comments were buried since I couldn't explain myself well and no one heard these ideas. After a week it starting being more popular. 100 hours later there's a marked change in the sub. There's still much more work to be done
+23:38:57 <TheJollyRoger> Got it. :(
+23:38:57 <cn3m[m]> If someone really had the drive they could research my comments. This stuff keeps coming up in the same way and I keep arguing with the same people with little verbal support
+23:39:16 <spaceinfinite[m]> Lol
+23:39:16 <chani1> cn3m[m]: if you have blogs to recommend, what are they?
+23:39:33 <cn3m[m]>  @freenode_TheJollyRoger:matrix.org It doesn't really hurt, but if people aren't going to read it besides people like you and me?
+23:40:30 <spaceinfinite[m]> Careful of burnout though
+23:41:06 <cn3m[m]>  @freenode_chani1:matrix.org will link some in a minute
+23:41:23 <spaceinfinite[m]> I see you madaidan strcat giving answers long like poems and again an again
+23:41:41 <cn3m[m]>  @spaceinfinite:matrix.org I'm trying to minimize Daniel's burnout. If people start helping me help him we can get a chain going
+23:42:00 <TheJollyRoger> Yarr!
+23:43:34 <spaceinfinite[m]> <cn3m[m] " @spaceinfinite:matrix.org I'm t"> As i said few hours ago, in the emd good will triumph
+23:43:47 <chani1> cn3m[m]: i get what you're saying about not wanting to cater to tl:dr culture, but honestly, I think it might be worthwhile to increase the ratio of good information in these reddits by writing posts that are more explanatory
+23:44:11 * cn3m[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/QeJDwKNDJhlQGONwYMnouuRv >
+23:44:49 * cn3m[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/QlZqjwkMXgwpyJJTuiELXykc >
+23:45:15 <spaceinfinite[m]> And it is step by step
+23:45:30 <cn3m[m]> https://www.microsoft.com/security/blog/ is worthwhile too
+23:46:32 <cn3m[m]> <chani1 "cn3m: i get what you're saying a"> you're going to have to explain that
+23:47:51 <cn3m[m]> I wrote this whole thing for one person https://reddit.com/comments/gro3rc/comment/fs2o8bf
+23:48:00 <cn3m[m]> I can't get more explanatory imo
+23:48:11 <mxnorvak[m]> <TheJollyRoger "Huh. I wonder if I should distil"> As in the FAQ section of the GrapheneOS site? I think you explain subjects very well and i have always enjoyed reading your explanations so I'd be happy if there was more
+23:49:33 <TheJollyRoger> Hi mxnorvak[m]! Thanks, I actually have a small backwater repository of stuff I've collected on GrapheneOS and notes I've taken at https://github.com/Peter-Easton/GrapheneOS-Knowledge although it's a tad bit dated.
+23:49:42 <chani1> one of the things I keep seeing over and over again on reddit threads is people having slapfights contstantly, and you've got to have the time and patients to dig into the arguments to understand what's going on
+23:50:23 <chani1> TheJollyRoger: haha, didn't realize that was yours. DannyWorkOrderPr recommended I link that on the new wiki and work on getting that info ported over
+23:50:31 <TheJollyRoger> Ah!
+23:50:52 <TheJollyRoger> Sure. I can help jump in and try to help a bit there once I've got some stuff on this end figured out.
+23:50:56 <cn3m[m]> it's slapfighting a lot of it is
+23:51:06 <cn3m[m]> That has consistently changed people's mind
+23:51:17 <chani1> cn3m[m]: part of the problem is a lot of these arguments get really into the weeds really quickly, and the average user doesn't really have the technical knowledge to evaluate the claims made themselves
+23:51:31 <TheJollyRoger> Yeah. So this is why quantity tends to win out in the end.
+23:51:45 <cn3m[m]> one guy was very misinformed and aggressive. When we got to it he changed his mind and is working on some cool security projects build on meaningful measures
+23:52:06 <cn3m[m]> I'm trying to change one person at a time. The general disposition of the sub
+23:52:14 <cn3m[m]> I'm the only person on every thread related
+23:52:20 <chani1> cn3m[m]: that's awesome! I want to see more of that happening.
+23:52:30 <cn3m[m]> if there were more people that would happen faster
+23:52:31 <cn3m[m]> It's not that hard
+23:53:08 <cn3m[m]> It's frustrating, but they aren't attacking my life's work. I can't imagine that for Daniel.
+23:53:17 <TheJollyRoger> Yeah...
+23:53:34 <cn3m[m]> if you aren't coding you should be beta testing and fighting misinformation
+23:54:02 <mxnorvak[m]> <TheJollyRoger "Hi mxnorvak[m]! Thanks, I actual"> I'll check them out ,thanks
+23:54:09 <cn3m[m]> even just a little bit
+23:54:21 <chani1> I'm just saying I think it's more effective to fight misinformation by providing good information in a a clear format for a wide audience than arguing with internet trolls.
+23:54:57 <chani1> sadly, there's a lot of trolls floating around those subreddits, and there's a huge lack of solid information available in a non-technical format
+23:55:26 <cn3m[m]> I'm making a difference in those subs
+23:55:47 <chani1> cn3m[m]: I'm not suggesting you aren't.]
+23:55:54 <cn3m[m]> the trolls are usually walking back statements
+23:55:57 <cn3m[m]> the culture is slowly changing
+23:56:04 <cn3m[m]> that's the most effective method available
+23:56:34 <mxnorvak[m]> <chani1 "I'm just saying I think it's mor"> I like this idea
+23:57:00 <cn3m[m]> upvotes on Reddit matter it's stupid but it does
+23:57:20 <cn3m[m]> if we work together on Reddit it will work. Even me going mostly alone works
+23:57:24 <cn3m[m]> you guys are missing the point
+23:57:30 <cn3m[m]> blogs and things won't help
+23:57:38 <cn3m[m]> you need to go to root of misinfo and paranoia
+23:57:39 <cn3m[m]> that's Reddit
+23:57:49 <chani1> cn3m[m]: I'm not suggesting blogs, I'm suggesting informative posts on reddit
+23:58:28 <chani1> cn3m[m]: ones written in a way the average user can understand
+23:58:30 <cn3m[m]> That's going to be called shilling
+23:58:31 <cn3m[m]> that's not going to help
+23:58:47 <cn3m[m]> The people who don't like me are very active at trying to say I'm biased
+23:58:55 <cn3m[m]> if I start making posts I make myself a target
+23:59:07 <cn3m[m]> winning in the questions is how I have to do it
+23:59:16 <cn3m[m]> the climate there is not what you think it is
+23:59:55 <cyborgninjaneer[> Got the patch. Thank you, @strcat:matrix.org

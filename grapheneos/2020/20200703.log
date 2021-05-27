@@ -1,0 +1,863 @@
+00:38:57 <strcat[m]> bonerdose: it would be more accurate to say filesystem-based encryption vs. block-based encryption
+00:39:15 <strcat[m]> and filesystem-based encryption can have different keys for different files / directories
+00:40:14 <strcat[m]> so for example it was per-profile encryption keys for user data
+00:40:53 <strcat[m]> and it has support for device-encrypted data which for example the Updater app explicitly opts into using so that it can perform updates without being logged into a profile
+00:50:45 <renlord> what about criticism re: fbe leaking metadata?
+01:43:48 <TheJollyRoger> I think the metadata itself I think is padded to disguise its length, and then is itself encrypted. I think something to the effect that Hash-Encrypt-Hash addresses the issue of some of the directory names turning out the same the way.
+01:44:05 <TheJollyRoger> Which I think might have been a problem with Counter.
+01:44:11 <TheJollyRoger> But I'm not sure.
+01:44:50 <overheadscallop[> isn't it also encrypted? https://source.android.com/security/encryption/metadata
+01:45:36 <TheJollyRoger> Yes, AES-256-HEH on the newer handsets if I recall right.
+03:12:10 <greenmoon[m]> https://twitter.com/topjohnwu/status/1278849731305672705?s=19
+03:12:30 <greenmoon[m]> I saw some news
+03:13:41 <greenmoon[m]> It is only for ROMs that include google apps anyway?
+03:14:56 <strcat[m]> greenmoon: not relevant
+03:15:50 <strcat[m]> hardware-based attestation works perfectly for alternate OSes
+03:16:09 <strcat[m]> obviously the verified boot key fingerprint it reports does not match the one for the stock OS
+03:16:16 <strcat[m]> why would you expect it to be any different?
+03:16:28 <greenmoon[m]> Right
+03:17:07 <strcat[m]> > This is pretty much death penalty for root and custom ROM users who still uses Google Play Services and expect things to work like it used to be.
+03:17:13 <strcat[m]> and... 0 impact for GrapheneOS users
+03:17:21 <strcat[m]> hardware-based attestation is a feature on GrapheneOS (Auditor)
+03:17:39 <strcat[m]> we don't have Play Services, there's no SafetyNet attestation to fail
+03:17:51 <strcat[m]> if apps have a hard dependency on Play Services they don't work
+03:18:12 <strcat[m]> if people want apps to work the app devs need to care about them working without Play Services
+03:18:54 <greenmoon[m]> I wonder if more and more apps require safetynet? All my apps work fine whiteout it. I hope they don't force it at some point.
+03:19:01 <strcat[m]> baseline Android doesn't have Play Services
+03:19:10 <strcat[m]> greenmoon: if the app doesn't have a hard dependency on Play Services
+03:19:12 <strcat[m]> this isn't relevant
+03:19:17 <strcat[m]> this is not at all relevant to GrapheneOS
+03:21:11 <M0xC0ncord[m]> <greenmoon[m] "I wonder if more and more apps r"> In my personal experience only really shitty (subjective) games and banking apps verify with SafetyNet. Not even my bank requires it and I can use their app just fine on GrapheneOS. Sad to say but if you must bank on your phone, just use the webapp.
+03:21:50 <cn3m[m]> Mario Go would like a word with you
+03:21:51 <M0xC0ncord[m]> I mean I play Ingress, but I just repurposed my old phone to keep playing it.
+03:22:32 <M0xC0ncord[m]> Ingress refuses to load even if CTS profile fails on SafetyNet, so I said screw it and just reverted my old OnePlus 3T to stock and relocked the bootloader to play it.
+03:23:08 <cn3m[m]> Isn't Ingress Google's spy platform?
+03:23:09 <M0xC0ncord[m]> <cn3m[m] "Isn't Ingress Google's spy platf"> Yes and no, by technicality. Niantic Labs *was* a subdivision of Google before they became their own startup in 2017(?).
+03:24:04 <greenmoon[m]> Im more worried that they turn it on for all gplay apps and so they all become impossible to use without safetynet but I'm off topic I guess.
+03:24:04 <strcat[m]> it's not relevant because SafetyNet is a Play Services API
+03:24:20 <strcat[m]> greenmoon: doesn't make any sense
+03:24:34 <greenmoon[m]> Good to know!
+03:24:59 <strcat[m]> this is only relevant to people trying to bypass SafetyNet attestation and SafetyNet is a Play Services component
+03:25:05 <strcat[m]> it is not relevant to GrapheneOS
+03:25:19 <strcat[m]> and SafetyNet attestation should have been using hardware-based attestation when available years ago
+03:25:26 <strcat[m]> it took them a really long time to get it deployed
+03:25:34 <strcat[m]> it wasn't particularly useful before
+03:25:40 <strcat[m]> still in the process of it being deployed
+03:26:14 <strcat[m]> it is not a bad thing that they improved it to use the hardware support
+03:26:44 <strcat[m]> people who were thinking they could keep trivially bypassing it are just uninformed and unimaginative, couldn't connect the dots that hardware-based attestation added in Android 7 would be used for SafetyNet attestation
+03:26:49 <strcat[m]> not sure why that's such a surprise
+03:27:15 <strcat[m]> we were talking about it years ago and adopted it to implement Auditor although with a pairing-based approach that offers a lot more security than using the root of trust
+03:27:21 <cn3m[m]> interesting
+03:27:22 <cn3m[m]> they don't want to get hit with anti-trust suits
+03:28:00 <strcat[m]> it was hard for them to adopt it because they need full compatibility with all the screwed up hardware and devices that predated it
+03:28:57 <strcat[m]> and all they're doing with it is verifying based on the root of trust
+03:29:04 <strcat[m]> not very interesting from an actual security perspective
+03:29:11 <strcat[m]> just for basic anti-fraud etc
+03:29:40 <strcat[m]> SafetyNet is useful for anti-cheat / anti-fraud and DRM for media, etc.
+03:29:52 <strcat[m]>  * SafetyNet attestation is useful for anti-cheat / anti-fraud and DRM for media, etc.
+03:30:12 <strcat[m]> the lower-level hardware-based attestation API it uses has much broader uses since it can provide much stronger security properties
+03:30:16 <strcat[m]> depending on how it's used
+03:31:08 <strcat[m]> SafetyNet attestation is only the lowest common denominator of that + the userspace checks it does (which weren't really ever very useful and are even less useful now that it has a real attestation implementation to use)
+03:31:43 <strcat[m]> if an app cares about working without Play Services and wants attestation they can get STRONGER attestation than what is provided via Play Services without using Play Services
+03:31:57 <strcat[m]> and they can support any aftermarket OSes that they choose to support
+03:32:05 <strcat[m]> so really, as I said before, this has no relevance to GrapheneOS
+03:32:14 <strcat[m]> apps with a hard dependency on Play Services have never worked on GrapheneOS
+03:32:17 <strcat[m]> there is no change
+03:32:29 <strcat[m]> and if apps want attestation they do not have to use Play Services to get it
+03:32:50 <strcat[m]> in fact they do better by using the lower-level API
+03:53:44 <renlord> so why does google implement a safetynet api when its already exposed via android?
+03:54:19 <renlord> is this one of those preferential design pattern that's deliberately meant to improve coupling of android and play services?
+04:03:42 <strcat[m]> SafetyNet attestation predates support for hardware-based attestation
+04:03:58 <renlord> ok ^ seals the deal for me
+04:04:12 <strcat[m]> hardware-based attestation is guaranteed to be supported for devices launched with Android 8+
+04:04:18 <strcat[m]> SafetyNet attestation is much older
+04:04:28 <strcat[m]> and has only recently learned to use the hardware support to be a more meaningful feature
+04:06:10 <strcat[m]> renlord: basically if apps care about working without Play Services they have a SUPERIOR AOSP API available
+04:06:23 <strcat[m]> renlord: and the AOSP API fully supports alternate OSes
+04:06:53 <strcat[m]> although apps would have to explicitly choose to support the yellow boot state with specific whitelisted verified boot keys (like ours)
+04:07:34 <strcat[m]> renlord: I don't really see this as any kind of problem for us
+04:07:52 <strcat[m]> real problems are things like U2F / FIDO2 support being implemented in Play Services instead of AOSP
+04:08:00 <strcat[m]> and maybe we can get those things fixed
+04:08:16 <strcat[m]> if apps WANT to use Google services with a hard dependency on them then not much we can do about that
+04:08:42 <renlord> i think its mostly just a convenience factor for app developers
+04:10:55 <strcat[m]> if devices without Play Services become more widely used
+04:10:58 <strcat[m]> app developers will care more
+04:15:00 <alicebobandeve[m> My company asked me to suggest a secure phone + OS and I recommended Pixel + Graphene after doing a bit of auditing. Thanks strcat for all your work.
+04:17:33 <alicebobandeve[m> Needless to say, we are testing it out right now and they will make a donation when they decide to confirm the usage.
+04:17:51 <chmod000[m]> hello
+04:17:51 <chmod000[m]> thank you developers :)
+04:33:48 <jknsec[m]> Woah. Neat. I love when Graphene is used for enterprise usage.
+04:34:14 <defconanon010102> Hey I just want to give you an update. I fixed the display bug. All I had to do was close developer options after I was done tweaking a few settings in there. Just an update I wanted to put out there.
+04:48:50 <alicebobandeve[m> jknsec: haha yes
+04:49:16 <alicebobandeve[m> I have been using it since the C word days
+04:50:00 <alicebobandeve[m> And obviously continued using Daniel's work later
+04:50:22 <alicebobandeve[m> defconanon010102: what bug was this?
+04:50:59 <alicebobandeve[m> If it's 3A or 4, never mind
+04:55:21 <defconanon010102> alicebobandeve: I am running Graphene on 3a XL. So you are good.
+04:56:00 <alicebobandeve[m> Ah
+04:56:18 <alicebobandeve[m> I should switch but I don't like the 3A
+04:57:35 <alicebobandeve[m> I'll buy the 5
+04:57:59 <sheruleeya[m]> I'm waiting whatever the pixel released on May 2022
+04:58:41 <sheruleeya[m]> Well, just a heads up that google store discontinued 3a(XL) recently, so their support ends on May 2022
+04:59:08 <sheruleeya[m]> * I'm waiting whatever pixel is released on May 2022 (assuming the project is still alive by then)
+05:00:40 <alicebobandeve[m> Nice. I'll wait for a used Pixel 5.
+05:00:58 <sheruleeya[m]> * Well, just a heads up that google store discontinued 3a(XL) recently, so their support ends on May 2022 (since +18 months from now will end before May 2022)
+05:03:58 <defconanon010102> sheruleeya: I already know and still preparing for that day. Most likely going to get the Pixel 5. Thanks for the info though.
+05:04:43 <sheruleeya[m]> * Well, just a heads up that google store discontinued 3a(XL) recently, so their support ends on May 2022 (since +18 months from now will end before May 2022, and the support is either 3 years or +18 months after the last phone sold on the google store)
+05:05:47 <sheruleeya[m]> If lucky enough, maybe 3 would have a longer support than 3a
+05:07:59 <sheruleeya[m]> * If lucky enough, maybe 3 would have a longer support than 3a, if and only if the last 3 on google store will be sold later than Oct of this month
+05:08:32 <sheruleeya[m]> "Pixel phones get security updates for at least 3 years from when the device first became available on the Google Store in the US.
+05:08:32 <sheruleeya[m]> If the duration is longer, Pixel 3, Pixel 2, and Pixel (2016) phones get security updates for at least 18 months from when the Google Store last sold the device."
+05:11:45 <sheruleeya[m]> * If lucky enough, maybe 3 would have a longer support than 3a, if and only if the last 3 on google store will be sold later than Oct of this year
+05:25:14 <defconanon010102> sheruleeya: End of support life usually varies so who knows that would be great though.
+06:06:22 <pacobell[m]> tap tap Is this thing on?
+06:06:59 <pacobell[m]> Okay, read indicators. Nice.
+06:07:22 <TheJollyRoger> Ahoy pacobell[m]. What can I do for you?
+06:07:29 <alicebobandeve[m> Hate read indicators
+06:07:59 <TheJollyRoger> You can switch them off if you like, after which your client won't honour them.
+06:08:00 <pacobell[m]> <alicebobandeve[m "Hate read indicators"> Eh, it's relatively unobtrusive for me.
+06:08:15 <anupritaisno1[m]> TheJollyRoger: you still up?
+06:08:25 <pacobell[m]> I can understand the privacy aspect, tho.
+06:08:31 <alicebobandeve[m> pacobell: I did, they still suck
+06:08:48 <alicebobandeve[m> Shouldn't have been in, in the first place
+06:09:07 <pacobell[m]> That's certainly an opinion.
+06:09:27 <TheJollyRoger> anupritaisno1[m]: yes, I'm still up.
+06:09:34 <alicebobandeve[m> True, like paco instead of taco
+06:12:26 <pacobell[m]> So I've read Micay doesn't believe that holding battery charge at 100% for prolonged periods of time negatively affects battery longevity. Is that opinion because he doesn't plan on supporting GOS longer than a couple years, anyway? Because Apple certainly believes that about their mobile products enough to bake advanced battery management into their OS.
+06:13:11 <pacobell[m]> <pacobell[m] "So I've read Micay doesn't belie"> Supporting on a specific device, that is.
+06:14:04 <pacobell[m]> https://www.apple.com/batteries/maximizing-performance/
+06:15:10 <pacobell[m]> Namely this bit: "if you store it fully charged for an extended period of time, the battery may lose some capacity, leading to shorter battery life."
+06:16:07 <anupritaisno1[m]> <pacobell[m] "So I've read Micay doesn't belie"> Actually I share similar opinions
+06:16:17 <anupritaisno1[m]> The reason is simple
+06:16:50 <pacobell[m]> I ask because before flashing GOS I was using a root script to automatically cut charging to the phone after about 80% and run directly from external power until unplugged.
+06:16:58 <anupritaisno1[m]> Your battery really never charges to 100%
+06:17:09 <pacobell[m]> Obviously, he doesn't believe in root on GOS.
+06:17:14 <TheJollyRoger> pacobell[m]: If I recall right the device's firmware will automatically manage battery levels for optimal life.
+06:17:26 <TheJollyRoger> Probably much better than manual intervention can; it's not 2003 anymore.
+06:18:13 <pacobell[m]> Mine clearly doesn't on my Pixel 2 XL. I've empirically tested my battery capacity and it's less than 80% of nominal.
+06:18:33 <anupritaisno1[m]> Well there's a so-called cut off voltage
+06:18:45 <anupritaisno1[m]> When you reach 100% you're not actually reaching 100%
+06:19:06 <pacobell[m]> Yes, but it's my opinion that the cutoff voltage is still too high.
+06:19:10 <TheJollyRoger> As always your mileage can vary. High temperature and repeated deep discharging can damage the battery's ability to hold a charge.
+06:19:47 <anupritaisno1[m]> You're reaching the cut off voltage
+06:20:13 <anupritaisno1[m]> From there the battery manager does this thing called trickle charging
+06:20:23 <pacobell[m]> I would gladly trade off less battery life for more battery longevity (assuming the underlying OS support is still there).
+06:20:39 <anupritaisno1[m]> Now how it is done is OEM defined
+06:21:03 <pacobell[m]> Yeah, I know all that.
+06:21:32 <pacobell[m]> That's why I forced charging to cut off at a predefined level of my choosing with root.
+06:21:44 <anupritaisno1[m]> Typically it lowers voltage from charger, waits for voltage to drop to a threshold below the cut off and then charges again until the cut off is reached
+06:21:44 <anupritaisno1[m]> It does so an OEM specified number of times and then disconnects the charger for good
+06:22:24 <anupritaisno1[m]> But since it is tracking voltage by the time the charger is cut off you're nowhere close to 100%
+06:22:34 <pacobell[m]> Oh? I didn't know about the backoff counter. That's interesting.
+06:22:36 <anupritaisno1[m]> You're closer to 90%
+06:23:06 <pacobell[m]> Meh, even 90% is too high for my liking.
+06:23:07 * anupritaisno1[m] uploaded an image: Screenshot_20200703-115237_Settings.png < https://matrix.org/_matrix/media/r0/download/m.apex.to/yXvxnIOlEvXpaZvNQHurdvUp >
+06:23:18 <anupritaisno1[m]> I just never disconnect
+06:23:40 <cn3m[m]> people need to update the studies
+06:23:58 <pacobell[m]> So, that device isn't your "daily driver", I'm assuming?
+06:24:29 <pacobell[m]> <cn3m[m] "people need to update the studie"> I'm all ears if you've got better data.
+06:24:46 <alicebobandeve[m> anupritaisno1: interesting, same time as my clock
+06:25:06 <pacobell[m]> Even journals as current as this year seems back the historical longevity claims.
+06:25:44 <alicebobandeve[m> Also, this is good info, wasn't aware about the battery manager's bit, thanks.
+06:25:47 <pacobell[m]> Unless there was some breakthrough in lithium cell technology I'm not aware of that's been implemented in phones in the past couple years.
+06:26:21 <anupritaisno1[m]> <pacobell[m] "So, that device isn't your "dail"> It is
+06:26:44 <anupritaisno1[m]> The disconnect 11 hours ago was for a system update
+06:26:48 <renlord> there's a reasonable assumption that by the time the battery life is expired, vendor support for your device expires too and you should be due to buy a new phone
+06:27:23 <pacobell[m]> <renlord "there's a reasonable assumption "> I soundly reject that assumption. We need less e-waste, not more.
+06:27:50 <pacobell[m]> I just wish it were easier to battery-swap my battery without running the AMOLED display.
+06:27:55 <anupritaisno1[m]> <pacobell[m] "I soundly reject that assumption"> Just keep your battery always connected then
+06:28:06 <pacobell[m]> So much strong adhesive in my model.
+06:28:10 <anupritaisno1[m]> You can't have battery wear if it doesn't discharge
+06:28:38 <renlord> pacobell[m]: if everyone had your mindset, then there'd have been zero incentive to develop anything beyond 2g
+06:28:45 <anupritaisno1[m]> BTW if you're curious
+06:28:55 <JTL> renlord: Apples and oranges. 3G was actually usable. :)
+06:28:59 <pacobell[m]> I thought dendritic growth still happens above a certain voltage level?
+06:29:21 <anupritaisno1[m]> Oneplus does battery replacements for 6 year old phones if you're in the EU
+06:30:01 <anupritaisno1[m]> Outside the EU they'll do it but the import costs are high and it might take months to get a battery but you'll get it
+06:30:17 <pacobell[m]> <renlord "pacobell: if everyone had your m"> I'm happy to upgrade to newer radio tech, if it makes sense. Just like I don't believe jumping to 5G makes much sense right now.
+06:30:34 <cn3m[m]> If only they did 6 years of security updates
+06:30:39 <defconanon010102> This is very interesting about the battery but what if you can't always keep it connected and need to take it work? Is the inevitable just going to happen where you need to replace it? anupritaisno1
+06:30:57 <pacobell[m]> That's the rub, isn't it?
+06:31:12 <sheruleeya[m]> <cn3m[m] "If only they did 6 years of secu"> Still waiting for an Android with >5 years of updates
+06:31:22 <pacobell[m]> Yaaaaas!
+06:31:28 <sheruleeya[m]> * Still waiting for an Android (phone) with >5 years of updates
+06:31:47 <cn3m[m]> <sheruleeya[m] "Still waiting for an Android wit"> Project Sandcastle
+06:31:50 <anupritaisno1[m]> <cn3m[m] "If only they did 6 years of secu"> They just mooch security off Qualcomm
+06:31:55 <cn3m[m]> (kidding)
+06:32:02 <anupritaisno1[m]> Oneplus doesn't do any security itself
+06:32:17 <pacobell[m]> Do PC vendors support their Secure Enclaves that long?
+06:32:24 <anupritaisno1[m]> When Qualcomm goes they go
+06:32:35 <cn3m[m]> <pacobell[m] "Do PC vendors support their Secu"> yes look at Apple
+06:32:51 <cn3m[m]> T1 and OG SEP
+06:32:54 <anupritaisno1[m]> Every month they'll do select cherry-picks from AOSP and Qualcomm and that's it
+06:32:57 <pacobell[m]> Then it's the SoC vendors' fault.
+06:33:05 <cn3m[m]> <anupritaisno1[m] "When Qualcomm goes they go"> I'd hate to see a MediaTek OP
+06:33:07 <anupritaisno1[m]> Okay why is riotx lagging
+06:33:18 <renlord> ok i think we should stop, its going off-topic
+06:33:30 <anupritaisno1[m]> But riot is fine
+06:33:40 <TheJollyRoger> anupritaisno1[m]: I get the riotx lagging too, if I type more than 5 lines into buffer. If that happens I have to force stop RiotX and restart it.
+06:33:45 <pacobell[m]> Google really should be in charge of their own silicon. But then again, they've been historically horrible at long-term support, at least with software projects.
+06:33:56 <anupritaisno1[m]> <cn3m[m] "I'd hate to see a MediaTek OP"> It exists and there's no kernel source
+06:34:04 <sheruleeya[m]> Yeah, just a last one to sneak in. Who's that anime (?) character on anupritaisno1's avatar?
+06:34:18 <anupritaisno1[m]> Huh
+06:34:20 <defconanon010102> anupritaisno1: Did you see my message?
+06:34:26 <cn3m[m]> <pacobell[m] "Google really should be in charg"> no please no
+06:34:36 <cn3m[m]> Google doesn't care about custom verified boot keys
+06:34:43 <cn3m[m]> Qualcomm does
+06:34:45 <cn3m[m]> Google just keeps it stock
+06:35:19 <sheruleeya[m]> <cn3m[m] "Qualcomm does"> Oh.
+06:35:34 <pacobell[m]> <cn3m[m] "Google doesn't care about custom"> And yet, they allow it on Pixels?
+06:35:45 <M0anticell[m]> <madaidan[m] "> <@madaidan.:matrix.org> The sy"> thanks!
+06:36:06 <sheruleeya[m]> * Yeah, just a last one to sneak in. Who's that anime (?) character on anupritaisno1's avatar?
+06:36:06 <sheruleeya[m]> It does seem to be from Touhou at first sight
+06:36:10 <cn3m[m]> Qualcomm makes the bootloader for everything and it's open source people fork it and remove it
+06:36:21 <defconanon010102> Welp I will take my phone to a repair place or open it up myself and replace the battery.
+06:36:24 <cn3m[m]> Google doesn't forbid custom verified boot keys since they don't go out of their way
+06:36:32 <cn3m[m]> if they care Pixelbooks would support it
+06:36:35 <pacobell[m]> What makes you think their bespoke ARM implementation wouldn't be any different?
+06:36:38 <cn3m[m]> they don't
+06:36:39 <JTL> Well it seems every other OEM fucks it up if not intending to break it
+06:37:20 <sheruleeya[m]> <cn3m[m] "if they care Pixelbooks would su"> Yeah, which is why we don't have a desktop equivalent of GrapheneOS yet
+06:37:27 <cn3m[m]> <JTL "Well it seems every other OEM fu"> Google wants Pixels to be the stock Android experience. The stock bootloader is important to that vision
+06:37:48 <JTL> Fair
+06:38:20 <JTL> I was hoping Android One would be better in this department but alas it isn't
+06:38:39 <pacobell[m]> Eh, I've modded the bootloader on my Taimen loads of times. It just shows a scary warning every time I boot.
+06:38:41 <cn3m[m]> Google I wouldn't be shocked at all if Pixels with Google chips were the end of Pixels running GrapheneOS
+06:38:55 <anupritaisno1[m]> > <@sheruleeya:matrix.org> * Yeah, just a last one to sneak in. Who's that anime (?) character on anupritaisno1's avatar?
+06:38:55 <anupritaisno1[m]> > It does seem to be from Touhou at first sight
+06:38:55 <anupritaisno1[m]> Yuki nagato, from the disappearance of haruhi suzumiya. Taken exactly at the end of the movie when she looks up to kyon's open threat to the data integration thought entity
+06:38:57 <pacobell[m]> Perhaps.
+06:39:05 <JTL> Hopefully someday we have our own "reference" hardware at some point
+06:39:30 <anupritaisno1[m]> <anupritaisno1[m] "> <@sheruleeya:matrix.org> * Yea"> Or well due to it
+06:39:33 <pacobell[m]> I'm really hoping for a RISC-V phone 😁
+06:40:04 <pacobell[m]> Compete with the ARM hegemony.
+06:40:10 <sheruleeya[m]> <anupritaisno1[m] "> <@sheruleeya:matrix.org> * Yea"> It's surprisingly relevant
+06:40:37 <pacobell[m]> <sheruleeya[m] "It's surprisingly relevant "> 👍
+06:44:40 <pacobell[m]> Oh, I do have another concern. When I was transitioning from stock Google to GOS, I was really hoping there would be an easy way to migrate my app data. I still have a nandroid backup in case I need to flash back to stock, but GOS has that Seedvault-based system. Is there an app or root framework available for Stock to make it compatible with GOS?
+06:45:56 <pacobell[m]> I also backed up all apps with Titanium, but that relies on root to restore.
+06:46:20 <cn3m[m]> pacobell: use adb backup
+06:46:46 <pacobell[m]> You know that's going away soon, as per Google mandate?
+06:48:39 <TheJollyRoger> It's not gone yet.
+06:50:04 <pacobell[m]> I'd rather commit to a backup regime that's got longer-term legs.
+06:50:28 <pacobell[m]> If Seedvault is it, let's do that.
+06:50:43 <TheJollyRoger> Yes, GrapheneOS has Seedvault.
+06:51:03 <pacobell[m]> But how do I do a Seedvault backup on Stock?
+06:51:26 <pacobell[m]> I've got crypto seeds I need to maintain.
+06:51:32 <defconanon010102> anupritaisno1: I am going to assume your RiotX is lagging pretty bad but it is fine.
+06:51:34 <cn3m[m]> use adb to transition over
+06:51:36 <cn3m[m]> use seedvault to move between Graphene/Calyx
+06:52:28 <sheruleeya[m]> * It's surprisingly relevant, and thanks.
+06:52:29 <pacobell[m]> So enjoy it while it lasts, huh?
+06:53:09 <pacobell[m]> I was really hoping there would be a roadmap of some sort when adb officially sunsets that feature.
+06:58:36 <alicebobandeve[m> <pacobell[m] "I've got crypto seeds I need to "> Syncthing
+06:59:10 <pacobell[m]> Yeah, there's always that.
+06:59:50 <pacobell[m]> Still, it's tied to the app storage, which GOS won't let me touch without Seedvault.
+07:00:09 <alicebobandeve[m> PC?
+07:00:43 <pacobell[m]> When I say "crypto", I don't mean "crypto currency" 😏
+07:01:09 <alicebobandeve[m> pacobell: yes
+07:01:30 <alicebobandeve[m> Did you read my username lol?
+07:01:36 <alicebobandeve[m> Keep copies
+07:01:46 <pacobell[m]> I'm glad you get it 😂
+07:02:11 <pacobell[m]> The bugaboo is how to restore it to GOS using "proper channels".
+07:02:41 <alicebobandeve[m> I don't think there's another way apart from the ones mentioned
+07:02:42 <pacobell[m]> The whole "no root" thing is a huge usability hassle.
+07:03:27 <TheJollyRoger> App-accessible Root is an antifeature. On Android, only init and a few other system processes required to get the kernel into memory should have root-equivalent access.
+07:03:43 <pacobell[m]> Normally, Titanium would be a one and done. This adds a new wrinkle.
+07:04:05 <TheJollyRoger> Otherwise, say hello to a single clickjacking exploit being able to take control of the entire phone, and goodbye to verified boot.
+07:04:09 <pacobell[m]> Yes, I get free security argument. Doesn't lessen the backup pain point, tho.
+07:04:26 <cn3m[m]> adb backup is fine
+07:04:57 <pacobell[m]> Oh well, if this is the momentary state of the industry, I guess I had no choice.
+07:05:05 <strcat[m]> if you restored it by hand you'd just end up with a screwed up state
+07:05:13 <strcat[m]> are you going to manually set proper SELinux labels etc? no
+07:05:22 <strcat[m]> you'll just leave an insecure / broken mess where stuff isn't migrated properly
+07:05:29 <strcat[m]> so it's good you can't do it since you don't actually know how
+07:06:00 <strcat[m]> I don't know it's even a good idea to do a full adb backup / adb restore
+07:06:17 <strcat[m]> less of a problem with stock -> GrapheneOS than other cases since most things are pretty close
+07:07:21 <strcat[m]> dunno why you're saying that adb backup is going away, I think you misunderstand what deprecated means
+07:08:09 <pacobell[m]> Historically, that has meant software dropping the feature in a couple generations.
+07:09:43 <pacobell[m]> That was hinted at last year. I give it another year before it officially breaks with Android 12.
+07:10:01 <strcat[m]> seedvault covers the same data
+07:10:24 <pacobell[m]> That's good. Now is there a way to get Seedvault to backup on Stock?
+07:10:47 <strcat[m]> no and backups are not necessarily compatible across stock and GrapheneOS
+07:10:54 <strcat[m]> they are different OSes
+07:10:57 <strcat[m]> we don't have Play Services
+07:11:02 <strcat[m]> apps do different things without Play
+07:11:13 <strcat[m]> their data isn't necessarily compatible
+07:11:15 <pacobell[m]> I'm okay with apps breaking due to GOS.
+07:11:19 <strcat[m]> if you restore an app's data from where it had Play Services
+07:11:28 <pacobell[m]> *GPS.
+07:11:34 <strcat[m]> the data will already have state from using Play
+07:11:48 <strcat[m]> pacobell: it would be from restoring incompatible data
+07:12:13 <strcat[m]> the stock OS doesn't have seedvault so it can't restore seedvault backups
+07:12:25 <pacobell[m]> I just uninstall those that have that dependency. Already had to do that for a few of them.
+07:12:38 <strcat[m]> I'm not talking about apps with a dependency on Play Services
+07:12:54 <strcat[m]>  * I'm not talking about apps with a hard dependency on Play Services
+07:13:04 <strcat[m]> I'm talking about apps that use it when available and do things differently when it's not
+07:13:37 <pacobell[m]> I see. That's a valid concern.
+07:13:49 <pacobell[m]> I would just not use that app, then.
+07:13:57 <strcat[m]> backups are fairly compatible between devices with the same OS because apps are supposed to disable backing up files
+07:14:00 <strcat[m]> that are device-specific
+07:15:00 <pacobell[m]> Yeah, some camera apps rely on certain Pixel hardware features.
+07:16:01 <strcat[m]> you definitely couldn't just restore stuff based on raw files
+07:16:08 <strcat[m]> we use different SELinux policy etc. than stock
+07:16:13 <pacobell[m]> Although, Google hasn't really been using their PVC for much other than HDR+ lately. It could've been so much more.
+07:16:39 <pacobell[m]> <strcat[m] "we use different SELinux policy "> Gotcha. That's definitely a showstopper.
+07:16:39 <strcat[m]> we won't have that on custom hw anyway
+07:17:58 <pacobell[m]> Eh, I've just resigned myself to installing stuff from F-Droid/Aurora that don't have the Play Services dependency. It's been difficult, tho. Waze barely works, for instance.
+07:18:29 <pacobell[m]> I was surprised Google Maps even functions as well as it does.
+07:19:32 <pacobell[m]> Oh yeah, I did the Bad Thing ™️ and ran microG. Spank me.
+07:20:48 <dorrimi23[m]> <pacobell[m] "Eh, I've just resigned myself to"> There are a lot of apps that works on GOS, even with the play services dependency
+07:21:14 <pacobell[m]> <dorrimi23[m] "There are a lot of apps that wor"> Yup, to varying degrees of "working".
+07:21:51 <pacobell[m]> I was relieved that GBoard was among those. Gotta have my reliable glide typing 😁
+07:23:18 <dorrimi23[m]> Yes, you dont really know until you try them
+07:23:57 <pacobell[m]> Hmm, I'll have to check the Anova app to see it it'll still connect to my sous vide machine.
+07:24:38 <pacobell[m]> I'm okay without the Wi-Fi functionally, but it's nice to be able to send recipe instructions wirelessly.
+07:25:18 <pacobell[m]> Dunno if the device takes commands over he Internet. That's fraught with danger 😂
+07:25:52 <pacobell[m]> At least it's got auto-shutoff when the water level gets too low (I hope).
+07:26:31 <pacobell[m]> *pls let there not be an exploitable firmware vuln! 😣
+07:27:24 <pacobell[m]> Cue obligatory @internetofshit
+07:28:47 <pacobell[m]> Gotta say, Cloudflare has become much more tolerable on Tor after they made the switch to hCaptcha from reCaptcha.
+07:29:15 <pacobell[m]> Dunno what that means for their earlier blinded token project, tho.
+07:30:10 <dazinism> pacobell: was some recent discussion about using seedvault when its not signed with the platform keys https://github.com/stevesoltys/seedvault/issues/20
+07:33:55 <pacobell[m]> Ah, someone asked "how does Google do it" and then they said it's possible to make Seedvault platform key agnostic.
+07:34:14 <pacobell[m]> But I doubt GOS would approve of that.
+07:34:44 <dazinism> pacobell: GrapheneOS has seedvault.
+07:35:00 <pacobell[m]> Yes, but not platform key agnostic.
+07:35:33 <pacobell[m]> It would upend the security model.
+07:35:56 <dazinism> I was thinking about working out a way to slip seedvault onto stock
+07:36:18 <dazinism> So you could get seedvault backups out
+07:36:30 <pacobell[m]> That'd be greatly appreciated.
+07:37:38 <dazinism> Would be nice if someone figured that out. Would make seedvault much more popular
+07:37:47 <pacobell[m]> Oops. Look at the time. Gotta wake myself at the ass crack of dawn if I'm to beat the traffic this morning.
+07:38:03 <dazinism> Night
+07:38:21 <pacobell[m]> Cya all.
+08:13:03 <Cyrinux[m]> Hi here, I search a Google translate replacement where I can Highlight a word then send to a translate thing
+08:16:23 <xabi[m]> > Oh yeah, I did the Bad Thing ™️ and ran microG. Spank me.
+08:16:23 <xabi[m]> Running grapheneOS with unlocked bootloader and/or root? I think that you missed the whole point.
+08:17:58 <xabi[m]>  * > Oh yeah, I did the Bad Thing ™️ and ran microG. Spank me.
+08:17:58 <xabi[m]> Running grapheneOS with unlocked bootloader and/or root? I think that you missed the whole point. Go for calyxOS/rattlesnakeOS if you want microG or just use a standard custom rom if you want unlocked bootloader
+08:32:32 <strcat[m]> https://www.reddit.com/r/privacytoolsIO/comments/hjmqen/question_mobile_or_desktop_banking/fws0ngr/
+08:32:34 <strcat[m]> more BS from this guy
+08:32:34 <strcat[m]> lol.
+08:34:22 <anupritaisno1[m]> strcat (@strcat:matrix.org): I need status on that PR
+08:34:24 <anupritaisno1[m]> I need to start merging LTS stuff soon
+08:34:26 <strcat[m]> these ppl have all day to spend spreading misinformation and wasting people's time
+08:34:36 <strcat[m]> causing harm to people who actually wanted help
+08:34:54 <strcat[m]> anupritaisno1: did you remove the x86 stuff
+08:35:15 <anupritaisno1[m]> Yes
+08:35:18 <anupritaisno1[m]> Removed the cr4 commit
+08:35:36 <cn3m[m]> strcat: sorry you have to deal with this stuff :/
+08:36:43 <strcat[m]> anupritaisno1: remove the audit one too, not relevant
+08:36:49 <strcat[m]> since we use audit
+08:37:43 <strcat[m]> anupritaisno1: and drop https://github.com/GrapheneOS/kernel_google_coral/pull/2/commits/2bbdd6314f4cc71c36daf97fc4284f40829eafc8 it's x86
+08:39:36 <strcat[m]> anupritaisno1: and can drop the userns stuff because CONFIG_USER_NS is disabled
+08:39:40 <alicebobandeve[m> <strcat[m] "https://www.reddit.com/r/privacy"> Sim jacking, sim cloning, he tried to use all possible buzzwords. It's not like you can use a tool, enter a phone number and you have successfully completed sim jacking lol.
+08:39:43 <strcat[m]> just want to get it down to a minimal amount
+08:39:57 <strcat[m]> alicebobandeve: I'm also not sure what that has to do with mobile phone security
+08:40:04 <strcat[m]> alicebobandeve: you can use cellular with other devices
+08:40:15 <strcat[m]> the security of your CELLULAR CARRIER ACCOUNT is a separate thing
+08:40:21 <JTL> ^^
+08:40:22 <anupritaisno1[m]> <strcat[m] "anupritaisno1: and drop https://"> It's dropped
+08:40:28 <strcat[m]> and yeah you should not use SMS or traditional phone calls for security relevant stuff
+08:40:37 <strcat[m]> especially securing accounts with SMS, etc. like people often do
+08:40:39 <alicebobandeve[m> strcat: yep, doesn't make sense at all. That guy needs to visit HN to get thrashed left right and center.
+08:40:52 <strcat[m]> but I am not sure what that has to do with phone security
+08:41:01 <strcat[m]> alicebobandeve: these people just churn out nonsense / bullshit
+08:41:02 <strcat[m]> that sounds appealing to clueless people
+08:41:04 <anupritaisno1[m]> strcat: dropped it anything else?
+08:41:18 <JTL> strcat[m]: Unfortunatly some services are that incompetent offering that as an only option, but that's a different topic
+08:41:19 <strcat[m]> they are good at writing in a way that sounds authoritative despite knowing very little and just repeating stuff they don't really understand
+08:42:09 <strcat[m]> anupritaisno1: did you drop the CLONE_NEWUSER one?
+08:42:14 <strcat[m]> github makes it really hard to review PRs
+08:42:20 <alicebobandeve[m> strcat: they basically try and sound so confident that any naive person feels like omg this guy is so smart
+08:42:44 <strcat[m]> anupritaisno1: https://github.com/GrapheneOS/kernel_google_coral/pull/2/commits/a327281722e8b0d7126f04574dd76776397db38c drop this
+08:43:00 <strcat[m]> since we have !USER_NS
+08:43:52 <strcat[m]> alicebobandeve: yeah and since they do nothing of value they can spend all their time spreading misinformation
+08:43:56 <strcat[m]> shrug
+08:44:28 <alicebobandeve[m> Makes my head hurt, fuck it. I'm not ruining my day. strcat
+08:44:56 <cn3m[m]> I want to research with my time I am not working or even get into coding
+08:45:05 <strcat[m]> anupritaisno1: I could cherry-pick over the commits that are definitely wanted
+08:45:10 <strcat[m]> to start working through it
+08:45:12 <cn3m[m]> fighting misinfo takes all that free time
+08:45:25 <cn3m[m]> It is absurd
+08:45:29 <cn3m[m]> I blame youtubers
+08:45:34 <alicebobandeve[m> cn3m: yep, no point
+08:45:35 <strcat[m]> anupritaisno1: btw at some point there was a script
+08:45:42 <strcat[m]> to create a source tree of only the code that's used
+08:45:53 <strcat[m]> so then you can see which stuff is definitely not relevant really trivially
+08:45:53 <anupritaisno1[m]> strcat: dropped clone newuser
+08:46:45 * anupritaisno1[m] uploaded an image: Screenshot_20200703-141551_RiotX.png (346KB) < https://matrix.org/_matrix/media/r0/download/m.apex.to/GqMRAlUoMLYwGxVBBjjfdJnU >
+08:46:46 <anupritaisno1[m]> Riot is lagging
+08:46:55 <strcat[m]> anupritaisno1: can drop https://github.com/GrapheneOS/kernel_google_coral/pull/2/commits/c914a2bd2f26dadb98cb8ff234268ffa89768478 too since we always use audit and it really only exists because Arch Linux wanted to disable it by default and have people enable it
+08:46:58 <strcat[m]> via kernel cmdline
+08:47:04 <strcat[m]> anupritaisno1: it's kinda a bug fix
+08:47:07 <strcat[m]> it should really go upstream
+08:47:17 <anupritaisno1[m]> <strcat[m] "so then you can see which stuff "> sysctl.c will alsats be recompiled so that script not very useful
+08:48:46 <anupritaisno1[m]> strcat: dropped that one
+08:49:12 <anupritaisno1[m]> * sysctl.c will always be recompiled so that script not very useful
+08:49:46 <alicebobandeve[m> Actually, unemployment does this. People have way too much time on their hands to talk about shit they have no idea about, there's also a term in psychiatry for this. Also the whole covid situation is bringing all the depressed people to the yard and they basically just want to impress people on the internet.
+08:50:03 <anupritaisno1[m]> Going to try clearing my riotx caches
+08:50:16 <anupritaisno1[m]> Nope still terrible lag
+08:50:31 <alicebobandeve[m> I can't type more than 2-3 sentences on riotx before it crashes or slows down
+08:51:17 <anupritaisno1[m]> strcat (@strcat:matrix.org): anyway anything else?
+08:54:15 <strcat[m]> some of the stuff is set in init so need to think about which is really needed
+08:54:27 <strcat[m]> the mmap entropy changes are useful because they impact init before it sets that up
+08:54:56 <strcat[m]> but for example init already sets kptr_restrict to max value (it sets it to 2 then 3 then 4 to use max supported)
+08:55:54 <anupritaisno1[m]> <strcat[m] "some of the stuff is set in init"> You've incorrectly set this one to 1 in init https://github.com/GrapheneOS/kernel_google_coral/pull/2/commits/4d6923e893f28b955b3164c0499d91e3ab7f3b82
+08:56:22 <strcat[m]> what do you mean
+08:56:27 <anupritaisno1[m]> Protected fifos, regular should be 2
+08:56:31 <strcat[m]> it's set to 2
+08:56:45 <strcat[m]> it was set to 1 a while ago but it's set to 2 now
+08:56:50 <strcat[m]> can see in the changelog
+08:57:01 <strcat[m]> just had to do it incrementally to make it easier to narrow down problems that occurred
+08:57:42 <anupritaisno1[m]> Sorry referred to an older source version
+08:59:54 <dazinism> Just saw this claim that Samsung Note9 supports verified boot with alternative OS https://nitter.net/gaabrielvelloso/status/1278854047299182592
+09:00:22 <JTL> no Knox bit shenanigans?
+09:00:34 <JTL> > I've relocked bootloader on my Note9 and cts goes ok... Knox is tripped but OEM unlock unticked...
+09:00:45 <JTL> if true that's :|
+09:01:21 <dazinism> cn3m looked thru a big part of that XDA thread but didnt find anything,  did you?
+09:01:25 <strcat[m]> they're saying they relocked with the stock OS
+09:01:35 <strcat[m]> and by "CTS" they mean SafetyNet passes
+09:01:37 <dazinism> Ah
+09:01:44 <strcat[m]> it's one hint people have no fucking clue what they're talking about
+09:01:45 <strcat[m]> so
+09:01:53 <JTL> yeah I was skeptical too
+09:01:58 <JTL> Rightly so
+09:02:04 <cn3m[m]> <dazinism "cn3m looked thru a big part of t"> oh that s10e?
+09:02:20 <cn3m[m]> I found 2 references, but they weren't clear
+09:02:32 <strcat[m]> SafetyNet matches devices to the profile for when they were approved (their Compatibility Test Suite certification)
+09:03:00 <strcat[m]> so SafetyNet will say it matches a CTS profile
+09:03:03 <strcat[m]> if it passes
+09:03:15 <strcat[m]> so people have totally misinterpreted this and think SafetyNet runs the Compatibility Test Suite
+09:03:24 <cn3m[m]> I have a feeling Samsung phones generally support custom keys, but it is a hunch
+09:03:24 <strcat[m]> as TheJollyRoger will tell you
+09:03:27 <strcat[m]> it's actually
+09:03:28 <dazinism> cn3m: I'd be interested to see
+09:03:30 <strcat[m]> pretty funny they think so
+09:03:57 <strcat[m]> TheJollyRoger: can you imagine if SafetyNet attestation ran the CTS to see if it passes? lol
+09:03:59 <strcat[m]> anyways
+09:04:04 <strcat[m]> it's xdaspeak
+09:04:17 <strcat[m]> so you have to translate it
+09:04:36 <cn3m[m]> <dazinism "cn3m: I'd be interested to see"> I will check again
+09:04:41 <strcat[m]> as far as I can tell all they're saying is they unlocked, then locked again (with the unmodified stock OS still) and SafetyNet passes - as expected, that's what it's supposed to do
+09:04:41 <JTL> "xdaspeak" love that term
+09:04:55 <strcat[m]> the knox tamper bit is an unrelated thing
+09:05:18 <strcat[m]> knox tamper bit is burned when the device is ever unlocked, etc.
+09:05:24 <strcat[m]> it doesn't really make a lot of sense
+09:05:30 <strcat[m]> samsung doing samsung things
+09:05:34 <JTL> ^^
+09:08:43 <strcat[m]> https://developer.android.com/training/safetynet/attestation
+09:08:46 <strcat[m]> the docs are pretty clear
+09:09:00 <anupritaisno1[m]> <strcat[m] "TheJollyRoger: can you imagine i"> Not possible tbh
+09:09:32 <anupritaisno1[m]> <strcat[m] "it's xdaspeak"> OwO what's this
+09:10:07 <strcat[m]> anupritaisno1: I'm saying that because it's laughable to think that it runs the CTS
+09:10:16 <dazinism> Given the time it took Jolly to run CTS on the Pixel4 and all the noise and stuff, the idea of safetynet running CTS is a bit of a jump
+09:10:20 <strcat[m]> because of the terminology of it matching a device to a CTS profile being misunderstood
+09:10:40 <alicebobandeve[m> safety net and CTS have completely different objectives don't they?
+09:10:47 <cyredanthem[m]1> Is there an easier way to enable lockdown mode?
+09:10:51 <strcat[m]> I explained above
+09:11:05 <anupritaisno1[m]> <cyredanthem[m]1 "Is there an easier way to enable"> Enable it
+09:11:10 <cyredanthem[m]1> > > <@cyredanthem:spitetech.com> Is there an easier way to enable lockdown mode?
+09:11:10 <cyredanthem[m]1> > Enable it
+09:11:10 <cyredanthem[m]1> Use it*
+09:11:13 <strcat[m]> SafetyNet is a blanket term for assorted Google Play Services security-related stuff
+09:11:17 <cyredanthem[m]1> Turn lockdown mode on
+09:11:23 <strcat[m]> SafetyNet attestation is the Google Play Services attestation API
+09:11:28 <strcat[m]> it's documented at https://developer.android.com/training/safetynet/attestation
+09:11:37 <strcat[m]> SafetyNet includes other things than that
+09:11:47 <anupritaisno1[m]> <strcat[m] "SafetyNet attestation is the Goo"> What about auditor?
+09:12:16 <strcat[m]> doesn't use SafetyNet attestation
+09:12:22 <alicebobandeve[m> I think I need to stop using riotx, app is a mess, not even getting messages now
+09:12:56 <dazinism> alicebobandeve: I mainly use minivector
+09:13:07 <dazinism> RiotX is beta
+09:13:27 <alicebobandeve[m> strcat: yeah, just read it
+09:13:35 <alicebobandeve[m> dazinism: will check, thanks
+09:13:43 <dazinism> I find it lags and locks pretty bad after a bit
+09:14:00 <strcat[m]> Auditor uses hardware-based attestation
+09:14:02 <dazinism> alicebobandeve: its Riot Android with some stuff stripped out
+09:14:05 <strcat[m]> via the AOSP hardware-based attestation system
+09:14:21 <strcat[m]> SafetyNet was originally just software-based attestation - largely just security theater
+09:14:27 <strcat[m]>  * SafetyNet attestation was originally just software-based attestation - largely just security theater
+09:14:47 <strcat[m]> it now uses hardware-based attestation on many but not all devices, but in a weak way
+09:16:43 <strcat[m]> imo SafetyNet attestation is essentially obsolete and app developers should just use the AOSP hardware-based attestation API
+09:16:54 <dazinism> <cn3m[m] "I have a feeling Samsung phones "> Would be nice if that were true
+09:17:44 <dazinism> Considering how popular Samsung devices are
+09:18:13 <dazinism> Also would open up a different SoC manufacturer
+09:18:47 <strcat[m]> their devices tend to have bare minimum AOSP support
+09:19:08 <renlord> they try to roll their own warez
+09:19:20 <renlord> samsung everything
+09:20:47 <dazinism> I know they arent great, but I'd hope that more devices supporting verified boot with alternative OS would make more folks care and snowball to more devices
+09:21:45 <anupritaisno1[m]> <strcat[m] "their devices tend to have bare "> What about the essential phones
+09:22:11 <anupritaisno1[m]> From a quick glance all you see is a proper AOSP device tree and an upstream kernel
+09:22:32 <dazinism> They're dead though arent they?
+09:22:32 <strcat[m]> anupritaisno1: they stopped making more
+09:23:03 <strcat[m]> company is dead
+09:23:13 <anupritaisno1[m]> Ah they died
+09:23:35 <anupritaisno1[m]> Hadn't heard about them in a while
+09:24:12 <alicebobandeve[m> <strcat[m] "imo SafetyNet attestation is ess"> Thanks for the info
+09:24:29 <alicebobandeve[m> <dazinism "alicebobandeve: its Riot Android"> Gotcha
+09:24:33 <strcat[m]> people came forward about sexual assault and harassment by the main founder
+09:24:45 <strcat[m]> which is probably part of why it died
+09:24:55 <strcat[m]> because it was largely his company
+09:25:01 <strcat[m]> doesn't exist without him
+09:28:00 <anupritaisno1[m]> Makes sense
+09:28:08 <alicebobandeve[m> strcat: you're using a Pixel 4?
+09:28:34 <anupritaisno1[m]> Yes alicebobandeve
+09:29:00 <alicebobandeve[m> Worth the upgrade? I have to charge my Pixel 3 4 times a day now.
+09:29:56 <alicebobandeve[m> Can't really blame riotx, this phone has been through a lot since more than a year now.
+09:30:32 <dazinism> Pixel 4 is notorious for low battery life, no?
+09:31:06 <alicebobandeve[m> Pixel 4 too? Fuck, let me do my research never mind
+09:31:08 <dazinism> alicebobandeve: can see whats eating the battery
+09:31:29 <anupritaisno1[m]> Well it's a good phone
+09:31:54 <strcat[m]> hopefully Pixel 4a uses the same kernel from the start
+09:31:54 <dazinism> Can get RiotX or Riot Android to behave better. But notifications are delayed
+09:32:04 <alicebobandeve[m>  dazinism: I've done all that lol
+09:32:16 <alicebobandeve[m> Too many cycles
+09:33:35 <alicebobandeve[m> strcat: I hope the 4a is easy for GOS dev, I hate my iPhone 11, have to keep coming back to my Pixel 3 running GOS.
+09:34:03 <anupritaisno1[m]> I don't have a battery issue
+09:34:14 <alicebobandeve[m> You use a Pixel 3?
+09:34:19 <anupritaisno1[m]> Pixel 4
+09:34:25 <alicebobandeve[m> Ok
+09:34:25 <dazinism> You leave it plugged in :p
+09:34:31 <anupritaisno1[m]> No
+09:34:52 <anupritaisno1[m]> I can't sadly
+09:35:02 <anupritaisno1[m]> The pixel 4 charger doesn't go in my wall
+09:35:18 <anupritaisno1[m]> So I can only charge it slowly over USB
+09:35:39 <alicebobandeve[m> What?
+09:35:42 <alicebobandeve[m> Woag
+09:35:46 <alicebobandeve[m> Woah*
+09:35:59 <dazinism> Adapt with an adaptor anu
+09:36:00 <MysteriousWizard> <anupritaisno1[m] "So I can only charge it slowly o"> FFFFFF
+09:36:17 <anupritaisno1[m]> Indian and USA plugs are very different
+09:36:23 <defconanon010102> dazinism: Hey, minivector seems really nice fork for now but have you ever had a problem where it won't accept your recovery key?
+09:36:30 <anupritaisno1[m]> The one in the box seems to be flat pin one
+09:36:38 <MysteriousWizard> <dazinism "Adapt with an adaptor anu"> OwO adapting adapter
+09:36:43 <anupritaisno1[m]> Indian sockets need the round stuff
+09:36:47 <alicebobandeve[m> <anupritaisno1[m] "Indian and USA plugs are very di"> Yes, I feel you, same country :)
+09:36:54 <anupritaisno1[m]> And you can't just use any adapter
+09:36:54 <dazinism> defconanon010102: I've never set up the recovery stuff
+09:36:57 <MysteriousWizard> <dazinism "You leave it plugged in :p"> Oh god no lol
+09:37:06 <anupritaisno1[m]> Need to match the specification on the charger
+09:37:11 <defconanon010102> Makes sense.
+09:37:20 <strcat[m]> anupritaisno1: it can fast charge from a computer if it has a proper USB-C port
+09:37:24 <MysteriousWizard> Leaving it plugged in destroys the battery, I actually get mine down to like 5/10% every night, then take it back to 100%
+09:37:29 <strcat[m]> it's not quite as fast as the wall charger
+09:37:32 <strcat[m]> but it's faster than the slow charge
+09:37:37 <anupritaisno1[m]> strcat (@strcat:matrix.org): sadly I don't
+09:37:49 <strcat[m]> anupritaisno1: also a standard USB quick charge charger
+09:37:50 <strcat[m]> works
+09:37:54 <strcat[m]> just not quite as fast I think
+09:37:59 <anupritaisno1[m]> I spent a lot on CPU and ram but otherwise use a really cheap motherboard
+09:38:14 <strcat[m]> my workstation is 4 years old now
+09:38:14 <MysteriousWizard> Lol
+09:38:19 <strcat[m]> needs to be replaced really badly
+09:38:31 <anupritaisno1[m]> <MysteriousWizard "Lol"> Works for me
+09:38:46 <strcat[m]> https://www.evga.com/articles/00941/EVGA-X99-Micro2-Motherboard/
+09:38:52 <strcat[m]> still have a proper USB-C port though
+09:38:54 <MysteriousWizard> > Daniel Micay: Firefox is bad
+09:38:54 <MysteriousWizard> > Resynth: *uses Firefox Beta*
+09:38:57 <anupritaisno1[m]> Just throw in a 9th gen no GPU i5 and top out with 64G ram
+09:39:20 <anupritaisno1[m]> Found the cheapest motherboard on the market
+09:39:45 <anupritaisno1[m]> My total expenditure is like 500 CAD with this strcat (@strcat:matrix.org)
+09:39:46 <anupritaisno1[m]> And decent enough to build
+09:40:04 <strcat[m]> I think the SSD alone was like 1300 CAD
+09:40:23 <strcat[m]> 2TB PCIe NVMe SSD, really high end one at the time
+09:40:33 <strcat[m]> that's probably only ~3 years old
+09:40:36 <anupritaisno1[m]> The i5 9x00f CPUs are a good deal
+09:40:38 <anupritaisno1[m]> Wow
+09:40:56 <strcat[m]> I need to build a new workstation
+09:40:57 <alicebobandeve[m> strcat: woah, intense
+09:41:02 <anupritaisno1[m]> Man just HDD here
+09:41:08 <strcat[m]> but I probably want to use threadripper this time around
+09:41:11 <MysteriousWizard> <anupritaisno1[m] "Man just HDD here"> LOL
+09:41:20 <strcat[m]> and that means I can't use EVGA motherboard which sucks
+09:41:35 <MysteriousWizard> F your speeds
+09:41:43 <anupritaisno1[m]> <strcat[m] "I need to build a new workstatio"> BTW I have some good stuff if you want remote servers
+09:41:55 <anupritaisno1[m]> Fully encrypted too ^
+09:42:02 <strcat[m]> https://www.samsung.com/us/computing/memory-storage/solid-state-drives/ssd-960-pro-m-2-2tb-mz-v6p2t0bw/
+09:42:05 <strcat[m]> is the SSD I have in it
+09:42:16 <alicebobandeve[m> My 3900X should last me a while but I need a new monitor setup
+09:42:17 <strcat[m]> dunno if I want to just move this stuff over to a new computer
+09:42:22 <strcat[m]> probably just reuse the SSD
+09:42:38 <strcat[m]> just get a new motherboard + CPU and reuse PSU, SSD
+09:42:54 <strcat[m]> reuse RAM too perhaps
+09:43:04 <anupritaisno1[m]> <MysteriousWizard "F your speeds"> Just initial Soong takes a while
+09:43:14 <strcat[m]> I think it's still DDR4
+09:43:22 <strcat[m]> so I just need a motherboard + CPU
+09:43:26 <anupritaisno1[m]> <strcat[m] "just get a new motherboard + CPU"> Ah so similar to what I did
+09:43:29 <strcat[m]> maybe I can reuse my heatsink even
+09:43:36 <strcat[m]> noctua sends free heatsink mounts
+09:43:40 <strcat[m]> for new cpu sockets
+09:43:40 <MysteriousWizard> <anupritaisno1[m] "Just initial Soong takes a while"> TBH there's not much difference when you load up a game, but damn those boot times
+09:43:47 <anupritaisno1[m]> My last workstation was like 10, maybe 12 years old
+09:43:53 <MysteriousWizard> <strcat[m] "noctua sends free heatsink mount"> Damn that's cool
+09:44:05 <MysteriousWizard> Damn...
+09:44:07 <strcat[m]> I think I just need to show noctua the newegg / amazon receipt for it and the new motherboard
+09:44:12 <strcat[m]> and they'll send a mount
+09:44:20 <alicebobandeve[m> You use a build server?
+09:44:20 <strcat[m]> if one is needed - I somewhat doubt the old one will work
+09:44:33 <strcat[m]> although I'm unsure if my heatsink will work with a threadripper layout motherboard
+09:44:56 <anupritaisno1[m]> <strcat[m] "although I'm unsure if my heatsi"> Why threadripper?
+09:45:13 <anupritaisno1[m]> Won't too many threads expose races in AOSP?
+09:45:54 <strcat[m]> ahhh no I can't use my heatsink
+09:45:59 <strcat[m]> anupritaisno1: no it won't expose races
+09:46:07 <strcat[m]> I need a new heatsink
+09:46:16 <strcat[m]> NH-D15 base is not big enough apparently
+09:46:40 <strcat[m]> there's no updated D15 yet :(
+09:46:51 <anupritaisno1[m]> <strcat[m] "anupritaisno1: no it won't expos"> Pretty sure there are a few
+09:46:56 <strcat[m]> no
+09:47:00 <strcat[m]> it will work fine with more cores
+09:47:16 <cdesai> threadripper works great here
+09:47:19 <cdesai> super fast builds
+09:47:45 <anupritaisno1[m]> What's your current setup like?
+09:47:47 <anupritaisno1[m]> Alright
+09:47:47 <cdesai> LTO is still slow, but that's it - everything else is fast.
+09:48:02 <strcat[m]> https://noctua.at/en/nh-u14s-tr4-sp3 yeah that's sad they don't have a D15 version for the socket yet
+09:48:05 <strcat[m]> because the die is so big
+09:48:10 <strcat[m]> the existing D15 won't work
+09:48:47 <cdesai> could always stick that on the gpu xD
+09:49:19 <strcat[m]> https://noctua.at/en/products/cpu-cooler-retail/nh-d15 is what I have for my current workstation
+09:49:29 <anupritaisno1[m]> Just curious what kind of setups you guys use
+09:49:29 <cdesai> me too, on a 3900x
+09:49:48 <cdesai> x370 board though since I updated from 1700, gotta love AMD cpu compatibility
+09:49:49 <strcat[m]> their newer generation ones have the new generation fans and more heatpipes
+09:50:17 <strcat[m]> cdesai: yeah that's AM4
+09:50:52 <strcat[m]> cdesai: the high end new CPUs are sTRX4
+09:50:56 <strcat[m]> it's a much bigger die
+09:51:02 <strcat[m]> so NH-D15 base isn't big enough
+09:51:05 <cdesai> strcat[m]: I know, we have a 3970x in the office
+09:51:10 <cdesai> on an AIO though
+09:51:22 <alicebobandeve[m> Ryzen 9 3900X, Crosshair 8
+09:51:49 <strcat[m]> NH-D15 beats most AIOs for prolonged load
+09:52:16 <strcat[m]> they just look good in crappy tests because it takes a while for the water to heat up
+09:52:43 <strcat[m]> but I guess I might have to do that
+09:52:43 <cdesai> there are some good AIOs though
+09:53:10 <cdesai> 280mm or even 360mm
+09:53:25 <alicebobandeve[m> I got the 3900x from my firm though. What's your setup anupritaisno1
+09:53:51 <strcat[m]> cdesai: I need to choose a motherboard too
+09:54:01 <strcat[m]> maybe I'll just get some enormous AIO and case
+09:54:01 <strcat[m]> lol.
+09:54:13 <cdesai> strcat[m]: I might have something for you re AIO, give me a bit
+09:54:20 <anupritaisno1[m]> <alicebobandeve[m "I got the 3900x from my firm tho"> i5 9400f
+09:54:40 * alicebobandeve[m sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/MLvJzbwoWBAkMqOrKdMHnlZV >
+09:54:42 <strcat[m]> 3990X is pretty expensive
+09:54:55 <cdesai> strcat[m]: https://www.aquatuning.us/water-cooling/radiators/radiators-active/25905/alphacool-nexxxos-xt45-full-copper-1260mm-supernova-radiator?c=6566 here you go
+09:55:02 <alicebobandeve[m> strcat: very
+09:55:05 <cdesai> 3970X is the sweet spot
+09:55:23 <strcat[m]> 3990X is double the cores though
+09:55:55 <strcat[m]> and also with proper power / cooling you can probably get a huge overclock
+09:56:17 <strcat[m]> since it's downclocked so much from the overall package heat / power
+09:56:32 <anupritaisno1[m]> Tbh wish I could max out the ram
+09:56:45 <anupritaisno1[m]> Like 64 gb
+09:56:48 <strcat[m]> double the cores but still 280W
+10:01:50 <anupritaisno1[m]> strcat (@strcat:matrix.org): what are your build times like?
+10:02:06 <anupritaisno1[m]> Assume clean
+10:02:25 <strcat[m]> a bit under an hour
+10:02:46 <anupritaisno1[m]> That's pretty nice
+10:02:52 <strcat[m]> anupritaisno1: https://ark.intel.com/content/www/us/en/ark/products/94456/intel-core-i7-6950x-processor-extreme-edition-25m-cache-up-to-3-50-ghz.html
+10:03:06 <strcat[m]> I have one of these @ 4.5GHz
+10:03:16 <strcat[m]> was really good back in 2016
+10:05:03 <strcat[m]> I have 2 computers that I actually use
+10:05:23 <strcat[m]> workstation and then a desktop
+10:05:32 <strcat[m]> 2x 27" 4k monitors, separate one for each
+10:05:55 <strcat[m]> and a little USB switch thing for my keyboard + mouse which switches it back and forth
+10:06:14 <cdesai> could put them in one case if you haven't already with something like https://www.youtube.com/watch?v=pB-zBSExMS4
+10:06:17 <strcat[m]> so the workstation is separate from everything else
+10:06:34 <strcat[m]> cdesai: prefer it separate
+10:06:39 <anupritaisno1[m]> Interesting
+10:07:15 <strcat[m]> either both computers need an upgrade
+10:07:26 <strcat[m]> or I need to retire the desktop and make a new workstation
+10:07:37 <strcat[m]> and then this workstation becomes my new desktop
+10:07:39 <strcat[m]> that probably makes sense
+10:07:48 <strcat[m]> in which case I need to just do a build from scratch
+10:08:06 <strcat[m]> this CPU is more than good enough for anything I'd do on the desktop
+10:08:26 <cdesai> my other machine is still on a 2600k
+10:10:03 <strcat[m]> I think I'll just do a new workstation from scratch
+10:10:16 <anupritaisno1[m]> I don't even know what I'm doing tbh
+10:10:24 <anupritaisno1[m]> Builds take 4h here
+10:10:53 <strcat[m]> well I have a 10 core / 20 thread CPU @ 4.5GHz base clock
+10:10:57 <cdesai> anupritaisno1[m]: what do you have?
+10:10:59 <strcat[m]> which is not bad
+10:11:13 <strcat[m]> and 64GB DDR4 (quad channel)
+10:11:20 <strcat[m]> quad channel is really important for this use
+10:11:21 <anupritaisno1[m]> That explains it
+10:11:26 <strcat[m]> I'll do 128GB+ next time
+10:11:37 <anupritaisno1[m]> So strcat you suggest I do more cores next time?
+10:11:37 <strcat[m]> also the 2TB PCIe x4 NVMe SSD
+10:11:52 <strcat[m]> anupritaisno1: yeah
+10:12:03 <anupritaisno1[m]> Will see
+10:12:19 <strcat[m]> anupritaisno1: for clean builds 2x as many cores is almost half the build time (especially since we build kernel separately so 'clean build' doesn't include kernel build)
+10:12:42 <strcat[m]> for incremental builds it's much more bottlenecked by single thread performance
+10:12:51 <strcat[m]> also memory bandwidth matters a lot
+10:12:55 <strcat[m]> quad channel is really important
+10:13:11 <strcat[m]> storage performance doesn't matter that much but it helps keep CPUs saturated without needing a ton of extra build jobs
+10:14:02 <anupritaisno1[m]> Well 4h isn't that bad
+10:14:17 <anupritaisno1[m]> Previous one needed 2 days for a build
+10:14:59 <strcat[m]> so yeah plan is workstation becomes regular use desktop and gets replaced with a new workstation
+10:15:02 <strcat[m]> sounds good to me
+10:15:29 <anupritaisno1[m]> It was a core2 q8300 btw
+10:15:37 <anupritaisno1[m]> Didn't bother upgrading
+10:38:20 <v2flel[m]> I dont have a working usb storage for backing up my phone, can I just do a local backup and copy the SeedVault folder over to my pc?
+10:41:13 <strcat[m]> yes
+10:41:46 <mxnorvak[m]> https://www.zdnet.com/article/look-whats-inside-linus-torvalds-latest-linux-development-pc/
+10:42:07 <mxnorvak[m]> This may also be interesting on the topic of workstations
+10:48:15 <alicebobandeve[m> "Torvalds is a build your own box type of guy". Yeah, no shit.
+10:49:41 <fll[m]> Sorry for off-topic but I found this an entertaining read about scam secure phones: https://www.vice.com/en_us/article/3aza95/how-police-took-over-encrochat-hacked
+10:50:10 <fll[m]> > "Torvalds is a build your own box type of guy". Yeah, no shit.
+10:50:10 <fll[m]> Also build your own OS type of guy :D
+11:13:58 <strcat[m]> anupritaisno1: I'll start merging your port of the patches tomorrow
+11:14:13 <strcat[m]> will start with the obvious yes changes
+12:07:54 <madaidan[m]> anupritaisno1: you can probably drop the TIOCSTI commits too since that's handled by SELinux
+12:43:40 <xabi[m]> Are the old  Intel Xeon good enough for the task? 6core/ 12 thread and loads of cache memory. 4 ram channels for around 200€. They could also heat your house in winter
+12:44:03 <xabi[m]> * Are the old  Intel Xeon good enough for the task? 6core/ 12 thread and loads of cache memory. 4 ram channels for around 200€ on aliexpress. They could also heat your house in winter
+12:47:37 <DrWhax> they also give you a very nice electricity bill
+13:08:35 <privacy_based_li> <TheJollyRoger "privacy_based_lifeform: As strca"> Yeah but desktop Tor Browser was able to protect against it
+13:13:06 <madaidan[m]> <privacy_based_li "Yeah but desktop Tor Browser was"> It was not
+13:21:52 <q22[m]> Yes, by disabling JS. :)
+13:26:26 <thedefiant8[m]> Hi, is there a way to turn off wifi automatically when I lose contact with my home AP?
+13:33:52 <FinnwwwBackFromt> So can I run Graphene on a VM on a Gentoo PC?
+13:38:32 <privacy_based_li> <anupritaisno1[m] "Just curious what kind of setups"> i7-10750H, 32 gig ram , rtx 2070 S
+13:39:23 <privacy_based_li> <mxnorvak[m] "https://www.zdnet.com/article/lo"> haha, LTT also released a video recreating it yesterday
+13:39:55 <privacy_based_li> <madaidan[m] "It was not"> what? mine was
+13:48:42 <cdesai> privacy_based_li: hahaa yeah that video was a nice watch, the build looked so clean
+13:48:49 <cdesai> much better than the typical rgb cable fest
+13:52:11 <madaidan[m]> <privacy_based_li "what? mine was"> There's many ways to fingerprint the Tor Browser with js
+14:01:40 <privacy_based_li> Yeah, must be, I was just saying its safe against https://fingerprintjs.com/demo
+14:30:41 <anonymouserobot[> <thedefiant8[m] "Hi, is there a way to turn off w"> Check out task runner apps. I use Easer for this sort of thing, although there could be better ones.
+15:00:51 <brenneke[m]> What do I need to do/have to be able to scan restaurant menu QR codes on GrapheneOS? Is there an option without an additional app?
+15:04:47 <aldous_leekie[m]> Hello :)
+15:11:51 <jcpicard32[m]> Greetings aldous_leekie
+15:12:09 <dallemon[m]> <brenneke[m] "What do I need to do/have to be "> https://f-droid.org/packages/de.t_dankworth.secscanqr/
+15:18:51 <brenneke[m]> Thanks
+15:53:02 <alicebobandeve[m> I browsed reddit today after months (anonymously of course) after strcat posted some links here. I must say it's a bigger shit hole than it was earlier. Most of the recent posts had strcat and madaidan. trying to explain to absolute numb nuts how Android and iOS work, only to be met half way in the discussion with a comment "I'm by no means an expert, researcher or programmer but I did my research for 2 weeks"
+15:53:02 <alicebobandeve[m> lol. Hats off to you guys.
+16:03:41 <bonerdose[m]> Yo, what do you guys think is safer, TAILS, or Whonix on QubesOS?
+16:04:59 <DannyWorkOrderP4> What's your threat model?
+16:06:07 <anupritaisno1[m]> Whonix and tails
+16:20:30 <bonerdose[m]> Government agencies, I live in a country where people are killed for criticizing it.  Tor usage is technically illegal here but bridges seem to work for people I know
+16:21:59 <DannyWorkOrderPr> I'd be using Whonix/Tails, + VPN out of the country, if that's the case.
+16:23:55 <anupritaisno1[m]> BTW exfat kernel coming for pixel 4
+16:23:56 <anupritaisno1[m]> I won't be upstreaming the driver
+16:24:26 <anupritaisno1[m]> So yeah don't expect exfat in grapheneos
+16:27:54 <anupritaisno1[m]> Well unless strcat approves
+16:28:39 <anupritaisno1[m]> Chances are pretty low BTW
+16:57:33 <cyborgninjaneer[> bonerdose: if VPNs are legal there, use one based outside your country.
+16:58:29 <cyborgninjaneer[> Otherwise Tor bridges are your only option, and still risky.
+16:59:28 <cyborgninjaneer[> Technically there's Loki net as well, but it's still experimental and I wouldn't suggest betting your life on it.
+17:05:12 <cyborgninjaneer[> If it were me, I'd use tails and have a way to quickly destroy the flash drive in case I got caught.
+17:05:38 <cyborgninjaneer[> What you're doing is very risky.
+17:06:24 <jfbourdeau1> DNS question  : my pixel 3a is not well configured and uses openvpn to connect to NordVPN server, I also change the config to force the phone to use cloudflare DNS. I tested my config with https://dnsleaktest.com  MY QUESTION : how do site as https://dnsleaktest.com are doing to know which DNS I am using ? it's not clear in my head how they get that info....
+17:24:36 <cyborgninjaneer[> Best way to get rid of it would probably be flushing the flash drive down the toilet, possibly after damaging it with a hammer or butane lighter. You wouldn't want the thing on you or your property, and it would be best if it were destroyed before being discarded.
+17:25:34 <cyborgninjaneer[> (That was also for bonerdose )
+17:27:05 <cyborgninjaneer[> Ideally you want to avoid your home or cell internet as well in case Tor is detected by deep packet sniffing.
+17:27:28 <anupritaisno1[m]> cyborgninjaneer: dd if=/dev/zero of=/dev/whatever
+17:27:30 <cyborgninjaneer[> It's hard to say what the best practice would be.
+17:27:30 <anupritaisno1[m]> Or GNU shred which uses 3 iterations
+17:27:31 <anupritaisno1[m]> If you have a really good USB drive this might work
+17:27:41 <anupritaisno1[m]> blkdiscard -s /dev/whatever
+17:27:49 <alicebobandeve[m> I'd go with shred
+17:27:59 <anupritaisno1[m]> This basically tells the drive to do a hardware secure erase
+17:28:14 <cyborgninjaneer[> There you go.
+17:28:52 <anupritaisno1[m]> Well idk how many drives have a controller that understands trim commands
+17:29:19 <anupritaisno1[m]> You might need the non secure blkdiscard /dev/whatever
+17:29:29 <alicebobandeve[m> Hmm
+17:29:48 <cyborgninjaneer[> bonerdose: Just don't trust your tools too much. Assume that nothing guarantees safety.
+17:29:53 <anupritaisno1[m]> The logic is simple
+17:30:10 <anupritaisno1[m]> TRIM everything on the disk
+17:44:39 <q22[m]> Any file manager recommendations?
+17:48:45 <sixBit[m]> <q22[m] "Any file manager recommendations"> Why not using the default one from GOS?
+17:50:44 <sivuda1[m]> <jfbourdeau1 "DNS question  : my pixel 3a is n"> Here
+17:51:00 * sivuda1[m] uploaded an image: e590c2cd-9bc8-4ec0-989b-272663bf9dd9.jpg (202KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/bwECUBzUwRDibVyEXajRVLmZ >
+17:53:55 <q22[m]> sixBit: Sorry, I was looking for one that could handle network shares. Or am I missing something?
+18:09:06 <sandelinos[m]> Android Samba Client (Access files shared through a SAMBA share) - https://f-droid.org/app/com.google.android.sambadocumentsprovider
+18:09:09 <sandelinos[m]> This adds samba to the built in file manager
+18:10:21 <sandelinos[m]> Nextcloud also integrates with the built in file manager
+18:10:52 <sandelinos[m]> For FTP you'll probably need another app
+18:39:42 <q22[m]> Cool, thanks guys
+18:48:11 <DannyWorkOrderP4> Grapehene should be able to open VCF attachments, right? or nah
+18:48:43 <TheJollyRoger> DannyWorkOrderP4: yes. Import them into Contacts.
+18:51:47 <DannyWorkOrderP4> TheJollyRoger: GrapeheneOS itself appears unable to handle the files I am receiving (may be one Google-Android sender's specific format, unsure)
+18:52:02 <DannyWorkOrderP4> I get a white screen when trying to view from Messages (text), and when I download it and try to open it that way, same deal.
+18:52:35 <TheJollyRoger> Hmm. Very strange!
+18:53:45 <DannyWorkOrderP4>  * TheJollyRoger: GrapheneOS itself appears unable to handle the files I am receiving (may be one Google-Android sender's specific format, unsure)
+18:53:55 <DannyWorkOrderP4> Thought so, too. So not a known issue. Okeydoke.
+18:54:22 <DannyWorkOrderP4> Google or carrier probably fuckin with the filestandard
+18:58:04 <DannyWorkOrderP4> "Import Contacts" from F-Droid handled importing the VCF properly, so it can't be corrupted/too non-standard.
+18:58:27 <DannyWorkOrderP4> (^for posterity, if anyone's runs into this in future and is looking for a workaround)
+18:59:42 <DannyWorkOrderP4> Will note that I wasn't able to choose where to store the contact on import, and don't seem to be able to change the Contact after the fact from On Device to Sync to an Account - but that's an "Import Contacts" complaint, obviously.
+19:32:01 <DannyWorkOrderP4> TheJollyRoger: If you're still around - have you found any Android browsers that are FIDO2 enabled? Know you've done some work in this space, and went through Vanadium, Bromite, and even Chromium last night, to no avail trying to register on two or three different services, so assuming it's not the services.
+19:32:04 <neonfuz2> Hey, maybe I'm just missing something but I can't find how to use the calendar on graphene
+19:32:40 <neonfuz2> I can scroll around, but its just blank and I can't find how to make new events
+19:33:08 <TheJollyRoger> DannyWorkOrderP4: sorry, no, I haven't.
+19:34:17 <neonfuz2> Are external apps required to make calendar events?
+19:34:55 <TheJollyRoger> neonfuz2: I think right now the calendar app's been disabled, but the Calendar API in Android does need to have it there for some reason, but I'm not quiiiite sure.
+19:35:23 <neonfuz2> hmm, alright
+19:35:26 <neonfuz2> odd
+19:35:50 <neonfuz2> why removed instead of just degoogled?
+19:36:01 <neonfuz2> there's a calendar on f-droid that's like the vanilla calendar
+19:36:04 <neonfuz2> is it a security thing?
+19:37:08 <TheJollyRoger> I actually don't know that myself, sorry. It's something from upstream AOSP. Upstream AOSP isn't "degoogled" - it just never had google in there to begin with.
+19:37:42 <neonfuz2> yeah I know lol
+19:37:44 <neonfuz2> and alright
+19:38:35 <neonfuz2> https://f-droid.org/en/packages/ws.xsoh.etar/
+19:38:41 <neonfuz2> I think this is a fork of the aosp calendar?
+19:39:10 <TheJollyRoger> Not sure, but likely if it's on F-Droid I don't think it'll pass the project's standards to be included.
+20:13:12 <neonfuz2> so I installed etar, and it's asking me to add a calendar account
+20:13:28 <neonfuz2> I tried using the built in calendar app as the account or whatever, and it doesn't work
+20:13:40 <neonfuz2> I think the built in calendar app is completely broken, even as a backend for other calendar apps
+20:14:28 <neonfuz2> I guess maybe things would go wrong with NO calendar app when an app requests calendar permission, but the built in app is pretty much a stub
+20:14:57 <neonfuz2> only really useful to give apps calendar permission that you don't trust I guess
+20:16:26 <q22[m]> It worked for me as readonly with davx5
+20:17:27 <neonfuz2> so you use davx5 and then use the default app as a viewer?
+20:17:36 <DannyWorkOrderP4> <TheJollyRoger "Danny (WorkOrderPro): sorry, no,"> My mistake! I was misremembering our smartcard discussion/assuming you may have done some FIDO2.
+20:17:56 <q22[m]> Used to, yes
+20:18:04 <neonfuz2> when I select the default calendar and then try to make an event in etar, it just brings me back to the empty calendar in etar, and upon trying to make another event it says I need to add a calendar account and gets stuck in a loop
+20:18:23 <neonfuz2> it seems I couldn't even write events to the default calendar with etar that is
+20:18:59 <neonfuz2> anyways, etar has support for offline calendars built in anyways, I'll just use that I guess
+20:21:00 <neonfuz2> oh wow, so I made a local calendar in etar and it showed up in the calendar app
+20:21:18 <neonfuz2> I guess it just can't be a backend, you need another app to act as the backend ("calendar account")
+20:21:59 <q22[m]> Probably
+20:50:53 <hiya> Is Android swap always used with zRAM?
+21:25:59 <demonMachina> Will have a 3a available in southern california if anyone is insterested. probably mid august
+22:57:21 <animalchin[m]> Does anyone know what the System App "Presence" is? I was trying to learn more about the apps and couldn't find any info on it. Only thing I could find was the security camera app in the PlayStore and I'm pretty sure it isn't that. Thank you.
+23:01:05 <strcat[m]> Nikos: etar was originally a fork of the AOSP calendar but it's a lot different now
+23:01:21 <strcat[m]> and the AOSP calendar was stripped down into a sample app
+23:04:41 <cdesai> strcat[m]: we're shipping it now, lineage got it building in aosp
+23:06:22 <strcat[m]> I won't bundle GPLv3 code
+23:06:50 <strcat[m]> rather just have it installed as an app by users
+23:06:59 <ruddo[m]> <strcat[m] "I won't bundle GPLv3 code"> Why tho
+23:07:23 <strcat[m]> because it's incompatible with making a GrapheneOS device with an immutable root of trust
+23:07:28 <strcat[m]> which is incompatible with the goals of the project
+23:07:56 <JTL> Would supporting a custom verified boot key similar to how Pixels currently do it still be incompatible?
+23:08:02 <strcat[m]> and I want to work towards not having any restrictively licensed code eventually
+23:08:04 <JTL> I agree it's kinda silly
+23:08:52 <cdesai> What's sad is the original Calendar was Apache2, and they changed it for one contributor and then kept it.
+23:09:00 <strcat[m]> JTL: what Pixels do is compatible, if we make our own device we don't necessarily have the resources to make a comparable implementation and hard-wiring it is a simpler way to make it secure
+23:09:09 <JTL> Fair
+23:09:10 <strcat[m]> Pixels have the Titan M paired with the TEE for this
+23:09:18 <strcat[m]> and store the custom key in the Titan M
+23:09:25 <strcat[m]> which also enforces bootloader lock state etc.
+23:09:35 <strcat[m]> JTL: I want GrapheneOS to be usable on a device with an *immutable* root of trust
+23:09:45 <JTL> I do agree it's some amount of complexity and takes extra resources
+23:09:47 <strcat[m]> rather than just on devices like Pixels with a security chip for enforcing it based on protected state
+23:09:52 <JTL> Fair
+23:10:06 <strcat[m]> not every company / organization / individual that will want GrapheneOS will want it to be possible to boot another OS
+23:10:20 <strcat[m]> so bundling GPLv3 code is not compatible with the project being permissively licensed
+23:10:30 <strcat[m]> and having it usable for everything people should be able to use it for
+23:10:51 <strcat[m]> GPLv2 isn't a problem but I would rather avoid code that can't be mixed and matched with other code
+23:10:53 <JTL> I'm personally in the camp of "want verifeid boot with custom keys as an optional feature" but I agree with your reasons
+23:10:58 <strcat[m]> because that's problematic and then I have to be careful about working on it
+23:11:06 <TheJollyRoger-M> Makes sense.
+23:11:43 <strcat[m]> for example if I make something in the kernel first and then want to use it in userspace
+23:11:48 <strcat[m]> I have to be careful it's not tainted by the kernel GPLv2 code
+23:11:53 <strcat[m]> so it's better to write it for userspace first
+23:12:10 <strcat[m]> hardened_malloc as an example of something where code sharing would be useful
+23:12:12 <strcat[m]> with a hardened slab allocator
+23:12:53 <TheJollyRoger-M> Wow.
+23:13:16 <FinnwwwBackFromt> Does Valladium support PWA installation?
+23:23:20 <strcat[m]> yes
+23:23:23 <strcat[m]> it's Vanadium
+23:26:32 <FinnwwwBackFromt> Does it install actual Android packages or just shortcuts?
+23:27:38 <cn3m[m]> shortcuts it's no different than how regular Android and Chrome do it
+23:27:39 <DannyWorkOrderP4> It's just a stateful website "container" linked to an icon on your homescreen, mate
+23:27:40 <DannyWorkOrderP4> No magic

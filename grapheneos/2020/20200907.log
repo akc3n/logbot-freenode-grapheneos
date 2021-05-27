@@ -1,0 +1,229 @@
+01:01:32 <birdie[m]> The jollyrogers.ca URL with this room rules doesn't work BTW.. Just went to read it..
+01:21:30 * birdie[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/zHmmhusjIiAqjUxvAGfGihVY/message.txt >
+05:38:06 <moaaz47> Hello all!I've compiled the grapheneos for Pixel 3xl (crosshatch). All the steps including the ones for extracting the vendor images and compiling the kernel beforehand were performed successfully. The build also completed successfully. But I cant seem to successfully boot from these compiled images. Flashed system.img, boot.img, vendor.img,
+05:38:07 <moaaz47> dtbo.img etc with and without erasing the avb custom key and then flashing the avb_pkmd.bin file ( which i think is the root of the issue ). I've tried flashing the factory images obtained from google itself, and then flashing again these compiled images as guided by some users. I still get this warning when the mobile tries to boot up but ends up
+05:38:07 <moaaz47> in bootloader showing this error:"Enter reason: No valid slot to boot"The compiled factory images of grapheneos available here (https://grapheneos.org/releases#crosshatch-stable) run perfectly well, just need to run the flash-all.sh bash file. What am I missing, whats wrong with the images built by me? Can anyone kindly help me out here?
+05:39:18 <strcat[m]> moaaz47: flash the factory images instead of trying to do it by hand
+05:39:37 <strcat[m]> you should be using the full build process including generating signed factory images
+05:39:54 <strcat[m]> unless you just want to do development builds for testing and then you need to understand what you're doing beyond what's written there
+05:40:16 <moaaz47> Build the tool needed to generate A/B updates:m brillo_update_payloadGenerate a signed release build with the release.sh script:script/release.sh crosshatch
+05:40:29 <moaaz47> These commands dont run successfully
+05:40:58 <strcat[m]> okay well the reason it doesn't work is you aren't finishing the build process
+05:41:04 <strcat[m]> and you're trying to come up with your own way of doing it
+05:41:13 <strcat[m]> so complete the process and don't skip any steps like generating signing keys
+05:41:18 <strcat[m]> and read the error messages if it shows them
+05:41:40 <strcat[m]> if you closed the shell you need to set up the environment again and I'd recommend just removing `out` and starting over if you've deviated from the instructions
+05:41:58 <strcat[m]> can't help you since we don't know what exactly you did and you aren't showing any errors from what went wrong during your attempt to build it
+05:42:07 <moaaz47> I just started compilation from the start again and removing the out directory.
+05:42:09 <strcat[m]> so perhaps just start over, and don't skip any steps or come up with your own way of doing it
+05:42:20 <moaaz47> I'll stay in touch and share my erros
+05:42:31 <moaaz47> errors*
+05:42:40 <moaaz47> thankyou!
+05:44:33 <strcat[m]> the issue is probably just that you tried to use a new shell without setting up the environment
+05:44:46 <strcat[m]> so you'll probably succeed doing it again and making sure not to do that
+05:45:00 <strcat[m]> if you do start a new shell you need to source envsetup.sh and use choosecombo again
+05:45:13 <moaaz47> okay thankyou, now i have a specific question. Im using make instead of the "m" command
+05:45:26 <strcat[m]> you should follow exactly what it says
+05:45:33 <strcat[m]> using make instead of m doesn't make much difference
+05:45:37 <strcat[m]> but just do exactly what it says
+05:45:51 <moaaz47> okay!
+05:46:02 <strcat[m]> if you haven't set up the environment, `m` won't be available, which is a good thing, since it will stop you from making that mistake
+05:47:43 <moaaz47> so the build command given as "m target-files-package" can be run as: "make target-files-package"
+05:55:21 <anupritaisno1[m]> <moaaz47 "in bootloader showing this error"> You're running the flash-all.sh "bash" file?
+06:00:02 <moaaz47> there's none in the out folder so first i flashed individual files and then tried using the same falsh-all.sh as the one in the stable releases, with that ofcourse I made a similar zip for the "fastboot -w --skip-reboot update image-crosshatch-2020.08.07.01.zip" command
+06:01:10 <strcat[m]> just use `m` like the instructions say
+06:01:14 <strcat[m]> you shouldn't be deviating from them
+06:01:29 <strcat[m]> and you should be using `flash-all.sh` with the factory images not coming up with your own way to flash
+06:01:41 <strcat[m]> if you deviate from them you're on your own without support
+06:02:10 <strcat[m]> follow the instructions on generating signed factory images
+06:02:30 <strcat[m]> if you want to make a production release matching the ones on the site. finish following the instructions to that point
+06:02:35 <strcat[m]>  * if you want to make a production release matching the ones on the site, finish following the instructions to that point
+06:10:51 <moaaz47> how to install 'm' in ubuntu, ive searched but cant find it "just use `m` like the instructions say"
+06:15:07 <Manouchehri> have any of you had trouble passing through a Pixel 4 on ESXi? Setting up a remote dev lab for my buddy, and stupid VM can't use the phone for some reason
+06:19:33 <JTL> moaaz47: It's *not* installed, assuming your sourcing the correct enviroment scripts for the GrapheneOS build system, it should be an automatically created alias
+06:21:58 <moaaz47> The guide says: Set up the build environment:  source script/envsetup.shI'm using this same command.
+06:22:09 <moaaz47> This is the output of the command:
+06:22:15 <moaaz47> graphene@graphene-desktop:/work/grapheneos$ source script/envsetup.shBUILD_DATETIME=1599393805BUILD_NUMBER=2020.09.06.12
+06:22:25 <moaaz47> graphene@graphene-desktop:/work/grapheneos$ source script/envsetup.shBUILD_DATETIME=1599393805BUILD_NUMBER=2020.09.06.12
+06:22:38 <moaaz47> * formatting issues
+06:28:24 <renlord> choosecombo setp?
+06:28:47 <renlord> moaaz47:
+06:30:55 <moaaz47> cant we add a screenshot here
+06:33:17 <renlord> logs only pls
+06:45:38 <osmon[m]> Regarding the Always On Display (AOD): Does GrapheneOS move the clock around to prevent a display burn-in?
+06:45:45 <moaaz47> choosecombo release aosp_crosshatch userBuild type choices are:     1. release     2. debugWhich would you like? [1] releaseWhich product would you like? [aosp_arm] aosp_crosshatchVariant choices are:     1. user     2. userdebug     3. engWhich would you like? [eng] user============================================PLATFORM_VERSION_CODENAME=RELPLATF
+06:45:45 <moaaz47> ORM_VERSION=10TARGET_PRODUCT=aosp_crosshatchTARGET_BUILD_VARIANT=userTARGET_BUILD_TYPE=releaseTARGET_ARCH=arm64TARGET_ARCH_VARIANT=armv8-aTARGET_CPU_VARIANT=genericTARGET_2ND_ARCH=armTARGET_2ND_ARCH_VARIANT=armv8-aTARGET_2ND_CPU_VARIANT=genericHOST_ARCH=x86_64HOST_2ND_ARCH=x86HOST_OS=linuxHOST_OS_EXTRA=Linux-5.4.0-45-generic-x86_64-Ubuntu-20.04.1-L
+06:45:46 <moaaz47> TSHOST_CROSS_OS=windowsHOST_CROSS_ARCH=x86HOST_CROSS_2ND_ARCH=x86_64HOST_BUILD_TYPE=releaseBUILD_ID=QQ3A.200805.001OUT_DIR=outPRODUCT_SOONG_NAMESPACES=device/google/crosshatch hardware/google/av hardware/google/interfaces hardware/google/pixel hardware/qcom/sdm845 vendor/google/camera vendor/qcom/sdm845 vendor/google/interfaces
+06:46:58 <renlord> maybe in a pastebin or something?
+06:47:22 <renlord> osmon[m]: no
+06:47:31 <renlord> uses aosp std behaviour
+06:50:47 <moaaz47> renlord https://pastebin.pl/view/d11dbd45
+07:23:59 <moaaz47> the envsetup.sh I have from the grapheneos repository is:
+07:24:07 <moaaz47> alias which='command -v'
+07:24:15 <moaaz47> source build/envsetup.sh
+07:24:34 <moaaz47> export LANG=en_US.UTF-8
+07:24:42 <moaaz47> export _JAVA_OPTIONS=-XX:-UsePerfData
+07:24:52 <moaaz47> export BUILD_DATETIME=$(cat out/build_date.txt 2>/dev/null || date -u +%s)
+07:24:57 <moaaz47> echo "BUILD_DATETIME=$BUILD_DATETIME"
+07:25:03 <moaaz47> export BUILD_NUMBER=$(cat out/build_number.txt 2>/dev/null || date -u -d @$BUILD_DATETIME +%Y.%m.%d.%H)
+07:25:10 <moaaz47> echo "BUILD_NUMBER=$BUILD_NUMBER"
+07:25:18 <moaaz47> export DISPLAY_BUILD_NUMBER=true
+07:25:23 <moaaz47> export BUILD_USERNAME=grapheneos
+07:25:30 <moaaz47> export BUILD_HOSTNAME=grapheneos
+07:25:39 <moaaz47> ---------------end of file -------------
+07:26:40 <moaaz47> no mention of setting up the alias 'm'
+07:27:43 <JTL> moaaz47: https://github.com/GrapheneOS/platform_build/blob/10/envsetup.sh#L768
+07:27:51 <JTL> (that's build/envsetup.sh)
+07:28:33 <JTL> (it's a bash function, not an alias)
+07:30:41 <moaaz47> Thanks alot, now this a new link for me, found no references to this before.
+08:17:16 <anupritaisno1[m]> <osmon[m] "Regarding the Always On Display "> There will be burn in regardless
+08:17:29 <anupritaisno1[m]> You just have to wait for QLED displays to be available
+09:16:59 <strcat[m]> moaaz47: you're not following the instructions correctly if you don't have `m`
+09:17:20 <strcat[m]> you should be sourcing script/envsetup.sh followed by choosecombo and then only using that shell to do the build
+09:17:28 <strcat[m]> that's what I was saying earlier
+09:17:54 <strcat[m]> the issue you had is likely that you didn't do that - you tried to do stuff in other shells, and ran make there, so you may not have built for the target you think either
+09:18:07 <strcat[m]> my suggestion remains clearing out/ and carefully following our official instructions
+09:18:23 <strcat[m]> don't alter them - you don't know better, if it says use `m`, use `m`
+11:55:11 <oxlur> Hello, Can you kindly help me make my pixel 3xl more secure? I want to lock the oem_unlock options or if not that the whole developer options so that no one can flash my device
+11:55:53 <jpds> oxlur: You should be able to do that yourself?
+11:56:24 <oxlur> yes
+11:56:28 <oxlur> so set a sort of password for developer options / oem unlock?
+11:56:33 <oxlur> is it possible?
+11:56:49 <jpds> No, just set a password/PIN on the whole device
+11:58:38 <jpds> If they're already physically holding your device while it's unlocked - it's kind of game over from a security perspective
+11:59:54 <oxlur> what if I make a secondary user. And of course that user wont be able to access developer options but the admin will always have to login once after device boot for the cecondary user to be able to lgin and use the device.
+11:59:55 <oxlur> secondary* login*
+11:59:56 <oxlur> so.... cant we solve this issue? (of not being able to login to secondary (limited) user directly)
+12:00:22 <jpds> What are you trying to accomplish?
+12:02:35 <oxlur> to be able to give the device to another person without the fear of him being able to flash any os of his own or delete / format my device
+12:03:07 <jpds> I don't think that's possible as they have physical access
+12:03:30 <oxlur> but oems like samsung and huawei lock their bootloaders with password
+12:03:46 <oxlur> cant that be done by a common man?
+12:03:47 <Autopsy[m]> But that's Samsung and Huawei.
+12:03:51 <Autopsy[m]> These are Pixel devices.
+12:07:14 <oxlur> so the most secure way is to just relock the bootloader after installing grapheneos and then disable oem_unlock option in developer mode and just hide developer options.
+12:08:11 <Autopsy[m]> Right, so...
+12:08:41 <Autopsy[m]> When you set up a guest user or another user, they cannot enable developer mode to switch on OEM unlocking.
+12:09:17 <Autopsy[m]> And when you switch users, you have to input your password/pin.
+12:09:32 <Autopsy[m]> Biometrics are turned off.
+12:09:36 <oxlur> yes and thats very secure. but everytime the device boots, it needs the admin user to login before any secondary user
+12:09:46 <Autopsy[m]> Until you unlock with password/pin
+12:09:55 <Autopsy[m]> So don't reboot?
+12:10:28 <oxlur> thats not really a solution  :\
+12:11:18 <Autopsy[m]> But, what you want cannot be done, so you're going to have to compromise somewhere.
+12:11:35 <marlow11[m]> Is there a way to allow screen shots in vanadium private browsing?
+12:11:52 <Autopsy[m]> <marlow11[m] "Is there a way to allow screen s"> Third party app?
+12:12:08 <marlow11[m]> Nope just stick GOS
+12:12:18 <marlow11[m]> *stock
+12:12:23 <Autopsy[m]> No, I am suggesting try a third party app
+12:12:31 <marlow11[m]> Oh okay
+12:12:45 <marlow11[m]> That's annoying
+12:13:32 <marlow11[m]> Not much of a privacy benefit if you can get around it with a third party app...
+12:14:23 <jpds> marlow11[m]: You can just open the website in a non-private tab and take a screenshot
+12:15:19 <marlow11[m]> This is a sensitive document reciept of information only supplied once.
+12:15:22 <Autopsy[m]> Yeah... It's incognito and private for a reason.
+12:15:31 <Autopsy[m]> So you can't screenshot it.
+12:15:44 <Autopsy[m]> Try another app, or do what jpds says.
+12:17:07 <marlow11[m]> Too late. I can't get the info back, no way to reopen in another browser. Bummer :-/
+12:17:38 <Autopsy[m]> Use another phone to take a photo lol
+12:17:39 <oxlur> should have taken a picture from the cam of another phone
+12:17:44 <oxlur> lol
+12:17:57 <marlow11[m]> Yeah... If I had a spare phone heh
+12:18:01 <marlow11[m]> Oh well
+12:18:14 <oxlur> use the webcam of a laptop xD worst case scenario
+12:18:40 <Autopsy[m]> <oxlur "use the webcam of a laptop xD wo"> Aye, gotta resolder it first, though!
+12:19:13 <oxlur> nice
+12:19:29 <oxlur> btw, can we change the bootup animation?
+12:20:10 <oxlur> or would that require generating and SIGNING the images
+12:20:24 <d64qoc8432li8p9o> <marlow11[m] "Yeah... If I had a spare phone h"> Try Bromite
+12:20:29 <Autopsy[m]> <oxlur "btw, can we change the bootup an"> There is a bug report / request thing on GitHub
+12:20:48 <Autopsy[m]> <d64qoc8432li8p9o "Try Bromite"> Doesn't work for incognito either
+12:21:03 <oxlur> ahan, can i have a link?
+12:21:27 <d64qoc8432li8p9o> <Autopsy[m] "Doesn't work for incognito eithe"> There is a flag for it.
+12:21:45 <Autopsy[m]> <oxlur "ahan, can i have a link?"> https://github.com/GrapheneOS/os_issue_tracker/issues/58
+12:21:52 <d64qoc8432li8p9o> <d64qoc8432li8p9o "There is a flag for it."> #enable-incognito-snapshots-in-android-recents
+12:22:11 <d64qoc8432li8p9o> Only in Bromite tho
+12:23:11 <Autopsy[m]> Ah, nice! Was browsing the settings menu.
+12:23:48 <d64qoc8432li8p9o> Maybe if somebody can test it and port to Vanadium
+12:23:57 <d64qoc8432li8p9o> And make a pull request
+12:25:41 <zyxt128[m]> @oxl
+12:28:14 <d64qoc8432li8p9o> I want to ask some experienced devs (building Vanadium) here if testing Vanadium TriChrome apk as user apk (by different package name) is enough?
+12:30:44 <oxlur> so just putting the file bootanimation.zip in the /system/media before building grapheneos will be enough to change boot animation?
+12:31:35 <Autopsy[m]> Give it a go and report back!
+12:31:43 <oxlur> on it
+12:32:57 <zyxt128[m]> oxlur: Techically, you can "lock" the adb with a key in order to block any PC to access the phone, but you have to modify the source code for that
+12:33:06 * zyxt128[m] uploaded an image: image.png (36KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/jUlRbYTBmksXlWlMCxPQxLfk/image.png >
+12:33:50 <zyxt128[m]> adbd_auth_confirm_key should be modified in order to not allow any key that doesn't match with your key
+12:35:06 <oxlur> but enabling oem unlock and flashing new rom doesne need adb.
+12:35:13 <oxlur> doesnt*
+12:35:16 <oxlur> right?
+12:35:24 <zyxt128[m]> Ow sorry, you want to block the flashing
+12:35:29 <oxlur> yes
+12:35:44 <zyxt128[m]> I though you wanted to block the adb access
+12:35:50 <zyxt128[m]> sorry my bad
+12:38:36 <oxlur> no thank you still, learnt a new thing
+12:59:14 <oxlur> so anyway... is there a way to run a script at boot with or without rooting? and is root possible on pixel 3xl
+13:33:50 <erhcetua[m]> rooting is a nogo in grapheneOS and even in general, it destroys your device security
+16:39:28 <dazinism> oxlur: think you need to look at device admin. Can android.os.UserManager.DISALLOW_OEM_UNLOCK
+16:39:50 <dazinism> https://developer.android.com/reference/android/app/admin/DevicePolicyManager
+17:29:40 <Anonymous[m]> Is there a custom rom tutorial?
+17:31:48 <Autopsy[m]> Probably, but this isn't the place to ask.
+17:32:56 <Anonymous[m]> <Autopsy[m] "Probably, but this isn't the pla"> is there another Graphene OS group were i can ask basic questions?
+17:33:41 <Autopsy[m]> Check the channel info box.
+17:35:06 <Anonymous[m]> <Autopsy[m] "Check the channel info box."> I tried to join #grapheneos-offtopic
+17:35:31 <Autopsy[m]> #freenode_#grapheneos-offtopic:matrix.org
+17:35:34 <Autopsy[m]> Click that.
+18:30:43 <devd> Hi, I have what is probably a basic question about SIM cards for GrapheneOS but I wasn't able to find an answer in the FAQ or on the subreddit.  If I install GrapheneOS on my phone, will I be able to continue getting call/text/data service from my SIM card without any adjusting?  I use Mint Mobile.
+18:32:08 <Autopsy[m]> <devd "Hi, I have what is probably a ba"> Mint works fine
+18:32:18 <Autopsy[m]> A quick search of the chat logs says so
+18:32:53 <devd> Ah ok.  I am new to IRC and don't know how to search chat logs.  Sorry I didn't catch that, and thank you!
+18:34:28 <Autopsy[m]> No worries. Apparently visual voicemail or whatever it is called doesn't work on GrapheneOS? Dunno what that means. Also, apparently VoLTE and VoWiFi works flawlessly, too.
+18:38:23 * zombieworld[m] uploaded an image: Screenshot_20200907-213750.png (261KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/kUnIllZXjKkmlhmkezVRirDz/Screenshot_20200907-213750.png >
+18:39:19 <kickstart> i think VOlte let you use internet data  while on phone call , example a phone call and maps
+18:39:38 <zombieworld[m]> Why do I have this even after a reset ? What app or service is causing it ?
+18:41:18 <zombieworld[m]> * Why do I have this even after a wipe/reset ? What app or service is causing it ?
+18:49:48 <anupritaisno1[m]> kickstart: no
+18:49:54 <anupritaisno1[m]> Volte sends the voice call data over the LTE connection
+18:59:08 <Vappy[m]> Are you still able to use microG even if your phone doesn't support it
+19:01:35 <Vappy[m]> Ok fuck that was poorly worded
+19:01:59 <Vappy[m]> Am I still able to use MicroG even if GrapheneOS doesn't support it
+19:02:15 <zombieworld[m]> Vappy: no, you cannot
+19:02:28 <Vappy[m]> Damn
+19:03:42 <zombieworld[m]> Vappy CalyxOs for that
+19:04:09 <anupritaisno1[m]> Vappy: yes you can
+19:04:18 <anupritaisno1[m]> Some apps like google camera will work just fine
+19:04:36 <anupritaisno1[m]> Only apps that need signature verification will fail
+19:04:54 <zombieworld[m]> Vappy: there is a halfway...install a virtual machine like X8 sandbox or VMOS
+19:05:20 <Vappy[m]> You can virtualize on android?
+19:05:48 <zombieworld[m]> Yes
+19:08:18 <Vappy[m]> Tbh, if there's a way to make a seperate Google services dependent profile then GOS would be an easy pick
+19:08:20 <zombieworld[m]> Vappy: research also SHELTER app and ISLAND app, they might be useful for some stuff
+19:08:32 <Vappy[m]> Its a tough pick though, so idk.
+19:08:46 <Vappy[m]> <zombieworld[m] "Vappy: research also SHELTER app"> Already know about them
+19:10:00 <zombieworld[m]> "Virtual xposed" app
+19:10:21 <zombieworld[m]> * "Virtual xposed" appVappy
+21:33:06 <stupidmonkeyqeq[> The tethering options are not showing up in settings. It shows up when I search for it but if I touch the toggle it doesn't change the setting and takes me back a screen
+21:34:24 <Autopsy[m]> Settings > Network and Internet > Hotspot and tethering
+21:34:32 <Autopsy[m]> It's not there?
+21:35:19 <stupidmonkeyqeq[> Nope
+21:36:27 <stupidmonkeyqeq[> But if I use the search at the top of settings, it takes me to it. But won't let me enable it
+21:36:47 <Autopsy[m]> Reboot and see if that helps?
+21:37:09 <Autopsy[m]> You verified your install using Auditor?
+21:37:13 <stupidmonkeyqeq[> I have it still persists
+21:37:14 <Autopsy[m]> What device do you have?
+21:37:37 * stupidmonkeyqeq[ uploaded an image: Screenshot_20200907-163643.png (53KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/IEnEXapdYxPTsxCoxLiBqUpW/Screenshot_20200907-163643.png >
+21:37:43 <stupidmonkeyqeq[> Pixel 3a xl
+21:40:29 <stupidmonkeyqeq[> No I don't have a second device running graphene to check it against
+21:41:48 <stupidmonkeyqeq[> I did however verify the install file before installing
+21:42:31 <Autopsy[m]> <stupidmonkeyqeq[ "No I don't have a second device "> Any device should be okay, as long as you install the app. You could also use attestation.app website.
+21:42:51 <Autopsy[m]> <stupidmonkeyqeq[ "I have it still persists"> Have you tried disabling Netguard first?
+21:43:43 <stupidmonkeyqeq[> No I haven't tried disabling netgaurd before disabling, but I can try that now
+21:49:11 <Autopsy[m]> <stupidmonkeyqeq[ "No I haven't tried disabling net"> Logs suggest deactivating your VPN on reboot and disable tethering hardware acceleration in developer options.
+21:49:45 <Autopsy[m]> Or enable ^
+21:54:09 <Autopsy[m]> Other than that, all I can suggest is pinging the devs here and/or submitting a bug. But check everything over first, just in case. It might be Netguard, or your install has messed up. Verify the install.
+21:54:51 <Autopsy[m]> Worst case, reinstall GrapheneOS. But, update to the latest Google stock version first, using this website: https://developers.google.com/android/images
+21:57:27 <stupidmonkeyqeq[> I have rebooted with netguard disabled, no change. I have also rebooted after disabling tether hardware acceleration disabled also with netgaurd disabled
+21:58:25 <stupidmonkeyqeq[> I will verify install and proceed from there. I appreciate your help Autopsy
+21:59:53 <Autopsy[m]> Yeah, no worries. Btw, the admin and mods of this channel are devs (most of them) so if what I suggested hasn't worked, hit them up
+22:31:29 <dazinism> If its booting with verified boot working I don't think reinstalling will help. Kinda has to be identical to every other install.
+22:32:03 <dazinism> Thats the whole point of verified boot

@@ -1,0 +1,979 @@
+00:00:32 <idanoo[m]> Oh boy, just realised the OEM Unlock toggle is greyed out on my Pixel 3
+00:03:38 <nickcalyx[m]> Sometimes you have to let it connect to google over WiFi first
+00:07:49 <brenneke[m]> What are you thoughts on the security of non open-source apps from Play Store - is it enough to restrict network permission to prevent apps from phoning home or is there more to the picture? I have an app called ColoNote for example that I used pre-GrapheneOS and really love and have yet to find an alternative that is as clean and functional. WPS Office is another.
+00:08:01 <brenneke[m]> ColorNote
+00:13:15 <madaidan[m]> Open source or not is irrelevant to an app's security. The network permission is not enough to prevent data exfiltration. It can be bypassed via IPC.
+00:13:35 <brenneke[m]> IPC?
+00:13:46 <JTL> inter process communication
+00:13:59 <madaidan[m]> Apps can make other apps make connections for them.
+00:15:22 <brenneke[m]> Ahhh....
+00:19:02 <brenneke[m]> So nothing really safe then unless open-source and verified checked?
+00:19:16 <renlord> wtf?
+00:19:29 <renlord> this is not specific to android is it?
+00:20:17 <JTL> renlord: I'm about to run, what's your question exactly?
+00:20:21 <renlord> afaik, selinux would be stripping and auditing IPCs
+00:20:49 <JTL> I think the android sandbox still allows forms of IPC between apps currently
+00:21:03 <JTL> But you're right, not specific to Android
+00:21:04 <renlord> sure, the intents and stuff would be using IPC
+00:21:52 <renlord> at the very least ashmem is regulated using selinux in android and i've touched code that applies those selinux policies on specific appdomains
+00:22:15 <madaidan[m]> <renlord "afaik, selinux would be strippin"> The apps are meant to be able to communicate with each other
+00:22:25 <renlord> or ashmem access removed altogether.
+00:22:27 <madaidan[m]> This is exactly how things like the download manager works
+00:23:08 <JTL> (see also side channels)
+00:30:06 <renlord> madaidan[m]: you suggest that there's nothing the host os can do about malicious apps
+00:31:15 <renlord> but we can potentially write up a really closed appdomain that can block most/if not all IPC for an app if the user thinks that the app should not be using IPC.
+00:35:26 <madaidan[m]> <renlord "madaidan.: you suggest that ther"> That's not what I'm suggesting at all.
+00:35:43 <renlord> madaidan[m]: i apologise for misrepresenting your intentions then.
+00:35:50 <madaidan[m]> <renlord "but we can potentially write up "> I know. There's even an issue on github about this.
+00:40:52 <TheJollyRoger> Ahoy shipmates!
+00:41:15 <renlord> TheJollyRoger: hi
+00:41:27 <TheJollyRoger> Yarr
+00:56:53 * idanoo[m] uploaded an image: image.png (7KB) < https://matrix.org/_matrix/media/r0/download/riot.kiwi/hWUPHfIJYAIUPTWgSetpjedP >
+00:57:04 <idanoo[m]> Aaaaah looks like Im' screwed.
+00:58:38 <idanoo[m]> Unless anyone knows a magic way to OEM Unlock a verizon model Pixel 3 :(
+00:58:41 <cx2[m]> swappa.com
+01:05:58 <renlord> lol
+01:06:30 <brenneke[m]> Is there any way to see what apps are phoning home to check the tightness of one's setup......Wireshark or the like?
+01:06:48 <bseeinu[m]> pihole dns
+01:07:11 <bseeinu[m]> setup a dns resolver and query the logs
+01:08:02 <rutxonboard[m]> > setup a dns resolver and query the logs
+01:08:03 <rutxonboard[m]> Doesn't work. Apps can work around that
+01:24:50 <TheJollyRoger> idanoo[m]: Sorry to hear that :(. You'll probably have to return it. Or if you want to contribute to the project, you could use it to run the Compatibility Test Suite.
+01:25:13 <TheJollyRoger> Since we need results from both a phone running the factory operating system, one running GrapheneOS, and one more running AOSP.
+01:27:15 <idanoo[m]> Unfortunately we never sold the pixel 3's here in New Zealand so bought off a friend of a friend, I'm tempted to grab another one because this one has a slightly cracked screen.
+01:27:15 <idanoo[m]> Yeah I'll look into that
+01:28:07 <TheJollyRoger> If you'd like to know how to use the CTS, I can walk you through it. Oh yeah. Ah crap. I gotta get the docs on that done. That's two ahahaha. Sorry. XP.
+01:28:55 <TheJollyRoger> The long story short with the CTS, you just leave a phone plugged in and it'll have some media on it, and then the computer will run various tests on it. It just needs to be propped up in a well lit area.
+01:29:19 <idanoo[m]> Ah cool, I'll check it out a bit later. Shouldn't have any problems with it 👍️
+01:29:45 <idanoo[m]> I did try all of the tricks to OEM Unlock.. but nothing works because I'm on latest security patches D:
+01:30:12 <TheJollyRoger> Awesome ^_^.
+01:30:20 <TheJollyRoger> Awesome on the first and -- ah shoot on the latter :(
+01:30:51 <TheJollyRoger> Yeah, that's a big problem :(. Exploits to unlock the bootloader generally are known to stop working the moment the firmware is updated. It's really sad that Verizon and co insist on doing this >_<.
+01:31:49 <idanoo[m]> Yep! There are some really cheap pixel 3/3a's available on our local buy and sell pages. Very very tempting if I can get one. Going to disable the play services service and see what stuff breaks for now
+01:32:25 <TheJollyRoger> Most stuff shouldn't break or can be switched off. It may nag you incessantly about Play Services being missing, athough most of these notifications can be ignored.
+01:32:30 <TheJollyRoger> Or hidden.
+01:32:54 <M0xC0ncord[m]> I'm paranoid enough to avoid buying a used one. Used phones these days are like used bedsheets. You don't know what kind of germs you'll find in them.
+01:33:04 * TheJollyRoger laughs
+01:33:19 <TheJollyRoger> Yeah, literally with viruses being able to surivive on most surfaces for several days!
+01:33:44 <idanoo[m]> Ha! Yeah most of the ones locally are new and sealed.. but not keen to gamble on it being a non-verizon
+01:34:07 * TheJollyRoger readies the disinfectant wipes.
+01:37:08 <JTL> I think copper is good for killing germs
+01:37:18 <JTL> I should see if I still have some copper mesh handy
+01:38:09 <bigtree[m]> hi
+01:39:21 <TheJollyRoger> Ahoy!
+01:40:36 <bigtree[m]> can someone tell me will it come for pixel 4
+01:41:36 <TheJollyRoger> It'll come when the community will step up and make the existing devices we have sustainable, before new ones arrive.
+01:41:47 <bigtree[m]> ?
+01:43:01 <TheJollyRoger> At this moment we need more maintainers to step forward and share the workload. The lead developer is very badly overworked, so either some devices will need to be dropped, or the community will need to step up to contribute to pull their weight.
+01:44:14 <TheJollyRoger> It's a lot of work to support a new device; to do it properly requires a large amount of device-specific coding and testing, implementing device-specific security hardening and exploit mitigations and testing it, etc... right now we need someone who's able to commit to three years of full time work to get that done.
+01:44:35 <TheJollyRoger> Either that, or the community will need to step up and hire another developer to make that happen.
+01:45:00 <bigtree[m]> <TheJollyRoger "It'll come when the community wi"> I use pixel 3xl and it looks stable
+01:45:14 <TheJollyRoger> bigtree[m]: because there's a maintainer for it.
+01:46:06 <JTL> No new devices until morale improves
+01:46:08 <JTL> Arr
+01:46:18 <JTL> Where "morale" = community work
+01:47:03 <TheJollyRoger> bigtree[m]: you can use a pixel 3XL stably because you're constantly being saved and rescued by a dedicated maintainer and lead developer who's poured his life's work into giving you that software and making it work.
+01:47:19 <TheJollyRoger> We don't have one of those for the 4 or 4XL.
+01:47:37 <idanoo[m]> Maybe I should get a 4 ;)
+01:47:47 <JTL> He doesn't have the time to do that, plous the Pixel 4, plus general OS work
+01:47:52 <idanoo[m]> Not really impressed with it compared to the 3 though
+01:48:24 <JTL> That's my theory as for another reason why no one else is supporting it
+01:48:33 <JTL> It's a pretty "meh" device in the grand scheme of things imo
+01:49:08 <TheJollyRoger> I don't like to spread rumours but... I believe that the reason why the project is more interested in getting maintainers for the devices /we have/ and making that work out now is to avoid the "dumping problem."
+01:49:25 <JTL> Agreed
+01:49:35 <TheJollyRoger> Where the moment a new device is released, the maintainer vanishes with their shiny new phone, and simply dumps the responsibility on the other members of the project.
+01:49:55 <JTL> That happens alot with Lineage and other "ROM" projects
+01:50:01 <TheJollyRoger> Yeah.
+01:51:52 <TheJollyRoger> If your objective is "just make the darn thing boot" then that's fairly easy in the grand scheme of things. However, to actually do a *full* port of the operating system to the handset with security and privacy properties that will meet (let alone exceed) the security and privacy properties of the commercially supported operating system actually requires a *lot* of work, potentially around the
+01:51:54 <TheJollyRoger> equivalent of one or more people committed to maintaining the device full time.
+01:52:48 <TheJollyRoger> GrapheneOS *will not* halfass support there, it's either going to be done properly, or not done at all.
+01:53:23 <TheJollyRoger> And by "committed to maintaining the device full time" that means "an ongoing commitment for the next three years."
+01:53:58 <DannyWorkOrderPr> <JTL "I think copper is good for killi"> Current virus lasts on copper longer than most "germs", not to go off-topic further 😜
+01:54:25 <TheJollyRoger> Heh. maybe I'll have to open up a GrapheneOS-offtopic channel, I'll send in a request.
+01:54:35 <JTL> DannyWorkOrderPr: I'm aware
+01:54:49 <JTL> hence "I think"
+01:56:10 <DannyWorkOrderPr> And it's more "can't stay alive as well/reproduce" than "kills" sort of situation =]
+01:56:37 <TheJollyRoger> So, this is partially why at this moment the project's keener to find support for /what we have/ before we get new ones. If a device gets dumped, what are we going to tell the users, when we don't have the maintainers to keep their devices secure? I can speak PR speak (kinda) but that's not what this is about.
+01:56:38 <JTL> :|
+01:56:40 <JTL> right
+01:56:56 <JTL> TheJollyRoger: Agreed
+01:57:00 <TheJollyRoger> Yarr!
+02:01:45 <TheJollyRoger> So... if you'd like the Pixel 4 supported, please pitch in to help, the more people we have that can take some amount of load off Daniel's back, the better off the entire project will be and the more likely it can grow.
+02:02:44 <TheJollyRoger> And the more it grows... then the chances of it being able to expand out into other things and support more devices and include new features start looking better.
+02:15:02 <rutxonboard[m]> > Heh. maybe I'll have to open up a GrapheneOS-offtopic channel, I'll send in a request.
+02:15:02 <rutxonboard[m]> Could be interesting
+02:19:58 <d-rav[m]> I’m interested in contributing to the project. I plan on getting a Pixel 3a in a couple weeks. However, I’m a front-end dev and I’ve never worked with anything Android-related before. Do you have any recommended resources apart from the GOS website to bring oneself up to speed enough to contribute?
+02:25:18 <TheJollyRoger> Hi d-rav[m], Android is somewhat documented, there's some documentation available directly from Google themselves at https://developer.android.com/guide. I think that's probably the first place that I would want to check in terms of getting familiar with the design of Android.
+02:56:24 <cyborgninjaneer[> The only documentation I looked at was webview, and the object oriented code was so spaghetti that I think Java should be called "Noodle-oriented" programming.
+02:56:43 <cyborgninjaneer[> Inheritance is shit.
+05:54:53 <Biv[m]> I like oop :(
+05:55:38 <Biv[m]> idanoo: ask seller to check imei
+05:55:49 <Biv[m]> that's what I did
+05:56:03 <idanoo[m]> That's a great idea, is that the whole 35 vs 39 or whatever
+05:56:17 <Biv[m]> no clue but there are online tools you can use
+05:56:47 <Biv[m]> I just linked it to my seller along with instructions for identifying google store devices
+05:57:06 <idanoo[m]> Ah yeah, I can use googles repair thing and it returns _vz if it's verison
+05:57:09 <Biv[m]> works better on eBay with big used phone sellers cuz they record the imei in a spreadsheet
+05:57:23 <Biv[m]> or similar
+05:57:30 <Biv[m]> also less messaging required
+05:57:47 <Biv[m]> seller was happy to do it if it meant immediately selling a device
+05:58:07 <idanoo[m]> It's annoying because there's no private message on our website, and they're not going to post the IMEI publically
+05:58:36 <Biv[m]> EBay then?
+05:59:00 <Biv[m]> I bought from thegizmotrader and they had one other pixel 2 if that was what you were looking for
+05:59:11 <Biv[m]> pixel 2 xl*
+05:59:25 <Biv[m]> didn't really ask about any other phones
+05:59:26 <idanoo[m]> Shipping at the moment to NZ is going to be nightmare haha. Plus this Pixel 3 I'm looking at is US$239
+05:59:34 <Biv[m]> oh gotcha
+05:59:45 <Biv[m]> pixel 3 wasn't worth it to me for the extra money spent
+06:00:16 <Biv[m]> more support is nice I guess but eh
+06:00:26 <idanoo[m]> I wouldn't mind trying a 3a, but they're more expensive here.. :/
+06:01:11 <idanoo[m]> Anyway thanks for your help!
+06:04:10 <Biv[m]> no problem
+06:04:17 <Biv[m]> man who would have thought other countries existed other than the USA /s
+06:05:15 <JTL> Buncha people in here are from Canada
+06:05:18 <JTL> lol
+06:05:25 <JTL> Canada does not exist /s
+06:06:54 <idanoo[m]> Hooold up
+06:06:54 * idanoo[m] uploaded an image: image.png (460KB) < https://matrix.org/_matrix/media/r0/download/riot.kiwi/KzOmuSOZpofzPabxVogmrSxO >
+06:07:04 <idanoo[m]> In his screenshot, it looks liked YouTube Vanced 🤔
+06:07:22 <idanoo[m]> I've asked for the IMEI anyway
+06:49:30 <joshman[m]> Folks, who had luck ripping persistent notifications through adb? I have signal background synchronization notification which irritates me so much
+06:51:28 <joshman[m]> * Folks, who had luck ripping persistent notifications through adb? I have this Signal background synchronization notification which irritates me so much
+06:54:03 <dextr[m]> remove the other option from the notification and it will disappear
+06:55:57 <joshman[m]> The deal breaker is if you toggle "Other" off you no longer see active call notification leaving me blind while having a conversation
+06:57:26 <joshman[m]> Not having seconds counter is another down side. But I can live what that
+06:57:39 <dextr[m]> ah kk didn't know that - new to all the w/o google stuff
+06:58:09 <joshman[m]> Yeah. Cons having unggogled stuff
+08:49:52 <hitchhooker[m]> Damn. Cant use banks 2FA app on GOS. I guess hmalloc spots memory bug in app
+08:51:29 <rutxonboard[m]> > Damn. Cant use banks 2FA app on GOS. I guess hmalloc spots memory bug in app
+08:51:29 <rutxonboard[m]> Wow.. do they have a bug bounty?
+08:51:55 <JTL> If it doesn't directly lead to an exploit I doubt they'll care tbh
+08:52:10 <JTL> hitchhooker[m]: If you get a logcat dump I'm pretty certain that'll help narrow down the issue
+08:52:21 <JTL> I'd be willing to assist if you'd like
+08:56:46 <rutxonboard[m]> Quick question
+08:56:50 <rutxonboard[m]> Are root certs per profile?
+08:57:02 <hitchhooker[m]> Sure, how is the dump exported?
+08:57:14 <JTL> Saved to a file
+08:57:28 <JTL> (I'm going soon so I can't help right now)
+08:57:42 <hitchhooker[m]> Aight.
+08:57:57 <JTL> If you have the Android SDK tools installed and know how to use adb, you're already half of the way there
+08:59:22 <hitchhooker[m]> Ah, need to usb debug and adb logcat?
+09:00:11 <JTL> Yeah
+09:00:24 <JTL> I'm going now and I'll be back within a day or so at most
+09:03:36 <JTL> hitchhooker[m]: In addition, if you don't mind telling me the name of the bank I might be able to test with an emulator instance of the OS
+09:03:45 <JTL> (won't be able to login into account though)
+09:03:53 <JTL> so if it fails after login, can't help there
+09:04:21 <hitchhooker[m]> Nordea Codes
+09:04:34 <JTL> hitchhooker[m]: I thought it was possible to take logcat on device, but that requires root lol
+09:04:42 <hitchhooker[m]> Crashes before that
+09:04:49 <JTL> right
+09:04:58 <JTL> ah finland?
+09:05:50 <hitchhooker[m]> In start
+09:05:55 <JTL> Gotcha
+09:06:18 <hitchhooker[m]> adb aint recognising device :/
+09:06:24 <hitchhooker[m]> Any trick for that?
+09:06:29 <JTL> Nevermind that
+09:06:35 <JTL> I'm seeing if I can reproduce the crash on my end
+09:06:47 <JTL> Willing to try before I go :)
+09:10:55 <hitchhooker[m]> Yeah no id why adb wont find device
+09:12:41 <JTL> Wait, on your device, do you get stuck at the blue "Nordea" start screen, or does something else happen?
+09:16:03 <hitchhooker[m]> https://pastebin.com/ns2nisJb
+09:17:03 <JTL> looing at it now
+09:17:09 <JTL> Disable ADB when your done btw
+09:17:53 <hitchhooker[m]> Sorry about lines, MS too focused in telemetry to create usable terminal
+09:18:08 <JTL> I'm trying to clean it up myself with some regex
+09:23:58 <rutxonboard[m]> Windows ew
+09:24:28 <JTL> I thought the new Windows 10 terminal was better?
+09:25:13 <rutxonboard[m]> It's dramatically better
+09:25:39 <rutxonboard[m]> You actually can maximize
+09:25:48 <hitchhooker[m]> Still terrible
+09:25:49 <JTL> WOAH
+09:25:51 <JTL> lol
+09:26:34 <hitchhooker[m]> pastebin.com/FkdjYBdt
+09:27:15 <JTL> Yeah I fixed your dump with regex
+09:27:17 <JTL> :D
+09:27:46 <hitchhooker[m]> Seg fault
+09:28:00 <JTL> Yup I see that
+09:28:10 <JTL> so it does look it's hardened_malloc exposing a issue
+09:28:13 <JTL> Good to know
+09:28:45 <JTL> hitchhooker[m]: Incidentally, it looks like the banking app was detecting my emulator and crashing in a different way
+09:28:47 <JTL> heh
+09:29:09 <JTL> Should be able to fix the emulator detection with enough work, but that's for another "rainy day"
+09:29:24 <antranigv> hey all :)
+09:29:32 <JTL> Good day
+09:30:48 <hitchhooker[m]> https://www.youtube.com/watch?v=tas0O586t80
+09:31:15 <antranigv> I am having a hard time deciding wether to choose GrapheneOS or LineageOS. my main preority is google-lessness and then OS hardening. can you guys give me a direction? :)
+09:31:45 <antranigv> oh and my device is Pixel 2.
+09:32:39 <rutxonboard[m]> > I am having a hard time deciding wether to choose GrapheneOS or LineageOS. my main preority is google-lessness and then OS hardening. can you guys give me a direction? :)
+09:32:39 <rutxonboard[m]> GrapheneOS is sustainably better
+09:32:42 <rutxonboard[m]> For many reasons
+09:33:31 <rutxonboard[m]> There are so many issues with Lineage and privacy/security I'm not even sure where to start
+09:34:08 <rutxonboard[m]> Beside saying Lineage breaks almost everything and lacks a lot of key features for both. Compared to stock with gapps disabled even
+09:39:19 <antranigv> I understand
+09:39:22 <antranigv> one more question then
+09:39:34 <antranigv> I see that it says "Pixel 2 (legacy)", as in, it will not be supported anymore?
+09:42:20 <hitchhooker[m]> Might be dropped due the lack of community support for device
+09:42:48 <antranigv> I see, well I will install anyway, and will wait until there's a new Pixel device.
+09:42:53 <hitchhooker[m]> Interested becoming maintainer for pixel2?
+09:43:14 <antranigv> unfortunatly I'm being attacked very often, and now moving back to FreeBSD + some phone device
+09:43:17 <antranigv> actually, I am
+09:44:00 <antranigv> I'll start by downloading and installing.
+09:44:24 <hitchhooker[m]> Awesome :)
+09:45:46 <fll[m]> "legacy" is a tag to indicate that there is not that much life left in the device. Firmware updates by the manufacturer are only guaranteed until Oct 2020 and when they drop it GraheneOS will drop it as well. Also legacy devices will be the first to drop if development resources are not increasing
+09:46:26 <hitchhooker[m]> Pixel2 hardware aint supported for much longer by google but if device finds new maintainer there might be possibility for some respiration :)
+09:48:29 <antranigv> So what's the best device to get (or to wait) in 2020?
+09:50:11 <rutxonboard[m]> > So what's the best device to get (or to wait) in 2020?
+09:50:11 <rutxonboard[m]> Wait. I think the 4a is going to eat dirt fighting the SE and go on sale very quickly. If someone does the dev work the 4a will be a good one
+09:50:39 <rutxonboard[m]> Pixel 4a will be pretty awesome deal by October when you have to replace the 2
+09:51:13 <cx2[m]> was going to say almost the exact same thing.
+09:51:26 <fll[m]> Because of lack of contributors no new devices are being added right now. So the best is a 3a device, since they have the longest guaranteed firmware update time ahead and also should be the cheapest device
+09:52:55 <fll[m]> But if you already have a 2 you might as well use it until updates stop
+09:52:57 <rutxonboard[m]> Sure, but hold on to the 2 until it is dropped if you already have it
+09:53:01 <rutxonboard[m]> The 4a could be supported by then you never know
+09:53:37 <rutxonboard[m]> The 2 isn't that bad hardware security wise. It's a huge step up. Not iPhone tier like the 3 series but it is very good
+09:58:05 <antranigv> good, good.
+10:04:30 <kohntree[m]> What are the threat model questions to consider when picking between a GrapheneOS phone and an iPhone? For security and privacy of course. I've heard them thrown around as the same and used them both.
+10:04:35 <kohntree[m]> As equivalent*
+10:11:02 <antranigv> kohntree[m]: in my case, because of my work, it happens that some private companies and even govts might try to hack, I chose an iPhone for that reason, but turns out, 1) macOS is VERY hard to audit and 2) iPhone is impossible to audit. in case of open-source Android at least I can a) view network sockets and processes running b) be able to do forensics if needed.
+10:12:05 <antranigv> and I will be moving from macOS to FreeBSD as well, just saving some money to buy a proper laptop.
+10:14:41 <antranigv> ideally I'd want to break out of Apple's ecosystem, but I invested too much (MBP, phone, watch, etc). maybe I'll keep the iPhone for photography, but that's it.
+10:17:35 <rutxonboard[m]> > and I will be moving from macOS to FreeBSD as well, just saving some money to buy a proper laptop.
+10:17:35 <rutxonboard[m]> That's a terrible idea on so many levels. FreeBSD and friends have terrible security and absolutely no security model for a desktop
+10:18:21 <antranigv> rutxonboard[m]: out-of-the-box: yes. but I will be running HardenedBSD on my laptop
+10:18:25 <cx2[m]> arch?
+10:18:36 <rutxonboard[m]> You give up verified boot, you give up sane userland sandboxing, you give up a commonly audited OS, you give up a system that is designed to minimize trust
+10:18:43 <antranigv> I can't handle Linux, with all the systemds and puleaudios and BT stacks, etc
+10:18:45 <rutxonboard[m]> > rutxonboard: out-of-the-box: yes. but I will be running HardenedBSD on my laptop
+10:18:45 <rutxonboard[m]> That's no good either
+10:19:03 <antranigv> what about OpenBSD?
+10:19:27 <rutxonboard[m]> OpenBSD arguably is the worst for desktop
+10:19:37 <antranigv> why?
+10:19:42 <rutxonboard[m]> There's no serious option right now beside macOS sadly
+10:19:53 <rutxonboard[m]> > why?
+10:19:53 <rutxonboard[m]> Terrible mitigations and no sandbox
+10:20:12 <rutxonboard[m]> OpenBSD is a security nightmare on a laptop much like all the other BSDs
+10:20:21 <antranigv> but OpenBSD has the best mitigations, according to Theo :P
+10:20:47 <rutxonboard[m]> > but OpenBSD has the best mitigations, according to Theo :P
+10:20:47 <rutxonboard[m]> Haha no they are really really bad
+10:20:55 <rutxonboard[m]> Linux also has a slew of issued
+10:20:58 <rutxonboard[m]> Issues*
+10:21:51 <rutxonboard[m]> If you are really worried about corporate espionage or state sponsored attacks you really can't beat macOS
+10:22:02 <rutxonboard[m]> It's not even close
+10:22:35 <rutxonboard[m]> ChromeOS wins in some ways and loses in others, but the lack of privacy is very bad. macOS balances the privacy and security very well
+10:23:22 <antranigv> I mean I like the new trusted boot stuff of macOS
+10:23:47 <rutxonboard[m]> macOS isn't perfect by a long shot and most experts will recommend an iPad Pro as a laptop if security and privacy is the top concern
+10:24:19 <rutxonboard[m]> > I mean I like the new trusted boot stuff of macOS
+10:24:19 <rutxonboard[m]> It's not just that, macOS has a lot of good security features you don't see
+10:25:37 <rutxonboard[m]> It's not comparable to iOS or GrapheneOS, but seriously if you have a Mac already there's no reason to leave it. It's really unmatched, beside maybe ChromeOS
+10:26:13 <cx2[m]> is there an ungoogled chromeOS
+10:26:44 <antranigv> cx2[m]: yes, ChromeiumOS
+10:26:54 <antranigv> rutxonboard[m]: in that case, I'll keep my mac for a while :))
+10:27:12 <rutxonboard[m]> > is there an ungoogled chromeOS
+10:27:13 <rutxonboard[m]> Yes, but it's crap. No verified boot, no persistence, and it's out of date
+10:27:39 <cx2[m]> Just make sure you're hardening it with CCleaner and Avast products
+10:28:17 <rutxonboard[m]> > rutxonboard: in that case, I'll keep my mac for a while :))
+10:28:17 <rutxonboard[m]> Definitely a good idea. Personally I would keep the iPhone if you already have a Mac since it means someone can use Linux and Darwin family exploits if you have both macOS and Graphene it does raise your attack surface
+10:28:33 <rutxonboard[m]> I love Graphene, but if your use case is as serious as you suggest
+10:28:49 <rutxonboard[m]> It's probably best to stay as you are
+10:29:44 <cx2[m]>  * Just make sure you're hardening it with CCleaner and Avast products
+10:29:44 <cx2[m]> just so we are clear..... totally not serious
+10:30:24 <rutxonboard[m]> First thing I did on my Pixel with Graphene was sideload Avast. I do feel safe now /s
+10:31:18 <cx2[m]> Whew... good call. Glad to have you with us smart people
+10:32:40 <antranigv> as far as I know, russians are trying to hack me, that's why I installed Kaspersky!
+10:32:54 <kohntree[m]> No antivirus is bad, I use a Bittium phone and I'm totally secure. /s
+10:33:10 <kohntree[m]> It's so secure I even will get Android 10 soon!
+10:33:34 <cx2[m]> <antranigv "as far as I know, russians are t"> Jason, save some pussy for the rest of us.
+10:34:12 <rutxonboard[m]> > It's so secure I even will get Android 10 soon!
+10:34:12 <rutxonboard[m]> For the low low price of $1.5k. For essentially a Pixel 3a running a crappy cut down version of GrapheneOS
+10:34:53 <dextr[m]> wtf is a bittium phone?
+10:35:05 <antranigv> okay, trying to install now.
+10:35:40 <rutxonboard[m]> It's literally a Pixel running graphene, but a little worse in everyway
+10:35:50 <antranigv> "You can either update the device via over-the-air updates or sideload a full update, which for Pixel phones can be obtained from the full update package page.
+10:35:58 <rutxonboard[m]> For the low low price for 1.5Gs
+10:36:11 <rutxonboard[m]> But it is an ugly Pixel
+10:36:14 <antranigv> how should I know if mine is early or not? lol
+10:36:19 <rutxonboard[m]> With a homemade Titan competitior
+10:36:47 <rutxonboard[m]> It's so bad it's funny
+10:37:53 <antranigv> I still do not understand, before the "Obtaining fastboot" step, do I need to do anything?
+10:37:54 <rutxonboard[m]> There is literally no good reason to get it over any Pixel or any iPhone
+10:39:37 <rutxonboard[m]> The best part is the features they brag about. The disk is encrypted, we have verified boot, chip to store credentials
+10:40:15 <rutxonboard[m]> I legitimately would trust Samsung more than Bittium. The only cool thing is they have workspaces that cleanly merges profiles into the launcher
+10:42:01 <rutxonboard[m]> They also brag about rollback protection and a permissions system
+10:44:11 <rutxonboard[m]> It disables debugging interfaces. If they want to look incompetent they have done a great job
+10:44:22 <rutxonboard[m]> There's nothing special
+10:44:27 <antranigv> okay so now OEM is unlocked
+10:44:37 <antranigv> now I'm downloading the latest image for Pixel 2
+10:44:46 <strcat[m]> we're probably going to need to skip the Pixel 4 because it's a long time since it came out and people still aren't interested in stepping up to help
+10:45:12 <strcat[m]> Pixel 4a probably not going to be supported either because it doesn't appear people want new generation devices with better security supported
+10:45:28 <rutxonboard[m]> So the 4a does have better security?
+10:45:46 <strcat[m]> Pixel 4 and 4a are a newer generation with various security improvements
+10:45:56 <strcat[m]> it would have made sense to support them if we had developers to do it
+10:45:59 <rutxonboard[m]> I thought it didn't really move the needle. I haven't looked enough though the 4 was very boring
+10:46:00 <strcat[m]> we don't
+10:46:18 <strcat[m]> rutxonboard: it didn't make things better
+10:46:34 <strcat[m]> it's not supported by GrapheneOS because the community hasn't provided much support for the project
+10:46:57 <antranigv> great, my phone is stuck, it says "no command"
+10:47:02 <strcat[m]> normally we would want to support each new devices for each generation
+10:47:08 <rutxonboard[m]> > great, my phone is stuck, it says "no command"
+10:47:08 <rutxonboard[m]> It's in recovery
+10:47:15 <strcat[m]> antranigv: it's not stuck and it sounds like you aren't following the official installation instructions
+10:47:28 <strcat[m]> follow https://grapheneos.org/install nothing elser
+10:47:32 <strcat[m]>  * follow https://grapheneos.org/install nothing else
+10:48:42 <trampleheft[m]> Grapheme rulz
+10:48:56 <antranigv> strcat[m]: I'm still unable to understand most of the stuff phone related
+10:49:29 <rutxonboard[m]> > strcat: I'm still unable to understand most of the stuff phone related
+10:49:29 <rutxonboard[m]> What step are you on exactly?
+10:49:32 <strcat> don't know what you mean but all I can say is that if you try to follow instructions from elsewhere you should expect problems
+10:50:19 <antranigv> nah I'm not using any other instructions
+10:50:29 <rutxonboard[m]> > normally we would want to support each new devices for each generation
+10:50:29 <rutxonboard[m]> Right. I think the hardest thing is with how expensive phones are you can't afford having a dev device too
+10:50:29 <antranigv> rutxonboard[m]: "Unlocking the bootloader"
+10:50:46 <strcat> rutxonboard[m]: I can afford to buy each generation of devices
+10:50:49 <rutxonboard[m]> I haven't made ROMs in years between that and data caps
+10:50:53 <strcat> I don't have time to support them
+10:51:00 <rutxonboard[m]> No I mean people helping
+10:51:03 <strcat> I won't be adding support for new devices - ever
+10:51:10 <strcat> other people are going to need to do it
+10:51:18 <strcat> if other people don't step up to help, the project will be wrapped up
+10:51:23 <rutxonboard[m]> I fully understand that
+10:51:25 <strcat> it's a collaborative open source project
+10:51:49 <strcat> eventually I'm going to move on and there has to be a community in place that carries it on
+10:52:12 <rutxonboard[m]> As it should be, it's more of a research project than a tool for the masses
+10:52:16 <strcat> people expecting they can rely on me for everything rather than people stepping up and forming a development team are very wrong
+10:52:18 <rutxonboard[m]> Right now at least
+10:53:02 <strcat> only because of lack of support / contributions
+10:53:11 <strcat> a lot more people trying to cause harm than helping
+10:55:55 <trampleheft[m]> <strcat "eventually I'm going to move on "> 😢
+11:01:05 <cx2[m]> So, I'm more of a direct person. So I'll say this. quite obviously there are a fair amount of people interested in GrapheneOS. I would further assess that if those same people have any sort of coding capability (and of course if lives up to your standard), that a good bit of them would contribute. So it seems theres a lack of coding knowledge from what I am understanding.
+11:01:17 <antranigv> so how many people are part of this project?
+11:02:06 <antranigv> "fastboot: error: Cannot generate image for userdata"
+11:02:09 <antranigv> :((
+11:02:13 <rutxonboard[m]> > so how many people are part of this project?
+11:02:13 <rutxonboard[m]> 2
+11:02:57 <antranigv> I'm guessing one of them is strcat[m] ?
+11:04:03 <rutxonboard[m]> > I'm guessing one of them is strcat ?
+11:04:03 <rutxonboard[m]> Yes he's full time and renlord is part time. They do the vast majority the work on the project. Correct me if I'm wrong
+11:04:20 <antranigv> okay seems like a TMPDIR issue, I'll create another tmp directory outside of /tmp
+11:05:44 <antranigv> yea well, if this works for me, I'll make sure to donate monthly at least.
+11:06:49 <rutxonboard[m]> > yea well, if this works for me, I'll make sure to donate monthly at least.
+11:06:49 <rutxonboard[m]> Donate on GitHub if you can they are matching for almost a year still
+11:07:32 <antranigv> ah fuck, still issues
+11:07:36 <antranigv> not a TMP issue for sure
+11:07:57 <cx2[m]> Another way to Support would be througn donations. Something I have personally done (a relatively decent amount I might add), but admitedly, I have no idea $1.00 provices, supports. Perhaps providing a sort of breakdown of what it would cost to do *x*... or we need to reach these goals by this point....something tangible, that the GrapheneOS user/fan/family base can move toward.
+11:07:57 <cx2[m]> But to be frank, the defeatist mentality is a bit off putting. I am wildly appreciative of the project, and would love to help in anyway that I personnaly can. I don't doubt that I likely speak for a lot of people in this regard. But on a public channel, threatening, "without support this project is going to be wrapped up..." certainly isnt the answer.
+11:07:57 <cx2[m]> I am all for solutions, and couldn't make me happier to help find them, rather than the oposite.
+11:08:18 <cx2[m]>  * Another way to Support would be througn donations. Something I have personally done (a relatively decent amount I might add), but admitedly, I have no idea $1.00 provides, supports. Perhaps providing a sort of breakdown of what it would cost to do _x_... or we need to reach these goals by this point....something tangible, that the GrapheneOS user/fan/family base can move toward.
+11:08:18 <cx2[m]> But to be frank, the defeatist mentality is a bit off putting. I am wildly appreciative of the project, and would love to help in anyway that I personnaly can. I don't doubt that I likely speak for a lot of people in this regard. But on a public channel, threatening, "without support this project is going to be wrapped up..." certainly isnt the answer.
+11:08:18 <cx2[m]> I am all for solutions, and couldn't make me happier to help find them, rather than the oposite.
+11:08:50 <rutxonboard[m]> > So, I'm more of a direct person. So I'll say this. quite obviously there are a fair amount of people interested in GrapheneOS. I would further assess that if those same people have any sort of coding capability (and of course if lives up to your standard), that a good bit of them would contribute. So it seems theres a lack of coding knowledge from what I am understanding.
+11:08:50 <rutxonboard[m]> Depends. Adding a content blocker to Graphene is probably not an insanely advanced project. Writing a device manager could be a little tricky to do well. You don't have to be the world's best coder. Just prepare to make a lot of mistakes
+11:10:03 <dallemon[m]> antranigv: it could definitely be an issue with TMP. when i was first installing and it does all the unzipping and downloading then my 8gb TMP was not enough
+11:11:17 * rutxonboard[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/bpVYzaZPLyLuoLHVnWLzaOuO >
+11:11:27 <strcat> cx2[m]: it's not a 'defeatist mentality' it's a clear statement about the reality
+11:11:32 <antranigv> ah never mind, the extFS tools were missing
+11:11:37 <strcat> I'm optimistic that people will finally start stepping up to make substantial contributions
+11:11:45 <antranigv> I installed it from macports, now let's try again
+11:11:48 <strcat> if they don't, things will be wrapped up, which is not what I expect to happen
+11:12:19 <strcat> what I expect is that people start making substantial contributions and EVERY DAY that it doesn't happen, it makes me disappointed and upset, because I'm being let down
+11:12:40 <antranigv> how about donating 1 USD every day?
+11:12:43 <antranigv> :P
+11:12:55 <strcat> if I didn't think it was going to happen I would have stopped a long time ago, I continue on only because I think the community will do better
+11:13:12 <strcat> at the moment, we lack the resources to make much use of donations
+11:13:17 <antranigv> I honestly think it would be nice if you have some kind of legal representation, like Graphene Foundation
+11:13:22 <strcat> there are also some problems with receiving donations
+11:13:27 <antranigv> hmm
+11:13:45 <strcat> donations aren't a magical solution to the issue of lack of developers / support
+11:13:48 <strcat> need people to do things
+11:13:53 <strcat> money doesn't get anything done by itself
+11:14:00 <strcat> need people to make use of it and the project doesn't have that
+11:14:25 <antranigv> like, hiring developers?
+11:14:28 <strcat> so for example donations can be used to buy devices for developers, or workstations, debug cable materials, etc.
+11:14:33 <antranigv> or givng grants
+11:14:43 <strcat> antranigv: hiring developers is not very realistic atm and who would hire them?
+11:15:09 <antranigv> yea seems like you will need a whole infrastucture for that.
+11:15:32 <strcat> the way this usually works for collaborative open source projects is that companies using the project hire developers to work on it
+11:15:38 <strcat> the project itself does not hire developers
+11:15:59 <strcat> look at collaborative open source projects like the linux kernel, openssl or many others
+11:16:54 <strcat> GrapheneOS is an independent project and isn't going to be strongly tied to a company again, and it isn't going to be a company itself, at most there would be a non-profit foundation
+11:17:02 <strcat> and it's not clear what advantages a non-profit would actually offer atm
+11:17:06 <strcat> beyond a bunch of extra work to deal with that
+11:17:09 <strcat> and costs
+11:17:23 <strcat> who would manage it?
+11:17:36 <strcat> what problems would it solve?
+11:20:07 <antranigv> strcat: what would you want people to do? like, work on the code? help port things? improve performance? anything specific in mind?
+11:20:24 <renlord> antranigv: check the os issue tracker.
+11:20:29 <renlord> heaps to do
+11:20:47 <strcat> development, maintenance, porting, testing, debugging, resolving issues
+11:21:02 <strcat> on many different sub-projects and the OS itself
+11:21:18 <renlord> what a bizarre issue, just changed my gpu today and i had to pass some kernel parameter to get 2nd monitor working
+11:21:21 <strcat> Auditor, AttestationServer, PdfViewer, Vanadium, hardened_malloc, the OS itself
+11:21:28 <antranigv> I have run the ./flash-all.sh script, looks like it's done, but the device did not reboot, is that normal?
+11:21:34 <strcat> other sub-projects including new ones that are needed
+11:21:47 <antranigv> what are the skillsets required? I mean, I'd be happy to help.
+11:21:49 <strcat> antranigv: we deliberately disable automatically rebooting so that you can go back to the fastboot menu and lock
+11:21:52 <rutxonboard[m]> > if they don't, things will be wrapped up, which is not what I expect to happen
+11:21:52 <rutxonboard[m]> Does a contributor specifically need to focus on a new device to get it supported or would someone assisting on main stuff and old devices be enough to push it forward. For instance another renlord shows up tomorrow and wants to take care of a Pixel 3 and normal development. Would you add support for the 4a?
+11:21:53 <strcat> before booting it
+11:22:03 <antranigv> strcat: thanks! will do that now.
+11:22:14 <renlord> valldrac has started contributing
+11:22:17 <strcat> antranigv: it's inconvenient for it to reboot automatically since you just need to go back to the fastboot menu and lock so we pass --skip-reboot to fastboot in the script
+11:22:23 <strcat> one of the only 2 changes we make to the flashing script
+11:22:38 <strcat> the other change is that we automatically flash the GrapheneOS verified boot key
+11:22:42 <strcat> instead of having people do that manually
+11:23:03 <antranigv> well, in that case, I will try to check github and try to improve
+11:23:17 <antranigv> I'll also get an old Pixel 2 and use it for development
+11:23:23 <antranigv> aaaaand it's up and running <
+11:23:24 <antranigv> <3
+11:23:34 * cx2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/wuHLlkUynwXzOduAGoocxQKx >
+11:23:50 <strcat> just make sure it's locked and you get the message saying another OS is loaded (yellow icon) rather than saying it's not being verified (orange)
+11:24:05 <strcat> and then you're assured that it's a proper install bit-for-bit identical to every other install
+11:24:13 <strcat> via verified boot
+11:24:41 <valldrac> renlord: thx, more to come :)
+11:25:19 <rutxonboard[m]> cx2: you keep saying that you're an upfront person? How many times are necessary to get that point across?
+11:25:44 <cx2[m]> I said it twice
+11:25:49 <antranigv> aaand it's up
+11:25:52 <rutxonboard[m]> Haha fair enough
+11:26:17 <strcat> cx2[m]: the issue is that you and other people are always trying to pass responsibility to me
+11:26:21 <strcat> I don't want your suggestions or advice
+11:26:30 <strcat> it's YOUR responsibility to act on ideas you think are worthy
+11:26:38 <renlord> strcat: i think adding like a short section in each release note highlighting which authors helped with the release is a good way to incentivise contributions with very little cost
+11:26:46 <strcat> if people want the project to be used by a company they can start contributing and talk to companies
+11:26:53 <strcat> because I'm not particularly interested in doing that
+11:27:00 <renlord> 1. it also helps new contributors see what are some low hanging fruits for first-time contributions
+11:27:10 <renlord> 2. it also gives authors a 'feel-good' feeling
+11:27:32 <antranigv> are there any wallpapers you guys recommend?
+11:28:39 <renlord> my hopes is that while it does not necessarily help much attracting long term contributors who'd be committed, it'd at least motivate some one-off contributions also
+11:29:23 <rutxonboard[m]> > my hopes is that while it does not necessarily help much attracting long term contributors who'd be committed, it'd at least motivate some one-off contributions also
+11:29:24 <rutxonboard[m]> That's a good idea
+11:30:22 <renlord> i see that it's quite successful with the bitcoin project, they even have that bitcoin merges bot on twitter congratulating each first-time contribution
+11:38:21 <strcat> don't understand what validatornu even validates for svgs
+11:43:20 <strcat> strcat@thinktank i ~/projects/grapheneos/servers/grapheneos.org master % validatornu --svg static/**/*.svg
+11:43:22 <strcat> strcat@thinktank i ~/projects/grapheneos/servers/grapheneos.org master %
+11:43:33 <strcat> strcat@thinktank i ~/projects/grapheneos/servers/grapheneos.org master % validatornu --verbose --svg static/**/*.svg
+11:43:34 <strcat> static/mask-icon.svg
+11:43:38 <strcat> such a useful tool
+11:43:46 <strcat> I can delete half the svg file and it doesn't detect any errors
+11:43:49 <strcat> it used to work
+11:46:00 <strcat> what's the point of a w3c linter that thinks "
+11:46:18 <strcat> "<svgasdh12312-_____&&&&; p<>svg>" is a valid svg
+11:46:37 <strcat> it works for html and css...
+11:46:43 <strcat> I swear it used to do SOMETHING for svgs
+12:49:32 <antranigv> everything is working nice
+12:49:35 <antranigv> except WiFi
+12:49:38 <antranigv> it's so damn slow
+12:49:39 <antranigv> :/
+12:50:06 <joeri_poeri[m]> strange, what device are you using?
+13:28:16 <antranigv> Pixel 2
+14:13:01 <DannyWorkOrderPr> <strcat "and it's not clear what advantag"> The biggest one, and possibly the only one, ATM, is, if someone from a Uni wants to commit a bunch of code and have it count as a semester (co-op), it would provide an avenue to offer that.
+14:13:40 <DannyWorkOrderPr> I'd be very willing to coordinate this, and handle the paperwork; I have experience in doing both of these.
+14:14:42 <DannyWorkOrderPr> I'd also be willing to lead a recruitment effort towards such, and have already "unofficially" started putting feelers out.
+14:17:04 <DannyWorkOrderPr> "Bolster your résumé and fulfill your internship/co-op requirements by working on an actual project, with a cutting-edge dev team, maintaining and feature-extending a revolutionary, security-first mobile operating system"
+14:19:40 <DannyWorkOrderPr> <valldrac "renlord: thx, more to come :)"> Cheers, valldrac - we're glad to have you, mate!!
+14:29:00 * dallemon[m] uploaded an image: Screenshot_20200421-162742.png (171KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/blviDPXEnyyjkxPpXgnWxFte >
+14:29:12 <dallemon[m]> antranigv: here is a test of WiFi from my Pixel 2 XL
+14:42:52 <bigtree[m]> Hi everyone
+14:44:09 <bigtree[m]> I thought about your word about you word about the project.
+14:45:16 <bigtree[m]> May it is possible to make something like crowdfounding for it?
+14:46:33 <DannyWorkOrderPr> As mentioned above, donations and other funding don't help a ton if there's no one to take the money and convert it into project code, or biy devices to help them convert into project code.
+14:50:05 <bigtree[m]> I think its easier find someone with money then without them
+14:51:09 <bigtree[m]> purism found 2+ millions dollars for their project
+14:51:39 <bigtree[m]> and it is still unuseful
+14:53:24 <cx2[m]> <dallemon[m] "Screenshot_20200421-162742.png"> > How likely is it for you to recommend google to a friend or colleague
+14:54:33 <dallemon[m]> cx2: yes, i found that quite amusing as well.
+14:55:16 <antranigv> dallemon[m]: I think it's not my phone... my home WiFi is the problem (I've never used it until now, LOL)
+14:55:38 <bseeinu[m]> After 9 days, my Pixel 3 started moving from the post office... it was in acceptance for 9 days...
+15:01:50 <DannyWorkOrderPr> > purism found 2+ millions dollars for their project
+15:01:50 <DannyWorkOrderPr> > and it is still unuseful
+15:01:50 <DannyWorkOrderPr> That's kinda proving my point. Matching coders with the project is the prime directive right now.
+15:02:58 <cx2[m]> Is there anything that Purism does that would be benifical to GOS?
+15:03:29 <madaidan[m]> <cx2[m] "Is there anything that Purism do"> No
+15:04:00 <DannyWorkOrderPr> (Besides community marketing)
+15:04:01 <madaidan[m]> Purism is just a bunch of bullshit
+15:04:22 <bigtree[m]> their task is a little more complicated
+15:05:57 <cx2[m]> <madaidan[m] "Purism is just a bunch of bullsh"> Well I get that.... it could be entirely misguided.... but at least from my perspective, they have to have some bright developers.... even if it is trash.
+15:06:11 <bigtree[m]> but here you need to find some one wo will fo;;ow the rpoject for 3 year
+15:06:24 <bigtree[m]> may be several peoples
+15:06:48 <bigtree[m]> so we have donate for their salary for this time
+15:07:24 <bigtree[m]> this is not lots of money
+15:07:57 <bigtree[m]> several handreds thousends dollars
+15:08:53 <bseeinu[m]> So, what’s the catch with crowdsourcing funds with a campaign? Wouldn’t that much attention also attract developers as a halo effect?
+15:10:17 <bseeinu[m]> Also: any graphics/design contributions needed? While not crucial, maybe some branding can’t hurt?
+15:11:16 <bigtree[m]> <bseeinu[m] "So, what’s the catch with crowds"> I can't see the future but it sounds logic
+15:11:33 <DannyWorkOrderPr> <bseeinu[m] "So, what’s the catch with crowds"> Needing an organization to accept the funds without taxation implications
+15:12:20 <bseeinu[m]> So that’s an advantage of an NGO. Crowdfunding campaigns to bring visibility and actually attract talent
+15:12:20 <bigtree[m]> I think it is poddible
+15:12:28 <DannyWorkOrderPr> <bseeinu[m] "Also: any graphics/design contri"> Graphene seems to be focused on the security, not changing the aesthetic, of AOSP
+15:12:38 <Zenithium[m]> <cx2[m] "Well I get that.... it could be "> Their ex-CTO Zlatan Todoric that was actually good afaik left when he saw how Todd Weaver was incompetent at handling the company
+15:12:41 <bseeinu[m]> Danny, just to be clear
+15:12:48 <Zenithium[m]> You can read his interview here https://www.phoronix.com/scan.php?page=news_item&px=Zlatan-Todoric-Interview
+15:12:52 <bseeinu[m]> I’m not talking about UX and Os aesthetics
+15:13:09 <bseeinu[m]> I’m talking about branding. The way you present the project to the world
+15:13:09 <cx2[m]> I've never done it, but would be willing to contribute time to figuring something like that out...I understand that money doesn't = code. But it could bring in the people that do.
+15:13:09 <cx2[m]> As they say, "Money doesn't buy happiness.... but it does by Jet Skis, and Jetskis make me happy"
+15:13:56 <bigtree[m]> <DannyWorkOrderPr "Needing an organization to accep"> I have to check and maybe I can find solution, If they wiil accept my help
+15:13:56 <bseeinu[m]> Logo, identity, guidelines and value propositions. Basically what made Apple sell Apple stuff.
+15:14:45 <bseeinu[m]> I find that “help us because we do the right thing” hardly ever works in the real side of things
+15:14:54 <bseeinu[m]> You have to offer a clear and streamlined vision
+15:15:08 <DannyWorkOrderPr> <bseeinu[m] "I’m talking about branding. The "> The current website, save a few more line breaks, and perhaps a logo, is perfect at communicating the value of the OS to the user.
+15:15:12 <bseeinu[m]> Visual identity is part of that
+15:15:38 <bseeinu[m]> Cool. So no branding improvement is possible ever and perfection has been reached.
+15:15:55 <bseeinu[m]> That’s why people are flooding.
+15:16:11 <DannyWorkOrderPr> There's no need to be passive-aggressive.
+15:16:26 <bseeinu[m]> I’m being critical
+15:16:46 <DannyWorkOrderPr> I would like to see a section with a roadmap, but the problem is, the developers are overwhelmed with simply maintaining the software, and don't have time to "be marketers".
+15:17:03 <bseeinu[m]> And provocative.
+15:17:13 <bseeinu[m]> Very actively so and not passively :)
+15:17:16 <bseeinu[m]> That’s what I’m offering, my friend :)
+15:17:48 <DannyWorkOrderPr> And the people who aren't familiar with the project that ask to do branding stuff largely will need to lean on the developers to ask them to write out their roadmap
+15:18:41 <cx2[m]> So strcat said it flat out.... if it's a community project and you guys firmly believe that, then let someone run with it.....then bring it back for approval.... and let it ride.
+15:18:57 <DannyWorkOrderPr> Which is similar in level of effort to just putting on the webpage themselves.
+15:19:04 <bseeinu[m]> Okay. The offer stands. It’s hard to expect people to come without a clear and visible call.
+15:19:27 <cx2[m]> <bseeinu[m] "Okay. The offer stands. It’s har"> Agreed.
+15:19:28 <DannyWorkOrderPr> > Cool. So no branding improvement is possible ever and perfection has been reached.
+15:19:28 <DannyWorkOrderPr> > That’s why people are flooding.
+15:19:28 <DannyWorkOrderPr> This is passive-aggressive, and not friendly towards volunteers. Just be cool, man.
+15:20:04 <bseeinu[m]> again, it’s active critical thinking. And not passive, I openly challenged that :)
+15:20:18 <hitchhooker[m]> for sure frontend pullrequests won't hurt
+15:20:26 <DannyWorkOrderPr> <bseeinu[m] "Okay. The offer stands. It’s har"> Flashy marketing = mainstream users. There's currently very little as far as volunteer time to handle the requests of these mainstream users (see Daniels complaints about the frankly dumbass questions on reddit).
+15:20:29 <bseeinu[m]> I got a couple calls, the offer stands and I get if it’s not needed. Offers can be refused, it’s fine. Trying to help.
+15:21:27 <DannyWorkOrderPr> Mainstream users are welcome, but the project would be overwhelmed with requests/bad reviews in its current state if every user and their mom from the Lineage crowd came to install GrapheneOS today.
+15:22:02 <DannyWorkOrderPr> The roadmap/vision = porting over features that were in the OS pre-corporate nonsense
+15:22:06 <bseeinu[m]> There ain’t no user base with no users.
+15:23:02 <bseeinu[m]> Understanding the logics of gaining traction doesn’t equal with flashy or fishy value propositions.
+15:23:06 <DannyWorkOrderPr> Additional users doesn't help the project right now - additional maintainers do. This is a repeat of what Daniel's said here.
+15:23:12 <bseeinu[m]> It’s just understanding how you get the engine going.
+15:23:25 <hitchhooker[m]> user base is about 10 000 times bigger than contributor base, so be welcome, contrinute the way you see best
+15:23:30 <bseeinu[m]> Ok no worries, gotta go. I’ll leave this on the side, it was a bad idea 🖖
+15:24:01 <bseeinu[m]> I have actual work calls :)
+15:24:12 <DannyWorkOrderPr> <hitchhooker[m] "user base is about 10 000 times "> +1
+15:24:37 <DannyWorkOrderPr> If you want to start a crowdfund account, bseeinu, or whomever, and use it to match up devs, let's organize that!
+15:24:57 <DannyWorkOrderPr> Just don't put the onus to make moves on the 1-3 overworked devs we already have.
+15:25:06 <DannyWorkOrderPr> They're literally doing the best they can
+15:25:12 <bseeinu[m]> Let’s talk later. Obviously the goal is to help, not overwhelm.
+15:25:29 <bseeinu[m]> And obviously I adore this project.
+15:26:05 <cx2[m]> I think bseeinu is saying he is trying to take the onus of a certain aspect of the project on himself...
+15:26:13 <DannyWorkOrderPr> <bseeinu[m] "And obviously I adore this proje"> Same. Let's figure some shit out. The future of Android/mobile security depends on it </cliché>
+15:28:12 <DannyWorkOrderPr> <cx2[m] "I think bseeinu is saying he is "> "The project needs to do rebranding" ≠ here's a proposed list of pages I've built that combine the carefully prepared technical language and ideas that Daniel's written up with some friendlier user-facing verbiage.
+15:28:47 <bseeinu[m]> No man
+15:28:54 <cx2[m]> Of course you need more devs.... got it... but youll have a hard time getting somewhere if when someone (seemingly a professional) offers a service or some guidance. Even if it's not exactly development. I think theres an immense about to be gained by growing the user base, especially if they are educated about what GOS Is, and what it ISNT, from the start
+15:28:55 <bseeinu[m]> Not rebranding
+15:28:58 <bseeinu[m]> I really got to go
+15:29:00 <bseeinu[m]> Please don’t take this as a challenge
+15:29:32 <cx2[m]> Danny@WorkOrderPro:  Dont disagree one bit..... but I think he was likely just putting feelers out there as well.
+15:29:33 <cx2[m]> All i'm saying is, give someone just a small bit of latitude. If they are a sham? tell them to fuck off.
+15:30:38 <DannyWorkOrderPr> Yeah, for sure. Having said that, "getting into" the project is as simple as submitting a PR/posting your work as a proposition.
+15:30:57 <bigtree[m]> <DannyWorkOrderPr "The current website, save a few "> I agree with denny, this project is about security not about the graffic. May be logo, but in all other aspects it have to be simle and usefull. This is the point and this is the stile
+15:32:15 <Hirppa> One problem with this project is the aim to support only the very best hardware. I understand why Pixel 1 got dropped, but that means also droppin potential users -- a lot of them. It would be better to have two flavours of GrapheneOS, the ultra secure for new hardware, and a little bit less secure one for older hadware.
+15:32:24 <cx2[m]> But even then... folks might not know that.
+15:32:24 <cx2[m]> We are talking about Cell phone software... it's the Single bit of tech that nearly every single person on the entire planet owns. Theres a MASSIVE amount of utility in that fact. One of the down sides is that there are plenty of people with a lot of skill that can be helpful... just might not be directly as devs..... solid chance they might not even know what a pull request is
+15:32:51 <DannyWorkOrderPr> <bseeinu[m] "Please don’t take this as a chal"> > You have to offer a clear and streamlined vision
+15:33:15 <cx2[m]> Hirppa:  That's a battle thats likely not going ot be won, friend.
+15:34:43 <DannyWorkOrderPr> <Hirppa "One problem with this project is"> It would be great. Please read the documentation on GrapheneOS.org. It clearly states why this isn't feasible. 1.) Google no longer publishing upstream security patching
+15:35:17 <DannyWorkOrderPr> which increase workload for maintaining that device immensely. Like, immensely.
+15:35:23 <cx2[m]> Hirppa: I don't know that its ever a bad idea in general to only deal in "the very best." But there are very specific reasons why the Pixel is the one chosen for this.
+15:35:49 <DannyWorkOrderPr> 2.) We don't yet have maintainers lined up for the *new* devices!
+15:38:01 <DannyWorkOrderPr> Hirppa: you can still build (for yourself) for the Pixel 1 - but you'll be insecure right out of the gate, because the security patch level is insufficient, which doesn't meet the goals of the project (Android Hardening)
+15:38:33 <Zenithium[m]> > It would be better to have two flavours of GrapheneOS, the ultra secure for new hardware, and a little bit less secure one for older hadware.
+15:38:34 <Zenithium[m]> I don't think Daniel ever wants to support "less secure" stuff as the goal is being as secure as possible, and older devices don't have the security features that the new generations do
+15:39:17 <Zenithium[m]> But I might be wrong, don't want to speak for him. In any case, right now supporting older devices is definitely not a goal since there are not enough resources even for the newer ones as was said above.
+15:46:25 <bigtree[m]> <Hirppa "One problem with this project is"> I don't agree. Security without compromises
+15:47:17 <DannyWorkOrderPr> > One of the down sides is that there are plenty of people with a lot of skill that can be helpful... just might not be directly as devs..... solid chance they might not even know what a pull request is
+15:47:17 <DannyWorkOrderPr> A frontend dev that wants this project to succeed could be picking up the phone today to speak to a University's CompSci/Sec department and ask if they could spread the word regarding potential co-op internship.
+15:47:40 <DannyWorkOrderPr> No PR required ;D
+15:48:24 <DannyWorkOrderPr> (cx2: this includes you!!)
+15:49:31 <DannyWorkOrderPr> > "Bolster your résumé and fulfill your internship/co-op requirements by working on an actual project, with a cutting-edge dev team, maintaining and feature-extending a revolutionary, security-first mobile operating system"
+15:49:31 <DannyWorkOrderPr> Anyone needing verbiage / script help need only to ask! =] As mentioned, I am experienced in handling the related paperwork, and am happy to follow through if you secure someone from a uni that Daniel sees fit.
+15:50:20 <cx2[m]> It does indeed include me.... and I do indeed have something that I am working on.
+15:51:00 <cx2[m]> That said, I am quite the precarious situation at the moment..... I am stuck abroad thanks to this virus issue that's apparently been going around...
+15:58:02 <DannyWorkOrderPr> Check the subreddit, search wallpaper, couple kicking around
+16:01:54 <DannyWorkOrderPr> Stay safe, cx2 - looking forward to seeing what we can all do together.
+16:04:26 <cx2[m]> Thank you!... i'm in a good spot... travel has just been restricted as all... and because of that, I DO have a mountain of time on my hands.... I guess I could learn some Java?
+16:07:28 <bseeinu[m]> @danny makes sense. To cx2’s point: some people won’t know what a pull request is, and you might have to dedicate time to share a vision so it’s choral.
+16:07:58 <bseeinu[m]> Like a for a movie crew, the movie itself could have a great director, but you need good actors and also fantastic editors to get to a great result
+16:08:23 <bseeinu[m]> Not everyone will share the same set of skills, but the overall success is a concert of knowledge and effort.
+16:10:46 <strcat[m]> Hirppa: I asked for help for the Pixel 1 over and over again and no one stepped up to take over maintenance, the same thing is happening with the Pixel 2 now
+16:11:10 <strcat[m]> Hirppa: the Pixel 2 may be dropped before it even reaches EOL
+16:11:28 <strcat[m]> it's not even an option to consider support for it once we can't provide full security updates
+16:11:56 <strcat[m]> who is going to take over maintenance of the kernel including all the kernel drivers, who will take over maintenance of all the userspace code and start rewriting it?
+16:12:16 <bseeinu[m]> I find the current website very very clear in intent and organization, with no frills.
+16:12:20 <strcat[m]> what's the point once serious issues in the firmware need to be patched and can't be patched?
+16:12:49 <strcat[m]> the website needs a lot of work i.e. massively more comprehensive usage guide and FAQ along with documentation on what features GrapheneOS provides
+16:13:18 <strcat[m]> it would be nice to have a fancy main page and maybe move the content there elsewhere while expanding it, I already moved a lot of content off the main page, it's just where things start
+16:13:26 <strcat[m]> but I don't want marketing fluff and useless graphics
+16:13:38 <strcat[m]> useful graphics sure
+16:13:41 <bseeinu[m]> That’s content over presentation, makes sense. A developer can help with that, Daniel is right
+16:13:51 <strcat[m]> screenshots of things in the tutorials and faq, etc.
+16:13:57 <bseeinu[m]> Cool, that’s a good point. What do you consider useful graphics?
+16:14:00 <strcat[m]> useful diagrams / images
+16:14:17 <strcat[m]> bseeinu: when it's communicating actual information that's better via image than text
+16:14:30 <strcat[m]> it isn't full of stuff like that because I don't have time and I care about things being reproducible / maintainable
+16:14:50 <strcat[m]> so if someone wants to make a diagram I want it done with something I can use to edit it as text and regenerate it
+16:14:50 <bseeinu[m]> Understood. Any section that comes to mind as an example of what could use graphics?
+16:15:01 <strcat[m]> and screenshots / clips should be done in a reproducible, scripted way
+16:15:10 <strcat[m]> like a video clip of navigating to some setting, if someone wanted to make those
+16:15:23 <strcat[m]> it has to be done using adb shell monkey
+16:15:30 <strcat[m]> in a script
+16:15:35 <strcat[m]> in some way I can run a script and it makes the video
+16:15:39 <bseeinu[m]> Ok. So a screen capture of GrapheneOS navigation
+16:15:43 <strcat[m]> Android 11 comes out -> probably moves a ton of stuff around -> all needs to be updated / redone
+16:15:54 <strcat[m]> bseeinu: I just mean as part of guides
+16:16:03 <bseeinu[m]> How about in the meantime a human captures the screen and that’s what’s used for the guides
+16:16:07 <strcat[m]> it's an example and not necessarily something that's really useful
+16:16:12 <bseeinu[m]> Would that be of help?
+16:16:27 <bseeinu[m]> Then no.
+16:16:27 <strcat[m]> bseeinu: but then when something changes it has to be removed
+16:16:47 <strcat[m]> best to have things divided up into small clips
+16:16:50 <strcat[m]> no long videos
+16:17:01 <strcat[m]> and ideally it's reproducible with a script not just done by hand
+16:17:04 <bseeinu[m]> Yes, say 15” max clips?
+16:17:16 <strcat[m]> there is a tool called monkey for automatically doing interactions with the device
+16:17:20 <strcat[m]> you can launch settings and click on things in a script
+16:17:26 <bseeinu[m]> I have absolutely no clue on how to script that. I do know how to compress things well and record.
+16:17:40 <bseeinu[m]> Ok
+16:17:41 <strcat[m]> adb shell
+16:17:45 <strcat[m]> am command to launch stuff
+16:17:48 <strcat[m]> monkey to click on stuff
+16:18:41 <bseeinu[m]> How about a cut of the install process via terminal for people who constantly run into errors?
+16:18:50 <bseeinu[m]> Divided by clip/command?
+16:19:13 <strcat[m]> I dunno if that will help
+16:19:21 <bseeinu[m]> Maybe could even be short, horizontals and ultra wide gifs of the command line running through commands
+16:19:26 <strcat[m]> it's only a couple of commands
+16:19:43 <strcat[m]> fastboot flashing unlock, cd to the directory you unzipped factory images, ./flash-all.sh, fastboot flashing lock
+16:20:01 <bseeinu[m]> There seem to be quite a few users running in trouble as they are unfamiliar with the whole process, maybe even the first time they see it
+16:20:08 <bseeinu[m]> Ok
+16:20:35 <strcat[m]> for someone that knows the CLI and can deal with fetching dependencies and figuring out issues those are the install instructions in terms of the terminal (just need to add in 'go to fastboot mode' at the right points and that's it)
+16:20:54 <bseeinu[m]> Yeah to you or good developers might seem trivial
+16:21:04 <bseeinu[m]> But do you spend any time fencing off basic questions about the command line?
+16:21:05 <strcat[m]> bseeinu: I merged the troubleshooting section from JollyRoger
+16:21:23 <strcat[m]> bseeinu: people's problems are mostly to do with having a broken OS, VM, USB port, USB cable, USB hub
+16:21:54 <strcat[m]> get people to buy computers / cables that aren't broken
+16:21:58 <madaidan[m]> <bseeinu[m] "Cool, that’s a good point. What "> We need a fancy anonymous hacker background with a guy fawkes mask and black hoodie /s
+16:22:16 <strcat[m]> the device itself comes with a USB-C cable only and lots of people don't have a new-ish laptop or desktop with USB C ports
+16:22:24 <strcat[m]> linux USB C / USB 3 support is historically broken
+16:22:30 <strcat[m]> most people use distros with ancient software
+16:22:40 <bseeinu[m]> So this guy for example: like it or not, 10k humans watched how to do the basic stuff you listed in a message
+16:22:44 <bseeinu[m]> https://m.youtube.com/watch?v=gQkb0OAOXoc
+16:22:52 <strcat[m]> the 4.9 debian LTS kernel is not like the 4.9 android LTS kernel
+16:23:08 <bseeinu[m]> What I’m thinking is: what is a middle ground to help people who need the video, without the video?
+16:23:15 <strcat[m]> for android they don't follow the rule of only backporting security fixes, they backport tons of bug fixes and huge overhauls / features too
+16:23:35 <bseeinu[m]> That’s a good list of things to avoid already I think
+16:23:38 <madaidan[m]> <madaidan[m] "We need a fancy anonymous hacker"> Copperhead's new design is actually like that
+16:23:52 <strcat[m]> it's the kernel.org LTS + a ton of extra backporting far beyond that, largely features
+16:23:56 * madaidan[m] uploaded an image: IMG_20200421_172316_251.jpg (105KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/MMpsmCyXgzjPeTfUmAaPrbhm >
+16:23:57 <strcat[m]> but a lot more bug fixes too
+16:23:57 <madaidan[m]> Bleugh
+16:24:00 <strcat[m]> and still it's hardly enough
+16:24:30 <strcat[m]> going to have a big announcement about what James / Copperhead are trying to do to me soon
+16:25:01 <strcat[m]> madaidan.: it really says everything that he lies about a bunch of companies he falsely claims are partners on that new site
+16:25:24 <strcat[m]> any company copperhead ever did every business with is somehow a "partner"? lol
+16:25:44 <strcat[m]> madaidan.: they claimed that calyx was a partner even
+16:25:51 <madaidan[m]> Yeah I saw people talking about that in here
+16:26:10 <strcat[m]> got in a fight with some Bitcoin people on twitter about it today
+16:27:13 <madaidan[m]> That is a lot of tweets
+16:27:42 <strcat> procrastinating dealing with stressful legal and tax issues
+16:27:55 <strcat> + really upset me
+16:28:09 <strcat> that they say they support me
+16:28:11 <strcat> and the project
+16:28:30 <strcat> but then they go and promote Copperhead and try making it seem comparable which is a joke
+16:28:51 <strcat> and then they start talking about how they want to donate and would donate if I use PayNyms
+16:29:09 <strcat> but it makes no sense to me that they want to donate while supporting people that are going to burn all of their donations
+16:29:26 <strcat> I could easily end up having to spend 50k+ on legal fees
+16:29:38 <strcat> dealing with their bullshit
+16:29:48 <strcat> and the government wants 8k from me that I should not owe them due to what they did
+16:30:02 <strcat> so there goes half the total donations so far to GrapheneOS
+16:30:06 <strcat> and could be more
+16:30:24 <strcat> people want me to hire developers? I can't, I need all the donations and more to deal with their BS
+16:30:36 <strcat> I need to run a crowdfunding campaign not to develop something but to raise money to deal with this stuff
+16:30:49 <strcat> need to choose a crowdfunding platform, suggestions welcome
+16:30:54 <strcat> 1 platform
+16:33:24 <strcat> I've tried to communicate how seriously this stuff continues to impact me and the project
+16:34:02 <hitchhooker[m]> Isis got 35k through GoFundMe for their legal battle https://www.gofundme.com/f/isis-lovecruft-legal-defense
+16:34:09 <madaidan[m]> Gofundme?
+16:34:17 <madaidan[m]> I've heard good stuff about it
+16:34:24 <strcat> I'm worried about getting into a situation like the BS I have with Stripe
+16:36:16 <strcat> Stripe successfully sent me a CAD payment btw
+16:37:16 <strcat> 17 Apr
+16:37:20 <strcat> CA$6,521.07
+16:37:25 <strcat> it's like 8 months
+16:37:28 <strcat> of GitHub Sponsors money
+16:37:41 <strcat> maybe 6 months w/e
+16:37:53 <strcat> the first failed payment is november
+16:38:01 <strcat> april 17 is first successful
+16:38:08 <strcat> because before november github was sending it to me themselves
+16:38:10 <strcat> with no issue
+16:38:48 <strcat> MATCHING FUND STATUS
+16:38:50 <strcat> $2,768.29
+16:38:52 <strcat>  / $5,000.00 matched
+16:39:29 <hitchhooker[m]> all at once?
+16:39:36 <strcat> so people have donated $2768.29 USD
+16:39:39 <strcat> and github matches it 1:1
+16:39:52 <strcat> so that's 5536.58 USD total
+16:40:12 <strcat> and they just sent me a SINGLE payment of 6,521.07 CAD due to how it got backed up and I spent MONTHS working with them to try to fix it
+16:40:16 <strcat> and we still haven't fixed it
+16:40:23 <strcat> I just gave them my CAD account info instead of USD
+16:40:28 <strcat> and for some reason they were able to send that
+16:40:36 <strcat> paypal and google deposit into my USD account just fine
+16:42:01 <strcat> I need to get a USD credit card and hook it up to my account so I can actually spend USD without paypal
+16:42:25 <madaidan[m]> This looks interesting https://twitter.com/DanielMicay/status/1252580680699166720
+16:42:35 <madaidan[m]> Anyone I would know on that list?
+16:48:52 <strcat> madaidan[m]: dunno just record anyone I see promoting it / supporting James along with companies still involved with them, etc.
+16:49:05 <strcat> if they do that publicly, don't see any reason I can't publish a list
+16:49:31 <strcat> I would make a twitter list for twitter if it didn't ping people and probably stop you from listing them if they block you
+16:51:06 <madaidan[m]> Make a massive, collaborative wall of shame on github or something
+16:51:40 <madaidan[m]> PR: added 2 new scumbags
+16:52:01 <strcat> I want to give people a chance to inform themselves / stop
+16:52:20 <strcat> but if people are publicly posting endorsements of Copperhead and supporting their BS attacks on me I have an issue with that
+16:52:28 <strcat> also they are using my code against the terms of the licenses
+16:53:06 <strcat> they're clearly using it commercially and they absolutely do not own it
+16:53:14 <strcat> they ONLY started claiming to own it AFTER I was not involved
+16:53:20 <strcat> until that point it was acknowledged that I owned it
+16:53:24 <strcat> explicitly
+16:53:35 <strcat> and they NEVER received a commercial license from me
+16:53:48 <strcat> madaidan[m]: they weren't the ones publishing the OS and making releases
+16:54:20 <strcat> I never actually gave them a license, I just approved certain things like ncrypt using it commercially
+16:54:46 <strcat> funny how James respected that I owned it and always made sure to have me sign off on stuff but then after fucking me over he just walks back and retroactively changes the history and our agreements
+16:54:50 <strcat> just lies about everything
+16:55:15 <strcat> once it no longer made sense to pretend he just completely changed everything
+16:55:31 <strcat> he also acknowledged the donations were mine, explicitly
+16:55:37 <strcat> I have IRC logs of him acknowledging they are mine
+16:55:44 <strcat> and then he just fucking stole them all
+16:56:09 <strcat> uses my money (donations and company revenue) to fund a war against me
+16:56:18 <strcat> uses a lawyer that's effectively half mine as if it's his personal lawyer
+16:56:24 <madaidan[m]> He's such a scumbag
+16:56:31 <strcat> uses those company resources to file a fraudulent claim over my copyright
+16:56:41 <strcat> and fills out my address in an optional field just to dox me as part of it because why not
+16:56:52 <strcat> so now my personal address is public government record
+16:57:26 <strcat> madaidan[m]: they filed a copyright claim over my work saying they are the owner and I'm the author even though I NEVER assigned any copyright to them
+16:57:28 <madaidan[m]> He doxed you? Shit.
+16:57:30 <strcat> they just regularly do fraud
+16:57:33 <strcat> madaidan[m]: yes
+16:58:19 <madaidan[m]> That's really fucked
+16:58:38 <strcat> madaidan[m]: he's an abuser who has stolen huge amounts of my money, engaged in a bunch of fraud against me, a public misinformation / slander campaign including doing media press releases slandering me with false claims
+16:58:46 <strcat> complete and utter scumbag
+16:59:11 <strcat> madaidan[m]: I knew he was a narcissistic asshole and probably a sociopath/psychopath long before this happened
+16:59:22 <strcat> I was stuck in that company wanting out with no clear way out
+16:59:34 <strcat> and then he eventually totally fucked me over and screwed over my project
+16:59:53 <strcat> company was supposed to be a sponsor but really I'd estimate it did 500k+ in damages to the project
+16:59:58 <strcat> or more
+17:00:05 <strcat> destroyed years of my work and progress
+17:00:14 <strcat> and he barely contributed anything or did any actual work at all
+17:00:26 <strcat> yet he took half the income and now he takes 100%
+17:00:29 <strcat> and uses it to harm me
+17:00:34 <strcat> I still own half the company
+17:01:05 <strcat> madaidan[m]: how is it at all fucking sensible that the company's lawyers are going after the 50% shareholder of the company for a PERSONAL dispute between myself and James
+17:01:18 <madaidan[m]> <strcat "madaidan.: I knew he was a narci"> Did he do any other scumbag-ish things while you were there?
+17:01:30 <strcat> madaidan[m]: some super incompetent lawyers that need to be disbarred and I am 100% going to pursue that
+17:01:32 <strcat> madaidan[m]: yes, 100%, many
+17:01:39 <strcat> he did many unethical and untrustworthy things
+17:01:44 <strcat> and you can see what they did after
+17:01:47 <strcat> they added DRM / tracking BS
+17:02:04 <strcat> madaidan[m]: so ridiculous for people to try to compare it to the real thing
+17:02:38 <strcat> when all they did is rip off my legacy code, pay some cheap outsourced devs and a lineageos dev to poorly port it forward, largely disabling / omitting what was present cause they don't understand it
+17:03:01 <strcat> change around the updater ui, add DRM / tracking to it
+17:03:08 <strcat> and some other stuff like that
+17:03:13 <strcat> app to report bugs
+17:03:18 <strcat> where is the privacy/security work? they don't do that
+17:03:31 <strcat> they don't do privacy/security research/engineering and they hardly even have devs at all
+17:03:45 <strcat> where is their source code? it's not even source available
+17:03:56 <strcat> where is the gpl2 kernel code including stuff they copied from me?
+17:04:22 <madaidan[m]> I heard that same lineage dev is a massive dick and fucked up even lineage too
+17:04:47 <strcat> he stole my work
+17:04:54 <strcat> and falsely attributed it to himself / Copperhead
+17:05:02 <strcat> fuck that guy
+17:05:16 <strcat> they added copyright notices falsely attributing it to themselves
+17:05:38 <strcat> when before they forked it, the ONLY attribute was to me using my PERSONAL email since I ALWAYS made sure to split up usage of my personal vs. corporate email
+17:05:42 <strcat> personal email for open source work I owned
+17:05:47 <strcat> company email for stuff for the company
+17:05:47 <madaidan[m]> <strcat "fuck that guy"> Agreed
+17:06:06 <strcat> notice ALL the work in the OS was all my personal email with ZERO attributions to the company because it was not involved
+17:06:18 <strcat> my personal work on my open source project
+17:06:24 <strcat> company was not paying me to do that work
+17:06:29 <strcat> was not compensated for any of that
+17:06:51 <strcat> madaidan[m]: they did some super fucked up stuff falsifying accounting records retroactively
+17:07:01 <strcat> they went back and falsely claimed I'd gotten shareholder advances
+17:07:04 <strcat> for years
+17:07:08 <strcat> when I NEVER fucking agreed to that
+17:07:12 <strcat> and it is not how I filed my taxes
+17:07:23 <strcat> so they move this money I already paid taxes on to 2018 and then claim it's this salary I never got
+17:07:26 <strcat> I never had a salary
+17:07:37 <strcat> never had any agreed upon salary and never had an employment agreement
+17:07:39 <strcat> was not an employee
+17:07:46 <strcat> madaidan[m]: they did this to claim government grants
+17:07:50 <strcat> fraudulently
+17:07:55 <strcat> retroactive changes to accounting
+17:08:04 <strcat> madaidan[m]: also falsely claiming I did the work as an employee
+17:08:10 <strcat> madaidan[m]: this is how James rolls
+17:08:36 <strcat> madaidan[m]: his 'business' experience is that he was a drug dealer, that's a fact, not libel, all this can be confirmed by many people
+17:08:44 <strcat> LITERALLY a drug dealer
+17:08:53 <strcat> the shit you find out about people over time
+17:10:07 <strcat> madaidan[m]: honestly going to refreshing dealing with this BS via a court where they shouldn't be able to keep bullshitting / lying
+17:10:14 <strcat> to be refreshing*
+17:10:18 <strcat> tired of this nonsense
+17:12:27 <madaidan[m]> <strcat "madaidan.: honestly going to ref"> I hoped copperhead gets fucked
+17:12:36 <Zenithium[m]> I think you will be a lot more convincing considering you have actual compelling evidence lol
+17:12:51 <madaidan[m]> It's crazy how people actually like James
+17:13:03 <madaidan[m]> He's such a dick
+17:14:04 <strcat> Zenithium[m]: any people that were around since early on
+17:14:09 <strcat> can be witnesses to so many aspects of it
+17:14:25 <Zenithium[m]> Dunno how they can even claim you just "worked for them" when you own 50% and you were the only one working on the project even before CopperheadOS was a thing (AndroidHardening)
+17:14:25 <strcat> they're so fucking stupid thinking they can get away with all this BS lying
+17:14:39 <strcat> I want to raise a ton of money and sue all of them
+17:14:47 <strcat> Zenithium[m]: I started it in 2014
+17:14:52 <strcat> Copperhead incorporated late 2015
+17:15:06 <strcat> and it was an open source project
+17:15:10 <strcat> attributions only to me
+17:15:20 <strcat> never changed, all the commits were always attributed to me via my personal email
+17:15:24 <strcat> can look for yourself
+17:15:47 <strcat> I explicitly own the copyright over it, it was agreed upon with the 2 people I started the company with
+17:15:56 <strcat> that I would own and control my open source work
+17:16:02 <strcat> and the company would do proprietary forks as needed
+17:16:12 <strcat> and could not dictate anything to me about the open source work
+17:16:26 <strcat> this was EXPLICITLY agreed upon - not in writing, but it was still explicit
+17:16:40 <strcat> the ONLY agreements in writing are incorporation and dividing up the shares
+17:16:44 <strcat> no NDA
+17:16:49 <strcat> no contracts
+17:16:52 <strcat> no employment agreement
+17:16:54 <strcat> no salary
+17:17:04 <strcat> no copyright assignment / no CLA / no licensing grant to them
+17:19:09 <Zenithium[m]> "Judge, the proof is in the commits!" :)
+17:19:26 <Zenithium[m]> I don't even know what James' defense is going to cook up
+17:19:32 <Zenithium[m]> How they plan to do this
+17:19:48 <strcat> Zenithium[m]: well initially it will be me defending but we can file counter-claims
+17:20:00 <strcat> and I don't see why I shouldn't sue James as an individual too
+17:20:13 <strcat> limited only by the money that can be raised really
+17:20:13 <Zenithium[m]> Yeah
+17:20:35 <strcat> if people are going to financially support a legal battle I am perfectly happy to waste tens of thousands of dollars dealing with this asshole, at this point
+17:20:48 <strcat> has stolen so much from me and fucked me over so badly
+17:21:59 <Zenithium[m]> I don't know if it's even worth it honestly, CopperheadOS is going to wither by itself with no actual work being done
+17:22:33 <Zenithium[m]> But slandering you is definitely a problem, clearing stuff up in court would maybe help with public image
+17:22:52 <madaidan[m]> <Zenithium[m] "I don't know if it's even worth "> I doubt it. Just look at the recent twitter thread. People still eat up copperhead's lies.
+17:23:15 <madaidan[m]> Infosec is full of people doing no real work and lying.
+17:23:34 <strcat> yeah and those are not non-technical people
+17:23:42 <madaidan[m]> The best way to handle this is legally imo.
+17:23:43 <strcat> some of them are probably developers
+17:23:52 <strcat> madaidan[m]: going to take a lot of money, time and energy
+17:23:55 <strcat> madaidan[m]: it's happening
+17:24:52 <strcat> madaidan[m]: ideally James would just get arrested and convicted for his criminal behavior
+17:25:20 <strcat> maybe they'll get him for one of those sketchy companies he works with
+17:25:25 <madaidan[m]> <strcat "madaidan.: ideally James would j"> That would be amazing
+17:25:44 <strcat> they arrested everyone in a Copperhead business partner
+17:25:45 <strcat> MPC
+17:25:52 <strcat> MPC secure
+17:26:11 <strcat> and also this cartel guy in vancouver who james was setting up a business deal with
+17:26:11 <madaidan[m]> Gonna be hard to spread lies from a prison
+17:26:21 <strcat> madaidan[m]: https://www.vice.com/en_ca/article/wjwbmm/inside-the-phone-company-secretly-run-by-drug-traffickers
+17:26:30 <strcat> > At one point, a version of MPC's phones also used code from an open-source, security-focused Android fork called CopperheadOS, three sources said.
+17:26:35 <strcat> madaidan[m]: but that's not all they got an official license
+17:26:41 <strcat> they were a business partner
+17:27:24 <strcat> madaidan[m]: and these are not the only sketchy companies
+17:27:34 <strcat> madaidan[m]: I was fighting with James about a lot of this stuff internally for years
+17:28:03 <strcat> madaidan[m]: he pretty much always wanted it to be closed source, with DRM / tracking, no product for individuals just businesses
+17:28:09 <strcat> sketchy resellers tied to criminals
+17:28:13 <strcat> that's his idea of a business model
+17:28:24 <strcat> and also selling out users to US military contractors
+17:29:03 <danvittegleo[m]> it's crazy to me how sketchy all of the secure phone companies are
+17:29:07 <Zenithium[m]> Well he was a drug dealer, not a bright fella for sure when it comes to business
+17:29:30 <strcat> madaidan[m]: he was against open source from the start but it was a condition of me being involved at all - and that I would own/control the open source project, with the company making proprietary forks internally
+17:30:04 <strcat> Zenithium[m]: he tries to portray himself as a business person but he's anything but that
+17:30:10 <strcat> he's just a mask he's trying to wear badly
+17:30:58 <strcat> his background is lead singer of some shitty band, drug dealer, who gets in physical fights with people
+17:31:08 <strcat> what business background / success can be point to
+17:31:21 <madaidan[m]> Lmao what's his band name
+17:31:23 <strcat> hosting insecure web / email servers for people, badly?
+17:31:31 <strcat> madaidan[m]: dunno what it was
+17:32:51 <strcat> madaidan[m]: I love how near the end he was still pretending to be a 'friend' and claiming he was my friend / that he cared about me and claiming he didn't want to do what he was doing
+17:32:53 <strcat> some real bullshit
+17:33:11 <strcat> madaidan[m]: still lying about that BS after involving the company lawyer that he brainwashed
+17:33:20 <strcat> and starting to screw me over and lie about everything
+17:33:29 <strcat> retroactively rewriting history, accounting, etc.
+17:33:35 <strcat> madaidan[m]: you know what's hilarious
+17:33:57 <strcat> madaidan[m]: they're so fucking incompetent they accidentally got the company registered as Coppperhead Limited instead of Copperhead Limited
+17:34:00 <strcat> ^ not even a joke
+17:34:12 <strcat> madaidan[m]: as part of their BS they want to force me to approve changing the name
+17:34:15 <strcat> nope
+17:34:43 <strcat> ot
+17:34:47 <Zenithium[m]> Hahahah that's golden
+17:34:55 <strcat> it's actually pathetic how fucking incompetent and terrible that company was and still is
+17:35:07 <strcat> total joke
+17:35:50 <strcat> the only reason it was a trustworthy OS is because I didn't like James / the company fuck anything up in the project by keeping it as a separate thing outside company control / ownership
+17:35:56 <strcat> only thing that could be fucked up was the business
+17:35:58 <strcat> and fucked up it was
+17:36:16 <madaidan[m]> <strcat "madaidan.: they're so fucking in"> Lol
+17:36:16 <strcat> madaidan[m]: he does succeed at doing enough scamming to keep things limping along indefinitely
+17:36:32 <strcat> that's why I get so frustrated with ppl supporting them
+17:36:38 <madaidan[m]> Gotta love the http version of their new site too
+17:36:40 <strcat> if they trick even 5 people into buying super expensive phones
+17:36:45 <strcat> with 0 costs basically
+17:37:03 <strcat> cause they don't actually do anything when it comes to actual privacy/security work
+17:37:13 <strcat> it's just some bs marketing, stealing my legacy work
+17:46:04 <madaidan[m]> Does anyone have any info on the Ubuntu touch sandboxing? I can't find the policies anywhere.
+18:00:25 <antranigv> question: how do people do OTP updates? or I have to do it always with adb?
+18:00:36 <antranigv> also: doesn't that mean anyone can get into my files with adb?
+18:02:58 <cx2[m]> Updates are pushed over the air. You do not need to manually sideloade updates (adb) to your phone.
+18:08:37 <cx2[m]> To check what verison you are on: Go to Settings -> scroll the the bottom and tap "About Phone".
+18:08:38 <cx2[m]> Go to Settings -> System -> Advanced -> System Update Settings.
+18:09:13 <rutxonboard[m]> > Does anyone have any info on the Ubuntu touch sandboxing? I can't find the policies anywhere.
+18:09:13 <rutxonboard[m]> If you have to ask, it's probably not there or not any good
+18:09:46 <strcat> antranigv: you shouldn't enable adb in the OS for production usage but even if you do it doesn't just trust anything you attach, it has a key whitelist system
+18:09:58 <strcat> antranigv: and you don't need adb enabled in the OS to sideload updates
+18:10:09 <strcat> but the only reason to sideload an update is if the device is never given internet access
+18:10:21 <strcat> or if you want to do something like reusing 1 update package download across 10 devices
+18:10:44 <strcat> antranigv: read https://grapheneos.org/usage#updates and https://grapheneos.org/releases#about-the-releases
+18:12:39 <rutxonboard[m]> The official site is so good
+18:13:47 <antranigv> so OTP it is
+18:13:47 * madaidan[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/KJLdFWTtOhaxEfLDeKVrCOkk >
+18:14:13 <antranigv> okay one more question: whenever I reboot, the bootloader says "this device has another opetating system" or something similar, that's okay, right?
+18:14:15 <madaidan[m]> The docs are non-existent other than "apps are run in an AppArmor security sandbox"
+18:15:05 <Zenithium[m]> <madaidan[m] "The docs are non-existent other "> Just read the code sar, it's open sores
+18:24:31 <madaidan[m]> <Zenithium[m] "Just read the code sar, it's ope"> It really helps that the code is nowhere to be found
+18:31:48 <mxnorvak[m]> so in the process of migrating from LOS to stock rom and removing stock and google apps from my xiaomi device by pm uninstall until i can get a pixel 3a, i found out that the miui has a setting in which you can select different countries for different regions , by doing that it automatically installs new apps and so the app count at first ( including system apps ) were 254 and now after going through all the countries
+18:31:48 <mxnorvak[m]> it is 274, just wow, mostly bloatware and normally uninstallable, but now im wondering if i should be worried about these apps
+18:32:27 <mxnorvak[m]> my understanding is that the apk is there and by switching the region it just gets installed
+18:34:53 <mxnorvak[m]> going through the privacy policy of this miui scared the shit outa me tho, they explicitly state that they collect everything and you also have an option to opt out but idk if that'd make a change
+18:35:20 <mxnorvak[m]> i dont even know if these debloating and degoogling would tho any good
+18:35:39 <mxnorvak[m]> wish i could just get a 3a rn
+18:36:03 <mxnorvak[m]>  * i dont even know if these debloating and degoogling would do any good
+18:36:30 <mxnorvak[m]>  * i dont even know if these debloating and degoogling would do any good in terms of the data xoami collects
+18:45:26 <mxnorvak[m]>  * so in the process of migrating from LOS to stock rom and removing stock and google apps from my xiaomi device by pm uninstall until i can get a pixel 3a, i found out that the miui has a setting in which you can select different countries for different regions , by doing that it automatically installs new apps and so the app count at first ( including system apps ) were 254 and now after going through all the
+18:45:26 <mxnorvak[m]> countries is 274, just wow, mostly bloatware and normally uninstallable, but now im wondering if i should be worried about these apps
+18:46:30 <dextr[m]> hmm opencam keeps crashing and makes aweful photos.. only thing I changed was using the v2 api.. any ideas?
+18:46:50 * dextr[m] uploaded an image: IMG_20200421_204035_HDR.jpg (1159KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/vFuWbkZZHQqYuUtuskPjDWRF >
+18:49:40 <cx2[m]> Well first, it doesn't look too terrible. Second, are you using the manual settings on opencam?
+18:50:10 <Zenithium[m]> strcat: besides the obvious options for crowdfunding like GoFundMe Kickstarter and Patreon, you could look into LiberaPay and Open Collective as many open source projects use them
+18:51:01 <cx2[m]> Also, I could be mistaken, but i'm fairly certain HDR is buggy on GOS.
+18:51:05 <Zenithium[m]> I would not go for Patreon as they are known for kicking off people they don't like off of the platform
+19:04:07 <dextr[m]> > Well first, it doesn't look too terrible. Second, are you using the manual settings on opencam?
+19:04:08 <dextr[m]> all on auto ;) ah good to know - I'll try again without HDR - thank you!
+19:04:08 <dextr[m]> colors on the dark bottom are very different than I am used to @cx2:matrix.org
+19:05:42 <cx2[m]> Yeah I would play with those settings a bit... I would also pair it with the snapseed app. You can do some pretty great post production work with snapseed
+19:08:49 <dextr[m]> hmm interesting - is it still working on GOS? I mean the big G bought the app afaik
+19:09:31 <cx2[m]> yeah they did... and yes it absolutely does. I just toggle off all permissions.
+19:10:10 <cx2[m]> Havn't used it extensively since I installed GOS...but I have played with it a fair bit. no hangups yet
+19:15:56 <dextr[m]> good to know thanks! :D
+19:27:01 <cx2[m]> Has anyone notice that Aurora Droid is tending to update quicker?
+19:27:09 <cx2[m]> Thoughts on Aurora Droid?
+19:33:35 <nickcalyx[m]> Isn't it just a front end to fdroid
+19:36:13 <madaidan[m]> <nickcalyx[m] "Isn't it just a front end to fdr"> Yes
+19:36:54 <cx2[m]> that's what I was thinking as well.... but it's definitely wanting to update apps sooner.
+19:37:57 <cx2[m]> If only a front end, it's definitely a nicer look
+19:54:51 <nickcalyx[m]> So then its probably just because fdroid is updating more
+19:55:34 <nickcalyx[m]> Calyx gave them build infrastructure recently for building the packages
+19:57:06 <cx2[m]> Well I made that assessment because I opened both to update, in this case, Joplin Notes.
+19:57:25 <cx2[m]> nevermind.... different repos.
+21:20:15 <kohntree[m]> In what ways would GrapheneOS and users be effected by EARN IT
+21:55:33 <DannyWorkOrderPr> kohntree: https://www.schneier.com/blog/archives/2020/03/the_earn-it_act.html
+21:59:53 <dazinism> dextr: you read https://grapheneos.org/usage#camera ?
+22:01:05 <dazinism> Also the HDR setting in open camera provides their own, not great version of HDR
+22:03:12 <kohntree[m]> <DannyWorkOrderPr "kohntree: https://www.schneier.c"> I feel like it is going to be used for more than messaging though
+22:16:05 <DannyWorkOrderPr> <kohntree[m] "I feel like it is going to be us"> They're trying to add a method of access (backdoor) to encryption of services based in the US.
+22:17:24 <DannyWorkOrderPr> Will that be pushed further with the next bill, if this somehow goes through? Undoubtedly. Does it impact Graphene right now? No. Should we be fighting against it/telling our friends/family not to support politicians banning math/basic security? Yes.
+22:18:43 <cx2[m]> Good thing there's Signal / Wickr if this does come through.
+22:55:13 <cx2[m]> Can you only pay with paypal on swappa??
+23:19:46 <hitchhooker[m]> kohntree I don't think project has shit to do with US laws
+23:21:35 <hitchhooker[m]> github is US company so maybe they start to offer backdoor as a service
+23:21:40 <hitchhooker[m]> :p
+23:53:26 <DannyWorkOrderPr> > Good thing there's Signal / Wickr if this does come through.
+23:53:26 <DannyWorkOrderPr> Why, what's wrong with Riot?
+23:59:26 <cx2[m]> I don't know if RIots data is encryped at rest, is it?
+23:59:35 <cx2[m]> Signal and Wickr are
+23:59:54 <cx2[m]> well the data in each I should say

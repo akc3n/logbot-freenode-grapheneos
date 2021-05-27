@@ -1,0 +1,519 @@
+00:11:57 * brenneke[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/pgasSEAlZqaDRniaAPzwkUgE/message.txt >
+00:39:28 <strcat[m]> Dylanger: Pixel 4 doesn't have a Pixel Visual Core
+00:39:49 <strcat[m]> Dylanger: it has a Pixel Neural Core
+00:40:08 <strcat[m]> and the Pixel 5 drops it altogether and switches to just using the SoC ISP, neural network acceleration, etc.
+00:40:30 <strcat[m]> Dylanger: Neural Core was a more generic Visual Core that implements the open source AOSP neural net api
+00:40:31 <Dylanger[m]> ^ CDSP
+00:40:38 <strcat[m]> https://developer.android.com/ndk/guides/neuralnetworks
+00:40:45 <Dylanger[m]> Qualcomm's Turing Engine
+00:41:07 <strcat[m]> Pixel 5 didn't need the Visual/Neural core anymore
+00:41:10 <strcat[m]> since SoC has advanced
+00:41:30 <strcat[m]> Dylanger: Google Camera itself has used various forms of DSP functionality despite the devices having the Visual/Neural Core
+00:41:54 <strcat[m]> anyway curious if they made HDR+ into an OS feature on the Pixel 5
+00:41:58 <Dylanger[m]> Interesting they dropped it, are they not worried a vendor will just grab the Camera ISP and plop it onto their platform with the same SoC?
+00:42:00 <strcat[m]> otherwise it will just be missing
+00:42:19 <strcat[m]> Dylanger: ISP == image processor, part of the SoC
+00:42:27 <strcat[m]> Dylanger: what Google provides is a bunch of custom DSP code, etc.
+00:42:36 <strcat[m]> implementing all their fancy stuff
+00:42:52 <strcat[m]> and it's designed / tuned for the specific camera / ISP combination in Pixels
+00:43:05 <Dylanger[m]> <strcat[m] "and it's designed / tuned for th"> Ah fair
+00:43:07 <strcat[m]> so yeah you could presumably rip it out and run it on another Qualcomm SoC of the same variant / generation
+00:43:17 <strcat[m]> but doesn't mean it'll produce good results
+00:43:24 <Dylanger[m]> You'd get lawyer'd as well
+00:43:32 <strcat[m]> yeah you can't do that
+00:43:46 <strcat[m]> Dylanger: it's possible Pixel 5 won't be able to do HDR+ for GrapheneOS
+00:44:04 <strcat[m]> but it's also possible it will be better and a lot of functionality will have moved into the device support code in the OS
+00:44:05 <strcat[m]> I don't know
+00:44:46 <strcat[m]> Dylanger: Pixel 2 through 4 provide HDR+ via that hardware and it works in any compatible app
+00:44:49 <strcat[m]> including on GrapheneOS
+00:45:04 <strcat[m]> Dylanger: it's possible that now they've switched to having Google Camera provide features for other apps - don't know
+00:45:10 <strcat[m]> don't really care much
+00:45:14 <strcat[m]> our long term focus isn't Pixels anyways
+00:45:47 <Dylanger[m]> Are you working with a manufacturer?
+00:46:07 <Dylanger[m]> Guess you're just hanging out for AMSS packages
+00:48:08 <Dylanger[m]> <strcat[m] "our long term focus isn't Pixels"> Seems like the reason you've gone with Pixel is because Google is the only vendor that correctly implemented AVB2
+00:48:31 <Dylanger[m]> But you're loosing out on customizing lower level firmware
+00:51:56 <strcat[m]> we'd only get to do that on our own hardware
+00:52:01 <strcat[m]> har
+00:52:16 <renlord[m]> who's gonna maintain that firmware :/
+00:52:17 <strcat[m]>  * hardware shipped in a production state doesn't let you do that
+00:52:28 <strcat[m]> the vendors as usual
+00:52:31 <strcat[m]> we'd just be signing it
+00:53:08 <renlord[m]> dont think there are many vendors that can implement things correctly
+00:53:12 <strcat[m]> we'd ideally partner with a good manufacturer and have a variant of an existing device of theirs which basically meets our standards already
+00:53:21 <renlord[m]> most are just too busy profiteering
+00:53:31 <strcat[m]> and they'd flash our sec image at the factory
+00:53:34 <strcat[m]> so it'd be our keys
+00:54:14 <strcat[m]> flash our factory images + sec image basically
+00:54:21 <strcat[m]> so our root of trust for the SoC firmware
+00:54:25 <strcat[m]> and then the OS from there
+00:54:45 <renlord[m]> cant we do that with qualcomm already? just order some SoCs from them
+00:54:53 <strcat[m]> renlord: not really how it works
+00:54:58 <strcat[m]> you partner with Qualcomm and are an OEM
+00:55:00 <strcat[m]> you pay them to be an OEM
+00:55:17 <strcat[m]> you can even get a reference design phone from them and have a manufacturer produce it
+00:55:20 <strcat[m]> but in all likelihood
+00:55:32 <strcat[m]> we'd partner with a manufacturer that's a Qualcomm partner, and partner with Qualcomm
+00:55:38 <strcat[m]> that's how it works
+00:55:43 <Dylanger[m]> <strcat[m] "and they'd flash our sec image a"> This is why I was asking about MRC earlier
+00:55:56 <Dylanger[m]> Graphene + Google Pixel device
+00:56:00 <Dylanger[m]> If you could swing that
+00:56:05 <strcat[m]> unlikely
+00:56:09 <renlord[m]> would google be open to that?
+00:56:11 <renlord[m]> kek
+00:56:31 <strcat[m]> it's also currently unlikely we could work with any Android OEM
+00:56:41 <strcat[m]> but we could work with manufacturers that are not Android OEMs themselves
+00:56:56 <strcat[m]> i.e. they are not Open Handset Alliance members etc
+00:57:20 <Dylanger[m]> <strcat[m] "the vendors as usual"> OEMs get a bunch of source, you'd want the AMSS packages that Qualcomm provide
+00:57:37 <strcat[m]> I know what they get
+00:57:46 <strcat[m]> the userspace sources and boot chain
+00:57:55 <renlord[m]> huawei? they got kicked out of android kek
+00:57:57 <strcat[m]> and the tools for setting up fuses
+00:58:02 <Dylanger[m]> Modem too
+00:58:05 <strcat[m]> I have it on my workstation
+00:58:15 <strcat[m]> Dylanger: a normal OEM doesn't get modem *sources* anymore
+00:58:16 <Dylanger[m]> SecTools is the best
+00:58:25 <strcat[m]> they do get to sign it
+00:58:57 <strcat[m]> a normal OEM just gets images you bundle into a modem image and sign
+00:59:06 <Dylanger[m]> Maybe the OEM you have experience doesn't, I've seen modem sources before on newer SoCs
+00:59:15 <strcat[m]> I don't know what is required to get modem sources but I don't think most have it anymore
+00:59:16 <Dylanger[m]> * Maybe the OEM you have experience with doesn't, I've seen modem sources before on newer SoCs
+00:59:34 <strcat[m]> Google has Google Fi
+00:59:38 <strcat[m]> which has special requirements
+01:00:02 <strcat[m]> Dylanger: I don't think it's part of the normal licensing is all
+01:00:14 <Dylanger[m]> Ah right, fair
+01:00:26 <strcat[m]> also Google might not need custom modem anymore
+01:00:34 <strcat[m]> Qualcomm might have just standardized it
+01:00:52 <strcat[m]> Nexus 5X and early Pixels had custom Qualcomm Wi-Fi firmware and drivers too for Wi-Fi anonymity
+01:00:58 <strcat[m]> but I expect it's just standard now
+01:01:13 <strcat[m]> the custom modem stuff was just for Google Fi multi carrier support stuff
+01:01:21 <strcat[m]> and I assume that's on the other Fi supported phones
+01:01:54 <Dylanger[m]> Have you looked at XBLSEC?
+01:02:05 <Dylanger[m]> AKA, Qualcomm hijacking RoT from OEMs
+01:02:25 <strcat[m]> you mean their CA?
+01:02:43 <Dylanger[m]> No, XBLSEC is the first stage bootloader
+01:02:51 <Dylanger[m]> It's signed by Qualcomm, not the OEM
+01:03:09 <Dylanger[m]> It's inside XBL
+01:03:31 <Dylanger[m]> Runs at EL3
+01:03:32 <renlord[m]> whats XBL
+01:04:00 <strcat[m]> Dylanger: I mean regardless they're a trusted party
+01:04:16 <strcat[m]> Dylanger: I've mostly looked at this code and worked on it with much older versions
+01:04:27 <Dylanger[m]> What if I (OEM) wanted to set some some super cool EL3 registers!?
+01:04:27 <strcat[m]> Dylanger: Nexus 5 and Nexus 6 era
+01:05:13 <strcat[m]> some devices use a Qualcomm CA as the root of trust anyway
+01:05:43 <Dylanger[m]> The ole days of MSM, it was all yours
+01:06:47 <Dylanger[m]> Did you ever see those QFPROM fuses called PBL_BOOT_ROM_PATCH? 😱
+01:11:52 <strcat[m]> no
+01:12:52 <Dylanger[m]> Sounds like a real hoot
+01:13:14 <Dylanger[m]> Anyway, have you pinned down a manufacturer?
+01:17:13 <strcat[m]> no
+01:17:21 <strcat[m]> have been in touch with various ones before
+01:17:25 <strcat[m]> but nothing has progressed very far
+04:36:56 <tailing> can we ask for help in this channel?
+04:37:43 <somenerd[m]> yeah, sure
+04:37:51 <somenerd[m]> as long as it's about GrapheneOS
+04:39:55 <tailing> I have a pixel 3, had graphene installed a few months but have an issue with notification
+04:40:40 <tailing> Often SMS and other notifications will only appear when I unlock the phone
+04:43:02 <tailing> Like the phone goes into a deep sleep mode after a while
+04:44:44 <tailing> Phone calls are fine but I often miss important texts, maybe there's a setting I need to change?
+04:45:42 <somenerd[m]> not really sure...
+04:45:49 <somenerd[m]> maybe check the setting?
+04:52:11 <bend[m]> I think the default in the privacy setting is "don't show any notifications on lock screen"
+04:53:03 <bend[m]> And there is an option available for "show all notifications"
+05:14:28 <tailing> I have "Show conversations, default and silent" set
+05:15:15 <tailing> maybe switching them off then back again might trigger something
+05:18:53 <tailing> but what tends to happen is if the phone has been used recently the notification will come through, if it's been locked for a certain period of time they don't come through
+07:15:38 <mistazaki[m]> Hi, I bought pixel 4a today. I must update android 11 first and install Graphene or just continue to install Graphene?
+09:06:48 <dazinism> mistazaki: general advice is update to latest stock Android before flashing
+09:07:18 <mistazaki[m]> <dazinism "mistazaki: general advice is upd"> android 11?
+09:07:31 <somenerd[m]> yeah
+09:07:39 <somenerd[m]> ( I think)
+09:09:35 <dazinism> Yes, update to latest as it should have any new improvements for compatibility with fastboot, if there are any. Theres no disadvantage.
+09:35:39 <mistazaki[m]> <dazinism "Yes, update to latest as it shou"> Thanks. Any tips for me after install Graphene?
+09:39:10 <BenchTed[m]> Tell everybody how awesome you are
+09:40:59 <dazinism> mistazaki: this may be useful https://hub.libranet.de/wiki/graphene-os/wiki/Apps
+09:41:11 <dazinism> https://hub.libranet.de/wiki/graphene-os/wiki/Backups
+09:42:24 <BenchTed[m]> BTW does default keyboard have aosp swiping support?
+09:42:45 <dazinism> mistazaki: make sure you do `fastboot flashing lock` at the end of flashing
+09:42:47 <strcat[m]> there is no AOSP swiping support
+09:42:54 <strcat[m]> question isn't correct
+09:43:49 <BenchTed[m]> I have havocos and it comes with with swiping by default
+09:43:56 <strcat[m]> there's no AOSP swiping support
+09:43:58 <strcat[m]> that's not AOSP
+09:44:08 <BenchTed[m]> Dam
+09:44:21 <BenchTed[m]> In description it says aosp
+09:44:29 <strcat[m]> it's not AOSP
+09:44:35 <strcat[m]> AOSP doesn't have swiping support for the keyboard
+09:45:17 <strcat[m]> it's clearly a fork of AOSP, not AOSP, it doesn't matter whether they change the name of the keyboard
+09:51:58 <projectmoon> more specifically, the AOSP keyboard support(ed) swipe typing but only if a proprietary google library is present on the system. some roms include it. most don't. then google took the aosp keyboard and made gboard out of it
+09:54:11 <strcat[m]> not quite
+09:55:53 <strcat[m]> AOSP keyboard doesn't support loading that library
+09:57:32 <strcat[m]> the sources include support for building a libjni_latinime library
+09:57:50 <strcat[m]> there is no support for building or loading a library for gesture typing in AOSP keyboard, it's not supported
+09:58:32 <strcat[m]> the reason it has UI code for it (but no implementation of the feature) is because Google Keyboard used to be an extension of AOSP keyboard (Gboard is not, they forked off from Google Keyboard a long time before even publishing it)
+09:58:57 <strcat[m]> they took a new approach with Gboard and that meant AOSP keyboard was no longer actively developed aside from bug fixes
+09:59:03 <anupritaisno1[m]> Did some poor soul actually flash havoc?
+09:59:20 <projectmoon> so does havoc have some patch to the aosp keyboard that implements the swipe typing then?
+09:59:47 <strcat[m]> go look, I'm sure they patch it to load a library which they just take from legacy Google Keyboard or whatever
+09:59:56 <anupritaisno1[m]> <projectmoon "so does havoc have some patch to"> Havoc is a terrible ROM FYI
+10:00:17 <anupritaisno1[m]> They just randomly git cherry-pick not understanding what they even pick
+10:00:21 <strcat[m]> this is off-topic now
+10:00:48 <mistazaki[m]> <dazinism "mistazaki: this may be useful ht"> Thanks so much
+10:00:59 <anupritaisno1[m]> Short version is
+10:01:15 <anupritaisno1[m]> No we are not going to add code from havoc unless you can prove it works well
+10:02:53 <anupritaisno1[m]> We'd also run into other issues adding code from havoc. They do not preserve attributions and the original authors either so we'll probably have trouble with original authors contacting us to fix the author
+11:31:58 <duggalsu[m]> Hi, do you plan to integrate / implement something like gotify/openpush as an alternative to FCM
+11:47:59 * mistazaki[m] uploaded an image: IMG_20201028_194734.jpg (84KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/eKogQcwaNADuNEBhlfNEtnmx/IMG_20201028_194734.jpg >
+11:48:33 <dazinism> duggalsu: something like that needs the messaging app developers to support it. Its outside what GrapheneOS has the resources to take on.
+11:48:43 <mistazaki[m]> is auditor app not supported on pixel 4a?
+11:49:39 <dazinism> Not yet no.
+11:51:31 <duggalsu[m]> <dazinism "duggalsu: something like that ne"> OK, seems like gotify is a popular alternative currently,  will look at it and see if its worthwhile integrating
+11:52:20 <dazinism> duggalsu: its not really necessary to have an alternative centralised push server
+11:52:36 <duggalsu[m]> * OK, seems like gotify is a popular alternative currently,  will look at it and see if it can be integrated
+11:52:56 <duggalsu[m]> * OK, seems like gotify is a popular alternative currently,  will look at it and see if it can be integrated
+11:52:58 <dazinism> Just need apps to implement their own decent push notifications
+11:53:27 <dazinism> Like Telegram, WhatsApp, Conversations does
+11:53:52 <dazinism> Then have an app which synchronises the device wakeup
+11:53:55 <duggalsu[m]> won't that be more work for each app developer?
+11:54:21 <dazinism> So they don't all do that at their own tempo and waste battery
+11:55:13 <dazinism> The apps would have to talk to the synchronisation app
+11:55:52 <dazinism> <duggalsu[m] "won't that be more work for each"> Someone could name an open source library that does this
+11:55:59 <dazinism> *could make
+11:56:36 <dazinism> Apps could include that
+11:57:09 <dazinism> Or copy the open source implementation from conversations
+11:57:51 <duggalsu[m]> I think the gotify app works that way, haven't tried it myself
+11:58:05 <dazinism> Whatever way needs work from the messenger developer to support push - weather its gotify/open push or their own
+11:58:37 <dazinism> *whether
+11:59:00 <duggalsu[m]> Ok
+11:59:10 <duggalsu[m]> Thanks
+12:01:35 <fragaria[m]> I've seen a video from the "techlore" channel ( https://tube.privacytools.io/videos/watch/0a806760-29fb-4653-8146-c3e599a34545 ), that made few benchmarks between grapheneOS, calyxOS and Stock; and it shows that grapheneOS is slower than the others, i was curious why..
+12:02:26 <somenerd[m]> cool
+12:02:34 <somenerd[m]> I didn't know that he uploaded
+12:11:13 <somenerd[m]> also, I think it's because of the hardening in the ROM
+12:14:31 <somenerd[m]>  * also, I think it's because of the hardening in the ROM (btw, this is I THINK, not KNOW, and I have no sources yet about this)
+12:16:02 <somenerd[m]>  * also, I think it's because of the hardening in the ROM (btw, this is I THINK, not I KNOW, and I have no sources yet about this)
+12:16:31 <nscnt> https://en.wikipedia.org/wiki/Read-only_memory
+12:27:53 <anupritaisno1[m]> <fragaria[m] "I've seen a video from the "tech"> He is benchmarking the wrong things
+12:29:23 <somenerd[m]> wdym?
+12:34:54 <fragaria[m]> <anupritaisno1[m] "He is benchmarking the wrong thi"> what should he have benchmarked? and why the area that he have benchmarked are slower?
+12:39:05 <somenerd[m]> yeah
+12:40:10 <nscnt> Regarding app opening see https://grapheneos.org/usage#exec-spawning
+12:41:20 <somenerd[m]> oh yeah
+12:41:43 <somenerd[m]> I think the 3a is the only one with this problem
+12:42:45 <alex-resist> I have to say it's really not that bad on the 3a, unless you're very impatient
+12:43:01 <alex-resist> Everyone should be able to handle a few 100 ms delay
+12:44:55 <somenerd[m]> yeah, and like the 4a is better (and even the 2)
+12:45:09 <somenerd[m]> but the other benchmarks idk
+12:48:11 <nscnt> I have the Pixel 3a, too. The spawning is totally fine
+12:48:43 <nscnt> I use dark mode for everything. When it's dark and I spawn an app, I'll be blinded for a few ms, but whatever
+12:49:09 <nscnt> White screen before it spawns in dark mode
+12:50:05 <nscnt> That's the budget hardware I bought. It's stupid to except something different. Maybe use your phone less in general if you're pissed by that
+12:50:16 <nscnt> *expect
+12:54:29 <somenerd[m]> hmmmm
+13:00:22 <somenerd[m]> > That's the budget hardware I bought. It's stupid to except something different. Maybe use your phone less in general if you're pissed by that
+13:00:22 <somenerd[m]> yeah, stock/calyx works better though
+13:00:41 <somenerd[m]> and so it's a bit understandable (for the average person)
+13:03:25 <fragaria[m]> <nscnt "That's the budget hardware I bou"> i just asked why is slower, i'm not pissed by that, i'm just curious; the Exec spawning solved one mystery
+13:03:26 <nscnt> Define "works better". GrapheneOS implements a spawning that's more secure. That's better for me
+13:04:49 <nscnt> fragaria[m]: Yea, sure. The being "pissed" wasn't addressed to you. Just in general
+13:05:17 <somenerd[m]> I meant from a different perspective : performance
+13:05:23 <somenerd[m]>  * I meant that from a different perspective : performance
+13:06:32 <somenerd[m]> like (for the average user) the phone running faster is a bit more important than permission models.
+13:07:20 <somenerd[m]> (emphasis on "for the average user" because for security minded people, the compromise may be worth it)
+13:19:27 <redu321[m]> I want to buy a pixel phone pure for one chat messenger. No other apps. I am thininking between a pixel 4 or a pixel 3a. I may have asked this before but what phone is better for using with graphene os for coming year max 2 years? I just want safety i dont need fancy cameras or nice display. Is the pixel 3a then the best value for me? Or is the pixel 4 better security?
+13:21:08 <somenerd[m]> 4a I think is supported?
+13:22:00 <revelation1318[m> <somenerd[m] "like (for the average user) the "> I'm always wondering what the average user really is though. I, and most people I know, don't do anything demanding on the phone.
+13:22:53 <somenerd[m]> hmm
+13:22:57 <strcat[m]> 🍓🍓🍓: do you understand that GrapheneOS implements substantial privacy and security hardening?
+13:23:22 <strcat[m]> CalyxOS and the stock OS use an insecure spawning model copying the same template for each app which causes substantial security regressions and some privacy issues
+13:23:37 <strcat[m]> seems you don't understand that GrapheneOS is a privacy and security project
+13:23:41 <strcat[m]> not just a branded build of AOSP
+13:24:02 <strcat[m]> techlore has a grudge against the project and spreads spin and attacks on it
+13:24:10 <strcat[m]> he's incredibly biased and acts maliciously
+13:24:30 <somenerd[m]> "grudge"? He suggested people to try GrapheneOS first
+13:24:41 <strcat[m]> he made an installation video against our wishes and holds a grudge since we didn't applaud it
+13:24:42 <somenerd[m]> and then see if it fit them or not
+13:25:06 <somenerd[m]> hmm
+13:25:13 <fragaria[m]> strcat: i know that, i was just asking what is slowing these benchmarks, and btw isn't necessary to be aggressive about it
+13:25:17 <somenerd[m]> what about The Hated One?
+13:25:31 <strcat[m]> 🍓🍓🍓: nothing aggressive is happening
+13:25:44 <strcat[m]> somenerd: I suggest finding better sources than non-technical 'influencers'
+13:25:52 <somenerd[m]> hmm
+13:26:01 <strcat[m]> this is off-topic for this channel
+13:26:17 <somenerd[m]> yeah moving to the off topic room
+13:26:37 <somenerd[m]> (for the "influencer" conversation)
+13:26:40 <strcat[m]> redu321: there is an FAQ section on recommended devices: 4, 4 XL, 4a, don't buy a past generation device
+13:26:45 <strcat[m]>  * redu321: there is an FAQ section on recommended devices: 4, 4 XL, 4a, don't buy an older generation device
+13:27:09 <strcat[m]> https://grapheneos.org/faq#recommended-devices
+13:27:49 <strcat[m]> 🍓🍓🍓: https://grapheneos.org/usage#exec-spawning about application spawning time
+13:28:07 <fragaria[m]> strcat: alright.. i agree that seems quite biased, but my question is why in that kind of benchmark is slower
+13:28:09 <strcat[m]> using the Zygote spawning model has substantial security problems
+13:28:24 <fragaria[m]> <strcat[m] "🍓🍓🍓: https://grapheneos.org/u"> yeah , i've already read that
+13:28:26 <strcat[m]> 🍓🍓🍓: read the https://github.com/GrapheneOS/hardened_malloc documentation too
+13:28:39 <strcat[m]> okay so you know why application spawning is slower
+13:28:55 <strcat[m]> and you can read the documentation on our other privacy and security features
+13:29:12 <strcat[m]> including hardened_malloc which provides substantial protections against the most common vulnerabilities (heap corruption vulnerabilities)
+13:29:28 <strcat[m]> the whole point of GrapheneOS is providing these privacy and security features
+13:29:45 <strcat[m]> that's the basics of what the project is
+13:29:57 <strcat[m]> it's not a branded build of AOSP
+13:30:06 <strcat[m]> I think our documentation explains this well including the content on the main page
+13:31:02 <redu321[m]> <strcat[m] "redu321: there is an FAQ section"> ""The Pixel 3a and 3a XL are budget devices meeting the same security standards as the more expensive flagship devices""You should get one of the budget devices if these things aren't compelling to you.""Does this mean that if i dont care about
+13:31:07 <strcat[m]> the video you posted is spin from someone with a grudge against the project who is not presenting the topic in an at all neutral, fair or accurate fair
+13:31:16 <strcat[m]> redu321: read the earlier content in the section
+13:31:20 <strcat[m]> again, get a 4, 4 XL or 4a
+13:31:27 <strcat[m]> do not buy an older generation device
+13:31:32 <redu321[m]> <redu321[m] """The Pixel 3a and 3a XL are bud"> good camera or fast prosessor i just can buy a pixel 3a for good security?
+13:31:40 <strcat[m]> redu321: no, read the FAQ section in full
+13:31:46 <strcat[m]> don't read only the part that appeals to you
+13:32:24 <redu321[m]> <strcat[m] "redu321: no, read the FAQ sectio"> Yess i see. What is the differnce in security between like a pixel 4 or a pixel 3a if i may ask?
+13:32:44 <strcat[m]> better hardware, firmware and kernel security
+13:32:46 <strcat[m]> longer support
+13:33:10 <redu321[m]> Allright thank you
+13:33:12 <strcat[m]> Pixel 2 and 2 XL will soon be end-of-life and 3, 3 XL and then 3a will be considered legacy devices
+13:33:29 <fragaria[m]> strcat: yeah, i know that the video isn't a technical one, and it is biased, if not i wasn't asking here the reasons of that benchmark results
+13:33:34 <strcat[m]> 3a also doesn't have a proper SSD which doesn't mix well with some of our security features
+13:33:55 <strcat[m]> 🍓🍓🍓: hardening features
+13:34:08 <redu321[m]> allright tnx
+13:34:10 <strcat[m]> https://github.com/GrapheneOS/hardened_malloc/blob/master/README.md is good reading
+13:34:18 <strcat[m]> and that's just one of the things we ship
+13:34:27 <strcat[m]> we ship hardened_malloc in the default very security-focused configuration too
+13:34:43 <strcat[m]> security vs. performance compromises are something that have to be made a lot
+13:34:45 <mrxx_0[m]> strcat: Do you think we can expect the same "performance" with the 4a compared to the 3a ? 4a hasn't a high end cpu
+13:34:51 <fragaria[m]> strcat: alright i'll try to read better the doc
+13:35:04 <strcat[m]> 4a will have substantially better performance than a 3a
+13:35:10 <strcat[m]> our documentation recommends buying a 4, 4 XL or 4a
+13:35:18 <strcat[m]> cannot recommend enough against buying a past generation device
+13:35:24 <strcat[m]> you aren't saving money when you get a year less of support
+13:35:50 <strcat[m]> I'll delete the old content talking about the 3 / 3 XL vs. 3a since that's apparently confusing
+13:36:04 <mrxx_0[m]> Yeah yeah I read what you said, it was by simple curiosity
+13:36:06 <strcat[m]> only need to compare the recommended current devices
+13:37:10 <redu321[m]> I was just wondering because the price between a pixel 4 and a pixel 3a is different and i only wanted to use 1 application on the phone. But if u say that there is a big different in security i will consider the pixel 4.strcat
+13:37:46 <mrxx_0[m]> <strcat[m] "I'll delete the old content talk"> Yes I think it is, 3/3XL are two years old now
+13:38:51 <mrxx_0[m]> People are looking to price instead of hardware/support when comparing 3/3XL/3a vs 4/4XL/4a
+13:39:58 <mrxx_0[m]> They want (not everytime) a cheaper solution without thinking about the benefit to get the new generation
+13:40:31 <strcat[m]> redu321: compare a Pixel 4a to a 3a, not a Pixel 4 to a 3a
+13:41:00 <strcat[m]> you're comparing an expensive high end device with a mid tier device
+13:41:15 <strcat[m]> the Pixel 4a is the only budget device to consider for GrapheneOS
+13:41:26 <strcat[m]> there is nothing cheaper supported
+13:41:38 <strcat[m]> we can mark 3, 3 XL and 3a as legacy devices on the site if that would help make things clearer
+13:43:02 <redu321[m]> Allright tnx
+13:47:58 <alex-resist> strcat as a user of a 3a, I would disagree. Second hand it's available for much cheaper than the 4a and it still has over 1.5 years of support left. I agree with the recommendation for the 4a, but I would only mark devices as "legacy" if they have less than one year of support left.
+13:48:46 <somenerd[m]> yeah but 1.5 isn't helpful to new users
+13:48:52 <somenerd[m]> only problem
+13:49:00 <redu321[m]> <alex-resist "strcat as a user of a 3a, I woul"> strcat: How do you look at this?
+13:49:01 <alex-resist> That's why it wouldn't be recommended. But it's not yet legacy
+13:49:11 <somenerd[m]> yeah
+14:00:41 <strcat[m]> alex-resist: we marked the Pixel 2 and 2 XL that way to substantial security improvements on the newer devices
+14:00:50 <strcat[m]> and due to the lack of maintenance for them and lack of focus on them
+14:01:00 <strcat[m]> + they were nearing end-of-life
+14:16:00 <algebro[m]> Has anyone been having issues with the pixel 3 rebooting randomly since the last stable update? My device has suddenly rebooted without warning 6 or 7 times in the last few days
+14:16:25 <algebro[m]> Haven't found a rhyme or reason to it yet, curious if its just me before I start digging
+14:23:17 <fuchs[m]> Hi, I will switch with my pixel 3 to GraphenOS but read that there are obviously no G apps but also the push service not available for the OS.
+14:23:17 <fuchs[m]> How are you using the elements app or Telegram on your device? I've had the issue in the early development phase of riot.im that the app was using to much battery because of no push service.
+14:24:41 <alzxjm[m]> fuchs: The F-Droid version of Element has fine-grained battery settings. I have found that notifications are timely, and Element never gets above 1-3% battery usage by the end of the day on my Pixel 4 XL.
+14:24:55 <alzxjm[m]> (I don't know that the Play Store/Aurora version of Element doesn't have those settings, btw.)
+14:25:46 <alzxjm[m]> fuchs: Settings > Notifications > Background synchronization > Background sync mode > Optimized for battery
+14:26:09 <alzxjm[m]> I don't use Telegram.
+14:26:38 <fuchs[m]> alzxjm:  but I don't uses the push functionally right?
+14:26:38 <fuchs[m]> The client is requesting new messages at the server?
+14:26:43 <alex-resist> Afaik Telegram, Signal, Conversations and apparently also Element work fine without Google services
+14:27:47 <fuchs[m]> But that's good news, because switching the OS is important to me.
+14:27:47 <fuchs[m]> Just a bit afraid of the process. 😂
+14:29:27 <projectmoon> Element's battery friendly notifications are relatively recent
+14:29:35 <projectmoon> But they work mostly fine yes
+14:31:29 <fuchs[m]> Thanks for the confirmation guys.
+14:32:11 <fuchs[m]> Any Tipps for a bloody beginner in installing new OSs to phones?
+14:33:16 <alzxjm[m]> fuchs: Really pay attention to the install guide and make sure that when you call fastboot and adb it's pointing to the correct versions.
+14:33:54 <alzxjm[m]> Lots of people get hung up on this. They follow the instructions to obtain the newest/correct version of fastboot but either skip or misuse the $PATH modifications and end up calling the fastboot installed by the system's package manager.
+14:34:07 <alzxjm[m]> fuchs: What OS are you using to flash GrapheneOS?
+14:34:33 <fuchs[m]> Ubuntu 20.04
+14:35:12 <alzxjm[m]> fuchs: Use the [install guide](https://grapheneos.org/install) and pass the commands to the letter.
+14:35:27 <alzxjm[m]> Be careful about that and you will be fine.
+14:36:04 <alzxjm[m]> It can be intimidating the first time you flash a different OS but Pixels (as I understand it) are fairly hard to brick and are forgiving. Please feel free to PM me for help.
+14:38:31 <projectmoon> Cable also important. I have many cables, but only one A to C seems to work for flashing the 4a.
+14:38:41 <fuchs[m]> alzxjm: that's nice, thank you!
+14:38:41 <fuchs[m]> I can just start tonight CET, if I have a bit of time to concentrate.
+14:38:49 <clox[m]> The installation went very well. I just only left the signify out since I did had difficulty to install that properly with linuxmunt.
+14:38:49 <clox[m]> But overall I am very happy with grapheneos and easy to use
+14:38:59 <clox[m]> Keep on the good working guys
+14:39:26 <alzxjm[m]> <projectmoon "Cable also important. I have man"> I'm happy my machine has a USB-C port so I can use the stock cable.
+14:40:04 <projectmoon> i tried using the usb-c cable, but it didn't work. although that wasn't for graphene. might depend on the usb-c port as well. fastboot is very finicky
+14:40:29 <fuchs[m]> Ubuntu: package is both broken and out-of-date, do not use (see paragraph above)
+14:40:45 <fuchs[m]> So, what to use them? ADB?
+14:41:23 <projectmoon> download a newer version of the platform tools
+14:43:32 <alzxjm[m]> fuchs: It means don't use `android-tools-adb android-tools-fastboot` or whatever to get `fastboot` and `adb`
+14:43:44 <alzxjm[m]>  * fuchs: It means don't use `apt install android-tools-adb android-tools-fastboot` or whatever to get `fastboot` and `adb`
+14:44:46 <alzxjm[m]> The versions of `fastboot` and `adb` which would be installed by Ubuntu's package manager are outdated and will potentially cause a failure.
+14:44:53 <fuchs[m]> Aah, so the repo packages are out of date. Got it
+14:45:35 <alzxjm[m]> Follow [these instructions](https://grapheneos.org/install#standalone-platform-tools) instead, making sure to run `export PATH="$PWD/platform-tools:$PATH"` after you download the tools.
+14:46:16 <alzxjm[m]> Make sure to run `fastboot --version` and (optionally) `which adb` afterward to make sure that `adb` and `fastboot` call the versions you have just installed.
+15:20:47 <user51[m]> I am running Graphene on a Pixel 3a
+15:21:31 <user51[m]> There seems to be a volume control bug
+15:26:33 <user51[m]> After connecting my bluetooth headset (Plantronics PLT E50) the volume control changes only during the first 5 steps
+15:26:56 <user51[m]> the remaining 20 steps dont work
+15:27:39 <user51[m]> The problem persists after disconnecting thr headset, until the phone is rebooted
+15:32:24 <user51[m]> i would like to file a bug
+15:32:38 <user51[m]> Any idea how to obtain the error log?
+16:36:30 <NorbertTretkowsk> Got my new work phone, a Pixel 4a yesterday, installed GrapheneOS, realized how smooth it works, and just made a donation. Thanks guys!
+16:36:58 <sc5atf2qmddjm1e0> Nice
+16:37:32 <makingaliasesisa> yeah i love graphene. i haven't had any problems with my 4a yet.
+16:39:25 <NorbertTretkowsk> On my Pixel 3 the camera app crashed from time to time, haven't had this issue with my 4a yet...
+16:40:05 <sc5atf2qmddjm1e0> <makingaliasesisa "yeah i love graphene. i haven't "> It (seems to be) an Auditor support away to be fully ported
+16:40:49 <makingaliasesisa> yeah
+16:41:33 * sc5atf2qmddjm1e0 sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/VCOQrKfouePeLboabamBYAod/message.txt >
+16:41:55 <makingaliasesisa> https://github.com/stoeckmann/signify-windows
+16:42:06 <makingaliasesisa> but very old
+16:42:29 <makingaliasesisa> last updated 2016
+16:43:15 <sc5atf2qmddjm1e0> <makingaliasesisa "yeah"> What package needed to be installed?
+16:44:08 <makingaliasesisa> ? i don't need any packages?
+16:54:36 <sc5atf2qmddjm1e0> <makingaliasesisa "yeah"> Can't find signify for windows
+16:56:27 <carlpoppa> hey, is it safe to install graphene from a live USB? i'm not sure why not, but i can't find any info about this anywhere
+16:56:35 <carlpoppa> thanks in advance
+16:56:42 <makingaliasesisa> I don't know i haven't used signify(if there is a proper one) on windows
+16:56:56 <makingaliasesisa> and hmm i wouldn't do it personally
+16:57:18 <sc5atf2qmddjm1e0> <makingaliasesisa "yeah"> Oh it does exist
+16:57:20 <sc5atf2qmddjm1e0> But 2016 release
+16:57:45 <makingaliasesisa> yeah it is a bit out of date by the looks of it
+17:09:20 <sc5atf2qmddjm1e0> <makingaliasesisa "? i don't need any packages?"> Huh wdym
+17:09:39 * sc5atf2qmddjm1e0 sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/bXvbGOjGddncPxrWIVALLOeC/message.txt >
+17:10:13 <makingaliasesisa> yeah guessed that would be the case
+17:10:52 <makingaliasesisa> and you asked  > What package needed to be installed?
+17:11:03 <makingaliasesisa>  *
+17:11:03 <makingaliasesisa> and you asked
+17:11:03 <makingaliasesisa> > What package needed to be installed?
+17:41:41 <sc5atf2qmddjm1e0> > <@makingaliasesisannoying:matrix.org>
+17:41:41 <sc5atf2qmddjm1e0> > and you asked  > What package needed to be installed?
+17:41:41 <sc5atf2qmddjm1e0> Well, this was for signify
+17:41:48 <sc5atf2qmddjm1e0> Was confused that there is signify for windows
+17:54:08 <Schnyd> Anyone know how to resolve this error when flashing from windows "fastboot too old, please download latest version..." I have the latest set of platform tools from google.
+17:58:12 <anupritaisno1[m]> [Schnyd](https://matrix.to/#/@freenode_Schnyd:matrix.org) post the entire thing
+17:58:39 <anupritaisno1[m]> We recently made the script more user friendly but that change hasn't made it in a release
+17:59:08 * user51[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/nEMtaxgzCzIhgJCisNLpkcpR/message.txt >
+18:00:56 <user51[m]> The problem persists after disconnecting thr headset, until the phone is rebooted
+18:00:56 <user51[m]> i would like to file a bug
+18:00:56 <user51[m]> Any idea how to obtain the error log?
+18:04:01 <Schnyd> anuprtaiso1 forgive my ignorance, I'm not sure what you are asking me to post.
+18:08:29 <anupritaisno1[m]> <Schnyd "anuprtaiso1 forgive my ignorance"> The entire output generated by the script
+18:09:10 <Schnyd> C:\Android\platform-tools\taimen-factory-2020.10.23.04>flash-all.bat
+18:09:50 <anupritaisno1[m]> What else did it say?
+18:10:52 <Schnyd> Thats all, when I run the script by double clicking, it opens and closes. The above is what I see when I run it from the command line.
+18:29:16 <busysec[m]> Hey Everyone. I'm planning on getting a 4a 5G. Will the 4a image work on that?
+18:33:10 <mrxx_0[m]> <busysec[m] "Hey Everyone. I'm planning on ge"> No, they are different devices
+18:54:05 <strcat> busysec[m]: no, 4a 5G is a different phone
+18:54:38 <strcat> they are as different as a Pixel 4 and Pixel 4a
+18:55:10 <strcat> it should be called the Pixel 5a
+18:55:14 <strcat> I don't know why they used that stupid naming
+18:58:42 <Schnyd> Are there instructions to manually flash instead of relying on the script? When looking at the script I feel like I could just work my way through the fastboot commands.
+19:01:01 <strcat[m]> Schnyd: that won't help you
+19:01:14 <strcat[m]> if your fastboot is genuinely too old that is a problem
+19:01:18 <strcat[m]> it's good that the script is telling you
+19:01:24 <strcat[m]> it also reports that error if you don't have fastboot at all
+19:01:40 <strcat[m]> you need to follow the instructions at https://grapheneos.org/install as written there, in a single shell, not across multiple
+19:01:52 <strcat[m]> it sounds like you closed it and now fastboot isn't in PATH so you don't have a usable fastboot command
+19:01:59 <strcat[m]> it is not enough to have fastboot somewhere on your computer
+19:02:14 <strcat[m]> you have to follow what's written there to add it to the PATH of the current shell and then use it in that shell
+19:02:43 <strcat[m]> it doesn't have you install anything or make any permanent changes to your environment
+19:02:53 <strcat[m]> it wouldn't make sense to do that with that platform-tools zip
+19:03:08 <Schnyd> I understand, but I did just use it to unlock the boot loader, and the platform tools are freshly downloaded from google.
+19:03:19 <strcat[m]> there is a self-updating SDK which can be used with or without Android Studio and which can install packages like that platform-tools package and keep them updated
+19:03:37 <strcat[m]> Schnyd: doesn't mean you have a working fastboot in the shell you're trying to use now
+19:03:46 <strcat[m]> run `fastboot --version` there
+19:03:49 <strcat[m]> per instructions
+19:04:02 <Schnyd> fastboot version 30.0.4-6686687
+19:15:13 <strcat[m]> Schnyd: so what happens when you run ./flash-all.bat
+19:15:15 <strcat[m]> in that shell
+19:15:42 <strcat[m]> same shell
+19:19:51 <Schnyd> C:\Android\platform-tools\taimen-factory-2020.10.23.04>./flash-all.bat
+19:21:35 <redu321[m]> I see that the pixel 4a is experimental. What does that mean? The auditor app is not working i see but is the security etc good like the other pixel 4 devices?
+19:22:14 <redu321[m]> Can i use the pixel 4a with graphene like any other pixel 4 devices with the same level of security etc?
+19:26:01 <anupritaisno1[m]> No not yet
+19:30:13 <carlpoppa> hey, is it safe to install from a live usb?
+19:43:23 <redu321[m]> <anupritaisno1[m] "No not yet"> When is it safe to use a pixel 4a with graphene? Already a date for that?
+19:45:22 <Schnyd> <strcat[m]> I'm going to delete everything and start from scratch. I must have missed something. Thank you for the help.
+19:51:53 <anupritaisno1[m]> <redu321[m] "When is it safe to use a pixel 4"> It's safer than stock already
+20:00:24 <strcat[m]> it's mostly just not complete, missing Auditor
+20:06:59 <fuchs[m]> alzxjm: that was super easy :D
+20:09:41 <alzxjm[m]> <fuchs[m] "alzxjm: that was super easy :D"> Enjoy!
+20:17:29 <fuchs[m]> alzxjm: ouh, the camera app is crap
+20:22:04 <fuchs[m]> what was the name of the playstore frontend again?
+20:23:54 <ruski[m]> aurora you mean?
+20:25:14 <ruski[m]> for gcam i think you'll need microg
+20:26:45 <carlpoppa> isn't microg incompatible with gos?
+20:26:47 <carlpoppa> there's https://github.com/lukaspieper/Gcam-Services-Provider
+20:27:52 <Dylanger[m]> <carlpoppa "isn't microg incompatible with g"> I'm running microG just fine, all notifications work, Signal, Protonmail etc
+20:28:03 <Dylanger[m]> Have to maintain my own build tho
+20:28:27 <carlpoppa> oh, neat
+20:28:42 * Dylanger[m] uploaded an image: Screenshot_20201029-072810.png (214KiB) < https://matrix.org/_matrix/media/r0/download/diagnostix.io/BoPujpeuUQjoallPXnLveQvg/Screenshot_20201029-072810.png >
+20:28:44 * Dylanger[m] uploaded an image: Screenshot_20201029-072816.png (97KiB) < https://matrix.org/_matrix/media/r0/download/diagnostix.io/JBPKzQXhjSXcFLtVDALfNQQE/Screenshot_20201029-072816.png >
+20:29:37 <ruski[m]> by "maintain my own build" do you mean that you manually install updates?
+20:30:03 <Dylanger[m]> Build Graphene, manually apply required patches and sign myself
+20:32:31 <fuchs[m]> and what does that mean for a non techy person?  😇
+20:33:55 <Dylanger[m]> That means
+20:33:55 <Dylanger[m]> "No soup for you"
+20:34:16 <louipc> in what language
+20:34:32 <Dylanger[m]> Lol you probably shouldn't do what I'm doing, goes against the ethos of Graphene, I'm just doing it because I'm happy with trade off
+20:35:03 <fuchs[m]> ok
+20:35:31 <fuchs[m]> but, to come back to my question:
+20:35:31 <fuchs[m]> is there a better camera app you can suggest?
+20:37:28 <louipc> 'Open camera'?
+20:37:45 <ruski[m]> open camera is like 60% as good as gcam
+20:37:52 <ruski[m]> but the UI is awful
+20:38:35 <ruski[m]> but you need to go into its settings, scroll to the bottom, select Camera API, and choose Camera2API
+20:41:09 <louipc> ouch
+20:41:51 <strcat[m]> Dylanger: Signal notifications work fine on official GrapheneOS
+20:41:59 <ruski[m]>  * you need to go into its settings, scroll to the bottom, select Camera API, and choose Camera2API
+20:41:59 <strcat[m]> Dylanger: as do most other open source apps
+20:42:31 <strcat[m]> it's quite strange that Protonmail implemented custom support for FCM while not support IMAP's standard push system
+20:42:45 <strcat[m]> perhaps they don't even use IMAP at all
+20:43:05 <Dylanger[m]> Yeah Protonmail is important, I missed some important ones a few days ago
+20:43:12 <Dylanger[m]> That and Threema
+20:43:16 <jpds> strcat[m]: They don't: https://protonmail.com/support/knowledge-base/imap-smtp-and-pop3-setup/
+20:43:18 <Dylanger[m]> Polling sucks
+20:43:37 <louipc> i think they have imap now, but they used to not have any imap or anything
+20:44:18 <louipc> oh bridging app
+20:45:00 <ruski[m]> <louipc "ouch"> 60% is a compliment btw
+20:45:46 <louipc> ouch²
+20:46:04 <strcat[m]> Dylanger: really no need for mail clients to do polling though
+20:46:16 <strcat[m]> there are a lot of email apps with IMAP IDLE support
+20:46:16 <Dylanger[m]> Threema polls
+20:46:36 <louipc> just need to check. when you check your phone :p
+20:47:14 <Dylanger[m]> <louipc "just need to check. when you che"> Lol this isn't my workflow, personally anyway
+20:47:16 <louipc> which is 10 times a minute already rite
+20:58:10 <fuchs[m]> Hello Form my New OS phone
+20:58:18 <fuchs[m]> Love it already
+20:58:52 <fuchs[m]> Just need to geht used to the Keyboard
+20:58:52 <fuchs[m]> Gboard was food
+20:58:59 <fuchs[m]> * Just need to geht used to the Keyboard
+20:58:59 <fuchs[m]> Gboard was good
+21:02:56 <carlpoppa> nice!
+21:13:33 * fuchs[m] uploaded an image: Screenshot_20201028-221312.png (184KiB) < https://matrix.org/_matrix/media/r0/download/koh.cloud/EWuwsnmgJqqfhGKGbFCghYkm/Screenshot_20201028-221312.png >
+21:13:38 <fuchs[m]> You mean this?
+21:36:57 <Dylanger[m]> GCam should just work, if you `adb install` it
+21:44:27 <projectmoon> and then it doesn't need the gcam services provider?
+21:50:55 <fuchs[m]> hm, no this is not what i was searching for
+21:51:16 <fuchs[m]> this is what i need:
+21:51:17 <fuchs[m]> https://play.google.com/store/apps/details?id=com.google.android.GoogleCamera
+21:51:39 <fuchs[m]> can it be used without worried about my data?
+21:53:30 <coffeebag[m]> Trying to build Gallery2, do i also need 16Go ram minimum if i want to build it ?
+21:54:02 <coffeebag[m]> If i can't have 16Go RAM, which are my options ?
+21:55:52 <anupritaisno1[m]> <coffeebag[m] "Trying to build Gallery2, do i a"> For the first build yes
+21:55:56 <anupritaisno1[m]> You need to build some of the runtime as a minimum
+21:56:12 <coffeebag[m]> argh
+21:56:31 <coffeebag[m]> i will try something
+22:02:49 * fuchs[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/YfzjwFkqldLxfDjMWhOVZInv/message.txt >
+22:13:05 <alzxjm[m]> fuchs: https://github.com/lukaspieper/Gcam-Services-Provider
+22:13:06 <alzxjm[m]> Install that.
+22:13:13 <alzxjm[m]> I believe only Google Camera v7.4 worka.
+22:13:16 <alzxjm[m]> works.
+22:13:22 <alzxjm[m]> I think v7.5 does not.
+22:14:34 <Wonderfall[m]> <alzxjm[m] "I think v7.5 does not."> It does now (only on Android 11).
+22:16:00 <alzxjm[m]> Wonderfall: how? Mine doesn't.
+22:16:16 <alzxjm[m]> version 7.5.107.326355469
+22:16:26 <fuchs[m]> <alzxjm[m] "Install that."> OK, an now?
+22:16:46 <fuchs[m]> The camera apk?
+22:17:30 <Wonderfall[m]> <alzxjm[m] "Wonderfall: how? Mine doesn't."> Update "GCam Services Provider", it was recently updated. I compile it from source personally
+22:19:20 <anupritaisno1[m]> Just install microg
+22:19:37 <anupritaisno1[m]> And then uninstall it when you're done
+22:20:41 <fuchs[m]> it works
+22:29:45 <alzxjm[m]> Wonderfall: thanks!
+22:39:39 <coffeebag[m]> Youhou build completed :DDD

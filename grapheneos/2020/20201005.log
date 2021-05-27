@@ -1,0 +1,641 @@
+01:26:57 <strcat[m]> also going to be trying out DeskClock from master in the development branch - not sure if it even builds, we'll have to see
+01:27:06 <strcat[m]> but the app is being very actively developed in master and was rewritten in Kotlin
+01:59:14 <Bramble> The audio on my pixel 3 with GrapheneOS on it only plays through the phones speakers even when I plug in my wired earbuds
+02:01:46 <Bramble> didn't mean to do that
+02:01:52 <Bramble> can anyone help me
+02:02:16 <strcat> btw doing a substantial change to AttestationServer will be down for a bit
+02:02:29 <strcat> and worse case scenario I made a backup of the current state (right now) and can roll back to that
+03:54:53 <strcat[m]> alright updating clock app seems to work
+03:54:56 <strcat[m]> might have new bugs
+03:57:12 <ricky19> Hey I'm guessing this happens a lot
+03:57:26 <ricky19> Wondering if the pixel 4a will be supported Soon?
+03:57:47 <ricky19> P.s not gone on irc in years
+03:57:56 <ricky19> Discord these days it's like slack but better
+04:06:32 <strcat[m]> updating Clock app doesn't seem like it will turn out well so not doing that
+04:06:34 <strcat[m]> causes more problems
+04:15:48 <Sourcream61[m]> Does anyone here recommend making a second profile for downloading apps with trackers like from Aurora store?
+04:17:31 <Resynth[m]> <strcat[m] "btw next release will re-enable "> Oh my fucking god I love you
+04:24:27 <Sheru[m]> Lol, maybe it just happens to belong to the same code with Logout
+04:24:33 <strcat[m]> you can already just take them with power + vol down right now, or use screenshot button in recent apps
+04:24:54 <strcat[m]> Sheru: not really but they are both global action dialog things
+04:24:59 <strcat[m]> logout also shows up on lockscreen
+04:25:28 <strcat[m]> AOSP still supports the screenshot option in the global actions dialog
+04:25:47 <strcat[m]> was just disabled by default because they expect people to use gesture navigation
+04:25:55 <strcat[m]> where you swipe up and there's a button
+04:25:59 <strcat[m]> to screenshot
+04:26:07 <strcat[m]> (full gesture navigation, not 2 button navigation)
+04:26:27 <Sheru[m]> <strcat[m] "updating Clock app doesn't seem "> That's unfortunate, was weirded out on SDK min greater than target SDK (on DeskClock)
+04:27:11 <strcat[m]> they're separate things
+04:27:46 <Sheru[m]> <strcat[m] "logout also shows up on lockscre"> Wondering how will that appear on holding power button now there are more than three buttons there by default
+04:29:02 <strcat[m]> the reason for one issue with deskclock
+04:29:06 <strcat[m]> is that a bot sabotaged it
+04:29:12 <strcat[m]> the guy who worked on it wanted to land a fix for Android 11
+04:29:17 <strcat[m]> but the bot kept reverting it wrongly
+04:29:27 <strcat[m]> https://android.googlesource.com/platform/packages/apps/DeskClock/+log/2668d8066a9c25ff7214b91419e8f6f3e6253b2c
+04:29:28 <strcat[m]> look
+04:29:42 <strcat[m]> stupid fucking bot
+04:29:49 <strcat[m]> anyway I applied that fix
+04:29:53 <strcat[m]> it builds fine
+04:30:13 <strcat[m]> 'Automerger Merge Worker <android-build-automerger-merge-worker⊙sgc>	'
+04:30:26 <strcat[m]> https://github.com/GrapheneOS/platform_packages_apps_DeskClock/commits/11
+04:30:28 <strcat[m]> easier to see here
+04:49:57 <Sheru[m]> That was some weird series of commit and revert
+04:55:32 <strcat[m]> Sheru: the bot was reverting it
+04:55:34 <strcat[m]> so it didn't ship as intended
+04:55:38 <strcat[m]> bot was broken
+05:00:11 <strcat> ideally we could just drop in a compatible, up-to-date gallery app
+05:00:16 <strcat> but I don't see any option available
+05:00:24 <strcat> could get desperate and use the CAF one
+05:27:04 <gofigga[m]> Is there a way to disable the screen from turning on when i plug in the phone to charge?
+05:33:46 <renlord> gofigga[m]: yes, you turn it off
+06:24:15 <gofigga[m]> <renlord "gofigga: yes, you turn it off"> Ah forgot about that extra step. Thanks
+06:24:30 * renlord chuckles
+06:49:34 <broda721[m]> Is there a way to block a certain domain system-wide? Like how on iOs you can block certain domains from opening on any app
+06:49:44 <broda721[m]> Or would I have to install an app such as Netguard
+07:00:45 <renlord> broda721[m]: not really, netguard doesnt work properly
+07:00:53 <renlord> best to delegate to your DNS provider via private DNS mode
+07:33:10 <sphinxcat[m]> <broda721[m] "Is there a way to block a certai"> seems like a planned feature: https://github.com/GrapheneOS/os_issue_tracker/issues/184
+08:29:54 <Sheru[m]> <sphinxcat[m] "seems like a planned feature: ht"> Low-priority tbh
+08:30:41 <Sheru[m]> Well, nextDNS as  DNS over TLS is the closest one can achieve it anyways
+08:31:32 <Sheru[m]> Some improvements/control/convenience in multiple users is more useful and feasible
+08:39:18 <bbqcore[m]> Hi I see hardened_malloc is available for Linux
+08:39:52 <bbqcore[m]> What would be the benefits of installing it on my main computer for daily browsing etc?
+08:42:01 <renlord> bbqcore[m]: using libhardened_malloc is part of security hardening
+08:42:41 <renlord> say the program buffer overflows but does not error out, libhardened_malloc catches it and causes it to error out instead
+08:42:54 <renlord> *does not error out using a std allocator
+08:43:24 <renlord> not erroring out can have unintended side effects which may (not) have security implications down the track
+08:43:54 <bbqcore[m]> renlord: hardened_malloc is available in AUR on Manjaro
+08:44:17 <bbqcore[m]> I can install it to enhance security on a normal computer?
+08:44:28 <renlord[m]> Sure.
+08:44:39 <renlord[m]> I think it's in the community repo in arch now.
+08:45:44 <bbqcore[m]> ERROR: One or more PGP signatures could not be verified!
+08:45:44 <bbqcore[m]> Failed to build hardened_malloc
+08:46:23 <renlord[m]> Report to the aur package maintainer.
+08:46:48 <renlord[m]> Neither of us maintain it.
+08:47:34 <bbqcore[m]> Ok how will this affect performance?
+09:17:31 <renlord> bbqcore[m]: i dont think you will notice until you ran perf benchmarks
+09:17:57 <renlord> and those % differences dont necessarily translate to degradation in perceived UX.
+09:18:12 <renlord> all in all "how will this affect performance" is a bad question to ask
+09:18:33 <renlord> unless you have a very specific usecase
+09:20:41 <bbqcore[m]> just wondering if there's any use in running it on daily rig
+09:21:16 <renlord> the degradation in perceived UX will probably stem from insecure software breaking down more than usual
+09:21:32 <renlord> but thats not hardened_malloc's fault, rather its the software vendor's
+09:21:34 <renlord> lol
+09:23:11 <bbqcore[m]> sounds like a good thing
+09:23:47 <renlord> bbqcore[m]: if it sounds good to you then run it!
+09:23:54 <renlord> hehe
+09:24:03 <bbqcore[m]> will do once PGP is fixed :)
+09:38:25 <madaidan[m]> IME of using hardened_malloc on Arch systemwide, it has a hefty performance loss unless you disable some of the more expensive security features.
+10:31:47 <anupritaisno1[m4> [bbqcore](https://matrix.to/#/@bbqcore:matrix.org): I run it on my daily
+10:57:31 <pikey[m]> Since last update PIA VPN keeps disconnecting. Not a big deal as I just reconnect but just wondered if anyone else has VPN disconnect issues
+11:19:34 <renlord> anupritaisno1[m4:
+11:19:51 <renlord> when you say titan m is broken, what sort of symptoms are we looking at?
+11:20:02 <renlord> does not being able to write to the filesystem count?
+11:21:02 <renlord> system_server not being able to write to the fs btw.
+11:21:27 <redu321[m]> Is there a good privacy friendly way to hide pictures or other files on your phone? Maybe a open source app or something?
+11:21:50 <renlord> redu321[m]: scoped storage and put it behind a passphrase
+11:21:57 <renlord> i.e. nextcloud
+11:22:04 <redu321[m]> <renlord "redu321: scoped storage and put "> on F-droid?
+11:22:12 <renlord> i think so
+11:22:17 <renlord> i dont use fdroid
+11:22:29 <redu321[m]> <renlord "i think so"> Tnx i will have a look.
+11:22:44 <redu321[m]> Alls stored on your phone no cloud right?
+11:24:30 <renlord> maybe a separate user profile
+11:34:48 <dontdisturbme[m]> Can anyone confirm gcam is workable up to v7.4 with gcam service provider?
+12:01:56 <jacktheclipper[m> <redu321[m] "Is there a good privacy friendly"> If you want to _hide_ it: Simple Gallery > Hide Folder. If you want to _encrypt_ it: EDS Lite
+12:03:06 <jacktheclipper[m> Both apps can be found on F-droid.
+12:05:39 <redu321[m]> <jacktheclipper[m "Both apps can be found on F-droi"> tnxx
+12:36:41 <Lckdyspl7[m]> <dontdisturbme[m] "Can anyone confirm gcam is worka"> Yup
+12:38:16 <dontdisturbme[m]> <Lckdyspl7[m] "Yup"> appreciate it as I couldn't get it to work before on 7.5. Wasn't aware of it. Thank you for confirmation. Appreciate it
+12:44:25 <dontdisturbme[m]> > <@lickidysplit-ptio:privacytools.io> Yup
+12:44:25 <dontdisturbme[m]>  * appreciate it as I couldn't get it to work before on 7.5. Wasn't aware of it. Thank you for confirmation
+13:01:03 <captain_nem0[m]> Hi guys I need some help with flashing the rom on my Pixel 3a
+13:01:51 <captain_nem0[m]> I posted on reddit but automod told me to come here
+13:02:22 <captain_nem0[m]> https://www.reddit.com/r/GrapheneOS/comments/j5ir40/flashall_command_returns_fastboot_too_old_message/
+13:02:40 <captain_nem0[m]> Any help would be nice
+13:44:10 <mrxx_0[m]> <captain_nem0[m] "https://www.reddit.com/r/Graphen"> I don't see the picture on reddit, you posted something else with the title ?
+14:28:48 <maddo> Hello, I wanted to buy a pixel device, I can technically wait a few months so I wanted to ask: should I buy the 4 now or should I wait for 4a/5 support coming?
+14:30:02 <maddo> I understand graphene is supported by volunteers and so on, I'm no android expert unfortunately, so just from a consumer perspective is it worth the wait? (5G isn't coming here for at least 4-5 years and I don't see any hardware advancements except screen on the 5)
+14:31:46 <maddo> also another info (again I'm no android expert): I've read that grapheneOS doesn't bundle play services or its "foss implementation" microG, how does it handle notifications?
+14:52:35 <kopolee11[m]> <maddo "also another info (again I'm no "> To answer this question, apps can use their own notification system not reliant on Google Play Services. If an app is in F-Droid or it's marked as "GSF Independent" in the Aurora Store then it will generally work. (I'm not qualified to say how it works exactly)
+14:52:46 <kopolee11[m]> * To answer this question, apps can use their own notification system not reliant on Google Play Services. If an app is in F-Droid or it's marked as "GSF Independent" in the Aurora Store then it will generally work. (I'm not qualified to say how it works exactly)
+14:52:46 <kopolee11[m]> Even some apps that rely on GSF notifications will work without it, due to using a fallback if GSF is not detected. Signal and WhatsApp are notable examples of that. You may have to have "not optimized" battery options enabled however.
+14:52:46 <kopolee11[m]> And of course other apps will work in general, but not have notifications working. Slack is an example of that.
+14:53:10 <bbqcore[m]> anupritaisno1: is the AUR maintainer in here?
+14:54:32 <maddo> kopolee11[m]: whatsapp notifications don't really work on my smartphone and I have microG right now, how can they work without anything?
+14:54:47 <maddo> (unfortunately, my family refuses to switch over to anything else)
+14:55:25 <telum[m]> Some apps just need to run in the background, and will give notifications. I.e. Signal, Tutanota, etc.
+14:55:40 <telum[m]> Takes a bit more battery, but consumption is good overall on GOS anyways.
+14:57:41 <kopolee11[m]> <maddo "kopolee11: whatsapp notification"> I don't use WhatsApp, but I believe it's supposed to work without GSF. However if you have microG running it won't use the failback method, instead it will try to use the GSF method.
+15:02:40 <maddo> thank you, any suggestion on my other question?
+15:03:18 <anupritaisno1[m4> <bbqcore[m] "anupritaisno1: is the AUR mainta"> For?
+15:05:01 <bbqcore[m]> <anupritaisno1[m4 "For?"> hardened_malloc
+15:05:18 <anupritaisno1[m4> Why
+15:06:22 <bbqcore[m]> PGP key error when trying to install
+15:08:11 <anupritaisno1[m4> Normal
+15:08:55 <anupritaisno1[m4> The keyserver used by default is broken
+15:09:45 * anupritaisno1[m4 sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/pZMfRSiUeczvHOmvcFwgdBVR/message.txt >
+15:11:28 <mpelley[m]> Is it appropriate to copy my large post from Reddit here? The bot sent me here.
+15:12:41 <nscnt> maddo: What's your goal? If you want to use GrapheneOS now, the Pixel 4 is your best bet. There's no guarantee that GrapheneOS will be supported on the Pixel 4a or 5 as long as no one is working for it. However, I think anupritaisno1[m4 is working on test builds for the 4a.
+15:13:02 <anupritaisno1[m4> [mpelley](https://matrix.to/#/@mpelley:matrix.org) share upon this chat a fragment pointing to this information you wish for us to seek
+15:13:02 <anupritaisno1[m4> Translation: link to it
+15:13:58 * mpelley[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/nLIOyWYusHEGjrrjcYsuSeQr/message.txt >
+15:16:05 <anupritaisno1[m4> [mpelley](https://matrix.to/#/@mpelley:matrix.org): there's nothing there
+15:16:16 <BalooRJ> yeah I'm not seeing anything either
+15:16:49 <nscnt> c:
+15:17:34 <mpelley[m]> ._.
+15:17:35 <nscnt> Maybe the post is too large to load /s
+15:17:50 * mpelley[m] uploaded an image: post.png (275KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/zYwALDVpmXfxlTVbuGfqSiCC/post.png >
+15:17:52 <mpelley[m]> No one see's this?
+15:19:17 <nscnt> No. I can't even find the post in the sub, just with your link to it (without any content)
+15:19:48 <anupritaisno1[m4> mpelley: yes it doesn't cover one thing
+15:19:58 <anupritaisno1[m4> User stupidity
+15:20:29 <mpelley[m]> Thank you for the quick answer :)
+15:21:46 <anupritaisno1[m4> I'm serious
+15:22:01 <anupritaisno1[m4> Nothing stops the user from installing spyware themselves
+15:22:06 <maddo> nscnt: my goal is actually simply replacing my current phone. I have a s7e, which is starting to feel old and sluggish (and could use a new battery), I wanted something that would last quite a while. I'm no phone gamer, I only use a phone for basic needs (browsing the web, chatting and some banking apps that require 2FA)
+15:22:15 <maddo> nothing more
+15:22:21 <captain_nem0[m]> <mrxx_0[m] "I don't see the picture on reddi"> https://imgur.com/a/ZPnL6fc
+15:22:32 <anupritaisno1[m4> And nothing stops them from flashing something else that isn't graphene
+15:23:15 <maddo> tho I have a bank app that I'd like to see if it works at all without microG (a notification is send for accessing the web page on pc)
+15:23:30 <anupritaisno1[m4> Most mistakes happen because users don't read the usage guide on the website
+15:23:35 <mpelley[m]> <anupritaisno1[m4 "Nothing stops the user from inst"> I believe you, and I hope the user base for GrapheneOS is a little more intelligent than that 😅
+15:23:36 <nscnt> mpelley[m]: A home server is practically opening a door in your home network. I wouldn't like to deal with it, but if you feel competent enough for it go for it
+15:24:34 <nscnt> uh oh offtopic sorry
+15:25:18 <nscnt> mpelley[m]: We have a #graphene-offtopic channel for such stuff if you care about it
+15:25:22 <mpelley[m]> <nscnt "mpelley: A home server is practi"> I appreciate the concern! I will definitely be doing mountains of research beforehand. In a previous life, I used to be familiar with pFSense, which I hope will be a skill I can use to make it work!
+15:25:23 <captain_nem0[m]> <mrxx_0[m] "I don't see the picture on reddi"> is the imgur link not showing up?
+15:25:36 <mpelley[m]> <nscnt "mpelley: We have a #graphene-off"> Oops, I will go there!
+15:26:09 <Sheru[m]> <mpelley[m] "post.png"> These questions can be mostly answered in either grapheneos.org/faq or grapheneos.org/usage
+15:27:32 <mpelley[m]> Thank you Sheru, I'm familiar with the FAQ - however I wanted to ask the question to be sure I had the proper answer, since I couldn't find it on the FAQ (I probably missed it)
+15:28:21 <nscnt> maddo: Same for you, @ the offtopic channel. We could figure out e.g. whether your banking app works under GrapheneOS.
+15:36:05 <captain_nem0[m]> <mrxx_0[m] "I don't see the picture on reddi"> https://imgur.com/a/dXvkf5M
+15:37:22 <maddo> nscnt: thank you
+15:38:07 <maddo> nscnt: is it on irc?
+15:38:22 <nscnt> maddo: Yes, it's on irc
+15:38:55 <maddo> #graphene-offtopic?
+16:37:48 <zachmartin[m]> New user here. Surprised you aren't hosting your own home server.
+16:39:20 <zachmartin[m]> Just got Pixel 3a running Graphene and like it so far.
+16:51:25 <zachmartin[m]> Can FB and Instagram still get your location data when only on cell service?
+16:56:15 <jpds> zachmartin[m]: You can block an app's access to location services, but they'd probably just infer it from your IP
+17:01:57 <zachmartin[m]> jpds okay, I have denied location for all apps, as well as background data, and am running always on VPN. Have also changed DNS to Cloudflare although I think that's default now.
+17:03:26 <zachmartin[m]> What is the difference in "Sensors" and "Location" in permissions? They both have the same location symbol.
+17:04:43 <jpds> I believe sensors covers things like the compass, gyroscope, etc
+17:11:02 <fomijafi[m]> zachmartin: DNS default is network-provided with a fallback to cloudflare. So, if you're on a VPN, DNS would be provided by the VPN provider by default. I believe leaving that is recommended to reduce hands in the pot.
+17:40:12 <zachmartin[m]> <fomijafi[m] "zachmartin: DNS default is netwo"> Okay, thanks, wasn't sure ProtonVPN used their own DNS server by default.
+17:40:45 <zachmartin[m]> <jpds "I believe sensors covers things "> Okay, def denying that
+17:44:14 <norwegian-keys> hello folks! i'm typing on a norwegian keyboard using the included grapheneos keyboard, but i am getting red lines below almost every single word and when i click them, english suggestions appear
+17:44:28 <norwegian-keys> relly annoying stuff. i've tried turning off correction and suggestion but to no avail
+17:44:43 <norwegian-keys> any suggestions as to what i should do?
+17:46:18 <tipsyturtle[m]> In the Language and Input settings,  under advanced, there is an option for AOSP spell checking - maybe turning that off will work?
+17:47:20 <norwegian-keys> thanks, that did the job!
+17:50:23 <norwegian-keys> btw, on my old 1st gen pixel (using the stock google os), dark mode turned the backgrounds on most of my apps to complete black (#000) which i think looks quite nice on the amoled display. however on my pixel 3a on grapheneos, the dark mode only turns my display a dark gray. is there any way to make it completely black like on my old pixel?
+18:18:22 <arept> hey, just got my pixel 4a.
+18:19:02 <arept> went into the settings, toggled developer etc but oem unlocking was greyed out
+18:19:46 <arept> i know graphene isnt supported yet but if oem unlocking is greyed out im not able to ever install right?
+18:22:42 <arept> is google locking by default now?
+18:22:48 <strcat[m]> arept: make sure it's not a Verizon model
+18:22:49 <strcat[m]> no, they aren't
+18:22:58 <strcat[m]> unless you bought a Verizon model you can unlock it
+18:23:03 <strcat[m]> read what we say in the install guide
+18:23:04 <arept> pretty sure it isnt verizon
+18:23:24 <strcat[m]> so you can unlock it
+18:23:28 <ruski[m]> is it locked to a provider at all?
+18:23:44 <textmate> Whats the status on Pixel 4aÞ
+18:23:46 <textmate> ?
+18:23:48 <arept> strcat[m]: oem is greyed out
+18:24:02 <strcat[m]> only a Verizon Pixel is bootloader locked
+18:24:08 <strcat[m]> arept: connect to the internet
+18:24:13 <arept> ooh
+18:24:18 <arept> do you have to be connected?
+18:24:26 <strcat[m]> arept: also look at the model of the phone
+18:24:36 <arept> i was offline if that is a problem
+18:24:56 <strcat[m]> arept: depends
+18:24:57 <strcat[m]> is this used
+18:25:05 <arept> no brand new pixel 4a
+18:26:27 <strcat[m]> just try connecting to the internet per https://grapheneos.org/install
+18:26:36 <strcat[m]> not necessarily required
+18:30:59 <arept> oufff thank you man it works just had to connect to the internet was kinda worried thanks a lot dude
+18:32:32 <arept> now i just have to wait for the release
+18:34:53 <norwegian-keys> arept: sorry to say, it might be a while
+18:35:25 <Sheru[m]> Testers were wanted on 4a iirc
+18:35:32 <Sheru[m]> (Not sure about now)
+18:41:01 <zachmartin[m]> Going to get a 3a XL next
+18:42:41 <norwegian-keys> zachmartin[m]: is it expensive?
+18:48:46 <BalooRJ> Just a question for those more familiar with the project. What can you say to someone who is skeptical that there is Google firmware in the Pixel phone chips that can be accessed even with GrapheneOS loaded
+18:53:54 <engulf[m]> If you cannot trust the firmware provided (also by Qualcom etc.) and signed by Google you are kind of f**** as then you cannot trust the root certs either.
+18:54:53 <engulf[m]> Titan M is open source but its near to impossible to verify that its running the code
+18:56:12 <zachmartin[m]> <norwegian-keys "zachmartin: is it expensive?"> Found one on Craisglist for 200
+18:56:51 <JTL> > 11:54 <engulf[m]> Titan M is open source but its near to impossible to verify that its running the code
+18:56:53 <JTL> OTOH the "same" problem applies to older open source Yubikey's
+18:56:55 * JTL sigh
+18:59:35 <engulf[m]> There are always at least few companies that you have to trust to some degree when it comes to computing
+19:04:00 <strcat[m]> BalooRJ: there are no open hardware phones, so your alternative is not using a phone
+19:04:27 <strcat[m]> or a computer in all likelihood - what are you going to use that's not 99% closed source hardware and firmware?
+19:04:42 <strcat[m]> there are some options but not x86 or arm
+19:04:48 <strcat[m]> and not a phone
+19:05:13 <anupritaisno1[m4> Are they secure though
+19:05:25 <anupritaisno1[m4> I'd assume those open architectures get audited a lot less
+19:06:01 <strcat[m]> BalooRJ: also just because something is closed source doesn't mean it's a black box - an ARM SoC is essentially a black box, but firmware for various peripherals, etc. can be inspected (although the hardware cannot really)
+19:06:17 <strcat[m]> anyway that applies to open source hardware too, you still trust the manufacturer as much as before
+19:06:26 <strcat[m]> you can't prove it really matches what it was supposed to be
+19:06:38 <strcat[m]> and as I said before, there are no open hardware phones
+19:06:49 <BalooRJ> Thanks very much, that's very helpful information.
+19:06:51 <strcat[m]> there are no open hardware ARM SoCs of course since it's a proprietary architecture
+19:07:08 <BalooRJ> NVidia owns the architecture at the moment I believe right?
+19:07:25 <strcat[m]> BalooRJ: and I don't know what firmware you're talking about anyway, it's a Qualcomm SoC device, the trusted party is primarily Qualcomm and the manufacturer of the phone (Foxconn)
+19:07:57 <strcat[m]> BalooRJ: I don't know if NVIDIA has actually acquired it yet, I doubt it
+19:08:10 <strcat[m]> that would all have to be approved by governments and go through that process
+19:08:16 <anupritaisno1[m4> Might be good if they do
+19:08:21 <engulf[m]> RISC-V is probably one to keep an eye on
+19:08:34 <anupritaisno1[m4> Nvidia had some good source releases for their phones AFAIK
+19:09:16 <strcat[m]> BalooRJ: peripheral components are not trusted by the SoC / OS in general, at least to the extent possible (i.e. a touchscreen is trusted to display the provided frames and provide input)
+19:10:08 <strcat[m]> BalooRJ: so for example the Titan M just provides specific features, it doesn't have any control beyond implementing the APIs it is supposed to implement
+19:10:29 <strcat[m]> and the way that's integrated into encryption uses it for additional security, it does not trust it or move responsibility to it
+19:10:39 <BalooRJ> that's also very good to know.
+19:10:49 <strcat[m]> it is used to add an extra feature (exponentially increasing delays for decryption attempts throttled by hardware with minimal attack surface and insider attack protection)
+19:10:56 <strcat[m]> suggest reading about it
+19:11:41 <strcat[m]> and the other APIs it implements (a more secure alternative to the traditional TEE-based keystore still used by most apps that use the keystore, etc.)
+19:13:10 <strcat[m]> BalooRJ: so you can be skeptical all you want but the end result of that is you can't use computers, or you accept that you trust the manufacturers of the devices to have not put in backdoors or whatever
+19:13:57 <BalooRJ> I am not skeptical myself, I was just touting the project and trying to defend it from critiques of "Well it runs on a Google Pixel anyway"
+19:14:17 <strcat[m]> GrapheneOS doesn't just run on Pixels
+19:14:57 <anupritaisno1[m4> Pixels are the only phones to actually satisfy many of the requirements
+19:15:02 <strcat[m]> it officially supports those because they offer the best privacy/security available from firmware/hardware other than an iPhone which does not support running another OS (without exploits, which doesn't count, since you won't be running it securely with the same hardware-based security features)
+19:15:18 <anupritaisno1[m4> Along with timely security patches
+19:15:22 <strcat[m]> BalooRJ: if people want to run it on another phone they are free to support that
+19:15:41 <strcat[m]> on the vast majority of phones it's not going to meet our standards and so there is no path to official support
+19:15:53 <BalooRJ> makes sense.
+19:16:03 <anupritaisno1[m4> BTW it doesn't work, spoilers
+19:16:16 <strcat[m]> we aren't going to support a device that chooses not to support alternative OSes securely, which is most of the devices that support installing another OS
+19:16:17 <anupritaisno1[m4> I've tried running graphene on many non pixels
+19:16:22 <anupritaisno1[m4> Most will barely boot
+19:16:33 <strcat[m]> they cut corners by not supporting hardware-based security with other OSes
+19:16:46 <strcat[m]> anupritaisno1: it will run fine on modern devices but that's not the problem
+19:16:52 <anupritaisno1[m4> Hardened malloc often kills almost every HAL on several xiaomis
+19:17:45 <strcat[m]> the problem is they aren't secure: they mostly don't provide proper security updates, and those that do have much weaker firmware/hardware privacy/security and force you to use the stock OS to get all the hardware-based security features
+19:18:04 <strcat[m]> anupritaisno1: bugs uncovered by hardened malloc and other mitigations are not really the main issue, that can be worked around
+19:32:36 <anupritaisno1[m4> <strcat[m] "anupritaisno1: bugs uncovered by"> How many will you work around?
+19:33:13 <strcat[m]> it's not really about # of bugs
+19:33:36 <strcat[m]> we're capable of temporarily using jemalloc for a process while fixing / reporting bugs in a process
+19:33:44 <strcat[m]> used to do that in several cases
+19:33:47 <strcat[m]> used to do that in several cases
+19:45:35 <zachmartin[m]> Does Graphene support the 90hz refresh rate on the Pixe 4 XL? Just want to double check.
+19:50:40 <anupritaisno1[m4> [zachmartin](https://matrix.to/#/@zachmartin:matrix.org) yes
+19:54:48 <TheLynx> hello everyone
+20:01:11 <broda721[m]> Hey
+20:01:52 <TheLynx> Just a short question tried (just for science) to run the Google Maps App from my GrapheneOS phone, since this app is just using the website under maps.google.com to get the routing information at the first start you just have to name the app a browser app and tahts it
+20:02:43 <TheLynx> nevertheless I cant cat it to get my current location when I give the app all permissions and activate the GPS function in the pull down menu
+20:03:25 <TheLynx> Than I realized that I cant use location services in any browser I'm using Not in Vandadium, Brmoite or Brave
+20:03:42 <TheLynx> does anybody has the same problem or a soulution for this?
+20:18:01 <strcat[m]> did you grant location permission to the browser and then to the site in the browser?
+20:18:22 <TheLynx> Both yes, but I will recheck it again
+20:18:37 <TheLynx> I use Vanadium only for google maps currently
+20:19:40 <xabi[m]> <TheLynx "does anybody has the same proble"> Have you tried native alpha? It now supports location for web apps
+20:21:48 <TheLynx> Native Alpha you mean the software branche`
+20:23:19 <TheLynx> Im just running the stable version of grapheneos
+20:28:43 <zachmartin[m]1> <zachmartin[m]1 "Vanadium > DDG ?"> Why funny xabi ?
+20:28:50 <zachmartin[m]1> Trying to learn more about it
+20:29:49 <TheLynx> Hmm, checked everything again sould work other apps have access to the my current location as well
+20:30:07 <xabi[m]> Vanadium is good enough, i dont see anything i need on ddg browser, that is my particular case
+20:30:58 <TheLynx> Hmm, checked everything again sould work other apps have access to the my current location as well. But I cant get the bowoser to get my location from the gps
+20:31:20 <TheLynx> The ring does not start swirling on maps.google.com
+20:32:02 <xabi[m]> <TheLynx "Native Alpha you mean the softwa"> https://github.com/cylonid/NativeAlphaForAndroid. This app works like creating a web app in desktop from chromium based browsers but it includes granular permisions for different sites/webapps. They added location setting recently
+20:34:51 <zachmartin[m]1> <xabi[m] "Vanadium is good enough, i dont "> Okay, thanks. *uninstalling ddg* lol
+20:35:36 <zachmartin[m]1> I only used of previously bc I wanted incognito keyboard
+20:35:59 <xabi[m]> <zachmartin[m]1 "Okay, thanks. *uninstalling ddg*"> Its my personal opinion, less layers is better if you can live without them. You can use ddg from vanadium anyway.
+20:38:50 <zachmartin[m]1> Okay, I'll keep ddg as the default search engine.
+20:44:33 <TheLynx> xabi[m]: Thanks for the tip sounds nice. But still, why is it not possible to get your location in vanadium or other browers
+20:44:36 <TheLynx> ?
+20:45:55 <Solaslux[m]> Hi everyone. I looked at the os-issue tracker and didn't see my problem there. Is this an okay place to ask a question about a problem?
+20:51:27 <TheLynx> The funny thing this only affects browes in other apps it is absolute no problem to get the location. I also checked the site settings and the search settings and unblocked google in vanadium
+21:00:16 <TheLynx> *browsers
+21:00:25 <strcat[m]> xabi: Chromium already includes granular permissions - not sure why you'd need another app for that
+21:13:49 <xabi[m]> <strcat[m] "xabi: Chromium already includes "> Do settings inside chromium stick when you create a shortcut "webapp"?
+21:16:29 * xabi[m] uploaded an image: 400019600415_406426.jpg < https://matrix.org/_matrix/media/r0/download/matrix.org/kjLHFcDfMnigguhgfnrhETbJ/400019600415_406426.jpg >
+21:18:33 <strcat> xabi[m]: it works the same as it always does
+21:19:27 <strcat> xabi[m]: you do not need some third party webview-based app to control permissions for web sites
+21:19:29 <strcat> that doesn't make sense
+21:20:04 <xabi[m]> Good to know! Tried google maps and location doesn't work anyway
+21:20:06 <strcat> you seem to have a misunderstanding about what 'add to home screen' does in Chromium-based browsers
+21:20:17 <strcat> it doesn't magically grant them permissions
+21:20:35 <strcat> they aren't really an app the browser just presents them as one
+21:20:46 <strcat> it's still within the browser and all the usual things apply
+21:21:02 <strcat> if you clear browser cookies your cookies in that pinned web app will be gone
+21:21:09 <strcat> it doesn't change how things work
+21:21:12 <strcat> it just changes how it is presented
+21:21:27 <xabi[m]> Doesn't using the webview separate the cookies from normal browser?
+21:21:42 <strcat> the webview is a different thing than the browser
+21:21:56 <strcat> webview is a per-app library/widget
+21:22:30 <strcat> it is an implementation detail if it uses the same browser engine
+21:22:58 <strcat> and btw in GrapheneOS for Android 11 we are not yet providing a Vanadium-based WebView until Chromium 86
+21:23:23 <strcat> and the WebView is not quite as secure as the browser, the sandbox it uses isn't quite as strong
+21:23:23 <xabi[m]> I don't need to wipe cookies and logins from amazon, Facebook, strava and Garmin connect but I don't like them with my browsing history
+21:23:41 <strcat> xabi[m]: web sites don't have access to your browsing history
+21:24:05 <strcat> anyway not really sure what you mean
+21:24:21 <xabi[m]> Ok, so leaving that app aside moving back to vanadium
+21:24:44 <strcat> you can use that if you want you just don't need it to control permissions per site, etc.
+21:24:47 <strcat> dunno why you'd think that
+21:27:21 <xabi[m]> I thought that vanadium webview was just as secure as browser
+21:28:58 <strcat> xabi[m]: suggest reading https://grapheneos.org/usage#web-browsing
+21:29:16 <strcat> and also as I said we aren't currently using the Vanadium WebView until Chromium 86 which has official Android 11 support upstream
+21:29:33 <strcat> xabi[m]: WebView is also a widget/library for apps to use
+21:29:54 <strcat> xabi[m]: Vanadium has a per-site sandbox with isolation boundaries between sites
+21:30:38 <strcat> xabi[m]: WebView uses 1 sandboxed renderer per app, there's semantic-level separation between different WebViews if that is how they use them but there is still 1 sandboxed renderer process
+21:31:09 <strcat> in theory the WebView could have finer-grained sandboxing but the WebView works differently than the browser and it would have to be done in a way that doesn't break the way the WebView API works
+21:32:37 <xabi[m]> Read that sections before installing graphene, it s well explained and as a I see webview doesn't offer site isolation
+21:33:24 <strcat> xabi[m]: WebView is totally separate between 2 different apps using it
+21:33:35 <xabi[m]> I think that I need to read it every now and then not to get back to the old habits xD
+21:33:46 <strcat> but within the same app using it, it doesn't provide OS sandbox level separation between each WebView widget / each form of content rendered in it
+21:33:52 <strcat> and the WebView is not strictly for rendering web sites
+21:34:00 <strcat> it's up to the app how to use it and the rules that are in place
+21:34:08 <strcat> and they can expose their own APIs to the web content within it
+21:34:25 <sjekk-igjen> which could be a vulnerability?
+21:34:30 <strcat> so some apps use the WebView to implement a web browser, some use it to display a specific site
+21:34:38 <xabi[m]> I see, good to get things clear first hand
+21:34:40 <strcat> but others use it to render beyond just standard web content
+21:34:52 <xabi[m]> Thanks for the support
+21:34:55 <strcat> sjekk-igjen: sure an app is responsible for security of their code as always
+21:35:14 <strcat> they can expose whatever APIs they want to the WebView
+21:35:35 <strcat> there are various lints and decorators designed to prevent making mistakes but there is a limit to what that can do
+21:35:46 <strcat> ultimately up to developers to preserve a security boundary if there is supposed to be one
+21:36:08 <sjekk-igjen> strcat: can grapheneos attempt to enforce these boundaries in any way?
+21:36:08 <strcat> an app might choose to be implemented in HTML/CSS/JavaScript using the WebView and expose all the APIs it needs to that WebView instance
+21:36:17 <strcat> sjekk-igjen: I don't know what you mean
+21:36:23 <strcat> we don't know how apps are meant to be designed
+21:36:47 <sjekk-igjen> strcat: right
+21:36:48 <strcat> I don't see how we could improve this
+21:37:22 <sjekk-igjen> strcat: you'll have to forgive my ignorance, i'm not very experienced with mobile operating systems and app design i'm afraid
+21:37:27 <strcat> and even if we knew that the app was intending to treat the WebView as a security boundary, we can't automatically verify / change their code
+21:37:44 <strcat> sjekk-igjen: the WebView is a widget / library for apps to use for web content - not necessarily web sites, but web content in general
+21:37:50 <strcat> it's not really something specific to mobile
+21:38:23 <strcat> this is widely done on desktops, apps just provide their own copy of CEF or Electron which is not automatically updated as part of the OS, the difference here is that the OS provides a standard library for apps to use
+21:38:50 <strcat> and the standard library always uses the OS sandbox (unlike CEF / Electron where many applications disable it)
+21:39:10 <sjekk-igjen>  ah, i understand. as long as developers has access to and can use this library, there is always the possibilty that something could go wrong
+21:39:16 <strcat> but it's still up to the app if they *want* the WebView to be a security boundary and it's up to them to choose what it can access
+21:39:27 <strcat> sjekk-igjen: well it's their code...
+21:39:33 <strcat> sjekk-igjen: we didn't write their app for them
+21:39:39 <sjekk-igjen> strcat: indeed
+21:39:52 <strcat> the OS doesn't know how they intend to use the library and doesn't have an understanding of what they are doing with it
+21:40:19 <strcat> if they really wanted they could bundle their own web rendering widget such as Mozilla's GeckoView
+21:40:31 <strcat> and then it's the app's responsibility to keep applying browser security updates every few weeks
+21:40:36 <anupritaisno1[m4> Hmmmmm sentient OSes
+21:40:36 <strcat> because they are the ones shipping it
+21:40:49 <strcat> and it's their responsibility not to disable security features (I don't think GeckoView has an OS sandbox anyway)
+21:41:10 <strcat> sjekk-igjen: the WebView is for web content in general - not just untrusted remote web sites
+21:41:48 <strcat> sjekk-igjen: it's common to use it only to load web assets from inside your apk and you can give the code running in it access to the app's files and content URIs it can access
+21:42:00 <sjekk-igjen> which could be as simple as an svg, right?
+21:42:03 <strcat> sjekk-igjen: it's just a portion of the app implemented via web standards
+21:42:12 <xabi[m]> Do you see scoped storage as a big improvement for android 11?
+21:42:22 <strcat> scoped storage was added with android 10
+21:42:23 <xabi[m]> Or is it more of a gimmick?
+21:42:32 <strcat> android 11 just adds some enhancements and makes it mandatory for API 30+
+21:42:34 <strcat> it's not a gimmick
+21:42:52 <xabi[m]> Good!
+21:43:33 <strcat> sjekk-igjen: an app can choose to use the WebView with a browser-like model, by default it doesn't have things like cookies, they have to set that up
+21:43:40 <xabi[m]> * Good! Android 11 makes it short of mandatory, right?
+21:43:50 <strcat> xabi[m]: it's mandatory for API 30+ as I said
+21:44:20 <strcat> Play Store currently requires new apps and app updates to use API 28+, but that becomes 29+ in a month
+21:44:45 <strcat> GrapheneOS shows a warning when launching an app targeting below API 28 for the first time (the stock OS shows the warning for apps below API 23)
+21:45:01 <strcat> it's up to you if you want to run apps targeting older API levels with weaker privacy/security restrictions
+21:45:12 <strcat> we don't disable support for it, that's your choice
+21:45:30 <strcat> F-Droid has a lot of legacy / poorly maintained apps targeting old API levels, they don't enforce a standard like the Play Store
+21:45:58 <strcat> an app developer cannot upload a new app or an update to an existing app to the Play Store targeting an API level below 28 (soon 29)
+21:46:15 <sjekk-igjen> I have gotten that warning for applications included with grapheneos
+21:46:17 <strcat> takes ~1.4 years for a newly launched API level (like 30) to become mandatory for the Play Store
+21:46:19 <anupritaisno1[m4> [strcat](https://matrix.to/#/@freenode_strcat:matrix.org): should we make it 29?
+21:46:32 <xabi[m]> When an app says that it was designed for an older version of android means that it
+21:46:32 <xabi[m]> Uses an older api?
+21:46:34 <anupritaisno1[m4> There's an selinux domain for 29 now
+21:46:57 <strcat> sjekk-igjen: because not all of the bundled apps are actively developed
+21:47:01 <strcat> some of them are just sample apps
+21:47:13 <strcat> so you might have a misunderstanding about the purpose and status of those bundled apps
+21:47:16 <strcat> if that surprises you
+21:47:31 <strcat> Gallery and Calendar are sample apps - you are not really supposed to use those
+21:48:05 <sjekk-igjen> i'm guessing the sample apps have been thoroughly checked for vulnerabilities then
+21:48:27 <strcat> they still receive security updates
+21:48:34 <sjekk-igjen> oh i see
+21:48:50 <strcat> they're sample apps, their purpose is primarily to be samples and to allow standard functionality to be tested
+21:49:03 <strcat> the expectation of AOSP is that we replace them
+21:49:18 <sjekk-igjen> but if i'm not mistaken you are in fact planning to replace them at some point, no?
+21:49:27 <strcat> look at the issue tracker
+21:49:41 <xabi[m]> I use stock gallery on some profiles, what do you recommend?
+21:49:55 <strcat> whatever your preferred gallery app is
+21:50:01 <strcat> I'm not going to make app recommendations on request
+21:50:24 <anupritaisno1[m4> No
+21:50:30 <anupritaisno1[m4> <sjekk-igjen "but if i'm not mistaken you are "> No
+21:50:51 <anupritaisno1[m4> With what could we replace them exactly?
+21:50:55 <strcat> if there was a decent Gallery app that was minimal, well maintained and had a suitable license for us to include we would have replaced it
+21:50:58 <xabi[m]> OK, something that doesn't come from tencent will be good enough xD
+21:51:00 <strcat> same goes for the Calendar app
+21:51:16 <strcat> not aware of anything we could use in either case right now
+21:51:19 <anupritaisno1[m4> There aren't enough people to do that
+21:51:29 <strcat> Etar is GPLv3, simple gallery is GPLv3, so neither is an option
+21:51:38 <anupritaisno1[m4> We can't use lineage's stuff either as they inject their sdk everywhere
+21:51:44 <xabi[m]> Is snapdragon gallery closed source?
+21:51:47 <strcat> and we can't just remove Calendar and Gallery because they provide standard functionality that is tested by the test suite
+21:51:49 <anupritaisno1[m4> And we don't want it
+21:51:49 <strcat> xabi[m]: no
+21:52:13 <strcat> xabi[m]: it's from far being minimal / security-focused, it does really crazy things
+21:52:20 <strcat> it isn't an unprivileged, normal app
+21:52:28 <strcat> it's a tech demo, really
+21:52:32 <strcat> like a lot of those CAF apps
+21:52:43 <strcat> it exists to demonstrate fancy hardware capabilities
+21:52:51 <strcat> it is not a good idea to actually use them
+21:52:59 <xabi[m]> Ah
+21:53:11 <xabi[m]> Got it from omnirom store
+21:53:39 <anupritaisno1[m4> >omnirom
+21:54:09 <xabi[m]> * Got it from omnirom store, moving back to camera roll. Idk if it s still updated
+21:54:31 <strcat> Snapdragon Gallery won't fully work without being built into the OS as a privileged app
+21:54:36 <strcat> and it's kinda insane
+21:54:43 <strcat> I looked at it a few days ago as a possible alternative to Gallery
+21:54:45 <strcat> and it's not
+21:55:11 <strcat> https://source.codeaurora.org/quic/la/platform/packages/apps/SnapdragonGallery/tree/AndroidManifest.xml?h=LAW.BR.3.0-21800-8x09w.0#n27
+21:55:29 <strcat> first of all, still targets API 23, that's horrible, you couldn't even upload that to the Play Store (requires 28+)
+21:55:46 <strcat> and the permissions it requires are insane
+21:55:58 <strcat> it has to be a privileged app built into the OS with whitelisted privileged permissions to get all that
+21:56:03 <anupritaisno1[m4> Gallery needs to write APN settings
+21:56:06 <strcat> it can't get it as a third party app
+21:56:09 <anupritaisno1[m4> Legit
+21:56:17 <strcat> yeah as I said
+21:56:19 <strcat> it's insane
+21:56:21 <strcat> it's a tech demo
+21:56:41 <boogaloo> anyone upfor helpingme flashmy google pixel 3? having a bunchof problems trying to actually flash graphene.
+21:56:56 <strcat> anupritaisno1[m4: LineageOS Gallery2 is this merged into the AOSP Gallery2 or something
+21:57:01 <strcat> anupritaisno1[m4: with their own changes on top
+21:57:02 <anupritaisno1[m4> [boogaloo](https://matrix.to/#/@freenode_boogaloo:matrix.org) yes
+21:57:03 <strcat> I looked at that too
+21:57:05 <strcat> lol
+21:57:08 <sjekk-igjen> when looking for a gallery app, which properties should i consider?
+21:57:11 <strcat> they merged them together
+21:57:19 <strcat> I don't even know how they maintain that and merge upstream changes
+21:57:39 <boogaloo> anupritaisno1[m4: what do I do with that link?
+21:57:48 <strcat> anupritaisno1[m4: this gallery app supports stuff like streaming audio / video
+21:57:50 <boogaloo> anupritaisno1[m4: bit of a newb
+21:57:52 <strcat> the CAF one
+21:57:52 <anupritaisno1[m4> <strcat "I looked at that too"> Someone needs to just remove lineage sdk
+21:58:13 <anupritaisno1[m4> [boogaloo](https://matrix.to/#/@freenode_boogaloo:matrix.org) what link
+21:58:20 <strcat> https://source.codeaurora.org/quic/la/platform/packages/apps/SnapdragonGallery/tree/res/xml/rtsp_settings_preferences.xml?h=LAW.BR.3.0-21800-8x09w.0#n32
+21:58:25 <strcat> maybe it can do video calls or something? lol
+21:58:26 <anupritaisno1[m4> [boogaloo](https://matrix.to/#/@freenode_boogaloo:matrix.org) yeah pm me
+21:58:29 <boogaloo> anupritaisno1[m4: thematrix.org one
+21:58:30 <strcat> it has integration into APNs
+21:58:32 <strcat> it's really weird
+21:58:41 <strcat> anyway I'd definitely avoid that insane Snapdragon Gallery app
+21:59:05 <strcat> Qualcomm likes making these apps as tech demos
+21:59:20 <strcat> they have bad usability, lots of outdated / legacy code, legacy API levels
+21:59:30 <strcat> just meant to demonstrate cool hardware capabilities etc
+21:59:45 <strcat> they are essentially another form of sample app meant to show off hardware capabilities and show how to use them
+21:59:47 <strcat> for other app devs
+22:00:12 <strcat> I think the idea is that a vendor would use this as a reference to make a Gallery app supporting some of those features as desired
+22:00:54 <anupritaisno1[m4> [strcat](https://matrix.to/#/@freenode_strcat:matrix.org): you know what
+22:01:00 <anupritaisno1[m4> Instead of all this bs
+22:01:02 <strcat> https://source.codeaurora.org/quic/la/platform/packages/apps/SnapdragonCamera/tree/AndroidManifest.xml?h=camera-SnapdragonCamera.lnx.4.1.r2-rel
+22:01:12 <boogaloo> anupritaisno1[m4: I'min the bootloader on the phone, and trying to flash graphene on windows 10 (virtualbox), the script hangs and is just waiting for device (<waiting for devices>)
+22:01:13 <anupritaisno1[m4> Users should just go to their favorite place
+22:01:25 <strcat> https://grapheneos.org/faq#bundled-apps
+22:01:27 <strcat> covers this
+22:01:31 <anupritaisno1[m4> And get a gallery app they like
+22:01:35 <strcat> I don't see it as our responsibility to find the best in class app and bundle it
+22:01:38 <strcat> and then deal with problems it has
+22:01:43 <anupritaisno1[m4> End of story
+22:01:59 <anupritaisno1[m4> This is too irritating
+22:02:14 <anupritaisno1[m4> <boogaloo "anupritaisno1: I'min the bootloa"> Don't use virtualbox
+22:02:26 <boogaloo> my host is linux mint
+22:03:11 <boogaloo> anupritaisno1[m4: I tried the shell script but it doesn't work either
+22:03:33 <boogaloo> anupritaisno1[m4: both on linux and on thevm
+22:03:46 <anupritaisno1[m4> [boogaloo](https://matrix.to/#/@freenode_boogaloo:matrix.org) then use it
+22:03:59 <systemctl[m]> why are gplv3 not viable options?
+22:04:02 <anupritaisno1[m4> Just
+22:04:30 <anupritaisno1[m4> I can't do a remote session rn
+22:04:53 <systemctl[m]>  * strcat: why are gplv3 not viable options?
+22:05:07 <anupritaisno1[m4> In the middle of testing and I have sensitive stuff in my clipboard. Passwords and so on
+22:09:32 <hitchhooker[m]> systemctl: it is not permissive license. If you use gpl3 in project everything has to be gpl3. https://www.reddit.com/r/GrapheneOS/comments/bjixvu/comment/em8sjus
+22:10:42 <strcat> systemctl[m]: because GPLv3 has restrictions which forbid using GrapheneOS in ways we want to allow it to be used
+22:10:54 <strcat> systemctl[m]: GPLv3 would forbid taking GrapheneOS and making a locked down device with it
+22:11:01 <strcat> we don't want to forbid that, we want it to be permissively licensed
+22:11:14 <strcat> GPLv2 is fine, GPLv3 is not, we won't include any GPLv3 code in the OS
+22:11:33 <strcat> a GPLv3 tool that doesn't taint the OS with GPLv3 is fine but we would prefer permissively licensed tooling too
+22:12:31 <strcat> systemctl[m]: note that most of those apps are using GPLv3 because they want as restrictive of a license as possible while still being considered FOSS
+22:13:01 <strcat> systemctl[m]: lots like Etar were originally based on Apache 2 code and then made the license more restrictive in a way that it can no longer be used by the permissively licensed projects they started from
+22:13:30 <strcat> and BTW projects like OpenBSD consider even GPLv2 to be a non-free license, the definition varies based on who you ask
+22:13:40 <strcat> OpenBSD doesn't like Apache 2 either though
+22:14:31 <anupritaisno1[m4> [strcat](https://matrix.to/#/@freenode_strcat:matrix.org) what about wtfpl?
+22:14:45 <strcat> that's fine
+22:15:13 <strcat> for us, GPLv2 is fine, but concerning, especially if they use "GPLv2 or later" since they might move to GPLv3 only
+22:15:30 <strcat> so if a project is GPLv2 or later, we would prefer to avoid that too, unless upstream is committed to not moving to GPLv3 only
+22:15:37 <strcat> because I don't want to bundle something and be cut off from updates
+22:15:43 <strcat> which BTW would have happened with simple gallery and etar
+22:15:47 <strcat> they switched their licenses to GPLv3
+22:15:52 <strcat> they were originally Apache 2
+22:16:18 <strcat> and since those 2 licenses are compatible they were able to just switch over for new releases without asking everyone for permission
+22:21:16 <boogaloo> Im trying to flash graphene on linux mint - I got the latest platform tools from android,but the script just says - that flashboot is too old????
+22:21:49 <strcat> make sure that's the fastboot you are using
+22:21:57 <strcat> follow the instructions in a single shell exactly as written there
+22:22:05 <wdnsdy[m]> verify your fastboot --version
+22:22:05 <strcat> run `which fastboot` and `fastboot --version` as it recommends
+22:23:13 <boogaloo> strcat: ah ok - it seems Im running fastboot version 1:8.1.0+r23-5ubuntu2
+22:23:39 <TheLynx> Question is a bit offtopic but for the whole channel what do you think about the brave browser? I guess it has less secuity becuase of the missing site isolation, but what do you think about the privacy features?
+22:24:13 <strcat> ask in #grapheneos-offtopic
+22:24:34 <TheLynx> ahh, didn't knew this # existed
+22:24:41 <strcat> boogaloo: there is no fastboot 8.1.0, that's a made up Ubuntu version and is super outdated
+22:25:14 <strcat> they took the AOSP android-8.1.0_r23 tag and built it from there - that's incredibly old, and AOSP OS releases are not the tags for platform-tools
+22:25:27 <strcat> i.e. they built that from out-of-date Android 8.1 code - Android is on Android 11...
+22:26:26 <wdnsdy[m]> unless you are on arch Linux, don't use android-tools from repos
+22:26:55 <TheLynx> Ok, but again to my issue with location services in browsers/Maps Go is this a known issue tha location services does not work in Vanadium?
+22:26:55 <boogaloo> strcat: ahh - bit rusty in linux. Its at ust/lib/android-sdk - I suppose I have to get the sh to usethe included version Idownloaded?
+22:27:08 <strcat> boogaloo: just follow the instructions from the top
+22:27:12 <strcat> exactly as they are provided there
+22:27:15 <strcat> it covers doing this
+22:27:26 <strcat> it covers getting up-to-date fastboot and setting PATH for the current shell
+22:27:31 <wdnsdy[m]> quite tiring to see always same problem, wouldnt happen if people actually knew how to read
+22:29:53 <TheLynx> wdnsdy[m]: I see, the installation manual is very well written and the installation quite easy...
+22:30:33 <strcat> we eventually want to have a web-based installer for people not familiar with CLI
+22:30:46 <strcat> but the CLI instructions do cover everything - if you run exactly the commands that are there it will work
+22:31:10 <strcat> on Linux distributions without proper udev rules for fastboot you can do those parts with root
+22:32:10 <louipc> :O
+22:32:50 <strcat> development branch is now based on the October update other than the kernels
+22:32:54 <strcat> still waiting for those tags to be available
+22:33:15 <louipc> i wonder how the heck web installer would work. sounds freaky
+22:34:50 <strcat> louipc: web usb
+22:35:05 <wdnsdy[m]> something like etcher then ?
+22:35:07 <strcat> louipc: https://flash.android.com/
+22:35:14 <strcat> https://source.android.com/setup/contribute/flash
+22:35:26 <strcat> it's supported by the Pixel 2 and later
+22:35:29 <strcat> WebUSB
+22:35:39 <louipc> omg why fffs
+22:36:00 <strcat> so we could have a grapheneos page like this that asks for WebUSB permission and then flashes GrapheneOS to a phone
+22:36:08 <strcat> for people that aren't verifying the signify signature it's no less secure
+22:36:24 <strcat> WebUSB asks you to grant permission to access a specific device to the site
+22:36:37 <louipc> oh what a tangled web we weave
+22:37:04 <boogaloo> strcat: Thanks - got it. :)
+22:37:23 <louipc> yea if it already exists why not i guess
+22:38:37 <strcat> this monthly update has a decent amount of non-security bug fixes
+22:38:40 <strcat> looking through them atm
+22:42:16 <anonymous821[m]> Hi all, I recently upgraded to RP1A.200720.009.2020.10.01.23. I am now noticing that I am always getting an sms like reminder for my alarm 30 mins prior to the actual scheduled time. Is there a way to turn this off? Also, at times the alarm does not trigger when it is supposed to. Most recently the alarm triggered 30 mins after the scheduled time (or anytime I unlock my phone after the scheduled time). Is anyone
+22:42:16 <anonymous821[m]> else having the same issue?
+22:42:40 <strcat> the Clock app got substantial updates in Android 11, it has some rough edges
+22:42:43 <renlord> anonymous821[m]: what does sms-like mean? a notification?
+22:42:46 <anonymous821[m]> Also, despite the upgrade, I am still not receiving sms alerts unless my phone is unlocked. Though sometimes I receive an sms alert,but delayed alert at a random time, sometimes a few mins, sometimes 10mins or even an hr.
+22:42:46 <strcat> will need to put in some work to address the issues
+22:44:13 <anonymous821[m]> <renlord "anonymous821: what does sms-like"> instead of the actual alarm beep, it is like an sms alert
+22:44:36 <renlord> anonymous821[m]: wew, i havent had that with my alarms.
+22:44:53 <renlord> can you set a soon-ish alarm and then collect some logs?
+22:45:03 <renlord> then create an issue?
+22:45:37 <anonymous821[m]> renlord: how do i generate the log?
+22:45:52 <anonymous821[m]> > <@freenode_renlord:matrix.org> anonymous821: what does sms-like mean? a notification?
+22:45:52 <anonymous821[m]>  * instead of the actual alarm beep, it is like an sms alert tone
+22:46:05 <renlord> generate a bug report -- toggle in dev options
+22:46:36 <renlord> anonymous821[m]: can you check if that sms alert tone is your default notification jingle?
+22:47:13 <strcat> there are a few fixes for the Clock app in the upcoming release
+22:47:19 <strcat> more fixes are needed
+22:47:35 <strcat> we tried updating to the overhauled Clock app in master but that didn't work well
+22:47:41 <strcat> so we'll need to backport fixes or do them ourselves
+22:48:57 <strcat[m]> a lot of fixes are needed for the sample Gallery app, it's quite broken ATM
+22:49:06 <strcat[m]> DeskClock mostly works but has some rough edges atm
+22:49:16 <anonymous821[m]> renlord: sorry, can you pls guide me to navigate to the dev options section, and also the default notification jingle
+22:50:11 <renlord> strcat[m]: do you think it'd be a good idea to just expose 'capturing a bug report' in settings without toggling dev options?
+22:51:04 <strcat[m]> renlord: yes, and I think there's a way to add support for submitting them more easily
+22:51:12 <strcat[m]> something we have to look into at some point
+22:52:10 <renlord> anonymous821[m]: tap 10 times on phone info, until it says 'you're a developer'
+22:52:22 <renlord> pls turn off dev options when you're done
+22:52:43 <renlord> otherwise if you dont know what you're doing at all, just dont do it
+22:53:16 <lev[m]> <anonymous821[m] "Hi all, I recently upgraded to R"> oh dang, that happened to me too actually; I woke up before my alarm once and it sounded, but I later thought I'd just dreamed that
+22:53:38 <lev[m]> let me see if I can reproduce
+22:54:03 <strcat[m]> don't need to reproduce that the notifications make sound
+22:54:04 <strcat[m]> we know
+22:54:16 <strcat[m]> you can disable it manually, ideally it would be set up more sanely by default
+22:54:28 <lev[m]> notifications of an impending alarm?
+22:54:36 <strcat[m]> as I said, the Clock app had major changes in Android 11
+22:54:38 <strcat[m]> it has rough edges
+22:54:42 <strcat[m]> help wanted to fix those
+22:54:44 <lev[m]> maybe I've just never observed that behavior before, but that seemed strange
+22:55:01 <strcat[m]> lev: it makes notifications of impending alarms and since Android 11 it has sound by default
+22:55:02 <strcat[m]> we know
+22:55:13 <anonymous821[m]> <renlord "anonymous821: tap 10 times on ph"> i tapped "build number" and now a developer, how do i retrieve the logs for the alarm?
+22:55:18 <strcat[m]> you can figure out which channel is which and disable the sound
+22:55:37 <lev[m]> huh, interesting
+22:55:55 <strcat[m]> long press the notification and you can configure them
+22:56:00 <strcat[m]> if you press on the channels you can configure them
+22:56:01 <lev[m]> it's rare enough that it doesn't impact my life, but good to know it can be avoided
+22:56:03 <strcat[m]> as with other notifications
+22:56:11 <renlord> anonymous821[m]: 2nd option down -- bug report
+22:56:24 <strcat[m]> the way the notification channels are set up by default is annoying
+22:56:32 <renlord> anonymous821[m]: next time when it happens, push that
+22:56:38 <renlord> and generate an interactive report
+22:56:41 <strcat[m]> it was already annoying in Android 10 though, it's just more annoying now that more notifications make sound by default now
+22:57:05 <strcat[m]> only way that's going to change is if people submit clean patches to improve DeskClock
+22:57:12 <strcat[m]> the changes in the master branch can be used as a guide / reference
+22:57:36 <strcat[m]> when other downstream projects are finally using Android 11 we could share work on this kind of thing with them
+22:57:47 <strcat[m]> for now we're pretty much on our own
+22:59:20 <anonymous821[m]> <renlord "anonymous821: 2nd option down --"> how do i navigate this? is it in settings, or in the clock app itself?
+22:59:43 <renlord> anonymous821[m]: Settings > System > Developer Options > Bug Report
+23:06:57 <anonymous821[m]> renlord: i just dloaded it, where it it normally saved?
+23:09:43 <strcat[m]> we really don't need captured bug reports for the clock app
+23:09:47 <strcat[m]> we're aware of the issues already
+23:09:53 <strcat[m]> need development help
+23:12:00 <anonymous821[m]> ok
+23:13:58 <anonymous821[m]> i am also having issues with sms alerts as well, i do not receive them unless my phone is unlocked, though sometimes i receive delayed sms, can be a few mins to an hr
+23:14:24 <anonymous821[m]> it has been an issue since i started using grapheneos
+23:21:53 <strcat[m]> did you start using it when it was still based on Android 10? or more recently
+23:32:29 <anonymous821[m]> when it was still android 10 i think
+23:32:49 <anonymous821[m]> i have used it for a few months

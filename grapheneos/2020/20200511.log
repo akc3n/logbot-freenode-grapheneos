@@ -1,0 +1,741 @@
+00:00:29 <BrokenCog> let's look at the Table of Contents: https://grapheneos.org/build ... "Building" is followed by "Prebuilt Code/Browsers" ... that's the order I followed the intstructions.  was that wrong?
+00:01:56 <JTL> If you build the image first and then build the browser, logic dicates the output image won't contain the browser
+00:02:03 <BrokenCog> exactly.
+00:03:03 <BrokenCog> hence my question "what step is needed to include the browser apk's into the OS image to flash on the device".
+00:04:01 <JTL> It should work if you prebuild the browser, ensure it's copied to the correct source directory and build the image
+00:04:13 <JTL> I might be able to test again in a few days for you
+00:04:19 <JTL> (since I haven't done that in awhile)
+00:05:30 <BrokenCog> "build the image" using  "m target-files-package"  or something else?
+00:05:45 <JTL> That should work
+00:45:54 <aeonsolution[m]> BrokenCog: I'm redoing the build too. The Prebuilt code section is there for reference. Vanadium should be included when you get the Build section.
+00:46:21 <aeonsolution[m]> This is what happened to me. I did all the steps leading to the Building section without running the m command for development.
+00:48:52 <aeonsolution[m]> I jumped to the Prebuilt Code section, and built Vanadium. And then copied files to the designated directory. Which is wrong because the steps contradict the steps in the Extracting vendor files for Pixel devices section.
+00:49:43 <aeonsolution[m]> For now, I don't need to build Vanadium because it should be included as a prebuilt.
+00:50:03 <aeonsolution[m]>  * For now, I don't need to build Vanadium because it should already be included as a prebuilt.
+00:50:53 <aeonsolution[m]> I just read everything literally and made a wrong assumption. I'm going through the steps again and will let you know if it works.
+00:51:54 <aeonsolution[m]>  * I jumped to the Prebuilt Code section, and built Vanadium. And then copied files to the designated directory. Which is wrong because the steps contradict the steps in the Extracting vendor files for Pixel devices section. (I could be wrong on this part and don't mind being corrected.)
+00:53:15 <aeonsolution[m]>  * BrokenCog: I'm redoing the build too. The Prebuilt code section is there for reference. Vanadium should be included when you get the "Building" section.
+00:53:42 <aeonsolution[m]>  * This is what happened to me. I followed the steps leading to the "Building" section without running the m command for development.
+00:55:18 <aeonsolution[m]>  * I jumped to the "Prebuilt Code" section, and built Vanadium because I was-wrongly-under the impression that I needed to add Vanadium manually. So after building it, I copied the files to the designated directory as described in the instructions. This is wrong because the steps contradict the steps in the "Extracting vendor files for Pixel devices" section. (I could be wrong on this part and don't mind being
+00:55:18 <aeonsolution[m]> corrected.)
+01:01:00 <strcat[m]> you CAN build Vanadium before starting your first build
+01:01:05 <strcat[m]> you just don't need to do that
+01:01:10 <strcat[m]> it doesn't conflict with anything if you do it
+01:10:15 <aeonsolution[m]> Heystrcat, is there a specific spot in the steps that you are supposed to add the manually built Vanadium files?
+01:11:01 <aeonsolution[m]>  * Heystrcat, is there a specific spot in the steps that you are supposed to add the manually built Vanadium files if you wanted to go that route?
+01:12:14 <aeonsolution[m]>  * Heystrcat, is there a specific spot in the steps that you are supposed to add the manually-built Vanadium files if you wanted to go that route?
+01:12:27 <renlord> read the vanadium building steps
+01:12:29 <renlord> https://grapheneos.org/build#browser-and-webview
+01:12:59 <renlord> when you've built them -- which take 2 hours on Ryzen 2700, copy them back into the grapheneos-10 tree
+01:14:32 <aeonsolution[m]> renlord: I did the steps but I am pretty sure I messed up somewhere. The manually-built Vanadium is completely built correctly. Its when I tried to add the apks to the general flow of instructions, that something went wrong.
+01:16:34 <renlord> you are adding custom apks?
+01:17:05 <renlord> you need to sign them
+01:22:11 <BrokenCog> aeonsolution[m]: thanks for the feedback.  I'll retry doing that sequence as well.
+01:23:26 <aeonsolution[m]> I didn't make a custom apk, I was just following the instructions. I did sign them with the generated key from the keytool command. My guess is that I messed up in the order of commands. I started from the top cloning graphene-10 and working my way to the "Building" section. At that point, the kernel is built. And I jump to the "Prebuilt code" section and do everything it says to do there.
+01:24:06 <BrokenCog> also, the prebuilt directory had the vanadium apk's however they didn't get installed on the device.  which is why I then did the seperate vanadium build.
+01:24:07 <aeonsolution[m]> I then jump back to the "Building" section and run the m command and it fails at 99% lol
+01:24:19 <BrokenCog> I'll do that first, then copy the apk's then build the main tree and see what happens.
+01:24:30 <BrokenCog> ouch.
+01:25:01 <BrokenCog> I think that's the same error I got doing 'm' after building vanadium.
+01:25:02 <aeonsolution[m]> Yeah, it was rough. Silverlining tho, everything minus the m command worked so thats a victory.
+01:25:14 <BrokenCog> where you can get them L).
+01:26:03 <aeonsolution[m]> The last step is an appropriate place to get the L
+01:26:50 <aeonsolution[m]> Michael Jordan's team lost two the Pistons twice before getting that Championship
+01:27:47 <BrokenCog> where did you clone the vanadium repo into? ./external? or a subdir?
+01:29:28 <aeonsolution[m]> `cp out/Default/apks/release/*.apk $HOME/graphene-10/external/vanadium/prebuilt/x86_64/`
+01:30:00 <BrokenCog> so you didn't have the Vanadium tree under the graphene-10 tree ... okay.
+01:31:02 <aeonsolution[m]>  * Michael Jordan's team lost to the Pistons twice before getting that Championship
+01:32:45 <aeonsolution[m]> Yeah, I wasn't sure where it would go under graphene-10 so I did it separately
+01:33:35 <BrokenCog> okay.
+01:35:26 <aeonsolution[m]>  * renlord: I did the steps but I am pretty sure I messed up somewhere. The manually-built Vanadium built correctly. Its when I tried to add the apks to the general flow of instructions, that something went wrong.
+01:38:38 <aeonsolution[m]>  * BrokenCog: I'm redoing the build too. The "Prebuilt code" section is there for reference. Vanadium should already be included when you get the "Building" section.
+01:41:25 <BrokenCog> yeah, the apk's are in external/vanadium/prebuilt/arm64, but they weren't installed on the device.
+01:41:44 <BrokenCog> I mean, they existed before I started trying to compile the browser locally.
+01:45:27 <aeonsolution[m]> Were those the ones that come prebuilt or the ones you added?
+01:46:09 <BrokenCog> prebuilt.
+01:48:34 <aeonsolution[m]> Weird, I wonder why. I'll see if I can reproduce that issue.
+01:50:18 <BrokenCog> I'm using the flash-all.sh from the downloaded GrapheneOS tar file.  perhaps additional steps are needed to flash the locally compiled build?
+01:53:20 <Dustin[m]1> Howdy GrapheneOS
+01:55:01 <aeonsolution[m]> sorry, i really cant comment on that yet BrokenCog
+01:55:15 <aeonsolution[m]> Hi Dustin, welcome!
+01:55:26 <Dustin[m]1> Thanks
+01:55:34 <Dustin[m]1> Just poking around the Graphene FAQ
+01:55:47 <aeonsolution[m]> Great place to start
+01:55:47 <Dustin[m]1> Looks great. I've been researching used Pixels online
+01:55:52 <Dustin[m]1> A lot of them seem to suffer burn-in eh?
+01:56:30 <Dustin[m]1> I set up LOS+microG for my partner on a OnePlus 5 and she's happy with it. My phone is on its way out so I'm looking at different options
+01:58:48 <aeonsolution[m]> Cool, well if you want to see the informal convo around Lineage vs Graphene check out: https://freenode.logbot.info/grapheneos
+02:10:25 <aeonsolution[m]> Forgot to mention, the goals of GrapheneOS are drastically different from Lineage. https://grapheneos.org/#grapheneos
+02:14:51 <Dustin[m]1> Thank you for the info
+02:17:39 <aeonsolution[m]> You're welcome. Good luck!
+02:27:50 <brenneke[m]> <Dustin[m]1 "A lot of them seem to suffer bur"> That's what I read too when researching way back when.....have now had two Pixel 2 XLs for years and can say they have been solid and flawless.
+02:43:39 <TheJollyRoger> Ahoy Dustin[m]1 ! Welcome to the channel!
+02:52:05 <TheJollyRoger> I've got some writeups on my old GrapheneOS knowledge base in interim as well, so if you're interested in some of its features or the hows and whys of the project, I've got a modest collection of stuff here: https://github.com/Peter-Easton/GrapheneOS-Knowledge/
+03:00:18 <Dustin[m]1> <brenneke[m] "That's what I read too when rese"> That's reassuring
+03:00:29 <Dustin[m]1> <TheJollyRoger "I've got some writeups on my old"> Thank you!
+03:03:02 <TheJollyRoger> Yep! So far the Pixel hardware has been pretty solid for me. My Pixel 3 I keep in a Urban Armour Gear case and I have a screen protector on it, and the handset's survived quite a bit of rough-housing, including the time I was riding my skateboard and had it in my hand, then my wheels struck a crack in the sidewalk and I and the handset got an involuntary, impromptu lesson in flying with no
+03:03:04 <TheJollyRoger> superpowers.
+03:03:24 <JTL> You skateboard? Cool
+03:03:28 <TheJollyRoger> Yeah.
+03:03:47 <TheJollyRoger> Just for cruising around, no tricks anymore, sadly :(
+03:31:09 <zxwayland> hi
+05:26:50 <joshman[m]> OMG. Latest Open Camera version is awesome. I haven't had a single camera failure ever since
+05:28:50 <joshman[m]> Latest Bluetooth fix and camera update just hardened my pocket ❤️
+05:30:11 <renlord> what camera update?
+05:32:47 <joshman[m]> Last night i received updated for like 20 different apps on fdroid
+05:33:23 <joshman[m]> Open Camera is now on ver. 1.48.1
+05:34:12 <joshman[m]> Still missing slow motion mode though. For boardtricks and kids videos
+05:41:06 <strcat[m]> camera issues are not fixed just bluetooth
+05:41:08 <strcat[m]> for the next release
+05:42:31 <dan-v[m]> open camera pictures still look pretty terrible in comparison to google camera app for me. i'd love if i was just missing something though.
+05:44:36 <dan-v[m]> i've been testing out using a separate user profile with just the microg core and google camera and it's a pretty stark difference
+05:45:34 <strcat[m]> dan-v: on which device
+05:45:37 <strcat[m]> if you make sure HDR+ is working it should match the quality
+05:45:47 <strcat[m]> if you mess with settings, enable flash, etc. then HDR+ doesn't work
+05:45:53 <strcat[m]> turn off flash
+05:46:50 <dan-v[m]> strcat: i'm on crosshatch. the only setting i touched was the camera 2 api is enabled
+05:47:18 <strcat[m]> check logs and see what's happening
+05:47:47 <strcat[m]> haven't tested open camera for a while
+05:48:00 <strcat[m]> ideally the AOSP camera app would work with the visual core
+05:48:04 <strcat[m]> people just don't care enough to work on it
+05:48:32 <strcat[m]> they accept patches upstream
+05:49:05 <renlord> do people even use aosp camera?
+05:52:58 <renlord> i find that open camera works better with camera api 1
+05:53:29 <dan-v[m]> interesting renlord  - i'll give that a shot
+05:53:29 <dan-v[m]> open camera: https://www.dropbox.com/s/x6nw35viyuwhpjg/2020-05-10%2022.36.11.jpg?dl=0
+05:53:30 <dan-v[m]> google camera: https://www.dropbox.com/s/3xhcq1vw7365a98/2020-05-10%2022.37.14.jpg?dl=0
+05:53:30 <dan-v[m]> google camera night sight: https://www.dropbox.com/s/rojt0o3zr45xg0q/2020-05-10%2022.37.22.jpg?dl=0
+05:54:05 <strcat[m]> looks like no HDR+
+05:54:10 <dan-v[m]> the open camera pictures generally seem a lot more "grainy" to me
+05:54:17 <strcat[m]> yeah that means HDR+ is off
+05:54:18 <dan-v[m]> ok - let me try that as well
+05:54:25 <strcat[m]> so it's doing something incompatible with HDR+
+05:54:27 <renlord> try camera api 1
+05:54:30 <strcat[m]> dan-v: it's not a toggle you can turn on
+05:55:03 <strcat[m]> I'd guess open camera made a change that made their defaults incompatible with HDR+
+05:56:07 <renlord> when i was travelling, first half of it was with camera2 and second half was with camera1
+05:56:12 <renlord> we deleted all the photos from the first half
+05:56:19 <dan-v[m]> renlord: with camera1 api i can't get it to focus
+05:56:31 <dan-v[m]> may just lower light situation that i'm in right now
+05:56:31 <renlord> there are focus settings
+05:56:51 <strcat[m]> dan-v: check in logcat
+05:56:54 <strcat[m]> make sure it's using HDR+
+05:56:57 <strcat[m]> figure out what's wrong with that
+05:57:05 <strcat[m]> turn off flash if that's on
+05:57:22 <dan-v[m]> ok - i'll take a look. it's a bit annoying have to swap to a different profile to take pictures.
+06:01:00 <renlord> strcat[m]: is the relevant string just 'hdrplusprocessing' ?
+06:01:55 <strcat[m]> dunno
+06:02:00 <strcat[m]> it says if it's being used though
+06:02:03 <strcat[m]> or if settings are incompatible
+06:02:32 <renlord> hdrplusprocessing then immediately crash_dump64
+06:02:33 <renlord> kek
+06:04:18 <renlord> yeah i think its Hdrplus processing
+06:04:26 <renlord> those are the strings to grep for
+06:04:44 <renlord> they work with default camera2 api settings
+06:05:20 <dan-v[m]> 05-10 23:03:38.809   850 11501 I HdrplusProcessing: onFinalImageRelease: Received final image for shot 0. num_images:3
+06:05:20 <dan-v[m]> 05-10 23:03:38.818   850 11501 I HdrplusProcessing: [PROFILE_TIMER] <HDR+ processing in libgcam> took 544.389832 ms.
+06:05:52 <dan-v[m]> yeah looks like hdr is running for me with camera2 api
+06:05:55 <renlord> if its grainy is it because resolution is low?
+06:06:55 <dan-v[m]> renlord: i have it set to max resolution
+06:07:20 <dan-v[m]> i'll play a bit around with the settings, i haven't really bothered to do that yet. i'll see if anything helps
+06:12:04 <joshman[m]> <dan-v[m] "ok - i'll take a look. it's a bi"> Try Snapseed for postprocessing. It will output better than gcam
+06:12:43 <joshman[m]> Camera Api1 and seems no big difference for my eye. After latest open camera update
+06:13:00 <joshman[m]> * Camera Api1 looks no big difference for my eye. After latest open camera update
+06:14:57 <joshman[m]> I'm confused a bit now. Some praise Api2. Some Api1. I yet see no difference anymore. I was api2 supporter b4
+06:22:15 <strcat[m]> post-processing can't make up for not using HDR+
+06:22:18 <strcat[m]> HDR+ captures more data
+06:22:21 <strcat[m]> it's not post-processing
+06:22:24 <dan-v[m]> hmm yeah josh.man - i played around with snapseed in another profile and it doesn't help because the photos are grainy in low light, hard to post process that
+06:22:46 <strcat[m]> API1 vs API2 don't have differences in photo quality just the API, 2 is more capable
+06:22:48 <strcat[m]> and offers a better API
+06:22:55 <strcat[m]> 1 is deprecated
+06:23:04 <strcat[m]> dan-v: you need HDR+
+06:23:06 <strcat[m]> no way around that
+06:23:18 <strcat[m]> figure that out and you'll have good pictures, if you don't figure it out you won't
+06:23:20 <joshman[m]> I agree about HDR+
+06:23:20 <joshman[m]> I was recommending Snapseed as a mediocre walk-around
+06:24:04 <dan-v[m]> strcat: yeah, it appears it's using it at least based on logcat, but for whatever reason is not very effective
+06:24:32 <strcat[m]> does it say it's using it
+06:24:37 <strcat[m]> it will post logs even when it's not used
+06:25:00 <dan-v[m]> yeah just posted up there
+06:25:03 <dan-v[m]> 05-10 23:03:38.809   850 11501 I HdrplusProcessing: onFinalImageRelease: Received final image for shot 0. num_images:3
+06:25:03 <dan-v[m]> 05-10 23:03:38.818   850 11501 I HdrplusProcessing: [PROFILE_TIMER] <HDR+ processing in libgcam> took 544.389832 ms.
+06:25:17 <dan-v[m]> claims to be using 3 images
+06:25:56 <joshman[m]> dan-v you can export your settings to try them on another device. Or send them I'll try on mine. If you're on p3xl
+06:26:43 <dan-v[m]> yeah i'm on pixel 3, that would be an interesting test. give me a moment
+06:27:19 <joshman[m]> What if you capture RAW? Still grainy? Postprocess raw pictures can do a lot good
+06:27:33 <dan-v[m]> yeah let me try that first
+06:30:13 <joshman[m]> Confirmed. Open Camera still fails though it is less frequent. I can hardly replicate the issue
+06:47:04 <dan-v[m]> josh.man: probably not worth sending settings. i just have default settings, change camera api to 2, and that's it. i played around with raw and the resulting image is about the same
+06:49:59 <strcat[m]> dan-v: 3 images isn't a lot
+06:53:08 <dan-v[m]> strcat: it doesn't appear to be configurable as far as i can tell
+06:59:50 <dan-v[m]> i reset open camera to default settings and did another comparison w/ api1, api2, and google camera
+06:59:55 <dan-v[m]> open camera 1 api w/ hdr: https://www.dropbox.com/s/okqu8jzz4udi7sp/2020-05-10%2023.54.33.jpg?dl=0
+06:59:55 <dan-v[m]> open camera 2 api w/ hdr: https://www.dropbox.com/s/lpxc8gwe4l0068q/2020-05-10%2023.48.31.png?dl=0
+06:59:55 <dan-v[m]> google camera default: https://www.dropbox.com/s/68zu67mvvmg643s/2020-05-10%2023.49.28.jpg?dl=0
+07:01:04 <dan-v[m]> not sure what is up with api2 - consistently making really dark images in low light with settings reset.
+07:02:12 <dan-v[m]> anyways, i'll stick with my separate camera profile for now. just was curious if anyone had some magic w/ open camera
+07:05:15 <c3po[m]> Reading the website I see that Bromite browser has also site isolation with GOS in Google Pixels. In this case, is it as safe as Vanadium or is Vanadium superior in some other things?
+07:06:45 <strcat[m]> Vanadium has more hardening
+07:07:03 <c3po[m]> Thanks!
+08:33:39 <minoas[m]> what would be the desktop equivalent of grapheneos?
+08:38:09 <BallMonokuma[m]> <minoas[m] "what would be the desktop equiva"> Kicksecure would be my answer
+10:19:46 <c3po[m]> Is GrapheneOs launcher based in Android 10 default launcher but without Google search bar?
+10:21:47 <BallMonokuma[m]> <minoas[m] "what would be the desktop equiva"> Kicksecure or qubes OS (Or both)
+11:49:10 <Cyrinux[m]> subgraphos
+11:55:33 <yekip[m]> <minoas[m] "what would be the desktop equiva"> Whenever Renlord pulls his finger out, I will let you know. 🤣
+11:55:57 <renlord> ?
+11:57:04 <yekip[m]> Just a jest. In case you had plans to build an OS as good as Graphene but for desktop!
+11:57:41 <renlord> i dont even think its possible given that desktop hardware is just lacking
+11:58:08 <renlord> maybe things will change when ARM SoCs become more powerful
+11:58:36 <renlord> lacking security
+11:58:57 <renlord> so even if you wrote the most secure desktop OS in the world, you get fucked at the booting phase
+11:58:59 <renlord> lol
+11:59:10 <renlord> what even is the point then?
+11:59:24 <yekip[m]> hehe, well you have my vote of confidence even if it's imposible :D
+11:59:28 <yekip[m]>  * hehe, well you have my vote of confidence even if it's impossible :D
+12:00:19 <yekip[m]> <renlord "so even if you wrote the most se"> haha yes. i hate to say it, but I suppose I really should thank Google for one thing. Maybe before I die, I will find the strength to do that :D
+12:01:00 <yekip[m]> bit of a silly question anyway really. Whonix I guess is a more sensible answer, no, Qubes.
+12:01:02 <yekip[m]> not that it can make the hardware any better
+12:02:25 <Cyrinux[m]> <renlord "so even if you wrote the most se"> qubesos got an auditor like feature for this
+12:05:21 <renlord> insecure bootloader -- just boot a broken qubesos?
+12:05:36 <renlord> you still think you're using qubesos, but just broken
+12:06:05 <renlord> like a compromised copy with the auditor ripped out
+12:06:55 <renlord> there's no boot integrity with desktops
+12:07:30 <renlord> please let me know if there is, i will upgrade my warez
+12:45:24 <Cyrinux[m]> renlord:  if you want to see how its implemented, it use tpm, https://www.qubes-os.org/doc/anti-evil-maid/
+12:46:07 <Cyrinux[m]> you know know before boot/being logged that an important piece, bios param, kernel version, others, change
+12:48:25 <Cyrinux[m]>  * you know know before boot/being login that an important piece, bios param, kernel version, others, change
+12:54:40 <renlord> isnt intel TXT untrustworthy?
+13:14:15 <shad0wbit[m]> > please let me know if there is, i will upgrade my warez
+13:14:15 <shad0wbit[m]> Don't know if this is what you meant, but in theory coreboot support vboot which is supported by quite some devices
+13:14:35 <shad0wbit[m]> https://doc.coreboot.org/security/vboot/index.html
+13:14:57 <shad0wbit[m]> *supports
+13:16:42 <jacksonpollock19> Read insurgo.ca seems to have a lot of information about qubes, Intel management engines disabling and secure boot.
+13:19:39 <shad0wbit[m]> Something similar would be the Nitropad
+13:20:03 <shad0wbit[m]> https://shop.nitrokey.com/de_DE/shop/product/nitropad-x230-67
+13:20:57 <shad0wbit[m]> https://www.nitrokey.com/news/2020/nitropad-secure-laptop-unique-tamper-detection
+13:21:14 <shad0wbit[m]> Last one is the english link
+13:23:30 <seaclown> Didn't know that existed but yes, is essentially the same as the insurgo privacy beast with more options.
+13:24:03 <seaclown> I have the privacy beast, love that little laptop and qubes
+14:08:21 <madaidan[m]> <Cyrinux[m] "subgraphos"> SubgraphOS has been dead for years
+14:09:12 <Cyrinux[m]> yes, zombie
+14:09:16 <Cyrinux[m]> since a man proof jail can be easily bypass
+14:09:31 <madaidan[m]> <renlord "so even if you wrote the most se"> UEFI secure boot and dm-verity exists
+14:25:26 <izymandias[m]> TheJollyRoger: They told me encryption has been enabled by default on r/riotim. Should work when you create a new room.
+14:56:55 <rpm67einf> test
+15:07:10 <yekip[m]> test received
+15:07:55 <yekip[m]> question for any audiophiles..... I have used various sets of bluetooth earphones. Had mostly apple compatible ones but they don't play nicely on android. Looking for a nice set, and wondered if anyone knows of any good ones which are known to play nicely with graphene/android? Ideally the small in ear type in recharging case.
+15:43:12 <MadCamel> yekip[m]: graphine has a notorious bluetooth audio bug. It might not be your headphones fault. The bug's been fixed upstream and the fix should be included in the next update
+15:48:31 <cyborgninjaneer[> Fun fact: Bluetooth just happened to work on stock android. It was done totally wrong.
+15:55:37 <yekip[m]> <MadCamel "yekip: graphine has a notorious "> oh, wow. glad i asked! Do you know any more about the bug so I can see if it was causing the issues?
+15:55:46 <algebro[m]> Woww good work fixing the a2dp offloading
+15:55:55 <yekip[m]> and do you know when the next updates come out?
+15:56:23 <yekip[m]> PS, I am still looking for a decent set of bluetooth earphones anyway so recommendations still appreciated :)
+15:57:20 <MadCamel> no idea on either front.. I'm just parroting what I read yesterday :)
+15:57:52 <yekip[m]> hehe, no probs. thanks anyway
+16:04:17 <cyborgninjaneer[> Next update? I'd guess after next month's security patches from AOSP
+16:55:57 <nscnt> yekip[m]: Is there a noticeable loss of audio quality or...?
+17:09:28 <yekip[m]> no, connectivity issues and features not working (much of the latter is due to buying iphone designed headphones, fake apple airpods in other words)
+17:16:42 <nscnt> yekip[m]: The reason for the connecitivity issue could be the bug. A lot of users have it. If the bug occurs, your sound just comes out of your phone instead of the bluetooth device even though you
+17:16:51 <nscnt> are "connected"
+17:28:17 <hitchhooker[m]> anybody managed to connect headphones to pixel3?
+17:29:55 <brenneke[m]> Can you please give me your recommendations on what 2FA to u se for Bitwarden Pixel 2 XL  GrapheneOS?
+17:31:14 <BrokenCog> hitchhooker[m]: I have a 3aXL.  haven't tried music, etc, but the system sounds are audible in headphones.  They're very faint though.
+17:32:03 <hitchhooker[m]> it has own plug, in pixel3 you need to go through usb and audio through usb seems not to be allowed
+17:32:42 <hitchhooker[m]> just wondering is this by design or something i could effect with pr
+17:45:01 <nscnt> brenneke[m]: I've often seen https://getaegis.app/ here as a recommendation.
+18:04:22 <brenneke[m]> Is this really a good way to go or is something like Yubikey preferred? I did try installing Authy just to play with it, does not run without Play Services.....what is with these developers who tie their apps to Google like that?
+18:12:01 <yekip[m]> <hitchhooker[m] "anybody managed to connect headp"> Pretty sure I have yeah
+18:12:17 <nickcalyx[m]> The nice thing about yubikey authenticator is the seeds are stored in the yubikey so easy to move or use on different devices
+18:13:04 <nickcalyx[m]> There is one called andOTP on fdroid that is recommended by some
+18:22:35 <brenneke[m]> <nickcalyx[m] "There is one called andOTP on fd"> OK thanks. What is the authenticator  concept  actually and how would I use it with a password manager.....enter pw manager pass, then also log into authenticator and retrieve code to complete pw manager login?
+18:23:13 <hitchhooker[m]> yekip? what was your workaround?
+18:25:00 <yekip[m]> yo. sorry, what workaround?
+18:30:22 <dazinism> andOTP has problems.  I'd recommend Aegis Authenticator instead
+18:31:28 <dazinism> See https://github.com/andOTP/andOTP/issues/427
+18:33:18 <dazinism> brenneke: its for sites that support 2 factor authenification
+19:04:25 <MadCamel> hitchhooker[m]: audio through usb is allowed.. there are two types of usbc audio adapters. one's just passing through wires - this doesn't work with the pixel. Other is a usb audio device. this works, I use mine often. Sometimes it goes a bit weird and I have to tap the USB device notification a few times
+19:07:50 <hitchhooker[m]> okay, thanks for the info, need to investigate a bit more. damn should have purchased 2 devices, one for debugging
+19:12:28 <MadCamel> if you have a laptop with usbc you could check to see if your dongle shows up as a usb audio device or not
+19:29:37 <headgas[m]> Whatsup, I have a pixel 4xl and I'm curious if theres going to be an official build for it soon?
+19:33:40 <TheJollyRoger> Hi headgas[m], more devices won't be supported until we have dedicated maintainers for the devices we have at this current time.
+19:34:37 <headgas[m]> Ok, some people told me its possible to get GrapheneOS on my pixel 4xl now, is this true?
+19:35:40 <TheJollyRoger> Maintaining each device is a lot of work, requiring a lot of device-specific work, testing, patching, and device-specific mitigations and workarounds to be applied, as well as backporting security updates from upstream, some of which may be specific to that particular device, and it'd need to be a three year commitment. Because that's so much work, the community either needs to step up and
+19:35:41 <TheJollyRoger> either do the work (using a device as a reference example), or find and hire the developers to do it on their behalf, if GrapheneOS is to be run as an open source nonprofit, rather than a business.
+19:36:19 <TheJollyRoger> headgas[m]: it's possible, but that's contingent upon the contributions the community makes to hiring, appointing, finding, or becoming dedicated maintainers for the current generation of devices.
+19:36:24 <TheJollyRoger> This is to avoid what I call the "dumping" problem.
+19:36:45 <TheJollyRoger> Where the moment a new device gets supported, the would-be maintainers immediately run off with their shiny new phone and dump the work onto the lead developers unsustainably.
+19:36:47 <headgas[m]> Hmm ok
+19:36:55 <TheJollyRoger> Given past experiences, this fear is very well-founded.
+19:37:09 <headgas[m]> Makes sense
+19:37:51 <headgas[m]> I'm no developer, and I'm still learning linux.  But I am using linux full time.  I want to learn what I can and help some how.  I'm a big believer in our rights to privacy and security.
+19:38:03 <TheJollyRoger> Fantastic! ^_^ That's the kinda attitude we need!
+19:38:53 <headgas[m]> I'm not sure what I could possibly do yet though with the little knowladge I have
+19:39:05 <headgas[m]> I'm running ubuntu touch on a nexus 5
+19:39:15 <headgas[m]> And I have a librem 15 V4 laptop running PureOs
+19:39:25 <TheJollyRoger> Well, one thing you definitely can do is stick around and enjoy the company!
+19:39:36 <headgas[m]> And my pixel 4xl is sitting here waiting to be de-googled as soon as it can be done.
+19:40:15 <headgas[m]> I've heard grapheneOs is the most secure and private rom
+19:40:21 <DannyWorkOrderPr> Anyone have security-first feedback on NextCloud?
+19:40:47 <TheJollyRoger> While I can't say the same for every Android OEM which will often bundle their own software, for the most part, most of the tracking/surveillance on Google's handsets, surprisingly, is actually opt-in. Most of it can be uninstalled, or disabled. Sure, sometimes it will nag you to high heaven to turn it back on, but it can be opted out of.
+19:40:55 <Dustin[m]1> Ah, you're here headgas
+19:41:05 <Dustin[m]1> Success
+19:41:14 <Dustin[m]1> Ok
+19:41:17 <headgas[m]> Yup haha
+19:41:20 <DannyWorkOrderPr> <headgas[m] "I've heard grapheneOs is the mos"> Deserves to be elevated over custom ROM tier, goes a step further than most, with boot security
+19:41:25 <Dustin[m]1> L(
+19:41:28 <Dustin[m]1>  * :)
+19:41:36 <yekip[m]> <TheJollyRoger "Well, one thing you definitely c"> I thought this was a non profit? :-D Howdy JR
+19:41:44 <TheJollyRoger> Ah, the term "ROM" -- I try to avoid saying ROM if I can, since phones haven't loaded their operating system from electronically erasable programmable read-only flash memory in generations.
+19:41:46 <TheJollyRoger> Ahoy!
+19:42:00 <DannyWorkOrderPr> <yekip[m] "I thought this was a non profit?"> It's neither, right now.
+19:42:17 <headgas[m]> Is it open source?
+19:42:27 <TheJollyRoger> GrapheneOS as DannyWorkOrderPr says is much more than a "ROM" - it's actually an entire production-quality release operating system and a series of many different subprojects that all work in conjunction with one another to improve upon the security and privacy characteristics of the Android OPen Source Project.
+19:42:54 <yekip[m]> It's also superb, and hugely appreciated
+19:43:14 <TheJollyRoger> The project isn't registered or legally recognized as a Canadian non-profit for the purposes of taxes and income. As of right now, it's an open source project.
+19:43:18 <hypokeimenon[m]> Are there any similar projects to Graphene OS?
+19:43:19 <headgas[m]> Nice
+19:43:40 <TheJollyRoger> It might be registered as a foundation in the future, when some current issues plaguing the project can be resolved.
+19:43:56 <yekip[m]> there are other projects, whether they are "similar" (either in ethics or success) are debatable. I would choose no on that score.
+19:44:42 <headgas[m]> So is it possible to install GrapheneOs on the pixel 4xl, and maybe I can try and make notes or something to help out since no one is working on it for the pixel 4 yet?
+19:44:42 <TheJollyRoger> There are other mobile operating system projects that have sprung up in recent years, but they aim for different goals than GrapheneOS does.
+19:45:41 <TheJollyRoger> headgas[m]: I don't mean to be snide, but no, it isn't, because GrapheneOS is a specific project; each installation of GrapheneOS is signed, validated, attested, and bitwise identical across every single given device and bitwise validated each time the phone boots.
+19:45:52 <hypokeimenon[m]> Incredible that there isn't a single other project aiming for security.
+19:46:16 <headgas[m]> Hmm ok that sucks
+19:47:05 <TheJollyRoger> You *could* in theory, clone the project's source code and do your own porting, provision your own keys, self-sign your own builds, do all the work yourself, create your own infrastructure, duplicate the attestation server and auditor, and build your own images, but you're not running GrapheneOS at that point.
+19:47:23 <TheJollyRoger> You'd essentially be on your own.
+19:47:45 <headgas[m]> That sounds way to advanced for me lol
+19:49:08 <k-sloth[m]> My alternative to grapheneOS is https://e.foundation/ another great project
+19:49:33 <TheJollyRoger> hypokeimenon[m]: I think it's partially that many people in the opsec/privacy/etc communities do not know what security actually is, outside of "Advanced Security Settings" or other theatrics.
+19:49:37 <hypokeimenon[m]> In a word, don't.
+19:50:16 <headgas[m]> e isn't available for pixel 4 yet either.  Nothing is
+19:50:30 <headgas[m]> And I want the most privacy and security
+19:50:58 <TheJollyRoger> headgas[m]:  if you'd like to get more privacy on the Pixel 4, you can start uninstalling, opting out, or disabling the more invasive apps. That's probably the best option I can give you at this time.
+19:51:45 <TheJollyRoger> Trying to do things like rooting your phone and doing things like installing "custom system images" is going to be a significant step backwards, because that means your verified boot is gone and most of these "KUSTUM ROMMZ!" will significantly roll back or even break the Android Security Model.
+19:52:32 <headgas[m]> Yea I've  de-googled as much as i can.  I have fdroid on it and replaced all the apps I can with ones from fdroid.  And deleted google, but i know i can't delete play services
+19:52:46 <headgas[m]> So thats why i got the nexus 5 and ran ubuntu touch on it
+19:52:49 <TheJollyRoger> What most people don't quite understand is beneath that fancy bubble UI, Android isn't built like a desktop operating system: it's comprised of many different mutually-distrusting components which are specifically designed to be caged via SELinux enforced by the Linux Kernel.
+19:53:24 <TheJollyRoger> Only a very very VERY few select processes like vold and init actually have root-equivalency.
+19:53:30 <TheJollyRoger> And only where unavoidable.
+19:53:46 <TheJollyRoger> I believe if you've done that, you've seriously harmed your privacy and security.
+19:54:15 <headgas[m]> Not trying to do that
+19:54:40 <k-sloth[m]> Interesting I didn't know that about void. Void was my main when I moved to linux
+19:54:40 <TheJollyRoger> That old Nexus 5 will be lacking firmware updates (Broadpwn, anyone?) and won't have any of the advances we've made in SMMU Mitigations since those days.
+19:54:47 <TheJollyRoger> Not void, vold.
+19:55:13 <k-sloth[m]> Lol aw kk
+19:55:13 <hypokeimenon[m]> Not void the operating system.
+19:55:28 <DannyWorkOrderPr> <headgas[m] "Not trying to do that"> headgas: I'd grab a 3a for the time being.
+19:55:59 <TheJollyRoger> So if you want to get a step up in terms of privacy and security without spending more money, take that Nexus 5 running Ubuntu Touch and get the hell off it right now, and start using your P4.
+19:57:05 <headgas[m]> Seriously? My pixel 4 which still has google, is more private and secure than my nexus 5 ubuntu touch?
+19:57:11 <TheJollyRoger> By orders of magnitude.
+19:57:25 <DannyWorkOrderPr> More secure, for sure.
+19:57:28 <TheJollyRoger> Yes, even if you were to get a GMail account and log into it and enable Play Services.
+19:57:36 <headgas[m]> How is that possible? Its linux, I thought linux was better just being linux
+19:57:48 <TheJollyRoger> Ready to have your mind blown?
+19:57:59 <hypokeimenon[m]> Lax security is of detriment to privacy.
+19:58:24 <DannyWorkOrderPr> hypokeimenon definitely. I would take Ubuntu telemetry over Google's version, though, for example.
+19:58:34 <DannyWorkOrderPr> One cannot be perfect without the other.
+19:58:55 <headgas[m]> I thought I was safer on ubuntu touch
+19:59:31 <TheJollyRoger> No. Because you're using an inherently insecure device that's not getting firmware updates, designed with a security model that doesn't distrust the apps.
+19:59:45 <DannyWorkOrderPr> Safer from Google, depending on your use. Less safe from, well, everyone else.
+20:00:24 <TheJollyRoger> Including the fifteen year old scriptkiddy that just learned about say, Broadpwn.
+20:00:26 <headgas[m]> Ok so I have to worry about everyone else more than google?
+20:00:38 <TheJollyRoger> Or any of the prepackaged exploits for obsolete handsets.
+20:00:43 <headgas[m]> I've never heard of broadpwn
+20:00:45 <TheJollyRoger> And I bet /he/ uses GMail ;)
+20:01:10 <cdesai> https://safeboot.dev/
+20:01:35 <TheJollyRoger> Broadpwn is an old vulnerability from ~2017 that affects certain handsets using Broadcom chips.
+20:01:54 <TheJollyRoger> I like to cite it as the reason "this is why we have firmware updates."
+20:02:08 <headgas[m]> Hmm ok
+20:02:11 <TheJollyRoger> And THIS is why we want to upgrade to handsets that have better SMMU mitigations and isolation.
+20:02:11 <k-sloth[m]> > Broadpwn is an old vulnerability from ~2017 that affects certain handsets using Broadcom chips.
+20:02:12 <k-sloth[m]> Wow didn't know this
+20:02:22 <headgas[m]> So I'm safe from google, but anyone can hack my phone since its old?
+20:02:54 <headgas[m]> So I wasted my time and money on getting a nexus 5 and installing ubuntu touch which was a pain for me haha
+20:03:27 <headgas[m]> I wish I found this chat before I got my nexus
+20:03:46 <TheJollyRoger> Yes, which means in the end, you aren't very safe from Google at all, since I guarantee you, cybercriminals will be a ton less respecting of your privacy and security or the integrity of your devices (hey, you do know that other people's phones and dataplans are worth a lot as residential outproxies on the black market, right?) than Google is.
+20:04:10 <DannyWorkOrderPr> Always choose your OS/software before your hardware, haha
+20:04:29 <TheJollyRoger> Since a ton of them will be using Google Services!
+20:05:00 <headgas[m]> damn
+20:05:08 <headgas[m]> I should have got a pixel 3
+20:05:33 <TheJollyRoger> About Linux being more secure... the Linux Kernel is a nightmare when it comes to security, and I'll knock down a couple old myths for you there. Take a good look at this:
+20:05:44 <TheJollyRoger> https://syzkaller.appspot.com
+20:06:29 <TheJollyRoger> Syzbot is a robot that continuously fuzzes the kernel looking for exploits, bugs, or little parts of the program that produce an incorrect result according to a series of pre-defined rules and checks.
+20:06:43 <TheJollyRoger> I think the Google Supercomputer doing the same for Chromium uses about 150,000 CPU cores.
+20:07:07 <TheJollyRoger> Look at how old some of these bugs are: some of them date back /years/ unaddressed.
+20:07:17 <TheJollyRoger> And these are just the low-hanging fruit that can be found via automated testing.
+20:08:38 <TheJollyRoger> Some of these allow writes out of bounds.
+20:08:50 <TheJollyRoger> And believe it or not, that's an ideal backdoor.
+20:09:16 <TheJollyRoger> (just a sec, I got a meeting)
+20:09:21 <k-sloth[m]> I talked to a lot people on reddit to come to the conclusion I should buy P3a and flash GrapheneOS.  I took me 1month to come to the decision. Research is key to protecting you Privacy.
+20:10:16 <k-sloth[m]> Omg Linux can be a nightmare. FML when the sudo flew was found
+20:12:36 <madaidan[m]> <k-sloth[m] "Omg Linux can be a nightmare. FM"> When sudo is available to your user, the attacker doesn't even need a bug to gain root. They can just keylog or intercept your password.
+20:13:46 <k-sloth[m]> Exactly, that's why it was a nightmare
+20:13:51 <shad0wbit[m]> Basically the same with X11
+20:15:05 <TheJollyRoger> (Sorry, I'm tied up in a call, I'll try to hurry)
+20:24:45 <TheJollyRoger> Okay, sorry about that, I return.
+20:25:19 <TheJollyRoger> headgas[m]: the thing with the idea of being "many eyes on the code" and "anyone can review it!" only makes sense if the work is actively being /done/.
+20:27:23 <zxwayland> hello
+20:28:53 <TheJollyRoger> It's not like this is the first time that open source community has gotten complacent and allowed ideology to start colouring their perceptions either: back in 2006 after there were allegations (which ultimately proved to be correct) that the NSA had inserted a kleptographic backdoor into the dual_ecc_drng standard, everyone flocked to OpenSSL thinking that because it was open source, it would
+20:28:55 <TheJollyRoger> be more secure and private. That same year, a single line of code that got commented out mistakenly ended up making a systematically important upstream provider distro produce cryptographic keys with no randomness.
+20:30:36 <headgas[m]> Hmm
+20:30:38 <MadCamel> security's hard. At least linux has powerful tools like ebpf seccomp filters we can use to try to mitigate potential issues. It'd be really nice if applications used them...
+20:30:45 <TheJollyRoger> The takeaway I'd like to leave you with for "the talk" is that old security myths end up being how a lot of power users (or people who assume they are power users) get mislead into trying to increase their security and privacy and end up doing the exact opposite.
+20:30:49 <headgas[m]> So I'm still trying to figure out for sure if I wasted my time getting ubuntu touch
+20:31:34 <headgas[m]> Ok
+20:32:02 <k-sloth[m]> > So I'm still trying to figure out for sure if I wasted my time getting ubuntu touch
+20:32:02 <k-sloth[m]> From what I understand the mistake is buying the nexus not Ubuntu T
+20:32:08 <headgas[m]> I'm worried about being mislead because I don't have enough knowladge
+20:32:18 <headgas[m]> Ok
+20:32:20 <TheJollyRoger> Hey, stick around here then :).
+20:32:37 <cyborgninjaneer[> Funny enough, Samsung fell into the power user trap and screwed up kernel security on production devices.
+20:32:40 <headgas[m]> I will, I just wish I could get GrapheneOS now haha
+20:32:52 <cyborgninjaneer[> So don't feel bad if you've been there and done that
+20:32:57 <TheJollyRoger> Yay~. Welcome aboard the ship!
+20:33:27 <headgas[m]> So is it really safer to go back to my pixel 4xl rather than continue using my nexus 5?
+20:33:28 <TheJollyRoger> Hehehe, yeah, we all start somewhere. I still consider myself to always be a student when I'm behind the keyboard O_O.
+20:33:31 <k-sloth[m]> Can't you take the pixal4 back and exchange for a 3, 3a
+20:33:51 <headgas[m]> No I've had it for several months, I bought it straight from google
+20:34:02 <TheJollyRoger> headgas[m]: unquestioningly, yes, it is FAR safer for you to go back to your Pixel4XL than to hold out on your Nexus 5. I would strongly suggest you either destroy or recycle the old Nexus5 phone, or keep it around as what I call a "poptart"
+20:34:03 <madaidan[m]> <MadCamel "security's hard. At least linux "> Seccomp isn't the same as eBPF.
+20:34:07 <headgas[m]> Before I realised i was dumb for not worrying about security and privacy before
+20:34:19 <k-sloth[m]> Not dumb at all
+20:34:26 <madaidan[m]> eBPF is a security mess and a great example of Linux's issues.
+20:34:33 <headgas[m]> Damn
+20:34:34 <TheJollyRoger> A "Poptart" is a term I use to describe a phone that's only useful for charging other devices, much like how real pop tart pastries are good at supplying energy, but have no real nutritional value.
+20:34:52 <k-sloth[m]> Just not educated about it. We all learn from making mistakes, and I've made heaps being a cyber junior
+20:35:06 <TheJollyRoger> Yeah, don't worry about it man.
+20:35:09 <headgas[m]> I have a lot to learn
+20:35:53 <headgas[m]> So other people told me i made the wrong computer choice too.  What do you guys think? I got Purism's Librem 15 V4 laptop and running their PureOS
+20:35:54 <TheJollyRoger> The only dumb thing to do would be to try to ask questions hoping for confirmation of previously accepted beliefs :). And you definitely haven't done that at all! ^_^
+20:35:59 <MadCamel> madaidan[m]: yeah I'm a bit leery of an interpreter(jit compiler?) built into the kernel.. Regardless, afaik seccomp rules can be written in ebpf. Could be wrong, I only know the old API.
+20:36:06 * TheJollyRoger takes a deep breath
+20:36:09 <madaidan[m]> <headgas[m] "So I'm still trying to figure ou"> Android 4.4 had a better security model than Ubuntu Touch.
+20:36:17 <hypokeimenon[m]> Safer? Yes. Drastically more secure.
+20:36:38 <k-sloth[m]> You could always sell your devices and buy a 2nd hand P3a
+20:37:05 <TheJollyRoger> Well... I'll try to be as gentle as I can, but... yes, I would avoid anything that comes out of Purism. They're a very unscrupulous company that overpromise and fail to deliver.
+20:37:23 <headgas[m]> Yea I was going to sell my pixel 4 xl since i got the nexus 5 but I decided to wait till i could de-google it.  But i dunno now
+20:37:26 <madaidan[m]> <MadCamel "madaidan.: yeah I'm a bit leery "> BPF != eBPF
+20:37:39 <headgas[m]> Well I know they did that with the librem 5
+20:37:52 <madaidan[m]> Seccomp uses BPF, not eBPF
+20:38:04 <k-sloth[m]> > Well... I'll try to be as gentle as I can, but... yes, I would avoid anything that comes out of Purism. They're a very unscrupulous company that overpromise and fail to deliver.
+20:38:04 <k-sloth[m]> Wow interesting. Agreed with the libram5 What about pine64
+20:38:05 <MadCamel> ah. thanks for the correction
+20:38:10 <headgas[m]> But i had no problem receiving my librem 15 laptop, and customer service is better than anything I"ve ever experienced
+20:38:45 <madaidan[m]> Purism is all security/privacy theater. Stay away from them.
+20:38:48 <TheJollyRoger> This might just be because of where I am, but I'm convinced that the Intel Management Engine is a bikeshed discussion in terms of security/privacy circles; yes, I know that it's an undesirable antifeature that adds a ton of attack surface and is essentially used for undesirable functions like enforcement of DRM, but nobody's ever considered that the IME very well could be instrumental in
+20:38:49 <TheJollyRoger> mitigating exploits in system management mode.
+20:38:55 <TheJollyRoger> Which has been a horrorshow since the late 1990's.
+20:39:15 <TheJollyRoger> That, I make no guarantees on.
+20:39:36 <headgas[m]> So my librem 15 isn't safe?
+20:40:01 <TheJollyRoger> I'm not saying it isn't safe. What I'm saying is that we need to think things through before we go immediately rushing out to assume "it's a backdoor, disable it!"
+20:40:20 <TheJollyRoger> And treat marketing that relies on that rhetoric with a healthy amount of skepticism.
+20:40:22 <madaidan[m]> <headgas[m] "So my librem 15 isn't safe?"> Not really.
+20:40:37 <madaidan[m]> PureOS is essentially reskinned Debian + extra theater
+20:40:46 <TheJollyRoger> Yeah. Debian is...
+20:41:05 <headgas[m]> Ok so since I have the librem 15, and I can't return it, what can I do to make it better?
+20:41:33 <madaidan[m]> PureBoot is also an incomplete form of verified boot.
+20:41:44 <headgas[m]> Hmm
+20:41:44 <TheJollyRoger> I feel like I need to be careful on this because one of the other projects I'm involved with has close relations with Debian, but I'm not a fan of the idea of backporting security fixes and diverging from upstream further and further,
+20:41:50 <madaidan[m]> No point in verifying the kernel when the attacker already controls all of user space.
+20:41:54 <TheJollyRoger> then in turn having to pass that off to a middleman.
+20:42:31 <headgas[m]> That doesn't sound good
+20:43:01 <TheJollyRoger> Yeah. Debian's fairly unique among distributions in that rather than update software, they instead "freeze it in time" and then attempt to backport security fixes from future releases to it.
+20:43:29 <headgas[m]> Ok I gotta get ready for work.  But I'll have my phone
+20:43:29 <madaidan[m]> <headgas[m] "Ok so since I have the librem 15"> Install a sane OS which, on the desktop, is near non-existent.
+20:43:33 <headgas[m]> Thinking about switching my sim card back before i leave haha
+20:43:47 <TheJollyRoger> Definitely use your Pixel 4!
+20:43:57 <TheJollyRoger> That Nexus 5 is a poptart.
+20:44:19 <TheJollyRoger> See you soon, stay safe man.
+20:44:29 <MadCamel> I'm sure I'll take heat for being the voice of dissent.. but I think compared to dell your librem is much better. I've torn apart dell firmware and the uefi modules they put in are rather horrifying. Intentional backdoors. Thanks to bootguard we're not allowed to remove these modules without extensive hardware modification. So from a freedom to fix security mistakes standpoint librem wins by far
+20:44:36 <k-sloth[m]> So braxman devices he sells are poptarts lol
+20:45:50 <shad0wbit[m]> Also would say that pureboot is better than some random notebook + Linux + no secure Boot / or secure boot
+20:46:06 <shad0wbit[m]> But isn't AS good as vboot
+20:46:07 <shad0wbit[m]> *as
+20:47:36 <madaidan[m]> <shad0wbit[m] "Also would say that pureboot is "> It's useless. Again, there's no point in verifying the kernel when the attacker already controls all of user space. Why would I try to replace /boot/vmlinuz-linux when I can just replace /sbin/init instead?
+20:49:24 <k-sloth[m]> @madaidan.:matrix.org: what is a sane OS?
+20:50:14 <madaidan[m]> <k-sloth[m] "@madaidan.:matrix.org: what is a"> On the desktop, the closest would be QubesOS.
+20:50:25 <shad0wbit[m]> Sculpt OS
+20:50:50 <madaidan[m]> Sculpt OS isn't really usable
+20:51:49 <shad0wbit[m]> Yeah it's unfortunately still in the beginning. But has some good concepts
+20:51:53 <k-sloth[m]> Is qubes running whonix sane?
+20:52:28 <k-sloth[m]> > > <@k-sloth:matrix.org> @madaidan.:matrix.org: what is a sane OS?
+20:52:28 <k-sloth[m]> > On the desktop, the closest would be QubesOS.
+20:52:28 <k-sloth[m]> OK thank good I did my research probably
+20:52:52 * k-sloth[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/PzYjRGlHwEEtupsZeeDLFqZQ >
+20:53:08 <madaidan[m]> k-sloth:  I'm working on a lot of things in Whonix that should hopefully make it somewhat sane but it's not ready yet.
+20:53:10 <k-sloth[m]> So BSD not sane?
+20:53:41 <madaidan[m]> Qubes-Whonix would be my "in the future" recommendation
+20:54:21 <madaidan[m]> <k-sloth[m] "So BSD not sane?"> "BSD" is vague since there are many of them but no, not really.
+20:55:12 <zxwayland>  hey, does bluetooth wireless earbuds work with grapheneos?
+20:56:07 <MadCamel> zxwayland: yes. but there is a bug that will cause audio to continue to come out of the phone's speaker even when they are paired unless you fiddle with it a lot. Fix should be in the next update.
+20:56:28 <zxwayland> oh no
+20:57:15 <MadCamel> try turning nfc on then off then rebooting. works for me.
+20:57:21 <zxwayland> so, do we use the youtube via web browser to listen to music? spotify isn't on the f-droid store
+20:57:37 <k-sloth[m]> > > <@k-sloth:matrix.org> So BSD not sane?
+20:57:38 <k-sloth[m]> > "BSD" is vague since there are many of them but no, not really. Wow mind blown.
+20:58:04 <k-sloth[m]> > so, do we use the youtube via web browser to listen to music? spotify isn't on the f-droid store
+20:58:04 <k-sloth[m]> You can use newpipe,
+20:58:19 <MadCamel> newpipe++ it's great software
+20:59:00 <zxwayland> oh nice
+20:59:09 <zxwayland> never heard of that app
+20:59:48 <k-sloth[m]> NewPipe
+20:59:48 <k-sloth[m]> https://f-droid.org/app/org.schabi.newpipe
+21:01:05 <MadCamel> Heh. So I've made a patch to make the lockscreen bruteforce timeout exponential.. Going to submit a PR upstream once I've gotten some critique. I was thinking of maybe attempting a 2FA lockscreen for Graphene. Fingerprint PLUS pin/pattern. What do you guys think?
+21:02:20 <TheJollyRoger>  MadCamel, that'd be awesome! I would probably suggest prioritizing the Fingerprint Plus pin/pattern first, since right now I've been testing the timeout delay, the exponential increase kicks in after 50 tries.
+21:02:38 <TheJollyRoger> After which it begins to double every 10 to a maximum of 24 hours at 150 tries.
+21:03:04 <TheJollyRoger> This would take approximately ~2 months of time to reach if my guess is right.
+21:04:01 <MadCamel> Oh very nice I didn't realize it was being worked on
+21:05:19 <TheJollyRoger> Oh, that part's already a part of the firmware.
+21:06:25 <zxwayland> wait, maybe i don't need a wireless earbuds. i do have a headjack port on my pixel 3a
+21:08:51 <TheJollyRoger> So what it'll end up being: for the first 10 attempts there won't be a delay, after that it's 30 seconds per attempt.
+21:09:25 <TheJollyRoger> Once you hit 50, it increases to one minute. After 60, that's two minutes. After 70, four, and 80, eight, and so on and so on.
+21:09:50 <k-sloth[m]> > wait, maybe i don't need a wireless earbuds. i do have a headjack port on my pixel 3a
+21:09:50 <k-sloth[m]> Yup, its much better then using Bluetooth of you can handle having a cord dangling everywhere
+21:10:24 <TheJollyRoger> So after two months (about) we've gone through 150 combinations total, before being slowed to one guess each day. At that point, I'd probably say the remaining four-digit pin code would probably take the next six and a half centuries, give or take.
+21:10:44 <zxwayland> i hate charging my old wireless earbuds. but i got rid of them because i switched to a flip phone
+21:12:56 <k-sloth[m]> Nice. Tbh the Pixal3a headphones that come in the box are pretty good
+21:13:23 <zxwayland> wait whaaaa
+21:13:26 <TheJollyRoger> Unlocking is handled via the Titan HSM. The timer in it increments, so switching it off and back on again won't bypass the function, nor will spoofing the clock from the host it's a really neat system.
+21:16:56 <zxwayland> i don't think it comes with the headphones in the box
+21:17:14 <k-sloth[m]> I don't know much about the lockscreen stuff. But I love how I can pin scramble. Its exactly the same as my banks log in. So thanks for this
+21:18:05 <k-sloth[m]> > i don't think it comes with the headphones in the box
+21:18:05 <k-sloth[m]> It does white google in ear headphones
+21:18:20 <zxwayland> yeah it doesn't. just checked online for whats included in the box
+21:18:33 <zxwayland> i thought i forgot to take it out of the box
+21:18:41 <k-sloth[m]> Um I brought one
+21:19:02 <zxwayland> ohh
+21:19:28 <k-sloth[m]> Maybe depends on counrry
+21:19:35 <k-sloth[m]> *country
+21:20:32 <zxwayland> well i got the first google pixel 3 when it first came out. it came with the earbuds
+21:21:02 * k-sloth[m] uploaded an image: VectorImage_2020-05-12_072053.jpg (95KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/GrUKAGsmiUnKYYnivlwdJdJn >
+21:22:20 <k-sloth[m]> I got these in the 3a box. I like them over my Sennheiser
+21:23:07 <headgas[m]> Why don't you guys want to use wireless headphones?
+21:24:50 <k-sloth[m]> For me Bluetooth has vulnerabilitys
+21:26:44 <TheJollyRoger> I'm fine with using Bluetooth, although I really wish I didn't have to keep a separate gadget charged.
+21:27:41 <k-sloth[m]> The new covid-19 apps uses Bluetooth and require it to be on all the time. That finally made be dumb android and switch here. Even though I never used Bluetooth in the 1st place.
+21:28:44 <zxwayland> wait, people already have the covid-19 app tracking already?
+21:32:16 <k-sloth[m]> > wait, people already have the covid-19 app tracking already?
+21:32:16 <k-sloth[m]> In my country its not tracking. But with a lot my college doing test and government promising to release source code but havent, I'm taking no chances
+21:37:44 <zxwayland> oh, you live in euro?
+21:42:21 <k-sloth[m]> No
+21:43:00 <k-sloth[m]> <k-sloth[m] "The new covid-19 apps uses Bluet"> Anyway location and/country doesn't matter. Most the covid apps are built the same
+21:44:21 <k-sloth[m]> Location and/or country doesn't matter. Most the covid app are made the Same
+21:46:25 <supajjj[m]> > Heh. So I've made a patch to make the lockscreen bruteforce timeout exponential.. Going to submit a PR upstream once I've gotten some critique. I was thinking of maybe attempting a 2FA lockscreen for Graphene. Fingerprint PLUS pin/pattern. What do you guys think?
+21:46:25 <supajjj[m]> That's Awsesome!!!
+21:57:50 <demonMachina> TheJollyRoger: can you pass the CTS webpage again, if able? Fresh install...didnt back up bookmakrs :|
+21:58:35 <demonMachina> @TheJollyRoger: Thanks in advance
+22:00:04 <TheJollyRoger> Hi demonMachina, one sec.
+22:00:33 <TheJollyRoger> https://github.com/Peter-Easton/GrapheneOS-Knowledge/blob/master/For%20Testers/The-Compatibility-Test-Suite.md Was this the one you were looking for?
+22:05:34 <demonMachina> that's it! Thank you
+22:05:58 <TheJollyRoger> You're welcome!
+22:06:47 <TheJollyRoger> Ah, crap. I just need to make a minor update to it...
+22:07:59 * cx2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/WnoxOePwpOTJCxDeywWWAfRZ >
+22:12:20 <TheJollyRoger> demonMachina: I just added a part about output states for a test, under "Filling out the lines" about what to write for a test: either "pass" "fail" or "flaky"
+22:14:32 <demonMachina> Awesome, i'll reload, and take my marching orders from there
+22:14:51 <TheJollyRoger> Arr!
+22:48:41 <bseeinu[m]> Qubes safe to use TOR with? Also, better not use it at all from a residential connection, right?
+22:49:20 <bseeinu[m]> And to be clear: just for privacy reasons.
+22:49:35 <headgas[m]> You cant use tor at home?
+22:50:23 <TheJollyRoger> bseeinu[m]: If you are in an area where Tor is censored, blocked, or dangerous, you can use bridges, or if all options fail, you can use meek.
+22:50:51 <JTL> TheJollyRoger: Hi
+22:51:21 <bseeinu[m]> I'm wondering more about general guidelines/don't do this
+22:51:26 <TheJollyRoger> I /strongly/ recommend not using meek unless you have to. It costs the Tor project more money to operate and if you're just trying to win opsec points, please don't do that because there are people in Syria, China, and Egypt that will desperately need the capacity.
+22:51:27 <headgas[m]> I have tor on my nexus
+22:51:28 <bseeinu[m]> And best setups
+22:52:02 <TheJollyRoger> Ahoy JTL! ^_^
+22:52:15 <JTL> Ahoy
+22:53:35 <TheJollyRoger> bseeinu[m]: If Tor is censored, blocked, or dangerous, use bridges or meek. Using a VPN with Tor can seriously damage your anonymity.
+22:53:53 <bseeinu[m]> Interesting
+22:54:04 <bseeinu[m]> What's the optimal connection you'd use
+22:54:16 <TheJollyRoger> Just Tor Browser.
+22:54:18 <TheJollyRoger> That's it.
+22:54:20 <bseeinu[m]> Mobile data with no VPN?
+22:54:32 <TheJollyRoger> On my residential connection.
+22:54:36 <bseeinu[m]> On your regular desktop OS from residential?
+22:54:39 <TheJollyRoger> Because /I own my router./
+22:54:41 <TheJollyRoger> Yes.
+22:54:43 <TheJollyRoger> Because I own my router.
+22:54:45 <bseeinu[m]> And no VPN
+22:54:48 <TheJollyRoger> Yes.
+22:54:53 <TheJollyRoger> Remember Opsec's most dangerous secret:
+22:55:08 <bseeinu[m]> How does owning the router mean anything
+22:55:33 <bseeinu[m]> And what about if you own it but block some services and there's deep packet inspection via a remote IPS service
+22:55:34 <TheJollyRoger> It means I can delete my access logs anytime I wish or choose not to keep them at all.
+22:55:49 <bseeinu[m]> Sorry I interrupted the secret
+22:55:51 <TheJollyRoger> That's what encryption and SSL is for.
+22:55:52 <bseeinu[m]> :)
+22:55:55 <headgas[m]> How do you own your own router?
+22:56:01 <bseeinu[m]> Lol
+22:56:02 <JTL> Your ISP can still infer some things if they really cared enough
+22:56:11 <bseeinu[m]> That was my point
+22:56:16 <bseeinu[m]> Like
+22:56:27 <bseeinu[m]> Do you really want to have that clear to ISP
+22:56:34 <JTL> As I once heard "All using a VPN does is shifting the risk elsewhere, and in most cases this can lead to bad things"
+22:56:38 <TheJollyRoger> Opsec's most dangerous secret is that you are your own worst enemy: academics and researchers with far more knowledge than I spend HUGE amounts of time and effort figuring out how to do what I want to do.
+22:56:46 <TheJollyRoger> So the more "custom tuning" you do?
+22:56:50 <TheJollyRoger> The worse off you're going to be.
+22:57:04 <JTL> Doesn't help that underlying browser engines have integrated ad blocking
+22:57:06 <JTL> (as an example)
+22:57:16 <headgas[m]> I use the librem tunnel. Purisms vpn
+22:57:17 <JTL> Although I think Safari has some sort of conent blocker engines
+22:57:26 <JTL> Isn't that just rebranded PIA lol?
+22:57:37 <JTL> er don't have*
+22:57:50 <bseeinu[m]> So vanilla connection, no VPN even if mullvad with bitcoin
+22:58:16 <bseeinu[m]> Plain desktop OS and just the browser
+22:58:25 <bseeinu[m]> And you go
+22:58:31 <TheJollyRoger> headgas[m]: I wouldn't say I truly own it... but I'd like to challenge anyone to go to a coffee shop, pick the router off the shelf, and undo the screws in it, get the root password to it, etc.
+22:58:44 <TheJollyRoger> Without being seen as suspicious.
+22:58:45 <JTL> TheJollyRoger: I have some ideas there
+22:58:48 <TheJollyRoger> Yes, you could do this clandestinely.
+22:58:52 <TheJollyRoger> But I'm not willing to do that.
+22:59:15 <TheJollyRoger> At least, not anymore ;)
+22:59:18 <headgas[m]> I don't understand
+22:59:25 <TheJollyRoger> bseeinu[m]: if you're very cautious, you can use Whonix.
+22:59:44 <TheJollyRoger> But homebrewing always ends in tears.
+22:59:45 <bseeinu[m]> Ok
+22:59:50 <bseeinu[m]> Makes sense
+22:59:50 <cx2[m]> TheJollyRoger: Curious, how does tor over vpn damage your anonymity?
+23:00:19 <bseeinu[m]> Because of credentials? How about Wireguard and bitcoined Mullvad
+23:00:40 <TheJollyRoger> cx2[m]: tor browser assumes that you don't want to trust the actors on the network, and so utilizes its own stream isolation.
+23:00:47 <TheJollyRoger> This was a very careful and deliberate design choice.
+23:00:58 <cx2[m]> TheJollyRoger: And what's the issue with Whonix, and requiring extreme caution? hahaha I mean, ive used it sure.... same with TOR,
+23:01:28 <TheJollyRoger> Now you're going against their design decisions by adding another actor in the middle and putting all your traffic through not just the ISP but also the VPN.
+23:01:48 <TheJollyRoger> cx2[m]: the most likely attack vector?
+23:01:51 <TheJollyRoger> You open a PDF.
+23:02:02 <TheJollyRoger> And it downloads external content /outside/ of Tor Browser.
+23:02:14 <TheJollyRoger> That's the threat vector Whonix is designed to try to prevent.
+23:02:24 <TheJollyRoger> Or if say, Tor Browser gets exploited.
+23:02:41 <TheJollyRoger> Just a sec. I will return shortly.
+23:03:52 <renlord> madaidan[m]: do you have material to UEFI secure boot + dm-verity
+23:04:21 <renlord> my naive googling is not really effective
+23:06:23 <madaidan[m]> <renlord "madaidan.: do you have material "> There's tons of guides on setting up them up.
+23:07:03 <madaidan[m]> UEFI secure boot verifies kernel/bootloader/initramfs -> kernel verifies the rest of the OS with dm-verity
+23:07:28 <renlord> can an adversary bypass this by doing a cmos flash?
+23:08:44 <JTL> I guess it depends on the motherboard and it's implementation of integrity checks (if any)
+23:08:57 <JTL> That's my educated guess
+23:09:04 <madaidan[m]> <renlord "can an adversary bypass this by "> An attacker can attack the firmware, yes. There is Intel Boot Guard/AMD Secure Boot to cover that though.
+23:09:09 <madaidan[m]> https://mjg59.dreamwidth.org/33981.html
+23:10:37 <cx2[m]> madaidan.: TheJollyRoger mentioned before he left that TOR over VPN is not a great decision. This would also include Whonix as well, if the host is also running a VPN?
+23:11:21 <renlord> tor over vpn @_@
+23:11:21 <madaidan[m]> <cx2[m] "madaidan.: TheJollyRoger mention"> Yes.
+23:11:31 <madaidan[m]> You shouldn't use Tor over a VPN.
+23:11:42 <madaidan[m]> It's useless at best and harmful at worst.
+23:17:01 * cx2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/PMTUmtgwhcAamTMOOiCnXKMv >
+23:19:20 <renlord> cx2[m]: just run tor all the time
+23:19:39 <renlord> it is suspicious af if you turn it on and off
+23:20:00 <TheJollyRoger> headgas[m]: what don't you understand?
+23:20:17 <TheJollyRoger> (I'm running around a lot right now, so I might be a tad high latency)
+23:21:21 <headgas[m]> Well I'm still a newb. Not sure. I use the librem tunnel(purisms vpn ) at home and I have tor on my nexus 5
+23:23:11 <TheJollyRoger> Er, are you asking me questions about the VPN or... Tor usage...?
+23:23:52 <headgas[m]> I'm just not sure if both things are bad or one is or what lol
+23:24:07 <TheJollyRoger> Well, If I recall right Purism's Librem One services are hosted on Digital Ocean or they resell another service provider's VPN service, I don't think they actually own their own services.
+23:24:40 <cx2[m]> <renlord "it is suspicious af if you turn "> That's the part I'm not getting I guess. If I am running a VPN... They can't see my connection any way, and in my mind I'm getting the added advantage of the rest of my processes not named TBB to at least route through a VPN tunnel
+23:24:58 * madaidan[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/MPHmqaULddXTbPmYkCwDhNPg >
+23:25:10 <madaidan[m]> That's assuming your connection goes VPN -> Tor
+23:25:41 <magicos[m]> <renlord "it is suspicious af if you turn "> Why?
+23:25:50 <TheJollyRoger> Because then you have no cover traffic.
+23:26:10 <cx2[m]> madaidan.: Thanks for the link! I'll give it a read
+23:26:19 <magicos[m]> I don't understand
+23:26:33 <TheJollyRoger> That's how the Harvard Bomb guy got busted - he was the only one anonymous when he sent that threatening letter.
+23:26:40 <madaidan[m]> cx2: You should also read https://matt.traudt.xyz/p/mRikAa4h.html
+23:26:42 <renlord> magicos[m]: traffic correlation attacks
+23:26:47 <JTL> > 16:24 <@TheJollyRoger> Well, If I recall right Purism's Librem One services are hosted on Digital Ocean or they resell another service provider's VPN service, I don't think they actually own their own services.
+23:26:48 <madaidan[m]> By a Tor developer
+23:26:50 <TheJollyRoger> Well that and when he was questioned, he broke down and confessed everything.
+23:26:59 <JTL> I think the VPN was resold PIA (Private Internet Access)
+23:27:05 <TheJollyRoger> JTL oh that makes sense.
+23:27:13 <TheJollyRoger> PIA it is then argh >_<.
+23:27:15 <JTL> And PIA has their own issues
+23:27:23 <TheJollyRoger> Yeah like...
+23:27:33 <TheJollyRoger> homer-simpson-hypnotized-and-screaming.avi
+23:27:39 <madaidan[m]> <TheJollyRoger "That's how the Harvard Bomb guy "> He was only caught because he admitted it.
+23:27:50 <madaidan[m]> Ah
+23:27:53 <madaidan[m]> You already said that
+23:27:55 <madaidan[m]> nvm
+23:28:04 <TheJollyRoger> AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaaaaaaa- hands over cash *GASP* here ya go -- AAAAAAAAAAAAAAAA
+23:28:33 <cx2[m]> <madaidan[m] "By a Tor developer"> Thanks again... will check them out. In the mean time, it sounds like the best option (using whonix as an example) would be simply block all connections via firewall, and white list the Virtualbox?
+23:28:43 <TheJollyRoger> Yeah. Not Tor's fault, it was just... bad opsec and not understanding what the tools do or how they keep you safe.
+23:29:43 <magicos[m]> <renlord "magicos: traffic correlation att"> I know what that is. Was curious why you said its suspicious to turn VPN on and off
+23:30:03 <renlord> tor
+23:30:36 <TheJollyRoger> Because then someone in a position to watch the network gain insights into not just that you're using it, but also *when* you're using it.
+23:31:08 <magicos[m]> Thanks for the answer
+23:31:34 <TheJollyRoger> Anonymity loves company.
+23:31:56 <madaidan[m]> <cx2[m] "Thanks again... will check them "> The firewall doesn't really help.
+23:32:08 <TheJollyRoger> If I were to take three people whose names I know, Alice, Bob, and Charlie, if only Bob is anonymous, but Alice and Charlie aren't, then I can deduce that the mystery man is Bob.
+23:32:30 <TheJollyRoger> cx2[m]: I would recommend just using the tools /as they have been designed to be used by their makers./
+23:32:36 <madaidan[m]> Whonix already forces all traffic over Tor.
+23:33:30 <cx2[m]> Right..... but the rest of the machine is still making connections that I would also want protected, no?
+23:33:53 <TheJollyRoger> cx2[m]: do you recall what I said about the modes of anonymity?
+23:34:01 <TheJollyRoger> And why it is a Very Bad Thing to cross the streams?
+23:34:06 <JTL> ^
+23:35:15 <TheJollyRoger> You want to use Tor the way that its designers /intended it to be used./ Not mixing the Modes of Anonymity is crucial to whether or not Tor is able to protect you.
+23:35:58 <JTL> Hi I'm Bob! You just got me fuck
+23:36:11 <k-sloth[m]> What about the rumor with NSA owning nodes??
+23:36:18 <chpkdev[m]1> <TheJollyRoger "Well, If I recall right Purism's"> Librem One VPN is just rebranded PIA
+23:37:06 <TheJollyRoger> k-sloth[m]: that's what SSL/TLS and /using the tools properly/ is specifically designed to thwart.
+23:37:12 <chpkdev[m]1> Chat = Riot, Social = Tusky
+23:38:03 <TheJollyRoger> Plus, there are a HUGE number of exit nodes and guard nodes and relays.
+23:38:32 <TheJollyRoger> chpkdev[m]1: hey right on.
+23:38:47 <k-sloth[m]> > k-sloth: that's what SSL/TLS and /using the tools properly/ is specifically designed to thwart.
+23:38:47 <k-sloth[m]> Right and its just a rumor. I'm sure Snowden wouldn't suggest it unless he a double agent
+23:38:48 <madaidan[m]> <k-sloth[m] "What about the rumor with NSA ow"> They already see all data as it passes over the internet anyway. Owning a few nodes won't give them anything.
+23:39:14 <k-sloth[m]> > > <@k-sloth:matrix.org> What about the rumor with NSA owning nodes??
+23:39:14 <k-sloth[m]> > They already see all data as it passes over the internet anyway. Owning a few nodes won't give them anything.
+23:39:14 <k-sloth[m]> But that data is encrypted
+23:40:21 <cx2[m]> TheJollyRoger: Understood.... And I have learned something.... reading through the articles that madaidan..
+23:40:22 <cx2[m]> So, use TOR when you wish to browse anonymously..... but the rest of the traffic from your machine will potentially remain unencrypted.
+23:40:22 <cx2[m]> Use VPN when you generally want to remain private?
+23:40:28 * madaidan[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/YOhBISHVfORFWvCTlsTfzAnb >
+23:41:17 <TheJollyRoger> cx2[m]: do me a favour and go and get yourself several large sheets of paper, and a couple different coloured pens or colouring pencils.
+23:41:33 <TheJollyRoger> Lay out a few.
+23:41:39 <renlord> would not surprise me if a vpn provider was operated by the NSA instead.
+23:41:41 <renlord> lol
+23:42:01 <TheJollyRoger> renlord: ahahaha, yeah, really. Especially running it out of a place in Panama, with no accountability, registered to a PO Box in Delaware...
+23:42:04 <TheJollyRoger> "Hey it's anonymous!"
+23:42:31 <renlord> what was that vpn provider that provided huge discounts a few months ago that got "compromised"?
+23:42:35 <renlord> was it Nord?
+23:42:36 <k-sloth[m]> Lol
+23:42:50 <TheJollyRoger> cx2[m]: tear off the first page and set it aside. At the top of the first page, write "Sender does not know Recipient. Using Tor."
+23:42:59 <TheJollyRoger> We're going to call that the Red page.
+23:43:11 <TheJollyRoger> In it, I want you to write down all your activities that fit this definition.
+23:43:21 <TheJollyRoger> Don't share them with me (obviously). This is for your own use.
+23:43:24 <JTL> renlord: NordVPN did get a server compromised
+23:43:42 <JTL> and the attacker showed how they could get "session mappings" with root access
+23:43:44 <JTL> lol
+23:43:45 <TheJollyRoger> renlord: yeah, it was NordVPN. Suspiciously enough, they are also run out of Panama and owned by pretty shady interests.
+23:43:48 <TheJollyRoger> Ahahahahahaha
+23:44:16 <TheJollyRoger> cx2[m]: tear off another page and set it aside. At the top of the second page, write "Sender knows Recipient, both him and me use Tor."
+23:44:35 <k-sloth[m]> Lmao and wasn't Nord hacked a little while back
+23:44:40 <TheJollyRoger> We're going to call this the Orange Page. Write down the activities that meet this definition in it.
+23:45:13 <TheJollyRoger> cx2[m]: tear off another page and set it down. At the top of this page, write, "My real name. Not using Tor."
+23:45:19 <TheJollyRoger> This is the Green page.
+23:46:01 <TheJollyRoger> This is where you're going to do your online banking, your professional job searching in your real name.
+23:46:10 <TheJollyRoger> Once you write an activity down,
+23:46:12 <TheJollyRoger> IT.
+23:46:16 <TheJollyRoger> DOESN'T
+23:46:18 <TheJollyRoger> LEAVE.
+23:46:20 <TheJollyRoger> THAT.
+23:46:22 <TheJollyRoger> PAGE.
+23:46:36 <TheJollyRoger> EVER.
+23:46:39 <k-sloth[m]> Jolly, this is pretty much Qubes right?
+23:46:44 <TheJollyRoger> k-sloth[m]: yes.
+23:46:51 <TheJollyRoger> (This is why I picked those colours deliberately :) )
+23:47:06 <TheJollyRoger> The same security principles that apply to Qubes apply to safe Tor usage.
+23:47:17 <TheJollyRoger> Sec, brb.
+23:48:24 <k-sloth[m]> Aw that makes perfect sense, but only if tor is used the way it was ment to correct along with the tools
+23:50:37 <TheJollyRoger> Yep. You have to use the tools correctly if you want them to protect you. \
+23:51:00 <TheJollyRoger> This is why simply "Torify everything" is a bad, bad idea.
+23:52:16 <TheJollyRoger> There are other modes of anonymity, but for now, keep it simple, and we'll start with these three.
+23:52:33 <k-sloth[m]> Mmmm some of my VM don't run tor. I set them up using pfsense with vpn. Is that OK?
+23:52:46 <TheJollyRoger> Again, all in your use case.
+23:53:21 <TheJollyRoger> There are modes such as "Using Tor, but not anonymous." such as if you're using Tor to bypass a firewall -- a good example of this is using Tor Browser to bypass the work firewall so you can get onto your Facebook account on your lunch break.
+23:53:49 <TheJollyRoger> THIS kind of a use case you definitely NEVER want to pollute the others.
+23:54:31 <k-sloth[m]> > There are modes such as "Using Tor, but not anonymous." such as if you're using Tor to bypass a firewall -- a good example of this is using Tor Browser to bypass the work firewall so you can get onto your Facebook account on your lunch break.
+23:54:31 <k-sloth[m]> With that exmple can that not hurt the organization infrastructure
+23:55:03 <TheJollyRoger> What do you mean?
+23:55:50 <k-sloth[m]> Well couldnt that introduced a vulnerability into the organization
+23:58:36 <TheJollyRoger> Well let's see... posting confidential work data to Facebook? Yes. Downloading a buggered up or counterfeit copy of the Tor Browser which contains a malware payload, not verifying it, and running it anyways? Quite possibly. Facebook runs executable code in your browser that breaks out of Firefox and downloads malware to your computer? Also a vector.
+23:59:47 <TheJollyRoger> Are those likely though? I don't know.
+23:59:53 <TheJollyRoger> I can't tell you.

@@ -1,0 +1,621 @@
+00:02:55 <madaidan[m]> <strcat[m] "madaidan.: it would take too lon"> Ah, I didn't think of LTO. That makes a lot of sense.
+00:05:17 <strcat[m]> madaidan.: it wouldn't really help much anyway
+00:05:24 <strcat[m]> madaidan.: there is upstream work on fine-grained ASLR to do stuff like that
+00:05:34 <strcat[m]> it doesn't really offer much
+00:06:17 <dxrwzy9y[m]> Should you use Orbot in VPN mode?
+00:06:28 <strcat[m]> yes
+00:06:43 <strcat[m]> using it by having apps route traffic through it is error prone, those apps can screw it up and have leaks
+00:07:02 <dxrwzy9y[m]> Don't choose any apps, right?
+00:07:05 <strcat[m]> better to have the OS feature force all their traffic through it via always-on VPN + block connections not via VPN
+00:07:11 <strcat[m]> dxrwzy9y: yes just do the whole user profile
+00:07:15 <strcat[m]> don't do only specific apps
+00:07:29 <dxrwzy9y[m]> Okay
+00:07:39 <strcat[m]> the OS routes all OS and app traffic through it other than the low-level OS networking for connecting to a network and letting the VPN app do stuff
+00:07:45 <dxrwzy9y[m]> Standard settings, right?
+00:08:00 <strcat[m]> just enable always-on VPN + block connections not through VPN
+00:08:04 <strcat[m]> in the VPN settings in the OS
+00:08:05 <strcat[m]> that's it
+00:08:07 <strcat[m]> don't change anything else
+00:08:24 <dxrwzy9y[m]> Okay
+00:08:49 <madaidan[m]> <strcat[m] "madaidan.: there is upstream wor"> Knowing upstream, it's probably going to take a few years to land.
+00:46:58 <dxrwzy9y[m]> Do widgets connect to the internet when you're not interacting with them?
+00:49:35 <Lightsword> hi, I'm trying to recover data off of a pixel 3a xl(bonito) that's failing to boot, I built an eng build using "choosecombo release aosp_bonito eng" but doesn't seem to be enabled during boot
+00:50:15 <Lightsword> any idea how I can get adb working so I can debug the boot failure?
+00:52:46 <rny> Lightsword: you need to use the signed release from releases.grapheneos.org if you have installed daniel's keys
+00:53:00 <Lightsword> rny, no keys installed and unlocked
+00:53:10 <rny> Lightsword: then what data is there to recover?
+00:53:24 <Lightsword> rny, the userdata partition
+00:53:39 <rny> were you using stock previously?
+00:54:05 <rny> the stock google OS
+00:55:22 <rny> reflash that and use adb to do whatever backup it is that you need, then follow the directions on grapheneos.org, installing new keys into avb wipes the device.
+00:56:01 <Lightsword> rny, I can't get stock to boot to recover data either
+00:56:19 <Lightsword> I can get adb in recovery but that's about it so far
+00:56:26 <Lightsword> but can't seem to mount data...
+00:56:39 <rny> Lightsword: of course not, the filesystem is encrypted lol
+00:57:01 <rny> it needs to boot successfully into the OS
+00:57:16 <Lightsword> rny, yeah, that's what I figured, is there any way to force enable adb during boot with grapheneos?
+00:58:24 <rny> Lightsword: unfortunately no
+00:58:30 <Lightsword> I followed the "Faster builds for development use only" option for the build
+00:58:47 <rny> Lightsword: otherwise an adversary would be able to compromise everyone else's pixel
+00:59:10 <rny> if you figured it out, google will pay you $1M+
+00:59:11 <Lightsword> rny, even with a fully unlocked bootloader and no keys installed in avb?
+00:59:41 <Lightsword> I thought that's what eng images were for
+00:59:49 <rny> Lightsword: no i dont think so, it'll just wipe userdata everytime there's changes
+01:00:22 <Lightsword> rny, how do you create development images for debugging early boot issues usually?
+01:00:32 <rny> Lightsword: userdebug builds
+01:00:50 <Lightsword> so "choosecombo userdebug aosp_bonito eng"?
+01:01:22 <Lightsword> or "choosecombo release aosp_bonito userdebug"?
+01:01:45 <rny> Lightsword: 2nd
+01:03:22 <dxrwzy9y[m]> <dxrwzy9y[m] "Do widgets connect to the intern"> Do they?
+01:04:08 <rny> Lightsword: question here is if you've acrued the userdata while the phone's bootloader was unlocked?
+01:04:20 <Lightsword> rny, yes
+01:04:34 <Lightsword> has not been wiped since boot failure
+01:04:46 <Lightsword> and was already unlocked with no keys installed
+01:07:10 <Dylanger[m]> 😑
+01:17:44 <Lightsword> rny, what img files are necessary to flash for a userdebug build?
+01:18:19 <rny> fastboot flashall
+01:19:16 <Lightsword> rny with the files in the $OUT folder?
+01:24:17 <rny> choosecombo sets up your env so fastboot knows where to find the img files to flash
+01:25:29 <Lightsword> rny, ah, I'm flashing on a different system than I compile on, but ANDROID_PRODUCT_OUT seemed to set it up at least
+01:26:02 <rny> then run choosecombo on the system you're flashing on too
+01:26:10 <rny> so its sets up the environment too
+01:29:18 <dxrwzy9y[m]> Is it a security or privacy issue if I use AirPods on GrapheneOS?
+01:30:12 <cyborgninjaneer[> Having Bluetooth on in public is a privacy issue unless GrapheneOS has patched it. It usually doesn't change MAC often enough
+01:30:17 <rny> dxrwzy9y[m]: it is a security/privacy issue once you toggle on bluetooth lol
+01:30:57 <dxrwzy9y[m]> So it's better to use wired headphones in public while Bluetooth is okay in private?
+01:31:00 <cyborgninjaneer[> I think there have been some pretty serious Bluetooth based exploits too, but again I don't know how much GrapheneOS has mitigated them.
+01:31:56 <cyborgninjaneer[> Bluetooth has a longer range than you think, but what's the chance of some rando driving around the neighborhood hacking people's phones via Bluetooth?
+01:32:30 <cyborgninjaneer[> On the other hand, lots of places use Bluetooth beacons in public places to track smartphone users as they move around.
+01:32:41 <cyborgninjaneer[> So, you do the math.
+01:33:32 <rny> dxrwzy9y[m]: if you're asking if bluetooth usage increases your exposure to security/privacy risks -- yes.
+01:33:50 <cyborgninjaneer[> ^ that's the general answer
+01:33:54 <rny> if you're asking if bluetooth usage will harm your security/privacy -- the short answer is unlikely.
+01:34:18 <rny> a lot of work has gone into improving security and privacy within the aosp codebase alone
+01:35:47 <dxrwzy9y[m]> Okay
+01:36:06 <dxrwzy9y[m]> Are there any good earbuds you'd recommend?
+01:36:26 <rny> ask in the offtopic channel
+01:36:36 <cyborgninjaneer[> If you're trying to play spy-vs-spy and be as close to a ghost as you can, use only WiFi with full MAC  randomization. For general use, turn off Bluetooth when you put the earbuds away so you're not walking around with it enabled for no reason.
+01:37:00 <rny> the earbuds would likely give away your privacy, not so much the phone's bluetooth
+01:37:14 <cyborgninjaneer[> You should not have BT enabled if you aren't using it.
+01:37:25 <dxrwzy9y[m]> Yeah of course I always disable whatever I'm not using at the moment.
+01:38:19 <dxrwzy9y[m]> <rny "the earbuds would likely give aw"> Bluetooth is encrypted, right? Others can't intercept what I'm listening, right?
+01:38:51 <cyborgninjaneer[> It's encrypted, but the security isn't great.
+01:39:27 <rny> the microcontrollers in the bt devices cant keep up lol
+01:39:29 <cyborgninjaneer[> Try to use up to date hardware if that's a concern. I think at the moment that would be BT 5.1
+01:40:15 <cyborgninjaneer[> Short answer is "Yes, but don't trust it."
+01:40:54 <cyborgninjaneer[> For example, I never enter passwords on a Bluetooth keyboard
+01:42:27 <cyborgninjaneer[> As far as some weirdo listening in on your phone calls or music, it's possible but unlikely someone would go to the trouble.
+01:43:16 <cyborgninjaneer[> There's not a lot of motive for a criminal or law enforcement to do that to the average person.
+01:52:16 <vudu> Hi, i have a question about grapheneos manager, my device is being controlled by a third party
+01:52:41 <vudu> Is it possible that the person who is managing my device can see my location and media?
+01:52:56 <vudu> I am using google pixel 4
+02:04:34 <brenneke[m]> <vudu "Hi, i have a question about grap"> What is graphenos manager?
+02:05:12 <vudu> Device manager, but i think the person who is managing the devices called it grapheneos manager.
+02:05:37 <louipc> your company provided phone?
+02:07:30 <vudu> Yes, but i have my concerns since i have no idea if someone who is managing my phone has acces 2 my location and media and etc, is that possible?
+02:11:32 <brenneke[m]> Does it show GrapheneOS screen when it boots?
+02:11:46 <vudu> Yes
+02:11:55 <louipc> hmm i'm not sure what features your device manager has
+02:12:22 <louipc> but google has some feature for android you can track your phone's location
+02:13:06 <brenneke[m]> Can you access Location settings?
+02:13:23 <vudu> And media and my confersations? Would that be possible with the right features? Or is graphene protecting against that kind of managaers
+02:14:10 <vudu> Where can i find location settings so i can look?
+02:14:27 <brenneke[m]> In Settings.
+02:14:38 <vudu> Ow fount it, no i cant acces it, i can see they are off and i cannot change it
+02:15:15 <brenneke[m]> What is off?
+02:15:57 <vudu> Location is off in settings, and i cannot change it to ON
+02:16:33 <vudu> There are more setting that i cannot change because the device manager is managing it
+02:16:48 <brenneke[m]> What kind of company do you work for?
+02:17:38 <LostScreen> Hey there, could use some help as I just cracked my screen on my pixel 3a with graphene os on it. Although I already know the answer, I thought I'd ask. With a cracked screen is there any possibility to connect to it trough a computer terminal and extract files? Mind you I´ve set it to not autoconnect usb, I must manually go inte settings and
+02:17:39 <LostScreen> enable what I´d like to do with the usb connection..
+02:20:20 <LostScreen> #ImFu**edRight #NeedToReplaceScreen #FML
+02:21:01 <brenneke[m]> What's with the hashtags?
+02:23:26 <LostScreen> Just me being frustrated, realizing there's no way to access those files before I replace the screen. Fed up with myself and just havinga bad day. There's no way to access those files right?
+02:32:58 <brenneke[m]> Dunno.....did you try?
+02:37:07 <louipc> vudu: i guess any app that has access to media could read the media and send to the company
+02:39:17 <vudu> Well i m not worriedd about the alls, but the manager has acces, when i look in system that grapheneos manager has alles acceses, media files, phone, sensors network etc no acces is denied
+02:39:57 <louipc> and you can't disable it i guess
+02:40:15 <vudu> No i cant
+02:40:30 <louipc> it would be interesting to hear more info about this manager though if you can find out anything
+02:41:11 <vudu> It look the same as device manager in android, same pictogram, only the name is grapheneos manager
+02:41:32 <vudu> Strange that no ons here knows about it since there are some developers here
+02:42:40 <vudu> The whole privacy point of graphene is lost when being manager i guess
+02:43:07 <vudu> The problem ks i cant wipe the phone also, also that feature is disabled
+02:43:10 <louipc> wonder why they call it 'grapheneos manager' though
+02:43:22 <louipc> seems like a trademark issue
+02:44:01 <vudu> I couldnt find anything about it on google also
+02:44:30 <louipc> vudu: yes because the company owns the phone, so I guess they have the rights to control it
+02:44:44 <louipc> but it still has enhanced security features compared to normal android
+02:45:50 <louipc> so leave the phone at work in a locked drawer and enjoy your off time
+02:45:53 <louipc> :D
+02:47:13 <vudu> Whahaha lol , or i can just reset the phone , i googled and fount out if i press power button with volume down i can go to fastboot mode and than recovery
+02:47:53 <vudu> But i dont know if i will get in trouble if i do that lol
+02:47:54 <louipc> hmm maybe heh
+02:50:47 <brenneke[m]> Considered getting your own phone?
+02:51:35 <vudu> I got my own phone, butt still i am interested in the possibility of the manager
+02:52:08 <vudu> I have both phone with me always and would not like to share my location
+02:53:10 <brenneke[m]> What kind of company you work for that uses GOS?
+02:54:03 <vudu> A company that likes 2 spy on they employees
+02:54:45 <louipc> if you try to disable/modify stuff then the device may not work properly until you restore it. that happened to me at one company
+02:54:50 <louipc> fun to try it though
+02:55:38 <vudu> Yeah i am consitering to boot to recovery mode and clear all data
+02:55:50 <vudu> See if the manager will be deleted,
+02:56:29 <strcat[m]> there is no 'GrapheneOS manager'
+02:56:39 <strcat[m]> also how is it that I just mentioned the possibility of a device manager being developed to someone
+02:56:46 <strcat[m]> and now we have a user claiming to have a device with it?
+02:57:08 <louipc> coincidence?
+02:57:24 <vudu> Well i really have a device with grapheneos manager
+02:57:43 <vudu> I am not making this up
+02:57:47 <strcat> there is no GrapheneOS manager
+02:57:54 <louipc> if you can share any info, even in private that would be helpful
+02:57:55 <strcat> we don't make a device manager
+02:58:08 <louipc> yea i said it sounds like a trademark issue
+02:58:14 <strcat> ^
+02:58:18 <strcat> if this really exists
+02:58:24 <strcat> here's the problem: we don't make a GrapheneOS manager
+02:58:25 <vudu> Wel someone did, because i have a device with grapheneos manager installed on it
+02:58:39 <strcat> I just mentioned the possibility of us theoretically being able to develop a device manager
+02:58:56 <strcat> vudu: it sounds like you have a phone from one the companies selling GrapheneOS devices that is not partnered with us
+02:58:59 <strcat> and they just use our OS
+02:59:04 <strcat> but we don't have a device manager
+02:59:14 <strcat> vudu: is this your personal property (the phone) or a company device?
+02:59:18 <strcat> where did you get this phone?
+02:59:31 <louipc> i wonder if its even an official grapheneos build
+02:59:42 <strcat> ^
+03:00:03 <vudu> In the netherlands
+03:00:10 <strcat> where did you get the phone
+03:00:13 <louipc> :p
+03:00:15 <strcat> did you buy it?
+03:00:21 <strcat> who did you buy it from?
+03:00:24 <strcat> where did you get it?
+03:00:40 <louipc> vudu: u can say in private if you wish
+03:00:44 <rny> and how much did you pay
+03:01:08 <rny> maybe the official site should list partner vendors
+03:01:15 <rny> so users know who to buy from
+03:01:36 <rny> strcat: ^
+03:01:43 <louipc> if there were any? :p
+03:02:00 <rny> apparently the overpriced australian one has contacted daniel
+03:03:07 <rny> $2k for grapheneos phone :P
+03:03:23 <louipc> nice
+03:03:33 <joehandcockandja> Dear god
+03:03:51 <strcat> lets not worry about this right now
+03:04:07 <strcat> GrapheneOS is available from https://grapheneos.org/releases / https://github.com/GrapheneOS for free
+03:04:39 <vudu> I am aware of that
+03:04:41 <rny> i assume they run a 24/7 helpdesk too
+03:05:25 <strcat> vudu: it sounds like this is a company's phone
+03:05:33 <strcat> bought from a company selling devices with a GrapheneOS (not us)
+03:05:40 <strcat> not your phone
+03:05:55 <strcat> and they have a device manager installed on it using our name
+03:06:03 <strcat> but again we didn't make that
+03:06:14 <strcat> I'd love it if we had an open source GrapheneOS device manager
+03:06:17 <strcat> but we don't
+03:06:24 <strcat> we don't make something like that atm
+03:06:32 <vudu> Okey i understand
+03:06:51 <strcat> vudu: you can provide me with more information in private
+03:11:13 <strcat> spoiler: they did not provide more information
+03:11:23 <strcat> going to just hope that was a troll
+03:12:05 <Linus[m]1> irc guy so may have just logged off for the night
+03:12:15 <strcat> nah
+03:31:00 <somenerd[m]> > going to just hope that was a troll
+03:31:00 <somenerd[m]> complex troll then
+03:31:08 <somenerd[m]> "grapheneos manager"
+03:35:07 <joehandcockandja> I thought Daniel was the grapheneOS manager
+03:35:13 <joehandcockandja> Haha
+03:49:20 <strcat[m]> somenerd: I think it was real and it's some company selling phones with an app called that - certainly not ours
+03:50:09 <somenerd[m]> how do people find these?
+03:50:12 <somenerd[m]> I'm confused
+03:50:20 <somenerd[m]> when I search GrapheneOS
+03:50:32 <somenerd[m]> the first site is the official one
+03:50:54 <somenerd[m]> and then wikipedia and GitHub
+03:51:41 <louipc> the nederland seller is on linkedin
+03:52:00 <louipc> using grapheneos name with modified logo
+03:52:14 <somenerd[m]> ohhhh
+03:52:26 <louipc> website links to official site tho
+03:52:38 <louipc> so its kinda messed up
+03:53:02 <somenerd[m]> yeah
+03:53:03 <brenneke[m]> Try to buy?
+03:53:30 <louipc> guess i could email to ask about the 'grapheneos manager'
+03:54:06 <somenerd[m]> probably some sorta DRM?
+03:54:09 <brenneke[m]> Sure, ask about features.....but guy might be here already.
+03:54:45 <joehandcockandja> Send a link to the linkedin
+03:55:11 <louipc> https://www.linkedin.com/company/grapheneos/
+03:55:28 <louipc> treat this delicately
+03:55:57 <joehandcockandja> Yikes
+04:21:28 <purist96> Hey everyone. Any word on whether Graphene is be resistant to SignalFrame tracking? https://www.wsj.com/articles/next-step-in-government-data-tracking-is-the-internet-of-things-11606478401
+04:29:05 <louipc> unless you can get details about exactly what they are doing its hard to say
+04:29:33 <louipc> but reduced attack surface and extra hardening will increase resistance for sure
+04:29:42 <louipc> generally speaking
+04:36:45 <purist96> The article isn't very specific. Generally speaking, it looks like SignalFrame scans peripheral MAC addresses and adds that info to the database in addition to on-device tracking. This apparently goes beyond wifi triangulation to mapping bluetooth and any other wireless device nearby. I'm just not sure a) how it gets on your phone in the first
+04:36:46 <purist96> place, and b) whether a graphene device would be visible or not to a standard android "infected" with SignalFrame's tracker.
+04:38:24 <louipc> sounds like they're targeting IOT stuff which are notoriously insecure/bad
+04:38:30 <louipc> low hanging fruit
+04:41:44 <purist96> I guess that's comforting. If anyone has more access or info I would love to hear how Graphene performs in relation to SignalFrame.
+04:42:51 <louipc> but if you open a portal into your home/life via a bad app not much can help you there
+05:19:28 <user36288978[m]> Anyone who has setup a pixel 4a with graphene is it pretty straight forward because it seems simple I'm just worried about bricking my phone in the process if I mess up.
+05:20:40 <cyborgninjaneer[> There aren't a lot of good options for tracking a GrapheneOS phone. I don't think SignalFlame is relevant as it would probably infect a device (I'm guessing) through Google Play Services as it would be easy to make a deal with Google.
+05:21:43 <cyborgninjaneer[> But that's just my impression from reading a vague article. Just reboot your device often like you should anyway if you're mildly paranoid.
+06:15:54 * mikf[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/VuxPAYtAGiKklthUKTyUEmYJ/message.txt >
+06:23:44 <madd_hatter[m]> <mikf[m] "> <@madd_hatter:matrix.org> So d"> GREAT!!  Sorry but I fell asleep last night before I could post back.
+06:34:38 <mikf[m]> madd_hatter: Not a problem! Yeah, trying to manually switch everything over graphene, didn't have seedvault on my last phone. Everything is much faster than i expected, and more apps work than i expected
+06:34:40 <madd_hatter[m]> <purist96 "The article isn't very specific."> This has been happening for a decade at least.  Nothing that new.  GOS phone is the least of the worries.  If you have smart tvs in your home and have not taken extreme measures they are all sending all sorts of data back to marketing. Let alone a echo,nest,ring, roomba etc.
+06:35:32 <madd_hatter[m]> mikf: great.  Glad it all worked out
+06:41:51 <alexschrank[m]> Hi all! New user here. My first update went smoothly, however ever since updating to RQ1A.201205.008.2020.12.12.03 on my Pixel 4a I've been getting a "No Internet" warning when I'm connected to Wi-Fi (I've tried multiple Wi-Fi networks with the same result). The internet *is* working over Wi-Fi, I've turned off mobile data and am still able to access the internet despite the icon showing no internet. I've fully
+06:41:51 <alexschrank[m]> reset my network settings and restarted my phone several times and the issue still persists. Does anyone have any ideas on how to fix this? Thanks in advance!
+06:52:43 <Lia[m]> <alexschrank[m] "Hi all! New user here. My first "> Probably just visual bug, or something is being blocked (DNS query or connectivitycheck?)
+07:09:57 <alexschrank[m]> <Lia[m] "Probably just visual bug, or som"> I'm getting a notification, and it falls back on mobile data until I confirm I want to stay connected to Wi-Fi, so my money is on the latter.
+07:11:49 <r0tt0r[m]> <alexschrank[m] "Hi all! New user here. My first "> its the connectivity check url that seems not reachable. did you change to google or use grapheneos one?
+07:25:10 <alexschrank[m]> <r0tt0r[m] "its the connectivity check url t"> That set me on the right track! I think my dns resolver was blocking the GrapheneOS connectivity check for some reason. I whitelisted a blocked domain and it it seems to be working now. Thanks!
+08:37:24 <Lia[m]> /join #fluffychat:matrix.org
+11:59:02 <mistazaki[m]> Hi, what happen if i disable com.android.cellbroadcastreceiver?
+12:36:25 <fomijafi[m]> Where do I look for more info about remote attestation failing before expiry time?
+12:37:04 <fomijafi[m]> In the attestation.app page I just see the successful attestations but not seeing anything about why its failing now
+15:18:38 <strcat[m]> fomijafi: use local verification
+15:26:26 <alzxjm> anyone here use standard notes?
+15:26:45 <alzxjm> i'm having some issues and i'm not sure if it's grapheneos or standard notes
+15:27:35 <organicpumpkin[m> <alzxjm "i'm having some issues and i'm n"> What issues?
+15:28:14 <alzxjm> my login/account doesn't survive reboots
+15:28:25 <alzxjm> when i log back in after a reboot the app does not sync
+15:28:53 <alzxjm> and where my account email normally is in settings says "Sign Out (undefined)" rather than my email address
+15:29:19 <organicpumpkin[m> Where did you get the app from?
+15:29:40 <organicpumpkin[m> Is it the PWA? Or Fdroid? Or Aurora Store?
+15:30:05 <alzxjm> it's downloaded from the github repo
+15:30:17 <alzxjm> https://github.com/standardnotes/mobile
+15:30:20 <alzxjm> latest version
+15:30:30 <alzxjm> not sure when the behavior started, but seems recent
+15:34:28 <signalarch[m]> I use it. It has so many bugs. I've seen that one before, I think before I was using graphene though, so I'm not much help.
+15:35:41 <alzxjm> it doesn't seem like a grapheneos problem, but it only happens on my phone (not the desktop apps or webapps)
+15:35:45 <alzxjm> so wanted to start there
+15:36:10 <organicpumpkin[m> Looks like they did a major upgrade to 3.5 recently (the fdroid version is still 3.0.17 for me).
+15:36:10 <organicpumpkin[m> Their upgrade did cause issues like "Migration to 3.5 from older versions of the app might have failed for some users because of Keychain data missing"
+15:37:22 <alzxjm> my phone has been on v3.5 for a while
+15:37:34 <alzxjm> it has been uninstalled and reinstalled a bunch of times, too
+15:37:45 <organicpumpkin[m> My older version works fine. BUT, haven't tried on GrapheneOS yet. You will need help from someone else on the GrapheneOS front.
+15:37:46 <organicpumpkin[m> From my end I will use the 3.5 for me and see if that reproduces an issue.
+15:38:19 <alzxjm> gonna submit an issue on their end, too
+15:38:39 <organicpumpkin[m> <alzxjm "gonna submit an issue on their e"> I was just going to suggest that
+15:47:20 <alzxjm> the Standard Notes issue is not replicating currently
+15:47:33 <alzxjm> might also be coinciding with GrapheneOS updates
+15:47:34 <alzxjm> not sure
+16:03:50 <userman23[m]> I am trying to use my wifi hotspot on my phone.  When my client connects, it can not connect to the internet.  On my phone, it is able to resolve websites.  On the client, I can ping the gateway, but can't get beyond that it seems.  Ie, I can't ping 1.1.1.1 or 9.9.9.9.  I tried the sim on my s9, and it worked.  I put it back into my 3a, and it still doesn't work.
+16:20:10 <Golli[m]2> Working fine on my 4 XL.
+16:37:51 <strcat> there is someone misrepresenting themselves as a co-founder of GrapheneOS in the Netherlands
+16:38:19 <strcat> they've been repeatedly asked to stop doing that, and we've tried in the nicest way possible to remain on good terms with them while having them not misrepresenting their involvement in the project
+16:39:11 <strcat> they had our permission to sell phones with GrapheneOS, but unfortunately they have substantially misrepresented their involvement in the project and appear to be misusing the project's brand for software that was not created by GrapheneOS
+16:39:42 <strcat> they recently cut off contact with me after I tried to get them to start turning over more accounts / domains they created in the name of the project
+16:39:58 <strcat> so, be aware of that, there are other people pulling similar things too
+16:40:22 <strcat> there are a bunch of companies selling GrapheneOS phones and some of them may be misrepresenting their involvement in the product and presenting themselves as officially partnered, etc. when they are not
+16:41:21 <strcat> some of you that were here yesterday may remember that someone came here asking about a "GrapheneOS manager" app and I believe that it is something this person created in the name of the project without permission
+16:41:46 <strcat> very unfortunate that it comes to this because they did provide some help to the project but they seem unable to understand the boundaries and continue misuing the brand and misrepresenting their involvement
+16:42:06 <strcat> I am not yet going to be talking about them by name, but just be aware that there are no other co-founders
+16:42:40 <strcat> qubits: is it a coincidence that you just joined?
+16:42:59 <qubits> why?
+16:43:16 <qubits> what happend?
+16:45:40 <strcat> qubits: yesterday you asked questions about device managers which were followed by someone else joining and talking about a "GrapheneOS manager" which is NOT something that GrapheneOS has created
+16:45:41 <entry1[m]> Good to know Daniel. Are there any companies selling your phones that give you a well deserved portion of their revenues? It would be nice other than directly donating for non-tech saavy individuals to help out the actual driver of the project rather than just retailers.
+16:45:47 <strcat> and it appears that someone has created an app misusing the name
+16:46:12 <strcat> entry1[m]: we need to deal with people misusing the name of the project, etc. as a priority right now
+16:46:45 <louipc> i thought that was vudu that asked about grapheneos manager
+16:46:56 <strcat> louipc: yes but it was right after qubits asked questions on the same topic
+16:47:01 <strcat> and to be clear
+16:47:03 <louipc> ok
+16:47:11 <strcat> there is no such thing as a GrapheneOS device manager app, we do not have a "GrapheneOS manager"
+16:47:34 <strcat> we are trying to resolve issues of companies overstepping their bounds and pretending to be more involved with GrapheneOS than they are
+16:47:48 <strcat> unfortunately, Copperhead are not the only ones doing things to harm the project
+16:47:53 <strcat> they are by far the worst
+16:48:09 <entry1[m]> Other than your OS releases, the only other apps are Vanadium, Auditor, and PDF reader correct?
+16:48:12 <strcat> but there are other scammers, and the worst part is a lot of them seem to appear helpful and willing to address problems, etc.
+16:48:24 <strcat> entry1[m]: all of our apps are on our GrapheneOS GitHub account
+16:48:31 <strcat> we have NO proprietary variants of the OS and NO proprietary apps
+16:49:08 <strcat> there is no GrapheneOS co-founder in the netherlands, there is someone who had permission to sell devices and misrepresented their involvement repeatedly and who has now reached the end of my tolerance for their BS
+16:49:28 <strcat> people need to be skeptical of those claiming involvement with the project
+16:49:44 <strcat> contact⊙go <- send an email there if someone claims to be involved
+16:51:07 <strcat[m]> everything official is on our site: Twitter, Reddit, GitHub, etc.
+16:57:13 <qubits> Oh just readed
+16:57:31 <qubits> Actually i would like to have authenitc grapheneos manager
+16:58:32 <qubits> Wich devices is that user selling in Netherlands?
+16:59:11 <strcat[m]> qubits: please don't worry about the details yet
+16:59:15 <strcat[m]> the issue is someone misrepresenting themselves as a co-founder of the project
+16:59:15 <entry1[m]> <qubits "Wich devices is that user sellin"> I don't think he wants to bring attention to it, but just set the record straight that there is no association
+16:59:39 <qubits> I m from Netherlands also thats the reason i m interested
+16:59:46 <strcat[m]> our licensing permits selling phones with GrapheneOS as long as those companies give appropriate attribution and do not impersonate us, etc.
+17:00:00 <qubits> Okay i understood
+17:00:11 <strcat[m]> qubits: yes and you should know that I am suspicious about the messages you posted yesterday and the potential that you were tied somehow to that vudu user who came later
+17:00:29 <strcat[m]> qubits: I'm not saying you did anything wrong
+17:00:40 <qubits> Dont be suspicious, cinfindence can happen
+17:01:06 <qubits> I m still searching for some manager
+17:01:09 <strcat[m]> yes but are you aware of vendors claiming to represent GrapheneOS in the Netherlands? and did it have something to do with you joining the channel?
+17:01:37 <qubits> I heard about such story, thats the reason i came here
+17:01:47 <qubits> To hear what is official statemant
+17:02:20 <qubits> Somone tried to sell me also , claiming he is the one of the owners of Grapheneos
+17:02:44 <qubits> But he didnt like that smart haha
+17:02:59 <qubits> he didnt look that smart
+17:03:25 <qubits> Anyway i m searching for some solution to manage grapheneos nothing more
+17:03:37 <qubits> To restrict some functions and applications that i dont need
+17:17:38 <alex-resist> I found this: https://www.linkedin.com/company/grapheneos
+17:18:07 <alex-resist> strcat
+17:18:34 <strcat[m]> alex-resist: please discuss it in PMs if you want to
+17:18:36 <th0mcat> I'm tweeting @linkedinhelp right now, strcat .  Hopefully they can expedite the process.
+17:18:39 <strcat[m]> I was very careful with what I said and didn't link to stuff for a reason
+17:18:59 <alex-resist> strcat PM with you? Or someone else?
+17:19:11 <alex-resist> Oh shit, I'm sorry
+17:22:22 <strcat[m]> alex-resist: I don't want to call this person out by name because they did have permission to sell phones and did provide help to the project and I would not be making this public if they had not recently stopped responding to me
+17:22:34 <strcat[m]> I was working things out with them and then contact was strangely cut off when it appeared to be going fine
+17:23:18 <alex-resist> I see, I just wanted to contribute to the research but I was naive
+17:23:46 <alex-resist> Again, apologies
+17:34:11 <organicpumpkin[m> strcat Do you not have good legal help for things like this? Maybe a nonprofit that supports free software?
+17:34:11 <organicpumpkin[m> I just feel so much empathy for you.
+17:36:05 <alex-resist> FSFE might be interested
+17:37:21 <ayaen_t[m]> any trusted online source for apks ? I mean i see apkpure apkmirror but am not so sure about using apks from there eventhough i read their faq and the measure they take to make sure the apks they host  are legit
+17:38:13 <organicpumpkin[m> <alex-resist "FSFE might be interested"> And you may potentially know about legal non profits that help activists and their support networks alex-resist ? They could be an option too.
+17:38:42 <organicpumpkin[m> Although this is all assumptions for us. I have a feeling strcat may already have help.
+17:39:16 <strcat[m]> alex-resist: I don't want help from organizations that have spread misinformation and harmed us in the past
+17:41:35 <organicpumpkin[m> But do you need help with the legal stuff? I can do research around potential non profits or legal teams that work with organisations like yours and send you my findings.
+17:41:59 <organicpumpkin[m> strcat
+17:43:42 <zyxt128[m]> @strcat Wut? FSF backed CopperheadOS instead of you? I knew that the visit of Richard Stallman in MS will bring a curse upon FSF...
+17:44:14 <zyxt128[m]>  * @strcat Wut? FSF backed CopperheadOS instead of you? I knew that the visit of Richard Stallman in MS would bring a curse upon FSF...
+17:44:57 <strcat[m]> zyxt128: I never said that
+17:45:04 <strcat[m]> please stop making up things based on assumptions
+17:45:19 <strcat[m]> you'll be banned from the channel
+17:45:29 <strcat[m]> I may ban you from the channel for that kind of stupidity anyway
+17:45:55 <strcat[m]> look, the project is being attacked by scammers, etc. and I am not going to tolerate people causing problems with more misinformation
+17:46:15 <strcat[m]> do not put words in mouth, do not claim that I have said things that I have not
+17:46:23 <strcat[m]> I will have to assume you are a sockpuppet attempting to harm the project
+17:46:27 <strcat[m]> final warning for the channel as a whole
+17:46:52 <zyxt128[m]> Chill out man, you are starting to see enemies everywhere
+17:46:55 <strcat[m]> OrganicPumpkin: I have a good lawyer, I need funding for legal fees, not a legal team
+17:46:57 <zyxt128[m]> just joking
+17:47:08 <strcat[m]> I don't see any joke
+17:47:19 <zyxt128[m]> ok fuck off then I'm signing out
+17:47:31 <alex-resist> The joke was fairly stupid because FSFE is a completely different organization
+17:47:44 <strcat[m]> I don't see how it's a joke
+17:48:47 <strcat[m]> implying I said something I didn't and then making a "joke" based on that is not going to be interpreted as a joke
+17:49:18 <strcat[m]> there are sockpuppet accounts in this channel attempting to undermine the project, if you do things that are inappropriate and harmful, it will be assumed that that's what is happening
+17:49:53 <organicpumpkin[m> <strcat[m] "OrganicPumpkin: I have a good la"> Understood. Let me see how I can leverage my networks for more donations.
+17:51:35 <CryptGoat[m]> Hey there!
+17:52:20 <elchupacabra420[> Hello!
+17:53:26 <CryptGoat[m]> I'm moving from a OnePlus 3T powered by LineageOS 17.1 to a Pixel 4a and I'm pretty excited to switch to GrapheneOS. Anything I should look out for that's not in the official documentation?
+17:54:35 <alex-resist> The official documentation is pretty good, it just takes a while for people to understand that :)
+17:56:13 <CryptGoat[m]> I understand that I have to apply updates via F-Droid manually, correctus?
+17:58:41 <louipcm> kindof, but fdroid is not recommended
+17:58:54 <CryptGoat[m]> Yes, I heard that F-Droid kind of clashes with the security model. What's the recommended way to get apps and keep them updated?
+18:00:50 <alex-resist> Some people prefer Aurora Store but I personally don't
+18:01:32 <CryptGoat[m]> eh. no way I'm going to use Aurora as my primary source for apps.
+18:02:27 <organicpumpkin[m> <alex-resist "Some people prefer Aurora Store "> Wouldn't the current ideal solution be direct apks from github etc when available, best if they have a hash/signature to check?
+18:02:50 <alex-resist> That's the third option, but then there is no mechanism for convenient updates
+18:03:17 <alex-resist> An ideal solution doesn't exist, that's why Graphene doesn't come with a store preinstalled
+18:03:45 <organicpumpkin[m> <CryptGoat[m] "Yes, I heard that F-Droid kind o"> I use custom repositories for fdroid whenever available (newpipe, bromite, tutanota etc) for the latest versions. Else github apks.
+18:04:07 <CryptGoat[m]> I see.
+18:04:45 <organicpumpkin[m> <alex-resist "That's the third option, but the"> For some apps there is. E.g. newpipe let's you know immediately when a new update is available and you just tap, download, install.
+18:05:17 <organicpumpkin[m> But I get your point, you are right of course.
+18:07:32 <CryptGoat[m]> Yup, I know :) Is there a site or document where the F-Droid security problem is being discussed? i would like to further understand the problem so I can decide how to proceed. Coming from LineageOS without GApps I like my apps to be as free as possible and there some apps that have proprietary libraries removed or replace.
+18:07:52 <CryptGoat[m]>  * Yup, I know :) Is there a site or document where the F-Droid security problem is being discussed? i would like to further understand the problem so I can decide how to proceed. Coming from LineageOS without GApps I like my apps to be as free as possible and there are some apps that have proprietary libraries removed or replaced.
+18:08:28 <ayaen_t[m]> any trusted online source for apks ? I mean i see apkpure apkmirror but am not so sure about using apks from there eventhough i read their faq and the measure they take to make sure the apks they host  are legit actually all i want to know is how to get termux without fdroid
+18:08:37 <alex-resist> Ideally GrapheneOS users would install only a handful of apps anyway, to reduce attack surface. Maybe a small number of apps could be managed manually. But then again, who does that in practice. Personally I use F-Droid + Newpipe + Wire from other sources, but then again I don't use proprietary apps (e.g. from Aurora) anyway. I'm looking forward to the Graphene store, that will be a cool thing to have.
+18:09:37 <CryptGoat[m]> I dont see how apkpure can be trusted if you are unable to verify the APKs
+18:09:45 <organicpumpkin[m> <CryptGoat[m] "Yup, I know :) Is there a site o"> Search for "fdroid" or "f-droid" on this group as well as the grapheneos-offtopic group. You will find some understanding here, we have discussed it.
+18:10:06 <CryptGoat[m]> Will do OrganicPumpkin
+18:12:05 <ayaen_t[m]> i only need termux which does not seem to keep any apks in its releases section on github
+18:13:34 <randomhydrosol[m> Fdroid is OT
+18:13:41 <randomhydrosol[m> Also we don't really recommend it
+18:14:11 <CryptGoat[m]> Roger roger. Sorry, I'm still ne.
+18:14:17 <CryptGoat[m]>  * Roger roger. Sorry, I'm still new.
+18:14:29 <ayaen_t[m]> No thats what i dont want to usw f-droid
+18:14:33 <entry1[m]> <CryptGoat[m] "I'm moving from a OnePlus 3T pow"> Nice. Follow the directions directly and do not try to follow any of the tutorials on YouTube. They are terrible and can cause you to download incorrect versions of what you need. If you are using Windows, everything can be done reading the instructions on the site and using PowerShell.
+18:15:11 <CryptGoat[m]> entry1: That was the plan. But I'm good with Linux 😇
+18:16:45 <entry1[m]> Perfect. Yeah everyone here is extremely helpful to guide you if you run into any issues. Just follow the instructions step by step and read them all prior to conceptually understand what you're doing. You can also search within this room if someone ran into the same issue as you
+18:19:02 <strcat[m]> I need to get in touch with the matrix.org administrators
+18:19:08 <strcat[m]> help me with that please
+18:19:40 <strcat[m]> I do not need advice or suggestions, I need help getting in touch with the admins, thanks.
+18:19:46 <randomhydrosol[m> strcat: pm
+18:39:47 <strcat> qubits: I'm the only founder and owner of GrapheneOS (Daniel Micay)
+18:40:13 <strcat> the project has also existed long before it adopted the name GrapheneOS in 2018
+18:40:31 <strcat> qubits: I'm still concerned about your presence here and your motivations
+18:41:42 <ryley-coyote[m]> <strcat "qubits: I'm still concerned abou"> Oh shit!
+19:03:15 <qubits> strcat nothing to be concerd about
+19:03:21 <qubits> Are you the founder?
+19:03:31 <qubits> I sent you email from my company
+19:03:43 <qubits> You can check it
+19:03:48 <qubits> You dindt answerd
+19:06:28 <qubits> I have intention to use GrapheneOS but i need some adaptions, if possible
+19:06:43 <strcat[m]> qubits: I don't see an email from you
+19:06:44 <strcat[m]> where did you send an email
+19:06:49 <qubits> Just looking for more security
+19:06:51 <strcat[m]> contact⊙go is the proper way to contact the project
+19:07:00 <strcat[m]> https://grapheneos.org/contact
+19:07:03 <qubits> i sent you moment
+19:07:46 <strcat[m]> I received an email with the subject "cooperation" without details that looks like spam
+19:07:47 <strcat[m]> today
+19:07:49 <strcat[m]> do you mean that?
+19:07:51 <qubits> daniel.micay⊙go
+19:07:54 <strcat[m]> To: daniel.micay⊙go
+19:08:25 <qubits> Subjext is  Grapheneos
+19:09:01 <qubits> Saterday 13h10m
+19:14:04 <qubits> Did you found it?
+19:15:16 <qubits> You have all my personal information in the email, company name, phone number address
+19:15:43 <qubits> Like i said i m just searching for more security and this project sounds interesting for me
+19:15:43 <strcat[m]> nope don't see it
+19:15:53 <qubits> I will send again the same email
+19:15:58 <strcat[m]> maybe you sent the email from a broken email provider
+19:16:05 <strcat[m]> I have fairly strict configuration rejecting invalid mails
+19:16:21 <strcat[m]> send it from one of the major providers instead of your own server that might be misconfigured
+19:16:23 <strcat[m]> that might be what happened
+19:16:35 <qubits> Sent again
+19:16:38 <qubits> Just sent
+19:16:44 <strcat[m]> we reject SPF, DKIM, and DMARC failures
+19:16:54 <strcat[m]> including "soft" failures
+19:16:55 <qubits> I use own email server
+19:17:02 <strcat[m]> yeah so it's probably configured wrong
+19:17:10 <qubits> Haha could be
+19:17:39 <qubits> I will send from gmail
+19:22:07 <qubits> Just sent from gmail
+19:22:23 <strcat[m]> yeah I got that
+19:22:29 <strcat[m]> I'd guess you have invalid SPF, DKIM or DMARC configuration
+19:22:52 <qubits> COuld be i will ask web designer to check
+19:23:18 <strcat[m]> qubits: send an email to check-auth⊙vpc
+19:23:31 <qubits> From my own server?
+19:23:47 <strcat[m]> qubits: yes send a mail there from your own server
+19:23:54 <strcat[m]> qubits: and use https://internet.nl/test-mail/ on your domain to test it
+19:23:57 <strcat[m]> it's not properly set up
+19:24:01 <qubits> I understood already sent, thanks for that
+19:26:33 <qubits> Reachable via modern internet address (IPv6) Passed :All domain names signed (DNSSEC) Failed :Not all authenticity marks against email phishing (DMARC, DKIM and SPF) Passed :Mail server connection sufficiently secured (STARTTLS and DANE)
+19:26:37 <qubits> true
+19:27:12 <qubits> Your DMARC policy is not sufficiently strict.
+19:27:20 <qubits> This is the issue
+19:34:52 <strcat> qubits: I think something is actually invalid
+19:34:58 <strcat> I can check what
+19:35:41 <strcat> qubits: can you PM me your email address for your own server or send it in an email
+19:36:17 <strcat> qubits: ah nvm
+19:36:21 <strcat> I just got your email from your own domain
+19:36:40 <qubits> oh great
+19:36:42 <strcat> qubits: you don't have secure email set up (no encryption, no authenticated encryption - depends on having TLS at all though, no anti-spoofing)
+19:36:49 <strcat> but it was just slow and I missed the first one
+19:38:13 <qubits> Okay i will need to fix that
+19:38:21 <qubits> Thanks for let me know
+19:45:48 <userman23[m]> I am trying to use my wifi hotspot on my phone.  When my client connects, it can not connect to the internet.  On my phone, it is able to resolve websites.  On the client, I can ping the gateway, but can't get beyond that it seems.  Ie, I can't ping 1.1.1.1 or 9.9.9.9.  I tried the sim on my s9, and it worked.  I put it back into my 3a, and it still doesn't work.
+19:46:21 <strcat[m]> userman23: may be an APN configuration issue
+19:46:36 <strcat[m]> userman23: can you try using Wi-Fi hotspot to provide internet based on another Wi-Fi network?
+19:46:42 <strcat[m]> phone connected to Wi-Fi and serving it to another phone
+19:47:59 <userman23[m]> strcat: you mean connect to wifi, then stand up hotspot, have client connect, and see if that works?
+19:48:36 <strcat[m]> yes
+19:48:40 <userman23[m]> ok
+19:48:46 <strcat[m]> connect the phone to wifi, then make a hotspot
+19:48:51 <strcat[m]> connect to that hotspot from something else
+19:48:57 <strcat[m]> to see if this is tied to cellular tethering specifically
+19:49:15 <strcat[m]> because some carriers try to block it unless you provision it with their app etc
+19:49:21 <strcat[m]> and we don't have those carrier apps, etc.
+19:49:29 <strcat[m]> userman23: the carrier you're using is quite relevant
+19:49:38 <userman23[m]> huh, strange, it's working now
+19:49:41 <userman23[m]> I don't understand why
+19:49:41 <strcat[m]> but first confirm it's a carrier issue with my wifi suggestion
+19:49:48 <strcat[m]> userman23: it's working with wifi?
+19:49:49 <strcat[m]> or with your carrier
+19:49:58 <strcat[m]> tethering to mobile is different due to carrier nonsense
+19:49:59 <userman23[m]> with wifi
+19:50:04 <userman23[m]> same client I was using before
+19:50:05 <cyborgninjaneer[> Since Termux runs within the Android Application sandbox, I expect it to be relatively safe. Are there any potential threats to my device I should be aware of before tinkering with Termux?
+19:50:10 <strcat[m]> userman23: yeah so try again with carrier now
+19:50:29 <strcat[m]> cyborgninjaneer:  not latest API level
+19:50:42 <strcat[m]> cyborgninjaneer: runs app data as code instead of packaging things via apks, etc.
+19:50:51 <strcat[m]> but a lot of programs like bash also run app data as code with interpreters anyway
+19:51:07 <userman23[m]> strcat: it doesn't load now.
+19:51:11 <strcat[m]> cyborgninjaneer: so if it was compromised an attacker can store code that runs persistently in app data
+19:51:17 <strcat[m]> userman23: yeah so it sounds like it's a carrier provisioning issue
+19:51:25 <strcat[m]> we disable that but we might need more changes for some carriers
+19:51:37 <userman23[m]> what does that mean?
+19:52:43 <cyborgninjaneer[> So in other words, a compromise "should" remain inside the sandbox unless specifically designed to escape the Android app sandbox, right?
+19:53:34 <cyborgninjaneer[> I'm well aware the app itself could be compromised if I did something stupid inside it.
+19:54:16 <userman23[m]> and any way to get it to work with carrier?  it works on carrier on my s9
+19:54:33 <cyborgninjaneer[> Okay, the main thing I don't completely understand is what you said about the API level. That's the Android API level, right?
+19:58:47 <cyborgninjaneer[> <strcat[m] "cyborgninjaneer: so if it was co"> This is probably the main threat to be aware of though. Thank you.
+19:59:25 <strcat[m]> cyborgninjaneer: apps targeting newer API levels have a stronger app sandbox
+19:59:46 <strcat[m]> we show a warning on first launch for apps with API level < 28
+19:59:49 <strcat[m]> current is 30
+20:00:17 <cyborgninjaneer[> It's not showing a warning.
+20:00:33 <strcat[m]> only on first launch
+20:00:53 <cyborgninjaneer[> I don't think it did. I'm going to reinstall and see.
+20:01:18 <strcat[m]> ah they use 28
+20:01:19 <strcat[m]> https://github.com/termux/termux-app/blob/master/gradle.properties#L19
+20:01:54 <strcat[m]> cyborgninjaneer: they were migrating to using apks to ship packages
+20:02:00 <strcat[m]> but the work stalled
+20:02:03 <strcat[m]> unclear what is going to happen now
+20:02:12 <strcat[m]> they may just stop publishing on Play Store and never update API level again
+20:02:25 <strcat[m]> since F-Droid doesn't enforce a minimum
+20:03:38 <cyborgninjaneer[> I see. Would you recommend using something else for a Linux VM?
+20:07:16 <strcat[m]> I mean it's not a VM
+20:07:16 <cyborgninjaneer[> Well, not that Termux is a VM.
+20:07:19 <strcat[m]> it's just normal native binaries
+20:11:41 <cyborgninjaneer[> I was thinking about trying to get qemu to run on it.
+20:50:48 <userman23[m]> strcat: and any way to get it to work with carrier?  it works on carrier on my s9
+20:51:06 <strcat[m]> userman23: contribute to getting it working
+20:51:14 <strcat[m]> or mess with APNs and see if you can fix it that way
+20:51:20 <strcat[m]> can't help you beyond that advice
+20:51:34 <userman23[m]> apn = access point network?
+20:51:45 <strcat[m]> we're working on improving carrier support further but the changes may cause regressions
+20:51:48 <strcat[m]> so we are reluctant to ship a bunch of changes
+20:51:51 <strcat[m]> userman23: yes
+21:14:45 <argil[m]> What's the status of microg?
+21:16:14 <strcat[m]> no news
+21:16:25 <strcat[m]> information is available on our twitter account and site about our future plans
+21:16:27 <strcat[m]> it is not going to be rushed
+21:16:56 <strcat[m]> @room I need help getting in touch with LinkedIn support / abuse handling to get a fake profile for GrapheneOS either turned over to me and removed
+21:17:05 <strcat[m]> @room This is urgent, I actually need help with this ASAP
+21:17:16 <strcat[m]>  * @room I need help getting in touch with LinkedIn support / abuse handling to get a fake profile for GrapheneOS either turned over to me or removed
+21:17:27 <argil[m]> Gotcha.
+21:18:05 <strcat[m]> ideally turned over to me, not removed, since people followed it thinking we made it...
+21:18:21 <AppAraat[m]> Wish I could help. I don't even have LinkedIn.
+21:19:00 <analtenderloin[m> I guess we could all collectively submit a ticket to support with the same subject line
+21:19:20 <strcat[m]> there are a lot of people in the channel, I need some of them to help
+21:19:32 <strcat[m]> people always ask how to help, here is how
+21:19:32 <AppAraat[m]> strcat: try making a HN thread, post here and I'll upvote it (along with many others here, I'm sure)
+21:19:38 <strcat[m]> no
+21:19:44 <strcat[m]> I do not want to draw attention to the fake profile
+21:19:52 <strcat[m]> I'm asking for help, not suggestions / advice on what I should do
+21:20:01 <strcat[m]> I'm asking for people to help me get in touch with LinkedIn support / abuse handling
+21:20:12 <strcat[m]> someone may know someone there, and if you don't, you can try contacting them
+21:20:34 <strcat[m]> I do not want people to post their assumptions or speculation on it or to draw more attention to misinformation
+21:20:53 <strcat[m]> I'm asking for help with getting it removed
+21:23:13 <strcat[m]> or better, turned over to us
+21:25:42 <aeolism> Good evening all
+21:26:37 <analtenderloin[m> Sounds like all of us contacting support with the same reason in the subject line will get their attention faster
+21:29:29 <Knull[m]> <analtenderloin[m "Sounds like all of us contacting"> got an email to use? their site's built-in help is garbage
+21:32:02 <analtenderloin[m> https://www.linkedin.com/help/linkedin/answer/61664/reporting-fake-profiles?lang=en
+21:32:10 <analtenderloin[m> This could be useful
+21:39:12 <CryptGoat[m]> Quick question: I just read this bit in the install guide  "To make sure that the device can be unlocked to install GrapheneOS, avoid carrier variants of the devices. Carrier variants of Pixels use the same stock OS and firmware with a non-zero carrier id flashed onto the persist partition in the factory. The carrier id activates carrier-specific configuration in the stock OS including disabling carrier and
+21:39:12 <CryptGoat[m]> bootloader unlocking." Well looks like my Pixel 4a had some carrier crap preinstalled (couldnt tell by looking at the box). I did a factory rest and it is all gone. I am able to enable bootloader unlocking in the developer options. Should I be fine going forward?
+21:39:31 <CryptGoat[m]>  * Quick question: I just read this bit in the install guide  "To make sure that the device can be unlocked to install GrapheneOS, avoid carrier variants of the devices. Carrier variants of Pixels use the same stock OS and firmware with a non-zero carrier id flashed onto the persist partition in the factory. The carrier id activates carrier-specific configuration in the stock OS including disabling carrier and
+21:39:31 <CryptGoat[m]> bootloader unlocking." Well looks like my Pixel 4a had some carrier crap preinstalled (couldnt tell by looking at the box). I did a factory reset and it is all gone. I am able to enable bootloader unlocking in the developer options. Should I be fine going forward?
+21:44:27 <strcat[m]> Knull: Case #:
+21:44:27 <strcat[m]> 201215-008935
+21:44:29 <strcat[m]> this is the case number
+21:44:32 <strcat[m]> for what I filed
+21:44:37 <strcat[m]> so people could ask them to prioritize that
+21:50:12 <TheJollyRoger> CryptGoat[m]: turn on USB debugging, plug your phone in, and in adb run: `adb shell getprop ro.boot.cid`
+21:50:28 <TheJollyRoger> If it returns ANY value except 000000, return that handset, because you got ripped off.
+21:51:08 <TheJollyRoger> If that carrier id value is 0000001 or something like that, you have two options:
+21:51:14 <TheJollyRoger> A) Return the handset and get a refund.
+21:52:02 <TheJollyRoger> B) Be content with never unlocking the bootloader.
+21:52:11 <TheJollyRoger> That's it.
+21:54:24 <CryptGoat[m]> 00000000 yeeeeees!
+21:54:37 <TheJollyRoger> CryptGoat[m]: excellent!
+21:54:38 <CryptGoat[m]> thank you TheJollyRoger
+21:54:53 <TheJollyRoger> You're welcome! You should be clear to continue with the installation!
+21:56:35 <TheJollyRoger> CryptGoat[m]: it goes without saying, but for emphasis, if you have anything on that phone you don't want to lose (photos, videos, 2FA token seeds), copy them off right now. Unlocking the bootloader will change the encryption keys in your phone. Everything you've saved to it will be permanently lost.
+21:57:03 <CryptGoat[m]> it's fresh phone so I'm good :) but thanks for the warning
+21:57:07 <TheJollyRoger> Great!
+22:13:41 <codebam> <strcat[m] "@room This is urgent, I actually"> someone slandered me on linkedin once. expect a delay of 2 days minimum when you open a support ticket
+22:18:55 <strcat[m]> in this case the problem is someone that was supposedly helping us out making inaccurate claims and then delaying fixing them + now not responding to communications anymore
+22:19:12 <strcat[m]> so we were not dealing with this with the appropriate severity because they have helped with some things
+22:20:03 <strcat[m]> but they are misrepresenting their role in the project as larger than it is and have not complied with my requests to remove that from their profile and to stop saying it to others
+22:20:28 <strcat[m]> they partially updated their profile a while ago after delaying and then delayed finishing what I asked
+22:20:43 <strcat[m]> after a certain point I just can't keep assuming good faith
+22:20:52 <strcat[m]> especially when they stopped responding to me recently
+22:22:07 <strcat[m]> LinkedIn apparently just lets people claim whatever they want as the default
+22:22:22 <louipc> basically
+22:22:23 <strcat[m]> there was no verification of the page for the project
+23:19:00 <zornell> hi there, can anyone here help me with a question? i was wondering if it is possible to get whatsapp running on grapheneos.
+23:20:01 <louipc> i think it was possible
+23:20:33 <strcat[m]> zornell: yes, works fine
+23:20:39 <louipc> with this note "No notifications unless the app is running in the background"
+23:20:48 <strcat[m]> need to enable the background connection setting and grant it a battery optimization exception for that
+23:20:59 <strcat[m]> works fine though
+23:21:06 <strcat[m]> not the most efficient implementation of push but works
+23:21:42 <zornell> okay. i have installed it today and it does not work. It tells me that it needs the Google Play Services which are not supported on my device
+23:22:19 <zornell> but i will check for the background connection setting
+23:22:55 <strcat[m]> zornell: sounds like you installed it from Play instead of the standalone one
+23:23:05 <strcat[m]> they may have alternate releases nowadays
+23:23:58 <zornell> i tried two versions. one from the aurora store ( i guess its the same apk you would get from google play) and i downloaded the apk from the whatsapp website
+23:24:06 <zornell> both behave the same
+23:26:23 <strcat[m]> uninstall it
+23:26:26 <strcat[m]> install it from the WhatsApp site
+23:28:38 <zornell> okay. i'll try again. Thank you so far
+23:35:42 <zornell> i'm afraid it does not work. But just to be on the same page. You mean the download from here https://www.whatsapp.com/android/ right?
+23:41:22 <louipc> looks like it
+23:42:40 <zornell> could it be possible that it is not working anymore this way?
+23:47:33 <louipc> still need google play?
+23:47:40 <zornell> yes
+23:47:49 <zornell> its exactly the same
+23:48:45 <louipc> hmm maybe they changed something. I'd encourage you to join #grapheneos-offtopic for further apps discussion tho
+23:50:44 <zornell> nevermind i just found out, how to get it running. I deinstalled fakestore from microg. Now t works
+23:50:52 <zornell> Thank you for your help!
+23:51:56 <louipc> wo wuts that
+23:54:22 <zornell> I guess whatsapp checks for the store signature and fails if it is wrong, but work anyways when no play store is there.

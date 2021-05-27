@@ -1,0 +1,1743 @@
+00:00:34 <strcat[m]> cn3m: the Linux kernel is increasingly what's exploited as userspace security on OSes like AOSP has gotten so much better
+00:00:38 <strcat[m]> sandboxing has gotten so much stronger, etc.
+00:01:10 <strcat[m]> cn3m: for local privesc it's already mostly how it's done
+00:01:24 <strcat[m]> cn3m: the ONLY layer of security is the linux kernel
+00:02:48 <cn3m[m]> it was insane
+00:02:49 <cn3m[m]> that's what I remember playing with Android-x86(which I know is shit) and it had no restrictions at all since no SELinux
+00:02:56 <cn3m[m]> that's what I remember playing with Android-x86(which I know is shit) and it had no restrictions at all since no SELinux
+00:02:57 <cn3m[m]> it was insane
+00:04:15 <cn3m[m]> double send whoops
+00:04:16 <cn3m[m]> double send whoops
+00:05:54 <strcat[m]> lol it's funny that stuff like anbox disables selinux
+00:06:01 <strcat[m]> and makes it seem like they are improving security or isolating it better
+00:06:06 <JTL> Oh god
+00:06:11 <strcat[m]> when really they make it easier for an app to compromise the kernel
+00:06:18 <strcat[m]> or escape from the sandbox, or steal user data, w/e
+00:06:23 <strcat[m]> even outside their container
+00:07:08 <strcat[m]> selinux is not some extra layer for the android security model
+00:07:12 <strcat[m]> it largely is the security model
+00:07:27 <strcat[m]> you can't do what it does via POSIX users/groups, etc.
+00:07:37 * madaidan[m] uploaded an image: IMG_20200524_010740_291.jpg (9KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/ewvznXnWsWsMEoPlHoiXHjhU >
+00:07:43 <strcat[m]> lol
+00:07:43 <madaidan[m]> Press (X) to doubt
+00:07:55 <JTL> Press (X) for "marketing bullshit"
+00:08:00 <strcat[m]> it runs the whole userspace inside namespaces (not a security feature or sandbox)
+00:08:02 <strcat[m]> with selinux disabled
+00:08:27 <strcat[m]> namespaces make things separate - it does not in any way defend the kernel tho
+00:08:43 <strcat[m]> so it gives you a separate android and non-android userspace
+00:09:05 <strcat[m]> but they are making the app sandbox way worse including exploiting the kernel and taking over the whole OS
+00:09:09 <cn3m[m]> <strcat[m] "lol it's funny that stuff like a"> such bullshit
+00:09:09 <cn3m[m]> Anbox talks the talk with their patch level from '17
+00:09:37 <strcat[m]> I mean patch level is also pretty meaningless when you disable mandatory security features like 90% of the security model
+00:09:57 <madaidan[m]> <cn3m[m] "Anbox talks the talk with their "> "but it uses a mount namespace that doesn't matter!1!!!"
+00:13:56 <strcat[m]> I think regardless of what happens in the future, it'll be important to have backwards compat with existing apps
+00:14:03 <strcat[m]> and the app permission / security model matters
+00:14:24 <strcat[m]> so the improvements to the app security model and APIs are long-lasting
+00:14:36 <strcat[m]> regardless of what happens with the kernel, etc.
+00:14:40 <cn3m[m]> quick question off topic I know, but LTSC or stock Windows 10 Pro for best privacy and security balance?
+00:16:28 <strcat[m]> cn3m: you would be better off with non-LTSC Enterprise
+00:16:29 <strcat[m]> than LTSC
+00:16:47 <strcat[m]> it is the Enterprise part of it that you want not LTSC
+00:16:56 <cn3m[m]> thanks I can do that
+00:18:04 <cn3m[m]> I appreciate the recommendation
+00:18:19 <strcat[m]> Enterprise has the fancy stuff like VM-based browser isolation and so on
+00:18:48 <strcat[m]> and has finer-grained control over things
+00:19:15 <cn3m[m]> thanks, and full telemetry control from what I understand so it should mix everything
+00:20:53 <cn3m[m]> VeraCrypt over Bitlocker?
+00:25:56 <thelearner[m]> kanuk: try cleaning out the port from lint
+00:26:19 <nickcalyx[m]> I still want to know what the deal was when all the veracrypt devs resigned and put out the statement that it could not be trusted
+00:28:45 <thelearner[m]> > cn3m: you would be better off with non-LTSC Enterprise
+00:28:45 <thelearner[m]> Preferred version of windows?
+00:32:21 <qevven[m]> Just got my 3a XL today on sale, so I should update to latest Android update before attempting to flash GrapheneOS correct?
+00:33:16 <thelearner[m]> <qevven[m] "Just got my 3a XL today on sale,"> qevven: yes. Go to grapheneos website, install instructions are there.
+00:33:31 <qevven[m]> Cool cool
+00:34:32 * cn3m[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/cEJOIOlJqelBRxuEVGQxlmZh >
+00:34:39 <cn3m[m]> <qevven[m] "Just got my 3a XL today on sale,"> welcome to the club
+00:36:17 <qevven[m]> I remember years ago I attempted to harden & degoogle my own Samsung, I couldn’t believe Android had Telnet 🤯 very insecure old Android
+00:36:26 * thelearner[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/ZwPHNRHHNTyPTCNuFOrZdFxK >
+00:37:15 <cn3m[m]>  * he said use Windows 10 Enterprise. As far as Windows goes
+00:38:49 <thelearner[m]> cn3m: All clear on that. :) Could you link or list what factors about it make it the best/better option. Thanks.
+00:39:27 <thelearner[m]> qevven: what are Samsung phones like or were like?
+00:40:01 <thelearner[m]> > I still want to know what the deal was when all the veracrypt devs resigned and put out the statement that it could not be trusted
+00:40:01 <thelearner[m]> Would be interested to know to, if that was the case.
+00:41:20 <qevven[m]> It was a galaxy S8 running Android 7 or 8 and had Telnet buried in the system not sure if specific to Samsung or Android in general
+00:41:39 <strcat[m]> qevven: it was probably just to have the tool for debugging
+00:41:54 <strcat[m]> https://github.com/gfto/toybox/blob/master/toys/pending/telnet.c
+00:42:25 <qevven[m]> Backdoor as far as I’m concerned 😏 haha
+00:42:32 * cn3m[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/pBjfAAQRYhkzCjPUCPyeYhZV >
+00:42:52 <strcat[m]> https://github.com/landley/toybox/blob/master/toys/net/netcat.c
+00:42:58 <qevven[m]> Veracrypt was fork of truecrypt
+00:43:27 <strcat[m]> qevven: Android 10 has netcat via toybox
+00:43:55 <qevven[m]> Does GrapheneOS have netcat & telnet?
+00:44:08 <strcat[m]> qevven: netcat is one of the toybox tools
+00:44:31 <qevven[m]> How about hardened IP Tables?
+00:44:50 <cn3m[m]> <thelearner[m] "cn3m: All clear on that. :) Coul"> Windows 10 LTSC is essentially Windows 10 1809 with less bloat(store and onedrive for instance). Windows 10 Enterprise with 1909 has better hardening and security features
+00:44:55 <strcat[m]> not sure what you mean and seems we jumped to a very diff topic
+00:45:45 <qevven[m]> Yeah
+00:46:08 <strcat[m]> cn3m: afaik LTSC is an Enterprise feature, it's just an LTS branch of Enterprise
+00:46:10 <strcat[m]> LTSC is a short form of Enterprise LTSC
+00:46:48 <strcat[m]> there's a yearly LTS
+00:46:56 <strcat[m]> so it's missing newer features - cause it's an LTS
+00:47:20 <qevven[m]> Why not just use Linux instead of windows?
+00:47:38 <strcat[m]> so Enterprise has the fancy extra sec features but if they're new they wouldn't be in LTSC since it's up to a year old
+00:47:42 <strcat[m]> year old branch
+00:47:50 <madaidan[m]> <qevven[m] "Why not just use Linux instead o"> The conversation was literally about Linux being a massive insecure mess
+00:48:06 <qevven[m]> Not quite true..
+00:48:20 <madaidan[m]> <qevven[m] "Not quite true.."> It is quite true.
+00:49:11 <strcat[m]> cn3m: it's also kinda common throughout different software that there are enterprise only features useful to others
+00:49:40 <qevven[m]> I mean windows bitlocker encryption was just recently hacked so..
+00:49:41 <strcat[m]> cn3m: like how on AOSP there are nice features they didn't make a Settings app UI to use generally because it's complicated or easy to screw up
+00:49:46 <cn3m[m]> Windows 10 or macOS they will defend your private data better qevven:
+00:50:08 <cn3m[m]> <strcat[m] "cn3m: like how on AOSP there are"> gotcha I am grabbing Windows 10 Enterprise per your suggestion
+00:50:09 <qevven[m]> Windows 10 is a spying tool are you serious?
+00:50:10 <cn3m[m]> thanks
+00:50:11 <strcat[m]> cn3m: or on Chromium it's similar, there are features you can toggle via the enterprise policy
+00:50:26 <strcat[m]> although with AOSP and Chromium - it's all there in the normal version, it's just the way it's adjusted is an enterprise API
+00:50:33 <cn3m[m]> <qevven[m] "Windows 10 is a spying tool are "> no it is not, I have MITMd it
+00:50:36 <madaidan[m]> <qevven[m] "I mean windows bitlocker encrypt"> I doubt that but here's a few hundred unfixes Linux vulns https://syzkaller.appspot.com/upstream#open
+00:50:44 <thelearner[m]> cn3m and strcat (@strcat:matrix.org) thanks for your comments. :)
+00:50:48 <cn3m[m]> <strcat[m] "although with AOSP and Chromium "> I have used Chromium enterprise rules before they are pretty nice
+00:50:55 <qevven[m]> Which Linux distro
+00:51:00 <qevven[m]> Or kernel?
+00:51:02 <madaidan[m]> <qevven[m] "Which Linux distro"> It's in the kernel
+00:51:13 <madaidan[m]> Linux has no real security model
+00:51:27 <strcat[m]> cn3m: yeah and that's essentially what Vanadium is ending up using for a lot of stuff since we want minimum diff from upstream
+00:51:29 <cn3m[m]> <qevven[m] "Or kernel?"> the userland for distros is so broken as well
+00:51:43 <qevven[m]> Uh Qubes OS ?
+00:51:50 <strcat[m]> cn3m: we're changing default settings that exist largely because of the enterprise settings
+00:51:57 <cn3m[m]> <strcat[m] "cn3m: yeah and that's essentiall"> that is a brilliant idea
+00:51:58 <cn3m[m]> I should look at your patches
+00:52:02 <strcat[m]> qevven: Qubes OS is not really a Linux distro
+00:52:22 <cn3m[m]> <qevven[m] "Uh Qubes OS ?"> insecure guests and it trusts a lot of maintainers
+00:52:26 <strcat[m]> qevven: but the Linux distros running inside it are still vulnerable to any of the regular stuff
+00:52:29 <strcat[m]> they aren't more secure
+00:52:37 <strcat[m]> what it provides is isolation between those
+00:52:46 <strcat[m]> it's a Xen distro at the core
+00:53:26 <qevven[m]> How about Clear Linux by Intel
+00:54:05 <strcat[m]> QubesOS basically aims to be an alternative to having a stack of laptops if that makes sense
+00:54:08 <cn3m[m]> the chances of a truly malicious update being pushed through the Fedora repos is orders of magnitude higher than Windows update
+00:54:25 <strcat[m]> instead of having 12 laptops you rely on virtualization to do it in 1
+00:54:33 <strcat[m]> which is cheaper and more convenient/portable
+00:54:34 <cn3m[m]> <qevven[m] "How about Clear Linux by Intel "> hundreds of unfixed vulns and no user/root isolation same issues
+00:54:46 <strcat[m]> but the individuals guests are not more secure
+00:54:50 <strcat[m]>  * but the individual guests are not more secure
+00:55:18 <qevven[m]> I would think the majority of windows installations around the world are not genuine licenses and use alternative activation methods
+00:55:24 * thelearner[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/PDfnvPqQxpVPhfKSytdiqdjv >
+00:55:28 <strcat[m]> so instead of work laptop and personal laptop you have work guest and personal guest and so on
+00:55:33 <strcat[m]> and rely on x86 virtualization + xen
+00:55:43 <cn3m[m]> qevven: if you want a secure linux distro the closest you will get is ChromeOS
+00:56:26 <qevven[m]> So you guys are in a Graphene OS channel pushing OS with google services which defeats the purpose of this project??
+00:56:41 <JTL> ???
+00:56:50 <JTL> Oh
+00:56:56 <qevven[m]> Are you guys spreading disinformation?
+00:57:23 <strcat[m]> there's a different between security and avoiding proprietary services
+00:57:34 <strcat[m]>  * there's a difference between security and avoiding proprietary services
+00:57:48 <strcat[m]> and GrapheneOS is not simply the stock OS without Google apps and services - that's AOSP without the GrapheneOS changes
+00:58:27 <strcat[m]> the purpose of GrapheneOS is taking AOSP, which doesn't have those Google apps and services, and doing privacy/security hardening + filling in functionality gaps
+00:58:31 <strcat[m]> so it largely misses the point to say the point is avoiding Google apps and services
+00:58:45 <cn3m[m]> the google services are open source on Chromium
+00:58:55 <cn3m[m]> by your own definition your argument is moot
+00:58:56 <cn3m[m]>  * the google services are open source on ChromiumOS
+00:59:21 <strcat[m]> although on mobile they don't use the open source Chromium version they outsource to Play Services when they can
+00:59:24 <cn3m[m]> I have several Google apps installed on my GrapheneOS phone
+00:59:39 <strcat[m]> you could technically build the open source clients but we don't want that so w/e
+00:59:49 <qevven[m]> OpenGapps?
+00:59:57 <strcat[m]> I would like to implement Safe Browsing using grapheneos.org tho
+01:00:03 <strcat[m]> but it's a super low priority
+01:00:25 <strcat[m]> cause enumerating badness is not a viable approach to security - it would just be nice to have best effort phishing protection, etc. based on those blacklists
+01:00:43 <strcat[m]> but it requires figuring out how to get the local database Safe Browsing working and how to host it on grapheneos.org
+01:00:55 <strcat[m]> the way it works is it hashes a URL
+01:01:02 <strcat[m]> and then takes the first few bytes of the hash
+01:01:16 <strcat[m]> and downloads a database for all URLs with those first few bytes after hashing them
+01:01:20 <strcat[m]> and then that's the db to check
+01:01:34 <strcat[m]> anyway it is a super low priority and not particularly interesting imo
+01:01:45 <strcat[m]> I would just like to not regress things like that when possible
+01:01:51 <cn3m[m]> Yes, I use Safe Browsing with NextDNS over PrivateDNS
+01:01:55 <qevven[m]> People can install something like NextDNS which is essentially like a Pi-Hole in the cloud to block malware domains & known phishing sites no?
+01:02:34 <cn3m[m]> don't install nextdns
+01:02:39 <thelearner[m]> > I have several Google apps installed on my GrapheneOS phone
+01:02:39 <thelearner[m]> Didn't think they could work.
+01:02:50 <qevven[m]> * People can install something like NextDNS which is essentially like a Pi-Hole in the cloud to block malware domains & known phishing sites no?
+01:02:50 <qevven[m]> Even NSA blocklist
+01:03:21 <cn3m[m]> use privatedns
+01:03:32 <qevven[m]> Why no NextDNS ?
+01:04:06 <cn3m[m]> <qevven[m] "Why no NextDNS ?"> use NextDNS with the built in PrivateDNS feature
+01:04:37 <qevven[m]> Why about IPV6 block?
+01:04:51 <qevven[m]> * What about IPV6 block?
+01:05:43 <qevven[m]> Some apps attempt to bypass by using internal app DNS
+01:06:28 <cn3m[m]> <qevven[m] "Why about IPV6 block?"> what about it?
+01:07:20 <cn3m[m]> untrusted apps will always find a way around your "privacy" features tacted on
+01:08:13 <cn3m[m]> I am a former professional Android and iOS ad tech coder
+01:09:52 <qevven[m]> Signal app uses this method to bypass censorship, are you saying Signal is untrusted?
+01:10:00 <cn3m[m]> don't run untrusted apps
+01:10:03 <cn3m[m]> there's too many ways around it
+01:11:36 <cn3m[m]> <qevven[m] "Signal app uses this method to b"> are you just trolling or something?
+01:11:40 <cn3m[m]> If you rely on adblocking your privacy you probably should be accessing that service from your browser
+01:11:53 <cn3m[m]> if Signal is trusted(I trust it, but it is a personal choice), then you don't need to use an adblocker
+01:13:01 <cn3m[m]> I have bypassed dns blocks regardless of ipv6 or not
+01:15:37 <qevven[m]> 🤷‍♂️ idk what to say, guess we have different views on that
+01:17:40 <nickcalyx[m]> > so instead of work laptop and personal laptop you have work guest and personal guest and so on
+01:17:40 <nickcalyx[m]> No but its different than that. They have all USB stuff in one VM, all network stuff in another VM and them the vulnerable parts are isolated
+01:17:47 <cn3m[m]> <qevven[m] "🤷‍♂️ idk what to say, guess we "> you are looking for poor solutions to problems(that won't be fixed)
+01:17:49 <cn3m[m]> NextDNS VPN version is not what you are looking for
+01:17:54 <cn3m[m]> use it and block google.com and take bromite with a secure dns that unblocks it
+01:18:11 <strcat[m]> if you give an app network access and let it connect to stuff it can clearly exfiltrate data
+01:18:35 <strcat[m]> if you allow it access to the app devs own servers you are not really restricting the app developers...
+01:18:57 <strcat[m]> same kind of weird misunderstanding as thinking blocking third party code running in a browser prevents third party tracking
+01:19:10 <strcat[m]> it just prevents them doing it via the client
+01:19:18 <strcat[m]> they can still get it all via the first party
+01:19:23 <strcat[m]> including middleware that runs there
+01:19:33 <strcat[m]> which is btw how things are becoming now
+01:19:36 <qevven[m]> But you can control who it communicates with through block lists
+01:20:07 <strcat[m]> qevven: if you let an app talk to the app dev's server
+01:20:12 <strcat[m]> a single whitelisted domain / IP
+01:20:15 <strcat[m]> it can talk to the whole world
+01:20:17 <cn3m[m]> all this stuff is privacy theater like firewalls and network blocks
+01:21:01 <strcat[m]> qevven: the app dev can send along your data to facebook or w/e from there
+01:21:05 <strcat[m]> they don't need to do that from the client
+01:21:14 <strcat[m]> they increasingly don't do it from the client
+01:21:38 <strcat[m]> one reason is there are security issues for them with that approach
+01:21:53 <strcat[m]> lets say you get some API key from facebook
+01:22:07 <strcat[m]> you obviously shouldn't stick that in your app if you don't want junk / malicious stuff being done with it
+01:22:20 <strcat[m]> you need to proxy it through your server
+01:22:30 <strcat[m]> otherwise anyone else can extract that api key and do w/e with it
+01:22:38 <strcat[m]> applies to anything really
+01:23:16 <strcat[m]> it's bad practice to include api keys in the client
+01:24:20 <strcat[m]> there is a substantial move away from sticking api keys in apps and using services from the app + obfuscating the app and hoping that deters ppl
+01:24:39 <strcat[m]> applies to some extent to web sites too
+01:25:27 <qevven[m]> But that’s how many advertisers do it no?
+01:25:27 <qevven[m]> When devs are implementing Ad SDKs in their apps they must use api in app to render the ads in view, or has this practice changed in recent years?
+01:25:39 <strcat[m]> anyway if you allow an app to communicate with the app devs server you allow it to communicate with anyone
+01:25:49 <strcat[m]> since you are trusting the same people who made the app with anything it wants to send
+01:26:05 <strcat[m]> to me at least that's obvious
+01:26:20 <JTL> Me too
+01:26:46 <strcat[m]> similarly if you connect to example.com and allow scripts, etc. from example.com (1st party origin)
+01:27:02 <strcat[m]> they can be serving you tons of stuff they didn't write and often are
+01:27:16 <strcat[m]> and the data that stuff sends to their server can and is often sent off to assorted third parties
+01:27:40 <strcat[m]> blocking third party stuff in the client does not mean third parties can't get the data
+01:28:07 <strcat[m]> so this is not a viable approach to real privacy where you have any sort of guarantees / assurance
+01:28:21 <strcat[m]> rather, at best, it can block all kinds of assorted things deemed 'bad' and not useful / needed for sites to work
+01:28:23 <cn3m[m]> apps are far craftier than simple solutions would suggestion
+01:28:38 <strcat[m]> but blocking everything 'bad' and not needed for the site to work
+01:28:40 <strcat[m]> doesn't stop tracking
+01:29:16 <strcat[m]> you are still tracked by the site itself, and stuff you have to whitelist for it to work, although that isn't needed for tracking at all, all that's needed is the first party
+01:29:38 <strcat[m]> and ofc nothing stops them sharing that data with others and they can and do run third party middleware
+01:29:43 <cn3m[m]> the much better solution is to run webapps
+01:29:44 <strcat[m]> which adds stuff and sends off data
+01:30:10 <cn3m[m]> you will still be spied on, but it will be better restricted
+01:30:20 <strcat[m]> and btw lets say you do block some third party connection for an app
+01:30:24 <strcat[m]> ok, you caused an exception
+01:30:31 <strcat[m]> but you allow connections to their server?
+01:30:42 <strcat[m]> their SDK for tracking crashes is going to send a report because of what you blocked
+01:30:52 <strcat[m]> you put yourself in a crash db
+01:31:10 <strcat[m]> database of info dumps from when exceptions are thrown
+01:31:18 <cn3m[m]> apps can see your real ip worth noting
+01:31:22 <strcat[m]> you made yourself stand out to the point that an actual person may look at your data
+01:32:13 <strcat[m]> it makes sense to have a Network toggle at least if other stuff enforces it
+01:32:42 <strcat[m]> it makes a lot less sense to pretend fine-grained filtering works as people seem to expect
+01:33:02 <strcat[m]> esp, since other stuff is not going to enforce that
+01:33:24 <strcat[m]> it's a lot to ask that some random browser you install enforces the INTERNET permission on other apps
+01:33:27 <qevven[m]> 1 person reviewing a debug log is better than 100 marketing companies targeting ads to you
+01:33:40 <strcat[m]> qevven: data can still go to the marketing company
+01:33:50 <strcat[m]> all you blocked is sending it from the client without going through their server
+01:33:54 <strcat[m]> and as I said earlier
+01:34:04 <strcat[m]> if it goes through the client that means the API key is the client
+01:34:17 <strcat[m]> which is considered a bad practice because anyone can extract the API key and use it the same way
+01:34:41 <cn3m[m]> <qevven[m] "1 person reviewing a debug log i"> you might find just not having an ad id breaks 90% of practical targeting anyway
+01:34:49 <cn3m[m]> qevven: https://grapheneos.org/faq#non-hardware-identifiers
+01:35:23 <strcat[m]> GrapheneOS is strongly opposed to privacy/security theater
+01:36:16 <cn3m[m]> I have no ad id and I use privatedns to block well known trackers that aren't trying. Extremely easy setup and just as effective as a more convoluted method
+01:36:20 <strcat[m]> we don't do stuff like blocking one of many ways to do something equivalent and making that seem meaningful
+01:36:25 <qevven[m]> I just don’t understand how choosing to minimise footprint is privacy theatre
+01:36:55 <cn3m[m]> <qevven[m] "I just don’t understand how choo"> you're not doing it with the methods you suggest
+01:36:59 <strcat[m]> qevven: it doesn't minimize your footprint, it makes you stand out
+01:37:38 <madaidan[m]> qevven: do you happen to browser r/privacy?
+01:37:43 <qevven[m]> Same can be said about Tor users
+01:37:45 <madaidan[m]>  * qevven: do you happen to browse r/privacy?
+01:37:52 <cn3m[m]> they add more risk
+01:38:03 <cn3m[m]> privatedns is a better setup than using a VPN app
+01:38:06 <strcat[m]> qevven: yes Tor users stand out to the local network, their ISP, and the traffic from exit nodes is super interesting
+01:38:30 <strcat[m]> qevven: but all the local network / ISP see is you are using Tor
+01:38:51 <strcat[m]> unless there is very coordinated  monitoring
+01:39:11 <qevven[m]> Ok I shall educate myself better on these subjects 🙃
+01:39:16 <strcat[m]> that is something to consider when using Tor
+01:39:23 <cn3m[m]> encrypted dns in general doesn't help against ISP tracking
+01:39:26 <cn3m[m]> it only makes things worse
+01:39:29 <strcat[m]> like if you are in a repressive country
+01:39:32 <cn3m[m]> poor comparison
+01:39:37 <strcat[m]> maybe simply using Tor is enough to get arrested / tortured
+01:39:38 <strcat[m]> so...
+01:40:16 <madaidan[m]> There's Tor bridges/pluggable transports but I wouldn't bet my life on them
+01:40:41 <strcat[m]> also worth noting the Tor Browser approach
+01:40:47 <analog[m]> It's pretty much impossible to completely hide Tor usage from your iSP afaik.
+01:40:57 <strcat[m]> is attempting to provide real privacy via anonymity
+01:41:01 <cn3m[m]> vpn is a better in that use case as plausible deniability is much higher
+01:41:08 <cn3m[m]> you don't stand out and it is beyond some repressive countries ability to monitor
+01:41:12 <strcat[m]> there are 3 parts to this
+01:41:32 <strcat[m]> traffic needs to go through something like Tor or a VPN where sites, etc. don't identify you simply by IP, etc.
+01:41:50 <strcat[m]> the site needs to be compartmentalized
+01:42:03 <strcat[m]> all the state and so on
+01:42:04 <strcat[m]> HTTP connection pools, cache, cookies, everything
+01:42:07 <strcat[m]> tons of stuff for browsers
+01:42:19 <strcat[m]> and then there is the issue of fingerprinting
+01:42:38 <strcat[m]> including through side channels like performance
+01:43:09 <strcat[m]> the Tor Browser attempts to address these things - it is the closest thing to providing it, although it is very flawed
+01:43:19 <strcat[m]> but really
+01:43:42 <strcat[m]> all those privacy extensions and things are mostly just privacy theater nonsense and don't stop you being tracked + make you stand out a lot, especially as you change more settings and use more extensions
+01:43:47 <strcat[m]> and set up the extensions in unique ways
+01:43:51 <madaidan[m]> There's also the need to not be hacked easily which TB doesn't provide
+01:43:58 <strcat[m]> specific ad-blocking subscriptions, specific versions of them and so on
+01:44:41 <strcat[m]> pretty trivial to try connecting to a list of URLs and use that to check which ad-blocking subs are enabled - that's the type of thing fingerprinting is built on
+01:44:49 <strcat[m]> the unique configuration, extensions, state in those extensions, etc.
+01:44:50 <strcat[m]> for that user
+01:44:57 <strcat[m]> also extensions are shared state between sites
+01:45:11 <strcat[m]> in many cases they break this kind of compartmentalization
+01:45:19 <strcat[m]> even if the browser does it
+01:45:30 <strcat[m]> similarly they can and do break stuff like an incognito mode
+01:46:00 <strcat[m]> cause they have their own state and they largely don't respect isolation between sites or stuff like an ephemeral state mode
+01:47:05 <strcat[m]> Tor Browser doesn't have an ad-blocking extensions because of the extra bits of fingerprinting it'd provide, and because it's providing a real approach to privacy
+01:47:17 <strcat[m]>  * Tor Browser doesn't have an ad-blocking extension because of the extra bits of fingerprinting it'd provide, and because it's providing a real approach to privacy
+01:47:40 <strcat[m]> if it did provide ad-blocking, it'd be important to not have configuration and for it to just be on/off (1 bit) with no dynamic updates
+01:47:43 <strcat[m]> of filters
+01:47:54 <madaidan[m]> Tails is stupid and adds one though
+01:48:12 <strcat[m]> I think most users of the Tor Browser don't really get how it works and do lots of things to ruin it anyways
+01:48:17 <strcat[m]> plus there are a lot of flaws / holes in this
+01:48:27 <strcat[m]> but it is the only VIABLE approach to providing real privacy
+01:48:33 <strcat[m]> enumerating badness is not
+01:50:01 <strcat[m]> content filtering is like antivirus except with hands tied behind their back
+01:50:17 <strcat[m]> well
+01:50:19 <strcat[m]> it's not different
+01:50:23 <strcat[m]> it is the same thing
+01:50:49 <strcat[m]> AVs tried moving to heuristics and more complex ways of doing signatures but it doesn't really change much
+01:50:57 <strcat[m]> you can try doing that with a browser extension too
+01:51:10 <strcat[m]> but really when you can't do anything about the first party site
+01:51:27 <strcat[m]> aside from outright disallowing a user to use say twitter.com or wikipedia.com or nytimes.com cause they track you
+01:51:37 <strcat[m]> and like
+01:51:41 <strcat[m]> disallow every site hosted via Cloudflare?
+01:51:44 <strcat[m]> or using AWS?
+01:51:56 <strcat[m]> any site not committing to not tracking users and selling the data themselves?
+01:52:07 <strcat[m]> and just rely on them keeping that promise?
+01:52:12 <strcat[m]> how exactly is this supposed to work? shrug
+01:53:44 <cn3m[m]> reminds me of the ethical ad blocker
+01:53:46 <cn3m[m]> only lets you connect to sites that are completely donation supported or sponsored
+01:53:57 <strcat[m]> https://www.qubes-os.org/ is GitHub (Microsoft)
+01:54:05 <strcat[m]> so yeah you can block the third party connections to google
+01:54:06 <strcat[m]> in the client
+01:54:23 <strcat[m]> but how are you going to stop Microsoft from knowing you visited it if your privacy relies on blocking third party stuff
+01:55:05 <cyborgninjaneer[> it's a long shot, but has anyone here got a link to that video of several doctors in a zoom meeting talking about most of the covid19 deaths actually being unrelated to the virus? I know there are a lot of hardcore anti-censorship types lurking
+01:55:41 <qevven[m]> I have a few links but you need to search for the exact video
+01:56:54 <cn3m[m]> strcat: excellent points
+01:57:02 <strcat[m]> gitlab.com
+01:57:03 <strcat[m]> cloudflare
+01:57:03 <cn3m[m]> privacy on the web is so misunderstood
+01:57:17 <strcat[m]> I mean half the web uses either aws or cloudflare
+01:57:20 <strcat[m]> for the 'first party'
+01:57:25 <strcat[m]> or both
+01:57:49 <strcat[m]> visit gitlab.com with 0 third party stuff allowed -> you are connecting via cloudflare
+01:58:02 <cyborgninjaneer[> qevven: In general, I'd appreciate it if you'd point me toward anything that's useful for locating info that's been censored by search engines and social media. If you've got a lion
+01:58:04 <strcat[m]> and they are using some host behind cloudflare
+01:58:06 <strcat[m]> probably something like azure or aws
+01:58:08 <cyborgninjaneer[> link* please throw it over.
+01:58:34 <strcat[m]> you can disable 100% of non-first-party web resources
+01:58:53 <strcat[m]> and even if the sites themselves like gitlab didn't track you
+01:59:01 <strcat[m]> the hosting they use can
+01:59:12 <strcat[m]> and ofc they can sell / share all the data amongst each other
+01:59:19 <strcat[m]> they really do not need your web browsing client to do that for them
+01:59:21 <strcat[m]> they can do it on their end
+01:59:25 <JTL> ^
+01:59:26 <cn3m[m]> <strcat[m] "visit gitlab.com with 0 third pa"> this is the hilariousness of it all
+01:59:31 <strcat[m]> like how facebook shares data with tons of companies
+01:59:31 <JTL> Agreed
+01:59:49 <strcat[m]> they didn't put the cambridge analytica stuff into your web browser, they gave them the data themselves
+02:00:07 <cn3m[m]> I tried to be active on reddit, but whenever I say stuff like this they say "use hardened firefox and they downvote to oblivion"
+02:00:37 <strcat[m]> I don't understand how enumerating badness is supposed to stop pervasive tracking
+02:00:45 <strcat[m]> and a lot of people that know better just ignore all this
+02:00:54 <strcat[m]> cause their job / projects depends on pretending not to know better
+02:00:55 <cn3m[m]> it's pointless
+02:01:05 <cn3m[m]> the privacy theater feel good stuff is too potent
+02:01:26 <JTL> > 18:59 <strcat[m]> they didn't put the cambridge analytica stuff into your web browser, they gave them the data themselves
+02:01:28 <JTL> no shit lol
+02:01:35 <strcat[m]> 99% of security stuff is a scam, 99.9% of privacy stuff
+02:01:46 <JTL> Makes me sad
+02:02:25 <cn3m[m]> <strcat[m] "cause their job / projects depen"> exactly if I make an adblocker and I say btw this is useless then people will say oh I will find another adblocker
+02:02:41 <qevven[m]> I’m more woke now then I was 30 minutes ago 😮
+02:02:49 <cn3m[m]> imagine if gorhill said adblocking was privacy theater. uBlock would be dead and nanoblocker would be the hot new thing since nanoblocker "works"
+02:04:06 <strcat[m]> the goal of GrapheneOS is to be less bad and provide real privacy and security improvements
+02:04:11 <strcat[m]> and to be honest about what it does and doesn't do
+02:04:31 <strcat[m]> and try to make things better overall and push things in the right direction
+02:05:12 <strcat[m]> unfortunately when I talk about these things - and I am saying things that are accurate, factual, truthful and well informed - some people get super offended
+02:05:21 <strcat[m]> and go try waging some war against myself and the project
+02:05:27 <cn3m[m]> <strcat[m] "and to be honest about what it d"> why I appreciate this project it is not all about rooted bullshit like xprivacy
+02:05:30 <cn3m[m]> that just makes me roll my eyes. client side checks my ass
+02:05:43 <strcat[m]> cause they don't like hearing that you need to take an approach dealing with the origin tracking you
+02:05:50 <madaidan[m]> <cn3m[m] "imagine if gorhill said adblocki"> Not everyone uses uBlock for privacy though
+02:06:05 <strcat[m]> I use ad-blocking because fuck ads, not because I think it gives me more privacy
+02:06:22 <qevven[m]> Ok I’m going to attempt to install Graphene OS let’s hope I don’t brick my pixel lol
+02:06:34 <strcat[m]> sure blocking a bunch of stuff opportunistically helps a little bit but it's not a real fundamental privacy feature
+02:06:42 <strcat[m]> it's just some opportunistic removal of low hanging fruit
+02:06:57 <strcat[m]> and ppl largely worry about the wrong things anyways
+02:07:09 <strcat[m]> lets say that Cloudflare was evil, as a hypothetical
+02:07:17 <strcat[m]> lets say Cloudflare is like some James Bond villain company
+02:07:26 <strcat[m]> they literally see half your web traffic decrypted
+02:07:29 <strcat[m]> going both ways
+02:07:46 <strcat[m]> amazon prob like 80%
+02:07:46 <madaidan[m]> <strcat[m] "and ppl largely worry about the "> Like they believe the ME is a bigger threat than the lack of OS security
+02:07:46 <strcat[m]> lol
+02:08:37 <cn3m[m]> root certs what are those? I can see your traffic
+02:11:29 <cyborgninjaneer[> qevven: I couldn't decrypt any of your private messages. Try the room I just invited you to.
+02:11:44 <cn3m[m]> I use Debian and Firefox(sandoxed with firejail) with a device with no firmware signing or microcode /s
+02:11:55 <strcat[m]> and also web browsers want you to feel all warm and happy about web security but web security is based on 1500 different trusted parties being responsible for checking DNS (without being required to check DNSSEC) and all being able to issue certs for any domain
+02:12:15 <madaidan[m]> I hate firejail
+02:12:28 <cn3m[m]> <madaidan[m] "I hate firejail"> and I love you for that
+02:12:36 <madaidan[m]> One of the devs even tried to spread FUD about bubblewrap when I pointed out its superiority
+02:12:46 <cn3m[m]> <strcat[m] "and also web browsers want you t"> do people even research the tech they use and how it works?
+02:12:52 <cn3m[m]> this seems very basic too me
+02:13:09 <strcat[m]> I think ppl may not realize
+02:13:23 <strcat[m]> that if I can do a MITM in front of a web site's authoritative DNS server
+02:13:35 <strcat[m]> if can obtain a valid DV cert trivially
+02:13:39 <strcat[m]> for that site
+02:13:54 <strcat[m]> and host valid HTTPS connections to it via my server
+02:13:56 <cn3m[m]> no shit
+02:14:02 <strcat[m]> also it's not even just DNS
+02:14:08 <cn3m[m]> root of trust
+02:14:10 <strcat[m]> DV is allowed to trust DNS + SMTP + HTTP
+02:14:15 <cn3m[m]> keyword trust
+02:14:21 <strcat[m]> unencrypted email and HTTP is a valid way to prove domain control to get DV cert
+02:14:42 * TheJollyRoger-M starts breaking out in a cold sweat.
+02:14:51 <strcat[m]> OV / EV just means they run some check to see it's a valid business and they put the name in
+02:14:54 <strcat[m]> and that's pretty useless
+02:15:00 <strcat[m]> and not shown by browsers anymore anyways
+02:15:15 <cn3m[m]> <strcat[m] "unencrypted email and HTTP is a "> didn't that happen semi recently like within the past decade
+02:15:18 <cn3m[m]> maybe to google or something
+02:15:48 <strcat[m]> really the only way to get a DV certificate should be DNS validated by DNSSEC and either get info from there or chain to an HTTPS server with pub key in DNS or w/e...
+02:15:52 <strcat[m]> but that is not how it works at all
+02:16:19 <cn3m[m]> I talked to a guy who didn't think it would be a problem with an adversary controlled every root cert since he could simply use i2p
+02:16:21 <strcat[m]> a common issue is sites allow email registration and you can sometimes register one of the emails that's considered an admin email and allowed to issue certs
+02:16:26 <cn3m[m]> I never facepalmed
+02:16:32 <strcat[m]> and btw this is just unencrypted email
+02:16:35 <strcat[m]> normal email
+02:16:43 <cn3m[m]>  * I never facepalmed so hard
+02:16:50 <strcat[m]> they are not required to check DNSSEC or DANE
+02:16:54 <strcat[m]> and the http way s just http
+02:16:57 <strcat[m]> not https
+02:17:55 <strcat[m]> there was HPKP which let you do pinning for trust-on-first-use
+02:18:01 <strcat[m]> chromium/firefox both removed it
+02:18:12 <strcat[m]> neither supports DNSSEC/DANE either
+02:19:07 <strcat[m]> chromium at least requires certs to be issued with Certificate Transparency so they are all logged
+02:19:20 <strcat[m]> so for example I monitor logs for grapheneos domains
+02:19:31 <strcat[m]> firefox doesn't enforce that certs are logged
+02:19:48 <strcat[m]> anyways that's just a reactive measure
+02:19:56 <cn3m[m]> sometime I feel like writing a whole long post about the true root of trusts in computing(especially networking), but I feel like I would lose my mind trying to handle the people making up crap
+02:20:00 <strcat[m]> i.e. site has to notice it happened and then do 'something'
+02:20:16 <strcat[m]> like go whine to the CA and try to get them to revoke it
+02:20:22 <strcat[m]> but revocation doesn't work
+02:20:28 <strcat[m]> and is cached for like 14 days
+02:20:42 <TheJollyRoger-M> Oh man.
+02:20:45 <strcat[m]> chromium has a system to distribute a subset of revocations quickly
+02:20:53 <strcat[m]> but they can't do all, they have to choose which to do
+02:20:58 <strcat[m]> CRTSets
+02:21:18 <renlord> cert transparency is meant to facilitate complaints
+02:21:19 <renlord> kek
+02:21:33 <cn3m[m]> I still chuckle whenever I remember Firefox was Germany's more secure browser for HTTPS reaons
+02:21:36 <cn3m[m]> excellent research /s
+02:21:39 <strcat[m]> the standard revocation thing is OCSP
+02:21:40 <renlord> should start a autoCAcomplain.com
+02:21:41 <TheJollyRoger-M> <madaidan[m] "Like they believe the ME is a bi"> Oh man. Too soon man, too soon aaaaargh...
+02:21:45 <strcat[m]> you ask a CA server if the cert is revoked
+02:21:47 * TheJollyRoger-M drowns his sorrows.
+02:21:51 <strcat[m]> and that's horrible cause
+02:21:53 <strcat[m]> they go down
+02:22:01 <strcat[m]> and it leaks every site you visit to CA if we really did that
+02:22:04 <strcat[m]> browsers had to do soft fail
+02:22:08 <strcat[m]> if connection failed just allow
+02:22:12 <strcat[m]> so that's basically dead
+02:22:41 <madaidan[m]> <cn3m[m] "I still chuckle whenever I remem"> Governments are so incompetent sometimes
+02:22:41 <strcat[m]> instead of there is OCSP stapling
+02:22:42 <strcat[m]> this feature is broken in both apache and nginx
+02:22:53 <strcat[m]> and they still can be cached for like 14 days
+02:23:06 <strcat[m]> so attacker can get one when they compromise it and it's valid for 14 days
+02:23:16 <strcat[m]> browser will accept that proof it is not revoked
+02:23:28 <strcat[m]> and anyway this assumes you set up something that is totally broken in both apache and nginx
+02:23:43 <strcat[m]> it is only really usable in a non-broken way with nginx using a third party script and pointing nginx at the result
+02:23:50 <strcat[m]> apache can't
+02:23:57 <strcat[m]> and set Must-Staple
+02:24:13 <strcat[m]> and that only allows you to properly revoke your OWN certs with that caveat of the revocation proofs being valid for 7-14 days or w/e
+02:24:31 <strcat[m]> assuming CA provides you a way to revoke sanely
+02:24:42 <strcat[m]> I remember startssl used to refuse to revoke certs
+02:24:58 <strcat[m]> you had to pay to get revocation
+02:25:23 <strcat[m]> ofc
+02:25:25 <renlord> strcat[m]: isnt that the definition of ransomware?
+02:25:36 <strcat[m]> shrug
+02:25:42 <strcat[m]> anyway this is the tip of the iceberg
+02:26:00 <strcat[m]> obviously web browsers aren't going to tell you how horribly fucked beyond repair everything they've done is
+02:26:05 <renlord> legalised ransomware
+02:26:07 <renlord> lol
+02:26:19 * TheJollyRoger-M cries into his beer so much the cup overflows and starts puddling onto the floor.
+02:26:22 <cn3m[m]> on that note do you use gmail for related security reasons?
+02:26:24 <cn3m[m]> <strcat[m] "I remember startssl used to refu"> I forgot about that oh boy
+02:26:41 <strcat[m]> cn3m: I try not to use email
+02:26:45 <TheJollyRoger-M> Yeah even after the Debian Weak Keys disaster!
+02:26:54 <strcat[m]> my gmail account is basically a way to collect 250+ emails in the spam folder daily
+02:27:09 <strcat[m]> email is super fucked beyond repair too
+02:27:32 <strcat[m]> I have seen that now after spending tons of time figuring out how to host an email server properly in a way that's as secure as possible
+02:27:54 <strcat[m]> ruined by the fact that 99% of other people's email servers are totally insecure
+02:27:55 <strcat[m]> so only 1% of the email exchanges are at all secure
+02:28:19 <TheJollyRoger-M> Oh god.
+02:29:18 <cn3m[m]> in all seriousness why host your own email?
+02:29:30 <strcat[m]> cn3m: because I need an email server for grapheneos.org etc
+02:29:49 <TheJollyRoger-M> Yeah for sending out the attestation alerts and such.
+02:29:52 <strcat[m]> attestation.app needs to send people alert emails and I need to be able to receive emails
+02:30:16 <strcat[m]> and there is no provider that offers the security I set up for it even if I wanted to trust them
+02:30:38 <strcat[m]> well no major one
+02:30:57 <cn3m[m]> fair enough
+02:31:02 <cn3m[m]> a lot of people would probably be uncomfortable with you outsourcing that to Google or Microsoft?
+02:31:04 <strcat[m]> cn3m: other people don't do stuff right, basically, instead I had to invest substantial time in this and I feel it was useful
+02:31:17 <strcat[m]> neither Google or Microsoft supports DANE only MTA-STS
+02:31:28 <strcat[m]> most providers don't have authenticated TLS at all so...
+02:31:31 <strcat[m]> that's better than most
+02:32:12 <strcat[m]> you need both MTA-STS and DANE really to provide TLS authentication for people doing either
+02:32:18 <strcat[m]> most people do neither one tho
+02:32:41 <strcat[m]> anyways email is really fucked even when set up totally properly
+02:33:14 <strcat[m]> also a lot of people are anti-email-security and don't like the features used to prevent spoofing emails, etc.
+02:33:27 <strcat[m]> so they actively work to keep it insecure
+02:33:46 <strcat[m]> cough linux kernel devs
+02:35:28 <madaidan[m]> I'd never want to deal with those people ever
+02:35:32 <madaidan[m]> They sound like a nightmare
+02:35:50 <madaidan[m]> Getting changes accepted downstream sounds far nicer
+02:36:43 <strcat[m]> mailing lists historically have liked to edit your emails
+02:36:50 <strcat[m]> stick info at the bottom about the mailing list
+02:36:54 <strcat[m]> and leave it as your FROM address
+02:37:54 <strcat[m]> so, ofc they don't have valid SPF since they send an email on your behalf to everyone - SPF doesn't really work alone, no one can enforce it
+02:38:03 <strcat[m]> and they modified the email so the DKIM signature is invalid
+02:38:11 <strcat[m]> DMARC requires either SPF or DKIM to be valid
+02:38:38 <strcat[m]> there is a header you can put on emails (and you can add headers to emails that are DKIM signed - it only signs specific headers the mail server lists)
+02:38:57 <strcat[m]> for doing list unsubscribe
+02:39:01 <strcat[m]> but they are super backwards and refuse to do this basically
+02:39:40 <strcat[m]> so people using domains where email spoofing is prevented can't use lots of mailing lists, lol, the spoofed emails from the mailing list are rejected by secure providers enforcing DMARC
+02:40:04 * JTL is still sad that any form of pinning is gone from browsers
+02:40:05 <JTL> lol
+02:40:08 <strcat[m]> and instead of just not modifying people's emails a lot of the mailing list software instead decided to rewrite your FROM address
+02:40:15 <strcat[m]> to their own domain
+02:40:46 <strcat[m]> dunno why they couldn't just use the List-Unsubscribe header
+02:40:52 <JTL> Hideous
+02:43:27 <strcat[m]> https://kernelnewbies.kernelnewbies.narkive.com/F9mlJOst/why-the-email-of-yahoo-com-can-t-subscribe-majordomo-vger-kernel-org
+02:43:32 <strcat[m]> yahoo set DMARC policy to reject
+02:43:39 <strcat[m]> so lkml banned people from posting with yahoo addresses
+02:43:49 <strcat[m]> cause they disallowed spoofing their emails
+02:44:03 <strcat[m]> good old 2014
+02:44:06 <qevven[m]> I’m running Solus Linux, Signify is not available for this distro, how do I verify .sig & file
+02:44:39 <strcat[m]> https://lkml.org/lkml/2015/9/4/721
+02:45:15 <strcat[m]> meanwhile the mailing lists could just... not modify people's emails and still claim the emails are from their actual address
+02:45:24 <strcat[m]> best to just... not modify people's emails and send them spoofed
+02:45:36 <strcat[m]> use List-Unsubscribe header (they are allowed to add that still...)
+02:45:50 <strcat[m]> so think about this for a sec
+02:45:54 <cn3m[m]> <qevven[m] "I’m running Solus Linux, Signify"> use Windows
+02:45:55 <cn3m[m]> I half jest, but it is probably a botched name
+02:45:59 <strcat[m]> linux kernel uses mailing lists for development
+02:46:03 <cn3m[m]> check the docs I am 90% sure they mention it
+02:46:29 <strcat[m]> linux kernel ppl were / are against preventing spoofed emails
+02:46:36 <strcat[m]> lol.
+02:47:13 <cn3m[m]> linux is secure frm the gubermint
+02:51:02 <strcat[m]> https://mailarchive.ietf.org/arch/msg/ietf/qLMLIcG6mwUfZPkamLVYqM9jPSU/
+02:51:26 <strcat[m]> there's the lead dev of ext4 and the linux CSPRNG arguing for permitting mail spoofing
+02:51:40 <strcat[m]> and ignoring that they could just not spoof people's emails bu not modifying them + using List-Unsubscribe header
+02:51:46 <strcat[m]>  * and ignoring that they could just not spoof people's emails by not modifying them + using List-Unsubscribe header
+02:53:26 <qevven[m]> <cn3m[m] "use Windows "> What software do I use for windows to verify signature of downloaded Graphene OS
+02:54:26 <madaidan[m]> Use Arch btw
+02:54:31 <strcat[m]> qevven: https://grapheneos.org/install#obtaining-signify
+02:54:42 <strcat[m]> > If you do not have a way to obtain signify from a package repository you're already trusting, it does not make sense to use it. GrapheneOS releases are hosted on our servers and we do not have third party mirrors. A compromised signify would be able to compromise your OS and the GrapheneOS download due to the lack of an application security model on traditional operating systems. It would be worse than not trying to
+02:54:42 <strcat[m]> verify the signatures. It's far less likely that our servers would be compromised than someone's GitHub account or GitHub itself. You're already trusting these installation instructions from our site, which is hosted on the same static web server infrastructure as the releases.
+02:54:52 <strcat[m]> qevven: the whole point of signify is chaining trust from your distro repos
+02:55:11 <strcat[m]> if it doesn't provide it, no point, you'd just be installing signify without verifying it a sig for it anyway right?
+02:55:44 <qevven[m]> Ok I’ll skip that step
+02:55:45 <strcat[m]> ideally every distro would provide working fastboot and signify
+02:56:51 <strcat[m]> I considered adding a signature that certutil on windows could verify
+02:56:53 <strcat[m]> but didn't do it yet
+02:56:58 <strcat[m]> it's really a pain
+02:57:11 <qevven[m]> No worries
+02:57:32 <strcat[m]> issue is the tool to verify has to be built into the OS or in trusted repos
+02:57:51 <strcat[m]> and GPG is too screwed up + not in Windows anyways
+02:58:26 <qevven[m]> I tried gpg but says no valid openpgp data found
+03:00:48 <cn3m[m]> I am trying to setup a development and media rig and I am going to get a emulator working for GrapheneOS. I hate developing on Windows would it be more sane to go with Arch Linux, Hackintosh(OpenCore), or ChromiumOS(Cloudready + Arch). Or should I just stick with Windows?
+03:01:12 <strcat[m]> https://mailarchive.ietf.org/arch/msg/ietf/AP4zYCig7BSBkzfrsW_4V-_3Vw8/
+03:01:21 <strcat[m]> qevven: it's not a GPG signature, it's a signify signature
+03:01:31 <strcat[m]> we moved to signify for better security and to make it simpler
+03:02:35 <madaidan[m]> <cn3m[m] "I am trying to setup a developme"> The answer is always Arch
+03:02:40 <cn3m[m]> it is way simpler yeah
+03:03:01 <madaidan[m]> Arch is the meaning of life
+03:03:19 <madaidan[m]> What's the point if not Arch?
+03:03:22 <cn3m[m]> <madaidan[m] "The answer is always Arch"> security model though..
+03:03:48 <madaidan[m]> <cn3m[m] "security model though.."> Security is for nerds
+03:04:58 <cn3m[m]> madaidan.: troll i ben u
+03:05:06 <qevven[m]> Chad
+03:05:20 <analog[m]> Chadaidan isn't here but I can invite him
+03:05:30 <qevven[m]> Who
+03:05:38 <madaidan[m]> <qevven[m] "Who"> Chadaidan
+03:10:40 <strcat[m]> intel uses ECC to run cache at too low of a voltage to properly preserve data and still be able to avoid corrupting data (most of the time, hopefully)
+03:10:41 <strcat[m]> TIL
+03:11:04 <JTL> o_O
+03:12:52 <cn3m[m]> intel is such an interesting company
+04:01:28 <renlord[m]> The email servers can be sure but the email exchange is done insecurely
+04:01:53 <renlord[m]> *secure
+04:23:16 <x26h9x2rxm[m]> hello, i am seeing connections from my pixel 3 that are leaking outside my VPN to epdg.epc.mncXYZ.mccABC.pub.3gppnetwork.org
+04:23:16 <x26h9x2rxm[m]> can anyone suggest how i prevent this connection?
+04:46:16 <nickcalyx[m]> turn off wifi calling
+04:47:30 <x26h9x2rxm[m]> i have no wifi calling enabled / option
+04:49:08 <nickcalyx[m]> well I'm pretty sure that's what it has to do with
+04:50:27 <qevven[m]> Does installing aurora store defeat the purpose of using grapheneos?
+04:50:27 <nickcalyx[m]> step 1) hit the phone icon as if you are going to make a call step 2) hit the 3 dot icon in the upper right corner, near "search contacts" and select 'settings'
+04:50:40 <nickcalyx[m]> step 3) hit 'Calls'
+04:50:58 <nickcalyx[m]> then you can select 'Wifi calling' .. what is it set to now
+04:51:08 <qevven[m]> Or installing the original pixel camera apk
+05:12:01 <x26h9x2rxm[m]> <nickcalyx[m] "then you can select 'Wifi callin"> there is no 'wifi calling' option, even in submenu
+05:13:01 <nickcalyx[m]> if you go to 'about' what does it say the build version is
+05:13:33 <x26h9x2rxm[m]> <nickcalyx[m] "if you go to 'about' what does i"> 'about' in calls? build version 23.0
+05:13:55 <nickcalyx[m]> hm, well I am stumped then. :)
+05:14:07 <nickcalyx[m]> that's the same version as me but I am not running graphene
+05:14:34 <nickcalyx[m]> however if you google about 3gppnetwork.org it's something the carriers use to implement wifi calling
+05:14:37 <x26h9x2rxm[m]> me too! internet research says the 3gpp network is about WiFi calling - but i can't find it on my phone
+05:15:03 <x26h9x2rxm[m]> i'm on the latest stable build of grapheneOS
+05:15:23 <x26h9x2rxm[m]> - the other question is how this is bypassing the VPN
+05:16:56 <x26h9x2rxm[m]> if WiFi calling is a system app, can i revoke the network permission?
+05:22:08 <nickcalyx[m]> ¯\_(ツ)_/¯
+05:22:18 <x26h9x2rxm[m]> ha! ok, thx
+05:24:48 <daru[m]> <x26h9x2rxm[m] "me too! internet research says t"> Wifi calling options tend to be in system settings > network and internet > mobile network > advanced > wifi calling
+05:25:20 <daru[m]> At least that's how I've always interacted with them
+05:26:09 <x26h9x2rxm[m]> <daru[m] "Wifi calling options tend to be "> thanks - i can't find a wifi calling option using the settings > network and internet path
+05:26:39 <cn3m[m]> https://www.reddit.com/r/privacytoolsIO/comments/gph5jx/degoogling_a_pixel_xl/
+05:27:06 <cn3m[m]> gotta love misleading crap about GrapheneOS and discrediting me
+05:28:27 <x26h9x2rxm[m]> <daru[m] "At least that's how I've always "> thanks - i can't find a wifi calling option using the settings > network and internet path
+05:29:35 <cn3m[m]> microg can always be used with CalyxOS which is far better than Lineage
+05:43:03 <xabierd[m]> <cn3m[m] "gotta love misleading crap about"> Bootloader can be relocked with lineage on OP5, dont know how useful it is and how well it is implemented but relocking works.
+05:45:23 * cn3m[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/EYJHkdeUQsrsjtsxDFndtuRP >
+05:46:30 <cn3m[m]> the build instructions don't have the custom keys
+05:49:11 <xabierd[m]> It can be relocked in any rom, optimumpro explains it on xda. He develops jaguar rom for op5, a hardened version of android, yet it supports microg and device tree comes from lineage
+05:49:57 <Shippwrecked[m]> <xabierd[m] "It can be relocked in any rom, o"> Do you have a link?
+05:50:21 <xabierd[m]> I can look for it, give me a sec
+05:50:49 <xabierd[m]> https://forum.xda-developers.com/oneplus-5/how-to/guide-relock-bootloader-custom-rom-t3849299
+06:11:28 <cn3m[m]> yeah relocking is one thing being built with verified boot keys is another I'll check it
+06:11:30 <cn3m[m]> if Official Lineage doesn't have verified boot on OP3-6 that's what I'm talking about
+06:12:22 <lvkm[m]> qevven: foss apps from fdroid are best but for exceptions i use aurora store in a separate work profile (via shelter).
+06:18:32 <qevven[m]> lvkm: so you put Aurora Store in separate profile and install apps in shelter ?
+06:25:20 <qevven[m]> Shelter isn’t working for me won’t install or clone into work profile
+06:28:03 <lvkm[m]> uninstall shelter and fdroid, aurora, reboot and install them again. once you have work profile active, go into shelter and clone aurora
+06:28:58 <lvkm[m]> then you can uninstall aurora from main profile
+06:29:35 <qevven[m]> Ok I’ll try, is Shelter still maintained? Looks like dev is no longer maintaining
+06:33:48 <lvkm[m]> i guess so. ideally you should have multiple users, and don't add another trust point with an obscure app, but switching is a bit of a pain in the ass.
+06:35:11 <qevven[m]> Oh I see now, I rebooted and all is working fine now
+06:35:34 <qevven[m]> This is cool
+06:35:52 <qevven[m]> Thank you for the tip
+06:37:19 <qevven[m]> lvkm: would you recommend keeping 2FA apps such as Bitwarden, Yubico, Authy in Main or Work profile?
+06:39:02 <lvkm[m]> you're welcome. i would probably end up ditching work profiles and use users. i already have a different one for finacial apps, shopping and tech stuff.
+06:41:11 <cn3m[m]> <qevven[m] "lvkm: would you recommend keepin"> main profile
+06:41:22 <lvkm[m]> i have keepassdx installed on each user and keep my database and key file on a type c usb stick.
+06:41:57 <lvkm[m]> krepassdx also supports 2fa
+06:43:31 <lvkm[m]> that way credentials are available on every user as there is no share storage between them
+06:44:51 <qevven[m]> Changing users is a pain no? If you shopping as one user and you won’t know if you get a text or call as another user, or does text and calls all still the same for all users?
+06:49:17 * qevven[m] uploaded an image: ima_8854c99.jpeg (52KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/PMCUZvQiuOfYBfrkUvioprdD >
+06:49:24 <qevven[m]> Should both be enabled or no?
+06:49:28 <lvkm[m]> keepassdx also saves the location so when i want to log in i just plug the stick, switch to the custom keyboard, tap the fingerprint scanner and I'm in. calls pass through but if the name is not in contacts it just shows the number. sms i didn't test
+06:50:08 <lvkm[m]> same, probably a bug
+06:51:58 <cn3m[m]> <qevven[m] "Should both be enabled or no?"> work only
+06:52:06 <cn3m[m]> device admin is a dangerous permission
+06:52:07 <cn3m[m]> that is work profile is considered partially untrusted
+06:52:11 <lvkm[m]> other comunication apps would need to be installed on each profile to not miss notifications
+06:53:50 <qevven[m]> As of now there is no google notifications alternative correct? Just microg as a proxy but microg doesn’t work for Graphene
+06:53:55 <lvkm[m]> * other comunication apps would need to be installed on each user to not miss notifications
+06:55:11 <qevven[m]> Or do notifications work fine in Graphene?
+06:56:53 <cn3m[m]> <qevven[m] "As of now there is no google not"> microg needs to be rebuilt before it will be added
+06:56:54 <lvkm[m]> unlimited "work" profiles without third party apps would be nice to have. notification work fine for the most part even without google services. some apps need to keep a persistent notification at all times for that tho.
+06:57:00 <cn3m[m]> anyone is free to work on breaking it down
+07:00:52 <lvkm[m]> once scoped storage is implemented in android 11 would it make sense to still use profiles? graphne has already a robust permission toggles system, any app could be kept in check by that.
+07:01:10 <qevven[m]> I wish I could contribute but I’m just a shitty web developer 😓
+07:01:14 <lvkm[m]> * once scoped storage is implemented in android 11 would it make sense to still use profiles? grapheneos has already a robust permission toggles system, any app could be kept in check by that.
+07:01:33 <qevven[m]> * I wish I could contribute but I’m just a shitty web developer 😓 lol
+07:01:57 <JTL> We all start somewhere
+07:03:44 <qevven[m]> Took C# & Java intro courses in college, learned a bit of Kotlin & Flutter with online tutorials but not enough to create something useful
+07:03:56 <lvkm[m]> * once scoped storage is implemented in android 11 would it make sense to still use profiles? grapheneos has already a robust permission toggles system,   couldn't apps be kept in check by that?
+07:04:16 <lvkm[m]> * once scoped storage is implemented in android 11 would it make sense to still use profiles? grapheneos has already a robust permission toggles system,  couldn't apps be kept in check by that?
+07:05:55 <qevven[m]> Hey should I keep financial apps like banking & stock trading in Main or Work profile ?
+07:06:43 <lvkm[m]> i have a special user just for that.
+07:10:06 <qevven[m]> So you have to log out and in everytime you want to do different activities?
+07:11:21 <lvkm[m]> yes
+07:11:47 <cg_droid> qevven[m], you only change the user in the same place as you have the icons Airplane mode, etc
+07:11:59 <cg_droid> qevven[m], you only change the user in the same place where you have the icons Airplane mode, etc
+07:12:26 <lvkm[m]> most of the time the apps remain open when switching profiles. i guess is a ram thing
+07:14:16 <lvkm[m]> as cg is saying is easy to just swipe notification down and tap on the user icon
+07:14:47 <lvkm[m]> less convenient than work profiles but more secure
+07:17:04 <qevven[m]> I see, I’ve used android many years & custom roms but never bothered using profiles or multiple users 😅 trying to ditch my iPhone for GrapheneOS, since tracing tools are being pushed into latest updates
+07:17:39 <qevven[m]> * I see, I’ve used android many years & custom roms but never bothered using profiles or multiple users 😅 trying to ditch my iPhone for GrapheneOS, since covid tracing tools are being pushed into latest updates
+07:19:11 <qevven[m]> I’ll give multi users a try, 2 downwards flicks of my thumb ain’t a hassle
+07:19:54 <cn3m[m]> Did you read Daniel's post on that?
+07:19:59 <cn3m[m]> you have to install the one app allowed for your country and give it express permission and leave your bluetooth on
+07:20:03 <cn3m[m]> it is at least 2 opt ins
+07:20:40 <qevven[m]> Where can I find that post?
+07:22:25 <qevven[m]> iPhone use Ultra Wideband (UWB)
+07:22:51 <qevven[m]> Bryan krebs wrote a piece on it about random location requests in November 2019
+07:23:15 <cn3m[m]> don't opt in twice then
+07:23:16 <cn3m[m]> I will find it
+07:23:55 <qevven[m]> I’m not even going to download that 13.5 iOS update, there’s no security fixes anyways
+07:24:44 <cn3m[m]> he said if it was open source and to the spec he wouldn't go out of his way to remove it
+07:26:50 <qevven[m]> I’m just losing trust in Apple and google more and more
+07:27:30 <cn3m[m]> <qevven[m] "I’m just losing trust in Apple a"> Apple and Google are really the only two you can still trust mate
+07:27:37 <qevven[m]> My main pc is Linux only boot into windows when I need very specific software
+07:27:46 <cn3m[m]> at least to do what they say and secure it
+07:28:23 <qevven[m]> They both in bed with big brother
+07:28:28 <cn3m[m]> https://www.reddit.com/r/GrapheneOS/comments/fz3i77/covid19_contact_tracing_api/fn49s34/?context=3
+07:28:46 <cn3m[m]> <qevven[m] "They both in bed with big brothe"> who is big brother in this example?
+07:30:13 <qevven[m]> Intelligence agencies, & government
+07:30:28 <cn3m[m]> Google was the first company to get their national security transparency site up after they legally could and they have been publishing NSLs
+07:30:37 <cn3m[m]> Linux has hundreds of known unpatched vulnerabilities they can't keep up with Google's fuzzers
+07:31:13 <cn3m[m]> Android security program shares vulnerabilities directly with the US and Chinese governments in advanced every month so they can patch their systems
+07:31:31 <cn3m[m]> you're spreading FUD
+07:32:23 <cn3m[m]> That includes Linux vulnerabilities by the way
+07:34:15 <cn3m[m]> http://www.reddit.com/r/Android/comments/ckdype/the_oneplus_7_pro_just_got_the_august_security_patch_on_the_31st_july._impr/evmor0s?context=3
+07:34:15 <cn3m[m]> "There's nothing they really need to 'reverse engineer'. There's nothing obfuscated. The binary diff is as usable as the source level one. Of course, I'm pointing out that this system doesn't really work, because attackers can get access from the start due to how broadly this is distributed to so many irresponsible companies. It's explicitly handed to the US and Chinese governments 30 days early every month. The system is
+07:34:15 <cn3m[m]> broken, and this is a small example of how non-seriously the information is handled by most companies."
+07:35:48 <cn3m[m]> If you want any protection from the government you would use a hardened system like iPad, GrapheneOS, Windows 10 to slow down exploit development. Toggles work, they are verified all the time by advanced network monitoring
+07:36:19 <cn3m[m]> There is no protecting from people with so much control over the root of trust over the web
+07:37:23 <cg_droid> cn3m[m]: how do you know that?, source?
+07:37:29 <cn3m[m]> they don't need backdoors or exploits(even though they could easily exploit). If the US government is in your threat model and you believe they will violate the law like never before you have to go offline. Windows 10 and macOS aren't data mining you. Turn off the clear opt outs
+07:37:41 <cn3m[m]> I linked all this stuff
+07:38:04 <cn3m[m]> "It's explicitly handed to the US and Chinese governments 30 days early every month. The system is broken, and this is a small example of how non-seriously the information is handled by most companies."
+07:39:21 <cn3m[m]> Linux with it's dismal security is particularly vulnerable. Time to exploit for most systems can be consistently under a month by hobbyists
+07:39:27 <cg_droid> I mean about giving that information and vulns to the government
+07:40:23 <cn3m[m]> Linux is the least safe from Big Brother. Though the point is moot
+07:40:49 <cn3m[m]> <cg_droid "I mean about giving that informa"> I literally quoted a Google Security partner that gets these 30 days in advance too
+07:41:07 <cn3m[m]> he wouldn't lie or he would be defaming the program and risk removal
+07:41:10 <cn3m[m]> that would be insane
+07:41:26 <cn3m[m]> Open source security teams are well known
+07:41:36 <cn3m[m]> much like Military closed source contracts
+07:42:18 <cg_droid> cn3m[m]: was he refering to Google only then?
+07:42:38 <cn3m[m]> they are generally share important vulnerability code
+07:42:53 <cg_droid> cn3m[m]: but linux?...
+07:42:58 <cn3m[m]> cg_droid: Google is a Linux security partner
+07:43:11 <cn3m[m]> that data contains kernel vulns
+07:43:18 <cg_droid> cn3m[m]: ah ok
+07:43:28 <cg_droid> I get it
+07:43:54 <cn3m[m]> Windows is used in military contracts it's safe to assume it is being shared too, but it 1-2 decades ahead on hardening
+07:43:56 <qevven[m]> So you don’t think Windows is data mining it’s users with telemetry?
+07:44:00 <cn3m[m]> that makes weaponizing far harder
+07:44:28 <cn3m[m]> <qevven[m] "So you don’t think Windows is da"> it can all be opted out of
+07:44:31 <cn3m[m]> or well documented and used for updates
+07:44:36 <qevven[m]> No it can’t
+07:44:52 <cg_droid> And also China?... It soumds weird
+07:44:59 <cg_droid> And also China?... It sounds weird
+07:45:21 <cn3m[m]> basic diagnostics(the one thing you "can't" turn off) is for update relevant data so it knows what to grab
+07:45:28 <cn3m[m]> it is all on install
+07:45:38 <cn3m[m]> <qevven[m] "No it can’t "> source
+07:46:15 <qevven[m]> It does not turn off all telemetry and data collection
+07:46:39 <qevven[m]> Give me one moment
+07:46:48 <cg_droid> qevven[m]: some people here has MITMd Windows and it' s true
+07:46:56 <cn3m[m]> I have MITM attacked Windows and done router level monitoring it is accurate to what it says
+07:46:57 <cg_droid> You can do it too
+07:46:59 <cn3m[m]> Windows is the most secure out of the box solution for most people and it offers reasonable privacy and account free experience
+07:47:01 <cn3m[m]> Windows is far far from perfect
+07:48:04 <cg_droid> > I have MITM attacked Windows and done router level monitoring it is accurate to what it says
+07:48:05 <cg_droid> Oh you too :)
+07:49:16 <JTL> > 00:46 <cn3m[m]> I have MITM attacked Windows and done router level monitoring it is accurate to what it says
+07:49:18 <JTL> Be curious to see that :)
+07:50:09 <cn3m[m]> Windows 10 1909 is a reasonable secure and private OS. An Edge Chromium escape from Windows Sandbox has been valued in competition at $350k
+07:51:07 <cg_droid> > Windows 10 1909 is a reasonable secure and private OS. An Edge Chromium escape from Windows Sandbox has been valued in competition at $350k
+07:51:07 <cg_droid> Do you know if Edge is degoogled?
+07:51:10 <cn3m[m]> <JTL "Be curious to see that :)"> You would do best to do it yourself if you're skeptical
+07:51:16 <cn3m[m]> I could do it again and show you, but it not really a simple thing to show
+07:51:43 <cn3m[m]> <cg_droid "Do you know if Edge is degoogled"> Edge with the privacy settings changed is reasonable, it doesn't have much in the way of Google
+07:51:53 <JTL> cn3m[m]: Okay fair enough
+07:52:07 <JTL> Was just curious if you had results written up or something
+07:52:25 * lvkm[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/PTwCAfvTYpGgYEIdOABamhOs >
+07:52:46 <cg_droid> cn3m[m]: is only Chromium with minimal changes?
+07:52:53 <lvkm[m]> citations from the officiall release
+07:53:09 <lvkm[m]> * citations from the official release
+07:55:11 <cn3m[m]> <cg_droid "cn3m: is only Chromium with mini"> It adds tracking protection and some minor tweaks
+07:55:41 <cg_droid> cn3m[m]: thanls
+07:55:46 <cg_droid> cn3m[m]: thanks
+07:55:48 <cn3m[m]> It doesn't have Chrome's best in class differential privacy telemetry, but I recommend not using any browser with telemety
+07:57:28 <cn3m[m]>  @nwiddkd:matrix.org don't install the one app allowed on the store for your country and don't opt into it
+07:57:32 <cn3m[m]> it's pretty simple
+07:58:31 <cn3m[m]> it's like complaining that there's location services on GrapheneOS, but having to install Google's manager and opting into letting it access the system
+07:58:41 <cg_droid> > cg_droid: Google is a Linux security partner
+07:58:41 <cg_droid> > that data contains kernel vulns
+07:58:41 <cg_droid> It soumds Google is like a trojan horse to the linux community then lol
+07:58:49 <cn3m[m]> that would be insane to say that, but people like to be edgy and complain about contact tracing
+07:58:58 <cn3m[m]> <cg_droid "It soumds Google is like a troja"> that's false
+07:59:08 <cn3m[m]> Linux partners with everyone too
+07:59:13 <qevven[m]> I feel there’s a very naive perception of big corporations & government in here, I don’t think GrapheneOS is for me, gonna give SailfishOS a try ✌️
+07:59:21 <cn3m[m]> I am going with the sources I have on my desktop bookmarks
+07:59:22 <cn3m[m]> there's more on my phone
+07:59:39 <cg_droid> > that would be insane to say that, but people like to be edgy and complain about contact tracing
+07:59:39 <cg_droid> > <cg_droid "It soumds Google is like a troja"> that's false
+07:59:39 <cg_droid> > Linux partners with everyone too
+07:59:39 <cg_droid> Oh my...
+07:59:52 <cn3m[m]> <qevven[m] "I feel there’s a very naive perc"> What am I wrong on
+08:00:01 <cn3m[m]> point to one thing
+08:00:34 <cg_droid> > I feel there’s a very naive perception of big corporations & government in here, I don’t think GrapheneOS is for me, gonna give SailfishOS a try ✌️
+08:00:34 <cg_droid> Bad decision, really..
+08:00:49 <cn3m[m]> there's a lot worse things you could lose your privacy too by downloading an app and opting into an OS feature
+08:00:54 <cg_droid> > I feel there’s a very naive perception of big corporations & government in here, I don’t think GrapheneOS is for me, gonna give SailfishOS a try ✌️
+08:00:54 <cg_droid> Bad choice, really..
+08:01:26 <qevven[m]> You guys realise when Edward snowden quotes Graphene os he is being paid by the Russian gov to say certain things just like Julian Assange
+08:01:34 <cn3m[m]> Accessibility settings is that easy to opt in and get malware controlling your device
+08:01:35 <cn3m[m]> people don't freak out about that
+08:01:52 <cn3m[m]> Sailfish is terrible
+08:02:19 <qevven[m]> I’m just gonna use a beeper 📟 instead lol
+08:02:19 <cn3m[m]> <qevven[m] "You guys realise when Edward sno"> you're spreading FUD
+08:02:20 <cn3m[m]> that's bullshit
+08:02:30 <cn3m[m]> It's open source
+08:02:33 <cn3m[m]> build it yourself
+08:03:21 <cg_droid> > You guys realise when Edward snowden quotes Graphene os he is being paid by the Russian gov to say certain things just like Julian Assange
+08:03:21 <cg_droid> You don't get Google apps or services in GOS and you get a network permission and many security features
+08:03:48 <cn3m[m]> GrapheneOS is all open source build it yourself
+08:03:50 <cn3m[m]> well we'll
+08:03:53 <cg_droid> Check the code, it' s free
+08:03:59 <cn3m[m]>  * well well
+08:06:13 <cn3m[m]> he never gave a source on Windows spying when opting out haha
+08:06:13 <cn3m[m]> he never gave a source on Windows spying when opting out haha
+08:08:00 <cn3m[m]> The funny thing is the Russians couldn't effect a Canadian project that's downstream from an  American project. There's zero reason for them to do that. Lack of critical thinking
+08:09:55 <cg_droid> cn3m[m]: and why also sending the vulns to China?, it doesn't sound to be true... Usa and China are enemies
+08:11:08 <cg_droid> Maybe that sentemce is not true, can we trust only in it?
+08:11:14 <cg_droid> Maybe that sentence is not true, can we trust only in it?
+08:11:55 <cg_droid> It's weak
+08:16:16 <cn3m[m]>  @freenode_cg_droid:matrix.org I mean countless Chinese OEMs get it
+08:16:22 <cn3m[m]> they have to share it and China might be maintaining their own fork they need patches for
+08:16:39 <cn3m[m]> many unsurprisingly ways they could get it
+08:17:50 <cg_droid> Ok
+08:18:06 <cn3m[m]> Security teams are not unique to Google and Linux or even just open source
+08:18:08 <cn3m[m]> pre sharing vulnerability patch code is a fact of life
+08:20:19 <cn3m[m]> anything that's an open or closed source project that's likely to have major forks(public or private), military, or government partnerships are all sharing
+08:20:39 <cn3m[m]> it's simply impossible to coordinate patches that well
+08:20:45 <cn3m[m]> look how badly most Android vendors screw it up
+08:21:01 <JTL> Samsung has been known to leak updates before the public release date
+08:21:01 <cg_droid> Well, I suppose there also many Chinese developers in there
+08:21:02 <JTL> lol
+08:21:10 <cg_droid> Well, I suppose there are also many Chinese developers in there
+08:21:16 <cn3m[m]> lazy governments with their fork of Firefox could take a very long time without that help
+08:21:25 <cn3m[m]> <JTL "Samsung has been known to leak u"> OnePlus more maliciously though
+08:21:43 <cn3m[m]> Samsung is a beta or something from all I've seen
+08:21:51 <JTL> I don't the specifics, but that doesn't surprise me
+08:21:59 <cn3m[m]> which is more likely to be an accident
+08:22:15 <cn3m[m]> OnePlus tries to market their devices as more secure than Pixels by this abuse
+08:22:33 <JTL> Jesus
+08:22:52 <cn3m[m]> they are almost the least secure device down with the barely named brands
+08:23:37 <cn3m[m]> Google is the only good Android. Samsung and Motorola have barely passable security models about half the time
+08:25:14 <cg_droid> So, are you saying that almost all systems out there are giving sensible info/vulnerabilities to the governments?
+08:25:29 <cg_droid> Is it something they can't avoid?
+08:25:30 <cn3m[m]> Graphene Phone > iPhone > Pixel > Motorola > Samsung
+08:25:50 <cn3m[m]> <cg_droid "Is it something they can't avoid"> it's their choice
+08:26:06 <cn3m[m]> it's not being forced
+08:26:11 <cn3m[m]> it's the nature of how things work
+08:26:14 <cg_droid> It's like waking up with a nightmare...
+08:26:39 <cg_droid> If that's the real truth
+08:27:07 <cn3m[m]> it's simple don't have the government in your threat model
+08:27:09 <cn3m[m]> which you shouldn't anyway
+08:27:46 <cg_droid> cn3m[m], maybe they must control everything
+08:27:53 <cn3m[m]> they could coerce root certs or abuse the other roots of trust in countless other ways as outlined earlier in the email and domain discussion
+08:28:02 <cg_droid> But wait a moment, they are already controlling it
+08:28:16 <cg_droid> That's true
+08:28:33 <cn3m[m]> I'm not saying don't try to avoid dragnet surveillance
+08:28:43 <cn3m[m]> you can and should
+08:28:46 <cg_droid> Maybe it's impossible to avoid
+08:28:55 <cn3m[m]> however it's pointless to worry about toggles not working
+08:28:58 <cg_droid> If they control internet...
+08:29:07 <cn3m[m]> or root certs or firmware
+08:29:21 <cn3m[m]> they can always fly a drone and spy on your password entry
+08:29:26 <cg_droid> Yes
+08:29:32 <cn3m[m]> they might even be able to use fidar
+08:29:43 <cg_droid> It sounds paranoid but...
+08:29:54 <cg_droid> fidar?
+08:30:14 <cn3m[m]> flir
+08:30:52 <cg_droid> what is it?
+08:31:03 <cn3m[m]> typo
+08:31:06 <cn3m[m]> typo
+08:33:24 <cn3m[m]> heatmapping vision
+08:33:45 <cg_droid> I always think we can avoid (not entirely) publicity while we use our browser and reduce the data we share with some companies, but not an agency of the government if you are a target
+08:33:49 <cg_droid> Ah ok
+08:34:16 <cg_droid> There are many 0-days out there we don't know and not patched
+08:35:17 <cg_droid> And if Linux is so fucked, and Internet works in the most part with Linux...
+08:35:21 <cn3m[m]> Linux can have hundreds unfixed regularly
+08:36:15 <cg_droid> Or what about BGP hijacking?, it's not solved
+08:36:36 <cn3m[m]> That's a good point
+08:36:51 <cg_droid> It's a bug in all internet
+08:36:51 <cn3m[m]> That's a good point
+08:36:52 <lvkm[m]> this is sad, frightening, infuriating and funny at the same time
+08:36:53 * lvkm[m] uploaded an image: Screenshot_20200524-113316_1_1.jpg (17KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/zhpySJdivvxASXjmSEIMEEqP >
+08:37:20 <cg_droid> lvkm[m], lol
+08:37:24 <lvkm[m]> this is sad, frightening, infuriating and funny at the same time
+08:37:27 <cn3m[m]> just worry about advertisers and hackers
+08:37:34 <cg_droid> yes
+08:38:32 <cn3m[m]> I use GrapheneOS for privacy. Daniel knows way more about privacy than any one I have met outside of the ad tech community
+08:38:52 <cg_droid> Yes, a great experrt
+08:39:01 <cg_droid> Yes, a great expert
+08:39:33 <cg_droid> But even experts are limited
+08:39:52 <cg_droid> And he can't do everything
+08:40:34 <cg_droid> Maybe the only thing I could help is to translate to Spanish language the website lol
+08:40:52 <lvkm[m]> two words come to mind. offline and burner
+08:41:14 <cg_droid> lvkm[m], 🙂
+08:41:32 <lvkm[m]> grapheneos + burner hotspot maybe
+08:42:25 <cg_droid> In this case the Kevin Mitnick book is good lol it's almost impossible to be hidden
+08:42:36 <cn3m[m]> <cg_droid "Maybe the only thing I could hel"> unfortunately the work needed in verifying the web site is immense. I doubt he could do it in a language he might not know. He gets attacked by fanatics for what he puts on there
+08:43:06 <cg_droid> We could do it in more than 1 person only
+08:43:12 <cg_droid> Deepl is a good translator to check
+08:43:26 <cg_droid> So, it's not only the work of 1 person
+08:43:42 <cg_droid> Deepl gives good results to check the translation
+08:44:08 <cn3m[m]> unfortunately they hang him on every word
+08:44:14 <cn3m[m]> ask him
+08:44:15 <cn3m[m]> for sure
+08:44:17 <cg_droid> I understannd
+08:44:19 <cg_droid> No problem
+08:44:33 <cn3m[m]> never hurts to offer, but people need to know English to use the rom I imagine
+08:45:54 <cn3m[m]> an unofficial Spanish fork could be interesting, but I'm not even sure there's enough reputable security material that's not bull in Spanish to warrant this type of ROM
+08:47:30 <cg_droid> Anyway almost all people understand English now or can use translators
+08:48:56 <cn3m[m]> your never know
+08:48:57 <cn3m[m]> definitely offer it
+08:49:39 <cg_droid> ok
+09:08:32 <xabierd[m]> I can also help with the translation to spanish, software or documentation.
+09:09:32 <xabierd[m]> Is only english supported on graphene OS?
+09:11:07 <cg_droid> xabierd[m], and I know another Spanish guy using GOS
+09:12:40 <cg_droid> I think strcat[m] update this part of the website: https://grapheneos.org/usage#web-browsing
+09:12:48 <cg_droid> I think strcat[m] updated this part of the website: https://grapheneos.org/usage#web-browsing
+09:14:10 <cn3m[m]> oh wow weird
+09:14:18 <cn3m[m]> I was just reading that as you said that
+09:16:04 <cg_droid> lol
+09:16:37 <cg_droid> I think he added what he posted in Twitter
+09:17:37 <cg_droid> https://nitter.net/DanielMicay/status/1264272017337004034?p=v
+09:22:23 <cg_droid> xabierd[m], from Barcelona?
+09:39:23 <xabierd[m]> Basque country
+09:39:37 <cg_droid> Ah ok, from the South here 🙂
+09:41:27 <joshman[m]> Dominican Republic here
+09:41:52 <cg_droid> joshman[m], great!
+09:48:08 <gervarouge[m]> <blueazul[m] "Is grapheneos as usable than /e/"> GrapheneOS is more usable for privacy and security
+09:48:14 <EssentialChaos[m> blueazul: Graphene doesn't have MicroG, otherwise it's just as Android, but more secure
+09:48:27 <gervarouge[m]> It is also generally a much newer version of Android
+09:48:30 <gervarouge[m]> Which brings many benefits
+09:48:37 <EssentialChaos[m>  * blueazul: Graphene doesn't have MicroG, otherwise it's just AOSP, but more secure
+09:49:05 <gervarouge[m]> It's normal Android
+09:49:14 <EssentialChaos[m> blueazul: There's a default browser on GrapheneOS, Vanadium, it's based on Chromium
+09:49:19 <gervarouge[m]> Vanadium is the secure browser by default
+09:49:28 <EssentialChaos[m> As an app store you can get F-droid
+09:50:07 <EssentialChaos[m> And then from F-droid you can get Aurora Store, which can download apps from play market
+09:50:17 <EssentialChaos[m> blueazul: No, I don't think so
+09:50:29 <gervarouge[m]> Vanadium doesn't support searx
+09:50:40 <EssentialChaos[m> I don't have Graphene, but I assume it uses DuckDuckGo, right?
+09:50:49 <gervarouge[m]> It does
+09:51:47 <gervarouge[m]> Google, Yahoo, Bing, DuckDuckGo(default), Ecosia
+09:52:06 <EssentialChaos[m> Also, afaik, /e/ provides some cloud storage, right?
+09:52:23 <cg_droid> gervarouge[m], Now that I see... it's true. Do you know why?
+09:52:24 <EssentialChaos[m> They have an /e/ account thing
+09:52:44 <gervarouge[m]> That rom is insanely insecure and lies about security patches
+09:52:47 <cg_droid> gervarouge[m], about searx
+09:53:02 <gervarouge[m]> It shouldn't be taken seriously
+09:53:08 <EssentialChaos[m> blueazul: They host a NextCloud instance
+09:53:10 <EssentialChaos[m> Idk, if Nextcloud can encrypt stuff
+09:53:12 <gervarouge[m]> > gervarouge, Now that I see... it's true. Do you know why?
+09:53:12 <gervarouge[m]> What's true?
+09:53:16 <EssentialChaos[m>  * Idk, if Nextcloud can encrypt stuff at rest
+09:53:26 <gervarouge[m]> > gervarouge, about searx
+09:53:26 <gervarouge[m]> Since it uses default Chromium list
+09:53:41 <cg_droid> gervarouge[m], ah ok
+09:53:48 <gervarouge[m]> No point reinventing the wheel
+09:54:19 <EssentialChaos[m> The /e/ ROM is basically Lineage for MicroG, but with a different launcher and a couple of preinstalled apps
+09:54:36 <gervarouge[m]> It's far worse than Lineage for security and privacy
+09:55:25 <gervarouge[m]> Lineage is already breaking Android security to work
+09:55:29 <gervarouge[m]> They take it even farther
+09:55:32 <EssentialChaos[m> How?
+09:55:33 <gervarouge[m]> If you need microg get a Pixel with CalyxOS
+09:56:15 <eligiblecoffee[m> Is gcam unsafe to use with graphene os
+09:56:37 <gervarouge[m]> > How?
+09:56:37 <gervarouge[m]> They break all persistence protections since Android 4.4, they lie about security patches, they break parts of the sandbox, and they are 6-9 months late on Android version updates
+09:56:44 <gervarouge[m]> <eligiblecoffee[m "Is gcam unsafe to use with graph"> Define safe, but probably
+09:57:23 <eligiblecoffee[m> gervarouge: safe in a sense that google doesn't track
+09:57:25 <gervarouge[m]> Lineage and /e/ are not security friendly it's better to run Stock Android with Google and stock apps disabled rather than run than for privacy and security
+09:57:44 <gervarouge[m]> > gervarouge: safe in a sense that google doesn't track
+09:57:45 <gervarouge[m]> Are you using any other Google apps?
+09:57:50 <EssentialChaos[m> eligiblecoffee: You can probably disable network usage
+09:58:09 <eligiblecoffee[m> gervarouge: no. Just the gcam. Rest of the apps are open source
+09:58:40 <gervarouge[m]> > gervarouge: no. Just the gcam. Rest of the apps are open source
+09:58:40 <gervarouge[m]> Disable network for that app and you should be fine
+09:59:03 <eligiblecoffee[m> EssentialChaos: yes I have done that. And there was an app uploaded on github by a user. It was a stub implementation of microg just to enable gcam
+09:59:17 <gervarouge[m]> > Well e is my main mobile os and I am happy so far
+09:59:17 <gervarouge[m]> The problem is they aren't being honest about security patches and breaking all Major security advances since Android 4.4
+09:59:41 <gervarouge[m]> CalyxOS on a Pixel is a full replacement for /e/ without security issues
+09:59:56 <gervarouge[m]> GrapheneOS is even better, but no microg
+10:01:51 <gervarouge[m]> Custom ROMs beside GrapheneOS, CalyxOS, RattlesnakeOS, and too a much lesser extent GlassROM aren't built for anything but speed and latest Android version. The security and privacy features aren't there
+10:03:35 <blueazul[m]> As I understand it's a very particular os
+10:03:35 <blueazul[m]> I will not get a phone which doesn't provide spare parts
+10:03:35 <blueazul[m]> And I want to be able to remove the battery
+10:03:45 <blueazul[m]> Do they sell preinstalled phones?
+10:04:04 <EssentialChaos[m> No
+10:04:27 <blueazul[m]> Mmm maybe e should try to bring grapheneos features
+10:04:47 <gervarouge[m]> > And I want to be able to remove the battery
+10:04:47 <gervarouge[m]> Check iFixIt it's $30 and a medium difficulty battery replacement
+10:05:04 <gervarouge[m]> Pixel 3a is pretty replaceable
+10:05:28 <blueazul[m]> Alright thanks
+10:06:28 <gervarouge[m]> No they can't
+10:06:46 <blueazul[m]> Could be insteresting in the near futur to have a second phone
+10:06:54 <gervarouge[m]> GrapheneOS starts at the hardware level for security and privacy
+10:07:23 <gervarouge[m]> They are the only known device to have real randomized mac
+10:07:39 <gervarouge[m]> Probably iPhone too
+10:07:54 <blueazul[m]> What about the company behind grapheneos?
+10:07:54 <gervarouge[m]> Almost all phones don't
+10:08:24 <gervarouge[m]> > What about the company behind grapheneos?
+10:08:24 <gervarouge[m]> It's not a company
+10:09:22 <gervarouge[m]> The dev has proven himself he was forced to pick between his job and turning on his users probably to the government and he protected his users
+10:10:27 <blueazul[m]> Who is the government
+10:11:36 <gervarouge[m]> It's speculated the government wanted to take over the ROM via his business partner
+10:11:54 <gervarouge[m]> He wouldn't turn over the keys and lost his job defending his users
+10:11:57 <cg_droid> gervarouge[m], :-o
+10:13:09 <gervarouge[m]> He's an AOSP Contributor and GrapheneOS is a Google Security Partner. It's a one of a kind project
+10:15:01 <blueazul[m]> Google Security Partner means that he works with/for google?
+10:15:27 <cn3m[m]> <blueazul[m] "Google Security Partner means th"> it means they trust him so they share patches ahead of time
+10:18:27 <gervarouge[m]> Works with not for
+10:20:14 <blueazul[m]> Why he stays in the U.S., if google doesn't protect him from the government, it's a strange story
+10:22:55 <blueazul[m]> I didn't know the story but this is my main concern that at some point the government or/and a tech giant will collecting the profits
+10:28:08 <blacklight447[m]> Question
+10:28:13 <blacklight447[m]> If i force my phone to only use lte (4g) does that mean that people calling me also need to be on 4g?
+10:30:32 <SystemLord[m]> No
+10:31:46 <cx2[m]> Personally can't say for certain. BUT, I've been "roaming" and still called folks that I would imagine e were not also "roaming"... In other words they didn't also need to be roaming to receive my call / text
+10:36:27 <cg_droid> gervarouge[m], Where was Daniel working before?, what you told makes me admires him even more.
+10:43:24 <eligiblecoffee[m> blacklight447: no. LTE only means it will just use LTE for making calls and internet. It won't switch to 3g network.
+10:43:46 <cg_droid> In GOS default apps, which ones do you consider innecesary to maintain the Network permission?: I disabled Auditor (doubts), Contacts, CaptivePortalLogin (yes, I know), Print Service Recommendation Service and the other Print permission (I don't use printers). Do you know which more can I disabled wiithout causing harm?
+10:44:13 <eligiblecoffee[m> blacklight447: since volte isn't enabled, calls won't be made on LTE only mode.
+10:45:15 <blacklight447[m]> <eligiblecoffee[m "blacklight447: no. LTE only mean"> I see
+10:45:37 <blacklight447[m]>  Im just wondering why i cannot seem to call my girlfriend when i select "4g only"
+10:46:21 <eligiblecoffee[m> blacklight447: its because volte isn't supported on graphene os yet.
+10:48:24 <blacklight447[m]> Ah i see, is this planned any time soon
+10:49:15 <blacklight447[m]> I would love to switch to 4g only to disable all this legacy crap
+10:49:30 <blacklight447[m]> But being unable to call is quite the tradeoff atm
+10:49:37 <cg_droid> 4g only means that if it's not available you lose connectivity?
+10:51:15 <eligiblecoffee[m> blacklight447: I don't think it will happen anytime soon since not enough developers are there to implement it at this time.
+10:51:46 <blacklight447[m]> 4g only means that it will only use 4g for a connection
+10:51:46 <blueazul[m]> > Works with not for
+10:51:46 <blueazul[m]> You are okay with that, also buying a phone from one of the biggest malware manufacturer
+10:52:39 <blacklight447[m]> It will refuse to connect to 3g networks
+10:52:40 <blacklight447[m]> So yes, if there is no 4g, there will be no connectifity
+10:52:52 <cg_droid> blacklight447[m], ok, thanks
+10:53:17 <cg_droid> blacklight447[m], do you know about what I asked before about apps in Network permissions?
+10:57:57 <blueazul[m]> Every cent and effort you put in google is for fiscal optimisation and more offensive behavior
+11:10:34 <blacklight447[m]> <blueazul[m] "Every cent and effort you put in"> Your free not to not buy a pixel and not use graphene
+11:10:34 <matic_nick[m]> The fuck is happening on reddit?
+11:12:17 <blacklight447[m]> <matic_nick[m] "The fuck is happening on reddit?"> Link?
+11:12:26 <cg_droid> lol
+11:13:08 <dazinism> blueazul: GrapheneOS builds from the most secure open source operating system.
+11:13:58 <dazinism> It uses Pixels because they are, probably, the only devices that properly support verified boot
+11:14:30 <dazinism> Also the Pixel 3 onwards has the Titan M security chip that gives significant advantages
+11:14:31 <EssentialChaos[m> dazinism: Also the Titan chip
+11:14:53 <matic_nick[m]> <blacklight447[m] "Link?"> The arguments on r/firefox which then scattered everywhere by the same op
+11:15:06 <dazinism> https://hub.libranet.de/wiki/and-priv-sec/wiki/verified-boot
+11:16:01 <dazinism> ^ now with exciting multi-colour text
+11:16:30 <dazinism> Just about to add some more info about FairPhone3
+11:29:29 <matic_nick[m]> Daniel's points on why the current browser privacy is broken is definitely interesting. Has he ever publish any research material on it? I'd be very likely subscribe
+11:50:51 <dazinism> Added the Fairphone3 info. Looks like they probably do have some kind of verified boot working
+11:51:26 <EssentialChaos[m> Is an Android phone?
+11:51:31 <EssentialChaos[m>  * Is it an Android phone?
+11:54:31 <Arhu> Yes
+11:57:18 <limitless0[m]> cn3m: as someone who worked on advertising what would be best way to block ads/trackers? Daniel explained that we cant really avoid data be transferred via first party app dev server but aside from that what can we use? Im using netguard blocking by default and just letting through first party domains of specific websites i visit.but now it just feels useless to use it
+11:58:58 <cg_droid> limitless0[m], dns.adguard.com as Private DNS?
+12:03:37 <limitless0[m]> Graph.facebook still goes through that last time i tried
+12:06:06 <cg_droid> Daniel posted this link: https://dnsprivacy.org/wiki/m/mobile.action#page/14025071
+12:06:37 <strcat[m]> https://boards.4channel.org/g/thread/76032766/daniel-micay-fans-on-suicide-watch
+12:07:56 <cg_droid> strcat[m], incredible...
+12:08:18 <strcat[m]> Mozilla literally using 4chan posts to direct harassment and threats towards me
+12:10:23 <cg_droid> strcat[m], they'll use whatever they can... is there a solution to this?
+12:10:54 <cg_droid> You can't write a book or many pages to refute all they can say
+12:11:37 <cg_droid> The more you answer the more they'll attack. Maybe leaving them alone with their nonsense could work, IDN
+12:15:18 <limitless0[m]> You cant fight ignorance. Just leave it be
+12:16:31 <cg_droid> limitless0[m], sorry, I confused Private DNS with what you asked about ads
+12:18:01 <strcat[m]> limitless0: not leaving it be, I'll make posts on the site documenting the dishonest and unethical behavior of individual Mozilla employees
+12:18:04 <strcat[m]> and will spread that around
+12:18:19 <strcat[m]> they want to play this game
+12:18:24 <strcat[m]> unlike them I won't make up dishonest claims
+12:18:58 <strcat[m]> if they are going to try to harass and silence me like this using their sockpuppet accounts
+12:19:12 <strcat[m]> Mozilla is thoroughly bankrupt of having ethics
+12:19:20 <limitless0[m]> <strcat[m] "limitless0: not leaving it be, I"> I understand but i dont think its healthy to comment on every site they comment /attack you
+12:19:42 <strcat[m]> limitless0: I'm not a public figure and they're waging a misinformation campaign against me
+12:19:50 <thelearner[m]> There's nothing wrong with a good fight, but picking the right battles is the way to go.
+12:19:55 <strcat[m]> limitless0: I need to at least post a response on our site
+12:20:12 <strcat[m]> thelearner: picking my battles == letting the community here deal with it if people cared to help
+12:20:30 <strcat[m]> so if people want me not to focus on this they should be dealing with it and you aren't doing enough
+12:21:29 <thelearner[m]> Only so much you can tell a person, up to them to figure out on there own. Referring to reddit trolls etc.
+12:22:21 <thelearner[m]> I do care to help, but to help graphreneos, not the trolls.
+12:22:53 <thelearner[m]> Anyway, that's my two cents.
+12:23:29 <limitless0[m]> <thelearner[m] "Only so much you can tell a pers"> What can someone like me say to them. I mentioned this last night on here. There are topics they commemt on that i have no clue about it, i cant just mimic what i learn from you cos i'll get stuck as soon as they ask a question or make a statement and i have nothing to say back apart from telling them to fuck off and leave you alone
+12:23:42 <limitless0[m]> And i' ll get banned for that soon after anyway
+12:23:51 <blueazul[m]> Is this the official grapheneos canal
+12:24:00 <cg_droid> blueazul[m], yes
+12:24:12 <cg_droid> FRom Spain?: canal?
+12:24:52 <blueazul[m]> Don't you have a moderator to delete or ban these subjects
+12:25:46 <cg_droid> strcat[m], what about some links in the website and Twitter showing they are wrong?, I mean some links where they can read the facts of what you say and they can't refute them
+12:26:07 <thelearner[m]> Thought the same thing ^
+12:26:19 <cg_droid> blueazul[m], it's not here
+12:26:33 <blueazul[m]> Then why do you care
+12:26:52 <cg_droid> Because they are attacking him, the GOS developer
+12:27:00 <strcat[m]> cg_droid: I suggest reading the logs here for the past few days, etc.
+12:27:01 <thelearner[m]> Misinformation is like wildfire
+12:27:21 <cg_droid> strcat[m], ok
+12:28:20 <blueazul[m]> <cg_droid "Because they are attacking him, "> Don't you have a safe place like a forum
+12:29:35 <zaxxa[m]> Is bromite's solution of integrating ad blocking better for fingerprinting than using extensions, ignoring the main problems with content filtering?
+12:29:37 <blueazul[m]> I mean 4chan, reddit... seriously
+12:30:41 <blueazul[m]> The secure os cannot protect itself from basic attacks
+12:32:20 <cg_droid> blueazul[m]: they also attack him there (reddit)
+12:32:21 <matic_nick[m]> <strcat[m] "https://boards.4channel.org/g/th"> wow this is just pathetic
+12:36:24 <limitless0[m]> <cyborgninjaneer[ "it's a long shot, but has anyone"> Late to this but have you found any links? I tried searching on this but cant find anything
+12:39:18 <thelearner[m]> > > <@thelearner:matrix.org> Only so much you can tell a person, up to them to figure out on there own. Referring to reddit trolls etc.
+12:39:18 <thelearner[m]> > What can someone like me say to them. I mentioned this last night on here. There are topics they commemt on that i have no clue about it, i cant just mimic what i learn from you cos i'll get stuck as soon as they ask a question or make a statement and i have nothing to say back apart from telling them to fuck off and leave you alone
+12:39:18 <thelearner[m]> Referring to reddit commits?
+12:39:49 <thelearner[m]> Comments*
+12:40:29 * limitless0[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/bEhJQBGJgyNrjIuyJdMPrmNl >
+12:40:50 <thelearner[m]> limitless0: okay, just getting to that midnight hour for me haha
+12:41:23 <cg_droid> The only thing I know for sure is that  Daniel will silence those mouths with its work: what he' s doing and what he'll do.
+12:41:29 <limitless0[m]> Yea its 1om in uk now
+12:41:40 <limitless0[m]> Pm*
+12:42:01 <zaxxa[m]> It's 1:41pm in uk
+12:42:13 <limitless0[m]> <zaxxa[m] "It's 1:41pm in uk"> 1:42
+12:42:15 <cg_droid> Whatever theu say now will fall down sooner or later.
+12:42:23 <cg_droid> Whatever they say now will fall down sooner or later.
+12:43:00 <thelearner[m]> > The only thing I know for sure is that  Daniel will silence those mouths with its work: what he' s doing and what he'll do.
+12:43:00 <thelearner[m]> Agreed.
+12:43:32 <thelearner[m]> What he's done, speechless.
+12:44:11 <thelearner[m]> Hope u guys going well in UK
+12:44:16 <matic_nick[m]> This is just pure bullying and coming from an org such as Mozilla is just sad
+12:44:21 <limitless0[m]> Anyone knows if this room can be bridged from telegram?
+12:44:22 <thelearner[m]> And wish everyone the best!
+12:44:49 <cg_droid> > Anyone knows if this room can be bridged from telegram?
+12:44:49 <cg_droid> I know from xmpp
+12:44:56 <thelearner[m]> limitless0: never used it, sorry.
+12:46:22 <limitless0[m]> <cg_droid "I know from xmpp"> You bridging it from xmpp?
+12:46:24 <cg_droid> Search for bridges from telegram to irc (freenode)
+12:46:48 <cg_droid> If it exists
+12:47:48 <limitless0[m]> <cg_droid "Search for bridges from telegram"> Will install telegram and try, riot is so slow unstable chats lag a loy sometimes
+12:48:48 <cg_droid> limitless0[m]: install conversations app and open a free xmpp account in some server
+12:48:49 <Arhu> Why not good old IRC?
+12:48:58 <cg_droid> I use it now
+12:49:38 <strcat[m]> blueazul: if you don't have a problem with people running a harassment campaign against the lead developer of the project for their technical statements, I don't really know what to say in response
+12:49:43 <strcat[m]> for accurate, factual statements that I made within our community
+12:49:50 <cg_droid> Arhu: not maintained as I know with free apps and very unstable maybe
+12:50:01 <strcat[m]> I did not post blog posts or go around spreading this stuff with the aim of causing anyone any harm
+12:50:15 <strcat[m]> I simply responded accurately and as thoughtfully / fairly as I could to people's questions
+12:50:25 <strcat[m]> I always try to be fair to competing options like an iPhone
+12:51:06 <strcat[m]> if I criticize something strongly and list out lots of things that are wrong with it, it's because it has serious problems and compares unfavourably to something else
+12:51:33 <Arhu> cg_droid: depends on the platform
+12:51:43 <strcat[m]> you can see the posts I have made about people's questions like iOS vs. GrapheneOS and I don't think I can be at all accused of not being fair and sticking to posting accurate technical information
+12:52:10 <matic_nick[m]> I'm curious why is the attack purely towards Daniel
+12:52:10 <strcat[m]> I actively recommend that most people just get an iPhone and use Safari with a popular VPN + popular content blocker
+12:52:16 <strcat[m]> I just posted that the only day too
+12:52:17 <cg_droid> > cg_droid: depends on the platform
+12:52:17 <cg_droid> I mean in the smartphone
+12:52:37 <strcat[m]> I am giving people accurate, factual and helpful information to help them understand the topics and their options
+12:52:49 <madaidan[m]> This guy is becoming increasingly problematic https://reddit.com/r/firefox/comments/gokcis/firefox_is_insecure_refuted/frmhinx?context=3
+12:52:49 <strcat[m]> I don't deserve having a harassment / character assassination campaign directed towards me
+12:53:26 <strcat[m]> I am not going around posting stuff across communities and seeking out conflict
+12:53:48 <strcat[m]> I only defend myself from these attacks, that's pretty much the only time I'm posting outside our communities
+12:54:02 <strcat[m]> I should be able to freely do security research and write factual information about things
+12:54:13 <strcat[m]> within our communities
+12:54:18 <anupritaisno1[m]> <strcat[m] "I am not going around posting st"> BTW something up with hardened malloc?
+12:54:42 <strcat[m]> anupritaisno1: not sure what you mean
+12:54:43 * anupritaisno1[m] uploaded an image: Screenshot_20200524-172408_Termux.png (119KB) < https://matrix.org/_matrix/media/r0/download/m.apex.to/SvJHNFwsncbZRaPmRMlMuHbu >
+12:54:57 <anupritaisno1[m]> See screenshot
+12:55:10 <strcat[m]> anupritaisno1: no, nothing up with it
+12:55:12 <anupritaisno1[m]> Nothing executes when it is preloaded
+12:55:20 <strcat[m]> it hasn't been changed for a while
+12:55:23 <strcat[m]> anupritaisno1: works fine here
+12:55:34 <anupritaisno1[m]> Archlinux with hardened malloc from git
+12:55:37 <anupritaisno1[m]> Ah ok
+12:55:45 <anupritaisno1[m]> Will check here
+12:57:25 <strcat[m]> madaidan.: I need people to help with this nonsense, really
+12:57:31 <strcat[m]> not just you and a couple others
+12:58:00 <strcat[m]> madaidan.: I expect Mozilla employees involved in this to respond to it too
+12:58:07 <strcat[m]> or they are fair targets to be personally called out for what they are supporting
+12:58:25 <strcat[m]> they sit by and support people posting false claims / misinformation that they know to be false
+12:58:35 <strcat[m]> and they give them cover by being active in the thread and just not responding to either me or them
+12:58:42 <strcat[m]> so they make it clear they are present and give cover
+12:58:58 <strcat[m]> that moderator is doing the same thing: giving cover for a character assassination / harassment campaign based on false claims / misinformation
+12:59:24 <strcat[m]> they are a participant in it hiding people an anonymous handle and daring to tell me that if I decide to post about what they're doing I better not use their real name
+13:00:15 <limitless0[m]> If people from mozilla think that daniel is so wromg why dont they jump in this channel and discredit daniel in his own room? If they are so sure about all the stuff?! Or they know they will be teared apart
+13:01:15 <madaidan[m]> <limitless0[m] "If people from mozilla think tha"> Mozilla knows he isn't wrong. That's why they stay silent and let the community spread the misinformation for them.
+13:04:04 <strcat[m]> they are actively involved in it
+13:04:04 <limitless0[m]> <madaidan[m] "Mozilla knows he isn't wrong. Th"> I know thats  why i said why dont they if they are so sure about it all. What best way to counter something on the very room he owns.but they are bullshit and hopefully more people like you with knowledge comment on them as i seen your replies on r/firefox
+13:04:09 <strcat[m]> they come there and give cover for it
+13:04:28 <strcat[m]> they participate on the peripheral so people know they are there
+13:04:40 <strcat[m]> and there's that moderator giving cover for it and pretending to be neutral
+13:04:49 <limitless0[m]> madaidan.: there you are again  from the other room
+13:05:09 <strcat[m]> but he's just trying to give cover for posting heaps of misinformation and trying to do character assassination and direct harassment towards me across a bunch of communities / platforms
+13:06:11 <madaidan[m]> <limitless0[m] "madaidan.: there you are again  "> I'm everywhere
+13:09:01 <limitless0[m]> <madaidan[m] "I'm everywhere"> Agent smith
+13:09:53 <matic_nick[m]> How does all this attacks benefit them exactly apart from losing more credibility?
+13:10:43 <limitless0[m]> They dont losr credibility from the masses, only handful of people knpw where to read useful info
+13:11:02 <limitless0[m]> Every google search reccomemd firefox linux
+13:11:25 <madaidan[m]> <matic_nick[m] "How does all this attacks benefi"> More people will believe that Firefox isn't less secure and that those that spread the truth aren't knowledgeable
+13:12:01 <strcat[m]> it is a symbiotic relationship with these clueless people posting misinformation
+13:12:19 <strcat[m]> the Mozilla employees give them cover by being involved on the peripherals and not countering it
+13:12:33 <strcat[m]> and they give cover to the Mozilla employees for harassing people who say inconvenient truths
+13:12:49 <strcat[m]> Mozilla owns this harassment campaign
+13:13:08 <strcat[m]> they are involved in it through anonymous handles and by giving cover to it via official handles
+13:13:08 <dazinism> I guess its not ethical, but I can imagine why people working on Firefox dont want to confirm its weaknesses.
+13:13:15 <strcat[m]> this is not just people in the Mozilla community doing it
+13:13:28 <strcat[m]> Mozilla is choosing to encourage it, give them a platform for it and lend their support to it
+13:13:40 <dazinism> Imagine some worry about the boss getting angry
+13:14:01 <dazinism> Others it may be more of a pride thing
+13:14:01 <madaidan[m]> <dazinism "I guess its not ethical, but I c"> People should be honest and open about the weaknesses of their software
+13:14:29 <strcat[m]> that is why I talk about the insecurity of the Linux kernel, etc.
+13:14:30 <madaidan[m]> They shouldn't be allowing harassment against people who point out those weaknesses
+13:14:33 <strcat[m]> that is about GrapheneOS largely
+13:14:39 <strcat[m]> explaining what we have to deal with
+13:14:47 <strcat[m]> trying to get people to see the scale of the problem and want to help with it
+13:14:53 <dazinism> Within coders/security community its been spoken about for years that chrome is more secure
+13:15:09 <strcat[m]> I am not even allowed to talk about the weaknesses of my own project without being harassed
+13:15:15 <matic_nick[m]> <strcat[m] "Mozilla is choosing to encourage"> That's nasty as shit. I'm sure this takes a toll for them in the security world
+13:15:57 <strcat[m]> I am not allowed to tell people an iPhone is one of the best options without being harassed
+13:15:58 <dazinism> But the privacy security love FF with all the about:config tweaks etc.
+13:15:59 <zaxxa[m]> > I am not even allowed to talk about the weaknesses of my own project without being harassed
+13:15:59 <zaxxa[m]> Damn :(
+13:16:04 <cg_droid> Maybe we can help posting to leave forever Firefox browser of Mozilla team doesn't refute what Daniel posted. Many posts like these: "me too" and maybe they'll answer.
+13:16:10 <strcat[m]> or to talk about the massive scale of the problems in the Linux kernel that we somehow have to deal with / mitigate
+13:16:17 <strcat[m]> I can't write documentation on the site with technical information or I get harassed / targeted
+13:16:35 <cg_droid> So it would be easy to help in some way
+13:16:37 <strcat[m]> I get daily emails and messages saying all kinds of nasty shit and threatening me
+13:17:07 <strcat[m]> renlord: opendmarc really doesn't work well
+13:17:17 <strcat[m]> renlord: I figured out the main issue tho
+13:17:23 <strcat[m]> gmail has a quarantine policy instead of reject...
+13:17:49 <strcat[m]> because too much stuff will lose the mails if they do hard fail / reject
+13:17:52 <strcat[m]> really sucks
+13:21:44 <dazinism> *privacy/security power users love FF
+13:21:51 <dazinism> *tend to love FF
+13:22:02 <strcat[m]> cg_droid: I want them to refute the misinformation the OP posted
+13:22:04 <strcat[m]> they know it is misinformation
+13:22:15 <cg_droid> strcat[m]: yes
+13:22:49 <strcat[m]> if they don't do that, they are supporting this
+13:23:01 <strcat[m]> and when they support a misinformation campaign personally targeting someone
+13:23:10 <strcat[m]> they make themselves valid targets for being called out as individuals
+13:23:34 <strcat[m]> not just as a company
+13:23:39 <cg_droid> That's why they could answer if many people say they will leave Firefox
+13:23:50 <strcat[m]> I don't think that's helpful
+13:24:00 <strcat[m]> I think it's helpful to counter these things within these threads they make
+13:24:04 <strcat[m]> but that's all
+13:24:08 <strcat[m]> don't make more threads
+13:24:37 <strcat[m]> my goal is not informing random people on the internet about web browsers
+13:24:42 <cg_droid> I mean answering in those threads
+13:24:51 <strcat[m]> I just want to be left alone and to be able to write GrapheneOS documentation for GrapheneOS users
+13:24:55 <strcat[m]> without being targeted / harassed
+13:25:07 <strcat[m]> if this thread did not mention me and target me with character assassiantionb
+13:25:22 <strcat[m]>  * if this thread did not mention me and target me with character assassination
+13:25:24 <strcat[m]> then I'd obviously not be posting in it
+13:25:27 <strcat[m]> I don't post in random threads about these topics around the internet
+13:25:53 <strcat[m]> I only work on GrapheneOS and when people are personally targeting me elsewhere I try to defend myself
+13:26:09 <strcat[m]>  * I only work on GrapheneOS and when people are personally targeting me elsewhere I defend myself
+13:28:07 <zaxxa[m]> Guess he had 99 problems
+13:30:53 <madaidan[m]> Maybe we can make a crawler or something to find stuff like this
+13:31:11 <madaidan[m]> Organize a group of people to counter it
+13:31:56 <Arhu> dazinism: privacy power users tend to love FF, security power users not so much
+13:32:56 <strcat[m]> and btw by countering it I mean responding within these threads they make
+13:33:03 <strcat[m]> not increasing the scale of it
+13:33:13 <madaidan[m]> <Arhu "dazinism: privacy power users te"> Security pseudo-experts love it
+13:33:39 <strcat[m]> https://twitter.com/DanielMicay/status/1264272017337004034
+13:33:43 <strcat[m]> a recent thread on the privacy topic
+13:33:53 <madaidan[m]> Ah yes rlbox makes firefox 10000x better than chrome because I say so
+13:34:53 <strcat[m]> rust still has prominent heap overflows in common stdlib code
+13:35:02 <strcat[m]> treating security researchers like shit has consequences
+13:35:07 <strcat[m]> why would I report any bugs to them ever
+13:35:42 <strcat[m]> I've  literally linked heap overflow bugs in rust / firefox here before
+13:35:44 <strcat[m]> and on twitter
+13:35:47 <strcat[m]> that are unfixed
+13:35:47 <strcat[m]> lol
+13:36:35 <madaidan[m]> <strcat[m] "https://twitter.com/DanielMicay/"> I think you should mention that Firefox doesn't even enable ancient stuff like FORTIFY_SOURCE on Android
+13:36:55 <madaidan[m]> madaidan.: https://bugzilla.mozilla.org/show_bug.cgi?id=1415595
+13:37:19 <zaxxa[m]> strcat what does "rather than an AntiVirus approach based on enumerating badness that's fundamentally unable to provide any real privacy. " mean?
+13:37:28 <strcat[m]> zaxxa: content filtering = antivirus
+13:37:42 <strcat[m]> listing out all bad things
+13:37:45 <strcat[m]> except in a crippled form
+13:37:45 <zaxxa[m]> Ah
+13:37:54 <strcat[m]> since they can't break functionality on sites
+13:38:13 <strcat[m]> zaxxa: also as I mention there
+13:38:18 <strcat[m]> the first party origin can and does do tracking
+13:38:32 <strcat[m]> and first party does not mean that when you go to QubesOS site, QubesOS is tracking you themselves
+13:38:36 <strcat[m]> it can mean that
+13:38:44 <strcat[m]> but it can also mean that what they choose to use for web hosting, CDN, etc. tracks you
+13:39:21 <strcat[m]> zaxxa: so with https://www.qubes-os.org/ as an example, this is hosted via GitHub Pages (Microsoft)
+13:39:55 <zaxxa[m]> So Microsoft could track you?
+13:40:36 <madaidan[m]> <strcat[m] "but it can also mean that what t"> What can they really track you with other than HTTP headers though? Github doesn't inject their own JS.
+13:41:05 <strcat[m]> madaidan.: they see all the traffic, your IP address, etc
+13:41:51 <strcat[m]> also GitHub seems to use fastly
+13:41:52 <strcat[m]> so there's another party involved
+13:42:05 <strcat[m]> madaidan.: btw HTTP headers can set cookies
+13:42:09 <strcat[m]> madaidan.: and cookies are sent for each HTTP request
+13:42:16 <strcat[m]> Cloudflare sets cookies on your behalf, you can't turn that off
+13:43:27 <strcat[m]> curl -v https://gitlab.com/gnuwget/wget2 > /dev/null
+13:43:35 <strcat[m]> cloudflare sees all your traffic to and from gitlab, decrypted
+13:43:40 <strcat[m]> < set-cookie: __cfduid=d9fe737b172b1605c7f601177b55533f81590327788; expires=Tue, 23-Jun-20 13:43:08 GMT; path=/; domain=.gitlab.com; HttpOnly; SameSite=Lax; Secure
+13:43:50 <strcat[m]> they set their own cookie(s)
+13:43:50 <strcat[m]> they see the cookies gitlab sets
+13:44:03 <strcat[m]> they see your IP address ofc
+13:44:28 <strcat[m]> they see all the traffic going back and forth - even without modifying it (and they do modify with it), they can fingerprint and so on
+13:44:42 <strcat[m]> Cloudflare is sitting between you and the backend servers
+13:45:02 <strcat[m]> pretty sure GitLab uses Google Cloud
+13:45:13 <strcat[m]> so Cloudflare + Google are both first parties, for GitLab
+13:45:32 <strcat[m]> that is the source of the first party gitlab.com stuff
+13:45:45 <strcat[m]> and maybe GitLab themselves do analytics / tracking, sure looks like it
+13:46:02 <strcat[m]> at the very least they set 2 tracking cookies themselves + the gitlab tracking cookie
+13:46:25 <strcat[m]> cloudflare actively looks at the traffic
+13:46:30 <strcat[m]> I'm not saying google does that
+13:46:40 <strcat[m]> but google sees the encrypted traffic going through
+13:47:01 <strcat[m]> and they ultimately control the servers
+13:47:15 <madaidan[m]> <strcat[m] "and maybe GitLab themselves do a"> Probably why they're so dependent on JS for the most simple of actions
+13:47:35 <Arhu> and if you email with anyone hosted by them, they scan your emails
+13:47:36 <strcat[m]> so yeah you can go to GitLab and disable all the client-side third party stuff
+13:47:43 <strcat[m]> how does that stop third party tracking?
+13:48:00 <strcat[m]> GitLab hosts everything via third parties and might even share the data you give them themselves
+13:48:02 <strcat[m]> just an example
+13:48:09 <strcat[m]> this is almost every site
+13:48:27 <strcat[m]> all you have control over are third parties in the client with extensions, etc. and they can see you're doing that
+13:48:53 <strcat[m]> it is visible to GitLab and Cloudflare that you have modified stuff if they want to know
+13:49:12 <strcat[m]> that is part of your fingerprint - your extensions, all the exceptions / decisions you have made with those extensions, the lists you choose to subscribe to
+13:49:27 <strcat[m]> and by actively breaking stuff you're generating error reports for them
+13:49:35 <strcat[m]> when you notice a site doesn't work and change something
+13:49:40 <strcat[m]> they can see that
+13:49:43 <strcat[m]> it shows up in logs
+13:50:55 <strcat[m]> privacy is not making yourself stand out from everyone else including other people taking the same approach
+13:51:28 <madaidan[m]> privacytoolsio would like to know your location
+13:51:47 <strcat[m]> the Tor Browser approach of hiding source of the traffic + compartmentalizing state and making it ephemeral + anti-fingerprinting is a real privacy approach - doesn't mean it is a solid implementation of it without a lot of bypasses, since it has problems for sure
+13:51:50 <strcat[m]> but that is a real privacy approach
+13:52:04 <strcat[m]> so would be doing the same thing with a popular VPN and similar web browser features
+13:52:16 <strcat[m]> it is actually a real attempt to provide meaningful privacy
+13:52:20 <strcat[m]> enumerating badness is not
+13:52:31 <strcat[m]> all these extensions pretending they are giving you privacy are not really doing it
+13:52:56 <strcat[m]> they are just eliminating some low-hanging fruit on the client side and also making you easier to track by what they don't strip out
+13:53:03 <strcat[m]> and they can't strip out the site itself, lol
+13:53:04 <zaxxa[m]> Should you use password manager extensions then?
+13:53:20 <strcat[m]> zaxxa: better to use the browser's own password management if you carea bout privacy
+13:53:26 <strcat[m]> because extensions can often / usually be detected
+13:53:36 <madaidan[m]> It's funny how nearly everything "privacy advocates" promote is snake oil
+13:53:53 <strcat[m]> zaxxa: extensions have their own state, and need to partition it per site themselves, and they can be detected
+13:53:59 <strcat[m]> and they need to respect stuff like incognito themselves
+13:54:19 <strcat[m]> zaxxa: extensions are shared across pages and generally have state shared across them
+13:54:31 <strcat[m]> so they're a big hole opened up in having the web browser compartmentalize sites
+13:54:39 <strcat[m]> which every major browser is working towards
+13:55:13 <strcat[m]> zaxxa: sites can see what extensions you have if they change stuff in the content and can detect how you have stuff set up
+13:55:17 <strcat[m]> like which filter subscriptions you use
+13:55:27 <strcat[m]> when they were last updated
+13:55:33 <strcat[m]> and they add state shared across sites
+13:55:45 <strcat[m]> they are a hole in semantic isolation between sites and the sandbox isolation between sites
+13:56:10 <strcat[m]> of course, you could design an extension to not touch the content / reveal itself but that kinda implies not doing any of this stuff
+13:56:41 <strcat[m]> if you want privacy use the Tor Browser for now
+13:56:48 <strcat[m]> it has weak security though
+13:56:54 <strcat[m]> and makes you into a target so...
+13:56:55 <strcat[m]> shrug
+13:57:03 <matic_nick[m]> To what degree does fingerprinting affects DNS blocking since more people are keen to use it?
+13:57:17 <strcat[m]> matic_nick: sites can detect which DNS provider you use and what is blocked
+13:57:33 <strcat[m]> matic_nick: so if you do DNS-based blocking it's a good idea to do it via a common provider and not customized
+13:57:40 <strcat[m]> like dns.adguard.com or w/e
+13:57:56 <strcat[m]> matic_nick: a site can generate a domain like
+13:58:12 <strcat[m]> random-string.the-site.com
+13:58:20 <strcat[m]> and so your browser queries your DNS for that
+13:58:31 <strcat[m]> and your DNS provider queries the site's authoritative DNS for that
+13:58:40 <strcat[m]> now the site knows your DNS provider
+13:58:46 <strcat[m]> cause it's a random string so it won't be cached
+13:59:27 <strcat[m]> and sites actually do this
+14:01:10 <strcat[m]> matic_nick: max privacy would just be using the DNS your VPN provider / Tor exit node gives you
+14:01:43 <strcat[m]> matic_nick: unless *most* people using the VPN with the same web browser use dns.adguard.com
+14:01:45 <strcat[m]> or w/e
+14:01:58 <strcat[m]> matic_nick: it's a complicated mess
+14:02:21 <strcat[m]> matic_nick: the more you configure / change tho, the more you'll stand out tho
+14:02:51 <zaxxa[m]> I only just started learning java and everything is confusing for me lol, so I just try and listen and learn :/
+14:02:53 <strcat[m]> Vanadium is going to include built-in content filtering with an on/off switch (the switch is already there)
+14:03:06 <strcat[m]> with a hard-wired list
+14:03:10 <strcat[m]> so that is 1 bit of entropy more
+14:03:11 <strcat[m]> on or off
+14:03:27 <strcat[m]> lets say you can configure the lists, and there are 20 hard-wired choices, that's a fair bit
+14:03:30 <strcat[m]> lets say you can add your own...
+14:03:34 <strcat[m]> I think you get the idea
+14:03:40 <zaxxa[m]> Yes
+14:03:56 <strcat[m]> although few people use Vanadium atm so it can't provide much privacy yet - but eventually we could put it on the Play Store
+14:04:12 <strcat[m]> and we'll also work towards matching Bromite 1:1 but requires us to add a bunch of stuff and to convince them to make some changes
+14:04:20 <zaxxa[m]> You mentioned on your site eventually it may merge with bromite or something ?
+14:04:23 <zaxxa[m]> Oh I see
+14:04:37 <strcat[m]> we need to go through their changes and review / overhaul them
+14:04:40 <strcat[m]> and submit changes back to them
+14:04:50 <strcat[m]> and slowly align things with them from both sides
+14:05:03 <strcat[m]> and get them to do the same changes as us too
+14:05:10 <strcat[m]> I dunno how realistic it is
+14:05:13 <strcat[m]> but there is progress
+14:05:25 <strcat[m]> mostly we just need to add a bunch of missing stuff, requires a lot of work
+14:05:26 <Arhu> Wouldn't you need a special version that doesn't reply on stuff GrapheneOS has over regular Android?
+14:05:32 <strcat[m]> I added a few more bits in this latest release
+14:05:44 <strcat[m]> Arhu: it would be the same Vanadium
+14:06:06 <strcat[m]> the only way to detect GrapheneOS would be performance measurements via JS able to detect OS mitigations or w/e
+14:06:06 <strcat[m]> which is possible
+14:06:12 <strcat[m]> although JavaScript / DOM doesn't use malloc, etc.
+14:06:27 <strcat[m]> and that can distinguish between different phones models, OSes, etc. anyway
+14:06:32 <strcat[m]> this is one of the big advantages of iPhones
+14:06:37 <strcat[m]> everyone is using the same few models
+14:06:58 <strcat[m]> so sure you can detect differences between iPhones based on screen size and performance measurements, etc.
+14:07:06 <strcat[m]> but there are hardly any different kinds of models
+14:07:13 <strcat[m]> very uniform population of hardware
+14:07:15 <Arhu> "It depends on hardening and compatibility fixes in GrapheneOS rather than reinventing the wheel inside Vanadium."
+14:07:26 <strcat[m]> this is a big inherent advantage for iOS
+14:07:33 <strcat[m]> Arhu: i.e. it doesn't bundle hardened_malloc
+14:07:42 <strcat[m]> if we made it available elsewhere we'd have to bundle a hardened libc and hardened_malloc
+14:07:46 <strcat[m]> among other things
+14:07:57 <strcat[m]> because atm it just gets them from GrapheneOS, doesn't bundle that stuff itself
+14:08:12 <strcat[m]> if you take Vanadium and run it on the stock OS you don't have hardened_malloc, etc. for it anymore
+14:08:25 <strcat[m]> or our sandbox improvements that apply to the renderer sandbox
+14:08:31 <strcat[m]> generic improvements that apply to every app
+14:09:10 <Arhu> Oh I see, so de modification for the Google Play / F-Droid version is that bundled libc and hardened_malloc
+14:09:18 <madaidan[m]> 4chan is cancerous as usual https://boards.4channel.org/g/thread/76032766/daniel-micay-fans-on-suicide-watch
+14:09:39 <strcat[m]> btw not really feeling well because of this stuff that's going on with people running a campaign against me for my technical statements here and elsewhere in the scope of GrapheneOS
+14:09:48 <strcat[m]> getting a lot of nasty messages, etc.
+14:10:09 <strcat[m]> don't get any break from this stuff
+14:10:39 <Arhu> I thought 4chan hated FF/Mozilla
+14:11:02 <strcat[m]> Arhu: maybe they do but doesn't stop mozilla people posting shit there to direct harassment at me
+14:12:00 <Arhu> It seems like that, because the average 4chan post in relation to FF/Mozilla is about trannies
+14:12:28 <madaidan[m]> <Arhu "I thought 4chan hated FF/Mozilla"> They hate everything
+14:12:32 <strcat[m]> shrug pretty low to post all over the place including 4chan trying to direct harassment towards me based on a bunch of false claims / misinformation
+14:12:33 <madaidan[m]> Except maybe Hitler
+14:12:46 <strcat[m]> madaidan.: not all of 4chan is /pol/
+14:13:02 <strcat[m]> they have a bunch of little uniquely fucked up communities
+14:13:23 <strcat[m]> their culture is more fragmented than you might think and they hate each other too
+14:13:54 <madaidan[m]> g is usually pretty bad
+14:14:46 <Arhu> the boards I read are very /pol/-y: g, fit, lit, biz
+14:14:51 <strcat[m]> also seems very much not in the spirit of 4chan to have sites archiving threads
+14:15:04 <strcat[m]> it wouldn't be that much of a problem if they just shit talked with each other and it didn't get archived
+14:15:34 <strcat[m]> do you think I want searches for my name to bring up 4chan threads like that
+14:16:06 <strcat[m]> it's a very calculated thing to attack me personally by name instead of just making a post about the topic
+14:16:18 <strcat[m]> and to include character assassination attempts targeting me
+14:16:36 <strcat[m]> and for moderators / Mozilla employees who claim to be 'neutral' to give it cover and make it seem okay
+14:16:43 <strcat[m]> they are participants in harassing / targeting me
+14:16:46 <strcat[m]> Mozilla employees are
+14:16:51 <Arhu> people on 4chan talking shit about you doesn't reflect negatively on you in any way
+14:16:53 <madaidan[m]> I don't anyone would take 4chan seriously though
+14:17:10 <madaidan[m]> They're known for being special
+14:17:43 <strcat[m]> you should take them seriously especially since people doxxed me and they have my address
+14:17:45 <strcat[m]> maybe you don't
+14:17:46 <strcat[m]> I do
+14:18:04 <strcat[m]> and 'people' here means Copperhead btw
+14:18:23 <Arhu> and everyone gets called the same: fag and jew
+14:18:33 <strcat[m]> I guess 'people' might be stretching it since it's 1 person without the usual human characteristics like empathy
+14:18:40 <Arhu> and in your case leaf because you're in Canada
+14:19:45 <strcat[m]> bringing up /pol/ anti-semitism doesn't make this seem any better
+14:20:15 <strcat[m]> seriously do you want people making threads directing harassment at you on 4chan especially when people causing this have posted your address online
+14:20:30 <strcat[m]> it doesn't look like they had much success that time - but this is an ongoing continuous thing
+14:22:04 <Arhu> I just meant the /pol/ insults aren't very personal. They call everyone that
+14:22:55 <Arhu> Literally anyone that gets mentioned there gets called that
+14:24:22 <blueazul[m]> <strcat[m] "blueazul: if you don't have a pr"> I am not aware of that, are you a grapheneos developer?
+14:25:06 <blueazul[m]> This is unacceptable
+14:25:45 <madaidan[m]> <blueazul[m] "I am not aware of that, are you "> He is *the* GrapheneOS developer
+14:26:09 <madaidan[m]> Btw the original thread was just locked
+14:26:27 <blueazul[m]> So american? Do you think that's the reason or can't you just take legal actions
+14:26:28 <strcat[m]> locked is enablement
+14:26:34 <strcat[m]> means I can't respond further
+14:26:55 <madaidan[m]> <strcat[m] "means I can't respond further"> What's there to respond to though?
+14:27:04 <strcat[m]> because I haven't had time to actually sit down and write a technical response to their BS
+14:27:06 <madaidan[m]> Looks like we got the last word
+14:27:45 <strcat[m]> this is my experience with Mozilla over the years tho
+14:28:00 <strcat[m]> before GrapheneOS
+14:28:03 <strcat[m]> when I worked on their projects
+14:28:12 <strcat[m]> all the same tactics
+14:28:33 <madaidan[m]> Do you have examples? Sounds interesting.
+14:28:34 <strcat[m]> make dishonest claims, post tons of misinformation / spin and refuse to acknowledge that it has been refuted
+14:28:42 <madaidan[m]> We can compile a list.
+14:28:48 <strcat[m]> when I say what they are doing, say I am being uncivil / rude
+14:28:49 <matic_nick[m]> By the looks of it, looks like you guys are just replying to antivax
+14:29:04 <strcat[m]> it is 100% my experience with Rust
+14:29:05 <strcat[m]> again
+14:29:20 <strcat[m]> and also having broad community people piling on with character assassinations / more misinformation
+14:29:31 <strcat[m]> who don't even have a clue what's happening
+14:29:38 <strcat[m]> along with lots of concern trolling and so on
+14:29:44 <strcat[m]> that is my experience with Mozilla, they are a cult
+14:30:01 <strcat[m]> you raise technical issues and they ostracize you and direct harassment towards you
+14:30:09 <strcat[m]> and say you're being uncivil / rude / bad for calling out what's happening
+14:30:22 <strcat[m]> btw they owe me money
+14:31:46 <stuux[m]> strcat: I got a debug version of Auditor running and tested it successfully
+14:31:52 <stuux[m]> although only with a messy workaround
+14:32:04 <stuux[m]> thanks for your patience and time anyway
+14:32:13 <strcat[m]> stuux: if that debug buildconfig thing is not set right
+14:32:16 <strcat[m]> it sounds like a bug in the gradle build system
+14:32:21 <strcat[m]> I haven't tested it for a while
+14:32:25 <strcat[m]> maybe we have to do something to make it work
+14:32:26 <strcat[m]> dunno
+14:32:35 <stuux[m]> Yeah could be
+14:32:52 <stuux[m]> I send you a pr with my patches
+14:33:07 <Arhu> I stumbled on an offering of a new Pixel 3 for a reasonable price. Does it have a significantly worse battery life than the 3a? The specs wouln't suggest that, but I've seen someone mention that on /r/grapheneos
+14:35:20 <strcat[m]> Arhu: no not really
+14:35:35 <strcat[m]> maybe their experience is with the stock OS on the 3?
+14:35:45 <strcat[m]> stock OS has much worse battery life generally
+14:36:00 <strcat[m]> unless you install an app with a really inefficient non-Play push implementation
+14:36:23 <strcat[m]> Signal's is not great but good enough that you still get substantially battery battery life than stock
+14:36:24 <Arhu> I was suspecting he was comparing an old 3 to a new 3a
+14:36:49 <strcat[m]> that'd also make sense cause batteries age despite the throttling on charging
+14:41:20 <Arhu> There really should be an open notification standard, so that it would become trivial to have your app work with a notification server besides Google. It's a shame Huawei doesn't push for anything like this now that they're banned from Google services
+14:56:54 <strcat[m]> Arhu: it's better if apps do it so there isn't a third party imo
+14:57:06 <strcat[m]> if apps do it PROPERLY and especially if they did it via a library shared between them
+14:57:08 <strcat[m]> it's not inefficient
+14:57:15 <strcat[m]> and the OS is smart enough to schedule it to happen in the same wakeups
+14:57:24 <strcat[m]> if apps used the same library and same intervals
+14:57:36 <strcat[m]> the OS would make sure it happens in the same wakeups always
+14:57:52 <strcat[m]> it is not really any measurably less efficient than having 1 server if it's scheduled together which it would be
+14:58:05 <strcat[m]> it's only less efficient because apps do it inefficiently and do it at different rates
+14:58:30 <strcat[m]> each app just needs to keep open a long lived connection for push and use regular keepalive checks to make sure it doesn't die
+14:58:40 <strcat[m]> with IPv6 it doesn't really die much
+14:58:55 <strcat[m]> it's  the carrier grade NAT crap for IPv4 that kills connections fast
+15:01:36 <Arhu> surely that's inefficient for the use case where you have dozens of apps of which many only get notifications once in a while, but you don't want a big delay
+15:02:31 <Arhu> ideally you could choose your notification provider like you choose an email provider
+15:03:40 <Arhu> that also gives more privacy because you don't need a persistent connection from your device to the servers of many apps
+15:07:07 <strcat[m]> Arhu: there isn't a delay because they keep open connections and use push
+15:07:33 <strcat[m]> Arhu: it doesn't give more privacy - keeping open those connections isn't a privacy issue
+15:07:43 <strcat[m]> going through a third party reveals to that third party about when messages, etc. are sent and they can correlate it
+15:08:07 <strcat[m]> and the app still has to connect to the app's server every time anyway
+15:08:23 <strcat[m]> it gets notified of a message and has to connect to it to get it
+15:08:53 <strcat[m]> keeping open a connection doesn't use power - only the keep alive checks use power, due to needing to regularly wake up the device
+15:09:03 <strcat[m]> and if the intervals are the same and scheduled via the OS properly
+15:09:08 <strcat[m]> it will make sure they happen in the same wakeups
+15:09:13 <strcat[m]> so having 10 vs. 1
+15:09:30 <strcat[m]> doesn't make much different if done well
+15:09:56 <strcat[m]> I don't think having a centralized notification server shared across apps is necessary at all
+15:10:14 <strcat[m]> what's necessary is apps implementing their own push, efficiently, and using the same approach / intervals as other apps
+15:10:38 <strcat[m]> the OS is already designed to run alarms, scheduled jobs, etc. in batches together
+15:10:52 <strcat[m]> in fact all the normal scheduled stuff uses imprecise/flexible timing
+15:11:12 <strcat[m]> so you can even have one thing asking for 4 minutes and once for 5
+15:11:16 <strcat[m]> and it will just schedule both every 5
+15:11:19 <strcat[m]> because it has leeway
+15:11:32 <strcat[m]> you choose the leeway too
+15:12:46 <strcat[m]> so what's really needed is a client/server library for push with sample app/server
+15:12:52 <strcat[m]> and get apps to reuse the same library
+15:13:08 <strcat[m]> it COULD support using a centralized server but it shouldn't be mandatory and I don't think it has much benefit vs. doing it right without that
+15:17:09 <EssentialChaos[m> Interesting, I think, apps could use different intervals, if they are just the shortest possible one multiplied, e.g. 5 min - shortest, but you can set 15 min. It'll still coincide with other apps, just not every 5 min
+15:18:18 <EssentialChaos[m> Although, now that I think about it, 20 min doesn't really coincide with 15
+15:21:37 <Arhu> Let's say for example I want to receive notifications from Skype. If it goes trough a notification server of my choosing, Microsoft doesn't know where I am at all times because there is an open connection. They will only know when I act on that notification and start the app. That's a pretty important difference in privacy to me.
+16:10:35 <strcat[m]> Arhu: that's not how it works tho
+16:10:41 <strcat[m]> Arhu: the app can and does make connections whenever it wants
+16:10:50 <strcat[m]> this doesn't remove any information they get about you
+16:11:16 <strcat[m]> and they don't know (approximately) where you are unless you aren't using a VPN
+16:11:58 <strcat[m]> also doesn't apply the same way to cellular that it does to wifi
+16:12:14 <strcat[m]> your cellular data IP address for IPv4 is a shared IP address
+16:12:27 <strcat[m]> and neither the IPv4 or IPv6 address is really tied to location
+16:12:34 <strcat[m]> and even for wifi that's a really coarse thing
+16:12:48 <strcat[m]> Arhu: anyway the app has network access, it can and does make connections when it wants
+16:13:03 <strcat[m]> Arhu: you're claiming adding an addition third party while not restricting the app at all gives privacy
+16:13:05 <strcat[m]> it's the opposite
+16:13:28 <strcat[m]> the app just gets notified via push server and then has to fetch stuff from their server
+16:13:43 <strcat[m]> and depending on the reliability of the push server they may check themselves regularly anyway
+16:13:54 <strcat[m]> GCM is not super reliable for example
+16:13:59 <strcat[m]> probably more reliable than anything else tho
+16:15:36 <strcat[m]> if your IP address tells people where you are, go solve that problem 1st, not really how cellular works tho and you can/should use a VPN if you don't want sites etc. tracking you from a non-shared/centralized IP address
+16:16:09 <strcat[m]> adding another party while not removing the access of the existing one can't really be an improvement
+16:18:47 <strcat[m]> Arhu: also when an app gets a push notification it connects to the app's server to get the data unless they're trusting the third party push server with the data - it's also not generally reliable enough to do that
+16:19:07 <strcat[m]> especially since it throttles etc
+16:19:11 <strcat[m]> drops messages
+16:22:44 <vThor> hello together, anyone else fail android-prepare-vendor? Did google change there site layout?
+16:33:56 <vThor> never mind, looks like git pull && git reset did the trick
+17:38:19 <gervarouge[m]> <cg_droid "gervarouge, Where was Daniel wor"> Daniel had an open source project (pretty much this) got a business partner who assisted the growth. He turned out to violate the agreement, steal donations, and want to break users security. You can read more about it on /r/CopperheadOS
+17:38:43 <hypokeimenon[m]> What is RattlesnakeOS
+17:38:45 <gervarouge[m]> He was more than likely bought out or trying to turn things over to the government
+17:38:54 <cg_droid> gervarouge[m], ah yes, I know about that. I think you meant about a previous job
+17:39:00 <cg_droid> Thanks
+17:39:02 <gervarouge[m]> <hypokeimenon[m] "What is RattlesnakeOS"> It's a project to build AOSP for your own device with AWS
+17:39:16 <hypokeimenon[m]> <gervarouge[m] "It's a project to build AOSP for"> AWS?
+17:39:23 <hypokeimenon[m]> Amazon web services?
+17:39:24 <gervarouge[m]> It uses verified boot user builds it's very safe
+17:39:31 <gervarouge[m]> hypokeimenon: yes sir
+17:39:46 <hypokeimenon[m]> Ah ok
+17:39:55 <gervarouge[m]> You build your own rom on the cheap
+17:40:47 <gervarouge[m]> If you didn't trust GrapheneOS or CalyxOS built from source and didn't need the features and trusted AWS it could make sense. I see it as a cool project I wouldn't use it
+17:40:49 <gervarouge[m]> Daniel is proven
+17:42:53 <hypokeimenon[m]> have you heard of hashbangOS?
+17:45:44 <gervarouge[m]> <hypokeimenon[m] "have you heard of hashbangOS?"> Not good things
+17:46:06 <gervarouge[m]> It's also avoiding blobs that are important and in a HAL Sandbox
+17:47:09 <hypokeimenon[m]> thanks
+17:52:51 <xabierd[m]> .
+17:55:00 <fujita_[m]> Stupid question but any idea how to activate emojis
+17:57:03 <gervarouge[m]> <hypokeimenon[m] "thanks"> I would only ever recommend AOSP_Alliance(GrapheneOS, CalyxOS, and RattlesnakeOS) and Apple iOS
+17:57:08 <cg_droid> Wow: https://grapheneos.org/releases#2020.05.23.12
+17:57:19 <gervarouge[m]> That's probably the only options that will guard your security and privacy
+17:57:22 <cg_droid> Have you received the update?...
+17:57:35 <eligiblecoffee[m> Finally Bluetooth will be fixed.
+17:57:57 <eligiblecoffee[m> <cg_droid "Have you received the update?..."> cg_droid: it will show up in few hours automatically.
+17:58:18 <cg_droid> eligiblecoffee[m, ah ok, that's why I wasn't receiving it
+17:58:23 <cg_droid> Thanks!
+17:58:25 <gervarouge[m]> RattlesnakeOS has support for insecure devices like the Pixel 1, but with clear warnings so that's very acceptable
+17:59:08 <cg_droid> Yes!, Bluetooth and sound...
+17:59:26 <cg_droid> And Vanadium update
+18:00:48 <dan-v[m]> Yeah just note @gervarouge:hackerspaces.be, I will be dropping original pixel support when android 11 lands.
+18:05:11 <joshman[m]> Bluetooth fixed. Yaay. Finally can switch developer settings off
+18:07:19 <hypokeimenon[m]> <dan-v[m] "Yeah just note @gervarouge:hacke"> are you a RattlesnakeOS dev?
+18:10:02 <gervarouge[m]> <dan-v[m] "Yeah just note @gervarouge:hacke"> Wonderful good to know keep up the hard work
+18:10:24 <gervarouge[m]> I think that's wonderful
+18:22:39 <dan-v[m]> hypokeimenon: yeah I'm the dev
+18:25:21 <dazinism> fujita_: hold down return/enter on the keyboard
+18:27:40 <dazinism> gervarouge: hashbang recently joined AOSPAlliance
+18:30:26 <dazinism> They started work on getting Pixel4 android prepare vendor working, but got caught up in other stuff. Think the  recent work on that may refocus them a bit.
+18:33:14 <sonikkk> madaidan: yeah, that joker guy is on a whole new level
+18:34:15 <sonikkk> https://old.reddit.com/r/firefox/comments/gokcis/firefox_is_insecure_refuted/frnsv0r/
+18:34:30 <gervarouge[m]> <dazinism "gervarouge: hashbang recently jo"> Thanks
+18:34:56 <sonikkk> https://old.reddit.com/r/firefox/comments/gokcis/firefox_is_insecure_refuted/frnt88g/
+18:35:37 <stuux[m]> k
+18:36:12 <sonikkk> That's a hilarious accusation, given that notorious guide of his: https://old.reddit.com/r/privacy/comments/em8doj/smartphone_hardening_guide_for_normal_people/
+18:37:11 <gervarouge[m]> > That's a hilarious accusation, given that notorious guide of his: https://old.reddit.com/r/privacy/comments/em8doj/smartphone_hardening_guide_for_normal_people/
+18:37:11 <gervarouge[m]> That guy?? He's terrible
+18:38:19 <sonikkk> https://old.reddit.com/r/india/comments/gl95vt/reliance_jios_myjio_app_is_pushing_full_screen/fqyp4lc/
+18:38:30 <sonikkk> This gut is a danger and cannot be taken seriously
+18:38:37 <sonikkk> Guy*
+18:55:41 <skwisgaar[m]> That "guide" just gave me an aneurysm
+18:56:13 <skwisgaar[m]> Next level shit right there
+19:02:16 <madaidan[m]> <sonikkk "That's a hilarious accusation, g"> He always brings that up as if it makes him an expert. He's so arrogant.
+19:02:42 <madaidan[m]> He's joined my groups before and kept throwing insults all over the place.
+19:03:06 <madaidan[m]> It's impossible to have a conversation with him.
+19:07:01 <BrokenCog> for some reason even though choosecombo show's the target is arm64, 'm target-files-package' shows arm ...
+19:07:19 <BrokenCog> any idea what would change the target other than choosecombo?
+19:21:40 <strcat[m]> if you run it in a different shell
+19:21:49 <strcat[m]> choosecombo sets up the current shell to build a target
+19:21:56 <strcat[m]> if you use a different shell it's going to build the default target
+19:22:30 <BrokenCog> it's all in the same shell.
+19:24:00 <BrokenCog> I removed a previous build with: rm -rf ./out ./keys ./vendor/google_devices/ ... is there anything else that could be remaining???  Even though the previous build was a successful arm64 target currently flashed to a Pixel3aXL.
+20:41:10 <gervarouge[m]> Hello
+20:45:05 <limitless0[m]> Anyone here uses privacy browser from fdroid?
+20:46:21 <cyredanthem[m]> > Anyone here uses privacy browser from fdroid?
+20:46:22 <cyredanthem[m]> It uses the hardening features of Vanadium gets. It's more secure than Bromite beside the site isolation
+20:48:00 * limitless0[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/wYvmlYNPJMpepAXpOcStDhXs >
+20:49:23 <limitless0[m]> This room is better than google for info
+20:52:13 <cyredanthem[m]> > This room is better than google for info
+20:52:13 <cyredanthem[m]> It sure is. Np
+20:52:21 <cyredanthem[m]> I would use Vanadium though
+20:53:09 <limitless0[m]> <cyredanthem[m] "I would use Vanadium though"> I do use vanadium and bromite but i split the browsing into browsers
+20:53:22 <limitless0[m]> Somehow i think its better
+20:53:34 <limitless0[m]> News/twitter/etc
+20:55:44 <limitless0[m]> Cant read news on vanadium cos no adblocking
+20:56:45 <cyredanthem[m]> Use PrivateDNS
+20:56:46 <cyredanthem[m]> I have dns.adguard.com set
+20:56:51 <cyredanthem[m]> No issue
+20:57:49 <limitless0[m]> I use netguard and it doesnt work well with private dns
+20:57:51 <cg_droid> cyredanthem[m], Privacy Browser is a webview browser without protection, at least it's what I know from it and Stoutner, who wants to create a Privacy Webview. So, why are you saying it's more secure than Bromite. does it use the Vanadium webview in GOS?
+20:59:22 <cg_droid> limitless0[m], you don't need Netguard with GOS
+20:59:42 <cg_droid> Only from time to time if you want to check some connections
+20:59:46 <limitless0[m]> <cg_droid "limitless0, you don't need Netgu"> How's that?
+20:59:54 <cg_droid> You have the Network Permission in GOS
+21:00:08 <cg_droid> And so, you can add a Private DNS without problems
+21:00:30 <cg_droid> And deny permissions directly
+21:00:40 <cg_droid> network permission I mean
+21:00:50 <limitless0[m]> Network permission is all or nothing.in netguard i at least try to block ads
+21:01:09 <limitless0[m]> Or so i think cos from what i have read its not that effective
+21:01:16 <cg_droid> limitless0[m], so you add Private DNS with dns.adguard.com
+21:01:51 <cg_droid> Or another DNS blocking ads
+21:02:06 <cg_droid> It's fast and goes very well (adguard)
+21:02:10 <cg_droid> I used Netguard before
+21:02:26 * limitless0[m] uploaded an image: tmp.jpg (263KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/eGVNlaZgPIdTIuFchzcmZhab >
+21:03:04 <cg_droid> Yes, I know. When you are browsing some website you can find those trackers
+21:03:19 <cg_droid> But you know you're trusting the Network Permission to another app: Netguard
+21:03:19 <limitless0[m]> It just feels more granular the adblocking with netguard
+21:03:31 <cg_droid> And you can't use a Private DNs
+21:03:34 <limitless0[m]> How im i ?
+21:03:51 <cg_droid> limitless0[m], are you using GOS?
+21:03:54 <limitless0[m]> Cod im giving permission to imternetbanyway to the app im using
+21:04:20 <limitless0[m]> I have set the normal adguard dns on netguard
+21:04:24 <cyredanthem[m]> > cyredanthem, Privacy Browser is a webview browser without protection, at least it's what I know from it and Stoutner, who wants to create a Privacy Webview. So, why are you saying it's more secure than Bromite. does it use the Vanadium webview in GOS?
+21:04:24 <cyredanthem[m]> Read the Twitter posts lately from Daniel
+21:04:27 <cyredanthem[m]> WebView has stronger hardening
+21:04:30 <limitless0[m]> <cg_droid "limitless0, are you using GOS?"> Yes
+21:04:51 <cg_droid> cyredanthem[m], yes, I mean if Vanadium webview works in all the browsers using android webview?
+21:05:05 <cyredanthem[m]> Yes it does and it's hardened
+21:05:13 <cyredanthem[m]> Bromite doesn't use that
+21:05:15 <cg_droid> Then it's great cyredanthem[m] thanks
+21:05:27 <cg_droid> I'm always in contact with Soren Stoutner
+21:05:51 <cg_droid> But I avoided in GOS this browser and using Bromite, I didn't know it had isolation as Bromite now
+21:06:05 <cg_droid> In this case I'll return to it 🙂
+21:07:29 <cg_droid> PRivacy Browser was always exposing my real IP when I used a VPN, but I'll check if using Vanadium webview has the same problem. Bromite works ok in this case.
+21:07:33 <dlm-johannes[m]> > sometime I feel like writing a whole long post about the true root of trusts in computing(especially networking), but I feel like I would lose my mind trying to handle the people making up crap
+21:07:33 <dlm-johannes[m]> I would like to read it. Love to read your discussion
+21:09:31 * limitless0[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/pzKjUULKWSTTpDXCynxtEBsD >
+21:13:48 <algebro[m]> I wish there was a self hosted private DNS you could put behind author...I want to try adguard but I don't really want to open a DNS server to the internet, especially with stuff like rce in pihole
+21:14:03 <algebro[m]> *behind auth, autocorrect
+21:14:41 <algebro[m]> And I'm not comfortable sending my dns queries to a bunch of randos in cyprus
+21:17:05 <cn3m[m]> I could, but It's just stating the obvious that the internet is fucked
+21:17:11 <cn3m[m]> the best way to communicate is by OTP
+21:18:24 <cn3m[m]> <algebro[m] "And I'm not comfortable sending "> use a VPN to connect to it then
+21:18:52 <limitless0[m]> So whats the deal when using an chat app forcing conmection through orbot, how anonymous are you this way?
+21:19:56 <limitless0[m]> Ie signal app new user profile ,orbot block connections without vpn?
+21:20:27 <cn3m[m]> <limitless0[m] "So whats the deal when using an "> do you trust the chat app?
+21:21:00 <limitless0[m]> To an extent yes
+21:21:00 <cn3m[m]> the app can de-anonymize you
+21:21:05 <cn3m[m]> if you trust the signal build then you are fien
+21:21:19 <limitless0[m]> Even through orbot?
+21:21:32 <limitless0[m]> Never comnected without tor?
+21:22:23 <cn3m[m]> sure
+21:22:40 <cn3m[m]> if you can procure a number
+21:23:39 <limitless0[m]> Signal with prepay sim used on simple nokia just to get the sms confirmation
+21:23:57 <limitless0[m]> So signal can still deanonymise
+21:24:59 <limitless0[m]> Even though the apps on amdroid 10 cant get the imei of the phone is installed on
+21:25:45 <cn3m[m]> no
+21:25:49 <cn3m[m]> unless the app is malicious
+21:25:50 <cn3m[m]> or the server is, but you can verify safety numbers and that is only partial compromise
+21:26:30 <limitless0[m]> There was an article on how signal leaked dns querys few days ago
+21:26:37 <limitless0[m]> Its patched now already
+21:26:46 <cn3m[m]> the best way is to buy an anonymous online phone number over tor with cryptocurrency
+21:27:42 <cn3m[m]> <limitless0[m] "There was an article on how sign"> great everything has exploits
+21:27:44 <cn3m[m]> did you know a camera recording your screen using also de-anonymize you?
+21:27:48 <cn3m[m]> it was fixed before the article came out
+21:28:57 <limitless0[m]> <cn3m[m] "did you know a camera recording "> You mean a camera in a coffee shop?
+21:30:21 <cyredanthem[m]> I think he was being rhetorical
+21:31:25 <cn3m[m]> limitless0: yes
+21:33:59 <limitless0[m]> <cn3m[m] "limitless0: yes"> Nevermind
+21:35:02 <limitless0[m]> Im clearly not in wrong room
+21:36:06 <cn3m[m]> limitless0: Signal is reasonably secure and private
+21:36:20 <cn3m[m]> it can have exploits, but they are very rare and fixed very quickly
+21:36:48 <limitless0[m]> <cn3m[m] "limitless0: Signal is reasonably"> I took signal as an example
+21:36:55 <cn3m[m]> what do you mean?
+21:37:07 <limitless0[m]> <cn3m[m] "it can have exploits, but they a"> What i wanted to ask is
+21:37:28 <limitless0[m]> Cos i cant put the question well
+21:38:13 <limitless0[m]> I wanted to ask if i want to contact someone via chat app forcing connection through orbot
+21:38:41 <cg_droid> cyredanthem[m], I can't find Daniel post about it in Twitter, only about Mozilla browser and the discussion, etc I love Privacy Browser but I want to be sure that it's true what you said
+21:38:45 <limitless0[m]> Can if the other party trace the connection? Ip?
+21:39:01 <cn3m[m]> gotcha, yes Signal is written in a memory safe language and was audited by a third party
+21:39:04 <cn3m[m]> they have a strong reputation
+21:39:40 <cyredanthem[m]> > cyredanthem, I can't find Daniel post about it in Twitter, only about Mozilla browser and the discussion, etc I love Privacy Browser but I want to be sure that it's true what you said
+21:39:40 <cyredanthem[m]> Check the website he added it to the usage guide
+21:39:54 <cg_droid> cyredanthem[m], ok thanks
+21:40:46 <limitless0[m]> cn3m: i have faith in signal.but the question was about anonimity if connecting via orbot offers any anonimity better than lets say vpn
+21:41:42 <cyredanthem[m]> > cn3m: i have faith in signal.but the question was about anonimity if connecting via orbot offers any anonimity better than lets say vpn
+21:41:42 <cyredanthem[m]> Tor has a much stronger protection system
+21:41:59 <cyredanthem[m]> You would have to compromise the directory system to attack it reliably
+21:42:09 <cg_droid> cyredanthem[m], yes about webview but... "Using Vanadium is highly recommended. Bromite is a solid alternative and is the only other browser we recommend". "Chromium-based browsers like Vanadium and Bromite provide the strongest sandbox implementation, leagues ahead of the alternatives"
+21:42:38 <cg_droid> It has isolation too because it's Chromium based
+21:42:56 <cyredanthem[m]> It does, read farther
+21:43:02 <cg_droid> Not Privacy Browser, but it's true Privacy Browser can use the Vanadium webview
+21:43:02 <cyredanthem[m]> Vanadium has specific hardening patches
+21:43:03 <cg_droid> ok
+21:44:17 <cyredanthem[m]> Vanadium WebView is hardened
+21:44:31 <cyredanthem[m]> It's all in the FAQ
+21:44:57 <cyredanthem[m]> Usage Guide*
+21:45:13 * limitless0[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/aqzKZUQAEMgoHVtzeyIURPTT >
+21:45:29 <cg_droid> cyredanthem[m], WebView-based browsers use the hardened Vanadium rendering engine, but they can't offer as much privacy and control due to being limited to the capabilities supported by the WebView widget
+21:45:48 <cg_droid> For example, they can't provide a setting for toggling sensors access because the feature is fairly new and the WebView WebSettings API doesn't yet include support for it as it does for JavaScript, location, cookies, DOM storage and other older features. For sensors, the Sensors app permission added by GrapheneOS can be toggled off for the browser app as a whole instead. The WebView sandbox also curre
+21:45:48 <cg_droid> ntly runs every instance within the same sandbox and doesn't support site isolation.
+21:46:08 <cyredanthem[m]> That's a trade off you have to consider
+21:46:39 <cg_droid> yes, but it says Bromite has isolation and not the rest of the browsers using webview
+21:47:05 <cg_droid> The WebView sandbox also currently runs every instance within the same sandbox and doesn't support site isolation.
+21:47:12 <cyredanthem[m]> > yes, but it says Bromite has isolation and not the rest of the browsers using webview
+21:47:12 <cyredanthem[m]> That's a factor if site isolation is a risk
+21:47:41 <cg_droid> Yes, so Bromite is, as he said before, the only browser he recommends with Vanadium until now
+21:47:58 <cg_droid> I think it's because it's also Chromium and has isolation
+21:50:13 <cyredanthem[m]> It's a mixed bag
+21:50:22 <cg_droid> Yes
+21:50:24 <cyredanthem[m]> The mitigations webview is more important to me
+22:01:30 <dan-v[m]> <algebro[m] "I wish there was a self hosted p"> self hosted wireguard + pihole works well.
+22:04:25 <dan-v[m]> haven't touched this in a while, but I hacked pihole install into algo: https://github.com/dan-v/algo
+22:11:08 <limitless0[m]> cg_droid: did you mention earlier about xmpp bridge to this channel?
+22:54:43 <shortcastle[m]> Test
+22:57:06 <cn3m[m]> hey  @shortcastle:matrix.org
+22:57:27 <shortcastle[m]> Hi, yes just testing if its live
+22:57:40 <shortcastle[m]> On riotx and wasnt sure
+22:59:07 <shortcastle[m]> Can see past chats on other rooms but couldn see history here
+23:02:27 <cn3m[m]> you can check the logs
+23:03:13 <shortcastle[m]> I think i can on riot not on riotx
+23:03:26 <cn3m[m]> it's just the way the server is setup
+23:03:28 <cn3m[m]> it's just the way the server is setup
+23:03:35 <cn3m[m]> Not sure why, but it's a good bs filter to see if people can see the description on my servers I use it on.
+23:04:31 <shortcastle[m]> Is riot more stable than riotx?
+23:05:06 <shortcastle[m]> Or is irc better?
+23:35:30 <analog[m]> On mobile I like FluffyChat
+23:43:33 <shortcastle[m]> analog: im already in this room
+23:44:32 <cn3m[m]>  @shortcastle:matrix.org check the logs in the description
+23:44:50 <shortcastle[m]> Fluffychat is a matrix client?
+23:45:15 <analog[m]> Yes.
+23:45:28 <cn3m[m]> this chat doesn't show old chats
+23:45:44 <cn3m[m]> I use FluffyChat
+23:45:49 <analog[m]> shortcastle https://christianpauly.gitlab.io/fluffychat-website/
+23:45:52 <cn3m[m]> light theme it's very nice
+23:48:28 <shortcastle[m]> Thank you, will try now

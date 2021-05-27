@@ -1,0 +1,603 @@
+00:08:23 <strcat[m]> no
+00:08:41 <strcat[m]> Android and ChromiumOS both run on x86
+00:08:55 <strcat[m]> verified boot on x86 is problematic on most hardware though, doesn't really work well
+00:09:15 <strcat[m]> Chromebooks are designed for it
+00:09:27 <strcat[m]> Windows only has good verified boot if you count the xbox as Windows
+00:09:32 <strcat[m]> it's a work in progress for laptops
+00:09:53 <strcat[m]> but it's making progress
+00:10:03 <strcat[m]> needs to be one of their 'secured core' laptops to have any hope
+00:10:03 <strcat[m]> otherwise it's a hardware issue
+00:10:31 <concat[m]> Forgot to state specifically for desktop equating Android out. I didn't really know ChromiumOS verified boot on x86 to be honest.
+00:11:34 <concat[m]> <strcat[m] "needs to be one of their 'secure"> Yeah I've heard some hype about the secured core laptops
+00:12:39 <strcat[m]> ChromiumOS is just what they build ChromeOS from with their added stuff
+00:12:46 <alzxjm[m]1> So does CloudReady get the blessing from the Graphene community?
+00:12:56 <strcat[m]> just like AOSP vs stock OS but much less different
+00:12:57 <strcat[m]> alzxjm: no
+00:13:22 <concat[m]> what's wrong with CloudReady
+00:14:32 <strcat[m]> the same reason putting current AOSP on a Nexus 5 doesn't make it secure
+00:15:00 <strcat[m]> all of this is off-topic and getting boring anyway
+00:17:13 <concat[m]> <strcat[m] "the same reason putting current "> Sure, but I'm not sure that is exactly an accurate equivalence. You still have the ChromiumOS security model and (some) verified boot. For desktop it's a severe upgrade from Linux.
+00:17:31 <concat[m]> You still have the virtualized Crostini environment
+00:18:08 <strcat[m]> you don't get verified boot without proper hardware support
+00:18:09 <strcat[m]> which most machines don't really have
+00:18:09 <strcat[m]> and as I said
+00:18:10 <strcat[m]> it's like putting current AOSP on a Nexus 5 in most cases
+00:18:12 <strcat[m]> the purpose of it is flawed
+00:18:39 <strcat[m]> hardware without firmware updates, etc. isn't fixed by putting another OS on it
+00:19:39 <concat[m]> <strcat[m] "hardware without firmware update"> That's not why people use CloudReady
+00:19:54 <concat[m]> <strcat[m] "you don't get verified boot with"> CloudReady does support some of the security features that comprise Verified Boot
+00:19:56 <strcat[m]> concat: also seems verified boot is totally broken for them
+00:20:19 <strcat[m]> concat: they allow disabling it - so how the hell is it supposed to work when it can be disabled from persistent state?
+00:20:20 <strcat[m]> they allow disabling it from the OS
+00:20:28 <strcat[m]> and they have transitions to root within the OS
+00:21:22 <strcat[m]> why would an attacker care about verified boot if there's a switch in persistent state to turn it off
+00:22:27 <concat[m]> <strcat[m] "they allow disabling it *from th"> You mean disabling rootfs with crosh?
+00:22:57 <strcat[m]> disabling it at all via persistent state
+00:23:03 <strcat[m]> means it was never doing anything in the first place
+00:23:57 <concat[m]> Ok, can you show me that?
+00:24:10 <strcat[m]> show you what
+00:24:49 <strcat[m]> they document that it can be disabled within the OS persistently
+00:24:57 <strcat[m]> and it's apparent that the OS exposes persistent root access too
+00:25:05 <strcat[m]> so there's no meaningful verified boot
+00:25:27 <concat[m]> I haven't seen that in their documentation.
+00:25:52 <strcat[m]> and if that's the approach - i.e. security theater and pretending to have features while having a totally useless implementation with a switch for the attacker to turn it off when they have the control that the feature is supposed to contain
+00:25:53 <concat[m]> If that's true, then that does suck. But would that negate all of the other system hardening?
+00:26:09 <strcat[m]> when they completely ruin stuff like this in such an obvious way
+00:26:22 <strcat[m]> doesn't bode well for the rest of it
+00:26:35 <strcat[m]> makes it apparent they don't care / don't know what they're doing
+00:27:08 <concat[m]> <strcat[m] "they document that it can be dis"> Do you have a link to the documentation you're referring to? I tried doing some searching, didn't find it there.
+00:28:10 <strcat[m]> https://cloudreadykb.neverware.com/s/article/What-is-RootFS-Verification
+00:28:55 <concat[m]> <strcat[m] "makes it apparent they don't car"> If that's true, regardless I'm unclear how this ultimately rejects the virtualized Crostini environment and ChromiumOS own security model which for the most part to my knowledge hasn't been tampered with. I'm taking what you're saying with consideration as well.
+00:29:04 <strcat[m]> https://cloudreadykb.neverware.com/s/article/Disabling-RootFS-Verification?r=5&ui-force-components-controllers-recordGlobalValueProvider.RecordGvp.getRecord=1
+00:30:02 <strcat[m]> what I'm saying is when they so obviously break the entire purpose of a core security feature
+00:30:06 <concat[m]> strcat Yeah, so that's with crosh that I asked you earlier.
+00:30:07 <strcat[m]> that doesn't bode well for the rest of it
+00:30:39 <radixed9[m]> This is the impression I got of CloudReady too. They are not entirely sure what they are doing. They are based on a solid base. I am concerned they will mess up their Android support
+00:30:49 <strcat[m]> concat: having a way to disable it within the OS means it has a branch on persistent state to decide if it should use it
+00:30:54 <strcat[m]> therefore the feature doesn't work
+00:31:38 <concat[m]> <radixed9[m] "This is the impression I got of "> They're just porting ARC++ for Android support, I thought.
+00:32:29 <strcat[m]> there's a reason you can't unlock the bootloader inside AOSP, and there's a reason why unlocking wipes data
+00:33:40 <concat[m]> <strcat[m] "concat: having a way to disable "> You need developer mode to do this
+00:34:42 <concat[m]> Without developer mode you can't disable the verity
+00:35:29 <strcat[m]> chromebooks have special hardware support to deal with that stuff
+00:36:59 <TheJollyRoger> hmm. Wonder if there's something special or special arguments that need to be passed to ./build.sh for coral? I'm getting this: https://jollyrogers.ca/public/coral-build.txt
+00:37:15 <concat[m]> So if an attacker can get developer mode on CloudReady then it's game over already, not just verified boot. Developer mode in general adds so much attack surface
+00:37:52 <strcat[m]> concat: they have developer mode by default
+00:37:58 <strcat[m]> also an attacker doesn't need to 'get it'
+00:38:14 <strcat[m]> you seem to be missing the whole point of verified boot
+00:38:40 <concat[m]> strcat No they don't.
+00:38:51 <strcat[m]> Chromebooks have special hardware support to implement developer mode
+00:39:01 <concat[m]> strcat My developer mode has always been disabled, and I tried disabling verity just now.
+00:39:03 <concat[m]> strcat I launched crosh and I am running as a yellow uesr
+00:39:22 <concat[m]>  * strcat I launched crosh and I am running as a yellow user (developer mode is green)
+00:39:23 <overheadscallop[> TheJollyRoger: I don't know about the erorr but aren't the coral and flame kernels already prebuilt
+00:39:41 <TheJollyRoger> Oh.
+00:39:43 <TheJollyRoger> Oops.
+00:40:06 <strcat[m]> concat: did you type `shell`?
+00:40:47 <concat[m]> strcat Yes.
+00:41:57 * concat[m] uploaded an image: image.png (5KB) < https://matrix.org/_matrix/media/r0/download/spitetech.com/wWuKzWztWSNBXvIaNuqOBYKm >
+00:43:07 <concat[m]> It could be that I did extra setting changing
+00:43:26 <concat[m]> I can try on my other laptop that I haven't configged
+00:43:42 <strcat[m]> doesn't match what their documentation says
+00:43:43 <strcat[m]> and again
+00:44:00 <strcat[m]> since this stuff is controlled by persistent state the OS can write
+00:44:01 <strcat[m]> verified boot model doesn't work
+00:44:06 <strcat[m]> if you don't get that you don't get verified boot
+00:45:59 <concat[m]> <strcat[m] "doesn't match what their documen"> I'll try on my other machine and see if I get thrown the same error.
+00:48:04 <concat[m]> <strcat[m] "since this stuff is controlled b"> Fair enough, assuming you don't do the same configuration as me then that's not good. But I still don't see how that negates the rest of what it has to offer (especially Crostini, most system hardening don't seem tampered with).
+00:48:25 <strcat[m]> you can't do configuration to change this
+00:48:27 <strcat[m]> that's the whole point
+00:48:39 <strcat[m]> that misses the point of verified boot
+00:48:45 <concat[m]> Must've done something to get the ``shell`` to malfunction
+00:49:04 <concat[m]> If the documentation contradicts that
+00:49:23 <strcat[m]> you're assuming that other hardening is still in place as it would be
+00:49:28 <strcat[m]> and that they use comparable kernels, etc.
+00:49:33 <strcat[m]> I'm not going to make that assumption
+00:49:45 <strcat[m]> especially when I can see verified boot is not intact
+00:50:01 <radixed9[m]> That's why I don't recommend ChromiumOS
+00:50:01 <concat[m]> strcat Me and my friend have grep'd a good amount of their work.
+00:50:01 <strcat[m]> anyway it's not a discussion I want to have - it's off-topic
+00:50:11 <defconanon12[m]> So I have a question is it true that Tor Project and Graphene are working close together or is that just a rumor?
+00:50:26 <concat[m]> Not to be anecdotal but for the most part almost everything seems identical
+00:50:27 <strcat[m]> defconanon12: it is not true
+00:50:55 <defconanon12[m]> strcat: Thanks for the clarification.
+00:50:56 <strcat[m]> on Chromebook there is hardware support for the hardware-based security features
+00:51:01 <strcat[m]> hardware support for developer mode without having insecure persistent state to toggle it
+00:51:06 <strcat[m]> hardware support for verifying the firmware and OS properly
+00:51:23 <strcat[m]> so the OS can chain from that and do real verified boot
+00:51:27 <concat[m]> <strcat[m] "on Chromebook there is hardware "> CR doesn't have the hardware-based security features
+00:51:31 <strcat[m]> hardware support for attestation, etc.
+00:51:48 <concat[m]> That's one of the problems I acknowledge with it
+00:51:48 <strcat[m]> hardware support for encryption
+00:51:55 <defconanon12[m]> It didn't sound legit. Just misinformed sprouting it around.
+00:52:08 <strcat[m]> the ChromeOS hardware support isn't as nice as the hardware security features on Pixels but it's still important
+00:52:09 <fluoridatedsheep> <furofuro_01[m] "How do I determine if an online "> I know a guy who could get you a decent one for a phone for $35, works like a charm for me. otherwise silent pocket is a good option
+00:52:09 <defconanon12[m]> * It didn't sound legit. Just misinformed people sprouting it around.
+00:52:27 <strcat[m]> will be back later, going for now
+00:52:38 <jknsec[m]> Are Faraday bags even effective or just theater?
+00:53:21 <defconanon12[m]> jknsec: What is a faraday bag?
+00:53:29 <TheJollyRoger> jknsec[m]: theatrics.
+00:53:37 <fluoridatedsheep> <jknsec[m] "Are Faraday bags even effective "> certainly not theater. try pinging those bitches. real faraday bags that is
+00:53:53 <fluoridatedsheep> there are plenty of shitty ones, no doubt
+00:54:08 <defconanon12[m]> Nothing is out of box secure.
+00:54:16 <jknsec[m]> True. I just meant most of which are sold. Silent pocket is reliable?
+00:54:24 <defconanon12[m]> Don't trust preconfigures.
+00:54:35 <overheadscallop[> defconanon12: https://en.wikipedia.org/wiki/Faraday_cage
+00:54:41 <fluoridatedsheep> <jknsec[m] "True. I just meant most of which"> I have no beef with silent pocket, but ive only used their wallet for rfid blocking
+00:54:50 <TheJollyRoger> If the device is compromised to the point you need to physically keep it isolated physically, you might as well use thermate, because then it could simply store what it wants to exfiltrate, wait until it gets reception again, and then dial out.
+00:55:31 <fluoridatedsheep> <TheJollyRoger "If the device is compromised to "> do you trust graphene enough not to get popped?
+00:55:36 <defconanon12[m]> overheadscallop: Thanks.
+00:55:45 <TheJollyRoger> fluoridatedsheep: yes.
+00:55:55 <jknsec[m]> I just keep my phone in airplane mode and activate when needed because I trust the security of the device and the main issue is cellular radio.
+00:56:23 <fluoridatedsheep> im currently using shelter to isolate things like spotify and groupme on my graphene phone.. i just want the apps completely offline when not in use. I know shelter gets some flack, but im not looking for full sandbox, just app downtime
+00:56:23 <jknsec[m]> Even though, you know, Wi-Fi
+00:56:32 <fluoridatedsheep> <TheJollyRoger "fluoridated sheeple: yes."> what about by nation-states?
+00:57:01 <defconanon12[m]> This honestly sounds like privacy theater. I need to see it in action.
+00:57:22 <TheJollyRoger> fluoridatedsheep: An adversary with unlimited resources is outside of my threat model, considering my roommates have shown me that thirty-five bucks and a bit of DIY can go a long way to a full compromise.
+00:57:31 <TheJollyRoger> And a trip to home hardware.
+00:58:02 <defconanon12[m]> Kinda reminds me of poorly designed router boxes. Though don't if even those actually work?
+00:58:15 <fluoridatedsheep> <TheJollyRoger "fluoridated sheeple: An adversar"> therein lies the problem for me
+00:58:43 <jknsec[m]> If you want to protect against nation states you pretty much need speciality hardware created by opposing nation states.
+00:59:24 <jknsec[m]> And software ofc
+00:59:42 <TheJollyRoger> A truly determined adversary won't bother spending $300,000 from an exploit broker to purchase an Android Zero day, no, they'll spend about $35 on plaster of paris, paint, a drywall knife, and then another $300 on a small camera they'll install into the lighting fixture of your room.
+00:59:47 <defconanon12[m]> * Kinda reminds me of poorly designed router boxes. Though don't know if even those actually work?
+01:00:00 <fluoridatedsheep> is graphene's airplane mode actually affective?
+01:00:08 <TheJollyRoger> fluoridatedsheep: yes.
+01:00:32 <cn3m[m]> <fluoridatedsheep "is graphene's airplane mode actu"> Yes
+01:01:10 <fluoridatedsheep> ill be switching over from linux shortly.. just a lot of apps that i could use :/ id like to run with no sim but that proves difficult in some situations
+01:01:27 <fluoridatedsheep>  * ill be switching over from lineage** shortly.. just a lot of apps that i could use :/ id like to run with no sim but that proves difficult in some situations
+01:01:27 <jknsec[m]> https://xkcd.com/538/
+01:02:08 <defconanon12[m]> Huh you learn something new everyday.
+01:09:50 <madaidan[m]> strcat: are you sure ChromiumOS uses Clang CFI? I've checked their kernel and couldn't find anything.
+01:15:51 <TheJollyRoger> defconanon12[m]: with respect to those "router enclosures" are you talking about those plastic ones you simply fit over your home router and fasten with a padlock?
+01:16:04 * concat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/CmgNfcWmkmMAUXXiiqyXXjDp >
+01:16:15 <TheJollyRoger> Like the one in the talk "AirBnBeware?"
+01:16:53 <TheJollyRoger> The threat model of those is "dissuade the casually curious/opportunistic but otherwise honest" types.
+01:21:29 <cn3m[m]> concat: CloudReady really doesn't seem to understand their shortcomings which definitely makes it questionable
+01:22:25 <concat[m]> cn3m How do you know that it wasn't an intentional design choice?
+01:23:01 <concat[m]>  * cn3m How do you know they aren't aware?
+01:23:14 <alzxjm[m]1> So ChromeOS is like, not an entirely unreasonable choice for security? It seems most of the pernicious privacy invasions can be opted out of.
+01:23:27 <concat[m]> I could make a strong argument for you that's not a hasty generalization; either they don't know or they intentionally did so. Both are bad.
+01:24:07 <concat[m]> I wouldn't slander them that way but still point out the error more efficently.
+01:24:59 <concat[m]> cn3m Has Hackintosh acknowledged their OpenCore verified boot was improper?
+01:25:35 <concat[m]> I could slander Hackintosh the same way.
+01:25:50 * madaidan[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/onHVDlFJXnGXPbSAINjpBErX >
+01:28:41 * concat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/XeVnWBtkcaYsgbByrNvwJwNf >
+01:31:01 * madaidan[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/ZTAPgHeSVZKhpGcophYgLxth >
+01:33:35 <concat[m]> > It's not unreasonable at all. So far we can tell they've ruined major parts of the security model. It's naive to think they haven't done more, especially when they've shown a clear lack of knowledge on these features.
+01:33:35 <concat[m]> It's not unreasonable to assume the plausability, but overall concluding is just induction.
+01:39:54 <concat[m]> madaidan. https://en.wikipedia.org/wiki/Problem_of_induction
+01:53:33 <interceptingfist> dazinism:trying to use shelter.. Isnt clone to work profile supposed to put the app into it? Mine does nothing
+01:54:38 <fluoridatedsheep> <interceptingfist "dazinism:trying to use shelter.."> its a bit buggy on graphene, but i got it to work
+01:54:49 <fluoridatedsheep> just restart a few times lol
+01:58:07 <jiibus[m]> <fluoridatedsheep "ill be switching over from linux"> What apps are you worried about not having access to?
+01:58:38 <fluoridatedsheep> <jiibus[m] "What apps are you worried about "> well i dont use my real number anywhere.. i have a google voice. fortunately calling/text forwarding should work
+01:59:52 <interceptingfist> fluoridated sheeple: it only let's me clone the apps graphene came with
+02:00:23 <jiibus[m]> Ah! I was in a similar pickle too. I resolved it by going with [jmp.chat](https://jmp.chat/). Android has a built in SIP client and I've been using them for a bit. Works like a charm. I use Conversations for texting.
+02:00:23 <fluoridatedsheep> <interceptingfist "fluoridated sheeple: it only let"> You restart? make sure to check permissions, turn off shelter as well
+02:00:34 <interceptingfist> Is that normal
+02:00:48 <fluoridatedsheep> shelter struggles on graphene lol
+02:01:08 <fluoridatedsheep> not like shelter is anything crazy for security, i just want to keep a few apps offline
+02:04:07 <interceptingfist> Doesn't let you install apks to yours
+02:04:30 <interceptingfist> Does it*
+02:08:09 <jcpicard32[m]> It did for me, but I had to try a few times
+02:08:18 <jcpicard32[m]> As others have mentioned shelter on Graphene is pretty buggy
+02:09:03 <interceptingfist> I'm just asking cause I don't want to spend a lot of time messing with it
+02:09:37 <fluoridatedsheep> <jcpicard32[m] "As others have mentioned shelter"> took me a few minutes, only have it for a few bad apps like waze
+02:10:19 <jcpicard32[m]> Yeah fortunately I didn't have to do too much. Pretty much have it for Facebook/Whatsapp/Spotify so I didn't have to futz with it too much
+02:12:26 <interceptingfist> fluoridated sheeple: jcpicard32  do you all use multiple user accounts?
+02:12:48 <jcpicard32[m]> I just use the work profile right now, but I've used multiple accounts in the past
+02:12:59 <jcpicard32[m]> It's more secure to use separate accounts at the cost of convenience
+02:13:40 <interceptingfist> What makes it more secure though
+02:14:21 <fluoridatedsheep> <interceptingfist "What makes it more secure though"> just keeps the bad apps offline, i wouldnt argue for its sandboxxing, it even says it shouldnt be relied on
+02:18:53 <jcpicard32[m]> I'm not sure of the exact explanations, but Daniel has said it here in the past. At the very least the reliance on external code increases attack surface, but I'm sure there's more to it than that.
+02:20:53 <qyo3462572445[m]> Shelter works great for me. I never had an issue with it on my 3a.
+02:21:53 <defconanon12[m]> TheJollyRoger: Correct.
+02:25:47 <cn3m[m]> Shelter adds a ton of attack surface and clipboard leaking opportunities
+02:30:17 <defconanon12[m]> cn3m: I sent you a DM by the way.
+02:33:58 <interceptingfist> qyo3462572445: I'm on 3a
+02:42:38 <faxing[m]> Yeah isn't shelter privacy from invasive apps at the cost of security?
+02:42:52 <cn3m[m]> <defconanon12[m] "cn3m: I sent you a DM by the way"> I'll check it later
+02:43:11 <defconanon12[m]> Will do.
+02:44:35 <interceptingfist> jcpicard32: fluoridated sheeple  I got it to install apks, thanks for the help
+02:46:11 <plsbrespectfulgu> <faxing[m] "Yeah isn't shelter privacy from "> i wouldnt say at the cost of security, it keeps those bad apps frozen. give and a take
+02:46:34 <plsbrespectfulgu> <interceptingfist "jcpicard32: fluoridated sheeple "> np
+02:46:48 <jcpicard32[m]> Glad you got it. Happy to help
+02:46:49 <defconanon12[m]> I know this is going to sound silly but Discord anyone? Not asking for usernames no. Just stating on Graphene OS I am having a problem with notifications. As to be expected though. I got it from the  Aurora store. Would this be different if I would get it from APKmirror?
+02:47:29 <plsbrespectfulgu> <defconanon12[m] "I know this is going to sound si"> doubtful, im certain discord uses google firebase or whatever else for notifications
+02:48:16 <defconanon12[m]> I believe it. Discord isn't exactly so secure as people may think. plsbrespectfulguys
+02:48:37 <plsbrespectfulgu> <defconanon12[m] "I believe it. Discord isn't exac"> nobody really parades it as secure tho
+02:49:00 <faxing[m]> I mean security of the system, not security of individual applications.
+02:49:58 <plsbrespectfulgu> <faxing[m] "I mean security of the system, n"> ah, i mean adding anything to a system adds a certain level of risk. for my use case, i prefer it
+02:50:24 <defconanon12[m]> plsbrespectfulguys: You would be surprised. It doesn't remove all EXCIF data by default for an example.
+02:51:11 <plsbrespectfulgu> <defconanon12[m] "plsbrespectfulguys: You would be"> what do you mean? i didnt think shelter removed any exif.
+02:51:23 <faxing[m]> Oh yeah, for certain use cases it can certainly be adventagous.
+02:51:50 <defconanon12[m]> plsbrespectfulguys: Talking about Discord am I screwing up a convo?
+02:52:25 <plsbrespectfulgu> while security is essential, i certainly want my privacy. My employer would love to tap my shit
+02:52:44 <plsbrespectfulgu> <defconanon12[m] "plsbrespectfulguys: Talking abou"> you're good, discord doesnt remove any exif
+02:53:44 <plsbrespectfulgu> and unfortunately comsec is hard when you dont want to be a total hermit, and you end up with shitty apps like groupme and discord lol
+02:53:44 <defconanon12[m]> plsbrespectfulguys: Yes, yet I met Discord artist that think they do. Misinformation on the Discord forums.
+02:54:12 <defconanon12[m]> * plsbrespectfulguys: Yes, yet I met Discord artists that think they do. Misinformation on the Discord forums.
+02:54:29 <defconanon12[m]> Photographers also. More vulnerable.
+02:54:35 <plsbrespectfulgu> <defconanon12[m] "plsbrespectfulguys: Yes, yet I m"> ah, just refrain from saying anythibg sensitive and remove the exif with another app like mat2
+02:55:19 <defconanon12[m]> plsbrespectfulguys: So true but the average user knows nothing of that.
+02:55:56 <plsbrespectfulgu> <defconanon12[m] "plsbrespectfulguys: So true but "> yeah, but thats people. most things they believe in are a feeble countenance at best, a pipe dream without action
+02:56:09 <defconanon12[m]> I personally never heard of mat2 myself.
+02:56:46 <plsbrespectfulgu> <defconanon12[m] "I personally never heard of mat2"> its built into tails and parrot. not a mobile app. use eggspliff from fdroid if you eant an app on mobilr
+02:57:34 <defconanon12[m]> Oh I got what you mean. Talking about if I was running a desktop environment.
+02:58:12 <defconanon12[m]> I am probably just going to stick with the desktop Discord it is more user friendly and can work on it better.
+02:59:19 <defconanon12[m]> I used Tails. Just never had a reason to use Mat2.
+03:49:59 <jiibus[m]> [Mat2](https://0xacab.org/jvoisin/mat2) is interesting. Good to learn about, thanks!
+04:32:27 <plsbrespectfulgu> <cn3m[m] "The freezing is a client side ch"> ah
+05:52:01 <greenmoon[m]> I'm just using that open source app Simple Camera there is an option to take pictures without saving Exit data, but not sure if the photo quality is the best
+05:53:41 <greenmoon[m]> Also: https://gizmodo.com/facebook-knows-how-to-track-you-using-the-dust-on-your-1821030620
+06:07:44 <renlord> ^ link does not work
+06:15:52 <cn3m[m]> Camera fingerprinting is much easier than that
+07:13:27 <furofuro_01[m]> "We kill people using metadata."
+07:42:51 <dazinism> interceptingfist: had a look at the multiple users toggle. It apparently doesnt shut down active user profiles, just hides the icon to select them.
+07:45:08 <dazinism> Think the safe/easy way to shut down user profiles is to restart the phone.
+08:11:48 <dazinism> Flicking the toggle at the bottom of the work profile app draw does kill everything running in the work profile
+08:24:57 <dazinism> > The freezing is a client side check don't expect much
+08:25:54 <dazinism> cn3m: thing I found interesting is how much shelter froozen apps disappear from the OS.
+08:26:23 <dazinism> Dont show up in the app draw, or in settings>apps
+08:29:00 <dazinism> But yes, the big issue with work profile / shelter is that shelter app has device admin permission for the work profile. Has more power there than the user.
+08:29:29 <dazinism> Shelter being compromised would be very bad for anything running there.
+08:37:50 <dazinism> <dazinism "cn3m: thing I found interesting "> Also worth considering other apps in the work profile can't see them when they are frozen.
+09:10:26 <dazinism> Interesting that Fairphone is about to roll out an OS update, 5 years from launch of the Fairphone 2
+09:10:28 <dazinism> https://www.theregister.com/2020/06/18/fairphone_support_comment/
+09:11:04 <dazinism> As we've seen there security can be a bit patchy
+09:11:37 <dazinism> Wonder if they are including firmware updates from Qualcomm
+09:12:03 <dazinism> *their security
+09:39:21 <jknsec[m]> Whoops Australia is being hacked
+09:39:38 <jknsec[m]> Fun
+09:41:26 <athyla> hey guys! a quick question. I have a Pixel 3 running GrapheneOS. When the phone starts up there is a warning saying that a custom OS is about to start on the phone. Is this normal or have I done something wrong when setting up GrapheneOS?
+09:42:52 <anupritaisno1[m]> "athyla" (https://matrix.to/#/@freenode_athyla:matrix.org): no all is fine
+09:43:28 <athyla> great, thanks
+09:43:39 <meltedcheddar[m]> <athyla "hey guys! a quick question. I ha"> Normal, everybody with GrapheneOS has it.
+10:02:48 <furofuro_01[m]> <dazinism "Interesting that Fairphone is ab"> Now only if Google does the same...
+10:03:00 <furofuro_01[m]> pixel and grapheneos would be more worth it
+10:15:02 <dominusart[m]> Wouldn't be surprised if EU did something about it in near future.
+10:22:47 <dazinism> Guess theres also hardware issues though.  Lots have changed in those 5 years
+11:12:40 <hitchhooker[m]> Updates are conducted without trust between the device and the server.
+11:12:40 <hitchhooker[m]> Since trust is not needed between the device and the server, updates work well over VPNs and Tor.
+11:12:40 <hitchhooker[m]> What its this supposed to mean?
+12:04:16 <dazinism> hitchhooker:  updates are verified by the device and a compromised update server or MITM can't serve a malicious update.
+12:15:44 <dazinism> > internal US politics right now that threatens @OpenTechFund, who funded #LetsEncrypt, #CertBot, @TorProject, #NoScript, TLS ESNI/ECH, @DNSPrivacyProj, #ReproducibleBuilds, #Wireguard, @DeltaChat, @OpenKeychain, #pypi, @GuardianProject, @SignalApp, and more. Looks like a couple proprietary software companies are trying to take over this #FreeSoftware money.  Please sign on to the campaign to try to stop it:
+12:15:44 <dazinism> https://saveinternetfreedom.tech
+13:18:58 <anupritaisno1[m]> "TheJollyRoger" (https://matrix.to/#/@freenode_TheJollyRoger:matrix.org) "JollyRoger" (https://matrix.to/#/@JollyRoger:matrix.org) I talked with the app dev guy he says he'll take a look
+13:19:23 <anupritaisno1[m]> I just linked him to the issue trackers for the app projects, he'll see what he can do and pull request if he has a solution
+13:37:30 <jfbourdeau> K9 notification problem : I am having a hard time to have k9 mail sent me notification on new eMail when phone is Locked / not used. Battery savin is off, k9 is setup to Fetch email every minute but still, When the screen is turned off/phone locked, my new GrapheneOS Pixel 3a install is perfect except for not getting my new eMail notification.   And k9 sometime show Sycning disabled....  Anyone has went trough this and have some steps I could check ?
+13:37:30 <jfbourdeau> it's something basic but crucial to me.
+13:38:07 <jfbourdeau> Noobie question I know...
+13:38:17 <jalb66> jfbourdeau, yes, wait
+13:39:00 <jalb66> In the general configuration (I don't know how it is in English language), go to Network and choose Always. Done.
+13:39:16 <jalb66> Synchronize in second hand or something like that
+13:40:05 <jfbourdeau> jalb66, in k9 (accounts setting or k9 general setting) ? or Setting of Grpahene ?  I am presently looking for it
+13:40:14 <jalb66> K-9
+13:40:22 <jalb66> General setting
+13:40:28 <jfbourdeau> ok found it
+13:40:55 <jfbourdeau> I will see how it goes with this setting   Tk you so much jalb66 for taking the time to reply to that simple question...
+13:40:55 <jalb66> I think it was that problem, I can't remember very well now, try it
+13:41:16 <jfbourdeau> will do tks have an nice day !
+13:41:23 <jalb66> In the new version I can't see the Accounts setting
+13:41:28 <jalb66> No problem
+13:53:26 <jfbourdeau> jalb66,  it's working perfectly well !  tks  I don't have to fect folder every 1 minute as I tried... ONly doimng what you said fixed my problem !  I work from home and now if I go in car or working outside, I won't miss important work emAils because of your help !
+13:53:54 <jalb66> jfbourdeau, glad it worked 🙂
+13:54:16 <jalb66> I discoverd it some time ago, I was like you before
+13:54:25 <jalb66> I discovered it some time ago, I was like you before
+14:00:59 <jfbourdeau> now I am testing your setting with Battery saver on... But I think it's not working, so I will turn off Battery saver
+14:02:09 <jalb66> jfbourdeau, it works
+14:02:19 <jalb66> Ah ok, sorry
+14:02:25 <jalb66> I thought you meant about optimizing apps
+14:02:32 <jfbourdeau> you mean if battery saver is ON, it should still work ?
+14:02:39 <jalb66> NO, sorry, IDN
+14:02:53 <jalb66> I mean that I'm optimizing K-9 and it work
+14:02:57 <jalb66> I mean that I'm optimizing K-9 and it works
+14:03:07 <jalb66> I don't need to make an eception in it
+14:03:37 <jfbourdeau> non it doesn't... At least according to my tests. Tks ! I am still happy... About App optimizing, I need to read / play with that ( come from the IOS world... A lord to learn in Android and Graphene)
+14:03:59 <jfbourdeau> jalb66, about " I mean that I'm optimizing K-9 and it work " What do you mean it work ?
+14:04:30 <jfbourdeau> in settings Battery or somewhere else that Battery Optimizing thing ?
+14:06:10 <jfbourdeau> jalb66, where do you that " I mean that I'm optimizing K-9 and it work "  ? And what work ?
+14:06:15 <jfbourdeau> not sure to get it...
+14:06:32 <jalb66> If you go to Advanced permissions
+14:06:37 <jalb66> The first option
+14:07:23 <jalb66> Settings - Apps - Advanced - Special access for apps or something like that (IDN in English)
+14:07:44 <jalb66> BAttery optimization?... I use Spanish language, sorry
+14:08:00 <jfbourdeau> I see it
+14:08:14 <jalb66> Normally if you don't want problems you add your app there
+14:08:17 <jfbourdeau> so you mean to put my k9 or whatever app I want to run, to "NOT OPTIMISED" ?
+14:08:21 <jalb66> But with K9 is not necessary, it works without it
+14:08:43 <jalb66> I think it's not optimised, check it
+14:09:12 <jfbourdeau> by default it'S " OPTIMISE"  I will set it to not optimise tks !
+14:09:36 <jalb66> Sorry, wait
+14:09:55 <jalb66> No, it's the opposite
+14:10:35 <nikoleos[m]> Hi, is it possible to change the OS accent color in Graphene OS other than green teal one ?
+14:10:41 <jalb66> When you want an app (like your messenger app, etc) to be very active you choose Not optimised
+14:10:55 <jalb66> In this case, even being K9 optimised, it works well
+14:11:25 <jalb66> And it's the default option, you don't need to "Not optimise" this app
+14:11:41 <jfbourdeau> in battery, Battery saver on your phnoe,m Battery saver is on or off ?
+14:12:16 <jfbourdeau> If Battery Saver is on, then I don't get the notification when phone locked, I " think ", will try again...
+14:12:52 <jfbourdeau> now the battery shows in RED at the top right of the screen when battery saver is " ON"
+14:13:14 <jalb66> Battery saver?: always off
+14:13:52 <jalb66> With battery save on all many background apps won't work correctly, maybe your alarm won't sound, etc
+14:13:55 <jfbourdeau> Yes because if On, then when phone locked, k9 do not fetch (get email and do not notify me)
+14:14:07 <jfbourdeau> that is what I noticed
+14:14:09 <jalb66> With "battery save on"  many background apps won't work correctly, maybe your alarm won't sound, etc
+14:14:16 <jfbourdeau> Do you use Whatsapp, Telegram or signal ?
+14:14:25 <jalb66> It's something normal
+14:14:34 <jalb66> No, Conversations (xmpp)
+14:14:52 <jalb66> Using it right now to write here with a bridge from xmpp to irc
+14:15:30 <jfbourdeau> xmpp, will google it :-)
+14:16:23 <jalb66> https://list.jabber.at/
+14:16:29 <jalb66> https://xmpp.org/software/clients.html
+14:16:41 <jalb66> Conversations is the best in my opinion
+14:17:11 <jalb66> But I use an account from another server (it costs money if you want an account from Conversations server)
+14:17:19 <jalb66> F-droid to download the app
+14:17:28 <jalb66> https://f-droid.org/en/packages/eu.siacs.conversations
+14:18:35 <jfbourdeau> ok taking not tks !!
+14:18:58 <jalb66> But Signal is probably the best. The problem is I don t want to give my phone
+14:20:32 <jfbourdeau> " The problem is I don t want to give my phone " I understand... I found something recently cool that do not require our phone one sec...
+14:21:11 <jalb66> Yes, there are many apps like that, I tested a lot
+14:21:39 <jalb66> But in what I need I only use Conversations: some channels, few friends and my wife
+14:22:17 <jfbourdeau> https://briarproject.org/how-it-works/   (for Android)
+14:22:28 <jalb66> Ah Briar, yes!, very good and decentralized
+14:22:32 <jalb66> I tested it
+14:22:33 <jfbourdeau> retroshare.cc  ( for Computer Win or Linux)
+14:22:37 <jalb66> And loved it
+14:22:49 <jalb66> TEsted too, and also qTox in Linux
+14:23:36 <jalb66> xmpp is not so safe but in individual messages Omemo as encryption is very good
+14:23:52 <jalb66> channels are not encrypt
+14:24:06 <jalb66> But you can create a small group (not channel) encrypted
+14:24:14 <jalb66> And it's very fast
+14:24:23 <jalb66> This app isn't optimised
+14:24:31 <jalb66> An exception
+14:35:00 <jfbourdeau> jalb66, when we change an App from OPtimized to " not optimized" can we do that with any Apps from what you know ? Of they need to have been coded for it, meaning, "yes we can do it in the interface" but may be not all App can be set to " optimized" ?
+14:35:52 <jfbourdeau> Whatsapp ( in Shelter / work profile mode  / isolated) stop updating itself, unless I clicked it.... trying to understand why... May be it simply absolutly need microG to run well in the background ( or when phone locked)
+14:36:24 <jalb66> IDN but normally the developer includes a warning to choose the option in the Settings to be Not optimise
+14:36:48 <jfbourdeau> ok
+14:36:50 <jalb66> Whatsapp needs Google services I think
+14:37:00 <jalb66> I don't use Shelter, IDN
+14:37:04 <jfbourdeau> I just tried setting Whatsapp to " not optimized " to see if it now work better when phone locked
+14:37:44 <jfbourdeau> I am new to android, but the concept behind shelted made sense to me ( not access my contacts, media, etc) so we can isolate an Dangerous App in a more CLOSED environnement
+14:37:48 <jalb66> Maybe it's something only Google services can do, if the app includes that code, I don't use it, sorry
+14:38:06 <jfbourdeau> but all Apps in the shelter WORK profile /Mode  can all access eachother infos if they try ( are malicious)
+14:38:08 <jalb66> Maybe another member could help you with that
+14:38:16 <jfbourdeau> ok tks
+14:38:23 <jalb66> I use a different user
+14:38:30 <jalb66> Only for Tor browser
+14:39:05 <jfbourdeau> yes someone told me " Profile", was may be safer than SHELTER... I didn't tried it yet. not even sure how to anyway LOL (Google)
+14:40:13 <jfbourdeau> WHATSAPP QUESTION FOR YOU GUYS :  Do some of you use Whatsapp ? I use WhatsApp within Shelter Work profile, and when phone is locked, whatsapp stop updating... I then need to unlock phone, lick whatsapp, and then it update itself...  Anyone was able to find a fix, workaround for that ? I would love to not use it, but TONS of people around me use it for work...
+14:40:21 <jalb66> Shelter could be dangerous if you give admin permission
+14:41:58 <anupritaisno1[m]> "jalb66" (https://matrix.to/#/@freenode_jalb66:matrix.org): no
+14:42:01 <jfbourdeau> I was guessing than having 2 profiles was complicated, as on a PC' log to the other profile to use this or this app etc... But I should try... We do that in settings, Accounts ? wHERE ? it's even more secure than Shelter I think,... COuld install all my dangerous apps there instead of using shelter
+14:42:13 <anupritaisno1[m]> > WHATSAPP QUESTION FOR YOU GUYS :  Do some of you use Whatsapp ? I use WhatsApp within Shelter Work profile, and when phone is locked, whatsapp stop updating... I then need to unlock phone, lick whatsapp, and then it update itself...  Anyone was able to find a fix, workaround for that ? I would love to not use it, but TONS of people around me use it for work...
+14:42:13 <anupritaisno1[m]> "lick whatsapp"
+14:43:27 <jalb66> anupritaisno1[m],  does shelter has device admin permission for the work profile?
+14:43:32 <anupritaisno1[m]> Epic
+14:43:35 <hitchhooker[m]> using whatsapp in separate profile right now to not be able contacts and files, but its kinda painful for ux
+14:43:44 <anupritaisno1[m]> Yes
+14:43:54 <jfbourdeau> tks anupritaisno1[m] and hitchhooker[m]
+14:44:07 <jalb66> anupritaisno1[m], and isn't it dangerous if the app is compromised?
+14:44:26 <jfbourdeau> Whatsapp with Shelter ( isolated) is simple and cool...Buty stop updating  if not active
+14:44:54 <jfbourdeau> jalb66, "  does shelter has device admin permission for the work profile "  I will look, not  sure where to look though LOL
+14:45:30 <jfbourdeau> So what they call WOrk profile (it's all the app in that are dangerous, you put them there)... And those in personal profile have more access ( contacts, media etc)  simple to use...Secure ?  I hope
+14:47:58 <jfbourdeau> ANDROID noobie question PROFILE : jalb66 where do we create a 2nd profile, I can google to but as you're already talking about this... I would try to put Whatsapp there to see if it's convenient / easy to use... And easy to move from one profile to the other, if we get notification from apps in the other profile ( surely not... )
+14:50:52 <jalb66> System- Advanced- Users
+14:51:43 <jfbourdeau> ok LOL Shame on me.... tks
+14:52:51 <jfbourdeau> jalb66, and they fastest / easy way to move from one user to the other  is ?
+14:53:08 <jfbourdeau> ok I found it
+14:53:13 <jfbourdeau> forget it :-)
+14:54:25 <jfbourdeau> jalb66, most of the time, when do you use your 2nd user  ? When using dangerous apps or doing " special" stuff ? SO this profile do not acces any of your personal infos ?
+14:54:26 <jalb66> Yes, in the place where notifications are 🙂
+14:56:17 <jfbourdeau> and last question ( I can move from one user to the other easily now), how do we LOGOUT that user so it doesn't consume CPU, Memory etc ? if we're to not use it for a while ?
+14:57:38 <fordude[m]> New grapheneos user here (last night) on Pixel 3 XL
+14:58:47 <jfbourdeau> fordude[m], : me tool Pixel 3a.   I am long time IOS user and tried 1 /e/ 1 month on an old MOTO E phone I bought and now just bough a Pixel 3a used and installed GrapheneOS and love it
+14:59:06 <jfbourdeau> 1 day old GraphenOS user and 1 month old, android user LOL
+14:59:07 <fordude[m]> Any suggestions to get notifications in Slack?  I have to unfortunately for work purposes.
+15:00:43 <fordude[m]> Nice jfbourdeau !
+15:02:32 <fordude[m]> So far liking GrapheneOS!  Been android user for a long time
+15:03:33 <jfbourdeau> SHELTER or 2 profiles ( question experienced Graphene/Android user ) : I am new to Android and Graphene but experience IT consultant ( not at the App level). AM I loosing my time using Shelter to put Apps like FaceBook, WHatsapp, Telegram and ot her in it  ?  or yes, it worth using Shelter ( Better than nothing) so dangerious apps do not access all our personnal info ( Contacts, Phone logs, Media etc) I am sensible to security but still, need a "
+15:03:33 <jfbourdeau> functionnal phone LOL"... I am forced, for work to use Whatsapp, Facebook, Messenger, Telegram etc).  So Shelter = " GOOD" or " BAD " ?
+15:04:45 <jalb66> jfbourdeau, it consumes ram, the user is active, not possible to logout
+15:05:31 <dallemon[m]> <fordude[m] "Any suggestions to get notificat"> No, it only supports GCM/FCM for notifications
+15:05:37 <jfbourdeau> ok jalb66  I will continue with Shelter, unless someone tells me it's stupid  / illusion of security / isolation of malicious apps... Shelter is more convenient
+15:06:36 <jfbourdeau> dallemon[m],  I am sensible / interested to the " Notification topics" So the right working is : if an app uses GCM / FCM or MicroG( can we say that LOL?) then notifications won't work well ?
+15:06:49 <jfbourdeau> I meant Right " wording " dallemon[m]
+15:07:12 <jfbourdeau> I am a noobie, but experience IT, trying to learn fast and not bother all of you with noobie question LOL
+15:07:50 <fordude[m]> Thanks dallemon!  I may have to investigate some middleware for notifications.
+15:08:29 <dallemon[m]> Yes. Many applications have alternative implementations that work fine. But if they only have GCM/FCM then you won't get notifications. Some apps even refuse to work.
+15:09:34 <fordude[m]> So far slack works normal.  Just no notifications.
+15:09:50 <jalb66> jfbourdeau, it doesn't consume much, it's ok to use another user
+15:10:09 <jfbourdeau> ok
+15:10:59 <jfbourdeau> dallemon[m], does GCM/FCM = microG ? Or not, an app could run well without microG and GCM/FCM do not need microG ? ( trying to learn )
+15:11:41 <jfbourdeau> I am asking that because it will influence which application I install so they work well and notification works well
+15:12:18 <jalb66> Maybe you need another system: calyxos, and GrapheneOS is not what you were looking for
+15:12:25 <jfbourdeau> if my question si not clear, is GCM/FCM a " microG thing"
+15:13:07 <jalb66> microg is like amulation of it
+15:13:35 <jalb66> Something to make those apps work, but if you use GrapheneOS maybe you shouldn't use apps with Google services
+15:13:53 <jfbourdeau> jalb66, I don't know if you were talking to me but I do like Graphene...   I tried /e/ 3.fundation that is cool but I wanted to go farther / more secure... Even if some Apps would cause problem to me
+15:14:38 <jalb66> I mean that Grapheneos doesn't include Google services and you use apps with Google services
+15:15:08 <jalb66> SO many ot them will not work or they won't receive notifications
+15:16:15 <jalb66> GOS is secure but also avoid Google services
+15:16:26 <dallemon[m]> jfbourdeau: MicroG pretends to be Google Play Services, so that most apps that require GSF work without problems. MicroG is incompatible with GrapheneOS.
+15:17:13 <dallemon[m]> Many apps that use GSF work fine on GrapheneOS, just without notifications
+15:17:21 <jfbourdeau> ok I get it jalb66  but still, will continue with Graphene for now... But so many choices... what are prox and cons of calyxos.org ???? THere are several choices ( Graphene, LineageOS, /e/) LOL  I heard a lot of good about graphese, one of the most secure etc etc...So I went with graphene
+15:17:43 <jfbourdeau> ok tks dallemon[m] (notifications)
+15:18:12 <jfbourdeau> sorry for my typos !! ( I'm french and typing too fast)
+15:19:05 <dallemon[m]> <jfbourdeau "sorry for my typos !! ( I'm fren"> Used to it here, many people do it on purpose to try and reduce tracking.
+15:19:33 <jalb66> GOS is more secure, Calyxos has verified boot and other features they share in common but it also uses microg, F-droid, etc: https://calyxos.org/
+15:20:06 <jalb66> LineageOS and /e are not secure
+15:20:13 <jalb66> LineageOS and /e/ are not secure
+15:20:50 <jfbourdeau> jalb66, this is what I though I learned / understood... Tks for confirming... So my choice is Good GOS (tks for the acronym !!)
+15:21:14 <jalb66> jfbourdeau, Gos is the best now 😉
+15:21:50 <jalb66> But maybe you must change your apps or IDN, sometimes I know it's difficult if you want more privacy but your friends donj't care about it
+15:22:02 <jalb66> But maybe you must change your apps or IDN, sometimes I know it's difficult if you want more privacy but your friends don't care about it
+15:22:17 <jfbourdeau> the installation steps were even good for a noobie like me ( unlock my boot loader, install, locked back the boot loader etc) If an IOS guy was able to do it, then GOS is not only for " Nerds or programmer / coder"
+15:22:43 <jalb66> Yes, I"m no expert but I installed it without problems
+15:23:01 <jfbourdeau> yea... Some apps I am forced to keep but try to minimize the risks ( Shelter)....
+15:24:53 <jalb66> I was using a Nokia 7.1 disabling Google apps and only apps without Google before 🙂 And I was looking for a more secure OS, so I found GOS
+15:25:02 <jalb66> Nokia 7.1: android one
+15:25:27 <jfbourdeau> my first Android / e/ experience was with /e/ on an Moto E 2nd generation XT1527, so slow LOL LOL but wanted to see if I liked ANdroid... After 1 month, I was going crazy and bough a pixel 3a   OMG  it runs smoothly. I have some apps that lost some features with GOS but it's tolerable ( Example my TESLA APP ) LOL
+15:25:34 <jalb66> Bought a Pixel 3a and installed it
+15:25:55 <jalb66> Going root and without verified boot is dangerous
+15:25:59 <jalb66> If you value security
+15:26:47 <jalb66> ANd more problems like updates, firmware updates, etc
+15:26:54 <jfbourdeau> oops not sure to get it jalb66   I bought a used Pixe 3a, as it was listed as compatible and recommended by GOS site, I followed instruction and installed GOS... I am not secure ??
+15:27:02 <jalb66> I'm more than happy with GOS 🙂
+15:27:19 <jalb66> Yes, of course you are, like me, I did the same
+15:27:29 <jalb66> I mean about LIneageOS and /e/
+15:27:42 <jfbourdeau> ha ok... ok I agree and now understand.
+15:28:35 <jfbourdeau> ok tks all, will talk to you another day... need to work outside, now that my notification works LOL  I learned a lot with you today and took some notes
+15:29:30 <jalb66> See you
+15:30:55 <nikoleos[m]> > my first Android / e/ experience was with /e/ on an Moto E 2nd generation XT1527, so slow LOL LOL but wanted to see if I liked ANdroid... After 1 month, I was going crazy and bough a pixel 3a   OMG  it runs smoothly. I have some apps that lost some features with GOS but it's tolerable ( Example my TESLA APP ) LOL
+15:30:55 <nikoleos[m]> Very similar to , i started my degooglesing with /e/ on redmi note 5 pro and a week ago bought a pixel 3a for GrapheneOS
+15:32:04 <jfbourdeau> cool nikoleos[m]   similar story ;-)  (I'm from Canada)
+15:40:46 <jfbourdeau> jalb66, k9 notificaiton / syncing stopped working LOL :-(   If I find why I will let you know.  If I open it it shows syncing disabled, for I don't know what reason
+15:41:08 <jfbourdeau> forn ow I am trying with OPtimise OFF but it doesn't seemed to be the problem
+16:01:34 <jalb66> jfbourdeau, you must check the options. Go to the options in your account and check if you have Notify sinchronization enabled
+16:01:51 <jalb66> Inside the Notificacions options
+16:02:00 <jalb66> But IDN all your other options in K9
+16:02:02 <jalb66> Sorry
+16:02:55 <jalb66> And also change the time you'll receive them
+16:03:19 <jalb66> I hope you have battery saver off
+16:05:07 <jalb66> And frequency of verification, mine is at 15 min
+16:05:20 <jalb66> Sorry, I must leave now, I'm working
+17:16:47 <packetup[m]> <dannyknoll "EteSync, Davx^5, DecSync"> I highly recommend EteSync
+17:17:29 <packetup[m]> You can self host if you wish.
+17:37:36 <TheJollyRoger-M> anupritaisno1: woah fingers crossed!! Thank you!
+17:42:48 <nikoleos[m]> Is it possible to enable voLTE in  GOS and how because i don't find the proper setting
+17:47:26 <anupritaisno1[m]> "nikoleos" (https://matrix.to/#/@nikoleos:matrix.org): the setting probably isn't there
+17:47:50 <anupritaisno1[m]> Set to 4g only and make a call
+17:47:51 <anupritaisno1[m]> If the call goes through
+17:47:51 <anupritaisno1[m]> It works
+17:55:43 * hapssmak[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/MVgtQkjhnLFvsgQUNzmZJFVg >
+17:56:51 <DannyWorkOrderPr> hapssmak: If simulating the GServices is a hard requirement for you, probably want to check out CalyxOS
+17:57:02 <anupritaisno1[m]> "hapssmak" (https://matrix.to/#/@hapssmak:matrix.org): better as in? It already passes CTS so
+17:57:33 <anupritaisno1[m]> As for donations
+17:57:51 <anupritaisno1[m]> Donations are just being spent on the legal battle with James Donaldson
+17:57:59 <DannyWorkOrderPr> hapssmak: I'd also recommend making moves to get off of apps that don't run without Google Play Services, can't be great for your privacy.
+17:58:32 <hapssmak[m]> <DannyWorkOrderPr "hapssmak: If simulating the GSer"> Already looked a bit into it. Sadly it isn't as focused on security. Is it trustworthy?
+17:58:45 <anupritaisno1[m]> "Danny@WorkOrderPro" (https://matrix.to/#/@dannyknoll:matrix.org): but this is a security focus ROM?
+17:59:26 <hapssmak[m]> <anupritaisno1[m] "Donations are just being spent o"> That doesn't mean people should stop though. That would for sure kill the project, if he should pay everything himself
+17:59:33 <DannyWorkOrderPr> <anupritaisno1[m] ""Danny@WorkOrderPro" (https://ma"> It's both, if you choose your apps correctly.
+18:00:09 <anupritaisno1[m]> <hapssmak[m] "That doesn't mean people should "> That's definitely very true
+18:00:36 <hapssmak[m]> <DannyWorkOrderPr "hapssmak: I'd also recommend mak"> Sadly not a choice for everyone.
+18:02:03 <anupritaisno1[m]> I personally don't support microg
+18:02:13 <anupritaisno1[m]> But you do you bruh
+18:02:52 <hapssmak[m]> <anupritaisno1[m] "I personally don't support micro"> Why not?
+18:04:08 <anupritaisno1[m]> Nobody updates it anymore
+18:04:21 <anupritaisno1[m]> It's like it just works
+18:04:34 <anupritaisno1[m]> Building it is also getting increasingly difficult
+18:04:39 <cdesai> isn't that the best kind of software? ;)
+18:05:05 <DannyWorkOrderPr> <hapssmak[m] "Sadly not a choice for everyone."> Mind me asking your usecase? I like to keep a personal list of what apps are holding people hostage to the Goog.
+18:05:14 <anupritaisno1[m]> Not to add there are several breakages that unofficial forks by organizations like nogoolag are trying to fix
+18:05:24 <anupritaisno1[m]> But if upstream doesn't accept them
+18:05:40 <anupritaisno1[m]> It's all a fragmented mess if you ask me
+18:07:58 <anupritaisno1[m]> "hapssmak" (https://matrix.to/#/@hapssmak:matrix.org): well there's a way to get microgay and have comparable security to grapheneos
+18:12:08 * anupritaisno1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/QGCRaiBVBrygRQftBsKXEdtn >
+18:19:08 <alzxjm[m]1> > Mind me asking your usecase? I like to keep a personal list of what apps are holding people hostage to the Goog.
+18:19:08 <alzxjm[m]1> I have a lot of bill credits on Google Fi, and I have a Pixel 4 XL so I'm kinda stuck on non-Graphene OS's for a bit.
+18:20:05 <alzxjm[m]1> Danny@WorkOrderPro: Pretty much just that. Android Auto is nice, too but not a deal-breaker.
+18:29:49 <aragorndr[m]> <DannyWorkOrderPr "Mind me asking your usecase? I l"> While I use gos, i really miss my bank app. It was compatible with the major banks from my country. I could send people money throw the phone number. I had discounts or free drinks if I paid with it
+18:40:33 <DannyWorkOrderPr> Not a perfect solution, but for these uses, I carry another device, and turn on/hotspot to it as needed.
+19:23:44 <defconanon12[m]> Is there any other ways someone could break out of guest mode other than restarting the phone?
+19:33:11 <nikoleos[m]> > If the call goes through
+19:33:11 <nikoleos[m]> sounds logical , i will try , thanks
+19:33:46 <cn3m[m]> <defconanon12[m] "Is there any other ways someone "> Could you explain what you mean?
+19:38:17 <defconanon12[m]> cn3m: Multiple user feature. If I was say for an example didn't want my friend to see what I am doing on my phone and I wanted to show him Graphene OS. Is there a way they could break out of guest mode? The user guest.
+19:38:34 <defconanon12[m]> * cn3m: Multiple user feature. If I was say for an example didn't want my friend to see what I am doing on my phone and I wanted to show them Graphene OS. Is there a way they could break out of guest mode? The user guest.
+19:40:34 <radixed9[m]> no
+19:40:57 <radixed9[m]> You can even use screen pinning
+19:42:04 <defconanon12[m]> Well I have that enabled if they turn off my phone. If they were a more technically inclined user they could break the pin. I need to safeguard it more.
+19:42:34 <cn3m[m]> The Titan M will rate limit attempts
+19:42:51 <cn3m[m]> It would be much easier for your friends to hack you than that tbh
+19:42:58 <cn3m[m]> Hidden camera
+19:44:09 <defconanon12[m]> What is the limit? All I am seeing is 30 seconds time frame based on the screwed up attempts. Is there a certain point where it wipes the data from the phone?
+19:44:17 <TheJollyRoger> defconanon12[m]: I have something for you.
+19:44:50 <defconanon12[m]> TheJollyRoger: So do I actually.
+19:45:01 <TheJollyRoger> https://github.com/Peter-Easton/GrapheneOS-Knowledge/blob/master/GrapheneOS-Security-Q%26A.md#does-graphene-allow-me-to-nuke-my-data-if-say-the-phone-gets-ten-incorrect-guesses-at-the-pincode This is what it will do. TLDR - even a 4-digit pincode on a Pixel 3 would take ~650 years to brute force.
+19:45:25 <TheJollyRoger> Assuming it's not something like your birthday, your high school graduation year, etc.
+19:45:36 <TheJollyRoger> And has been chosen with perfect randomness.
+19:46:00 <defconanon12[m]> Heh not a novice but I will read up on that.
+19:46:00 <dominusart[m]> Which is never the case
+19:46:09 <defconanon12[m]> Thanks.
+19:46:24 <TheJollyRoger> You could use some D&D dice to generate the password.
+19:46:28 <TheJollyRoger> *the pin code.
+19:46:35 <TheJollyRoger> or an EFF Diceware sheet.
+19:46:50 <TheJollyRoger> and some game dice.
+19:47:02 <dominusart[m]> That is an idea, but 4 digit pincodes are meh.
+19:47:17 <TheJollyRoger> GrapheneOS supports passwords of up to 64 characters in length.
+19:47:47 <TheJollyRoger> Which is great for me because I find it easier to memorize four words, rather than four nonsensical numbers.
+19:47:56 <dominusart[m]> Yeah, if you have the option to use a normal password, why would you use a pin?
+19:48:19 <defconanon12[m]> TheJollyRoger:  You were talking about light bulbs and I think we should know about this if you haven't already.
+19:48:19 <TheJollyRoger> Simply put, Google took a very pragmatic attitude with this and realized that for many users, that's what they /expect/.
+19:48:23 <defconanon12[m]> https://www.wired.com/story/lamphone-light-bulb-vibration-spying/
+19:48:24 <cn3m[m]> Pin is fast
+19:48:36 <TheJollyRoger> defconanon12[m]: yep!
+19:50:04 <TheJollyRoger> dominusart[m]: TLDR, Google realized that most users not only expect, but take for granted bombproof security out of a four digit pin code. The lengthening timer and the hardware bound key derivation function is their way of doing their best to protect users who expect that a short pincode will be enough.
+19:50:34 <TheJollyRoger> And bolstering the cryptographic strength of that four digit pincode.
+19:51:17 <TheJollyRoger> Because let's be honest, a majority of users aren't going to create EFF diceware passphrases for their phones, and it's entirely unrealistic to expect them to.
+19:51:40 <alzxjm[m]1> Related question: if you don't expect to be coerced by law enforcement, why is it generally recommended to avoid biometric authentication on Pixel phones?
+19:52:24 <TheJollyRoger> alzxjm[m]1: It's not. In fact, I suggest using the fingerprint reader because of the increasing prevalence of insecure "home surveillance" or "home security" cameras.
+19:52:37 <TheJollyRoger> Or people looking over your shoulder on the subway.
+19:53:29 <qyo3462572445[m]> Plus its easy to quickly enter "lockdown" mode to require passcode if needed.
+19:53:40 <DannyWorkOrderPr> <alzxjm[m]1 "Related question: if you don't e"> In certain jurisdictions, L.E. are legally allowed to use your biometrics to open your device for collection of evidence.
+19:53:45 <TheJollyRoger> Which I think is a FAR more realistic threat than someone using microfine fingerprint dust and a cyanoacrylate mister to lift your fingerprints off the glass you touched at last night's party.
+19:54:03 <DannyWorkOrderPr> But I like TheJollyRoger's train of thought
+19:54:03 <radixed9[m]> I use a PIN and have no shame in that
+19:55:23 <DannyWorkOrderPr> I've gotten into the habit of covering with one hand while entering my pattern
+19:55:47 <DannyWorkOrderPr> For shoulder-surfers and cameras of all kinds, sky, pole, and building-based
+19:56:01 <DannyWorkOrderPr> Paranoid? Sure. Effortless? Also sure.
+19:56:15 <TheJollyRoger> Let me put it this way: when you threat model, stop thinking about "the sexy" attacks involving superpowered ninjas from the Nebulous Secret Government Bio Tech Laboratory and start thinking about what's an attack that could be relevant right now, because it's those that'll be tried first.
+19:56:20 <TheJollyRoger> And it's those where people mess up.
+19:56:34 <dominusart[m]> There is not shame in that, it's just not the best option. Also the google pin thing someone mentioned above applies only to Google, my banking app has pin as the only option and they sure as hell don't have the google approach to it.
+19:56:45 <defconanon12[m]> Biometric can be great but don't rely on it. Just like with anything.
+19:57:32 <DannyWorkOrderPr> dominusart: Wait - your bank has PIN only, no password?
+19:57:46 <dominusart[m]> <DannyWorkOrderPr "dominusart: Wait - your bank has"> Mobile app, yes :)
+19:57:48 <defconanon12[m]> If you go the fingerprint route use a less common finger.
+19:57:51 <TheJollyRoger> This unfortunately's going to be the problem with your bank :(
+19:58:10 <dominusart[m]> Which is retarded if you ask me
+19:58:23 <DannyWorkOrderPr> <dominusart[m] "Mobile app, yes :)"> Ah, okay, so not the account itself, just opening the pre-auth'd app. Makes sense. There are still some non-western banks that use a 6 digit PIN as their entire password...........................
+19:58:33 <DannyWorkOrderPr> Was hoping someone here was not using one of those, lol
+19:58:52 <TheJollyRoger> The banks here where I am are pretty lackadaisical towards security.
+19:58:52 <defconanon12[m]> Don't use the mobile app unless the website is the same? dominusart
+19:58:56 <DannyWorkOrderPr> <dominusart[m] "Mobile app, yes :)"> Good news is, you still have to get into your device to get to that app, so
+19:59:17 <TheJollyRoger> For years, Royal Bank of Canada had its landing page in plaintext, without SSL.
+19:59:19 <dominusart[m]> Yeah, but it's still kind of meh.
+19:59:43 <TheJollyRoger> Then you'd have to click "Log in" to go to the login page, and the URL was so hugely long it was effectively un-memorizable.
+19:59:47 <defconanon12[m]> Banking mobile apps usually do.
+20:00:00 <dominusart[m]> <defconanon12[m] "Don't use the mobile app unless "> Website is actually pretty good, you have to authorise a device to even login to the web panel
+20:00:26 <TheJollyRoger> So it would've taken one BGP hijack to simply get everyone from the landing page to a phishing site.
+20:01:22 <TheJollyRoger> And they also didn't even have STARTTLS when they E-mailed you your banking reciept so the last couple digits of your credit card and your entire account balances were essentially public on the Internet.
+20:01:47 <TheJollyRoger> Along with your real name.
+20:02:28 <TheJollyRoger> I'd like to give whoever thought that was good enough a stern lecture.
+20:03:24 <dominusart[m]> I don't think anyone thought it was a good idea, they just didn't give a shit.
+20:03:59 <DannyWorkOrderPr> <dominusart[m] "I don't think anyone thought it "> Their board probably did
+20:04:00 <DannyWorkOrderPr> Because their checks kept clearing
+20:04:28 <DannyWorkOrderPr> Which ties into the "Upton Sinclair" not giving a shit idea you mentioned lol
+20:04:52 <alzxjm[m]1> > I don't think anyone thought it was a good idea, they just didn't give a shit.
+20:04:52 <alzxjm[m]1> I think this statement explains most problems in the world.
+20:20:55 <defconanon12[m]> That wouldn't be my prefer. Banking on the go. It is convenient but that usually comes with more security threats. You don't want to leave yourself more vulnerable when you are out in the wild than you are already are.
+20:21:23 <defconanon12[m]> * That wouldn't be my prefer. Banking on the go. It is convenient but that usually comes with more security threats. You don't want to leave yourself more vulnerable when you are out in the wild than you already are.
+20:31:58 * paride15[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/sxOwopUApjrRwoKaqDzPkOgm >
+20:51:23 <hapssmak[m]> <defconanon12[m] "That wouldn't be my prefer. Bank"> What do you mean by being vulnerable when out in the wild?
+20:53:02 <defconanon12[m]> hapssmak: Talking about when you are out and about in public. You are more at security risk.
+20:54:38 <hapssmak[m]> <defconanon12[m] "hapssmak: Talking about when you"> How so? Not sure which country you're from, but doesn't it sucks to living in a world where you're paranoid of everyone always?
+20:55:09 <hapssmak[m]> You will never be happy that way.
+20:55:48 <hapssmak[m]> Not like there is any real increased risk in checking your bank on the go.
+20:57:51 <defconanon12[m]> My emotions of no concern to you. Think of it like this. If you don't know how to protect yourself when hooking up to a public WiFi hotspot simply don't do it. If you don't trust strangers around you don't enter your password if one decides to glance over. This also depends on how well your area is monitored.
+21:01:11 <hapssmak[m]> You do you.
+21:01:57 <defconanon12[m]> Same to you. ^^
+21:20:30 <jfbourdeau> New user questions (APPS ) : What " photo / Camera " software most of you are you installing in GOS (Graphene) as the one provider misses some features compares to the default one provider in Android ?  I have a Pixel 3a.   And what calendar app (Agenda) most of your are adding to GOS as the one do not allow to schedule appointement ? tks !
+21:22:08 <jfbourdeau> sorry for TYPOS !!!
+21:29:04 <Kurai> jfbourdeau opencamera is a decent choice, the ui is not best unfortunately. not sure about the calendar, check etar or simple calendar
+21:49:13 <yofa6767> Tks Kurai.  ( jfbourdeau on phone now )
+21:56:14 <Cyrinux[m]> "anupritaisno1" (https://matrix.to/#/@anupritaisno1:m.apex.to): what so you think about 'private lock'?
+21:59:08 <Cyrinux[m]> <plsbrespectfulgu "its built into tails and parrot."> You talk about scrambled exif android app?
+22:00:17 <nickcalyx[m]> I like the name eggspliff ! Could be an awesome name for a band.
+23:52:09 <TheJollyRoger> nickcalyx[m]: I hope if we have a band here in this channel we could start it simple with singing sea shanties.
+23:52:12 <TheJollyRoger> :p.
+23:55:04 <nickcalyx[m]> Arrrrgh what do you do with a drunken sailor, early in the morning
+23:55:52 <TheJollyRoger> ~~Ban his account on the production server, ban his account on the production server, ban his account on the production server, early in the morning!~~
+23:56:04 <JTL> I remember this :D
+23:56:32 <TheJollyRoger> \o/

@@ -1,0 +1,434 @@
+00:03:21 <greentaco> OK, it's still going but it's taking longer than the first times i've tried.
+00:03:36 <greentaco> It was the USB port that I was using
+00:03:52 <Cann0n> Hey
+00:04:13 <greentaco> thanks I did it, thanks guys
+00:04:22 <Cann0n> greentaco: installing new?
+00:04:22 <strcat[m]> now you can lock
+00:04:24 <strcat[m]> and should all be good
+00:04:35 <greentaco> awesome yes.
+00:04:37 <strcat[m]> greentaco: broken USB cables / ports are the most common issue
+00:04:58 <strcat[m]> added some more information on that to prerequisites
+00:05:01 <greentaco> yeah, I have four usb ports the One plus cable did infact work I was using a bad port.
+00:05:17 <greentaco> old computer for this
+00:05:53 <Cann0n> Im new too. Dont be shocked if some apps you used to use dont work anymore. Luckily most things have a website you can use instead. I only had 2 apps I used to use not work. Lyft and Ring
+00:06:53 <Cann0n> Other than that, there's better alternatives. I called the Black and Red suggestions on setup and been tweaking it non-stop since Saturday. I finally got the phone I exactly wanted
+00:07:10 <greentaco> yeah now the tweaking part for me.
+00:08:52 <Cann0n> thats the best part. I love GrapheneOS
+00:28:01 <Guest944> Hi, i wanna know if its possible to recover deleted data from my pixel with grapheneos? I know this is possible with android but wonder if it can be done with grapheneos also?
+00:29:01 <strcat[m]> depends on how you deleted it and how you're attempting to recover it
+00:29:27 <strcat[m]> if you delete a profile, none of the data stored in them can be recovered, due to wiping what's required to obtain the per-profile encryption key
+00:29:55 <strcat[m]> the same thing applies to an app deleting a keystore key they used to encrypt data
+00:30:06 <Guest944> And if i have only 1 profile and delete file the normal way
+00:30:36 <strcat[m]> if you want reliable deletion within a profile without deleting the profile, the data needs to be encrypted with a keystore key that you delete
+00:31:01 <Guest944> If i use signal for example, and delete the signal app, is the keystore key also deleted?
+00:31:09 <strcat[m]> yes
+00:31:21 <strcat[m]> signal encrypts the database with a keystore key, so for Signal, that reliably deletes the whole Signal database
+00:31:26 <strcat[m]>  * Signal encrypts the database with a keystore key, so for Signal, that reliably deletes the whole Signal database
+00:31:29 <strcat[m]> most apps don't do that
+00:31:48 <Guest944> And if i wipe my phone, if that the same and data cannot be recovered?
+00:31:52 <strcat[m]> Signal would ideally use a StrongBox key rather than traditional TEE keystore key though
+00:32:11 <strcat[m]> Guest944: yes, that reliably prevents recovering the encryption keys
+00:32:33 <strcat[m]> for all profiles and for the device encryption keys used to encrypt non-sensitive data outside of profiles
+00:32:58 <strcat[m]> Guest944: deleting profiles (or wiping the device as a whole) is reliable, as is deleting data by wiping the hardware keystore keys used to encrypt it
+00:33:16 <Guest944> Okey, so if i recieve a picture thru signal for example, deleting only the picture from the map is not enough
+00:33:29 <strcat[m]> deleting files in general does not reliably prevent recovering that data (for someone with root access and the encryption keys)
+00:34:02 <strcat[m]> Guest944: Signal only uses a single keystore key so you can reliably delete the database as a whole, you can't *reliably* delete data without doing that
+00:35:15 <Guest944> Oke , so the safest way is to use a second profile and deleting the profile.
+00:35:23 <strcat[m]> Guest944: you can delete it, sure, and we changed SQLite to use secure deletion by default (i.e. wipe the data) but that doesn't absolutely prevent recovery
+00:35:40 <strcat[m]> Guest944: or uninstall Signal, or clear the app data for it
+00:35:47 <strcat[m]> either of those reliably deletes the keystore key
+00:36:03 <Guest944> Okey i understand, thanx for the explaiation
+00:36:11 <strcat[m]> (but again, ideally, they'd use the StrongBox keystore, not a TEE keystore)
+00:36:17 <strcat[m]>  * (but again, ideally, they'd use the StrongBox keystore, not the TEE keystore)
+00:36:34 <Guest944> And signal used TEE at this moment?
+00:37:18 <hypokeimenon[m]> Why do they use the TEE keystore?
+00:37:23 <strcat[m]> wiping the device, deleting the profile or deleting a StrongBox keystore key (any of these is pretty much guaranteed to work) > deleting a TEE keystore key > wiping the data > deleting stuff
+00:37:32 <strcat[m]> hypokeimenon🖤‍❤️🏳️‍🌈: it's the older API, you have to explicitly support using the newer one
+00:38:10 <Guest944> How do i only delete TEE keystore keys in geaphene?
+00:38:13 <strcat[m]> you have to call .setIsStrongBoxBacked(true)
+00:38:26 <strcat[m]> Guest944: keystore keys are made by apps via the keystore API
+00:38:42 <strcat[m]> when you clear app data or uninstall the app, it deletes their keys, or they can do it on a case-by-case basis themselves
+00:38:48 <strcat[m]> Signal uses a TEE keystore key to encrypt their database
+00:39:12 <strcat[m]> https://developer.android.com/training/articles/keystore#HardwareSecurityModule
+00:39:21 <strcat[m]> they could add .setIsStrongBoxBacked(true), catch error when not supported and do it without it
+00:39:40 <strcat[m]> it's simple to use, same API (just doesn't support as much algorithm bloat)
+00:40:10 <analtenderloin[m> Why is it that when I use network level firewalls like in Calyx and Lineage apps without internet don't crash but if I use the permission based firewall in graphene apps will oftentimes crash on launch
+00:40:28 <strcat[m]> first of all, those network level things don't work
+00:40:45 <qubits> strcat  what do you think about thi statement from Threema
+00:40:52 <qubits> Threema includes its own app-specific encryption based on AES-256 to protect stored messages, media and your ID's private key. The key used for this encryption is generated randomly the first time you start Threema, and can optionally be protected by setting a Master Key Passphrase in the settings, which we highly recommend. Without a passphrase, the encryption will only add obscurity due to the way hardware encryption is handled on Android
+00:40:52 <qubits> . If you set a Master Key Passphrase, you will have to enter it after every restart of the device (and after the system has terminated the app due to low memory).
+00:40:54 <strcat[m]> they don't block network access via IPC APIs and mostly don't prevent all ways of using the network directly either
+00:41:46 <strcat[m]> analtenderloin: so, one reason is that they're not actually preventing it, the other is they're not forbidding doing it just breaking the connections
+00:42:59 <strcat[m]> analtenderloin: GrapheneOS takes away the permission to use either direct or indirect network access - of any kind
+00:44:20 <analtenderloin[m> The internet permission is actually in AOSP right?  Its just not visible to the user?
+00:44:24 <strcat[m]> analtenderloin: those features elsewhere just reject connections via one form of direct network access - the apps can still access the network via APIs requiring INTERNET access and can still use localhost to communicate to other apps including across profiles, etc.
+00:44:33 <strcat[m]> analtenderloin: yes, we make it into a runtime toggle
+00:44:42 <strcat[m]> analtenderloin: so apps already know to declare if they need it
+00:45:01 <strcat[m]> although they don't have code to handle it as a dynamic permission, so some assume they always have it
+00:45:23 <strcat[m]> analtenderloin: apps often don't have proper error handling, only error handling for errors they have seen, not all errors that can occur
+00:45:53 <analtenderloin[m> Why would AOSP include an internet permission if its granted by default always on stock?
+00:46:33 <strcat[m]> analtenderloin: because it's a good thing for apps to protect themselves by declaring what they actually need and not having access to things they don't need
+00:46:51 <strcat[m]> analtenderloin: there are a bunch of low-level "normal" permissions for non-sensitive things
+00:47:01 <strcat[m]> the "dangerous" permissions are the ones that are user-facing (allow access to sensitive data)
+00:47:10 <strcat[m]> we change INTERNET from "normal" to "dangerous"
+00:47:30 <strcat[m]> it doesn't make sense to do it for the other "normal" permissions - most also just allow an app to request something, not actually to do something
+00:47:46 <Guest944> Is there an app as good as signal that uses strongbox instead of tee keystore?
+00:47:49 <strcat[m]> for example there's one to allow apps to request a battery optimization exception, one to allow apps to request to toggle Wi-Fi, etc.
+00:48:04 <strcat[m]> it's not a good reason to use another app
+00:48:10 <strcat[m]> it would be easy to change that in Signal if you cared
+00:48:23 <strcat[m]> literally 1 API call with a single argument set to true
+00:48:48 <strcat[m]> 1 line of code if requiring StrongBox, otherwise a few more to catch the error when not supported and redo it without it set
+00:49:31 <Guest944> So how do i change that code? I never changed anything in apps sorry
+00:49:33 <strcat[m]> analtenderloin: disabling INTERNET disallows apps from creating connections or listening for connections (including on localhost) and disallows them from using APIs requiring INTERNET
+00:49:36 <qubits> Threema is far better then Signal, Session is also far better then signal, thats what i was told
+00:50:01 <hypokeimenon[m]> I don't think you can judge something to be far better on hearsay
+00:50:07 <strcat[m]> analtenderloin: the toggles elsewhere only reject specific kinds of connections and don't prevent apps from listening / connecting via localhost or from using APIs requiring INTERNET to connect to *anything* on the internet via that API
+00:50:32 <strcat[m]> qubits: and you're not on an expert so maybe you shouldn't be repeating things like that without at least giving a source
+00:50:40 <hypokeimenon[m]> It's getting off topic for the room anyway. #grapheneos-offtopic:matrix.org
+00:51:04 <qubits> hypopke actually i readed statments from cryptograh when they where analzing some applications
+00:56:14 <Guest944> Is there a explaination somewhere how to change signals TEE to strongbox, i m no developer but still want to do it on my phone
+00:56:25 <valldrac> strcat[m]: I was not aware of the setIsStrongBoxBacked call. I'll add it to Molly
+00:57:13 <alex-resist> dazinism btw I got the USB 3 cable today but still it's not working. Now I suspect the DVI->HDMI adapter. It's nerve-racking
+00:57:45 <qubits> Local data security is for sure better on Threema , also group chats are on threema real end to end encrypted. I m refering to cryptography_whitepaper of threema and independent audit from cnlab  research
+00:57:46 <valldrac> strcat[m]: seems trivial to implement. I wrongly assumed it defaults to StrongBox when it's available
+00:58:29 <alex-resist> dazinism if it works, it would be such a breakthrough. Also an affordable one, since the hardware costs like 30 bucks. If not, I don't even know if I should be disappointed
+00:58:33 <madaidan[m]> <qubits "Local data security is for sure "> Press (X) to doubt
+00:58:41 <strcat[m]> valldrac: look at Auditor for an example
+00:58:44 <strcat[m]> it's also easy to check if it's being used
+00:59:03 <strcat[m]> you can check with the API but also with the CN of the public key certificate
+00:59:07 <strcat[m]> it puts the keystore type
+01:00:01 <strcat[m]> valldrac: StrongBox is a proper secure element (Titan M on Pixels, Qualcomm SPU on most other devices that have support for it) and has internal secure storage
+01:00:05 <strcat[m]> and can reliably delete directly from that
+01:00:44 <strcat[m]> TEE keystore is messy - TEE has a lot of attack surface and has to delegate storage to the OS (it encrypts the keys with the hardware-bound key it has in hardware and passes them to the OS to store them)
+01:00:57 <valldrac> strcat[m]: I generate an HMAC key in the KeyStore to derive user's password. It should be generated randomly inside the cryptoprocessor
+01:01:00 <strcat[m]> and it has rollback resistance to prevent reusing a deleted key
+01:01:20 <strcat[m]> valldrac: yeah that's a good way to do it
+01:01:54 <strcat[m]> valldrac: StrongBox is just better because it's an actual secure element, not an execution mode on the CPU sharing CPU hardware and delegating storage to the OS (after encrypting it with a key unavailable to the OS)
+01:02:21 <strcat[m]> way lower attack surface (hardware and the far smaller and simpler API / implementation of the secure element)
+01:02:54 <strcat[m]> Qualcomm SPU is a separate secure element on the SoC - which is fine, it's properly isolated from the CPU
+01:03:22 <strcat[m]> TEE is a lot less good because it's just a fancy execution mode on the CPU, lot more prone to side channels than a separate secure element and the design of it has far larger attack surface
+01:03:32 <valldrac> strcat[m]: so I assume without the StrongBox setting, there is a chance that the HMAC computation is done in the main CPU instead of the crypto processor (secure element)
+01:03:40 <strcat[m]> TEE is basically designed to run a supervisor that has full access to the OS and monitors it in some way to detect compromise, etc.
+01:03:51 <strcat[m]> it's not a good design for a place to put a keystore, etc.
+01:04:07 <strcat[m]> it's just what is available if you don't have a proper secure element to use
+01:04:38 <strcat[m]> valldrac: TEE isn't a secure element - it's a CPU mode, the Qualcomm TEE delegates crypto to the SoC crypto engine
+01:04:44 <strcat[m]> valldrac: but not all of it
+01:04:55 <strcat[m]> valldrac: and it does do things on the main CPU
+01:05:13 <strcat[m]> the crypto engine does have HMAC
+01:05:28 <strcat[m]> valldrac: TEE is not a secure element and doesn't use one
+01:05:49 <strcat[m]> valldrac: the keys are encrypted and passed to the OS to store, it doesn't have storage itself, it has secure storage in the sense that the OS can't get those keys
+01:06:16 <strcat[m]> but if you delete a TEE key it has to rely on the OS deleting it + rollback resistance implementation to prevent reusing a deleted key
+01:06:25 <strcat[m]> vs. StrongBox that is an actual secure element with secure storage and deletes it reliably from that storage
+01:06:31 <alex-resist> strcat we'll have a talk at this year's RC3 (remote CCC) and we will mention & recommend GrapheneOS
+01:06:39 <strcat[m]> valldrac: there's no real reason to use TEE keystore aside from backwards compatibility
+01:06:58 <hypokeimenon[m]> <alex-resist "strcat we'll have a talk at this"> pardon the ignorance, but who's we?
+01:07:09 <strcat[m]> every keystore use should really be designed to use StrongBox and fall back to TEE if unavailable (or refuse to function at all if it's really important)
+01:07:14 <valldrac> strcat[m]: got it! it's odd they don't make the strongbox by default when the secure element is available
+01:07:18 <alex-resist> Me & another person from resist.berlin
+01:07:58 <hypokeimenon[m]> >cyberpunk activism
+01:07:59 <hypokeimenon[m]> love it
+01:08:06 <hypokeimenon[m]>  * >
+01:08:06 <hypokeimenon[m]> cyberpunk activism
+01:08:06 <hypokeimenon[m]> love it
+01:08:15 <hypokeimenon[m]>  * >cyberpunk activism
+01:08:15 <hypokeimenon[m]> love it
+01:08:27 <alex-resist> (we'll overhaul the website until then)
+01:11:55 <Guest944> Is it complicated to change tee to strongbox for a noob like me? I really would like to do this for my signal on graphene
+01:12:44 <strcat[m]> use valldrac's Molly fork
+01:12:45 <strcat[m]> he's going to do it
+01:13:22 <Guest944> Okee so its not just going to terminal and put in 1 command , its harder
+01:13:52 <Guest944> I like molly but molly does not have notifications when locked
+01:17:02 <Guest944> Well at least something good came out of my question, valldrac s going to improve molly, going to screenshot this conversation and print it out, hang it above my bed like a troffee
+01:56:51 <Latin_IME_Q> Greetings all. I have a question about the default keyboard, and something I noticed. Can anyone confirm which they have installed, or given option of? Currently, I have two Pixel 4a's with me, both running the same/latest build of GrapheneOS, but one (which has been used for a while prior) has the Android AOSP Keyboard for input, and the other,
+01:56:51 <Latin_IME_Q> fresh install, shows "GrapheneOS Keyboard". I have no idea how or why the difference, as I never installed "Android AOSP Keyboard" on the first phone.
+01:57:52 <Latin_IME_Q> Is this discrepancy known? I tried searching, but couldn't find any info.
+02:00:35 <Latin_IME_Q> Perhaps it's nothing, but being an input method, I wanted to be sure. I checked the repo, and it looks like the latest LatinIME package states the appname is "Android Keyboard (AOSP)" @ https://github.com/GrapheneOS/platform_packages_inputmethods_LatinIME/blob/11/java/res/values-en-rGB/strings-appname.xml#L23
+02:01:58 <Latin_IME_Q> If both phones are running the latest release, updated from the GrapheneOS servers ('default' way of updating), I would have expected the second phone to show "Android Keyboard (AOSP)" like the first. Thanks in advance for any help/insight.
+02:03:43 <Latin_IME_Q> Found this commit (with a message of 'rebranding') which does show "GrapheneOS Keyboard" in the strings, and I am a bit confused. https://github.com/GrapheneOS/platform_packages_inputmethods_LatinIME/commit/b1997bcd557c378483bd4405345a639e603dcd5b
+02:11:32 <Latin_IME_Q> Nevermind! I figured it out. It was due to different default system languages. Apologies for the wall of text.
+03:05:35 <Liakde[m]> <Guest944 "I like molly but molly does not "> That's working as intended
+03:13:53 <Liakde[m]> If you used passphrase lock
+03:24:01 <organicpumpkin[m> <Liakde[m] "That's working as intended"> So can Molly not even get call notifications or ring when called if it is locked?
+03:29:59 <Liakde[m]> <organicpumpkin[m "So can Molly not even get call n"> If you setup the passphrase lock, as it clears unencrypted data on RAM on lock screen
+03:41:41 <Hawk1291[m]> Is it ok to disable OEM unlocking in developer settings once graphene is installed?
+03:45:19 <Liakde[m]> Yeah
+03:45:34 <Hawk1291[m]> Awesome. Thank you!
+04:25:46 <daBlueGrinch> I have a question.
+05:22:59 * hasnoname[m] uploaded an image: 20201223_211723_4265795414774111097.jpg (84KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/kdBPRpzlQSGUkypPUIUaGwlO/20201223_211723_4265795414774111097.jpg >
+05:23:24 <hasnoname[m]> Flasing GOS for 4 xl
+05:23:31 <hasnoname[m]> And got this error
+05:25:01 <Liakde[m]> Weird
+05:25:44 <Liakde[m]> can I see the list of your recent commands you used in powershell?
+05:26:52 <strcat[m]> probably a broken USB cable / port
+05:27:22 <strcat[m]> recommend rebooting to recovery, sideloading stock OS OTA update with adb sideload and then trying to flash again with a better USB connection
+05:27:23 * hasnoname[m] uploaded an image: 20201223_212643_6818477443184479915.jpg (105KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/DVBHcWkoQhoLcPbLYVcIwySl/20201223_212643_6818477443184479915.jpg >
+05:28:29 <Liakde[m]> Seems like you deviated a bit om cd section, and also rebooting in adb to bootloader is not advisable
+05:29:10 <hasnoname[m]> <strcat[m] "recommend rebooting to recovery,"> Should in lock and then relock the bootloader?
+05:29:19 <hasnoname[m]> *lock and unlock
+05:29:25 <strcat[m]> hasnoname: no
+05:29:27 <strcat[m]> leave that be
+05:29:45 <strcat[m]> just boot to recovery, sideload stock OTA update to fix the situation (by resetting stuff to a proper state)
+05:29:47 <strcat[m]> and boot back to bootloader menu
+05:29:52 <strcat[m]> and run ./flash-all.sh again
+05:29:56 <strcat[m]> but probably using a better USB cable / port
+05:30:01 <strcat[m]> that's probably what went wrong
+05:30:14 <hasnoname[m]> Okay
+05:30:26 <strcat[m]> what kind of USB cable / port are you using
+05:30:30 <strcat[m]> what kind of computer etc
+05:30:30 <hasnoname[m]> Forgot to grab the pixel usb
+05:30:43 <hasnoname[m]> Will do it now and im on windows
+05:31:02 <strcat[m]> ideally use the cable that comes with it if you have a USB-C port
+05:40:43 <hasnoname[m]> <strcat[m] "ideally use the cable that comes"> Dont have a USB c port on my computer
+05:45:19 <hasnoname[m]> <hasnoname[m] "Dont have a USB c port on my com"> Nvm. Gonna use a different computer
+05:54:30 <anupritaisno1[m]> hasnoname: pm me
+05:54:42 <anupritaisno1[m]> I've seen your issue and well
+05:54:52 <anupritaisno1[m]> You messed this up yourself
+05:55:15 <anupritaisno1[m]> But what you have done isn't easily fixable
+05:55:17 <strcat[m]> anupritaisno1: it can happen from a bad USB connection
+05:55:33 <anupritaisno1[m]> strcat: he basically didn't read the guide correctly
+05:55:48 <anupritaisno1[m]> His bootloader now thinks an update is in progress
+05:55:54 <anupritaisno1[m]> And refuses to flash graphene
+05:57:53 <anupritaisno1[m]> Btw is there a U2F browser on stock besides chromium?
+05:58:02 <anupritaisno1[m]> Last time I tried it
+05:58:18 <anupritaisno1[m]> Well, other browsers didn't work at all
+05:58:34 <anupritaisno1[m]> I was hoping edge would have had something but no
+06:35:35 <hasnoname[m]> <anupritaisno1[m] "strcat: he basically didn't read"> Thanks for helping out. Cheers!
+06:52:19 <Wvztree> So
+06:52:57 <Wvztree> I actually have two sims working on graphene fresh after the install.
+06:53:01 <Wvztree> I'm actually surprised
+06:53:26 <Wvztree> I thought microg was needed
+06:57:33 <Liakde[m]> Nice
+06:57:47 <Liakde[m]> eSIMs don't get wiped after factory reset iirc
+06:59:34 <Wvztree> yeah, ive always deleted my esims after factory reset though so i never realized this
+06:59:50 <Wvztree> before*
+07:01:10 <Dylanger[m]> <Wvztree "I thought microg was needed"> microG is required to use Google's LPA, to actually manage profiles etc
+07:01:12 <Dylanger[m]> Add, delete etc
+07:01:35 <Dylanger[m]> But you can install one on stock, flash GoS and away you go
+08:24:17 <Golli[m]2> <strcat "Golli: there's a built-in one of"> I've been unable to find it at all, where abouts would it be?
+08:51:31 <cj10> Possible to install graphene via OpenBSD?
+08:54:04 <ayaen_t[m]> cj10:  dont want to spoil the fun for you but only the documented installation methods are supported here
+08:55:10 <ayaen_t[m]> there you go https://grapheneos.org/install
+08:55:10 <ayaen_t[m]> im sure you read it just in case you misunderstand me
+08:56:16 <ayaen_t[m]> supported as in we will happily help you out if you get stuck anywhere in the middle while following the linked instructions
+08:58:29 <ayaen_t[m]> cj10:  no one  i know of came here before with OpenBSD
+09:04:48 <paranoid11> Hi - New Graphene user here. Should I be concerned about installing apps that are not open source (fDriod)? Also, is Fdroid safe?
+09:05:28 <somenerd[m]> this discussion is a bit offtopic, care to join #grapheneos-offtopic:matrix.org
+09:05:31 <somenerd[m]>  * this discussion is a bit offtopic, care to join #grapheneos-offtopic:matrix.org?
+09:05:43 <paranoid11> Also, are there any good 3rd party guides for best privacy practices using GrapheneOS?
+09:05:56 <paranoid11> Sure. Sorry
+09:06:12 <paranoid11> Is this channel for devs?
+09:06:25 <somenerd[m]> no it's for discussion directly about GrapheneOS
+09:06:32 <ayaen_t[m]> is the reason why it is recommended to stick to the instructions got anything to do with the possibility that not following the instructions might compromise the factory image and hence render all the effort put into signature and authentication useless?
+09:06:46 <somenerd[m]> > Hi - New Graphene user here. Should I be concerned about installing apps that are not open source (fDriod)? Also, is Fdroid safe?
+09:06:46 <somenerd[m]> I was talking about this question
+09:06:55 <paranoid11> OK
+09:06:59 <ayaen_t[m]> or am i just talking in air?
+09:07:02 <somenerd[m]> > is the reason why it is recommended to stick to the instructions got anything to do with the possibility that not following the instructions might compromise the factory image and hence render all the effort put into signature and authentication useless?
+09:07:02 <somenerd[m]> possible bugged install and bricking your phone
+09:07:31 <somenerd[m]> those are the main reasons I can see
+09:07:50 <ayaen_t[m]> i was under the impression pixels are harder to brick
+09:07:59 <somenerd[m]> but not impossible
+09:09:19 <somenerd[m]> also following other guides may cause unofficial software to be used
+09:09:31 <somenerd[m]> (I believe techlore's one was an example of this)
+09:09:33 <ayaen_t[m]> yes . cant imagine the situation in this room withoutvthe installation guide
+09:10:12 <paranoid11> Are there any good 3rd party guides for best privacy practices using GrapheneOS?
+09:10:50 <paranoid11> (There's not much info about 3rd party apps etc on the main website)
+09:11:07 <somenerd[m]> https://hub.libranet.de/wiki/and-priv-sec/wiki/Home
+09:11:10 <somenerd[m]> this wiki can help
+09:11:21 <somenerd[m]> (general android privacy and security)
+09:11:28 <somenerd[m]> even a section on apps
+09:11:31 <paranoid11> Thnak you
+09:14:48 <somenerd[m]> > yes . cant imagine the situation in this room withoutvthe installation guide
+09:14:48 <somenerd[m]> probably a mess
+09:25:49 <ayaen_t[m]> it would be nice if we did put together some basic/sane recommendations to improve privacy
+09:25:49 <ayaen_t[m]> like i wasnt aware until after hauling all the apps in the owner user profile that it is recommended to use a secondary profile for daily use
+09:26:52 <ayaen_t[m]> many things are covered in the site itself though
+09:27:18 <strcat[m]> the reason is just because you have to log into the owner profile before you can use others (and can put secondary ones fully at rest without reboot, for the same reason)
+09:27:28 <ayaen_t[m]> like lte is recommended any random vpn app is not recommended etc
+09:28:54 <ayaen_t[m]> yes . and that is quiet an enhancement all by itself i feel we should put that somewhere where all can read
+09:29:41 <ayaen_t[m]> before going off and trying to get gcam work , lol!
+09:30:11 <Golli[m]2> strcat Would the OS Issue Tracker repo be the best place for feature requests/suggestions?
+09:41:08 <graphiteos[m]> Anyone else having problems with the `.backup.metadata` file from seedvault not syncing to nextcloud?
+10:04:06 <somenerd[m]> >  Would the OS Issue Tracker repo be the best place for feature requests/suggestions?
+10:04:06 <somenerd[m]> yeah, at least features directly related to the OS, and not Vanadium/Auditor/PDF Viewer
+10:32:05 <avensurha> hello guys. i'm trying to install to a pixel 4a from linux. once you get to fastbootd, does that mean it's done?
+10:36:19 <ayaen_t[m]> avensurha: hi there
+10:36:40 <ayaen_t[m]> what do you mean by get to fastbootd?
+10:36:59 <avensurha> hello ayaen_t[m]. i ran the flash-all.sh and ended up in fastbootd (menu)
+10:37:31 <ayaen_t[m]> oh.
+10:38:31 <avensurha> fastboot/adb binaries work
+10:39:22 <ayaen_t[m]> did the flashall.sh end without anyissues?
+10:40:14 <avensurha> "fastboot: error: Failed to boot into userspace fastboot; one or more components might be unbootable."
+10:40:27 <ayaen_t[m]> ohkay.
+10:41:31 <avensurha> i used "sudo env "PATH=$PATH" ./flash-all.sh"
+10:41:42 <ayaen_t[m]> did you follow the inatructiins here
+10:41:42 <ayaen_t[m]> https://grapheneos.org/install
+10:42:11 <avensurha> yep
+10:42:27 <avensurha> i'll just try it on windows
+10:43:37 <ayaen_t[m]> go for following the instructions  word by word that may help avensurha .  it also makes it easier to locate the problem
+10:44:30 <ayaen_t[m]> all the best
+10:45:43 <ayaen_t[m]> you coul try it again on linux if you were using arch  debian ubuntu.
+10:46:19 <avensurha> thanks
+10:47:24 <ayaen_t[m]> avensurha: my pleasure.
+11:05:41 <avensurha> got past that error in windows ayaen_t[m]
+11:05:46 <avensurha> i guess it'
+11:05:51 <avensurha> it's a driver issue
+11:10:21 <jenniffercyber35> hello
+11:10:33 <Cann0n> Hey
+11:10:47 <jenniffercyber35> Cann0n, do you have any questions
+11:10:55 <jenniffercyber35> I can assist with Graphen Installation
+11:10:57 <jenniffercyber35> Or reccomend apps
+11:11:03 <jenniffercyber35> My personal reccomendation
+11:11:05 <jenniffercyber35> =)
+11:11:19 <jenniffercyber35> Also, remember to donate to Graphene to support the project
+11:11:54 <jenniffercyber35> Is the Graphene OS hostname, randomized?
+11:12:00 <jenniffercyber35> "hostname is randomized at boot by defaul" = copperhead
+11:12:22 <Cann0n> Well no I have no issues with installation. I'm new to Android but not Linux. I have one question and a recommendation
+11:13:04 <jenniffercyber35> yes
+11:13:08 <jenniffercyber35> ask away
+11:13:19 <Cann0n> I like swype style keyboards for mobile because I type fairly fast. Can gboard or SwiftKey be used without compromisinf provacy
+11:13:39 <Cann0n> Compromising privacy
+11:13:43 <jenniffercyber35> Gboard, I wouldnt use
+11:13:46 <somenerd[m]> you can revoke the INTERNET permission
+11:13:47 <jenniffercyber35> On Graphene anyway
+11:13:51 <somenerd[m]> (remove network access)
+11:13:55 <jenniffercyber35> True ^
+11:14:03 <jenniffercyber35> Personally, I still wouldnt instally anything Google related
+11:14:07 <Cann0n> Yeah I did that but I still don't trust it fully.
+11:14:25 <jenniffercyber35> Yeah it could have some remote access code exploit feature
+11:14:33 <Cann0n> Exactly.
+11:14:42 <jenniffercyber35> Maybe a swype keyboard will be added to fdroid soon
+11:14:49 <jenniffercyber35> But googles swype keyboard is the best imo
+11:14:55 <jenniffercyber35> I just type manually these days
+11:15:22 <jenniffercyber35> Ok whats your reccomendation?
+11:16:07 <Cann0n> What map app for gps navigation is a solid pick?
+11:16:54 <Cann0n> I used Osm last night and it was a disaster.
+11:17:45 <jenniffercyber35> I just lookup directions on Google Maps and screenshot/write down the turn by turn directions
+11:17:50 <jenniffercyber35> using Chrome
+11:18:14 <jenniffercyber35> I think theres some offline Openstreetmaps software
+11:19:45 <Cann0n> I've tried a lot of apps for nav. I use navigation a lot for work and recreational. I live in a big city.
+11:20:13 <jenniffercyber35> I just memorize everywhere I need to go
+11:20:18 <jenniffercyber35> Or lookup directions
+11:20:21 <jenniffercyber35> Im like  a bird
+11:20:29 <jenniffercyber35> I have a good internal compas and memory
+11:20:32 <Cann0n> I'm not lol.
+11:20:47 <Cann0n> I travel all over strange cities for work.
+11:21:01 <jenniffercyber35> sounds like a street pharmacist
+11:21:13 <Cann0n> Definitely not.
+11:21:19 <jenniffercyber35> jk lol
+11:22:32 <Cann0n> Apples maps have tried to kill me twice. "continue 300ft and turn right" yet we stopped the car 10 feet from going off of a cliff...
+11:22:53 <Cann0n> Siri literally tried to have us drive off a cliff.
+11:23:39 <jenniffercyber35> Yeah the CIA does that too
+11:23:48 <jenniffercyber35> You know how modern cars can all be hacked?
+11:23:59 <jenniffercyber35> Thats so the government can shut down cars at will
+11:24:15 <jenniffercyber35> Civil Crisis? Cars Shut down
+11:24:26 <jenniffercyber35> Police Chase? Car remotely shut down
+11:24:39 <jenniffercyber35> Has lots of possible good benefits
+11:24:52 <jenniffercyber35> Just gotta have some common sense
+11:24:58 <jenniffercyber35> and not just blindly trust a GPS app
+11:25:09 <hypokeimenon[m]> #grapheneos-offtopic:matrix.org
+11:25:52 <Cann0n> Yes but it's a nice feature to have when on the road all of the time.
+11:26:31 <jenniffercyber35> yes
+11:26:36 <jenniffercyber35> Are you using Grapene?
+11:26:49 <Cann0n> Correct.
+11:26:49 <jenniffercyber35> Perhaps look for a Browser-based Live GPS navigation tool
+11:26:55 <jenniffercyber35> I have a feeling it should be possible
+11:27:11 <jenniffercyber35> Browser tab , webpage live GPS navigation with GPS permission sounds easily doable
+11:27:19 <jenniffercyber35> PErhaps slightly laggy
+11:28:02 <jenniffercyber35> hey I think i found it
+11:28:08 <jenniffercyber35> Waze has a webpage gps navigaton
+11:28:17 <jenniffercyber35> waze live map < search
+11:28:50 <Cann0n> Yeah that's what I used when I was on iPhone.
+11:28:59 <jenniffercyber35> Does it work
+11:29:43 <Cann0n> It has an app that I used. Fairly good. But used a lot of data including accident reporting for route redirection
+11:30:34 <jenniffercyber35> yeah
+11:30:40 <jenniffercyber35> I dont think you can install the app on Graphene
+11:30:45 <jenniffercyber35> But the live website looks perfect
+11:31:08 <Cann0n> An off-line map like Osm is really what I want but less bloat. And a better updated UI because the turn arrows are very tiny
+11:31:20 <jenniffercyber35> Whats wrong with osm?
+11:31:30 <jenniffercyber35> does it speak 'turn left' etc
+11:32:23 <Cann0n> You can't search by address
+11:32:27 <jenniffercyber35> Look for openstreetmaps
+11:32:32 <jenniffercyber35> wow lol just GPS?
+11:32:47 <jenniffercyber35> I think I found an offline GPS navigation app
+11:32:50 <jenniffercyber35> a few months ago
+11:33:32 <Cann0n> So if someone texts me an address, I can't copy and past it. I have to enter it in sections. Then the address lastnight didn't come up.
+11:34:20 <Cann0n> It put me on Gilmore Rd,  not Street. Which was 4 miles off route.
+11:35:07 <Cann0n> So the process I found that works is to physically scroll to the point and drop a marker. Instead of typing an address
+11:35:21 <Cann0n> Today I'll use another map
+11:40:05 <jenniffercyber35> 'maps and gps navigation osmand+?
+13:25:06 <r0tt0r[m]> just realised 4g calls dont work,just ends directly. switching to 3g works
+13:29:28 <Golli[m]> <r0tt0r[m] "just realised 4g calls dont work"> I also have this issue.
+13:33:23 <jpds> You need VoLTE for 4G calls
+13:34:30 <r0tt0r[m]> normally my isp provides volte
+13:35:58 <bentley> oh, that explains why my calls didn't work
+13:36:22 <bentley> on tracfone (don't know the underlying service provider)
+13:42:45 <Golli[m]> My provider does have VoLTE though :(
+13:46:04 <r0tt0r[m]> im pretty sure that worked before in earlier versions
+14:00:21 <anupritaisno1[m]> r0tt0r: we have a volte fix in testing but not enough people are testing
+14:00:28 <anupritaisno1[m]> There is also a lot of inaction from device maintainers
+14:29:16 <r0tt0r[m]> <anupritaisno1[m] "r0tt0r: we have a volte fix in t"> ye i would like to help testing but currently need device
+14:40:31 <COVID-1984> pretty sure "make & receive calls" -- make calls with: "ask first" has been reset a few times. Any idea why?
+14:49:48 <mulbr[m]> r0tt0r saw you had a pull request with boot animation. What is best way to view that animation?
+15:10:32 <r0tt0r[m]> <mulbr[m] "r0tt0r saw you had a pull reques"> is general its like 700 png files in 3stages
+15:11:13 <r0tt0r[m]> i guess easiest is to use any unlocked android phone and put thebootanimation.zip in place
+15:20:51 <Liakde[m]> <r0tt0r[m] "i guess easiest is to use any un"> Or generate it in imagemagick and play it?
+15:20:52 <Liakde[m]> Unsure
+15:21:52 <Cann0n> Hello
+15:22:33 <r0tt0r[m]> <Liakde[m] "Unsure"> also open first image in part0 and go through with arrow keys
+15:23:30 <Liakde[m]> <Cann0n "Hello"> Hello
+15:24:19 <Cann0n> How are you?
+15:24:20 <Liakde[m]> <r0tt0r[m] "also open first image in part0 a"> Oh, not too shabby, that works too
+15:24:29 <Liakde[m]> I'm good
+15:24:37 <fomijafi[m]> <COVID-1984 "pretty sure "make & receive call"> This happens to me after every reboot.
+15:25:17 <Cann0n> I was on this morning talking with jennifercyber35 about maps and Swype style keyboards
+15:26:09 <Cann0n> Osmand maps seen to be a good bet for navigation.
+15:26:47 <Cann0n> Any advice on a map/nav app?
+15:28:16 <Liakde[m]> Depends on the place (whether OSMand is usable, or need some traffic data of GMaps), but try asking #grapheneos-offtopic:matrix.org as well
+15:28:46 <Liakde[m]> <Cann0n "Osmand maps seen to be a good be"> Yeah that's an alright choice
+15:33:34 <anupritaisno1[m]> Use google maps
+15:33:35 <anupritaisno1[m]> They work
+15:35:12 <Cann0n> Trying to avoid google maps on grapheneos
+15:35:19 <COVID-1984> fomijafi[m]: damn :(
+15:36:10 <COVID-1984> strcat[m]: should we report that phone app resetting after every boot (according to fomijafi[m])?
+15:38:52 <Liakde[m]> <anupritaisno1[m] "Use google maps"> On browsers, preferrably?
+15:44:53 <COVID-1984> Liakde[m]: I have the actual Google Maps app installed... Hopefully it isn't doing anything nefarious considering it is only allowed to have my location when I do use it.
+15:48:47 <ruddo[m]> Why not just use Osmand+ with warts and all.
+15:59:01 <COVID-1984> ruddo[m]: cuz it just doesn't work as well for restaurants and stuff where I am
+15:59:28 <COVID-1984> When you're in a social situation and people need to be fed you can't be like, "oh sorry, I need to use my super secret special boy map cuz Google blah blah"
+15:59:29 <jpds> COVID-1984: So, edit the map and add them
+15:59:44 <ruddo[m]> Not even with the wikepidea data maps?
+16:00:12 <COVID-1984> ruddo[m]: not sure what that is
+16:00:14 <ruddo[m]> Over here that works okay, and if i need to, I double check using the gapps browser.
+16:00:26 <COVID-1984> im in eastern europe
+16:06:36 <COVID-1984> ruddo[m]: ya unless running google maps is gonna mess with me, it doesn't make sense not to use it to find restaurants and stores usually.
+16:11:01 <Cann0n> I'm checking it out via browser.
+16:11:47 <Cann0n> Google maps hasn't steered me wrong. Apples maps tried to kill me twice. Once by telling me to drive 300ft and turn right even tho we were parked 10ft from a cliff
+16:12:46 <ruddo[m]> Haha legendary apple maps hahaha
+16:18:09 <Linus[m]1> that's pretty funny
+16:23:12 <PowerM> Hi, got a Question. I'm moving from my Pixel 2 to a Pixel 3. Is it better to buy the pixel 3a instead?
+16:23:56 <Cann0n> I bought a 4a
+16:24:30 <PowerM> I know it's the recommended phone.. can't afford it for the moment, I'm buying second hand
+16:24:31 <PowerM> nd
+16:25:19 <Cann0n> If it's a good deal sure. I plan on keeping this phone until it breaks or my carrier no longer works.
+17:15:00 <r0tt0r[m]> wish all merry christmas, stay healthy
+17:19:06 <louipc> and wealthy
+17:20:47 <Linus[m]1> And stealthy 😎
+17:35:23 <anupritaisno1[m]> Please help against misinformation too
+17:35:30 <anupritaisno1[m]> Pm me
+17:40:46 <louipcm> ok but change your nick please
+17:49:29 <r0tt0r[m]> <Linus[m]1 "And stealthy 😎"> 😄
+19:21:06 <Thatcher[m]> Hey everyone. Merry Christmas! Make sure to tell Santa to send some money to our beloved developers of Graphene!
+19:22:14 * Golli[m] uploaded an image: image.png (6KiB) < https://matrix.org/_matrix/media/r0/download/matrix.kiwifarms.net/GHtjCDIjLEOHQkNMWcOdwPmY/image.png >
+19:22:20 <Golli[m]> Already have 🤠
+19:22:34 <Golli[m]> Wishing all a Merry Christmas
+19:23:28 <Gui_Do> already have, too
+19:23:43 <Gui_Do> mery xmas eve
+19:24:46 <Gui_Do> but not via santa, i used to use paypal :-)
+21:01:03 <t0mo[m]> Trying to install GOS, can I use the android-tools and android-udev packages from manjaro? Or should I download the standalone platform-tools?
+21:02:42 <Golli[m]> Manjaro user here.
+21:02:43 <Golli[m]> I downloaded the standalone platform-tools.
+21:02:53 <Golli[m]> Follow exactly what the instructions tell you, and you should be fine 👍️
+21:04:52 <t0mo[m]> Okay thanks
+22:53:20 <rny> weechat
+22:55:30 <louipc> whom

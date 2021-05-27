@@ -1,0 +1,432 @@
+01:10:58 <Thatcher[m]> Santa asked me if there are any Google backdoors or other code that links to Google servers in AOSP and if all that stuff is removed in GrapheneOS? (Asking for Santa Claus)
+01:13:27 <madaidan[m]> <Thatcher[m] "Santa asked me if there are any "> https://grapheneos.org/faq#default-connections
+01:22:34 <Thatcher[m]> Was actually asking for my brother. He wants more privacy from GAFAM, so I'm showing him Graphene
+01:23:40 <strcat[m]> there are no "Google backdoors" in AOSP or the supported devices
+01:25:37 <strcat[m]> GrapheneOS provides a choice of using our connectivity server or the default one so it doesn't make connections to Google servers unless you choose to blend in with other Android devices
+01:26:07 <strcat[m]> since we also use a secure HTTPS-based network time implementation rather than the standard NTP (which is insecure) servers
+01:26:19 <strcat[m]> covered in the FAQ
+01:28:28 <Thatcher[m]> Thank you strcat
+01:28:30 <strcat[m]> Vanadium is also covered there, including that the WebView doesn't make any connections not done by the apps using it and the browser still uses some standard Chromium servers to fetch updates for things like dictionaries
+01:29:02 <strcat[m]> all covered there
+01:29:08 <strcat[m]> no connections are made by default that aren't covered
+01:29:13 <strcat[m]> all other connections are triggered by apps
+01:30:22 <strcat[m]> for example if an app says that it wants to handle opening URLs for a domain and asks the OS to check that it's permitted, the OS has to fetch the relevant information metadata from the domain to verify it - that's triggered by installing an app doing that and you can avoid it by not installing the app (all possible to see from the static apk metadata)
+01:30:34 <strcat[m]> https://developer.android.com/training/app-links/verify-site-associations
+01:30:43 <strcat[m]> we don't cover that kind of thing there because it's not a default connection made by the OS
+01:31:03 <strcat[m]> we may add another section explaining that, and explaining that the OS has APIs like DownloadManager which apps that have the Network permission enabled can use
+01:31:33 <strcat[m]> so it's a mistake to attribute those connections to the OS, it's making them on behalf of apps (same with DNS queries)
+01:37:59 <Thatcher[m]> Thanks for clarifying all that. Your work is incredible!
+01:50:58 <Thatcher[m]> Now the question is: to use Graphene server or Google for connectivity checks? I'd prefer to not stand out in a sea of iphones and androids, so I think using the Google server for connectivity checks will be better for my privacy. Other than that, the only time my phone will query Graphene servers is the update checks every 4 hours
+01:54:07 <louipc> so its still standing out i guess
+01:58:26 <mulbr[m]> Where's jolly rodger for this sea shanty standing
+02:57:17 <strcat[m]> Thatcher: there's time.grapheneos.org too if network time updates are enabled (you can disable it)
+02:58:02 <strcat[m]> Thatcher: you'll blend in with other Android devices with network time updates disabled, because AOSP / stock only use NTP when they aren't getting the time from the mobile network, while GrapheneOS doesn't trust either the mobile network or the insecure NTP protocol
+02:58:17 <strcat[m]> so AOSP normally isn't using NTP because normally there's a mobile network
+02:58:42 <strcat[m]> we only use the mobile network to get the time zone which doesn't impact security like the time, since it has no impact on certificate validation, etc.
+02:58:53 <strcat[m]> time is security sensitive due to key validity times
+02:59:00 <strcat[m]> certificates expire
+02:59:21 <strcat[m]> an attacker able to set your time could set it back 1 month to use an expired key they compromised
+02:59:30 <strcat[m]> so we use a secure time update system
+03:08:08 <qubits> E2E grao
+03:10:12 <qubits> I hope that there will be time when E2E grapheneOS admin manager  will be developed
+03:35:56 <rny> what are you even talking about?
+03:36:03 <rny> e2e admin manager? wtf is that
+03:40:11 <louipc> maybe MDM
+03:40:39 <qubits> mdm
+03:41:55 <qubits> orginal for grapheneos only end to end encrypted
+03:43:03 <louipc> yes encryption will be a requirement for that for sure
+03:46:06 <rny> is this for remote management of a grapheneos device?
+03:46:19 <rny> sounds like an enterprise feature to me
+03:46:27 <rny> where is the enterprise $$$? ffs
+03:47:08 <rny> this feature (i hope) will be at the bottom of the feature wishlist/roadmap (if one exists)
+03:47:22 <qubits> it could be pay per device managment
+03:47:24 <rny> **tethered** to the bottom
+03:47:40 <louipc> which is the top feature?
+03:48:21 <qubits> i assume soon there will be 10.000 devices , very easy to reach that
+03:48:21 <rny> louipc: i'm thinking the list gets read from top to bottom
+03:48:30 <louipc> yea
+03:48:46 <rny> qubits: why'd devs that contribute their free time help enterprise screw over their users?
+03:48:53 <qubits> 10.000 device for 2e. is 20.000e eacht month income
+03:49:38 <qubits> but i would pay only for orignal grapheneOS mdm nothing else
+03:50:31 <rny> qubits: sounds good, i doubt grapheneos will ever ship a MDM
+03:50:36 <Liakde[m]> Doubt that'll be prioritized as feature, due to lack of devs, and needing some cleanup on UI of some bundled apps, like PDFviewer (the page scrolling is quite bad, for instance)
+03:50:41 <rny> it'll probably be rebranded as something else and use grapheneos as upstream
+03:52:10 <Liakde[m]> Probably
+03:52:42 <qubits> i think it would be a good thing to get extra income for such important project and it is actually a good case that enterprise also use grapheneos. world will be more secure
+04:00:59 <qubits> The more attention this project receives and income and at the same time remains independent is a good thing
+04:31:21 <anon1000[m]> Lightsword:
+05:08:16 <purist94> Hey all. Anyone know how to check device imei in fastboot?
+05:40:52 <strcat> they left too early
+05:41:04 <strcat> anyway the answer is you can show all the available variables with `fastboot getvar all`
+05:42:47 <strcat> devices make the serialno available there
+05:43:08 <ayaen_t[m]> strcat:  he is there in offtpic
+05:43:10 <strcat> showing the IMEI would require talking to the cellular radio which is probably too complicated for the bootloader to do
+05:43:23 <strcat> ayaen_t[m]: they left there too
+05:43:31 <strcat> Matrix doesn't sync joins/parts properly
+05:43:43 <ayaen_t[m]> oh boy!
+06:05:40 <clox[m]> Merry Christmas /\ /\ /\
+09:25:54 <hdksv7391[m]> Where can I report bugs
+09:32:46 <Golli[m]2> https://github.com/GrapheneOS/os_issue_tracker/issues
+09:32:56 <hdksv7391[m]> Thanks
+09:45:26 <Golli[m]2> No worries
+11:45:10 <somenerd[m]> Merry Christmas everyone
+12:11:36 <userman23[m]> Good Morning
+12:11:58 <eagle> good  morning
+12:12:21 <userman23[m]> any thoughts on this: https://f-droid.org/packages/com.tobykurien.google_news/?  It looks like it "sandboxes" the application.
+12:15:20 <ayaen_t[m]> userman23: it provides the web app version of the application which some of us would install directly on the device as an app
+12:15:31 <dar_gomml[m]> <userman23[m] "any thoughts on this: https://f-"> seema depreciated, the recommend using "webapps" instead (on fdroid too)
+12:15:47 <dar_gomml[m]> * seems depreciated, they recommend using "webapps" instead (on fdroid too)
+12:15:58 <ayaen_t[m]> and why dont we take this to grapheneos offtopic ?
+12:16:52 <userman23[m]> sure
+12:17:33 <ayaen_t[m]> dar_gomml:  yes most importantly its not been in more than a year
+12:18:27 <eagle> ayaen_t[m] can you teach me please on the off topic how to make webs
+12:18:28 <ayaen_t[m]> * dar_gomml:  yes most importantly its not been updated in more than a year
+12:20:04 <ayaen_t[m]> eagle:  dont understand you fully. anyways off to off topic.
+12:23:38 <joehandcockandja> I tried to do the whole "using the owner profile to only manage my user profiles" but the SMS notifications were all fucky
+12:24:34 <joehandcockandja> And I wasn't able to do quick reply from the notification itself
+12:36:53 <strcat> joehandcockandja: you need to enable SMS/calls for another profile
+12:39:14 <ayaen_t[m]> i thought hed done that. seems like he can see the notifications themselves....
+12:46:52 <joehandcockandja> <strcat "joehandcockandjames: you need to"> Yeah I did, I get the notifications it just doesn't let me quick reply and see the message text in the notification area. When I changed to another SMS app in the profile , it made things all weird and I was sending messages from the new SMS app while the AOSP one was receiving texts
+13:54:52 <anupritaisno1[m]> Glassrom no longer owns 86.105.51.194
+13:55:05 <anupritaisno1[m]> Please stop using it, the server will be destroyed in 1 day
+14:55:51 <Neocortex391> Hello
+14:56:06 <Neocortex391> What are the exact commands to run the Signify verification commands?
+14:56:42 <Neocortex391> This command signify -Cqp
+14:56:44 <Neocortex391> doesnt work
+14:56:50 <Neocortex391> -Cqp isnt working on my system
+14:57:09 <Neocortex391> Running Trisquel 8 OS, based upon Debian/Ubuntu
+14:58:45 <ayaen_t[m]> Neocortex391:  could you ahow what exactly you typed in the terminal?
+14:58:59 <Neocortex391> As per the guide: signify -Cqp factory.pub -x sunfish-factory-2020.12.12.03.zip.sig && echo verified
+14:59:04 <Neocortex391> With latest verison info
+14:59:09 <Neocortex391> -Cqp isnt recognized
+14:59:48 <ayaen_t[m]> nah the whole command would help a lot.
+15:00:39 <Neocortex391> Yeah thats the command I ran
+15:00:40 <Neocortex391> signify -Cqp factory.pub -x sunfish-factory-2020.12.12.03.zip.sig && echo verified
+15:00:53 <Neocortex391> And it says '-Cqp' is unrecognized or unknown etc
+15:01:03 <ayaen_t[m]> if its a debian based and uses apt and you installed signify-openbsd you should do ok
+15:01:03 <Neocortex391> Ive since flashed GOS without verifiying the Signature
+15:01:14 <Neocortex391> yeah it just doesnt recognize the command -Cqp
+15:01:16 <ayaen_t[m]> signify-bsd
+15:01:21 <Neocortex391> alright
+15:01:29 <Neocortex391> Also, I already flashed Graphene onto my pixel
+15:01:39 <Neocortex391> Without verifying the cryptograhpic signature
+15:01:58 <ayaen_t[m]> debian has another package signify which is not even maintained
+15:02:02 <Neocortex391> So, is there anyway I can verify my Graphene OS is legit, once its already installed onto my phone
+15:02:04 <Neocortex391> ok
+15:02:24 <ayaen_t[m]> Neocortex391:  you should do it again.
+15:02:57 <ayaen_t[m]> my opinion .
+15:03:58 <Neocortex391> Yeah
+15:04:01 <ayaen_t[m]> a proper installation ensures that the image you flashed is a good one .
+15:04:06 <Neocortex391> Can I use the Auditor app to verify?
+15:04:10 <Neocortex391> post-installation
+15:04:33 <Neocortex391> can you use Auditor to verify my Auditor app
+15:04:39 <Neocortex391> We can share QR codes via image sharing sites etc
+15:04:40 <ayaen_t[m]> otherwise there is not much point in signing the build ls or making sure the builds are reproducible...
+15:04:58 <Neocortex391> Yeah, I basically only had HTTPS security
+15:05:04 <ayaen_t[m]> right now my phone is not with me
+15:05:14 <Neocortex391> And my download was interrupted for unknown reasons like 5 times while downloading graphene
+15:05:22 <Neocortex391> Perhaps NSA Quantum Insert
+15:05:33 <Neocortex391> Implanting covert malware onto my graphene image
+15:05:40 <Neocortex391> Would an Auditor app verification
+15:05:49 <Neocortex391> proove the legitimacy of my GOS installation sufficiently?
+15:06:01 <Neocortex391> Or are there places that malware can hide where auditor wont detect any changes
+15:06:08 <Neocortex391> like some encrypted partition
+15:06:11 <ayaen_t[m]> but if you have another recent android device running stock os you should be abke to install auditor and do.it as instructed
+15:06:30 <Neocortex391> Auditor can run on stock android
+15:06:31 <Neocortex391> ?
+15:06:38 <Neocortex391> And, how through is Auditor
+15:06:40 <ayaen_t[m]> Neocortex391: yes .
+15:06:48 <Neocortex391> Im sure there some encrypted partition where sneaky FBI malware can hide
+15:06:54 <Neocortex391> for example.
+15:07:39 <ayaen_t[m]> Neocortex391:  neither i nor you can do anything about it short of dumping the device itself
+15:07:46 <refraction[m]> Neocortex391: Reading the Github Q&A page would be nice
+15:07:48 <refraction[m]> https://github.com/GrapheneOS/Auditor/releases
+15:08:01 <ayaen_t[m]> yes thank you refraction .
+15:08:08 <ayaen_t[m]> a relief.
+15:09:32 <ayaen_t[m]> we need to do something about all this quantum nsa backdoor thingy. im not saying its all false.
+15:10:20 <Neocortex391> Its 100% real
+15:10:29 <Neocortex391> Basically NSA impersonates a legit server
+15:10:32 <Neocortex391> and implants malware
+15:10:46 <ayaen_t[m]> but seriously if you had such doubts then the most sensible thing to do is to dump the device and not use another computer built by yourself
+15:10:47 <Neocortex391> NSA servers located to be faster than the real servers
+15:11:20 <ayaen_t[m]> ok if its going to be about nsa and back doors then it should be in the offtopic room.
+15:11:23 <Neocortex391> Yes, but just trying to be as secure as possible
+15:12:10 <ayaen_t[m]> * but seriously if you had such doubts then the most sensible thing to do is to dump the device and not use another computer not  built by yourself
+15:14:24 <refraction[m]> Neocortex391: OK, just to get the easy thing out of the way, what OS are you using?
+15:14:33 <Neocortex391> Trisquel 8
+15:14:41 <Neocortex391> so Auditor says my device is unmodified
+15:14:49 <Neocortex391> Unmodified official release
+15:14:53 <Neocortex391> Security Level High
+15:15:33 <hdksv7391[m]> Camera on Pixel4a not working.. Was able to take one photo and now just shows blackscreen on camera. Bug or am I dumb
+15:16:16 <refraction[m]> <Neocortex391 "so Auditor says my device is unm"> Then it should be alright.
+15:17:21 <Neocortex391> Camera works for me
+15:17:58 <Neocortex391> I just used the Auditor app on Google Pixel4A everything worked and verified
+15:18:03 <Neocortex391> Camera worked
+15:18:23 <Neocortex391> Try restarting phone, checking, then looking at permissions
+15:18:38 <Neocortex391> Try updating Graphene OS
+15:18:44 <hdksv7391[m]> Okey will try
+15:18:48 <refraction[m]> <hdksv7391[m] "Camera on Pixel4a not working.. "> I would say Delete Cache and Storage, and if everything didn't work then reflash
+15:18:58 <refraction[m]> Try the reboot first though
+15:21:26 <hdksv7391[m]> Oh yeah fixed. Thankss :)
+15:21:41 <Neocortex391> My Nanosuit is reporting new intelligence
+15:22:24 <Neocortex391> https://www.wired.com/2015/04/researchers-uncover-method-detect-nsa-quantum-insert-hacks/
+15:22:33 <Neocortex391> 'DETECT NSA HACKING TOOLS'
+15:23:12 <Neocortex391> https://en.wikipedia.org/wiki/Equation_Group
+15:26:05 <Neocortex391> The Auditor App homepage and Graphene OS pages have seperate donation addresses
+15:26:15 <Neocortex391> I would of thought that they would of shared donation addresses
+15:27:05 <Neocortex391> O man
+15:27:10 <Neocortex391> I saw this moment coming 15 years ago
+15:27:20 <Neocortex391> I was going to be sitting here in the Graphene OS chat room
+15:27:24 <Neocortex391> With Jolly Roger
+15:27:27 <Neocortex391> I saw all this coming 15 years ago
+15:27:49 <Neocortex391> "Donate to Graphene OS"! :)
+15:29:05 <Neocortex391> Quick somebody say something cybersecurity related
+15:29:31 <hdksv7391[m]> Encryption
+15:29:33 <Neocortex391> "My Encrypted Graphene OS phone, is using a Wireguard Offshore VPN, and has encrypted calls and Texts with Signal"! :)
+15:29:36 <Neocortex391> Thanks
+15:29:55 <hdksv7391[m]> :D
+15:29:55 <Neocortex391> Now we are Cyb3r
+15:30:11 <Neocortex391> So Cyb3r in here I just put on my *Puts on anonymous mask*
+15:30:30 <Neocortex391> I feel so good Im going to setup a Tor Relay today
+15:30:44 <ash[m]1> Finally installed graphene, is there a way to change keyboard settings as well as primary accent color?
+15:32:00 <ayaen_t[m]> ash:  just type keyboard into the search bar in settings app .
+15:32:17 <ash[m]1> ye found keyboard settings
+15:32:22 <ash[m]1> ty :)
+15:32:36 <ash[m]1> now tryna figure out accent color
+15:32:49 <ayaen_t[m]> as doe the change of accent i dont think we have it like android stock does
+15:32:58 <ash[m]1> gotcha
+15:33:03 <ayaen_t[m]> * as for the change of accent i dont think we have it like android stock does
+15:33:07 <ash[m]1> is there a root tweak that can?
+15:33:47 <Neocortex391> Is there a way to change Icon Themes
+15:34:01 <ayaen_t[m]> ash: rooting breaks the security model as the most priviliged user is just exposed so no
+15:34:02 <Neocortex391> For example I like the Signal Stregnth Bar to have individual Bars instead of 1 solid bar
+15:34:19 <ayaen_t[m]> Neocortex391: i dont think so.
+15:34:24 <ash[m]1> kk
+15:34:28 <hdksv7391[m]> Not sugested thing to do I think cuz of security..ash
+15:34:29 <Neocortex391> In stock Pixel OS I can change the theme
+15:34:31 <ash[m]1> tysm :)
+15:34:47 <ayaen_t[m]> Neocortex391: yes sure .
+15:34:59 <Neocortex391> Is it possible to do with Graphene?
+15:35:09 <Neocortex391> Just want to see like the 5 Signal Strength Bars
+15:35:15 <Neocortex391> Instead of 1 solid signal icon
+15:35:25 <Neocortex391> I like to seee the individual signal strength bars
+15:35:35 <Neocortex391> Where 5/5 is max signal, for example
+15:35:45 <Neocortex391> Current setting is just 1 solid flush of white
+15:36:08 <ayaen_t[m]> grapheneos is focused on bringing production quality os focused on security and privacy .this takes alot of resources so we will wait for theming .
+15:36:44 <ayaen_t[m]> or probably just forget about it. imo.
+15:36:48 <Neocortex391> https://i.imgur.com/s1cFPt5.jpg
+15:36:51 <Neocortex391> Something like this
+15:36:52 <Neocortex391> ^
+15:37:08 <hdksv7391[m]> No.Neocortex391
+15:37:08 <Neocortex391> I knows its just cosmetic but It should also be easy to add
+15:38:01 <Neocortex391> No, what
+15:38:13 <hdksv7391[m]> Not possible atm
+15:38:14 <Neocortex391> It should take like 1minute to add the theme .ico files
+15:38:26 <Neocortex391> Its just an .ico file I think
+15:38:34 <hdksv7391[m]> XD
+15:38:49 <Neocortex391> What?
+15:38:55 <Neocortex391> Do you have anything constructive to add?
+15:39:01 <Neocortex391> Adding a theme ico should be easy
+15:39:24 <hdksv7391[m]> The OS is focused on security and privacy.
+15:39:44 <Neocortex391> Yes I know
+15:40:26 <ayaen_t[m]> guys lets take this to gfapheneos off topic
+15:40:33 <refraction[m]> You could very well install a launcher for customisation, though it is the onus of the user to determine whether it is an application they can trust.
+15:40:48 <ayaen_t[m]> refraction: good one .
+15:41:10 <refraction[m]> Though if it is as easy as you say, you can always download the GOS source code and add in the .ico yourself.
+15:41:31 <hdksv7391[m]> refraction: True
+16:48:47 <SilverSurfer666> Hi, i have read that using secondary profiles make sure that the first profile harddisk stays encrypted and use the second profile
+16:49:36 <SilverSurfer666> But when i have 2 profiles it always loads the administrator profile, and from the adminiatrator i have 2 switch 2 my second profile?
+16:51:23 <Liakde[m]> That's by design. Admin (user) profile is always running until you reboot. You can logout secondary users to flush encryption keys.
+16:57:57 <nscnt> SilverSurfer666: You misunderstood. Liakde[m] explained the actual benefit why to use different user profiles
+16:59:21 <SilverSurfer666> Daniel micay on twitter : using ansecondary user as your main profile is one of our recommendations for high risk users
+16:59:46 <SilverSurfer666> That way you can still boot uo and use the device withoit decrypting your main profile
+16:59:53 <SilverSurfer666> What did i misunderstood?
+17:00:04 <Liakde[m]> Yeah, admin user should ideally be empty
+17:00:22 <SilverSurfer666> Yeah but when i boot phone it always starts main profile first
+17:00:33 <SilverSurfer666> When i unlock the mail i can swith to second?
+17:00:38 <Liakde[m]> The secondary (non-admin) user will be your "main" or daily user, which is not decrypted after you unlock admin user
+17:01:01 <nscnt> Do you have a link to the tweet?
+17:01:33 <SilverSurfer666> https://mobile.twitter.com/GrapheneOS/status/1342314760465997824
+17:01:50 <Liakde[m]> admin user is the only the one you unlock and decrypt after reboot
+17:01:50 <Liakde[m]> https://nitter.net/GrapheneOS/status/1342314760465997824#m
+17:02:00 <Liakde[m]> due to file-based encryption
+17:02:24 <Liakde[m]> Also, see https://grapheneos.org/faq#encryption
+17:02:29 <Liakde[m]> for details
+17:02:29 <SilverSurfer666> Okey but if the admin profile is empty than its useless
+17:02:39 <nscnt> SilverSurfer666: You misread. The premise is, that you use your second user profile as your main
+17:02:47 <SilverSurfer666> Because i still have to enter and decrypt the second profile to use apps?
+17:03:12 <Liakde[m]> That's exactly the point. The admin user is only used for making secondary users, and a secondary user profile will be your main or daily user
+17:03:18 <SilverSurfer666> Yes thats what i m saying, i want to use second profile as main
+17:03:19 <Liakde[m]> <SilverSurfer666 "Because i still have to enter an"> You can logout.
+17:03:39 <Liakde[m]> Yeah, nothing is stopping you from doing so
+17:03:42 <SilverSurfer666> But every tine i boot the phone it automaticcly starts the admin , not the second
+17:03:52 <simpletech[m]> Is it possible to directly log into the secondary profile without unlocking the other one?
+17:03:52 <Liakde[m]> That's the point
+17:03:54 <nscnt> Yes, your "main" user profile is just a concept
+17:03:57 <SilverSurfer666> So i have to enter admin, thats empty and than enter the second again
+17:04:09 <nscnt> You can't automatically boot into your secondary profile
+17:04:10 <Liakde[m]> Yeah
+17:05:10 <nscnt> SilverSurfer666: It's not implied that you shouldn't use a lock method for your admin user, though
+17:05:13 <SilverSurfer666> And if i log out from the second profile, and my apps like signal, whatsapp etc are there, i will not recieve messages till i log into the second again?
+17:05:54 <Liakde[m]> <nscnt "SilverSurfer666: It's not implie"> It is recommended to have passwords on admin user profile and daily secondary user profile.
+17:06:08 <Liakde[m]> <SilverSurfer666 "And if i log out from the second"> Yeah.
+17:06:38 <SilverSurfer666> Hmm , it makes using my smartphone more complicated
+17:07:18 <simpletech[m]> > for high risk users
+17:07:49 <Liakde[m]> <SilverSurfer666 "Hmm , it makes using my smartpho"> Depends on your security practices, but it's a small price to pay for app isolation and storage isolation
+17:08:35 <Liakde[m]> Take your own pace though
+17:08:39 <SilverSurfer666> Thata true, gotta get used to it
+17:08:44 <simpletech[m]> Hmm, propably. Maybe we will see a option in a future version of Android where we can directly log into a secondary account
+17:09:13 <Liakde[m]> For security reasons, I don't think that's desirable
+17:09:30 <SilverSurfer666> Switching from second to first is easy, but from main to second , gotta do it in option that sucks
+17:10:17 <SilverSurfer666> So every time i switch from second to main, my second profile and alle the apps/data are encrypted again
+17:10:31 <Liakde[m]> <SilverSurfer666 "So every time i switch from seco"> logout*
+17:10:55 <Liakde[m]> switching will not flush the encryption keys from memory
+17:10:58 <simpletech[m]> <Liakde[m] "logout*"> German auto-correction? :D
+17:11:34 <SilverSurfer666> Didnt know you can switch and logout, tought it was the same
+17:11:52 <Liakde[m]> Not really, the word switch is the one I am trying to correct. That can be found by holding the power off button, and it has this "End Session" option there
+17:12:44 * Liakde[m] uploaded an image: Screenshot_20201225-171210.png (29KiB) < https://matrix.org/_matrix/media/r0/download/kde.org/5ec103e79e91932ca4a5f920a3adc2b3864c3d72/Screenshot_20201225-171210.png >
+17:13:18 <SilverSurfer666> Okee ubderstood, thank you
+17:13:43 <Liakde[m]> You're welcome
+17:17:28 <dazinism> SilverSurfer666: theres a load of info about using profiles here. https://hub.libranet.de/wiki/and-priv-sec/wiki/user-profiles
+17:58:50 <nscnt> He's already gone, but: There's a quick switching option for user profiles. If you fully "swipe down" the quick settings menu, you'll see a little icon on the bottom right to switch to another user
+17:59:09 <nscnt> It lists all users there
+19:09:33 <Thatcher[m]> I run Graphene admin account as my main. What are the security benefits of running a secondary account as main?
+19:11:03 <simpletech[m]> {App, Storage} Isolation. You could install untrusted apps in one place and signal, threema and so on on your profile you're actively using
+19:11:23 <hdksv7391[m]> Again broblems with my camera. It works but after a while it stops and have to reboot device to make it work again
+19:19:35 <Thatcher[m]> <simpletech[m] "{App, Storage} Isolation. You co"> How does one differentiate untrusted and trusted apps? If apps are sandboxed in gOS, should it not matter to separate apps from each other via different profiles?
+19:20:22 <sel[m]1> <Thatcher[m] "How does one differentiate untru"> I'm assuming trusted & untrusted is subjective here
+19:20:37 <sel[m]1> Signal maybe trusted while WhatsApp maybe untrusted (as an example)
+19:22:02 <chris42> <bearded1[m] "Do you have a write up...> I am using a docker and script to build my aosp for the Pixel 5. Not fully automatic though...
+19:23:40 <simpletech[m]> Example: You "need" to use Snapchat (why ever). I wouldn't trust Snapchat (for course: subjective) running on the same profile where my pictures, legally downloaded music and Signal is sitting. If you give Snapchat Storage permission, they GOT the permission to snoop your photos. Don't like that.
+19:24:16 <Thatcher[m]> <simpletech[m] "Example: You "need" to use Snapc"> Ahh I see
+19:27:09 <Thatcher[m]> So if an untrusted app has storage permission even in an OS like Graphene, can it be assumed that the app is secretly rummaging through your files and sending the data through the network without your knowledge?
+19:27:53 <hdksv7391[m]> Yes
+19:29:58 <Thatcher[m]> That sucks. I hope that security is upgraded in next version of AOSP
+19:31:45 <Thatcher[m]> Like temporary storage permissions, and permission to view only specified files
+19:33:51 <brenneke[m]> <nscnt "He's already gone, but: There's "> Does the second user get properly logged out automatically when switching back to admin?
+19:34:06 <nscnt> brenneke[m]: No, it doesn't
+19:34:29 <nscnt> That's why GrapheneOS implemented "End session"
+19:34:56 <simpletech[m]> temporary storage permissions are not useful. If I got your data for 1 minute, I've got it forever. Maybe we can shrink down the access-area for apps (I think I saw that already somewhere?? dunno) via SELinux. On Computer we got e.g. Flatpaks which use this
+19:38:02 <nscnt> Thatcher[m]: API level 30 has Scroped storage enforcement already
+19:42:47 <nscnt> For a read: https://developer.android.com/about/versions/11/privacy/storage
+19:55:14 <joehandcockandja> Any reason why I can't do quick reply to texts in a profile that isn't the owner?
+19:55:22 <joehandcockandja> Is that just me or
+19:56:00 <brenneke[m]> <nscnt "That's why GrapheneOS implemente"> Nice thanks...always wondered how to log out, read here it is accessed from power button menu.
+19:56:07 <joehandcockandja>  Or see the message of the text in the notification area
+19:56:31 <joehandcockandja> It only lets me in the owner profile
+19:56:39 <simpletech[m]> <brenneke[m] "Nice thanks...always wondered ho"> You've got a "profile" tab in your menu if you swipe down
+19:57:12 <nscnt> brenneke[m]: It's also available on the lockscreen
+19:57:38 <nscnt> So you don't need to unlock before actually ending the session
+19:59:52 <nscnt> Ah nvm you can also bring that up when locked
+20:00:13 <nscnt> but, yea... There's a button on the lockscreen without the need of holding the power button
+20:07:35 <joehandcockandja> Someone Please Help Has Anyone Else Experienced This Or Have An Solution :( I Am Dumb!
+20:09:12 <nscnt> I don't know, sorry
+20:13:21 <joehandcockandja> Pain.
+20:19:34 <Thatcher[m]> Sounds like secondary profile is a pain in the ass
+20:22:06 <nscnt> Sounds like users having a wrong impression of what it is and what it does
+20:23:00 <joehandcockandja> I-i just needed help with the notification, chill out guys
+20:23:17 <nscnt> I wasn't referring to you
+20:24:18 <Thatcher[m]> He was referring to me
+20:29:20 <Thatcher[m]> * Sounds like secondary profile is a pain in the ass (for people like me who have the wrong impression about what it is and what it does).
+20:34:35 <joehandcockandja> Should I file a bug report :D
+20:35:36 <Thatcher[m]> So if I had to guess, the main feature of the secondary profile is not the isolation of untrusted apps, but like having two phones in one. Like if I needed two Signal instances using different numbers with access to a completely different set of files. Compartmentalization, like Qubes.
+20:36:51 <Thatcher[m]> * So if I had to guess, the main feature of the secondary profile is not the isolation of untrusted apps, but like having two phones in one. Like if I needed another Signal instance using different numbers with access to a completely different set of files. Compartmentalization, like Qubes.
+20:37:08 <Thatcher[m]> * So if I had to guess, the main feature of the secondary profile is not the isolation of untrusted apps, but like having two phones in one. Like if I needed another Signal instance using a different number with access to a completely different set of files. Compartmentalization, like Qubes.
+20:38:36 <joehandcockandja> Yeah but, the notifications
+20:38:54 <joehandcockandja> That's kind of my whole thing
+20:41:23 <r00st3r[m]> Noob here, can someone explain to me how to make sure i buy a pixel with an unlockable bootloader on Verizon?
+20:41:51 <Thatcher[m]> <r00st3r[m] "Noob here, can someone explain t"> Don't buy a Pixel from Verizon
+20:41:56 <Thatcher[m]> Or any carrier for that matter
+20:42:43 <r00st3r[m]> Next dumb question: is an "unlocked" phone different than one with an unlocked bootloader?
+20:43:11 <anupritaisno1[m]> joehandcockandjames: what happened
+20:45:16 <Thatcher[m]> <r00st3r[m] "Next dumb question: is an "unloc"> Not a dumb question. Yes, unlocked means you can use it with any carrier you choose. Unlockable bootloader means the system can be modified (to install Graphene)
+20:47:04 <r00st3r[m]> where do you guys buy your phones from?
+20:47:17 <Thatcher[m]> But I've heard that not all carriers are supported for Graphene, but I could be wrong. I've heard verizon users had some trouble. (I'm also kind of a noob to all of this)
+20:47:41 <Thatcher[m]> I bought my unlocked Pixel 4a from Best Buy
+20:48:07 <hdksv7391[m]> r00st3r:  It doesnt matter, you can ask frim the seller is it unlocked or locked
+20:48:13 <hdksv7391[m]> From*
+20:48:15 <louipc> or google, but i guess not many countries can buy from google
+20:49:02 <r00st3r[m]> Thanks guys. Didn't mean to derail the rest of discussion but it's been driving me a little crazy
+20:49:45 <hdksv7391[m]> I know the feeling, it took 7h of troubleshootting when installing Graphene xDr00st3r
+20:49:53 <joehandcockandja> <anupritaisno1[m] "joehandcockandjames: what happen"> The notifications from texts on a profile that is not the owner do not have the ability to quick reply to or view the text of the message in the notification area
+20:50:09 <joehandcockandja> I don't know whether this is intentional or not
+20:50:15 <joehandcockandja> But I haven't found a way to make it possible
+21:12:33 <hdksv7391[m]> Is the "Check For Updates" button suppose to do something in the device settings if automatic updates are enabled? Clicking it doesnt do anything so just thinking
+21:19:03 <joehandcockandja> It's supposed to give you android 12
+21:22:09 <hdksv7391[m]> :D
+21:31:49 <nscnt> hdksv7391[m]: https://github.com/GrapheneOS/platform_packages_apps_Updater/issues/19
+21:36:23 <hdksv7391[m]> nscnt: Thanks :)
+21:40:04 <Cruft> Does Android or GrapheneOS have a way of using GPS as the NTP timesource?
+21:40:19 * rafff[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/EtezlSRsSowwdysQMigiSvFJ/message.txt >
+21:41:57 <Cruft> Default camera app isn't bad. Simple Gallery is better than Gallery. Material File Manager is better than default.
+21:44:32 <nscnt> SilverSurfer666: If you swipe down to show the Quick settings, there is an icon for Users & guests at the bottom right. You don't need to tap through all settings
+21:45:46 <rafff[m]> <Cruft "Default camera app isn't bad. Si"> I use simple gallery. Like it.
+21:47:08 <Cruft> Gallery had a weird bug awhile back that sometimes comes back where when used with the default camera, deletes a picture after edit is used after clicking the picture in the circle.
+21:47:09 <SilverSurfer666> Ok didnt know that thanks nscnt
+21:47:19 <Cruft> So I just don't trust that interaction ever again
+21:49:14 <strcat[m]> Cruft: GrapheneOS uses secure network time via HTTPS
+21:49:17 <strcat[m]> GPS is not secure
+21:49:33 <strcat[m]> Android normally uses the mobile network when available, otherwise NTP, neither of which is secure
+21:49:50 <strcat[m]> NTP is an inherently insecure protocol
+21:52:20 <anupritaisno1[m]> drifts in china gps
+21:58:08 <eglssm[m]> <strcat[m] "GPS is not secure"> Why is not secure? I am not arguing that it is, it just got my attention that you say it is not. I would not have expected it. I have tried to find some meaningful info about but I did not succeed. If anyone can elaborate or drop a link where it is explained I would appreciate it. Thanks.
+22:01:06 <strcat[m]> it's not meaningfully authenticated and can be spoofed
+22:01:20 <SilverSurfer666> https://www.wired.com/story/spoof-jam-destroy-why-we-need-a-backup-for-gps/
+22:02:03 <strcat[m]> Cruft: doesn't have cryptographically secure authentication - simple
+22:02:19 <Golli[m]> You can broadcast your own GPS signal if you want.
+22:02:20 <Golli[m]> The only thing that's stopping you is a law.
+22:06:31 <Cruft> I mean, you wouldn't constantly be using it...
+22:06:49 <Cruft> drift? what, after two months or more? come on.
+22:06:52 <lodtank> does anybody  here have experience with kobo books app on graphene? does it work  on graphene?
+22:07:15 <Cruft> How do you think the DNS providers are telling what time it is? WWVB? LOL
+22:08:49 <Cruft> "GPS is not secure" says people constantly sending packets to tell what time it is from a source that uses GPS.
+22:12:19 <Cruft> https://eprint.iacr.org/2019/788.pdf
+22:12:19 <tdrfygh> Hello everyone, do you know how long is the flashing process in fastboot ?
+22:13:29 <Cruft> eglssm, https://en.wikipedia.org/wiki/Spoofing_attack#GPS_spoofing
+22:14:08 <SilverSurfer666> +- 5 minutes
+22:15:24 <hdksv7391[m]> tdrfygh:  Falshing took 3h for me because had to do some troubleshootting
+22:15:56 <SilverSurfer666> It took me 5 minutes
+22:16:11 <hdksv7391[m]> Nice
+22:16:48 <SilverSurfer666> First time i did it, it took me 4 hours and a broken windows laptop
+22:17:11 <SilverSurfer666> Swiched to macbook amd now the process is smooth as a .....
+22:18:01 <hdksv7391[m]> Oh well I was on Linux
+22:18:18 <tdrfygh> thanks, it's been 30+ minutes and the phone did not reboot once si I guess I messed someting up
+22:18:27 <Cruft> If we can't use GPS for time, why is there no switch to turn off downloading of the qualcomm GPS assistance files entirely? https://packetstormsecurity.com/files/139033/Android-Qualcomm-GPS-GNSS-Man-In-The-Middle.html
+22:19:40 <SilverSurfer666> It will now reboot, it will just return to fastboot mode, where you can lock the bootloader again and manually start to see if the install process was right
+22:19:57 <SilverSurfer666> Now=NOT sorry
+22:20:43 <hdksv7391[m]> Cruft:  Why are you talking about this here in the GrapheneOS matrix channel.. XD
+22:20:44 <tdrfygh> i'm on linux and fastboot didn't output anything, do you thing it safe to reboot the phone and start the whole sequence again ?
+22:21:28 <tdrfygh> in the flash-all.sh there is a fastboot reboot-bootloader, i assumed it would reboot
+22:21:30 <SilverSurfer666> Hmm not sure, never did it on linux
+22:21:41 <Cruft> I asked if is was possible within android/grapheneos and was met with loads of FUD and the same issue, just abstracted.
+22:21:55 <SilverSurfer666> I use adb reboot bootloader
+22:23:31 <hdksv7391[m]> tdrfygh:  do adb reboot bootloader. If doesnt work search online for some help
+22:23:52 <anupritaisno1[m]> tdrfygh: pm
+22:24:14 <SilverSurfer666> Try youtube, there are some video s explaining step by step
+22:24:36 <hdksv7391[m]> Techlore has great tutorials and troubleshootting guide
+22:24:41 <tdrfygh> thanks, il will look at it
+22:25:01 <LinusSexTips[m]> Techlores video messed a lot of people up though
+22:25:37 <hdksv7391[m]> Really? It worked for me.. Okey after 7h xD
+22:26:02 <tdrfygh> I got an error with adb reboot : error: no devices/emulators foundI will search about it
+22:26:13 <LinusSexTips[m]> The first time I flashed I just followed the instructions on Ubuntu and finished after about 20 minutes
+22:26:19 <LinusSexTips[m]> I had more problems on windows
+22:26:28 <SilverSurfer666> Did you unlock oem and usb debughing?
+22:26:42 <LinusSexTips[m]> * The first time I flashed I just followed the official instructions on Ubuntu and finished after about 20 minutes
+22:26:48 <SilverSurfer666> Try adb devices and see if the device can be read
+22:28:31 <tdrfygh> yes I did unlock oem and usb debugging, and unlock bootloader
+22:28:43 <tdrfygh> no edvices are displayed
+22:30:54 <tdrfygh> is it safe to reboot the phone and do it all again ?
+22:31:48 <SilverSurfer666> Probably
+22:31:59 <SilverSurfer666> I would reboot amd try again
+22:32:33 <SilverSurfer666> You will probably have to enable usb debugging again
+22:32:43 <SilverSurfer666> Before starting the process again
+22:36:12 <tdrfygh> will do,
+22:37:39 <tdrfygh> restarted without any trouble on andriod, I will troubleshoot the adb probelm, thanks for your help
+22:37:56 <SilverSurfer666> Good luck
+22:38:15 <SilverSurfer666> I would recommand watching a youtibe video while doing it again,
+22:40:49 <gaussvector[m]> Anybody know if you can use firebase with graphene, or is it play dependant?
+23:02:36 <SilverSurfer666> Anyone knows if pixel 5 will be supported anytime soon?
+23:19:00 <anupritaisno1[m]> We need pixel 3 testers for carrierconfig changes
+23:27:26 <tdrfygh> I retried and it flashed fine, after locking the bootloader I try to boot and I got an error "no valid slot to boot". I can't see anything relevant about it online
+23:31:45 <anupritaisno1[m]> Pm me
+23:31:55 <anupritaisno1[m]> tdrfygh: told you to pm me

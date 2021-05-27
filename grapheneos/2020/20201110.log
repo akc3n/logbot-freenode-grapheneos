@@ -1,0 +1,440 @@
+03:01:50 <renlord[m]> > TheJollyRoger: i use a $2 wrench
+03:01:51 <renlord[m]> how many spares do you own?
+03:06:11 <TheJollyRoger> renlord[m], louipc, heh, sounds like that would be Mastercraft wrenches if they actually priced them fairly!
+03:49:33 <louipcm> yep i have a whole set
+03:51:38 <TheJollyRoger> Yeah. They're not bad for light, occasional use, I suppose.
+04:57:17 <dxrwzy9y[m]> Hey is there any way to double check that the bootloader is locked?
+04:57:32 <TheJollyRoger> Hey dxrwzy9y[m], reboot your phone.
+04:57:57 <TheJollyRoger> If you get "SOFTWARE INTEGRITY NOT GUARANTEED!" in bright orange letters, it's unlocked.
+04:58:16 <dxrwzy9y[m]> Okay, that doesn't show up
+04:58:17 <TheJollyRoger> If you get "Your device is loading a different operating system" then it's locked and verified boot is enforced.
+04:58:30 <dxrwzy9y[m]> Okay good to know
+04:58:38 <TheJollyRoger> If you get no warning whatsoever and it just boots straight to Android, you're running Google's official OS.
+04:59:05 <dxrwzy9y[m]> Yeah no, I'm good then haha
+04:59:22 <TheJollyRoger> Yeah. It's only if you see that ominous orange screen that the bootloader is unlocked. The yellow "Loading a different operating system" warning is a good sign.
+04:59:53 <TheJollyRoger> If you would like a bit more of an assurance, head on over to https://attestation.app and you can use remote verification and auditor.
+05:00:37 <TheJollyRoger> It'll periodically check in with your phone and if your phone fails to respond after a certain time or returns an incorrect result, it will warn you if something goes amiss.
+05:01:02 <TheJollyRoger> The first time you pair with the attestation server it will print some relevant information about your device.
+05:02:59 <chani> 22:59 <@TheJollyRoger> If you would like a bit more of an assurance, head on over to https://attestation.app and you can use remote verification and auditor.
+05:03:20 <TheJollyRoger> The hardware based remote attestation that Auditor app uses can do things like detect whether the device has been rooted, the bootloader unlocked, or list out the verified boot hash. More importantly, it can /also/ tell you if the keys used for enforcing verified boot were legit.
+05:03:32 <chani> oops, sorry, didn't mean to copy/paste that
+05:03:46 <TheJollyRoger> Ah, heh, I was about to ask, ah, did you hit return too early? :P
+05:03:54 <chani> haha
+05:04:19 <chani> nope, puttytray is a fun IRC client.
+05:04:43 <TheJollyRoger> Ah!
+05:05:21 <chani> TheJollyRoger: do you happen to know if Danny is still around, maybe using a different nick?
+05:05:44 <TheJollyRoger> Interestingly enough, Auditor can also do some pretty interesting things like detect the presence of things like Magisk which can lie to the operating system and even lie to Android Debug Bridge, but Auditor will still catch it.
+05:06:08 <TheJollyRoger> Humm...
+05:06:14 <TheJollyRoger> I don't see him in the nicks list.
+05:06:21 <TheJollyRoger> But I'm only bridged from the IRC side.
+05:08:58 <TheJollyRoger> dxrwzy9y[m]: I think the phone will also attempt to warn you if the bootloader is unlocked by displaying a translucent icon of a lock with its shackle hanging open overtop the boot animation (I think?) over the lockscreen. So it tries to make this very obvious to you.
+05:09:15 <TheJollyRoger> *and (I think?) over the lockscreen.
+05:23:29 <anupritaisno1[m]> <TheJollyRoger "dxrwzy9y: I think the phone will"> No
+05:23:34 <anupritaisno1[m]> That was on oneplus
+05:23:53 <anupritaisno1[m]> Instead of showing a warning while booting they just showed an unlock icon
+05:24:11 <TheJollyRoger> Oh, okay, whoops!
+05:38:51 <anupritaisno1[m]> TheJollyRoger anyway that was before verified and secure boot became mandatory
+05:45:39 <TheJollyRoger> Oh, okay.
+05:56:40 <c3e4njxqgdac[m]> Hi all. I'm new here and just trying to set up a 4a for the very first time. I'm following the guide and finding that 'adb devices' will list the phone when the phone boots normally, but when in the bootloader menu it no longer seems able to see it. If I try to run 'fastboot flashing unlock' then the phone doesn't respond with any sort of prompt and the terminal output just shows '< waiting for any device >'. Is
+05:56:40 <c3e4njxqgdac[m]> that a known issue or am I doing something wrong?
+06:01:18 <TheJollyRoger> Ahoy c3e4njxqgdac[m], what operating system are you running? If you are on any Debian based Linux, you may need to set udev rules for fastboot.
+06:02:03 <TheJollyRoger> (Also make sure you're using the official version of fastboot, and not the version that came with your OS.)
+06:02:26 <TheJollyRoger> If you are still getting adb to list the device properly,
+06:02:35 <TheJollyRoger> note that fastboot /must/ be entered when the phone is on its bootloader.
+06:02:42 <TheJollyRoger> Otherwise it will hang.
+06:02:50 <TheJollyRoger> And you'll get that result.
+06:04:00 <TheJollyRoger> Try `adb reboot bootloader` wait for fastboot to come up, and then try the fastboot command.
+06:05:06 <c3e4njxqgdac[m]> Yes, I'm on buster.  I was getting the plugdev error but added a udev rule for that after finding some stackoverflow suggestions and it went away. I downloaded the platform tools as per the guide and not the buster repository version.
+06:05:20 <TheJollyRoger> Great.
+06:05:49 <TheJollyRoger> So, give fastboot a try while your device is in fastboot -- not while the host is running.
+06:06:00 <TheJollyRoger> *host on the device is running
+06:06:49 <c3e4njxqgdac[m]> I've only tried running it when on the fastboot menu :(
+06:07:12 * TheJollyRoger frowns.
+06:07:56 <c3e4njxqgdac[m]> This sounds like the sort of thing I am seeing actually:
+06:07:59 <c3e4njxqgdac[m]> https://android.stackexchange.com/questions/58187/adb-can-discover-devices-but-not-fastboot
+06:08:10 <Remu[m]> Is the public verified boot key hash on GrapheneOS pixel is known here
+06:08:30 <c3e4njxqgdac[m]> Ah I perhaps I need some more udev rules for the bootloader?
+06:08:41 <Remu[m]> besides it being succesfully did a strong attestation
+06:08:49 <Remu[m]> <c3e4njxqgdac[m] "Ah I perhaps I need some more ud"> Ye
+06:08:53 <TheJollyRoger> What rules did you add? Since you need to make sure that both adb and fastboot are allowed through.
+06:10:07 <TheJollyRoger> If you're not concerned with the security implications of running a precompiled binary program downloaded from the internet as root (NOT RECOMMENDED) one litmus test is to attempt to run fastboot as root. Again, not recommended, but it's one way to tell.
+06:10:38 <TheJollyRoger> Hang on a sec.
+06:10:51 <c3e4njxqgdac[m]> Just the one from what lsusb reported at the time. I didn't realize that there were multiple.
+06:11:00 <anupritaisno1[m]> TheJollyRoger first try sudo fastboot devices
+06:11:09 <anupritaisno1[m]> Don't just assume it works
+06:12:04 <TheJollyRoger> Er, right, sorry about that, my bad. Yeah, try listing fastboot devices.
+06:12:14 <anupritaisno1[m]> As root
+06:12:22 <anupritaisno1[m]> Not just fastboot devices
+06:12:25 <TheJollyRoger> I've had good luck with these rules: https://raw.githubusercontent.com/M0Rf30/android-udev-rules/master/51-android.rules
+06:12:56 <TheJollyRoger> It contains a lot more stuff than you'll need -- namely other vendors and other devices, but it does have Googles'.
+06:12:59 <TheJollyRoger> *Google's.
+06:13:36 <anupritaisno1[m]> TheJollyRoger please take a moment to think what you are saying
+06:13:51 <anupritaisno1[m]> You have not confirmed that it works with root
+06:14:00 <TheJollyRoger> Right, sorry. >_<.
+06:14:01 <anupritaisno1[m]> Unless you know it works with root
+06:14:16 <anupritaisno1[m]> You cannot just say udev is the issue
+06:14:25 <anupritaisno1[m]> Run it as root first
+06:14:36 <c3e4njxqgdac[m]> This was the rule that I added (never had to touch these before)
+06:14:39 <c3e4njxqgdac[m]> SUBSYSTEM=="usb", ATTR{idVendor}=="18d1", ATTR{idProduct}=="4ee7", MODE="0666", GROUP="plugdev"
+06:14:57 <c3e4njxqgdac[m]> Looks like 4ee0 for the bootloader
+06:15:03 <anupritaisno1[m]> c3e4njxqgdac does it work when you are root?
+06:15:27 <anupritaisno1[m]> Does
+06:15:34 <anupritaisno1[m]> sudo fastboot flashing unlock
+06:15:37 <anupritaisno1[m]> Work?
+06:17:39 <c3e4njxqgdac[m]> Looks like running with sudo loses the temporary path as it says fastboot command not found
+06:18:07 <anupritaisno1[m]> c3e4njxqgdac then you know what to do
+06:18:25 <anupritaisno1[m]> Run which fastboot
+06:18:37 <anupritaisno1[m]> Put output of which fastboot as so
+06:18:58 <anupritaisno1[m]> sudo "output of which fastboot" flashing unlock
+06:20:00 <c3e4njxqgdac[m]> Yes, that does bring up the prompt on the phone!! :)
+06:20:24 <c3e4njxqgdac[m]> I wasn't sure if fastboot would need to call anything else that relied on the path mod.
+06:21:23 <c3e4njxqgdac[m]> So what does that mean for the remainder of the installation instructions? Do I just need to make sure that I sudo everything?
+06:29:44 <c3e4njxqgdac[m]> I _think_ need to run sudo env "PATH=$PATH" ./flash-all.sh ?
+06:29:54 <anupritaisno1[m]> c3e4njxqgdac then your udev rules are messed up
+06:30:02 <anupritaisno1[m]> Just run as root
+06:30:08 <c3e4njxqgdac[m]> ok
+06:30:15 <anupritaisno1[m]> Set up your PATH in root
+06:30:19 <anupritaisno1[m]> And ./flash-all.sh
+06:30:21 <anupritaisno1[m]> As root
+06:30:28 <anupritaisno1[m]> Also fix your system
+06:30:31 <c3e4njxqgdac[m]> I'm not used to writing udev rules.
+06:30:55 <anupritaisno1[m]> c3e4njxqgdac idk why you wrote your own
+06:31:15 <anupritaisno1[m]> There is a community maintained udev rules list
+06:31:26 <anupritaisno1[m]> Jollyroger linked you to it
+06:31:29 <anupritaisno1[m]> Use that
+06:31:36 <c3e4njxqgdac[m]> The one linked to above?
+06:31:41 <c3e4njxqgdac[m]> yeah, I will try that
+06:33:59 <c3e4njxqgdac[m]> That now seems to respond to 'fastboot devices' correctly without sudo! :)
+06:34:35 <c3e4njxqgdac[m]> Thank you for taking the time to respond to me. Hopefully, the rest of the install goes smoothly.
+06:37:12 <TheJollyRoger> Good luck!
+07:15:54 <faroutaxiominist> yeet, i am here.
+07:21:08 <anupritaisno1[m]> faroutAxioministrator explain
+07:25:47 * pchelp321[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/ZNAbFQDfEcqfMzcRzIFcjNDi/message.txt >
+07:25:54 <pchelp321[m]> can anyone help
+07:26:42 <pchelp321[m]> it stays on waiting for device. I already have debugging enabled and OEM unlocked
+07:29:27 <zyxt128[m]> Have you run `fastboot devices` in order to check if fastboot can find the device?
+07:29:27 <zyxt128[m]> Also, in the bootloader screen, does it say that the device is unlocked or is it locked?
+07:29:59 <pchelp321[m]> i havent ran that and once on bootloader it says locked
+07:30:40 <zyxt128[m]> Is it a verizon unlocked pixel 3a?
+07:31:13 <pchelp321[m]> I was told when buying it was unlocked meaning any carrier, bought from amazon
+07:31:29 <pchelp321[m]> how could i tell if its a verizon phone
+07:32:18 <zyxt128[m]> Doesn't matter, I asked that because the majority of pixel 3a which are offered in amazon are verizon unlocked
+07:33:39 <zyxt128[m]> In the developer options, the OEM is unlocked, or is it just disabled?
+07:33:39 <zyxt128[m]> I faced a similar issue with a pixel 3a and the workarround was to put a SIM on the phone in order to enable the OEM toggle in the developer options
+07:34:33 <pchelp321[m]> i am on devolper settings and it blue (OEM unlocking is on)
+07:34:51 <pchelp321[m]>  * i am on devolper settings and its blue (OEM unlocking is on)
+07:35:11 <zyxt128[m]> And in the bootloader it says that it is locked?
+07:35:24 <pchelp321[m]> i have an extra phone with a verizon plan if that can help anyway
+07:35:26 <pchelp321[m]> yeah it does
+07:35:39 <zyxt128[m]> That's weird, I never saw that
+07:36:53 <pchelp321[m]> so im guessing im fucked lol
+07:37:19 <zyxt128[m]> Don't give up. maybe someone else can help you here or in reddit
+07:37:38 <pchelp321[m]> could it be fedora is the issue? i read some things about the distro not reading the device
+07:37:46 <pchelp321[m]> saw some issues with windows and pop os
+07:40:36 <zyxt128[m]> Hmm, now that you said that, on windows you have to install a different driver for fastboot
+07:40:52 <pchelp321[m]> yeah but im on fedora
+07:40:54 <zyxt128[m]> but I believe that in linux it works out of the box
+07:41:20 <pchelp321[m]> i might try a virtual box of windows but idk if thats doable
+07:41:37 <faroutaxiominist> Is your OS virtualized?
+07:41:45 <zyxt128[m]>  * Hmm, now that you said that, on windows you have to install a different driver for fastboot (actually the google usb drivers)
+07:41:49 <pchelp321[m]> not the one i am on now
+07:42:14 <pchelp321[m]> but i do have others i can try like windows
+07:43:34 <zyxt128[m]> just a dumb question, have you tried to run fastboot as root?
+07:44:09 <pchelp321[m]> how do i do that
+07:44:26 <zyxt128[m]> sudo
+07:44:36 <zyxt128[m]> sudo fastboot devices
+07:45:04 <pchelp321[m]> XXXXXXXXXX 	fastboot
+07:45:13 <zyxt128[m]> or yum instead of sudo (sorry I'm a debian user)
+07:45:22 <pchelp321[m]> that pops up, ofc i blurred the serial
+07:45:28 <zyxt128[m]>  * or yum instead of sudo (sorry I'm a debian user I'm not familiar with fedora)
+07:46:13 <zyxt128[m]> ok try, sudo fastboot flashing unlock
+07:46:27 <pchelp321[m]> omg
+07:46:31 <pchelp321[m]> youre a god
+07:46:39 <pchelp321[m]> i finally went to the next step
+07:47:16 <faroutaxiominist> ao
+07:47:48 <faroutaxiominist> * imao
+07:49:11 <anupritaisno1[m]> <zyxt128[m] "Hmm, now that you said that, on "> No you do not
+07:49:51 <anupritaisno1[m]> Follow the install guide correctly
+07:50:05 <anupritaisno1[m]> At no point does it say install windows drivers
+07:51:18 <zyxt128[m]> <anupritaisno1[m] "No you do not "> Well, I had to install the google usb drivers in my case because when I connected the phone when the phone was on bootloader it was not recognized as a device. Maybe it was just my setup.
+07:51:41 <zyxt128[m]> > <@anupritaisno1:m.apex.to> No you do not
+07:51:41 <zyxt128[m]>  * Well, I had to install the google usb drivers in my case because when I connected the phone with my windows PC when the phone was on bootloader it was not recognized as a device. Maybe it was just my setup.
+07:51:50 <anupritaisno1[m]> It should work out of the box
+07:52:15 <anupritaisno1[m]> Most people with issues have gone ahead and broken their system with additional drivers
+07:52:54 <zyxt128[m]> It's google usb drivers, how can you broke your system with that?
+07:57:32 <zyxt128[m]>  * It's google usb drivers, how can you brake your system with that?
+07:57:41 <anupritaisno1[m]> Because they should be automatically installed by windows update when you plug in the device
+07:57:48 <anupritaisno1[m]> If they do not install
+07:58:01 <anupritaisno1[m]> You have broken your system and using an unsupported configuration
+07:58:16 <anupritaisno1[m]> Or you have installed a bunch of unsupported conflicting drivers by yourself
+07:58:26 <pchelp321[m]> im watching the hated ones video on yt but hes flashing the os on windows, how do i run it on fedora??
+07:58:52 <anupritaisno1[m]> pchelp321 you have the files downloaded?
+07:59:00 <pchelp321[m]> yeah both
+07:59:03 <pchelp321[m]> and unziped
+07:59:23 <pchelp321[m]> platform tools and sargo-facotry-xxxxxx
+07:59:25 <anupritaisno1[m]> Installed udev rules?
+07:59:42 <pchelp321[m]> probably not, how do i do that
+08:00:15 <anupritaisno1[m]> I think fedora is going to pose problems regardless
+08:00:27 <anupritaisno1[m]> You can try flashing as root
+08:00:40 <pchelp321[m]> sudo waht
+08:00:42 <pchelp321[m]> what
+08:02:33 <anupritaisno1[m]> sudo su
+08:02:44 <anupritaisno1[m]> Become root, setup fastboot
+08:02:52 <anupritaisno1[m]> Then call flash-all.sh
+08:05:25 <anupritaisno1[m]> Also seriously
+08:05:37 <anupritaisno1[m]> The install guide is not a wishlist
+08:05:44 <anupritaisno1[m]> ```
+08:05:44 <anupritaisno1[m]> Windows 10, macOS Catalina, Arch Linux, Debian buster and Ubuntu 20.04 LTS are the officially supported operating systems for installing GrapheneOS
+08:05:56 <anupritaisno1[m]> Do not use unsupported operating systems
+08:06:30 <anupritaisno1[m]> https://grapheneos.org/install
+08:12:52 <hehehe> On graphene offical site it says on the newest update that ”While waiting for this release to become available, you can manually add a battery optimization exemption for the Clock app via Settings ➔ Apps & notifications ➔ Special app access ➔ Battery optimization where you can select "All apps", scroll down to the Clock app and manually add
+08:12:52 <hehehe> an exemption”
+08:13:05 <hehehe> I cant do this
+08:17:42 <pchelp321[m]> /flash-all.sh
+08:17:42 <pchelp321[m]> ./flash-all.sh: line 22: [: c7815d: integer expression expected
+08:17:42 <pchelp321[m]> fastboot too old; please download the latest version at https://developer.android.com/studio/releases/platform-tools.html
+08:17:56 <pchelp321[m]> i got this when trying to flash
+08:18:03 <pchelp321[m]> i have to update fastboot
+08:18:26 <pchelp321[m]> <anupritaisno1[m] "https://grapheneos.org/install"> and yeah i know but i dont have any of those so I gotta make it work
+08:24:23 * anupritaisno1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/xAvNkYToVUghFyGGRvgYTIUu/message.txt >
+08:25:04 <pchelp321[m]> how do i fix this
+08:36:38 <anupritaisno1[m]> Add it to your PATH
+08:36:45 <anupritaisno1[m]> Official guide does tell you how
+08:38:47 <pchelp321[m]> where?
+08:39:02 <pchelp321[m]> im new to this
+08:58:28 <fll[m]> pchelp321: https://grapheneos.org/install this is the only resource you should consult when installing. It is being kept up to date.
+08:58:28 <fll[m]> It will also tell you about PATH
+11:10:56 <fabilola[m]> Hey, aurora stopped working, and I tried aurora droid, but it also doesn't work. The problem is that it doesn't find any apps to install. After reinstalling aurora I log in as 'anonymous', it says it's successful but then stays on that screen. Did aurora break for everyone or is it just mine?
+11:11:23 <warturkey[m]> can comfirm that
+11:18:12 <Erraverunt> Yeah same here, changes at googles end propably
+11:33:05 <dar_gomml[m]> @ aurora store: can't confirm for central Europe. working as usual..
+11:42:48 <nscnt> fabilola[m]: Try using another tokenizer. Everything works for me. But that's for #grapheneos-offtopic for the future
+11:58:56 <briaruser[m]> Is the google pixel 3 good for only signal for at least one year? I will install graphene and only use signal. Is the phone secure for at least one year?
+12:00:20 <briaruser[m]> I know its not a reccomended device thats why am asking
+12:05:23 <nightjar[m]> briaruser It should have about a year of support remaining in the three year guarantee considering it entered the market in Autumn 2018
+12:05:43 <nightjar[m]> It should be good
+12:05:55 <briaruser[m]> <nightjar[m] "briaruser It should have about a"> Great tnx
+12:06:09 <nscnt> briaruser[m]: Minimum update period ends at October 21 on Google's side. I think you may expect GrapheneOS's support at least until that date, too.
+12:06:26 <dxrwzy9y[m]> Does battery saver mode degrade performance? Is it a good idea to keep it on 24/7?
+12:06:36 <nscnt> dxrwzy9y[m]: No, it's not a good idea.
+12:06:58 <nscnt> Don't use it if you don't really need it (lost in the forest)
+12:07:05 <briaruser[m]> <nscnt "briaruser: Minimum update period"> Next year?
+12:07:23 <dxrwzy9y[m]> So it does degrade performance?
+12:07:25 <nscnt> October *2021
+12:07:28 <nscnt> Sorry about that
+12:07:32 <nscnt> briaruser[m]: Yes.
+12:07:34 <dxrwzy9y[m]> Any other ways to improve battery life?
+12:07:39 <briaruser[m]> <nscnt "October *2021"> Tnx
+12:09:17 <nscnt> dxrwzy9y[m]: Use it less, I guess.
+12:09:42 <nscnt> Android's already doing its work to get the best out of it
+12:11:17 <dxrwzy9y[m]> Shouldn't Graphene have better battery life cause it doesn't run any Google background services?
+12:11:36 <nscnt> dxrwzy9y[m]: I think most if not all Pixels have OLED. True black may help? But I'm not sure about its total effectiveness.
+12:12:00 <dxrwzy9y[m]> So enable dark mode?
+12:12:11 <jpds> dxrwzy9y[m]: It does, I frequently get over a day's worth even on my 3a
+12:12:41 <dxrwzy9y[m]> It's just kinda distracting with reflections when the screen is mostly black.
+12:13:04 <dxrwzy9y[m]> How much screen on time is that?
+12:13:52 <nscnt> dxrwzy9y[m]: Just because it's a background service it doesn't mean it's running 24/7. They surely implement it in a battery preserving way with the relevant APIs
+12:14:38 <nscnt> dxrwzy9y[m]: I use a matte screen protector. I really got to like them since I had one for the first time
+12:15:31 <dxrwzy9y[m]> I'm kinda terrible with installing screen protectors haha
+12:15:52 <dxrwzy9y[m]> I always get dust underneath no matter what.
+12:16:24 <dxrwzy9y[m]> Too bad I don't have a clean room.
+12:20:17 <fabilola[m]> nscnt: how do I use another tokenizer / what is it?
+12:30:21 <dxrwzy9y[m]> Can I save battery life by using a lower resolution in NewPipe or doesn't it make a difference?
+12:38:51 <dar_gomml[m]> turn off the screen  or dim it if you need more battery life
+12:44:29 <jpds> dxrwzy9y[m]: It really isn't going to make a difference
+13:14:55 <louipcm> i heard of people using a lower screen  refresh rate
+13:30:33 <yukinoo[m]> Hello everyone
+13:31:12 <yukinoo[m]> I would like to know which usb c ethernet adapter do you use for google pixel 3a?
+13:39:54 <clox[m]> Hi guys, i want to buy a pixel 4a for installing the grapheneOS software on it. But i see they have 2 kinds of pixel 4a (the 4a 4G & the 4a 5G). So my question is, which one i need to use for installing grapheneOS? Or it doesn't matter which one?
+13:41:44 <louipc> clox 4g
+13:43:13 <clox[m]> <louipc "clox 4g"> Thx bro :-)
+13:45:30 <louipc> aka normal pixel 4a
+13:47:00 <fuu[m]1> when in doubt check codename
+13:47:40 <briaruser[m]> When i download and install graphene with powershell on my phone. Will there be any meta data about my laptop go with the OS in my device? Like what kind of laptop i used or username of the laptop i installed with.
+14:00:31 <jpds> briaruser[m]: No
+14:00:55 <Remu[m]> <yukinoo[m] "I would like to know which usb c"> It does work
+14:01:12 <Remu[m]> <clox[m] "Hi guys, i want to buy a pixel 4"> The codename should be sunfish
+14:01:23 <Remu[m]> 4a - sunfish
+14:01:31 <Remu[m]> 4a 5G is bramble?
+14:01:37 <briaruser[m]> <jpds "briaruser: No"> For sure? Can someone else also confirm this?
+14:02:46 <Remu[m]> Well, unless you have the GrapheneOS file and have your bash history saved and logged (which can be deleted anyways by removing all the text and ctrl+s or deleting the file), then maybe not
+14:02:47 <jpds> briaruser[m]: Yes, basically: it's irrelevant what device is used to install Graphene, so it doesn't keep a record of it
+14:03:32 <Remu[m]> <jpds "briaruser: Yes, basically: it's "> Oh, the file name does not have GrapheneOS on it anyways
+14:04:28 <yukinoo[m]> <Remu[m] "It does work"> Have you ever tried it? Which adapter have you tested?
+14:05:22 <Remu[m]> <yukinoo[m] "Have you ever tried it? Which ad"> Using it as daily, well, it's quite a random branded one adapter, so I can't vouch on its quality (it's usb C to ethernet btw)
+14:05:32 <pikaman[m]> Do you think that the CopperheadOS lawsuit will have a large impact on the development of GrapheneOS?
+14:06:37 <louipcm> no
+14:09:26 <yukinoo[m]> <Remu[m] "Using it as daily, well, it's qu"> there's an adapter that doesn't support Android devices so we're not sure
+14:37:57 <Remu[m]> <yukinoo[m] "there's an adapter that doesn't "> Ah, fair enough. Once, ugreen was used, and it seems to work
+14:38:22 <Remu[m]> <louipcm "no"> It will still continue provided donations are sufficient
+14:43:47 <nichos[m]> Hi all, I've been looking at this project and had a few questions:
+14:43:47 <nichos[m]> 1-how are updates to the OS handled? Are they automatic, or do I have to use fastboot each relesae?
+14:43:47 <nichos[m]> 2-Is this stable enough to be a daily driver? Do things like bluetooth, etc all work? (I'm on a pixel 3a)
+14:44:11 <jpds> nichos[m]: Yes, this is all covered on the website
+14:45:07 <nichos[m]> 🤦 I read the install guide, about, but didnt read the FAQ
+14:45:09 <nichos[m]> sorry about that
+14:54:01 <mastercakex[m]> 1. Updates are OTA. Smoother than what iPhone
+14:54:01 <mastercakex[m]> 2. Been my daily beater for the last 12mnths
+14:55:33 <mastercakex[m]> 3a is probably too slow for 2021
+14:55:34 <mastercakex[m]> I'm on 3xl yet I feel I need a faster cpu for my daily heavy tasks
+15:18:32 <nichos[m]> Thanks mastercakex is Graphene slower than stock? I'm running stock on the 3a now and have no complaints about performance.
+15:29:17 <mastercakex[m]> It is slower by a notch due to its hardening
+15:29:31 <mrxx_0[m]> mastercakex 3a is not a recommended device : https://grapheneos.org/faq#recommended-devices
+15:31:29 <mrxx_0[m]> Shit I wanted to tag nichos
+15:32:21 <mrxx_0[m]> read that part too nichos  https://grapheneos.org/usage#exec-spawning
+15:40:07 <nichos[m]> Thanks mrxx_0 maybe i'll pick up a deal on one for black friday
+15:43:52 <zfnmxt> How long does the flashing the factory images generally take? `flash-all.sh` doesn't report progress.
+15:47:11 <zfnmxt> And judging by all of the `fastboot reboot-bootloader` lines, I should be seeing the phone reboot, but it has not. Does flashing the initial image take that long?
+15:53:38 <zfnmxt> Is there any risk in just killing the shell?
+15:56:42 <briaruser[m]> Do you use Windows? zfnmxt In windows i use ".bat" instead of ".sh."
+15:57:48 <ludicrous_speed[> If you follow the install instructions exactly, shouldn't be any issue if you are flashing from stock.
+15:58:43 <zfnmxt> No, I'm on linux.
+15:58:49 <zfnmxt> I believe I followed the instructions exactly.
+15:59:02 <ludicrous_speed[> But I have to emphasize "exactly".
+15:59:37 <zfnmxt> The only instructions that have side effects are literally unzip and running the script.
+16:00:00 <zfnmxt> (Well, and unlocking the bootloader.)
+16:00:12 <ludicrous_speed[> I used windows with power shell for my flash session. Haven't tried it on Linux, so can't comment on that really.
+16:00:29 <zfnmxt> Guess I'll just kill the script. Nothing else to really do.
+16:01:11 <ludicrous_speed[> zfnmxt: the batch file when it runs will show progress.
+16:02:16 <zfnmxt> Unless `fastboot` reports progress itself, the `.sh` script does not. Regardless, the batch file is irrelevant to me.
+16:03:35 <zfnmxt> Oh, heh. It was just stuck on the first line of the script. For some reason `fastboot` doesn't see the device right now. :P
+16:03:44 <projectmoon> If fast boot hangs you probably need a different port or cable
+16:06:21 <anupritaisno1[m]> projectmoon not necessarily
+16:08:13 <anupritaisno1[m]> There can be bugs in fastboot
+16:09:39 <zfnmxt> anupritaisno1[m]: Do you know approximatel how long it takes to flash `bootloader-*.img`?
+16:14:43 <projectmoon> it takes a few minutes to run the flash at max
+16:20:47 <anupritaisno1[m]> zfnmxt a few seconds
+16:21:04 <anupritaisno1[m]> You should reboot and try again
+16:23:03 <zfnmxt> Yeah, I did. And different cables. And different ports.
+16:23:09 <zfnmxt> I'll try a different computer/distro now. :P
+16:37:27 <zfnmxt> Using a different computer (running a different distro) worked. C:
+16:38:47 <louipc> wow what distros you used
+16:43:33 <zfnmxt> NixOS followed by Pop!_OS
+16:44:05 <zfnmxt> I doubt it was the distro; I my main computer has always been funky with this sort of stuff.
+17:21:53 <habbihabbiya3[m]> hi guys im new to the matrix room does anyone know the eta for pixel 5 official release ? Also, is there going to be a significant dip in performance because of the lower end hardware compared to the pixel 4xl ?
+17:28:19 <louipc> habbihabbiya3[m]: no plans of the moment. volunteers are welcome
+18:42:40 <dazinism> <pikaman[m] "Do you think that the Copperhead"> Sadly it distracts developer time and financial resources away from improving the OS.
+18:43:08 <dazinism> There are currently regular large legal bills
+18:43:40 <dazinism> I'd encourage people to support the project during this difficult period.
+18:44:09 <dazinism> https://grapheneos.org/donate
+18:44:10 <dazinism> https://hub.libranet.de/wiki/graphene-os/wiki/Helping-graphene-os
+19:12:04 <barrikade[m]> Hi, I am currently using a pixel 3a with grapheneos as my daily driver. I am considering to sell it and buy a second hand pixel 4a. Do you think it is worth to switch the phone already for security and privacy reasons?
+19:21:32 <strcat[m]> barrikade: probably not worth it
+19:21:46 <strcat[m]> it would be substantially faster though
+19:26:00 <barrikade[m]> Thank you very much for the answer. The 3a is fast enough for my needs. Right now the second hand price for both is almost the same and I also was considering to switch because the longer EOL of the 4a. I think I have answered my question! Thanks again and have a great day/night everyone!!
+19:30:16 <A57> Hi
+19:30:25 <A57> Can someone please help me out
+19:30:40 <jpds> A57: That depends on what your issue is
+19:30:59 <A57> I can't seem to update graphene os manually to the latest version
+19:31:44 <A57> It looks like it got updated but when i check in about phone it's still at the same build number ( RP1A.200720.009.2020.10.01.23)
+19:33:15 <A57> The cmd output doesn't show any problems with regards to installing it
+19:35:10 <A57> I have a more detailed explanation on reddit with screenshots (r/GrapheneOs)
+19:36:48 <A57> Anyone?
+19:39:16 <louipc> well post the link :p
+19:39:27 <A57> https://www.reddit.com/r/GrapheneOS/comments/jrrn9h/updating_graphene_os_on_pixel_3_not_working/
+19:39:44 <A57> I really hope someone can figure out what the problem is
+19:40:22 <louipc> huh i see no info there
+19:40:46 <A57> ?
+19:41:30 <A57> https://www.reddit.com/r/GrapheneOS/comments/jrrn9h/updating_graphene_os_on_pixel_3_not_working/
+19:41:43 <A57> You should be able to see it
+19:41:58 <louipc> [removed]
+19:42:09 <louipc> maybe the bot did it
+19:42:32 <A57> reddit. com/r/ GrapheneOS/comments/jrrn9h/updating_graphene_os_on_pixel_3_not_working/
+19:42:37 <A57> can you see the link now?
+19:43:26 <louipc> no i visited your reddit post but there's nothing in the post
+19:43:49 <A57> damnn let me copy the info
+19:44:54 <A57> I was a few updates behind and tried to manually update it, everything went well and it seemed like the phone had updated but when I checked the build number it was still on the same build as before the update (RP1A.200720.009.2020.10.01.23)
+19:44:57 <louipc> it got wiped right
+19:45:17 <A57>  Eventhough I 'tried' updating it to RP1A.201105.002.2020.11.05.18. I've already checked all documentations on grapheneos.org and I can't seem to find a solution...
+19:45:22 <strcat[m]> Standalone hardened_malloc version 4 released: https://github.com/GrapheneOS/hardened_malloc/releases/tag/4
+19:45:23 <A57> yeah it did
+19:45:43 <strcat[m]> A57: how did you 'manually' update it?
+19:46:12 <strcat[m]> A57: it looks like you unlocked the bootloader (which wipes data) and flashed the factory images again (which wipes data)
+19:46:23 <strcat[m]> you didn't manually update it, you reinstalled
+19:46:40 <strcat[m]> A57: first of all, make sure to lock the bootloader if you hadn't done that before, and figure out why you aren't receiving over-the-air updates, perhaps you're using a VPN / DNS server blocking it
+19:46:57 <strcat[m]> A57: and if you want to manually update it, you need to use an update package and sideload it per the instructions in the usage guide
+19:47:00 <strcat[m]> what you did is reinstalling the OS
+19:47:14 <strcat[m]> see https://grapheneos.org/usage#updates including the sideloading section
+19:47:15 <A57> i can't receive over the air updates thats why i flashed the full updated rom over my installed on
+19:47:30 <strcat[m]> A57: well, you reinstalled the OS, wiping everything you had on the device
+19:47:31 <louipc> but that would wipe all your data
+19:47:33 <strcat[m]> you didn't update it manually
+19:47:58 <A57> yeah i don't mind everything getting wiped of the device aslong as it is updated
+19:48:00 <strcat[m]> A57: https://grapheneos.org/usage#updates-sideloading is how you update manually
+19:48:17 <strcat[m]> A57: that only happened because you reinstalled the OS instead of updating it
+19:48:29 <strcat[m]> A57: it's entirely possible to update the OS via sideloading, see https://grapheneos.org/usage#updates-sideloading
+19:48:36 <louipc> A57: are you against over-the-air updates? or you just have a technical problem?
+19:48:40 <strcat[m]> A57: also, again, you need to check and make sure you have the bootloader locked before doing anything else
+19:48:55 <strcat[m]> A57: it's possible your previous install was not completed properly and so the Updater app was unable to update
+19:48:58 <A57> damn i missed that step. feeling stupid rn
+19:49:02 <strcat[m]> it's important to lock the bootloader to enable verified boot
+19:49:42 <A57> but I think my previous installation might not be 100% correctly installed. How do i completely reinstall the os?
+19:50:01 <louipc> read the install guide :D
+19:51:02 <A57> I did all the steps from the install guide to 'update/reinstall' the OS but it didn't update, it just wiped everything and i was still on the same build number
+19:51:26 <A57> so if i really want to reinstall completely how do i do that?
+19:51:28 <louipc> you might need to lock the bootloader like strcat[m] said
+19:52:26 <strcat[m]> A57: the process you did was flashing the OS again, not updating
+19:52:36 <strcat[m]> A57: and it looks like you probably didn't finish it
+19:52:48 <strcat[m]> you partially reinstalled the OS again or something like that
+19:53:01 <strcat[m]> A57: you need to complete the full installation instructions including locking the bootloader
+19:53:09 <strcat[m]> and make sure it finishes properly
+19:53:28 <A57> i did relock the bootloader
+19:53:32 <strcat[m]> and then it should get updates just fine - but if it doesn't, and you want to manually update it, follow the instructions for that rather than reinstalling the OS again
+19:53:39 <strcat[m]> A57: ok just follow the instructions on updating
+19:53:54 <strcat[m]> don't try reinstalling again, it looks like you're doing something wrong with that
+19:54:17 <strcat[m]> A57: instead download the latest update package and sideload it per the instructions and then I expect you start receiving updates over-the-air just fine once you have a proper install of the OS
+19:56:02 <A57> I understand and i really appreciate your help but the whole OS has been acting weird lately and just to make sure I wanted to completely remove the OS and reinstall it. If I sideload the rom and update it, is there still a chance for missing files/corrupt files from the previous installation?
+19:57:39 <strcat[m]> A57: you can factory reset after you update
+19:58:01 <strcat[m]> it sounds like whatever you're doing to flash the OS is not properly completely the flash, you have a broken OS or hardware (USB cable, port, etc.)
+19:58:22 <strcat[m]> you need to get the OS properly installed, my suggestion is to try sideloading the latest update then doing a factory reset if it's successful in updating it
+19:58:35 <strcat[m]> if that doesn't work you'll need to install again and figure out how to fix whatever is going wrong installing it
+19:58:58 <strcat[m]> sounds like you did not successfully flash it, and it rolled back to the previous install
+19:59:20 <A57> Maybe it has something to do with the bootup slots A and B?
+19:59:24 <A57> not sure
+20:00:11 <A57> But i have been into flashing custom roms, recovery's and kernels for a few years and it just doesn't seem logical..
+20:01:38 <A57> But anyways thanks for your time and effort, i will try your suggestion and hopefully it works..
+20:05:32 <strcat[m]> A57: looks like you're doing something wrong where 'wrong' could include using broken hardware or OS environment
+20:05:49 <strcat[m]> A57: the only relevance of the slots to this is that it can roll back to the other slot if the new one doesn't boot
+20:06:34 <strcat[m]> A57: you'll need to fix whatever is breaking flashing with fastboot, or you'll need to see if sideloading the latest update succeeds and boots
+20:07:01 <A57> yeah i know but what make you think that, that causes the error?
+20:07:07 <strcat[m]> it's possible your phone hardware is failing and some of the flash storage is unusable but it's more likely there's just a problem with your flashing environment / equipment
+20:11:02 <strcat[m]> broken OS or USB cable / port
+20:11:29 <strcat[m]> if you try flashing it and show the log from flashing perhaps there is an error message there showing it's not completely
+20:11:34 <strcat[m]>  * if you try flashing it and show the log from flashing perhaps there is an error message there showing it's not completely flashing it
+20:18:24 <anupritaisno1[m]> A57 pm me
+20:20:48 <strcat[m]>  * it sounds like whatever you're doing to flash the OS is not properly completing the flash, you have a broken OS or hardware (USB cable, port, etc.)
+20:22:56 <clox[m]> Guys, how to install signal on my grapheneOS without using aurora app? The aurora app is not working :-(
+20:23:22 <NorbertTretkowsk> clox: https://signal.org/android/apk/
+20:38:46 <clox[m]> Norbert Tretkowski: Thx Norbert.
+20:39:11 <clox[m]> Do you also know what is going on with aurora?
+20:39:52 <anupritaisno1[m]> Temporary service unavailability is common with Aurora
+22:09:50 <clox[m]> <anupritaisno1[m] "Temporary service unavailability"> Noted
+22:29:14 <TheLynx> hello
+22:31:52 <louipc> hi
+23:44:38 <strcat[m]> Secure PDF Viewer app version 6 released: https://github.com/GrapheneOS/PdfViewer/releases/tag/6.
+23:44:41 <strcat[m]> https://twitter.com/GrapheneOS/status/1326309485032460292
+23:44:54 <strcat[m]> https://www.reddit.com/r/GrapheneOS/comments/jrwl6k/secure_pdf_viewer_app_version_6_released/
+23:45:33 <famfop> hi, i am thinking about buying the new google pixel 5 and am wondering if grapheneos is going to be available for this phone any time soon?
+23:45:46 <strcat[m]> Standalone hardened_malloc version 4 released:
+23:45:46 <strcat[m]> https://github.com/GrapheneOS/hardened_malloc/releases/tag/4
+23:45:56 <strcat[m]> https://twitter.com/GrapheneOS/status/1326249152204972034
+23:46:03 <strcat[m]> https://www.reddit.com/r/GrapheneOS/comments/jrryyl/standalone_hardened_malloc_version_4_released/
+23:46:22 <strcat[m]> famfop: there's no one working on that, the device has no maintenance team that has stepped up
+23:46:50 <strcat[m]> famfop: 0 progress made on it, 0 progress being made, indefinite amount of time until it's supported (if *ever*)
+23:47:04 <strcat[m]> famfop: same answer for the 4a 5G or future devices, or non-Pixel devices
+23:47:15 <strcat[m]> see https://grapheneos.org/faq#device-support
+23:47:29 <strcat[m]> please read the device support sections in the FAQ
+23:48:25 <famfop> I read the faq. That's unfortunate. The pixel 5 looks promising but i don't know how to contribute so i guess it is not an option...
+23:49:04 <strcat[m]> if there is no maintenance team for it, it won't be supported
+23:49:17 <strcat[m]> it's in no way guaranteed that we'll support every Pixel phone
+23:49:51 <strcat[m]> the 4a release was so close to the 5 and 4a 5G release that we're a lot less interested than we'd usually be in finding maintenance teams for them
+23:49:58 <strcat[m]> and either way, we'd have to find maintenance teams
+23:50:47 <famfop> more than asking for it i was asking about it. thanks though :-)
+23:53:17 <seashield[m]> > <@strcat:matrix.org> Secure PDF Viewer app version 6 released: https://github.com/GrapheneOS/PdfViewer/releases/tag/6.
+23:53:17 <seashield[m]> >
+23:53:17 <seashield[m]> Broken link? 404
+23:54:21 <seashield[m]> Actually, it works now.
+23:54:58 <strcat[m]>  * Secure PDF Viewer app version 6 released: https://github.com/GrapheneOS/PdfViewer/releases/tag/6
+23:55:13 <strcat[m]> seashield: probably from copying it from Twitter and the . not being marked up as separate from the URL?
+23:55:14 <strcat[m]> unsure
+23:56:00 <seashield[m]> You're right, it's the .

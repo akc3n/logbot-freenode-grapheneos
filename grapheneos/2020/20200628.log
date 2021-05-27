@@ -1,0 +1,683 @@
+00:24:35 <nickcalyx[m]> > And no i don't think they check the app to make sure it's secure
+00:24:35 <nickcalyx[m]> Its not really possible given the number of apps fdroid has
+00:29:53 <worldwideworld[m> It would be good if the store was in some kind of order
+00:35:36 * mxnorvak[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/uXeoIxUVbuDPfItLpbnaCRUp >
+00:58:01 <defconanon12[m]> Well I am still going to play around with Arch and Fedora so yeah. In a VM setup. Once I have that running.
+02:17:55 <BeingFrey[m]> <georgeaux[m] "7hr screentime and still 47% cha"> 😃
+02:30:48 <plsbrespectfulgu> does anyone have bleachbit ish applications for droid? norton clean without data permission was my go to in the past
+03:49:39 * bonerdose[m] uploaded an image: comedyheaven-hf4rch.jpg (52KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/UBWYLKDuAWIHudCBnRegILUY >
+05:47:20 <thelearner[m]> TheJollyRoger: Hi, have a question about the auditor app. Why doe sit display different colours after the phone has been audited and what do they mean? Thank you. :)
+05:48:44 <TheJollyRoger> Hi thelearner[m], I'm glad you asked! I'll see if I can explain as best as I can:
+05:49:32 <TheJollyRoger> So, the thing with Auditor, is that to establish *some* amount of trust at the onset, is that for the initial pairing, it relies on a certificate chain which is validated all the way back to Google's digital signature saying "yes, this is a real Android Device."
+05:49:42 <TheJollyRoger> Then afterward, it relies on /that specific device/.
+05:49:53 <TheJollyRoger> So, in a nutshell...
+05:50:55 <TheJollyRoger> Yellow is the Auditor telling you that "I've never seen this device before, but the Auditor key is signed by the batch key, which is then attested by the vendor saying that 'it's legitimate' which is then backed up by Google saying 'Yes, the vendor is legitimate.'"
+05:51:27 <TheJollyRoger> Green is the Auditor telling you that "I've seen this device before, and it's legit, because I know I've seen this device before and the keys haven't changed for it."
+05:51:44 <TheJollyRoger> If that screen turns red, that's the auditor telling you "Hold it! Something's wrong!"
+05:54:11 <thelearner[m]> Thank you very much TheJollyRoger: that makes sense. I looked on the grapheneos site and couldn't find this there. Maybe it should be updated? Or maybe I missed it haha.
+05:54:47 <TheJollyRoger> Let me go take a look, and I can go and add it if need be!
+05:56:23 <thelearner[m]> So, to keep it simple green and yellow is okay, but red is a no go or aka red alert and the person would need to reinstall grapheneos properly?
+05:56:42 <TheJollyRoger> well, there are some more innocent reasons that can produce a red screen...
+05:56:49 <TheJollyRoger> The first one of them, is large amounts of clock skew.
+05:57:29 <thelearner[m]> And thanks for adding it to the GOS site, if need be.
+05:57:42 <TheJollyRoger> If the clocks don't agree or are incorrect, then you can end up producing a red screen error.
+05:58:35 <thelearner[m]> The two phones being in two different time zones? Is that an instance of clock skew?
+05:59:30 <TheJollyRoger> Don't quote me on this but I think if one phone is set to be a much, much earlier date than the other, then sometimes this can produce an incorrect result.
+06:00:18 <ahmouse[m]> hey
+06:00:25 <TheJollyRoger> Another one can be holding the phone upside-down, or if you don't hold the phone steady enough, and you can get an error, since there's a lot of data to go through in the "response" QR code and sometimes that small screen can produce very tiny pixels.
+06:00:27 <TheJollyRoger> Ahoy!
+06:00:35 <TheJollyRoger> So you have to hold it steady or sometimes it can end up producing an error.
+06:01:09 <thelearner[m]> Okay and will do. Thanks once again. Also, should I use the app after a fresh install or every new update?
+06:01:46 <TheJollyRoger> I need to check this, but if your bootloader's not locked, then it might also say "something's wrong" - I can check this for you after my CTS run finishes.
+06:02:10 <TheJollyRoger> Well, you can set up Remote Verification, and that'll do it automatically every 4 hours.
+06:02:21 <TheJollyRoger> If you do find something wrong though, there is a very simple solution!
+06:02:25 <TheJollyRoger> And that is...
+06:02:31 <TheJollyRoger> ...reboot your phone!
+06:03:13 <TheJollyRoger> If you've locked your bootloader, what that does is essentially do a complete bitwise validation, signature check, and if something fails, a reinstallation of GrapheneOS.
+06:03:21 <TheJollyRoger> Every time the operating system boots.
+06:03:26 <TheJollyRoger> Thanks to Verified Boot.
+06:04:10 <thelearner[m]> Could you please explain the use case for Remote Verification? Thank you.
+06:04:53 <thelearner[m]> And please do check after your CTS run finishes or whenever you have time. Don't want to hold you up.
+06:04:56 <TheJollyRoger> Every device running GrapheneOS has a bitwise identical system image to every one of the same devices running GrapheneOS. For instance, if you have a Pixel 3a, and I had a Pixel 3a, it doesn't matter that we're completely different people, running different use cases, apps, and such, the system image on both your phone, and my phone, is bitwise identical and the Qualcomm Bootloader that's been
+06:04:58 <TheJollyRoger> keyed to s?trcat's signing keys will check that every time the phone reboots.
+06:05:21 <TheJollyRoger> Sure. One potential use case for Remote Verification is to check heuristically for intrusion.
+06:06:06 <TheJollyRoger> *check regularly for intrusion.
+06:06:12 <TheJollyRoger> let's take an example...
+06:07:09 <TheJollyRoger> For instance, let's say that there's an Extremely Determined Adversary (we'll call 'em the EDA) that wants to get control of your phone and discovers an exploit that can escape from the multiple layers of isolation and sandboxing that keeps the apps confined and isolated.
+06:07:47 <TheJollyRoger> And they use this exploit to reach into your phone's system partition, and say... modify it to do something like say, break the permission model, or install a backdoor or even pivot to a further exploit.
+06:08:29 <TheJollyRoger> If the operating system becomes compromised like that, then it's going to fail attestation because the device is no longer running GrapheneOS unmodified in its original condition.
+06:10:31 <TheJollyRoger> Because Auditor relies on the attestation data generated by your phone's Strongbox (if you're running a Pixel), even if the operating system can lie to /you/ on the screen or even to Android Debug Bridge, it can't lie to remote attestation.
+06:14:08 <thelearner[m]> Thank you for the very detailed response. The auditor app, seems to be essential to the security of GOS. Why is it separate from the built in settings of the OS, instead being a stand alone app?
+06:14:09 <TheJollyRoger> So the remote attestation is essentially a way for you to, if you're worried that someone might fool around with your device by potentially a software exploit, to be able to periodically check to make sure that it hasn't gone so far as to modify the operating system itself. A good use case for this, as an individual, is if you're about to travel over a border, and you've paired your phone with
+06:14:11 <TheJollyRoger> an attestation server beforehand.
+06:14:45 <TheJollyRoger> Partially because it goes a bit further than GrapheneOS! It can be used on and installed to other non-GrapheneOS phones!
+06:15:36 <TheJollyRoger> There's a long list of phones it does support, some with better security than others (Phones that support Strongbox, and have the dedicated hardware to support Strongbox, are going to be much harder for an adversary to exploit than ones that don't have Strongbox).
+06:15:55 <TheJollyRoger> Provided you're running the vendor operating system on thosse phones, Auditor can extend many of the same benefits to them, too.
+06:16:38 <thelearner[m]> Makes sense in regards to the use case. Oh, haha my fault, thought it was a GOS only app. Amazing app though.
+06:17:00 <TheJollyRoger> (If the phone doesn't support Strongbox, then it's likely going to utilize the Trusted Execution Environment, but while that's a considerable security gain from allowing the operating system domain over it, it has more attack surface than letting a separate enclave chip process it)
+06:17:05 <TheJollyRoger> It is! :D
+06:17:22 <TheJollyRoger> In a company/corporate setting it could become even more valuable with a few subtle tweaks.
+06:18:54 <TheJollyRoger> For instance, a theoretical use case would be... let's say you're running an organization like say, activism, journalism, or a legal firm, where you need to make sure that your company phones aren't tampered with to maintain client or source confidentiality and your members' phones are high value targets.
+06:19:52 <TheJollyRoger> Although this functionality to self-host and use multiple attestation servers needs to be added, it would be possible for you to set up remote integrity monitoring to provide a periodic "check in"
+06:20:08 <TheJollyRoger> And if one of those phones either A) goes dead, or B) starts sending back invalid attestation data,
+06:20:53 <TheJollyRoger> right then and there you know that A) something has happened to one of your members, or at the very least, one of their phones. B) one of your member's phones has been hacked and should be retrieved and examined right away.
+06:22:35 <TheJollyRoger> Of course, in that situtation it's best to check before hitting the roof: maybe they just forgot to put it on the charging plate that night and their phone has run out of battery power.
+06:22:44 <TheJollyRoger> That's an entirely innocent reason a phone could literally "go dead."
+06:22:59 <TheJollyRoger> Or they dropped it in a mud puddle or something.
+06:27:18 <thelearner[m]> Very informative! :D Would you have any links or lectures that I could read/follow? Just don't want to bog down this with too many questions haha. Could I send message to your chat of I have another question regarding auditor or other? Also, thank you once again for your very detailed response. Very helpful in understanding the auditor app use case and why it is need or important.
+06:27:59 <TheJollyRoger> I don't have any links or lectures, but I tell you what... I could write one and put it on my knowledge base if you like. You can ask me anytime you like. I'm probably going to head off for the night shortly, but I'm usually on on most days.
+06:28:29 <TheJollyRoger> If you send me a PM and I don't appear to get it within about 48 hours or so, usually try sending it again, because on occasion my Integricloud server crashes and then I lose the notification.
+06:28:45 <TheJollyRoger> (I didn't add enough memory to it X(... I really should :P )
+06:31:37 <cn3m[m]> If you are interested in security chips in general I watched a wonderful blackhat on the SEP. Might give you insight
+06:31:50 <TheJollyRoger> I'd love to see it!
+06:32:20 <thelearner[m]> That would be very handy and would be most welcomed! :) Could you send a link to your knowledge base/website. Also, thank you for wanting to give your time to help and answer my questions, very grateful.
+06:32:20 <thelearner[m]> Will do. Haha got no idea what that is, but hope you find a fix for it soon. :)
+06:33:25 <TheJollyRoger> Sure. It's a tad bit out of date but some of the stuff here might help you on general directions, I think I'll add our discussion on Auditor to it. https://github.com/Peter-Easton/GrapheneOS-Knowledge
+06:34:02 <thelearner[m]> Sounds good and no worries. Will give it a good read over.
+06:35:57 <TheJollyRoger> Yeah! And if you've got more questions let me know and I can add them!
+06:36:07 <cn3m[m]> https://www.youtube.com/watch?v=BLGFriOKz6U&t=415 TheJollyRoger
+06:36:13 <thelearner[m]> Awesome. Sounds good. :)
+06:36:19 <TheJollyRoger> Woohoo!
+06:38:59 <cn3m[m]> It's very good
+06:39:03 <thelearner[m]> In regards to Secure Core Laptops, would there be anyones with good GPUs?
+06:40:27 <TheJollyRoger> I actually uh... humm... I dunno anything about Secure Core Laptops >_<.
+06:41:07 <cn3m[m]> I'd get an ARM Mac at this point. They are going to have a bonkers GPU on them and even good x86 performance
+06:41:43 <cn3m[m]> ARM is better built for verified boot and it's much cheaper
+06:43:10 <thelearner[m]> That's okay. :) yea, been hearing a lot lately about apples new ARM Macs, just don't want to get apple products and mainly, would want a laptop that I could game on. Mostly portability is why, otherwise would just build a rig.
+06:44:07 <macg[m]> <thelearner[m] "That's okay. :) yea, been hearin"> Yeah the fastest supercomputer in the world right now is ARM based
+06:44:25 <cn3m[m]> Security and gaming don't go super well together. You install a lot of sketchy insecure code as admin or root
+06:44:32 <thelearner[m]> macg: Japanese one?
+06:44:37 <macg[m]> yup
+06:44:51 <cn3m[m]> macOS is pretty good about not needing root for stuff, but it's not great for gaming
+06:45:00 <thelearner[m]> cn3m: that's a shame.
+06:45:22 <macg[m]> Do you guys also use privacy-enhancing main OSs like FreeBSD?
+06:45:27 <thelearner[m]> Yea, if only apple did both, would be perfect.
+06:45:48 <macg[m]> Yeah and if only apple had decent hardware... the best mac they ever made was the 2015 pro
+06:45:53 <thelearner[m]> macg: no just windows.
+06:46:09 <cn3m[m]> If you want security and gaming I'm not sure there's a better platform than iPad or macOS
+06:46:26 <macg[m]> Yep macOS is the best for both
+06:46:58 <thelearner[m]> macg: What about the cheese shredder, in regards to decent hardware.
+06:47:44 <thelearner[m]> cn3m: too much $$ for me. Might just stick too windows.
+06:48:34 <cn3m[m]> I use Windows, but I only game on Steam and keep it in another profile
+06:48:55 <cn3m[m]> That's the least insecure way to game
+06:49:42 <cn3m[m]> On Windows
+06:49:49 <cn3m[m]> Steam installs games for you as admin. As Steam so they are a little less likely to do shady things
+06:50:02 <thelearner[m]> Fair. Though, apple stuff wasn't the best for gaming? Will that change in 4 years with ARM?
+06:50:25 <cn3m[m]> I'd use Steam exclusively
+06:50:45 <dazinism> Auditor is now on the izzyondroid Fdroid repo
+06:50:48 <dazinism> https://apt.izzysoft.de/fdroid/index/apk/app.attestation.auditor
+06:51:56 <cn3m[m]> <thelearner[m] "Fair. Though, apple stuff wasn't"> ARM Macs will be able to play iPad games FWIW
+06:53:41 <thelearner[m]> cn3m: don't have anything apple, though good to know. :)
+06:54:14 <thelearner[m]> TheJollyRoger: Thank you once again for your help. Have a great day! :)
+06:56:20 <TheJollyRoger> Anytime! :)
+06:56:24 <TheJollyRoger> Sleep well, shipmates!
+07:00:17 <macg[m]> Hey, can anyone help with me with doing a full backup and restore?
+07:00:32 <macg[m]> Does the built in seedvault tool work well for that?
+07:04:34 <macg[m]> I want to make an exact copy of my phone to use as a backup phone
+07:23:45 <xabi[m]> <cn3m[m] "Security and gaming don't go sup"> It seems that Microsoft did a pretty decent job securing Xbox one(x86). On the other hand switch(arm) got powned easily
+07:26:52 <cn3m[m]> <xabi[m] "It seems that Microsoft did a pr"> I mean on a device you use daily
+07:26:57 <nickcalyx[m]> > Does the built in seedvault tool work well for that?
+07:26:57 <nickcalyx[m]> Not all apps allow backups
+07:27:03 <cn3m[m]> The less secure a console the better in my book
+07:33:31 * macg[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/CVdLDCYroQyahmlbxZYEtThc >
+07:33:42 <macg[m]> Would one need a custom recovery image to do that?
+07:39:55 <frenchieisverige> <cn3m[m] "The less secure a console the be"> Why?
+07:41:57 <cn3m[m]> > <@frenchieisverige:matrix.org> Why?
+07:41:57 <cn3m[m]> > I can't see your point
+07:41:57 <cn3m[m]> Hacking Linux onto it mainly. Unless I'm going to get spied on due to some rce
+07:41:59 <circlerepeat[m]> Hello
+07:43:01 <cn3m[m]> Bootrom attacks are ideal on a console
+07:43:06 <cn3m[m]> <circlerepeat[m] "Hello"> Hello
+07:44:31 <circlerepeat[m]> Can someone please tell me why this company is charging 5660$ Canadian for a pixel phone with your  OS on it. I mean sure they include airtime on a cheap encrypted SIM card.
+07:44:31 <circlerepeat[m]> I mean sure they reworded everything for marketing purposes.
+07:44:31 <circlerepeat[m]> Omertadigital.com
+07:45:24 * sheruleeya[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/cVkxvYeDpqniRUzKzJzteQEC >
+07:45:47 <sheruleeya[m]> * Probably being used without permission and with vested interests (for profit), I mean, GOS is open source and all
+07:47:33 <cn3m[m]> It's not officially associated. This project is run on donations
+07:47:55 <sheruleeya[m]> <cn3m[m] "It's not officially associated. "> As expected
+07:48:15 <sheruleeya[m]> Companies being companies after all -sighs-
+07:48:34 <travankor> looks like a scam
+07:48:45 <macg[m]> What do you all do for backups? Just seedvault or something more ?
+07:49:05 <sheruleeya[m]> * (GrapheneOS) probably being used (by Omerta) without permission and with vested interests (for profit), I mean, GOS is open source and all
+07:49:39 <sheruleeya[m]> <macg[m] "What do you all do for backups? "> Seedvault for apps, normal flash drives with OTG
+07:50:16 <macg[m]> So basically there's no good solution for a full system image?
+07:50:16 <sheruleeya[m]> * Seedvault for apps, normal flash drives with OTG for other files
+07:51:23 <sheruleeya[m]> * Companies being companies after all -sighs-
+07:51:23 <sheruleeya[m]> I don't blame the lead developer not trusting companies (I already lost my faith on (most) companies, they're most probably always have vested interests for gains)
+07:57:22 <circlerepeat[m]> Is an encrypted sim car just a SIM card with a lock pin on it?
+08:07:35 <nickcalyx[m]> chat with them and ask about the "encrypted SIM"
+08:10:27 <bonerdose[m]> Why is it that whenever I try to flash the system image it tells me my fastboot is out of date even though I used the latest android SDK?
+08:13:16 <aeonsolution[m]> do you have other versions of fastboot on your machine?
+08:14:29 <bonerdose[m]> I have gone through and uninstalled all of them, when I try to search it only brings up the SDK version
+08:14:58 <aeonsolution[m]> try running `fastboot --version`
+08:15:48 <aeonsolution[m]> and if that doesn't give you other versions try `which fastboot`
+08:24:22 * bonerdose[m] uploaded an image: IMG_20200628_012320_1.jpg (244KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/zHhyGRWkKnQswDlHmSVpIqGB >
+08:26:26 <aeonsolution[m]> give me a sec. to look over this and compare with my setup
+08:26:38 <bonerdose[m]> Thank you
+08:29:15 <cn3m[m]> Apparently Samsung Exynos Phones support custom verified boot keys?
+08:29:17 <cn3m[m]> At least S10e it looks like.. interesting
+08:29:49 <anupritaisno1[m]> Ah shoot
+08:29:54 <anupritaisno1[m]> Tried enabling secure boot
+08:30:33 <anupritaisno1[m]> Sitting here with no display now
+08:31:16 <anupritaisno1[m]> cn3m: if you know something about this on windows let me know
+08:31:31 <anupritaisno1[m]> Otherwise might have to send this motherboard back
+08:32:22 <bonerdose[m]> Y'all ever spill your dinner on your lap because it was too close to the edge of the desk
+08:34:27 <cn3m[m]> anupritaisno1: did you pull CMOS?
+08:36:53 <aeonsolution[m]> bonerdose: run `$env:path`, DONT post the results. Can you see if there are there are more than 1 platform-tools path?
+08:41:29 <bonerdose[m]> No platform tools path listed aeonsolution
+08:42:38 <bonerdose[m]> aeonsolution: honestly I'm due for a PC reset anyways so I'm decrypting SSD then reformatting I'll try to see if it works tomorrow thanks for the help 🤙
+08:46:12 * aeonsolution[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/bcnpFbZzfavcgYsAOFYVwLtV >
+08:47:22 <aeonsolution[m]> try to stick to the instructions on <https://grapheneos.org/install> as closely as possible, maybe you missed a step
+08:48:48 <aeonsolution[m]> you're welcome on the help, good luck for when you try again
+08:51:11 <bonerdose[m]> Thanks man, I followed that one dudes tutorial that involved outdated fastboot and it kind of fucked everything
+08:51:37 <aeonsolution[m]> that'll do it
+08:52:22 <bonerdose[m]> Also, can anyone confirm that Graohene is compatible on GSM MVNOs like metro?  And do I need to activate on stock before flashing?
+08:53:00 <sheruleeya[m]> Send help
+08:53:12 <sheruleeya[m]> I think bromite is leaking my real IP
+08:53:26 <sheruleeya[m]> Is there some way to turn off WebRTC
+08:54:55 <sheruleeya[m]> * (Deleted)
+08:57:38 <bonerdose[m]> Bromite shouldn't leak webrtc, that's part of the feature of its custom webview
+08:58:24 <aeonsolution[m]> bonerdose: There is an issue with Visible (MVNO owned by Verizon) but there isn't any issues reported for Metro.
+08:58:42 <sheruleeya[m]> Welp, I still get an IP close enough to my real IP
+08:58:47 <aeonsolution[m]> you can check the logs to see if anyone's talked about it
+08:58:52 <sheruleeya[m]> quite alarming
+08:59:05 <aeonsolution[m]> https://freenode.logbot.info/grapheneos/
+08:59:54 <bonerdose[m]> <aeonsolution[m] "https://freenode.logbot.info/gra"> Thank you, I currently have garbage-ass sprint but I'm switching over to either T-Mobile or metro tomorrow.
+09:00:40 <bonerdose[m]> Imagine having a carrier that requires device specific Sim cards and proprietary backdoor software to activate
+09:02:14 <aeonsolution[m]> I've tested Verizon sims and they work on a reboot. Sprint would require you to activate over the web using your account or at a store. I haven't tired either option.
+09:03:04 <sheruleeya[m]> * (Deleted)
+09:03:10 <aeonsolution[m]> You could always test before switching so that way we know if it works on Sprint bonerdose.
+09:03:32 <sheruleeya[m]> * Nevermind, it wasn't really my location, just an IP close enough maybe due to DNS.
+09:03:52 <bonerdose[m]> <aeonsolution[m] "I've tested Verizon sims and the"> Daniel says sprint straight up won't work
+09:04:28 <bonerdose[m]> In fact the only ROM I've ever got to work on sprint was lineage, everything else won't work.
+09:05:46 <aeonsolution[m]> The phone has to be on your online account before you can activate it for Sprint. It won't work otherwise.
+09:05:56 <sheruleeya[m]> I kinda said that for when I logged in, the gmail didnt get translated to the VPN location
+09:07:11 <bonerdose[m]> <aeonsolution[m] "The phone has to be on your onli"> I'll give it a go tomorrow if I can flash it then, I'll report back if I can get it to work, usually I only get 3g sometimes and then I just have talk and text only for the other 90% of the time.
+09:08:26 <aeonsolution[m]> Sounds good, make sure its on the Sprint network before you flash the device. It'll be good to know if it works or not.
+09:41:34 <joshman[m]> "cn3m" (https://matrix.to/#/@cn3m:privacytools.io) win10 question. What if 2 people use one laptop. Will it make sense having two instances of win10 installed or is it enough with 2 separate profiles
+09:41:34 <joshman[m]> Do you have bitlocker on or off? I read it's controversial AH
+09:42:21 <joshman[m]> Crazy times. Going back to windows with a feeling of partial security against no security on Arch
+09:45:12 <dallemon[m]> josh.man: I think you should have 3 accounts. 1 admin and 2 users.
+09:47:20 <joshman[m]> "dallemon" (https://matrix.to/#/@dallemon:matrix.org) so, no 2 windows. Just 3 profiles in 1 os
+09:48:49 <dallemon[m]> Unless it's possible to do BitLocker on both. Unsure if that's possible.
+09:49:56 <joshman[m]> BitLocker is bad according to various info channels
+09:50:52 <dallemon[m]> I think it only does FDE.
+09:51:53 <cdesai> Is there another solution for encryption with windows then?
+09:52:27 <cdesai> Also most desktop linux setups do FDE as well by default
+09:52:28 <joshman[m]> VeraCrypt
+09:57:14 <mxnorvak[m]> <dallemon[m] "josh.man: I think you should hav"> What would be the use case of having 1 admin and n user accounts?
+09:57:55 <dallemon[m]> Locking out regular users from installing stuff and such
+09:59:29 <privacy_based_li> <worldwideworld[m "What are your thoughts on telegr"> lost trust in it
+10:00:49 <joshman[m]> <dallemon[m] "Locking out regular users from i"> Both people sharing one laptop are experienced enough not to mess up. Any other advantages of limiting user Rights?
+10:04:34 <sheruleeya[m]> Not being able to install stuffsm
+10:05:16 <sheruleeya[m]> * Not being able to use admin rights to install or modify settings?
+10:06:58 <dallemon[m]> josh.man: well you could argue that it's a good idea anyway as the default user account is admin
+10:07:36 * privacy_based_li sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/CfifPDeqsFZtAQtYNGoRJwzD >
+10:10:32 <privacy_based_li> > One unique inclusion of our handsets is the use of a heavily modified version of Android as the operating system. The operating system is the software which controls the phones hardware & allows you to interact with it. Omerta uses GrapheneOS – a version of Android tailored to do one thing amazingly well: making a mobile phone which is resilient to hackers & designed to deliver privacy.
+10:10:32 <privacy_based_li> "unique inclusion" ?? wtf
+10:14:35 <mxnorvak[m]> <dallemon[m] "Locking out regular users from i"> Would it also provide any isolation in the sense that it would not let malicious software that auto launches grant admin access ?
+10:15:30 <macg[m]> Is it possible to run TWRP with graphene?
+10:15:31 <macg[m]> And are there any good solutions to run apps like Lyft which require Google play services?
+10:17:32 <dallemon[m]> <mxnorvak[m] "Would it also provide any isolat"> I have not tested it. But have been using 2 accounts on my windows computers for several years.
+10:18:45 <macg[m]> <macg[m] "And are there any good solutions"> For instance, does anyone run these on a VM?
+10:19:03 <dallemon[m]> <macg[m] "Is it possible to run TWRP with "> No. Then you no longer would have verified boot intact.
+10:19:33 <sheruleeya[m]> <macg[m] "Is it possible to run TWRP with "> Not recommended I guess, but it could be if you can make your own avb with iy
+10:20:14 <macg[m]> <dallemon[m] "No. Then you no longer would hav"> So that's the compromise to have a decent backup mechanism
+10:20:48 <macg[m]> Backing up "some apps" isn't good enough
+10:22:23 <dallemon[m]> <macg[m] "Backing up "some apps" isn't goo"> Then try contacting the app developers to fix it. Not having functional verified boot is not worth it. Your system partition could be changed and you wouldn't know
+10:22:39 <sheruleeya[m]> * Not recommended I guess, but it could be if you can make your own avb with it.
+10:23:20 <mxnorvak[m]> <dallemon[m] "I have not tested it. But have b"> Same here, however since I am the sole user of this computer I've been wondering if I'm providing any meaningful security for my day to day usage as i use the non admin account all the time and use the admin one for changing settings or installing or uninstalling software
+10:24:52 <sheruleeya[m]> <dallemon[m] "Then try contacting the app deve"> I am not sure why one seek for it (image (as in system image) backup) when apps is the one not backup-able with normal means (files can be easily transferred)
+10:29:32 <macg[m]> <sheruleeya[m] "I am not sure why one seek for i"> So to back up apps you just copy the data file manually from the phone?
+10:46:18 <sheruleeya[m]> <macg[m] "So to back up apps you just copy"> Apps can be backup through seedvault in GrapheneOS/CalyxOS
+11:01:02 <joshman[m]> <dallemon[m] "josh.man: well you could argue t"> A lil sick of it tbh. It's easier for me to pop up @apple to grab a MBP/MBA and release this group off oftop
+11:04:43 <worldwideworld[m> Is shelter the only one of its kind on F-droid?
+11:07:38 <joshman[m]> <macg[m] "Is it possible to run TWRP with "> Twrp is something one should avoid at all cost
+11:08:27 <privacy_based_li> <worldwideworld[m "Is shelter the only one of its k"> I guess
+11:10:02 <privacy_based_li> But does Shelter work on Graphene? It gives a warning that it might break your system
+11:11:58 <worldwideworld[m> Seems to be working for me
+11:13:28 <worldwideworld[m> i did not get receive that
+11:13:42 <worldwideworld[m>  * i did not receive that
+11:40:37 <sixBit[m]> are you guys using any cloud? I guess the only open source cloud is Nextcloud?
+11:41:13 <sixBit[m]>  * are you guys using any cloud? I guess the only open source option is Nextcloud?
+11:42:36 <georgeaux[m]> Are there any special practise you are doing your voice/phone calls on Graphenos?
+12:35:00 <anupritaisno1[m]> <cn3m[m] "anupritaisno1: did you pull CMOS"> Did. Nothing
+12:39:28 <ruddo[m]> <sixBit[m] "are you guys using any cloud? I "> My "cloud" of choice is Syncthing.  Does everything I need.
+12:39:36 <dazinism> sixBit: Nextcloud is probably best bet. Theres other stuff, but they dont see as much development
+12:40:32 <dazinism> Could use syncthing if you want to keep files on your own devices
+12:40:43 <dazinism> The GrapheneOS backup service, Seedvault, can send your backups to Nextcloud.
+12:41:16 <dazinism> Look at Settings > backup. You'll see nextcloud as an option if you have the app installed
+12:41:41 <dazinism> So long as you dont password protect the nextcloud app on your phone
+12:42:39 <dazinism> Also people who've taken a look at the Nextcloud code say it looks sensible
+12:42:57 <dazinism> Its getting used by some big corps / orgs
+12:47:08 <JTL> > 01:29 <cn3m[m]> Apparently Samsung Exynos Phones support custom verified boot keys?
+12:47:09 <JTL> > 01:29 <cn3m[m]> At least S10e it looks like.. interesting
+12:47:11 <JTL> So it doesn't "KNOX eFuse brick" certain functionality, thats just Qualcomm based devices now?
+12:48:26 <sixBit[m]> I've been looking for a reliable cloud for some time. Using nextcloud seems to only shine if you selfhost it since its not supporting E2EE yet iirc. I don't really feel comfortable hosting it myself, at home. I had it on a VPS before but again that kinda defeats the purpose since the hosting provider might be able to see your data.
+12:49:11 <sixBit[m]> Or is nextcloud supporting E2EE by default?
+12:50:07 <ruddo[m]> No.
+12:50:22 <ruddo[m]> It's not a zero knowledge platform.  It's a php app.
+12:51:13 <sheruleeya[m]> Is seedvault backup encrypted
+13:04:34 <dazinism> sheruleeya: seedvault is encrypted but some metadata isnt
+13:05:03 <dazinism> Can see which apps have backups, but not any data held in the apps
+13:07:21 <dazinism> sixBit: i dont think there is any end to end encrypted cloud storage?
+13:08:40 <sixBit[m]> <dazinism "sixBit: i dont think there is an"> There are, at least they claim it. To name some: sync.com, Tresorit.. All closed source though
+13:51:54 <sivuda1[m]> <sixBit[m] "I've been looking for a reliable"> I host nextcloid. But for an added redundancy I also have a pcloud lifetime account to which I weekly upload all my data through cryptomator.
+13:52:44 <Cybernaut> has anyone tried to unofficially build graphene os for other devices?
+14:13:26 <sheruleeya[m]> <Cybernaut "has anyone tried to unofficially"> To be fair, if you can afford to build (it requires quite some CPU-power and RAM on PC/laptops) (on some countries), might as well buy a officially supported device instead
+14:17:38 <Cyrinux[m]> Hi, maybe im late, what think about this https://www.androidauthority.com/lawful-access-to-encrypted-data-1132922/ ?
+14:27:56 <sheruleeya[m]> * (removed)
+14:28:26 <sheruleeya[m]> <Cyrinux[m] "Hi, maybe im late, what think ab"> Definitely not a good thing, but isn't matrix federated anyways?
+15:16:16 <cyborgninjaneer[> Matrix isn't very resistant to surveillance.
+15:17:08 <sheruleeya[m]> <cyborgninjaneer[ "Matrix isn't very resistant to s"> Well, in this room, yes.
+15:17:59 <cyborgninjaneer[> Federation bleeds lots of metadata
+15:19:15 <sheruleeya[m]> <cyborgninjaneer[ "Federation bleeds lots of metada"> Oh, alright. Somehow makes sense on server side?
+15:20:36 <cyborgninjaneer[> It has to hop between everybody's home server, and none of that is obfuscated. Plus it's unencrypted by default.
+15:20:51 <worldwideworld[m> Which anonymous phone number website do you guys use?
+15:21:33 <cyborgninjaneer[> None. Just don't use crap if they demand a telephone number
+15:22:07 <JTL> Signal's going to have alternative identifiers sometime before 2025
+15:22:22 <sheruleeya[m]> <cyborgninjaneer[ "None. Just don't use crap if the"> Sadly, Signal uses phone number
+15:22:24 <JTL> (the 2025 part is something I made up, this is *actually* planned though)
+15:22:51 <worldwideworld[m> I am looking for a site of anonymous phone numbers to reg some apps
+15:22:54 <cyborgninjaneer[> I use Signal for IRL contacts and may start using Session for others.
+15:23:10 <sheruleeya[m]> Why can't they use anything else -sighs-
+15:23:10 <sheruleeya[m]> The moment they'll use other ways, it would have been better for all of us.
+15:23:12 <tamz[m]> <cyborgninjaneer[ "It has to hop between everybody'"> iirc e2ee is now the default setting for new rooms
+15:23:22 <sheruleeya[m]> <cyborgninjaneer[ "I use Signal for IRL contacts an"> Is Session stable enough for daily usage?
+15:24:00 <cyborgninjaneer[> I'm not sure. I have barely used it, but it hasn't glitched out on me yet
+15:24:31 <cyborgninjaneer[> Only issue I've seen is that it sometimes doesn't clear notifications after you look at messages.
+15:24:51 <sheruleeya[m]> Some had reported that messages dont get delivered on time
+15:25:13 <cyborgninjaneer[> IDK. Haven't seen that... Yet.
+15:25:38 <cyborgninjaneer[> I have rarely seen messages deliver very slowly via Signal.
+15:27:57 <sheruleeya[m]> Not Signal though, I meant Session
+15:28:21 <hypokeimenon[m]> > <@sheruleeya:matrix.org> Why can't they use anything else -sighs-
+15:28:22 <hypokeimenon[m]> > The moment they'll use other ways, it would have been better for all of us.
+15:28:22 <hypokeimenon[m]> They are working on it with the encrypted storage option.
+15:28:41 <hypokeimenon[m]> Session is not fully implemented, not yet audited and does not provide the same feature set as Signal.
+15:30:10 <hypokeimenon[m]> <cyborgninjaneer[ "Federation bleeds lots of metada"> Is there a federated service that does a good job with metadata
+15:31:00 <bonerdose[m]> <sivuda1[m] "I host nextcloid. But for an add"> Mega is relatively cheap, e2ee, and their client apps are open source.
+15:31:07 <skwisgaar[m]> I don't remember exactly, but I think signal uses phone numbers in order to offload some degree of legal responsibility onto phone companies rather than themselves. Wish I remembered the full details.
+15:31:35 <cyborgninjaneer[> > > <@cyborgninjaneer:matrix.org> Federation bleeds lots of metadata
+15:31:36 <cyborgninjaneer[> > Is there a federated service that does a good job with metadata
+15:31:36 <cyborgninjaneer[> Federation is the cause of excess metadata. Signal is the only option to minimize metadata.
+15:32:48 <cyborgninjaneer[> If you have to, buy a burner number from the grocery store to make a Signal account and then set registration lock before you pitch the phone.
+15:32:48 * hypokeimenon[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/coUXEGIKsMAUnKvqPzgYnbdX >
+15:32:52 <cyborgninjaneer[> No
+15:33:07 <sheruleeya[m]> <bonerdose[m] "Mega is relatively cheap, e2ee, "> Mega too sketchy for my needs, also the server and owner place isn't particularly a good place for privacy.
+15:33:45 <cyborgninjaneer[> Signal is centralized, which is why it's able to conceal everything except the fact that you connected to Signal's server to send or receive a message.
+15:36:02 <cyborgninjaneer[> Session is onion routed to do roughly the same, but as others have said, it hasn't been audited yet.
+15:36:31 <hypokeimenon[m]> <sheruleeya[m] "Mega too sketchy for my needs, a"> there's Internxt's service I guess, decentralised and zero knowledge e2ee
+15:38:45 * sheruleeya[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/zLCBGvrYuVBmIbpszZlDSxNG >
+15:39:02 <hypokeimenon[m]> another called Allsync? or something like that which is based in the Netherlands
+15:39:45 <sheruleeya[m]> * Mega too sketchy for my needs, also the server and owner place isn't particularly a good place for privacy.
+15:39:45 <sheruleeya[m]> Also, not yet audited? Client-only open source must be used with precaution, like Keybase.
+15:39:45 <sheruleeya[m]> (for instance: Keybase was bought by Zoom), while Mega's owner is unknown whether it's Chinese owned or its sever is there.
+15:49:07 <AdventureCommuni> Aurora store and fdroid just stopped working for me? Aurora cant build the google play api and fdroid fails to update repositories. Everything else works fine though like I can search and use riot
+15:50:08 <nickcalyx[m]> > Federation bleeds lots of metadata
+15:50:08 <nickcalyx[m]> There needs to be more federation over Tor. Calyx's xmpp server started federating over tor years ago, and our mail server does as well. Unfortunately its kind of a manual opt in system
+15:54:23 <nickcalyx[m]> As far as e2ee cloud storage goes, there is Tahoe-LAFS
+16:11:28 <defconanon12[m]> sheruleeya: I believe that is Chinese owned and I think that is the CCP's favorite place to censorship a lot of files. CCP has control of Mega from what I see.
+16:12:05 <privacy_based_li> <Cyrinux[m] "Hi, maybe im late, what think ab"> strcat: this would affect pixel too right? Maybe they will backdoor the Titan chip?
+16:13:26 <bonerdose[m]> Man after resetting my PC and downloading the latest android SDK its STILL saying fastboot out of date, any ideas?
+16:13:54 <defconanon12[m]> If the CCP didn't have your data before they do if you use Mega. You can reference Mega's privacy policy which is iffy.
+16:15:34 <JTL> privacy_based_li: I was going to ask. Your nick a reference to a certain music project? :)
+16:16:11 <bonerdose[m]> I don't think mega is Chinese owned actually, it was bought by a Chinese investor but the new Zealand gov acquired it because it was an illegal purchase (something about domestic ownership laws)
+16:16:41 <privacy_based_li> <JTL "privacy_based_lifeform: I was go"> > Your nick a reference to a certain music project?
+16:17:01 <JTL> heh okay
+16:17:27 <JTL> Offtopic, but I'll just leave this here
+16:17:28 <JTL> https://en.wikipedia.org/wiki/Carbon_Based_Lifeforms
+16:17:35 * privacy_based_li sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/CVgqoIjDEfhfxkTsZvuDZJfs >
+16:17:56 <JTL> :)
+16:18:09 <privacy_based_li> 😂😂
+16:19:06 <defconanon12[m]> bonerdose: Well it is a honeypot of some sorts.
+16:22:33 <bonerdose[m]> So do you guys have any idea what's wrong with my fastboot? I've downloaded the newest SDK and its still telling me when I try to run flash-all.bat that my fastboot is out of date.  I reformatted my PC last night so there's no way of any other fastboot being on there.
+16:24:05 <privacy_based_li> is your phone up tp date?
+16:25:40 <privacy_based_li> caz fastboot is in your ohone
+16:25:44 <privacy_based_li>  * caz fastboot is in your phone
+16:25:57 <bonerdose[m]> Yes, latest security patch
+16:26:12 <privacy_based_li>  * > Your nick a reference to a certain music project?
+16:26:12 <privacy_based_li> nope lol
+16:26:29 <privacy_based_li> hmmmmm
+16:26:49 <privacy_based_li> what exactly are you trying to do tho
+16:27:15 <bonerdose[m]> Flash the OS, by running the .bat file in the terminal
+16:28:41 <privacy_based_li> whats the output of this "fastboot --version"
+16:29:17 * bonerdose[m] uploaded an image: IMG_20200628_012320_1.jpg (244KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/KnHNMoJPdbJAnNsczntpiXXQ >
+16:31:05 <aeonsolution[m]> can you show the error you get
+16:33:45 <nowbody[m]> I had exactly the same issues with fastboot
+16:34:30 <nowbody[m]> Just open the fastboot file in a text editor, and do all the commands manually from the commandline
+16:35:13 <nowbody[m]> It is the only way I got it done
+16:35:16 * bonerdose[m] uploaded an image: Imagepipe_0.jpg (30KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/XsIovxnceEiQXURDTWcYIFtr >
+16:35:43 <nowbody[m]> I got exactly the same error
+16:35:47 <privacy_based_li> but how is that giving the version error
+16:35:55 <nowbody[m]> The fastboot is broken
+16:36:14 <nowbody[m]> I really got exactly the same output
+16:36:41 <nowbody[m]> Downloading any new version to the PC does not help
+16:37:01 <nowbody[m]> The only way is just to do all the commands manually in the terminal
+16:37:17 <nowbody[m]> Just without the fuckedup 17 line
+16:37:24 <aeonsolution[m]> did you add fastboot to the path?
+16:37:42 <privacy_based_li> its saying what all may be wrong, maybe the path is
+16:38:15 <aeonsolution[m]> it looks like they are running the bat file in the platform-tools
+16:38:44 <privacy_based_li> yeah
+16:38:53 <aeonsolution[m]> directory instead of the release directory
+16:38:56 <nowbody[m]> Yeah, it is the most common error people nowdays getting than they trying to flash ROMs
+16:39:32 <privacy_based_li> ive forgot how windows cli looks like😂
+16:39:46 <bonerdose[m]> Where do I need to be running it? Its in the platform-tools directory?
+16:39:59 <nowbody[m]> Doing any command from this file manually solves the issues
+16:40:21 <aeonsolution[m]> try adding the fastboot to the path first
+16:40:38 <aeonsolution[m]> and running fastboot --version outside of the platform-tools directory
+16:40:46 <aeonsolution[m]> to see if it was set properly
+16:41:34 <AdventureCommuni> Anyone else unable to use the Aurora Store?
+16:41:35 <bonerdose[m]> Its not a recognized command outside of the platform-tools directory
+16:42:05 <aeonsolution[m]> because you havent set the environment variable on the path
+16:42:19 <aeonsolution[m]> you aren't following the instructions on the install page
+16:43:55 <bonerdose[m]> Okay, so is this part of the "obtaining fastboot" section or the "flashing factory images" section?
+16:44:41 <aeonsolution[m]> `$env:Path = "$pwd\platform-tools;$env:Path`
+16:44:54 <aeonsolution[m]> "obtraining fastboot? section
+16:45:17 <aeonsolution[m]>  * [correction]"obtaining fastboot" section
+16:46:38 <bonerdose[m]> <aeonsolution[m] "`$env:Path = "$pwd\platform-tool"> That command is giving me an error both in and out of the platform-tools directory, its saying it isn't a recognized cmd, function, etc.
+16:47:40 <aeonsolution[m]> because you are inside the platform-tools directory on powershell
+16:48:01 <aeonsolution[m]> you need to be a path level up; `cd ..`
+16:48:36 <aeonsolution[m]> run that command and try the command again
+16:49:11 <aeonsolution[m]>  * [correction]`$env:Path = "$pwd\platform-tools;$env:Path"`
+16:55:53 <bonerdose[m]>  `cd $env:Path = "$pwd\platform-tools;$env:Path`  is that the command your telling me to run, outside of platform tools?
+16:56:54 <aeonsolution[m]> run the commands separately
+16:57:04 <aeonsolution[m]> first run `cd ..`
+16:57:21 <aeonsolution[m]> you should be in your downloads if i'm following your picture correctly
+16:58:03 <aeonsolution[m]> then run the `$env` command
+17:00:21 <aeonsolution[m]> if you don't follow the instructions closley from the grapheneos site, you will run into issues
+17:01:43 * bonerdose[m] uploaded an image: Imagepipe_1.jpg (67KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/pOWHBWSzbaIAWFQjYQldkDKX >
+17:02:10 <bonerdose[m]> There's obv something I'm not getting lol, sorry about the ignorance in command line shit
+17:02:31 <aeonsolution[m]> don't run the bat file yet
+17:02:47 <aeonsolution[m]> run 'fastboot --version' now
+17:03:03 <sheruleeya[m]> You're supposed to go to cd (insert folder extracted on GOS zip file)
+17:03:28 <aeonsolution[m]> he put it inside the platform-tools directory
+17:03:28 <sheruleeya[m]> After checking the `fastboot --version`
+17:05:25 <defconanon12[m]> Adventure Communist: Alright very interesting. Aurora Store failed to build Google API. You can't even make an anonymous account on there anymore. Yet AuroraDroid is still functional.
+17:06:08 <aeonsolution[m]> the PATH is a list of directories to find your tools, if you dont add the fastboot directory to the PATH; your computer will not recognize the fastboot command outside of its directory
+17:07:00 <aeonsolution[m]> you want to run the bat file inside the folder you unzip
+17:07:15 <aeonsolution[m]> start over from this step
+17:07:41 <aeonsolution[m]> https://grapheneos.org/install#flashing-factory-images
+17:09:44 <sixBit[m]> <hypokeimenon[m] "there's Internxt's service I gue"> I looked into Internxt as well. Looks promising. Just pretty new.
+17:09:55 <aeonsolution[m]> after you follow the instructions on https://grapheneos.org/install#obtaining-factory-images
+17:10:56 <bonerdose[m]> IT WORKED
+17:11:25 <bonerdose[m]> thank y'all for helping 🤘
+17:11:52 <aeonsolution[m]> 👍️
+17:12:13 <aeonsolution[m]> did you flash the OS on the Sprint network?
+17:23:14 <nickcalyx[m]> Instead of having people struggle with paths, why not just have them put adb and fastboot in the directory with the install bundle
+17:24:02 <AdventureCommuni> damn it was so easy for me on linux lol
+17:34:11 <defconanon12[m]> Adventure Communist: Just to let you know the site is down for the Aurora Store.
+17:36:06 <defconanon12[m]> Wait I was wrong I can't browse at all currently.
+17:36:24 <AdventureCommuni> hmm weird
+17:36:26 <AdventureCommuni> though as I said a reinstall made it working again for me
+17:36:27 <anupritaisno1[m]> <nickcalyx[m] "Instead of having people struggl"> You can't
+17:36:29 <anupritaisno1[m]> Powershell doesn't execute from cwd for security reasons
+17:38:23 <nickcalyx[m]> so just use the regular windows shell
+17:38:40 <nickcalyx[m]> I'm updating apps from aurora store right now
+17:39:07 <nickcalyx[m]> works fine
+17:39:15 <defconanon12[m]> Adventure Communist: Okay host is down.
+17:42:07 <plsbrespectfulgu> is aurora store failing for anyone else rn?
+17:43:15 <plsbrespectfulgu> i have multiple devices and the api keepa failing
+17:43:23 <nickcalyx[m]> It has proxies that it uses to login with fake accounts
+17:43:44 <nickcalyx[m]> Just chill out, it will work later
+17:44:47 <plsbrespectfulgu> no need to change the proxy or any settings? i was doing a device transition but this slowed things down
+17:45:10 <aeonsolution[m]> hi anupritaisno1 👋
+17:45:26 <nickcalyx[m]> If you are in a rush, give it a real Google account to use
+17:45:48 <nickcalyx[m]> Instead of using its 'anonymous' fake accounts
+17:46:14 <plsbrespectfulgu> guess i can wait, would rather not make a new goog
+17:47:47 <AdventureCommuni> <plsbrespectfulgu "is aurora store failing for anyo"> yes a few of us
+17:47:51 <AdventureCommuni> try reinstalling
+17:47:54 <anupritaisno1[m]> aeonsolution: hi
+17:50:25 <plsbrespectfulgu> <AdventureCommuni "try reinstalling"> i did. might just have to wait
+17:52:43 <defconanon12[m]> anupritaisno1: Still having Windows issues?
+17:56:10 <anupritaisno1[m]> Yes
+17:56:11 <anupritaisno1[m]> Returned the motherboard waiting on a new one
+17:57:44 <jalb> Hello, to use auditor remotely, do I need a friend or someone else with Auditor installed to check the QR code or there's some website to check it?
+18:01:23 <aeonsolution[m]> Here are the instructions https://attestation.app/tutorial
+18:02:36 <jalb> aeonsolution[m], thank you very much for your help!
+18:05:20 <httplov3craft[m]> <bend[m] "hi everyone, I was told on reddi"> What did you break? 😏😂
+18:11:46 <jcpicard32[m]> Quick sanity check. Did you let things keep running when you hit the fastbootd menu? When I installed originally I didn't realize that things continued installing after you first get there, and I had similar issues.
+18:14:24 <jalb> aeonsolution[m], do you think it's safe or private in some way to use attestation website to check remotely my system?, it uses Google DNS
+18:14:30 <defconanon12[m]> bend: If you hit the enter key before the flash finished you are going to have a corrupt OS. In this case a corrupted Graphene OS.
+18:16:55 <jcpicard32[m]> When I had this problem I just tried reinstalling and gave it plenty of time to do its thing and it worked.
+18:17:22 <defconanon12[m]> bend: Well at this point you need to reflash the stock OS and start over from there. It is possible you have a bad Stock OS not sure. Depends where you got the Stock OS from.
+18:17:23 <jcpicard32[m]> You definitely have Fastboot working, which provided you used the version from google means you avoided the other common pitfall
+18:17:26 <jcpicard32[m]> Yeah that's what I did
+18:17:35 <jcpicard32[m]> You could also try reflashing the stock OS
+18:17:47 <jcpicard32[m]> Just make sure to switch the keys back using the instruction at the end of the guide
+18:20:11 <jcpicard32[m]> That is normal. Just let it do its thing when you get there
+18:21:01 <nickcalyx[m]> you should read the output of the script
+18:21:09 <nickcalyx[m]> to figure out what's not working
+18:21:28 <nickcalyx[m]> maybe your disk is filling up when it tries to unzip graphene
+18:40:48 <defconanon12[m]> anupritaisno1 You are an Arch user right?
+18:42:47 <anupritaisno1[m]> Yes
+18:48:18 <hypokeimenon[m]> <sixBit[m] "I looked into Internxt as well. "> Yeah. Apart from that LeastStorage are doing privatestorage which might be decentralised and completely built on open-source tech but no idea on when it's coming
+18:48:19 * anupritaisno1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/DFOEJmsHGVNfAototbgAsApr >
+18:48:22 <anupritaisno1[m]> Quoted as-is
+18:48:24 * anupritaisno1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/LEXKkORWMwzJBlqmasUyNXbo >
+18:51:43 <madaidan[m]> I also use arch btw
+18:52:19 <concat[m]> <madaidan[m] "I also use arch btw"> *Void screech*
+18:52:46 <aeonsolution[m]> <jalb "aeonsolution, do you think it's "> it generally is, you can be more secure if you trust the initial verification with a device in your possession
+18:52:49 <anupritaisno1[m]> No you use gentoo
+18:53:32 <concat[m]> <anupritaisno1[m] "No you use gentoo "> I've only ever seen Madaidan using Gentoo in my dreams
+18:54:12 <jalb> aeonsolution[m], thanks!
+18:54:25 <TheJollyRoger> I don't run Gentoo, Gentoo runs me... up the wall at times T_T.
+18:54:40 <aeonsolution[m]> TheJollyRoger!!!!
+18:54:45 <TheJollyRoger> Ahoy!
+18:56:21 <TheJollyRoger> Heh, guys, check this out, I'm using the "Run Everything" command and...
+18:56:34 <TheJollyRoger> Command Id  Exec Time  Device            State
+18:56:36 <TheJollyRoger> 1           58h:01:08  XXXXXXXXXXXXXXX]  running stub on build(s) 'DeviceBuildInfo{bid=6482717, serial=XXXXXXXXXXXXXX}'
+18:56:41 <TheJollyRoger> Sixty hours and counting! XP.
+18:56:46 <concat[m]> <TheJollyRoger "I don't run Gentoo, Gentoo runs "> Idk, used to have Gentoo as my daily driver and there was mild irratation at times
+18:56:48 <concat[m]> maybe try Void Linux that stuffs cool too
+18:57:57 <aeonsolution[m]> bend: if you followed the instructions for flashing on windows 10 using powershell https://grapheneos.org/install#flashing-factory-images then after the script finishes running, from fastbootd it would reboot back to the bootloader without user intervention
+18:57:58 <TheJollyRoger> concat[m]: it's not as bad as I make it out to be, but mind you, I'm also running an unstable/testing profile with a large number of cross-architecture keywords.
+18:58:20 <anupritaisno1[m]> TheJollyRoger: yeah could have watched fist of the north star in that time /s
+18:58:28 <TheJollyRoger> Argh X(
+18:59:47 <defconanon12[m]> concat: TheJollyRoger anupritaisno1 madaidan. I am going DM you all at some point. I just need opinions and advice with distros if you wouldn't mind.
+19:00:03 <defconanon12[m]> If you don't want this DM tell me now.
+19:00:09 <TheJollyRoger> Sure.
+19:00:37 <madaidan[m]> <concat[m] "I've only ever seen Madaidan usi"> I guess you dream about me a lot
+19:01:13 <TheJollyRoger> I should give you the heads-up that I'm not a distro expert, I'm constrained largely by the hardware I chose.
+19:01:29 <TheJollyRoger> On the x86 you'll have a lot more variety.
+19:01:41 <concat[m]> <madaidan[m] "I guess you dream about me a lot"> Where'd you get that conclusion baka?
+19:01:48 <anupritaisno1[m]> <defconanon12[m] "concat: TheJollyRoger anupritais"> DM me
+19:02:27 <madaidan[m]> <concat[m] "Where'd you get that conclusion "> I watch you sleep
+19:02:45 <concat[m]> <madaidan[m] "I watch you sleep"> how do you see my dreams
+19:03:22 <madaidan[m]> <concat[m] "how do you see my dreams"> You keep moaning
+19:03:51 <concat[m]> <madaidan[m] "You keep moaning"> but those are for James
+19:06:24 <EssentialChaos[m> madaidan.: concat I think you are in the wrong room
+19:06:33 <worldwideworld[m> has anyone used https://f-droid.org/en/packages/com.aurora.adroid/
+19:08:35 <hypokeimenon[m]> <defconanon12[m] "concat: TheJollyRoger anupritais"> I can save you some time. Don't lol
+19:14:11 <madaidan[m]> <EssentialChaos[m "madaidan.: concat I think you ar"> no
+19:25:55 <cn3m[m]> <defconanon12[m] "concat: TheJollyRoger anupritais"> Don't use Linux ez
+19:26:57 <nitroneurons[m]> Use windows 10 2004
+19:26:58 <EssentialChaos[m> <cn3m[m] "Don't use Linux ez"> I mean, it's probably still the best for development
+19:27:32 <maneo[m]> https://wiki.archlinux.org/index.php/security
+19:27:56 <maneo[m]> would taking the steps outlined in the guide lead to comparable security to windows 10?
+19:28:02 <maneo[m]>  * would taking the steps outlined in this guide lead to comparable security to windows 10?
+19:30:33 <strcat[m]> @maneo:matrix.org: no not at all
+19:30:38 <cn3m[m]> <maneo[m] "would taking the steps outlined "> No not even close
+19:31:16 <strcat[m]> thinking that making assorted little tweaks makes a substantial difference for your security is so wrong too
+19:31:54 <madaidan[m]> <maneo[m] "would taking the steps outlined "> Not even close
+19:32:13 <strcat[m]> BTW I'm getting tired of people using this channel to get desktop security advice
+19:32:15 <cn3m[m]> Windows 10 has good security options, but they are just extending the already partially formally verified and well audited hypervisor features
+19:32:18 <strcat[m]> whenever I look at it that's the discussion
+19:32:20 <madaidan[m]> Changing a few settings will not fix architectural security issues
+19:32:25 <strcat[m]> and people are not willing to go back and read past discussions
+19:32:32 <jknsec[m]> Would it be ill-advised if I duel booted a rarely used Arch with Windows? Currently using Qubes but it works very poorly on my hardware and I need something
+19:32:35 <maneo[m]> thank you guys, in that case it sounds like it might be worth it to go back to windows
+19:32:36 <jknsec[m]> oh okay
+19:33:19 <jknsec[m]> lol I ask a question immediately when strcat mentions he's tired to desktop security stuff
+19:33:35 <strcat[m]> it was never on-topic
+19:33:42 <antranigv> Hey all
+19:33:47 <jknsec[m]> True
+19:33:51 <strcat[m]> and if it's just a retread of past and especially recently discussions it's not appropriate
+19:34:11 <strcat[m]> when you want to know something you should do research
+19:34:20 <strcat[m]> asking questions here is a last resort when you can't find the answer yourself
+19:34:24 <sixBit[m]> <cn3m[m] "Windows 10 has good security opt"> Do you use an AV?
+19:34:35 <maneo[m]> if only ltsc was easier to purchase
+19:34:41 <antranigv> I have a Pixel 2 with GrapheneOS where I do some testing of friend's software. However, I really want to use a proper powerful phone (this one's batter is no-good anymore), which one do you guys recommend?
+19:34:52 <strcat[m]> @maneo:matrix.org: ltsc is an optional enterprise feature and is not advisable
+19:34:54 <cn3m[m]> We all saw the was bad timing don't worryjknsec
+19:34:59 <strcat[m]> you should follow the normal releases
+19:34:59 <antranigv> I know Graphane is Pixel-only, so I'm assuming the coming Pixel 5 or current Pixel 4?
+19:35:04 <strcat[m]> and again
+19:35:07 <strcat[m]> you could just read past discussions
+19:35:10 <strcat[m]> and see this
+19:35:30 <antranigv> also, is there a way to "sandbox" an application and then run it? sometimes I need to run non-opensource apps.
+19:35:32 <strcat[m]> it's tiring repeating the same things about off-topic stuff people want to talk about more than the topic of the channel
+19:35:42 <strcat[m]> antranigv: all apps are sandboxed
+19:35:56 <strcat[m]> antranigv: an app being open source does not mean it's secure or privacy friendly
+19:36:25 <antranigv> strcat[m] but at least I can read the code :) :P
+19:36:27 <antranigv> just kidding
+19:36:43 <cn3m[m]> This chat is logged you can search strcat[m] Windows for example
+19:37:04 <cx2[m]> antranigv: would seriously consider typing keywords into the channel search. You will fine answers to all questions you've asked.
+19:37:14 <cn3m[m]> <antranigv "also, is there a way to "sandbox"> This is covered in the FAQ and Usage guide. It covers what apps can see
+19:37:37 <antranigv> cx2[m] thanks! I'll search now (I think my ZNC keeps the logs)
+19:37:45 <strcat[m]> antranigv: you can read the compiled code either way - and I'm not sure how that really helps you
+19:37:47 <antranigv> cn3m[m] thanks! I'll read it again.
+19:37:52 <maneo[m]> thanks again, and my bad for derailing the discussion strcat
+19:37:53 <jknsec[m]> sorry, lol, I've done research just didn't realize it was a big issue
+19:38:22 <dazinism> cn3m: you got any more  info/links about verified boot on Samsung s10e?
+19:38:23 <strcat[m]> if you search the logs for this channel you'll see people want to talk about desktop operating systems multiple times a day
+19:38:25 <jknsec[m]> But I do have a question about the device descriptor bug or whatever it's called
+19:38:27 <strcat[m]> and I'm not sure whty
+19:38:31 <strcat[m]>  * and I'm not sure why
+19:39:06 <strcat[m]> and each time people bring it up, it will be harder to find the discussions which were more in-depth - which are few
+19:39:13 <strcat[m]> so you're just making your own life harder
+19:39:22 <strcat[m]> because either way I expect people to go read the past discussions
+19:39:29 <strcat[m]> so yes you will have to dig through 300 non-in-depth ones
+19:39:33 <strcat[m]> with people posting misinformation
+19:39:38 <strcat[m]> because people keep bringing it up daily
+19:39:50 <TheJollyRoger> @strcat ah crud, sorry. I'll ask people to take desktop security questions elsewhere.
+19:40:09 <strcat[m]> it's no longer an appropriate topic - it has been discussed enough
+19:40:11 <cn3m[m]> strcat: can madaidan and your discussion here https://forums.whonix.org/t/fixing-the-desktop-linux-security-model/9172
+19:40:11 <cn3m[m]> Be the go to resource?
+19:40:31 <strcat[m]> no
+19:41:08 <strcat[m]> cn3m: feel free to point people there w/e
+19:41:11 <strcat[m]> just no more about this
+19:41:30 <TheJollyRoger> Got it. No more desktop security questions, then.
+19:41:38 <strcat[m]> tired of this topic 3 times every day, almost every time I look at the channel it's just people discussing the same misunderstandings/misconceptions they have about desktop Linux - it's pretty stupid
+19:42:05 <jknsec[m]> strcat Has there been a proper patch for it or is there still just a sort of "workaround"? Or is that the patch?
+19:42:26 <strcat[m]> why
+19:42:27 <strcat[m]> look at the thread
+19:44:15 <jknsec[m]> what thread? I checked release notes and am under the impression that something was simply disabled in the hardened_malloc implementation
+19:44:24 <jknsec[m]> Still
+19:44:33 <jknsec[m]> * But I do have a question about the device descriptor bug or whatever it's called.
+19:46:41 <strcat[m]> jknsec: it was disabled for that specific audio process
+19:46:47 <strcat[m]> you can look at the threads on the issue tracker]
+19:46:51 <strcat[m]>  * you can look at the threads on the issue tracker
+19:47:45 <jknsec[m]> kk
+19:48:22 <jknsec[m]> I feel as though I hath invoked the daily annoyance of strcat
+19:49:03 <strcat[m]> it's no easier for me to search for the thread and link it to you than it is for you to find it
+19:49:17 <strcat[m]> there is one for the original issue and one for the workaround
+19:49:25 <strcat[m]> linking to each other
+19:49:38 <cn3m[m]> It's a lot of work to be community manager and lead developer. He's trying to have people do their own research.
+19:49:53 <jknsec[m]> I got you.
+19:50:50 <jknsec[m]> Sorry for being kind of sloppy as far as questions go. Tired and have a lot of work to do and didn't even think to just check the issue tracker
+19:51:07 <jknsec[m]> Like duh
+19:52:11 <MysteriousWizard> <cn3m[m] "It's a lot of work to be communi"> I thought Micay was the lead developer
+19:52:54 <cn3m[m]> MysteriousWizard1943: strcat, micay, thestinger are the same person
+19:52:56 <jknsec[m]> MysteriousWizard1943 He is
+19:53:07 <jknsec[m]> ^
+19:53:29 <cn3m[m]> renlord is another developer(part-time) he just goes by renlord
+19:53:55 <MysteriousWizard> <cn3m[m] "MysteriousWizard1943: strcat, mi"> Ahh
+19:54:00 <MysteriousWizard> Makes sense (it doesn't) but thanks
+19:56:11 <jknsec[m]> bend Waiting for any device usually means it's not reading the device properly
+19:56:51 <TheJollyRoger> jknsec[m]: are you on fastboot?
+19:57:03 <TheJollyRoger> And if you are on Linux, are your udev rules set properly?
+19:58:00 <jknsec[m]> I can't remember. That was simply my experiencing with flashing. Then again I did it on Arch.
+19:58:06 <cn3m[m]> MysteriousWizard1943: he's only here as strcat, only on GitHub as thestinger, and only on Reddit as DanielMicay
+19:58:45 <jknsec[m]> TheJollyRoger bend Is the one having the issue though...
+19:59:09 <aeonsolution[m]> bend redownload the release
+19:59:12 <aeonsolution[m]> and try again
+19:59:33 <aeonsolution[m]> you probably moved files you werent supposed to by accident
+20:00:11 <aeonsolution[m]> when the bat file runs, the device moves to fastbootd
+20:00:17 <aeonsolution[m]> the flashing happens here
+20:00:19 <jknsec[m]> ^
+20:00:31 <aeonsolution[m]> when it finishes, the script reboots into the bootloader
+20:00:45 <TheJollyRoger-M> Oh wait I see... The bridge conked out and I don't see Bend because the bridge is silently dropping his messages.
+20:00:47 <aeonsolution[m]> and at this step you lock the device following the instructions on the install page
+20:00:57 <jknsec[m]> woah
+20:01:00 <TheJollyRoger-M> Sorry jknsec my mistake.
+20:01:10 <aeonsolution[m]> if it messed up between fastbootd and the bootloader
+20:01:13 <jknsec[m]> It's fine, lol
+20:01:42 <aeonsolution[m]> then you tampered with the unzipped release thus why its failing to flash the device
+20:01:46 <jknsec[m]> Probably need to switch to an IRC client on of these days. Or just use both.
+20:02:21 <jknsec[m]> Also need to make a Github account. Add it to the pile.
+20:02:31 <aeonsolution[m]> the good thing bend you are 80% of the way there
+20:02:56 <aeonsolution[m]> just follow the instructions and you'll be good
+20:03:30 <aeonsolution[m]> you dont need to reinstall stock if you had all the updates on stock
+20:04:12 <aeonsolution[m]> it used to happen that old versions of Pixel had issues when you didn't update, let me get the exact info from the site
+20:04:13 <aeonsolution[m]> give me a sec.
+20:04:58 <aeonsolution[m]> here's the info https://grapheneos.org/install#prerequisites
+20:05:28 <aeonsolution[m]> `It's best practice to update the stock OS on the device to make sure it's running the latest firmware before proceeding with these instructions. This avoids running into bugs, missing features or other differences in older firmware versions. Early Pixel 2 and Pixel 2 XL bootloader versions use a non-standard unlocking system not covered by these installation instructions. You can either update the device via
+20:05:28 <aeonsolution[m]> over-the-air updates or sideload a full update, which for Pixel phones can be obtained from the full update package page.`
+20:06:11 <TheJollyRoger-M> Yes. bend you need to make sure that your phone is on fastboot and if you are on Linux, to ensure the udev rules are set.
+20:08:36 <aeonsolution[m]> yes
+20:08:49 <aeonsolution[m]> the site explains the differences for you
+20:08:57 <aeonsolution[m]> its kind of complicated to explain in chat
+20:10:09 <privacy_based_li> <defconanon12[m] "concat: TheJollyRoger anupritais"> make it public, it would be helpful for us too
+20:21:49 <greenmoon[m]> <aeonsolution[m] "`It's best practice to update th"> Can you do those updates by downloading the files on your pc and putting them on to the phone so the phone is never online before using graphenenOS? Like the good old flashing?
+20:22:11 <greenmoon[m]> * Can you do those updates by downloading the files on your pc and putting them on the phone so the phone is never online before using graphenenOS? Like the good old flashing?
+20:22:17 <spaceinfinite[m]> cn3m: as someone who has worked on advertising, on ios 14 there is a permission to deny the apps to track you across other apps. How can they cross track if they are fully sandboxed and cant see comunicate with other apps unlike android?
+20:22:43 <aeonsolution[m]> you could if you know how to get the files and do the installs manually
+20:23:28 <spaceinfinite[m]> even signal asks permission to see other devices on the network, what could be the purpose or reason for it?
+20:24:48 <greenmoon[m]> <aeonsolution[m] "you could if you know how to get"> Ho OK, I found the answer and files here https://developers.google.com/android/ota
+20:25:02 <bonerdose[m]> Wickr vs Signal what do you guys think is better?
+20:25:30 <spaceinfinite[m]> Signal all the way
+20:25:36 <TheJollyRoger> greenmoon[m]: you can sideload OTAs if you like for factory.
+20:25:41 <TheJollyRoger> bonerdose[m]: Just use Signal.
+20:28:50 <bonerdose[m]> Also, does installing the standalone play services (not privileged) fix apps that rely on play services?
+20:29:11 <cn3m[m]> <spaceinfinite[m] "cn3m: as someone who has worked "> Ad ID just turn off Limit Ad Tracking
+20:29:35 <cn3m[m]> <bonerdose[m] "Also, does installing the standa"> People do it on new Huawei phones, but I doubt it's a good experience. It's better to just use Stock
+20:30:40 <cn3m[m]> Stock has some security advantages like auto updates for apps that install themselves and no need for unknown sources. If you want to use Google Services Stock OS is 100% the way too go
+20:31:37 <spaceinfinite[m]> <cn3m[m] "Ad ID just turn off Limit Ad Tra"> There is no more option of Limit Ad Tracking on ios 14
+20:32:06 <dallemon[m]> <bend[m] "alright im still ending up at th"> Try a different USB port
+20:32:52 <dallemon[m]> Or maybe flipping the cable or reversing it (if USB-C in both ends)
+20:33:48 <dallemon[m]> Or a different USB-C cable if you have
+20:33:53 <dallemon[m]> No that's fine
+20:36:35 <dallemon[m]> No
+20:40:47 <dallemon[m]> They are
+20:44:23 <dallemon[m]> Should be ok.
+20:44:47 <dallemon[m]> Are you using the latest fastboot?
+20:46:58 <dallemon[m]> You can try doing each command from the script. It's pretty self-explanatory
+20:47:18 <aeonsolution[m]> try using a USB C to USB A
+20:47:37 <aeonsolution[m]> the one that comes with the phone is USB C to USB C
+20:47:56 <aeonsolution[m]> i don't know the specifics of why that may be the issue
+20:48:05 <aeonsolution[m]> but if nothing else works, that might be the fix
+20:48:30 <aeonsolution[m]> no use a USB C to USB A cable
+20:49:36 <aeonsolution[m]> and make sure its on a USB port connected to the motherboard
+20:49:48 <aeonsolution[m]> i don't know the specifics of why that works but that might make the difference
+20:50:19 <dallemon[m]> <bend[m] "so even if my initial attempt at"> Yes. No issue
+20:51:47 <dallemon[m]> You need to lock bootloader and disable OEM unlock from inside the OS before you can't recover. ;)
+20:51:56 <aeonsolution[m]> if its not a high quality cable
+20:52:00 <aeonsolution[m]> the flashing will always fail
+21:01:49 <georgeaux[m]> This will be a stupid question but I don't understand how should I use it.   So when I want to look at my apps pull up my finger on the screen first it always opens my running apps. And only after that I can enter in the app segment of the launcher.
+21:01:49 <georgeaux[m]> Is it normal or how it supposed to work, how should I use it? Because now its kind of annoying in my opinion.
+21:07:17 <georgeaux[m]> Noone gets me. Okay :D Than I guess everything imported goes on the "desktop/main screen" and for other apps I have to move my fingers twice.
+21:22:45 <greenmoon[m]> You are doing it wrong I think
+21:23:12 <greenmoon[m]> You are opening the multitask thing instead of the drawer
+21:30:55 <cn3m[m]> Shout out to jcpicard32 this guy is a boss and really helping handle misinformation on Reddit. 2 thumbs up
+21:34:49 <aeonsolution[m]> \o/
+21:34:58 <aeonsolution[m]> thanks jcpicard32
+21:37:59 <TheJollyRoger> Yarr, thank'ee jcpicard32[m]!
+21:38:49 * proof_jr sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/FpBPUOBmamsgiAUUdGPvEehB >
+21:39:18 <spaceinfinite[m]> <cn3m[m] "Shout out to jcpicard32 this guy"> Which sub?
+21:39:53 <proof_jr> privacytools
+21:40:25 <proof_jr>  * privacytools spaceinfinite:
+22:05:23 <kinderkraft[m]> Hello, how can I see that Grapheneos was updated? Then I am pushing the button, check update : nothing hapening. I installed it, in the begining of the month and now on the homepage I see that it was update (after I installed it) do not know what to do... Maybe I schould use sideloading?
+22:07:57 <anupritaisno1[m]> kinderkraft: you must reboot
+22:08:17 <anupritaisno1[m]> You can only apply one update at a time
+22:08:19 <anupritaisno1[m]> You must reboot after that before you can apply another
+22:15:42 * kinderkraft[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/WsbCtwEmzWYzTIiQHVIiqfnn >
+22:16:07 <kinderkraft[m]> <anupritaisno1[m] "You can only apply one update at"> Just I am doing it for the first time... Actually I do not know how does the update looks like
+22:17:45 <jcpicard32[m]> cn3m: TheJollyRoger Aww thanks guys. Just trying to do what I can to help out. Programming skills aren't there yet but I can at least apply what I've read about <3
+23:07:15 <animalchin[m]> Hey all. Hope the day has been good for all of you. I have a question.  Is there any benefit to using DoH on a browser if I'm already using VPNForAndroin? I know my VPN provider already uses its own DNS. Some articles I've read say do it. Some say just use the VPN.  I noticed on the VPN website it shows I'm protected with the VPN IP but a DNS leak test shows the DoH address. Any input would be appreciated. Thank
+23:07:15 <animalchin[m]> you.
+23:28:39 <strcat[m]> https://grapheneos.org/faq#default-dns
+23:28:45 <strcat[m]> read the sections about DNS, VPNs, etc.
+23:28:54 <strcat[m]> it explains that the DNS server you're using can be detected
+23:29:03 <strcat[m]> so if you're using a VPN and want to blend in use the VPN provided DNS servers
+23:29:18 <strcat[m]> if you want ad-blocking use a popular VPN provider providing it as an option
+23:33:41 <animalchin[m]> strcat: thank you very much for the answer

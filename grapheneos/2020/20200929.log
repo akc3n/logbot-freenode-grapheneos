@@ -1,0 +1,400 @@
+00:00:35 <secretsecrets[m]> strcat: So until they add that to protonmail I can't receive notifs?
+00:00:36 <strcat[m]> bbqcore: have you been using GrapheneOS since before it was called GrapheneOS, i.e. Android Hardening? before the only stable Android Hardening release
+00:00:56 <strcat[m]> secretsecrets: they don't have an implementation of push notifications other than pushing them via Google's cloud service
+00:01:00 <strcat[m]> GrapheneOS doesn't have Play services
+00:01:09 <strcat[m]> secretsecrets: it would take a developer a day to implement this
+00:01:25 <strcat[m]> most email clients are bad
+00:01:26 <bbqcore[m]> strcat: yes
+00:01:51 <secretsecrets[m]> strcat: R.I.P notifs
+00:01:56 <bbqcore[m]> Ok I see now
+00:02:09 <strcat[m]> secretsecrets: use a different email client to access it via IMAP assuming it lets you do that
+00:02:26 <modp2[m]> Are these any known issues with Bluetooth in the last release? My earphones stopped working since last update
+00:02:55 <strcat[m]> secretsecrets: for example FairEmail supports IMAP IDLE (push) so if the provider supports IMAP IDLE it will provide efficient push notifications
+00:02:57 <strcat[m]> without needing FCM
+00:03:29 <bbqcore[m]> strcat: will restoring via seedvault back up help in this case?
+00:03:48 <secretsecrets[m]> strcat: I'll try it out
+00:04:08 <strcat[m]> bbqcore: you can reject the factory reset until it rolls back to the previous OS version if you haven't already
+00:04:21 <bbqcore[m]> yes I have
+00:04:32 <strcat[m]> bbqcore: you will have to accept wiping in order to actually upgrade because we couldn't keep support for the legacy filesystem format from pre-Android Hardening stable release
+00:04:49 <strcat[m]> we tried to port it but the code has been totally overhauled and we just couldn't get it working without a huge effort
+00:05:20 <strcat[m]> so I assume it's a Pixel 2 with GrapheneOS since the early Android Hardening snapshots
+00:05:20 <bbqcore[m]> so can I restore my install with Seedvault?
+00:05:24 <bbqcore[m]> or do I have to start fresh
+00:05:32 <bbqcore[m]> no Pixel 3
+00:05:52 <strcat[m]> ah right forget we supported Pixel 3 then
+00:06:12 <strcat[m]> bbqcore: you can restore your app data / OS settings with Seedvault
+00:06:20 <strcat[m]> note Seedvault doesn't back up your home directory
+00:06:24 <strcat[m]> and currently only backs up the main profile
+00:06:40 <strcat[m]> bbqcore: and some apps disable backups, such as Signal, which provides an encrypted backup implementation itself
+00:07:07 <strcat[m]> bbqcore: Seedvault will get a lot but many apps disable backups for some reason *shrug*
+00:07:13 <strcat[m]> I know it's hassle
+00:07:18 <strcat[m]>  * I know it's a hassle
+00:07:46 <strcat[m]> they pretty much totally rewrote the fscrypt userspace code and it wasn't clear how to do the compatibility workaround we were doing before
+00:07:55 <strcat[m]> the issue is we switched to 32 byte padding for file names early on
+00:08:22 <strcat[m]> we came up with a way to fall back to the old padding length if 32 didn't match the settings
+00:08:29 <strcat[m]> just really unclear how to fit that back into it
+00:08:53 <strcat[m]> they have a proper versioning system now but this predated that - so it has the same versioning regardless of this
+00:09:04 <strcat[m]> (versioning was just introduced in Android 11)
+00:11:22 <bbqcore[m]> PITA
+00:11:28 <bbqcore[m]> really puts me off upgrading
+00:14:42 <strcat[m]> well it dates back to it being a pre-release before the Android Hardening initial stable release
+00:15:05 <strcat[m]> we didn't have everything we needed ready in those snapshots
+00:15:31 <strcat[m]> the 1st tagged release (the Android Hardening release listed on the site) has the 32 byte padding change
+00:15:51 <strcat[m]> so it would have had to be a snapshot from before that
+00:15:59 <signalarch[m]> If in my bootloader the Device state says locked does that mean I have a carrier locked device?
+00:16:04 <strcat[m]> no
+00:16:20 <strcat[m]> https://grapheneos.org/install
+00:16:45 <strcat[m]> part of installing is unlocking, and then after flashing you lock it again for security (very important since it's what enables verified boot and various other hardware security features)
+00:17:40 <signalarch[m]> Okay. I cant get it unlocked so I was just wondering
+00:18:19 <strcat[m]> signalarch: did you enable OEM unlocking in the OS/
+00:18:22 <strcat[m]> you need to do that 1st
+00:18:33 <strcat[m]>  * signalarch: did you enable OEM unlocking in the OS?
+00:19:31 <signalarch[m]> Yeah and usb debug
+00:21:19 <aeonsolution[m]> signalarch: i can help you with this, assuming you did unlock OEM, go back to the install page, and find the fastboot command for unlocking the bootloader
+00:21:39 <strcat[m]> signalarch: if you were able to toggle on OEM unlocking in the OS
+00:21:42 <strcat[m]> then it's unlockable
+00:21:54 <aeonsolution[m]> ^
+00:22:12 <strcat[m]> Verizon devices simply have a carrier id flashed onto them which the OS reads and then disables the OEM unlocking toggle in the OS
+00:22:20 <strcat[m]> there aren't really differences beyond that
+00:22:32 <strcat[m]> just a carrier id value which changes a few behaviors like that
+00:23:16 <strcat[m]> a Verizon Pixel still has the same unlocking system at a firmware/hardware level
+00:23:29 <strcat[m]> the GUI for toggling it is just disabled - that's it
+00:25:56 <signalarch[m]> I have oem unlock on. Fasboot flashing unlock does nothing when im in the bootloader
+00:26:22 <strcat[m]> signalarch: sounds like an issue with your fastboot install / OS / usb cable
+00:26:24 <strcat[m]> your phone is fine
+00:26:35 <strcat[m]> signalarch: run 'fastboot devices' to see if the device is detected
+00:26:44 <strcat[m]> or another fastboot command like `fastboot getvar all`
+00:26:53 <strcat[m]>  * signalarch: run `fastboot devices` to see if the device is detected
+00:30:23 <signalarch[m]> Fastboot devices gives no permission (user in plugdev roup ....
+00:30:40 <signalarch[m]> Ive tried some things to fix ot but nothing works
+00:30:54 <aeonsolution[m]> what os are you using
+00:31:12 <signalarch[m]> Ubuntu 20.04
+00:31:17 <aeonsolution[m]> mavic321: were you able to flash GrapheneOS afterall?
+00:31:36 <aeonsolution[m]> signalarch: add the `sudo` command before fastboot
+00:32:33 <signalarch[m]> <aeonsolution[m] "signalarch: add the `sudo` comma"> That gives ?????? Fastboot
+00:33:03 <aeonsolution[m]> its a permissions issue on Ubuntu since it doesn't have android-udev tools
+00:33:14 <aeonsolution[m]> dont even worry about not understanding that
+00:34:41 <signalarch[m]> So what can I do to get around it
+00:34:56 <aeonsolution[m]> setup udev rules https://github.com/M0Rf30/android-udev-rules
+00:36:04 <aeonsolution[m]> on Ubuntu just run `sudo fastboot flashing unlock`
+00:36:45 <aeonsolution[m]> if you want to setup udev rules, you will have to figure that out independently, outside of the scope here
+00:40:54 <signalarch[m]> The command didn't work but I followed the link and that did. Thanks!
+00:53:50 <signalarch[m]> Just to clarify, even if I lock the bootloader after graphene instalation, it should still warn about loading an alternate OS?
+00:55:48 <aeonsolution[m]> yes
+00:59:00 <hypergenesis[m]> Hi, will GrapheneOS support Pixel 5?
+01:01:08 <alzxjm[m]1> hypergenesis: only if someone volunteers to be a device maintainer for the P5
+01:01:09 <aeonsolution[m]> hypergenesis: https://grapheneos.org/faq#future-devices
+01:01:22 <hypergenesis[m]> Thanks
+01:02:48 <aeonsolution[m]> hypergenesis: consider donating https://grapheneos.org/donate to support the project's longevity
+01:19:54 <ruddo[m]> Just wondering if there is a way to change the boot warning to nothing except if someone tampers with your phone.  It's annoying to see onscreen, delays boot for no reason, and I remember when I was at google that the design doc had good intentions but it was clear that the idea was to warn people not to use non-Google OSes.
+01:21:37 <ruddo[m]> <webb[m] "Is anyone else dealing with bad "> This happened to me after boot into Android 11 and mang it was HORRIBLE.  But it seems to have normalized now.  Back to usual.
+01:24:03 <aeonsolution[m]> <ruddo[m] "Just wondering if there is a way"> im pretty sure its flashed onto the SOC
+01:24:30 <aeonsolution[m]> let me see if i can find the info on the log
+01:40:15 <aeonsolution[m]> ruddo: ran out of time, but i sure the info is somewhere there in the logs if you are interested in finding it
+01:40:19 <aeonsolution[m]> no more than a month ago
+01:50:32 <ruddo[m]> Thanks.
+04:14:33 * mastercakex[m] uploaded an image: Screenshot_20200929-071354~2.png < https://matrix.org/_matrix/media/r0/download/matrix.org/nPCFAopxDIdxwMaexlmKPhKE/Screenshot_20200929-071354~2.png >
+04:15:28 <mastercakex[m]> Who else experienced this issue?
+04:15:28 <mastercakex[m]> Cleaning port won't help
+04:15:28 <mastercakex[m]> Claiming warranty won't either as I'm void on GrapheneOS
+04:16:22 <renlord> burn in?
+04:16:54 <renlord> have you tried rebooting?
+04:17:06 <renlord> mastercakex[m]:
+04:20:03 <mastercakex[m]> Rebooting? Like 250 different times. This notification is with me for months. As well as wireless charger. I can't charge wired nor upload stock software
+04:47:27 <renlord> mastercakex[m]: why cant you reflash stock firmware?
+04:55:46 <unsafeoppa[m]> Hi guys few days ago I reported WiFi randomization messing up RADIUS authentication. It seems only EAP-TLS is affected
+04:56:24 * unsafeoppa[m] posted a file: Mac.mp4 (1025KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/qkPrCiWYwzXWZQZrdxQoDUnC/Mac.mp4 >
+04:58:21 <unsafeoppa[m]> I'm currently on RP1A.200720.009.2020.09.25.00
+05:29:40 <duggalsu[m]> Is remote attestation helpful in any way if the threat model is NSA?
+05:30:35 <cn3m> duggalsu: more important than your adversary is how much your adversary would pay to get you specifically
+05:30:43 <cn3m> It’s the wrong question
+05:31:14 <cn3m> remote attestation is great
+05:32:30 <blacklight447[m]> <mastercakex[m] "Screenshot_20200929-071354~2.png"> Pretty sure you have usb debugging enabled
+05:32:33 <duggalsu[m]> Ah ok
+05:49:44 <renlord> unsafeoppa[m]: can you get logs
+05:49:48 <renlord> pls
+05:50:56 <renlord> `adb logcat` when you're doing those steps
+05:55:27 <mastercakex[m]> renlord I presume I can't. Because I can't charge via wire
+05:56:12 <renlord> mastercakex[m]: if you can flash grapheneos, then you can flash stock.
+05:56:19 <renlord> unless im missing something
+05:57:24 <mastercakex[m]> I flashed it a year ago
+05:57:45 <mastercakex[m]> At that time I was able to connect wires
+05:58:12 <mastercakex[m]> Then this message started to appear until one day I was unable to charge wired
+05:58:46 <mastercakex[m]> Thanks God I have 3xl. Otherwise I could toss it into the ocean
+06:01:00 <mastercakex[m]> I don't about others but where I am I need to run stock software in order to claim warranty
+06:01:10 <mastercakex[m]> * I don't know about others but where I am I need to run stock software in order to claim warranty
+06:02:23 <renlord> mastercakex[m]: oh, im sorry to hear
+06:02:30 <renlord> phone is broken
+06:03:40 <renlord> mastercakex[m]: try this instead.
+06:03:48 <renlord> push power + volume down
+06:03:53 <renlord> and boot into the bootloader
+06:03:56 <renlord> select recovery mode
+06:03:58 <renlord> wipe everything
+06:04:02 <renlord> then claim warranty
+06:04:20 <renlord> and say "everything got wiped, pls help"
+06:04:59 <renlord> unlocking bootloader does not void warranty.
+06:05:55 <mastercakex[m]> Oh. Thanks. That'll  help
+06:10:55 <renlord> mastercakex[m]: let us know how you go.
+08:30:49 * mavic321[m] uploaded an image: powershell.PNG (14KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/VZSxUZtRkRMIPqtVlfpDGSEw/powershell.PNG >
+08:31:26 <mavic321[m]> i have multiple powershells i see. is there a recommended one to install graphene os with? or can i use any powershell
+08:32:31 <Sheru[m]> The first big option?
+08:32:47 <zyxt128[m]> I use this one
+08:32:48 <zyxt128[m]> https://cmder.net/
+08:32:54 <koolpepsi[m]> mavic321: The first one is fine.
+08:33:06 <mavic321[m]> allright tnx
+08:36:26 <anupritaisno1[m4> [mavic321](https://matrix.to/#/@mavic321:matrix.org): only use the first one
+08:36:28 <anupritaisno1[m4> ISE has some issues
+08:38:17 <mavic321[m]> ""Next, add the tools to your PATH in the current shell so they can be used without referencing them by file path, enabling usage by the flashing script."" I have put this command and get the picture below in my powershell. What do i need to put there after the >>
+08:38:18 * mavic321[m] uploaded an image: Knipsel5.PNG (3KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/iUlNthsFjySFwicuGIAZdayH/Knipsel5.PNG >
+08:39:20 <Sheru[m]> You forgot a "
+08:40:30 <mavic321[m]> <Sheru[m] "You forgot a ""> tnx!
+08:40:36 <ham5urg> Is it possible with GrapheneOS to reactiviate the Video-Output? https://www.slashgear.com/pixel-4-usb-c-video-output-exists-but-is-disabled-in-source-code-03598259/
+08:41:20 <Sheru[m]> Does the hardware support it? If not, it's useless to activate it
+08:42:13 <ham5urg> Pixel4 hardware should do it AFAIK.
+08:43:35 <mavic321[m]> i am trying now to install graphene on pixel 4
+08:44:41 <Jochen[m]> What's the status of Wifi Calling with GrapheneOS? I'm on latest stable with Pixel 3A XL. Network is German Telekom
+08:47:09 <Sheru[m]> Not sure, never used wifi calling, but shouldn't that be included in APN
+08:47:26 * mavic321[m] uploaded an image: Knipsel6.PNG (6KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/eUoINvnbcFATdipkmJVXscTE/Knipsel6.PNG >
+08:48:13 <mavic321[m]> When i want to download with this command i get the "Uri: left down in the corner. what do i need to put there?
+08:48:31 <anupritaisno1[m4> <Jochen[m] "What's the status of Wifi Callin"> Maintainers have to fix it themselves
+08:48:52 <anupritaisno1[m4> There is no pixel 3a maintainer
+08:50:09 <Sheru[m]> <mavic321[m] """Next, add the tools to your PA"> curl.exe
+08:50:25 <Jochen[m]> I thought the 3a is officially being supported anupritaisno1
+08:51:15 <mavic321[m]> <mavic321[m] "Knipsel6.PNG"> someone who knows what to put after the Uri: left down in the corner of the picture?
+08:52:22 <anupritaisno1[m4> [Jochen](https://matrix.to/#/@jdemmer:matrix.relaix.net): yes it is
+08:52:31 <anupritaisno1[m4> That doesn't mean there is an active maintainer
+08:52:58 <anupritaisno1[m4> Only pixel 4 has an active maintainer
+08:53:28 <Jochen[m]> shouldn't that be in the FAQ, too?
+08:54:29 <anupritaisno1[m4> [Jochen](https://matrix.to/#/@jdemmer:matrix.relaix.net): not really
+09:06:55 <a4ve3ryl1e3e3t7[> Hi all
+09:16:10 <Jochen[m]> what does it mean when a device isn't being maintained exactly? I mean it's supported, but not maintained, I don't get what this means for me as an end user
+09:25:08 <mavic321[m]> what camera app is the best to download for graphene?
+09:27:09 <marlow11[m]> mavic321: I've been using open camera and I like it a lot
+09:27:28 <mavic321[m]> <marlow11[m] "mavic321: I've been using open c"> from F-droid?
+09:27:40 <marlow11[m]> Yeah
+09:43:09 <NorbertTretkowsk> Anyone else having trouble flashing the Android 11 based GOS release on Pixel 3a? It stops here at: `Sending sparse 'vendor_a' 2/3 (262140 KB)`
+09:47:04 <anupritaisno1[m4> Norbert Tretkowski: try a different cable, make sure the cable is connected directly to the motherboard and the charging port on the phone is not dirty
+09:53:39 <NorbertTretkowsk> Meh... using a different cable did the trick, thanks.
+10:28:40 <renlord> i can still flash my pixel after saving it from the washing machine
+10:29:26 <renlord> anupritaisno1[m4: ^
+10:41:47 <dazinism> Jochen: it means its continued support is as stable as if there was a maintainer. Daniel has been trying to get other people to take over maintenance for a long time, sadly nobody has stepped up to take on any existing devices. New devices won't be supported without a maintainer
+10:42:25 <dazinism> *is not as stable/likely
+10:42:58 <dazinism> The pixel 4 was the first device to have an official maintainer
+10:46:40 <dazinism> Daniel (and I guess possibly others may help?) looks after the rest, but really would rather not. Its a big work load / responsibility looking after all those device... then add all the other stuff that needs maintenance / development.
+10:47:11 <dazinism> Support is always very much appreciated
+10:48:12 <dazinism> https://grapheneos.org/donate
+10:49:04 <dazinism> https://hub.libranet.de/wiki/graphene-os/wiki/Helping-graphene-os
+11:02:44 <anupritaisno1[m4> <dazinism "The pixel 4 was the first device"> Actually the only
+11:17:24 <johannes[m]> Does anyone know if there is a FOSS way to sync with Microsoft Exchange? The AOSP email app that can do this is not included in grapheneos.
+11:36:32 <ham5urg> johannes[m], is it only email or all the other stuff too? Can Fair-Email do it?
+11:41:01 <noctux> exchange CAN do imap afaik, but it's a server side setting whether it is enabled at all
+11:41:48 <noctux> the alternative being proprietary activesync
+11:42:32 <noctux> "FairEmail does not support non-standard protocols, like Microsoft Exchange Web Services and Microsoft ActiveSync."
+12:11:03 <johannes[m]> > johannes, is it only email or all the other stuff too? Can Fair-Email do it?
+12:11:04 <johannes[m]> The main thing i want is the calendar
+12:27:55 <ham5urg> Can't tell you much about Outlook. I'm using DavX5 to synchronise against Cal and Cont., works good.
+12:28:27 <ham5urg> Tasks too
+12:31:40 <alzxjm[m]1> johannes: EteSync is great for contacts, calendar, and tasks sync.
+12:32:48 <johannes[m]> > johannes: EteSync is great for contacts, calendar, and tasks sync.
+12:32:48 <johannes[m]> Oh no, I use caldav and such for private stuff. This is for my work calendar where i have no choice but use outlook.
+12:35:44 <alzxjm[m]1> Gotcha.
+13:47:58 <Adam[X]> Hello. I've run into an odd issue. My fiance is running a Pixel 3a with GrapheneOS. For whatever reason, she can't connect to my router whenever it's using a DFS band. It's a WRT3200ACM with OpenWRT on it.
+13:51:25 <mistazaki[m]> <strcat[m] "mistazaki: screen recording is w"> Sorry for the misunderstanding, thanks for your feedback
+16:12:44 <mrxx_0[m]> How can I know which version the update client is downloading ?
+16:25:13 <jpds> mrxx_0[m]: You can't
+16:33:57 <mrxx_0[m]> I don't know if it's the case for everyone but I have the feeling that my 3a XL is faster on A11, maybe the transitions do that idk, but anyway it is really nice and smooth.
+16:52:04 <jpds> mrxx_0[m]: I opened https://github.com/GrapheneOS/platform_packages_apps_Updater/issues/17
+16:58:53 <mrxx_0[m]> jpds thanks, I was going to do it. A little feature and not so hard to do I think, I will take a look at the code to see  if I can do it
+17:00:46 <anupritaisno1[m4> mrxx_0: we don't really have versioning
+17:00:47 <anupritaisno1[m4> We just use build dates
+17:09:54 <mrxx_0[m]> anupritaisno1 I still think it's a good idea, the build date is the " which version" I was looking when the client was downloading
+17:51:54 <mmcblk0[m]> What is it this?  t.me/copperheadsec
+17:52:10 <mmcblk0[m]> Did you saw it?
+18:10:18 <mistazaki[m]> Hi, what tool or app for hidden apps?
+18:11:49 <engulf[m]> mistazaki: From who are you trying to hide the apps?
+18:15:09 <mistazaki[m]> Only for my eyes to see..
+18:17:30 <mistazaki[m]> Example phone app, there are already on the front. Only in the list of apps want to hide.
+18:18:44 <mistazaki[m]> Sorry because my english is not good for explain.
+19:10:18 <snowkeld[m]> <inthewaves[m] "snowkeld: if you can, could you "> seems that when I do this the network rejects me. I connect, but then after a few seconds drops to "emergency calls only"
+19:12:49 <snowkeld[m]> <mistazaki[m] "Example phone app, there are alr"> install a launcher that offers this. I know "smart launcher" will do this, you can get it through Aurora store.
+19:16:50 <allahswt> hello?
+19:26:15 <oats`> Anybody else unable to get media controls to show up on the lock screen?
+19:26:38 <jpds> oats`: Working for me
+19:26:41 <alzxjm[m]1> I can play an eBook as my main user and switch to a different user and that user can also play that ebook. I'm confused as to how this can happen.
+19:26:51 <alzxjm[m]1> I did not install the ebook app in the other user profile.
+19:31:13 <fll[m]> oats: Simple Music Player from fdroid has controls on the lock screen on my Pixel3
+19:46:37 <strcat[m]> alzxjm: apps can choose to put controls on lock screen
+19:46:37 <strcat[m]> when locked
+19:46:41 <strcat[m]> in which case I assume another user can use it
+19:46:59 <strcat[m]> also, not all apps have updated to support the Android 11 media controls
+19:47:13 <strcat[m]> some tried to update and didn't properly test their code in which case it might now be somewhat broken, but it's the app's fault
+19:47:17 <strcat[m]> if they just did nothing it'd still work fine
+19:47:30 <strcat[m]> that's what's wrong with NewPipe atm, they fixed the issue already but haven't done a release
+19:48:14 <anupritaisno1[m4> BTW YouTube vanced works
+19:54:27 <allahswt> hey everyone, im new to graphene and irc in general so i dont really know what im doing. between the pixel 3 and 3a which will have longer support?
+19:55:22 <alzxjm[m]1> allahswt: Pixel 3a. It came out more recently.
+19:55:24 <jpds> allahswt: https://support.google.com/pixelphone/answer/4457705?hl=en
+19:57:05 <allahswt> and so getting a pixel 3 for graphene is no good?
+19:59:06 <alzxjm[m]1> allahswt: It will likely have superior performance as it is a flagship phone. Cold launches of apps might take a bit longer on the 3a due to exec spawning.
+19:59:39 <alzxjm[m]1> It does not have the Pixel Visual Core so you won't have access to HDR+ with apps such as Open Camera.
+19:59:41 <alzxjm[m]1> (that is, the 3a does not have PVC)
+20:02:00 <allahswt_> hey sorry i think i hit something by accident
+20:02:57 <allahswt_> so theres no downside to pixel 3 other than slightly worse battery life?
+20:06:18 <strcat[m]> allahswt_: I don't think the battery life on a Pixel 3 is necessarily worse
+20:06:31 <strcat[m]> our current recommendation is a Pixel 4 anyway
+20:06:43 <strcat[m]> https://grapheneos.org/faq#recommended-devices
+20:06:49 <strcat[m]> > The recommended devices with the best hardware, firmware and software security along with the longest future support time are the Pixel 4 and 4 XL. Once it's supported, the Pixel 4a will also be recommended.
+20:07:13 <anupritaisno1[m4> Pixel 4 has had the best battery for me
+20:07:17 <allahswt_> pixel 3's are on sale at my local store right now for real cheap
+20:07:39 <strcat[m]> just keep in mind you'll want to replace it before EOL
+20:07:58 <allahswt_> eol?
+20:08:24 <strcat[m]> just keep in mind you'll want to replace it when it's end-of-life
+20:08:49 <allahswt_> like when graphene stops updating it right?
+20:23:05 <blacklight447[m]> <strcat[m] "our current recommendation is a "> are there things that make the pixel 4 more secure then the pixel 3?
+20:24:16 <strcat[m]> yes
+20:25:01 <blacklight447[m]> Such as? (Being curious here)
+20:26:35 <blacklight447[m]> strcat
+20:27:02 <strcat[m]> more kernel hardening
+20:27:18 <strcat[m]> newer SoC with stronger security
+20:27:19 <anupritaisno1[m4> Really?
+20:27:31 <anupritaisno1[m4> (Haven't checked other devices)
+20:28:14 <blacklight447[m]> <strcat[m] "more kernel hardening"> Because the kernel is more recent, i assume?
+20:28:28 <strcat[m]> blacklight447: no, not really
+20:28:39 <strcat[m]> because they implemented additional hardening
+20:28:42 <anupritaisno1[m4> blacklight447: off the top of my head memory initialization stuff is a plus
+20:28:59 <strcat[m]> anupritaisno1: that's there for older devices in GrapheneOS
+20:29:01 <anupritaisno1[m4> We literally have same memory initialization stuff as mainline rn
+20:29:03 <blacklight447[m]> Im currently hoping to rock my 3a till the pixel 6 comes out with ( hopefully ) MTE
+20:30:43 <blacklight447[m]> To which im also hoping it will have a fingerprint scanner again, im not a fan of facial biometrics
+20:38:24 <ham5urg> Can I activate the video-out of the Pixel4? Google deactivated it by removing the kernel driver but can GrapheneOS reactivate it?
+20:41:42 <blacklight447[m]> <ham5urg "Can I activate the video-out of "> Too my knowledge, they don't even have the hardware capable of sending hdmi out
+20:41:54 <blacklight447[m]> The whole port doesn't support it
+20:42:40 <ham5urg> blacklight447[m] - https://www.slashgear.com/pixel-4-usb-c-video-output-exists-but-is-disabled-in-source-code-03598259/
+20:42:58 <ham5urg> Is this site wrong?
+20:44:12 <strcat[m]> ham5urg: enabling the kernel support doesn't mean it's going to magically do something if there isn't support for it elsewhere
+20:44:48 <strcat[m]> there is SoC support, that doesn't mean there is hardware support for it or that there is software support outside the kernel
+20:44:59 <strcat[m]> you're free to work on it
+20:45:05 <ham5urg> I see, I was just hoping for it...
+20:45:35 <strcat[m]> we work on privacy and security features, we're not going to be exploring extra hardware capabilities that could be enabled, if you're interested in working on that you're welcome to
+20:45:58 <anupritaisno1[m4> ham5urg: remind me in 2 months
+20:45:58 <strcat[m]> it's unlikely that it can be simply toggled on and we're not going to add code for it, but who knows, someone would have to look into it
+20:46:22 <anupritaisno1[m4> I'll take a look for a while when I'm doing the forced 90hz patches for my personal use
+20:47:00 <strcat[m]> also we do not have a 'desktop mode', we don't have a free form window mode launcher or anything like that
+20:47:20 <ham5urg> I will come back with this in some weeks.
+20:47:21 <strcat[m]> it's not something supported out-of-the-box in AOSP
+20:47:36 <ham5urg> Maybe I can get more informations about it.
+20:48:01 <ham5urg> I know, GOS does not need this video-out, but it would be a nice to have for the users.
+20:49:20 <anupritaisno1[m4> ham5urg
+20:49:28 <anupritaisno1[m4> Please take this to offtopic chat
+20:49:34 <ham5urg> Yes
+20:52:41 <alzxjm[m]1> anupritaisno1: Yeah did you fix this for Pixel 4 XL? Screen no longer flickers on A11!
+20:53:14 <anupritaisno1[m4> <alzxjm[m]1 "anupritaisno1: Yeah did you fix "> Google fixed a lot of stuff
+20:53:31 <anupritaisno1[m4> My screen doesn't have this weird green gradient on R anymore
+20:54:13 <alzxjm[m]1> Yeah. Mine gets a bit greenish at low brightness but the flickering that was there at low brightness is now gone. Mild green tint is way better than flickering.
+21:01:42 <mrxx_0[m]> <strcat[m] "also we do not have a 'desktop m"> What's the "free form window mode launcher" ?
+21:04:40 <DerpiKarpfen> Was the media player changed recently?
+21:15:00 <strcat[m]> DerpiKarpfen: what specifically are you asking about
+21:16:44 <DerpiKarpfen> Well you know when you minimize, for example, vlc and you have a song playing, you get a the media player next to your notifications. I was wondering whether it was changed. It seems less persistant and disappears a lot
+21:17:13 <DerpiKarpfen> Also its completly broken with newpipe, not displaying the forward backward pause or any other button
+21:19:19 <boys_I_have_a_bi> https://twitter.com/CopperheadOS/status/1309575210417508352
+21:19:33 <boys_I_have_a_bi> We lost boys :(  it's over... "Pixel 4a (sunfish) booting on CopperheadOS. "
+21:19:46 <boys_I_have_a_bi> *loads my gun* it was nice knowing u guys :(
+21:21:05 <boys_I_have_a_bi> BREAKING NEWS: Virgin dead in basement with message written in blood on the walls: android code sync took too long...
+21:22:40 <boys_I_have_a_bi> anupritaisno1[m4 I have a pixel 4a :]
+21:22:45 <boys_I_have_a_bi> Sorry I meant to PM
+21:23:03 <jpds> DerpiKarpfen: Interestingly, newpipe isn't in the new "media control" section
+21:25:01 <DerpiKarpfen> Also I get a message just containing "null" whenever I click on any text field and my keyboard opens up, be it aosp keyboard or anysoftkeyboard
+21:25:31 <boys_I_have_a_bi> DerpiKarpfen Dude I am getting that on a stock (aka Google) rom for android 11 pixel 4a
+21:25:45 <DerpiKarpfen> Damn
+21:26:03 <louipc> whats over
+21:26:10 <boys_I_have_a_bi> Definitely sounds like an upstream issue 100%.
+21:26:56 <boys_I_have_a_bi> louipc oh, I was just joking that GrapheneOS is done for cause copperheados booted 4a before us. But, just a joke :P
+21:27:00 <DerpiKarpfen> the media control panel being busted and the null message are quite annoying and hindering my main uses for my phone
+21:27:37 <boys_I_have_a_bi> https://support.google.com/pixelphone/thread/69916905?hl=en
+21:27:44 <boys_I_have_a_bi> HAS TO DO WITH AUTOFILL KEYBOARDS
+21:27:58 <DerpiKarpfen> HECK
+21:27:58 <boys_I_have_a_bi> I am using Firefox lockwise, maybe you are too?
+21:28:03 <DerpiKarpfen> I use lockwise
+21:28:12 <boys_I_have_a_bi> Damn hahahah so it's a lockwise issue
+21:28:18 <DerpiKarpfen> Fuck
+21:28:27 <DerpiKarpfen> I don't wanna get rid of lockwise
+21:28:36 <boys_I_have_a_bi> Wait, looks like it's for all autofills: Just to add on, this issue affects all autofill password managers in Android 11.  You don't need to actually uninstall the app, you only need to deselect the app as your phones autofill service in settings.
+21:28:44 <louipc> hmm i see
+21:29:05 <DerpiKarpfen> What about the media control panel though?
+21:29:23 <boys_I_have_a_bi> Can't help with that, sorry >.>
+21:29:38 <DerpiKarpfen> Damn
+21:29:54 <DerpiKarpfen> But yeah, disabling lockwise fixed the null message
+21:30:28 <boys_I_have_a_bi> Nice, thanks for testing.
+21:37:37 <strcat[m]> there are already people who built GrapheneOS for the Pixel 4a, there's nothing worth noting about that
+21:38:06 <strcat[m]> we only post official announcements on the GrapheneOS Twitter account
+21:38:50 <blacklight447[m]> <strcat[m] "there are already people who bui"> Yeah, having something boot locked isnt that big of an achievement
+21:39:01 <blacklight447[m]> It can be completely broken in every other aspect
+21:39:07 <strcat[m]> if you look at the sources you can see we have source-level Pixel 4a support in-progress
+21:39:28 <strcat[m]> blacklight447: well it works fine... but it doesn't have the device-specific hardening ported and is using the stock kernel
+21:39:34 <strcat[m]> the standard AOSP / stock kernel
+21:39:45 <DerpiKarpfen> Also I found the bug on the newpipe github, a fix was merged 3 days ago https://github.com/TeamNewPipe/NewPipe/issues/4031
+21:39:48 <strcat[m]> anupritaisno1 is working on getting the kernel port done
+21:39:55 <blacklight447[m]> <strcat[m] "if you look at the sources you c"> The fact that i can read your code and not copperhead makes me trust you
+21:40:02 <strcat[m]> DerpiKarpfen: yes, we're aware NewPipe didn't do their Android 11 port properly
+21:40:13 <strcat[m]> blacklight447: they're just using the work AOSP alliance did anyway, they didn't do that work, they crib off us
+21:40:23 <strcat[m]> they take credit for my work and others work since the beginning
+21:40:23 <blacklight447[m]>  Have always worked like an open book, while copperhead plays a dirty game of hide and seek with their code
+21:40:26 <DerpiKarpfen> Thats nice to know
+21:40:28 <strcat[m]> including CalyxOS
+21:40:51 <strcat[m]> they have contributed nothing to any of the projects they're cribbing off
+21:41:02 <strcat[m]> and they go out of their way to cause as much harm as they can to the people they take the code from
+21:41:29 <strcat[m]> blacklight447: you can simply build AOSP for it with android-prepare-vendor, and they didn't play any role in doing that
+21:42:06 <strcat[m]> blacklight447: since Copperhead doesn't develop privacy/security hardening but rather just makes branded builds of AOSP with my legacy changes and a fork of my Updater with tracking/DRM, what would they even do?
+21:42:10 <strcat[m]> they are just using others work
+21:42:30 <strcat[m]> anyone can boot AOSP + android-prepare-vendor with a custom boot animation and wallpaper
+21:43:01 <strcat[m]> AOSP Alliance (i.e. CalyxOS, dan-v, us) did the work
+21:44:02 <strcat[m]> DerpiKarpfen: I think the issue is NewPipe started targeting API 30+ before finishing porting to it
+21:44:11 <louipc> blacklight447[m]:i think u can read their code if u sign the NDA or something
+21:44:22 <strcat[m]> if they approve you to see it
+21:44:26 <louipc> would be nice to compare the 2 codebases
+21:44:30 <strcat[m]> and if that's really the code they use
+21:44:41 <strcat[m]> louipc: it's just a poorly done fork of my legacy code
+21:44:56 <strcat[m]> and they take bug fixes and our android-prepare-vendor support work, etc.
+21:45:05 <louipc> isnt there some gpl requirements there?
+21:45:15 <louipc> if you purchase
+21:45:19 <strcat[m]> they don't follow the licensing for my legacy code
+21:45:31 <strcat[m]> we're filing a lawsuit against them
+21:45:46 <louipc> ok
+21:46:21 <strcat[m]> louipc: the kernel is GPL
+21:46:34 <louipc> guess a motivated customer could persue them too
+21:46:45 <louipc> kinda rare tho
+21:46:48 <strcat[m]> my changes to other repositories that they forked were under a non-commercial usage license in the code they forked
+21:47:14 <strcat[m]> GrapheneOS is permissively licensed but there is a caveat for them, their license violations invalidate their ability to use my future code under certain licenses like the GPL too
+21:50:29 <strcat[m]> https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
+21:50:36 <strcat[m]> see section 4
+21:50:46 <strcat[m]> > 4. You may not copy, modify, sublicense, or distribute the Program except as expressly provided under this License. Any attempt otherwise to copy, modify, sublicense or distribute the Program is void, and will automatically terminate your rights under this License. However, parties who have received copies, or rights, from you under this License will not have their licenses terminated so long as such parties remain in
+21:50:46 <strcat[m]> full compliance.
+21:51:10 <strcat[m]> if you violate GPLv2, your license is terminated and has to be explicitly restored
+21:51:39 <louipc> ouch
+21:53:33 <strcat[m]> anyway not much we can do about apps that implemented broken Android 11 support and enabled it
+21:53:48 <strcat[m]> rather than waiting until Android 11 was actually released and getting it stable first
+21:57:04 <strcat[m]> similarly not much we can do about F-Droid using v1 signatures even for API 30+ apps where it's disallowed, and then not rebuilding them with v2 signatures promptly
+21:57:21 <strcat[m]> this is getting fixed when apps are updated since they aren't using v1 signatures anymore but they aren't rebuilding all the broken apps
+21:58:10 <strcat[m]> it's pretty apparent that they don't care much about users having the apps disabled and their data inaccessible - we may have to start strongly recommending against F-Droid due to problems like this and lack of interest from upstream in addressing it
+21:58:31 <strcat[m]> 4 years to adopt a security fix, which they've finally adopted only once it became mandatory
+21:59:00 <strcat[m]> totally unnecessary little disaster they created for users on Android 11 (not specific in any way to GrapheneOS, the problem is F-Droid's broken app builds)
+21:59:27 <strcat[m]> also, those apps from either the developer themselves or the Play Store work fine - it is not a problem with the apps themselves, just F-Droid's broken builds of them
+22:00:32 <louipc> yea its been a bit too long for fdroid to get its act together
+22:02:24 <strcat[m]> they made a list of apps with v1 signatures and API 30
+22:02:34 <strcat[m]> they could have just triggered rebuilds of all of them ASAP to fix the problem
+22:02:35 <strcat[m]> they didn't
+22:02:50 <strcat[m]> instead they're requiring app developers to request a rebuild - doesn't make much sense
+22:03:04 <strcat[m]> so, until the app developers ask F-Droid to rebuild it or make a new release, it will be broken
+22:03:23 <strcat[m]> it would be nice if the people working on F-Droid actually used F-Droid on an up-to-date device
+22:03:30 <louipc> why not just use the builds from the devs themselves tho.. thats the question
+22:04:00 <strcat[m]> right now, F-Droid fills a gap but it's not going to be a long-term solution
+22:04:43 <strcat[m]> at the very least it needs a fork by a project with a focus on usability, robustness and security
+22:04:51 <strcat[m]> more likely, making something better and simpler
+22:05:00 <strcat[m]> instead of starting from a legacy codebase
+22:07:58 <jpds> They're 10 years old today
+22:28:41 <Erraverunt> Nice to know the info about newpipe bug, so propably same thing happening with vinyl because I have the same problem with that also
+23:10:42 <steveie55[m]> Hi everyone. Ever since my phone updated to the latest stable Android 11 release, I've been having delayed SMS notifications. I've tested to send myself an SMS from another phone, it says delivered but my phone doesn't notify me. After a random amount of time, I receive a notification but when I check the message details, it does say the correct time it got on my phone, not the notification time. So that means it
+23:10:42 <steveie55[m]> does get to my phone. I've searched online a lot but mostly suggest battery optimization to which I've tried the messages app is a system app and so I can't modify its battery optimization settings. I don't have such an issue with Signal for example. Sorry that's long but I wanted to include as much details as I could.
+23:23:00 <strcat[m]> battery optimization wouldn't be relevant
+23:23:22 <strcat[m]> steveie55: do you receive the message immediately and only the notifications are sometimes late?
+23:25:31 <steveie55[m]> <strcat[m] "steveie55: do you receive the me"> Yes, exactly that. Also, if I happen to unlock my phone, I'll get all notifications without having to wait a random time. Note: unlock, not just wake the phone

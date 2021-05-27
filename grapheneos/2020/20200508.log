@@ -1,0 +1,411 @@
+00:29:48 <BrokenCog> hellos.  I'm having a problem at the build#browser-and-webview step of the build instructions.  Specifically, "gclient sync -D --with_branch_heads -r $VERSION --jobs 32" never seems to end!  any idea how to dewtermine if it's finished correctly?
+00:30:21 <aeonsolution[m]> did you replace $VERSION?
+00:30:26 <BrokenCog> yes.
+00:30:44 <BrokenCog> VERSION=android-10.0.0_r35
+00:31:35 <aeonsolution[m]> the version comes from https://github.com/GrapheneOS/Vanadium/blob/10/args.gn
+00:33:14 <BrokenCog> ah. page says "Sync to the latest stable release for Android" ... so, the args.gn file has a "version_name" and a "version_code" ... which does this expect?
+00:34:02 <aeonsolution[m]> i made a guess and used version_name, but i could be wrong
+00:34:17 <aeonsolution[m]> i ran the command and it worked for me so far
+00:34:47 <BrokenCog> okay.  I chose that as well, we'll see how it goes
+00:35:11 <BrokenCog> what about the pervious git checkout $CORRECT_BRANCH_OR_TAG
+00:35:16 <BrokenCog> what tag did you use for that?
+00:35:36 <aeonsolution[m]> i believe thats a variable from a script
+00:35:47 <BrokenCog> lol.  which script?
+00:35:52 <aeonsolution[m]> i could be wrong for that one too
+00:36:29 <aeonsolution[m]> i didnt try looking
+00:36:49 <aeonsolution[m]> im trusting the Official instructions
+00:36:54 <renlord> aeonsolution[m]: is there a reason why you'd like to pm me/
+00:37:24 <aeonsolution[m]> hey renlord, sorry for the spam; Riot updates made the private message bug out
+00:37:36 <aeonsolution[m]> it was creating rooms when i tried reaching out
+00:37:53 <aeonsolution[m]>  * hey renlord, sorry for the spam; Riot's update made the private message bug out
+00:38:01 <renlord> no prob
+00:40:19 <JTL> BrokenCog: Last time I did this I used the value from android_default_version_name and that seemed to work
+00:40:26 <JTL> s/from/of
+00:41:05 <JTL> Should be more clear in the docs though
+00:41:10 <BrokenCog> okay.  I'll use that, but I'm still not sure which "CORRECT_BRANCH_TAG" to do the git checkout to.
+00:41:52 <aeonsolution[m]> i think its a reference to the build your setting up
+00:42:00 <aeonsolution[m]> for me it was graphene-10
+00:42:04 <JTL> BrokenCog: follows the GrapheneOS manifest tag
+00:42:07 <BrokenCog> ah, the qq2a build number?
+00:42:20 <JTL> That'll work
+00:42:20 <BrokenCog> or the chromium 18.... build number?
+00:42:25 <JTL> the former
+00:43:37 <JTL> For the Vanadium repository, the CORRECT_BRANCH_TAG is either `10` (for development purposes) or the build number (for a production build)
+00:44:35 <BrokenCog> okay.
+00:46:15 <BrokenCog> any idea how long this 'fetch' takes?
+00:46:35 <aeonsolution[m]> depends on your connection
+00:46:44 <BrokenCog> of course.
+00:46:47 <aeonsolution[m]> more than 5 mins
+00:46:55 <BrokenCog> is it 5G? 10? 100G?
+00:47:02 <JTL> Let me check
+00:47:05 <aeonsolution[m]> less than an hour for me
+00:47:08 <JTL> It's big
+00:47:34 <BrokenCog> I added the --no-history, hopefully that reduces it a bit.
+00:49:24 <BrokenCog> sadly gclient doesn't seem to want to pass --depth to git.
+00:49:33 <BrokenCog> don't really need the entire history.
+00:50:09 <JTL> BrokenCog: with defualt settings my latest clone of Chromium (81.0.4044.96) came out to 43GB
+00:50:19 <BrokenCog> jeebus.
+00:50:35 <JTL> Sure is nice having an "office" with good internet :p
+00:50:46 <BrokenCog> :).
+00:50:48 <JTL> But yeah it's an issue for some folks
+00:51:45 <renlord> chromium also takes longer to build than grapheneos
+00:51:47 <renlord> lol
+00:52:05 <JTL> ^^
+00:52:13 <JTL> It's why Google made ChromiumOS /s
+01:03:14 <renlord> what is this 'smart city plan' for toronto
+01:03:17 <renlord> that just got ended
+01:03:27 <renlord> every news article is so ambigious on it
+01:04:41 <JTL> My understanding is it's a bunch of IoT sensors and related things with a scable database and data processing attached to it
+01:05:00 <JTL> That's my ELI5 explanation if I were to give one
+01:05:10 <JTL> But I'm not in Ontario and only vaguely read over it
+01:11:36 <BrokenCog> curious how "tech" and "green" always go hand in hand.  "tech" is one of the least (as an aggregate) green thing on the planet.  between power usage, resource extraction, transportation etc.  granted it's helpful, it's the mythical universal equation of tech leading to green which I'm commenting on.
+01:12:23 <JTL> Probably things like power saving and some marketing like "conflict free materials"
+01:12:30 <seaclown> There is a portion to the east of downtown that was historically Portland's/industrial and is going through redevelopment. They had a
+01:12:46 <JTL> Power saving as in compared to older electronics
+01:12:49 <JTL> lol
+01:13:44 <seaclown> Submitted a proposal that was being discussed with the local govt for it to be tech intensive
+01:13:54 <aeonsolution[m]> hey JTL , I ran the ninja command and got this error:
+01:13:59 <aeonsolution[m]> ninja: Entering directory `out/Default/'
+01:13:59 <aeonsolution[m]> [6/76668] ACTION //third_party/android_deps:com_google_errorprone..._config_crbug_908819(//build/toolchain/android:android_clang_x64)
+01:13:59 <aeonsolution[m]> FAILED: gen/third_party/android_deps/com_google_errorprone_error_prone_annotations_java.build_config
+01:14:26 <JTL> Is there any more of an error?
+01:15:00 * aeonsolution[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/zPcMOKHYBNDlUtBkpjZJXbwr >
+01:15:33 <JTL> aeonsolution[m]: You just gotten by the Python versioning "bug" :p
+01:15:57 <JTL> Seems some of the Chromium build system still requires Python 2
+01:16:05 <aeonsolution[m]> -_____-
+01:16:26 <aeonsolution[m]> let me work on that; thanks for pointing that out
+01:16:43 <TheJollyRoger> Got the test results from the cts test cases. Results coming up.
+01:17:23 <JTL> hitchhooker[m]: Looks like aeonsolution[m] also got bitten by the Python version bug :p
+01:17:28 <TheJollyRoger> These results were really good, only unfortunately my phone has been left with two admin apps that for some reason the phone is saying is "not installed for this user" and I can't seem to purge them from this list. I may have uninstalled them in the incorrect order.
+01:18:37 <aeonsolution[m]> at least i got this far with python3 lol
+01:54:22 <miniblue[m]> So Keybase was just bought by Zoom? Is that right?
+01:54:28 <JTL> Yes
+01:54:45 <JTL> Or as I like to call it "A PGP keyserver with the kichen sink bolted on after"
+01:55:17 <miniblue[m]> Never used it (Signal, Briar, Riot for me) but sucks for those who didn't.
+01:55:20 <miniblue[m]> Ah yes
+01:55:37 <miniblue[m]> *who did
+01:56:32 <miniblue[m]> If I'm not mistaken it was kind of a security mess, no?
+01:56:46 <JTL> Well buggy Electron app, so kinda
+01:57:01 <JTL> And it had it's own cryptostorm seperate from GPG
+01:57:29 <miniblue[m]> I see. Still a shame. I'm sure it had some usefulness.
+01:57:42 <TheJollyRoger> Cue some jokes here about gpg over Zoom? :P
+01:57:57 <miniblue[m]> oh god
+01:58:27 <TheJollyRoger> I'd have to go see if libgcrypt runs its cryptographic operations in constant-time...
+02:06:38 <miniblue[m]> Is there any functionality or plans to implement any functionality in regards to a "wipe on x failed passcode attempts" type thing? It's not really important and is more of a QoL thing but I was just wondering if that was possible.
+02:08:10 <miniblue[m]> Though I would assume features of that type would come later in the project with more devs and more time, if it's not complete security theatre, that is.
+02:08:29 <JTL> I think a hardware implementation would be much better but not possible with current Pixel hardware
+02:08:41 <TheJollyRoger> miniblue[m]: I got a writeup for you on that actually.
+02:08:51 <JTL> and I discussed this with TheJollyRoger awhile ago
+02:09:56 <TheJollyRoger> miniblue[m]: https://github.com/Peter-Easton/GrapheneOS-Knowledge/blob/master/GrapheneOS-Security-Q%26A.md#does-graphene-allow-me-to-nuke-my-data-if-say-the-phone-gets-ten-incorrect-guesses-at-the-pincode It's sorta not really needed anymore.
+02:10:17 <TheJollyRoger> The reason why Apple and BlackBerry did it was because of the limitations of enclave processors at the time, so they took the sledgehammer approach.
+02:10:45 <miniblue[m]> Oh wow. Interesting.
+02:11:27 <TheJollyRoger> Yeah. The TLDR of it is that it's mostly security theatre and presents a highly dangerous Denial of Availability exploits.
+02:11:34 <TheJollyRoger> *a highly dangerous Denial of Availability exploit
+02:12:06 <JTL> I could see adding it being potentially valid assuming those caveats are documented, but adding it to the OS without being back by hardware seems kind of pointless to me
+02:12:38 <JTL> backed*
+02:13:16 <madaidan[m]> It would be useful for those paranoid, crazy people
+02:13:20 <TheJollyRoger> As I understand it (Don't take my word for this) the way that it used to be done on Apple's older iPhones was that the four digit pincode was combined with a unique ID generated within the processor that the processor wouldn't allow extraction of, along with possibly some other keying information.
+02:15:13 <TheJollyRoger> miniblue[m]: since those older handsets didn't have an internal timer that was separate from the clock, they had no way of measuring time, so as a result this was something of a kludgy way for them to deter brute force attacks /provided/ the attacker went through the operating system.
+02:15:39 <miniblue[m]> TheJollyRoger: Fantastic writeup, thank you. That makes complete sense.
+02:15:43 <TheJollyRoger> This is why that feature exists, and this is why as JTL said, it will only be useful if you have a hardware binding on it.
+02:15:50 <TheJollyRoger> Anytime :). What I'm here for!
+02:17:22 <miniblue[m]> I assume Apple has better hardware security now and doesn't need the feature but leaves it for the purposes of security theater and/or because it's difficult to remove? I'm guessing?
+02:17:57 <TheJollyRoger> I unfortunately know very little about the newer Apple Handsets, so unfortunately I can't help you there :(.
+02:18:51 <TheJollyRoger> Just that that was how it was /thought to have been done/ on the older iPhone 5C.
+02:19:03 <TheJollyRoger> I can't confirm that either, unfortunately.
+02:19:43 <miniblue[m]> I see. Because if that isn't the case then that is a major security risk and is, IMO, really poorly designed.
+02:20:08 <TheJollyRoger> But, what I can confirm is that yes, the "nuke" feature is resultant of the limitations of the hardware at that time. Why it's not gone away... I'm not sure. Perhaps people are more comfortable with knowing it's there...? I dunno.
+02:20:31 <miniblue[m]> I would imagine they have better security chips nowadays.
+02:20:56 <miniblue[m]> Yeah probably advertising/security theater honestly.
+02:21:07 <miniblue[m]> Who knows what they're thinking
+02:21:20 <TheJollyRoger> Yeah.
+02:26:22 <TheJollyRoger> After about 650 years, I kinda wonder if the phone would still even be alive. By that point, electromigration might have simply stripped all the conductor out of the CPU and essentially kill the unit.
+02:26:37 <TheJollyRoger> Er, out of the HSM's CPU
+02:27:41 <TheJollyRoger> I wouldn't count on the solid state memory where the access tokens are stored to last longer than maybe a couple decades.
+02:38:26 <mxnorvak[m]> Just to report back, Twidere works almost fine as a twitter client, sometimes has problem loading order tweets and dms
+02:39:25 <TheJollyRoger> Oh fantastic.
+02:39:35 <mxnorvak[m]> I liked the offical twitter app more tho
+02:40:01 <mxnorvak[m]> Idk if its work making a new profile to have only twitter on it
+02:40:46 <mxnorvak[m]> I already have 2 other profiles for 2 shady apps, one for each
+02:43:19 <mxnorvak[m]> Its a pain switching between profiles but the upside has been as I'm annoyed by constantly changing profiles, i don't do it that often and spend less time with my phone xD
+02:43:40 <mxnorvak[m]> Idk if its worth*
+04:09:14 <brenneke[m]> <mxnorvak[m] "Just to report back, Twidere wor"> Personally found it flaky as hell, just use Bromite now.
+04:25:32 <k-sloth[m]> For Graphene what VPN should I use? Wirrguard?
+04:32:06 <mxnorvak[m]> <brenneke[m] "Personally found it flaky as hel"> Well yeah its not as smooth as the offical app,how's the PWA version been like?
+04:47:51 <zxwayland> hey, what is there to do on grapheneos?
+04:51:27 <vzlcn0[m]> https://github.com/GrapheneOS/os_issue_tracker/issues
+04:51:27 <vzlcn0[m]> > hey, what is there to do on grapheneos?
+04:52:28 <zxwayland> i am used to being on youtube and playing mobile games on it
+04:52:38 <zxwayland> (old android phone)
+05:03:49 <brenneke[m]> <mxnorvak[m] "Well yeah its not as smooth as t"> Pardon my Twitter ignorance, not sure what PWA is. Fenix app was my favourite but does not work for me on GrapheneOS. I just go to Twitter in Bromite, log in then add to home screen. Is that PWA? Very solid but does require a few minor workarounds.
+05:05:45 <mxnorvak[m]> <brenneke[m] "Pardon my Twitter ignorance, not"> Yeah as far as i know that's PWA, how about being signed to multiple accounts at once,does that work?
+05:07:30 <mxnorvak[m]> haven't used Fenix, is it a client for Twitter?
+05:09:35 <mxnorvak[m]> Yeah just checked it, seems nice but needs to be purchased
+05:11:08 <mxnorvak[m]> Has anyone used Nitter for Twitter?
+05:15:31 <mxnorvak[m]> WebApps Sandboxed Browser (Sandbox for webapps) - https://f-droid.org/app/com.tobykurien.webapps
+05:15:56 <mxnorvak[m]> This also seems to be an option but idk how good their sandbox is
+05:32:55 <strcat[m]> mxnorvak: by 'sandbox' they just mean running them in the WebView
+05:54:11 <mxnorvak[m]> Oh
+05:55:05 <mxnorvak[m]> <strcat[m] "mxnorvak: by 'sandbox' they just"> what's your preferred way of using twitter on mobile?
+06:10:38 <renlord[m]> I just use vanadium.
+06:33:55 <fujita_[m]> Noob question: is it possible to paste using clipboard from 2 different user account or will I have to set up a separate  password manager file on the 2nd user account
+06:34:26 <strcat[m]> you can't share data between user profiles
+06:34:56 <fujita_[m]> Thanks
+06:34:56 <strcat[m]> you would have to do it over the network
+06:35:18 <fujita_[m]> What do you mean by that?
+06:35:36 <fujita_[m]> Does keepassdx has that function?
+06:48:24 <mxnorvak[m]> <renlord[m] "I just use vanadium. "> Would twitter know which sites I'm accessing on other tabs? I guess this is where the chromium sandbox comes into play
+08:33:41 <dazinism> mxnorvak: not sure if how Twitter do it, but certainly Facebook did (and I expect still do)
+08:34:49 <dazinism> Facebook used copyright of their 'F' logo so that any site that wanted a share on Facebook button had to use their widget
+08:36:20 <dazinism> That widget would have code which reported your visit ro the site
+08:36:46 <dazinism> Adding to your Facebook cookie IIRC
+08:39:19 <dazinism> Expect any sites that run other Facebook code - like 'login with Facebook' would also be looking for visitors that use that browser for Facebook
+08:42:05 <dazinism> Using a different browser to the one you use for twitter would stop that kind of tracking. (Eg. The Webapps Sandboxed Browser)
+08:42:43 <dazinism> Used to use twitter via Twidere and was happy with that.
+08:44:07 <dazinism> Now I only use and use it via Nitter with JavaScript off
+08:44:28 <dazinism> *now I only read and use it
+09:09:02 <__oi> is it possible to install google play services on grapheneos?
+09:37:21 <strcat[m]> __oi: no, not an actual installation of it - it's not a regular app, it can't just be installed without being integrated into the OS
+09:37:35 <strcat[m]> and it replaces a bunch of things that are part of the OS
+09:37:56 <strcat[m]> so no, you can't, if you want to integrate Play Services you need your own fork of the OS which is not GrapheneOS
+09:45:21 <__oi> i have come across tutorials for installing play services on miui os. or is that something different?
+09:46:40 <__oi> the functionality i am interested in is push notifications for the Slack app
+09:49:35 <strcat[m]> you can't install it, it has to be built into the OS
+09:49:56 <strcat[m]> some Chinese OSes build in support for Play Services without including it - that's not the case with GrapheneOS and will never be
+09:50:12 <strcat[m]> Play Services has to be built into the OS, it is not an unprivileged third party app, there is no way around that
+09:50:14 <strcat[m]> you can't do it
+09:50:28 <strcat[m]> use the stock OS or something else if this is mandatory, you can't use Play Services on GrapheneOS
+09:50:55 <__oi> ok, thanks for the answers
+09:51:01 <strcat[m]> as I said earlier you would need to fork GrapheneOS to include Play Services if you wanted to do that (and that would not be GrapheneOS anymore)
+10:12:24 <k-sloth[m]> <mxnorvak[m] "This also seems to be an option "> i tried it, it was ok but most websites break and you need to enable certain web hostings to unbreak it, i deleted it lol but wasnt bad just not for me
+10:31:25 <yekip[m]> dumb question alert.... i haven't tried using profiles yet, but just wondering....
+10:31:25 <yekip[m]> Lets say i had 3 profiles with 3 Signal apps installed under different numbers (obviously). Would I need to switch through the profiles to check for messages, or would any incoming msg alerts come through on the main profile?
+10:31:36 <mxnorvak[m]> <dazinism "Now I only use and use it via Ni"> Do you use the UntrackMe app for Nitter?
+10:31:42 <yekip[m]> kind of assuming thats not possible, but assumption is the mother of all mistakes :)
+10:38:10 <shad0wbit[m]> > dumb question alert.... i haven't tried using profiles yet, but just wondering....
+10:38:10 <shad0wbit[m]> > Lets say i had 3 profiles with 3 Signal apps installed under different numbers (obviously). Would I need to switch through the profiles to check for messages, or would any incoming msg alerts come through on the main profile?
+10:38:10 <shad0wbit[m]> Yes you would need to switch profiles. But you would get an alarm for an incoming call (at least it is so with WhatsApp and with normal calls ).
+10:38:17 <shad0wbit[m]> Dunno about Signal
+10:40:23 <yekip[m]> thanks, the question is more about profiles than signal really. am i rightg in thinking a profiole is totally isolated so alerts can't come through for any app in one profile, in another profile? such as email alerts or lets say whats app message (if I used that junk!)
+10:42:50 <shad0wbit[m]> Notificantions won't come through. So yes they are isolated from each other. You just will hear an alarm of there is an incoming phone call on one of your profiles (and when your alarm clock or a timer sets an alarm)
+10:43:04 <shad0wbit[m]> if there
+10:45:56 <yekip[m]> you mean will only hear it in the profile the app is running in?
+10:46:15 <shad0wbit[m]> No
+10:46:20 <shad0wbit[m]> Also in the other
+10:54:58 * yekip[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/IHRtPoDuxtRSowKduCagKqSM >
+10:56:11 <shad0wbit[m]> There is a diffrence between notification and an alarm/ringtone
+10:57:22 <shad0wbit[m]> You won't see notifications. You will only hear a ringtone on profile1 when there is an incoming phone call on profile 2 for example
+10:57:57 <yekip[m]> i see. thats kinda cool. thanks!
+10:59:06 <yekip[m]> was wondering if there was some kind of app, or IFTT type thing to push something over from one profile tyo another. so if a message came in on profile 2, i would get some kind of notice in profile 1 to tell me to switch across to deal with it. CCTV motion detection alerts in an app, for instance, would be one use for this
+10:59:17 <shad0wbit[m]> You can kinda test it if you set a timer for 20 sec. on profile 2 switch to profile 1 and wait until the time of the timer went off
+10:59:41 <shad0wbit[m]> But for incoming phone calls it is different from that
+10:59:51 <yekip[m]> right yeah
+11:00:10 <yekip[m]> not even sure how to set up profiles yet. can't seem to find five mins to do it, day in day out! but soon
+11:11:41 * nuttso[m] uploaded a video: signal-2020-05-08-131047.mp4 (2399KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/cPTTmgLhixdGcQCMLQoWuvFE >
+11:38:55 <yekip[m]> nice thanks!
+11:43:02 <k-sloth[m]> to switch, pull down the notification menu full. you will see a little person icon click that
+13:13:43 <yekip[m]> <k-sloth[m] "to switch, pull down the notific"> thanks. so you dont have to actually log out of current user or reboot or anytghing like that?
+13:25:37 <nuttso[m]> <yekip[m] "thanks. so you dont have to actu"> The user is locked out a few minutes after u switch.
+13:28:25 <yekip[m]> ok thanks.
+14:49:34 <dazinism> mxnorvak: yeah, I've got that app.
+14:50:24 <dazinism> limitless0 been thinking a bit about your issue not being able to uninstall jami
+14:51:10 <dazinism> I've noticed sometimes the OS fails on installs
+14:52:07 <dazinism> Thought it was an issue with the Fdroid app, which I mainly use.
+14:52:49 <dazinism> Sometimes installs fail depending on where you are in the app. The updates page, from the app page, from the list of apps
+14:53:16 <dazinism> Generally I've found trying again, or from somewhere else in the app, works
+14:53:32 <dazinism> Guess this is for updates as well as installing.
+14:54:11 <dazinism> But I was recently playing with Aurora Droid and found it could fail on installs also.
+14:55:51 <dazinism> limitless0 getting more to your situation. Yes you could try via adb
+15:04:12 <dazinism> Would expect adb uninstall would work, weird its not working on your device.
+15:06:11 <DannyWorkOrderPr> <__oi "i have come across tutorials for"> Please don't  =] Set up Slack notifications via email, or perhaps a Slack <-> Matrix (Riot) bridge?
+15:07:48 <limitless0[m]> dazinism: thank you,i'll try the adb and see if it works
+15:09:13 <dazinism> limitless0: actually just thought of something that may be worth a try...
+15:10:08 <dazinism> https://f-droid.org/app/com.oF2pks.applicationsinfo
+15:10:48 <dazinism> When viewing an apk, theres an uninstall option in the menu...
+15:11:05 <dazinism> *when viewing an all details
+15:11:33 <dazinism> lol
+15:11:43 <dazinism> *when viewing an apps details
+15:15:47 <limitless0[m]> <dazinism "https://f-droid.org/app/com.oF2p"> Yea i havr tried that still doesnt uninstall
+15:15:57 <dazinism> Although looks like it tries to do that the same way sliding the apk icon to uninstall on the homescreen uses
+15:16:17 <dazinism> Did you install jami via Fdroid?
+15:17:05 <limitless0[m]> Yes
+15:17:10 <dazinism> That doesnt have the
+15:17:26 <limitless0[m]> Maybe the app its corrupted or something
+15:18:18 <dazinism> Request_delete_packages  permission
+15:19:07 <dazinism> Guess it maybe somehow does something different
+15:19:51 <dazinism> You've tried to uninstall from in Fdroid app
+15:20:17 <limitless0[m]> I've tried from fdroid ,aurora,system
+15:20:25 <limitless0[m]> Only option left is adb now
+15:20:47 <dazinism> Yeah
+16:24:53 <brenneke[m]> <TheJollyRoger "The reason the Signal APK is dif"> Other than self-updating functionality, do you think the app is the same between web and play apks?
+16:35:06 <valldrac> brenneke[m]: there's something more, the web version expires after 90 days
+16:36:15 <valldrac> counting from the day the APK was built
+16:36:43 <valldrac> after 90 days it will raise an error and refuse to send any message
+16:42:48 <dallemon[m]> <valldrac "after 90 days it will raise an e"> It will usually prompt for an update well before that though.
+16:51:18 <valldrac> right, so you should keep updating or the app will stop working
+16:58:51 <BrokenCog> well, gclient sync for Vanadium is up to 34G!!
+17:17:38 <brenneke[m]> <valldrac "after 90 days it will raise an e"> Interesting thanks. Do you think anything different with respect to push notifications?
+17:20:19 <valldrac> brenneke[m]: no difference
+17:26:25 <brenneke[m]> <valldrac "brenneke: no difference"> OK, so really not reason not to just update with Aurora along with other apps.
+17:52:13 <fujita_[m]> @natuso how did you manage to change the profile picture of the the 2nd profile and does your 2nd profile always stay in dark theme since mine would switch back to light theme every time I change profile
+18:43:05 <brenneke[m]> > > <@yekip:privacytools.io> thanks. so you dont have to actually log out of current user or reboot or anytghing like that?
+18:43:05 <brenneke[m]> > The user is locked out a few minutes after u switch.
+18:43:05 <brenneke[m]> Is this user lockout time adjustable?
+21:38:27 <kieni111[m]> Concerning signal: it uses around 1.7 gb ram after 6-8h - has anyone found out if the different versions (aurora, hp) behave less or more "hungry" or if it is some setting? (Pixel 3a, latest graphene)
+21:42:10 <dazinism> fujita_: can change the image for a user profile in the emergency information
+21:46:02 <minoas[m]> kieni111:  yes. it's called wire
+21:47:22 <minoas[m]> signal is a battery hog as well.
+21:50:28 <TheJollyRoger> kieni111[m]: use the official version from the Signal site.
+21:50:41 <dazinism> conversations.im has low battery draw. Lots of servers to choose from.
+21:50:52 <TheJollyRoger> That one is optimized for missing Play Services and I've left it running on my phone for days on end without a charge.
+21:51:04 <TheJollyRoger> And running multiple instances of Signal in different profiles to boot.
+21:51:21 <dazinism> TheJollyRoger: I've found sometimes it draws heavy
+21:51:58 <dazinism> Wonder if it has something to do with quality of network connection?
+21:52:32 <dazinism> Or maybe the load on signals servers?
+21:52:36 <TheJollyRoger> I'm not sure.
+21:52:53 <TheJollyRoger> I've just never had a problem with it, the last time I experienced heavy battery draw from Signal was years ago.
+21:54:04 <dazinism> I have it offline mainly, recently left it on by accident and found it wasnt draining battery. Left it on for a few days and it did...
+21:55:09 <TheJollyRoger> kieni111[m]: I recommend you simply just download it from the official website release.
+21:59:31 * dazinism uploaded an image: IMG_20200508_225643.jpg (892KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/LGyWYhhAmNSVfcdukLBQoSzm >
+22:00:23 <dazinism> Thats my partners phone
+22:00:58 <dazinism> Although I just checked and its installed from Aurora Store....gonna change it to another version
+22:16:19 <dazinism> They havent got Play on their phone
+22:35:32 <cx2[m]> Pretty sure I downloaded straight from Signal and it's running perfect... RiotX is taking a toll though... but still nothing substantial
+22:51:24 <k-sloth[m]> I'm trying out mini victor, so far so good and also has less permissions. Yeah riotx uses a lot of battery it seems
+23:04:22 <strcat[m]> instructions at https://grapheneos.org/install now fully cover Windows
+23:04:37 <dazinism> valldrac do you know if theres likely to be a difference between battery draw from Play and apk download versions?
+23:04:42 <aeonsolution[m]> strcat: thanks!
+23:04:43 <strcat[m]> also fleshed out build dependencies section at https://grapheneos.org/build#build-dependencies instead of just pointing at AOSP docs
+23:04:51 <strcat[m]> which are out-of-date and should not be used, really
+23:16:38 <strcat[m]> going to eliminate some of the kernel build dependencies
+23:20:04 <dazinism> kieni111: wrote up details of how to verify the signature fingerprint at https://hub.libranet.de/wiki/graphene-os/wiki/Apps#Verifying_apk_files
+23:20:23 <TheJollyRoger> Thank you strcat[m] and dazinism!!!
+23:20:24 <dazinism> For signal downloaded from their site
+23:21:04 <dazinism> And you mate
+23:21:41 <strcat[m]> ok removed the dependency on having make and some other tools
+23:21:47 <strcat[m]> since they're prebuilts already
+23:21:58 <strcat[m]> the kernel builds don't use the regular build sandbox setup since it's separate
+23:22:02 <strcat[m]> kinda annoying to set up that stuff myself
+23:23:56 <strcat[m]> AOSP build process uses a namespace-based sandbox to build now
+23:24:02 <strcat[m]> and they whitelist what leaks in from the host
+23:24:11 <strcat[m]> as part of making builds more robust / and reliably reproducible
+23:24:36 <strcat[m]> that's why builds are reproducible by default
+23:24:45 <strcat[m]> along with the other work that has gone into it
+23:25:33 <aeonsolution[m]> does that make building everything less time consuming?
+23:25:36 <strcat[m]> and if we ever want to extend anything like the compiler toolchain that's straightforward since all the dependencies are bundled and have reproducible builds themselves
+23:25:53 <strcat[m]> aeonsolution: not really since all these things used to just need to come from the OS
+23:26:22 <strcat[m]> the prebuilts aren't to make building faster but to have reproducible builds and handle certain things like the Linux kernel and Vanadium separately due to their complexity
+23:26:49 <strcat[m]> I don't currently provide GrapheneOS kernel prebuilts but I should so that building the kernel is an optional step
+23:29:07 <aeonsolution[m]> i appreciate the clarification
+23:29:48 <strcat[m]> basically all the build dependencies are becoming prebuilts - rather than just many
+23:30:00 <strcat[m]> and there's an nsjail command included which runs everything in a namespace-based sandbox
+23:30:02 <strcat[m]> and isolates it from the host
+23:30:09 <JTL> Very interesting
+23:30:12 <strcat[m]> and then only leaks certain things in that are whitelisted
+23:30:24 <strcat[m]> eventually it will be fully isolated from the host other than the kernel, I'd expect
+23:30:31 <cdesai> I was looking at that recently and was wondering if there's anything stopping them from mounting src ro
+23:30:34 <cdesai> right now it's rw
+23:30:35 <strcat[m]> and you can build all of the prebuilts using the AOSP source tree
+23:30:47 <cdesai> strcat[m]: building prebuilts is a pita though
+23:30:56 <strcat[m]> cdesai: depends, some is easy
+23:31:05 <strcat[m]> it's easy enough to build clang, etc.
+23:31:07 <strcat[m]> there's a manifest
+23:31:34 <strcat[m]> and I asked them to start pushing tags for platform-tools which they do now
+23:31:43 <cdesai> I saw r30 last week iirc
+23:31:46 <strcat[m]> so you can check out a platform-tools tag and build the official releases of adb, fastboot, etc.
+23:31:56 <strcat[m]> so if we wanted we could release our own platform-tools releases
+23:32:01 <strcat[m]> instead of telling people to use theirs
+23:32:06 <strcat[m]> although those builds are reproducible
+23:32:10 <strcat[m]> and I just included a hash for now
+23:32:17 <cdesai> there's https://android-rebuilds.beuc.net/
+23:32:23 <strcat[m]> https://grapheneos.org/install#obtaining-fastboot
+23:33:00 <strcat[m]> cdesai: that's the SDK though
+23:33:37 <cdesai> strcat[m]: yeah but it does have platform tools too, and could have separate adb/fastboot zips via this setup as well.
+23:34:15 <JTL> cdesai: very interesting
+23:34:20 <strcat[m]> Arch Linux uses the platform-tools tags I got them to start making to build an 'android-tools' package which is an arbitrary subset of platform-tools with a couple extras
+23:34:33 <strcat[m]> they use their own build system instead of the AOSP build system
+23:34:35 <strcat[m]> because the maintainer doesn
+23:34:45 <strcat[m]>  * because the maintainer doesn't want to check out the whole thing
+23:34:49 <cdesai> I want to do something similar in Debian too.
+23:34:54 <strcat[m]> that's why it's a subset and has some extra tools
+23:35:02 <cdesai> if you spend some time, you can get away with checking out only some repos
+23:35:21 <strcat[m]> yes but they don't even use the standard build system
+23:35:41 <strcat[m]> the same thing applies to debian, etc. and that's why they mangle the version and have a totally broken build not based on an actual release tag for fastboot
+23:35:51 <strcat[m]> because they just cobbled together their own thing and didn't understand what they were doing
+23:36:01 <strcat[m]> made up their own version numbering system and override the standard one with it
+23:36:05 <cdesai> strcat[m]: well, I'm on that team, and at that time, there were no platform tags
+23:36:09 <strcat[m]> luckily their versions are lower than the proper ones
+23:36:16 <cdesai> it's not made up, it's the standard android tags, as that's all was available
+23:36:20 <strcat[m]> cdesai: there were manifests revisions but not tags
+23:36:35 <strcat[m]> cdesai: run fastboot --version with the AOSP fastboot you build when you build AOSP
+23:36:41 <strcat[m]> it still uses the standard versioning
+23:36:43 <strcat[m]> it just calls it a release candidate
+23:36:47 <strcat[m]> since it's not a real release
+23:36:53 <strcat[m]> cdesai: they're clobbering that
+23:38:25 * strcat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/VkmKKHBOhEZsuJMHbReCkeFr >
+23:38:48 <cdesai> yeah I see what you mean, can fix.
+23:38:50 <strcat[m]> it uses $VERSION-$BUILD_NUMBER
+23:39:10 <strcat[m]> where $BUILD_NUMBER is your own custom versioning system
+23:39:56 <strcat[m]> nice the build system depends on freetype2
+23:39:58 <strcat[m]> for openjdk
+23:40:24 <strcat[m]> testing it in a container atm
+23:40:46 <strcat[m]> nesting namespaces doesn't work well and it breaks the build sandboxing
+23:40:56 <strcat[m]> guess I should just make a custom chroot perhaps
+23:41:15 <strcat[m]> namespaces are so fucking broken
+23:41:16 <strcat[m]> such a joke
+23:42:12 * strcat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/HovxjalipqRKejzgrfhmUIUQ >
+23:42:15 <strcat[m]> nice work openjdk
+23:42:26 <strcat[m]> trying to do something headless
+23:42:32 <strcat[m]> and it pulls this BS
+23:42:40 <strcat[m]> wonder if it can just be disabled
+23:43:25 <strcat[m]> why the hell does openjdk load fonts
+23:43:39 <cdesai> there are -headless packages, turns out that's what I have installed.
+23:44:03 <cdesai> jre* -headless
+23:44:18 <strcat[m]> cdesai: yes freetype2 is apparently a dependency of those
+23:44:47 <strcat[m]> cdesai: https://www.archlinux.org/packages/extra/x86_64/jre11-openjdk-headless/
+23:44:54 <strcat[m]> this is with the one bundled as a prebuilt in the sources though
+23:45:38 <cdesai> ah right I keep forgetting that
+23:46:27 <strcat[m]> I'm trying to make a somewhat reasonable list of deps
+23:46:32 <strcat[m]> at least what you need on Arch
+23:46:43 <cdesai> I have a list for debian somewhere
+23:46:47 <strcat[m]> most things are prebuilts, but not everything
+23:46:54 <strcat[m]> and some prebuilts have external library deps
+23:47:06 <strcat[m]> in some cases the libraries are included for some prebuilts but not others
+23:47:09 <strcat[m]> it has ncurses5 for GCC
+23:47:15 <strcat[m]> but the clang prebuilt is also using it
+23:47:32 <cdesai> apt install bc git htop ccache curl build-essential zip m4 python-protobuf python3-protobuf default-jdk-headless default-jre-headless libncurses5 libncurses5-dev libssl-dev
+23:48:16 <cdesai> actual list would be smaller than this
+23:49:22 <strcat[m]> don't need htop, ccache, curl at a minimum
+23:49:34 <strcat[m]> build-essential includes stuff you don't need, it's a group of things
+23:49:40 <strcat[m]> ofc if you just want to install everything it's fine
+23:49:49 <strcat[m]> but I want a minimal list of deps basically
+23:50:11 <cdesai> yeah this was more of a generic "this is what I used when setting up a machine for aosp build + chromium + kernel etc and it works"
+23:50:32 <strcat[m]> cdesai: you need a font
+23:50:33 <strcat[m]> lol
+23:50:35 <strcat[m]> for openjdk
+23:50:46 <cdesai> lol
+23:50:47 * TheJollyRoger suddenly imagines someone running "apt install *" and the root partition expanding to take up >200GB of solid binaries...
+23:50:49 <strcat[m]> it bails out if you have no TTF/OTF font installed
+23:50:57 <strcat[m]> installing ttf-dejavu fixed that error
+23:51:19 <strcat[m]> so yeah someone using a workstation would never run into that
+23:51:22 <strcat[m]> but I'll document it
+23:56:25 <strcat[m]> TheJollyRoger: have you seen slackware?
+23:56:34 <strcat[m]> TheJollyRoger: slackware doesn't have dependency management in the package manager
+23:56:38 <strcat[m]> TheJollyRoger: do you know how they work around that?
+23:56:45 <strcat[m]> TheJollyRoger: a standard installation of slackware installs EVERYTHING
+23:57:24 <TheJollyRoger> I...
+23:57:30 <TheJollyRoger> I... I had no idea.
+23:57:39 * TheJollyRoger suddenly goes wide-eyed.
+23:57:47 <strcat[m]> TheJollyRoger: https://docs.slackware.com/slackware:package_and_dependency_management_shouldn_t_put_you_off_slackware read this attempt to make it sound okay
+23:58:14 <strcat[m]> it does make sense to have a well-defined core base system that's always installed but that's nothing like this
+23:58:18 <strcat[m]> and it doesn't update it as a whole
+23:58:23 <cdesai> imagine android make not having dependency resolution thus building everything everytime
+23:58:53 <TheJollyRoger> ...good gravy.
+23:59:05 <JTL> strcat[m]: Slackware, that's a name I haven't heard in awhile
+23:59:20 <strcat[m]> cdesai: well it doesn't really use make anymore, uses kati implementation of make, and they are moving to blueprint quickly
+23:59:31 <strcat[m]> we just use make to build the kernel
+23:59:32 <TheJollyRoger> "Users who install slackware are recommended to install a full install (every package)"
+23:59:32 <cdesai> strcat[m]: I know, but you know what I meant :P
+23:59:36 <strcat[m]> yeah
+23:59:45 <nickcalyx[m]> Slackware is the first Linux distro I installed, from 3.5" disks
+23:59:56 <strcat[m]> it isn't really possible to just update slackware to a new release either

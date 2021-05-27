@@ -1,0 +1,532 @@
+00:11:29 <codebam> where is the release key?
+00:11:39 <codebam> I want to `gpg --verify` the file I'm downloading
+00:12:09 <anupritaisno1[m]> codebam: use signify
+00:12:15 <codebam> okay
+00:12:20 <anupritaisno1[m]> gpg is not recommended for usage and isn't very secure
+00:12:40 <codebam> okay
+00:13:07 <codebam> where do I get signify?
+00:13:36 <TheJollyRoger> codebam: what operating system are you running?
+00:13:44 <codebam> TheJollyRoger: Solus Linux
+00:14:36 <TheJollyRoger> codebam: Check your repositories, but if it's not in your operating system repositories then use Auditor post-install.
+00:14:53 <codebam> I might just install a different OS
+00:15:01 <codebam> I wanted to try Fedora Silverblue anyways so now I can
+00:18:16 <TheJollyRoger> Sure. If Fedora don't package Signify for you, then just use Auditor.
+00:19:14 <codebam> I don't know if they package it but yeah I'll use Auditor
+00:19:25 <codebam> Auditor is the app that's installed after you boot to verify the build?
+00:19:29 <codebam> how does that actually work?
+00:19:37 <TheJollyRoger> Yes, it's included with the operating system -
+00:19:41 <codebam> do I need 2 phones for that?
+00:20:02 <TheJollyRoger> That's one way of doing it, or the other way is to use the project's own attestation server at https://attestation.app
+00:20:13 <codebam> oh okay cool
+00:20:34 <TheJollyRoger> Auditor's pretty neat: Phones that shipped with Android 8 are capable of Remote Attestation.
+00:21:25 <codebam> oh cool, I'm excited to try it out
+00:21:36 <codebam> is it safe to just lock my bootloader after flashing?
+00:21:44 <TheJollyRoger> If the phone's bootloader is locked, this allows a phone to cryptographically attest to the boot hash. The initial pairing is backed up with a validate it with a certificate that's validated by your batch, which is validated by your OEM, which is then validated by Google's self-signed Root.
+00:21:47 <TheJollyRoger> Yes, it is.
+00:21:53 <codebam> awesome
+00:22:13 <codebam> I think I asked this a while back, but does eSIM work on grapheneos?
+00:22:30 <codebam> on Calyx it worked right away after I enabled d2ds so I'll try that
+00:22:33 <TheJollyRoger> So the interesting thing about Auditor... even if the operating system itself tries to lie about its own authenticity, remote attestation was actually designed to check if the verified boot hash is legit and actually was signed by the release key.
+00:23:12 <codebam> oh wow that's really cool
+00:23:15 <TheJollyRoger> If it isn't, then Auditor can actually catch it -- Auditor can even do some very bizarre things like detect the presence of programs that try to mask themselves like Magisk, which can even lie to ADB.
+00:23:34 <TheJollyRoger> Yeah, it's really neat.
+00:24:23 <TheJollyRoger> Since the in-house attestation server has genuine copies of those keys, if say, someone gave you a phony system image and provisioned their own keys in the bootloader while you weren't looking during the installation, Auditor can actually catch that.
+00:24:57 <TheJollyRoger> codebam: I don't think eSIM is supported at this point in time, unfortunately.
+00:26:57 <TheJollyRoger> Auditor is GrapheneOS' secret weapon when it comes to making sure the phone operating system's image is legitimate. It's pretty simple to use, if you have another phone you should take that approach and pair those phones, that's probably the safest. But if you don't or need something to start the chain of trust, then use the Attestation server, and use another device you trust to display the
+00:26:59 <TheJollyRoger> audit data.
+00:27:06 <codebam> that's okay. I'm upgrading to a new device soon anyways
+00:27:17 <TheJollyRoger> Got it.
+00:29:21 <strcat[m]> the main way that Auditor works is from pinning the generated key and the attestation chain for it
+00:29:30 <strcat[m]> but it does have very basic authentication of the initial result via the root
+00:29:45 <strcat[m]> after that it's paired and the root doesn't actually play a role
+00:29:53 * TheJollyRoger blushes.
+00:30:03 <anupritaisno1[m]> Btw guys we need help to counter FUD and misinformation being spread against graphene by james, copperhead and a few other people who have been misled by them
+00:30:03 <anupritaisno1[m]> Please pm me if you would like to help us
+00:30:05 <TheJollyRoger> Ack!
+00:30:09 <codebam> eSIM works btw TheJollyRoger
+00:30:18 <codebam> I did the same as in Calyx
+00:30:27 <TheJollyRoger> Oh it does?
+00:30:30 <codebam> I don't think the setup wizard works, but I just enabled D2DS and rebooted
+00:30:31 <TheJollyRoger> Well splice the mainbrace!
+00:30:37 <TheJollyRoger> \o/ Awesome.
+00:30:42 <codebam> yeah it restores already saved eSIM cards
+00:30:48 <TheJollyRoger> Beautiful.
+00:31:02 <anupritaisno1[m]> Also if you have a record of donations or have archives of source code from 2014 onwards please get in touch with strcat
+00:31:15 <strcat[m]> TheJollyRoger: what we're missing for eSIM is an app to set it up, basically
+00:31:21 <TheJollyRoger> Ohhhh
+00:31:23 <strcat[m]> TheJollyRoger: all the infrastructure for it in the OS is there and works
+00:31:26 <strcat[m]> we're missing the setup
+00:31:26 <TheJollyRoger> Oh but the backend is supported?
+00:31:30 <strcat[m]> yeah
+00:31:34 <strcat[m]> we are missing activation / setup
+00:31:36 <TheJollyRoger> OH huh. That makes sense.
+00:31:40 <strcat[m]> we're just missing an app for it
+00:31:46 <strcat[m]> we need our own implementation I guess
+00:31:48 <TheJollyRoger> Ack, got it o.O.
+00:31:54 <strcat[m]> someone has to make it
+00:32:27 <TheJollyRoger> I see, I see... ack.
+00:34:03 <codebam> the correct way to use grapheneos is no apps right?
+00:34:19 <codebam> I can probably live with webapps
+00:34:58 <TheJollyRoger> codebam: you can install apps! Just a little catch:
+00:35:35 <TheJollyRoger> The first one is that at the present time GrapheneOS lacks a first-party app store of specially curated, apps chosen for their security properties and by necessity and with co-operation from upstream developers.
+00:36:00 <TheJollyRoger> So in interim, you'll have to find, and update the applications yourself.
+00:36:01 <codebam> can/should I use f-droid?
+00:37:10 <TheJollyRoger> The second catch is that GrapheneOS doesn't have Google Play and many apps have hard dependencies on Google Play and may experience strange behaviour when their developers don't code their apps to handle phones without it. This could take the form of apps crashing on launch or whenever trying to request functionality that is provided by Google, finding nothing, and not having any
+00:37:12 <TheJollyRoger> exception-handling capability.
+00:37:43 <TheJollyRoger> Or in some cases, needing to run in the foreground and display a "app is running" icon.
+00:37:50 <TheJollyRoger> or running but not sending notifications.
+00:38:03 <TheJollyRoger> codebam: F-Droid is a tad bit controversial in this chat room, I'll try to explain both sides as best I can...
+00:38:42 <strcat[m]> codebam: it makes sense to use F-Droid + Aurora Store
+00:38:43 <TheJollyRoger> On one hand, some people do have it because it offers the lowest barrier to quickly and readily grab lots of readily available apps from the same place.
+00:38:44 <strcat[m]> codebam: we're just not going to bundle either
+00:38:56 <codebam> okay that's fine. I'll use those
+00:39:02 <TheJollyRoger> whew. Okay!
+00:39:14 <codebam> I need to verify the F-Droid APK first though and for that I need a proper desktop OS
+00:39:34 <codebam> If you don't mind me asking, what desktop OS's do you guys use?
+00:40:05 <codebam> I was going to use Fedora Silverblue because I realized I can't trust my OS if I'm using sudo all the time
+00:40:22 <anupritaisno1[m]> codebam: OT chat
+00:40:29 <codebam> okay, sorry
+00:40:51 <TheJollyRoger> Hi codebam, non-GrapheneOS operating systems aren't really covered here-- ha, beat me to it anu.
+00:41:02 <codebam> asked in ot chat
+00:52:19 <Dylanger[m]> Is it possible to remove the ability for apps to directly access certificates of other apps?
+00:52:19 <Dylanger[m]> The Play Services client lib gets the cert for Play Services/GMS via PackageManager
+00:52:19 <Dylanger[m]> I wonder if it's possible to not allow that
+00:52:54 <anupritaisno1[m]> Dylanger: this is already not allowed
+00:53:30 <anupritaisno1[m]> On the stock ROM there is an overlay that contains a string array of apps
+00:54:12 <anupritaisno1[m]> This array has a list of whitelisted apps that any other app can query the signature for
+00:54:55 <anupritaisno1[m]> And GMS is one of those
+00:57:15 <Dylanger[m]> Ah thank you
+00:57:20 <Dylanger[m]> I was wondering how that was working
+01:04:45 <Dylanger[m]> `frameworks/base/data/etc/hiddenapi-package-whitelist.xml`
+01:13:26 <strcat[m]> anupritaisno1: they can do it if they have QUERY_ALL_PACKAGES or w/e it's called
+01:14:18 <Dylanger[m]> https://developer.android.com/reference/android/Manifest.permission.html#QUERY_ALL_PACKAGES
+01:16:54 <Dylanger[m]> I'm trying to locate this whitelist
+01:28:09 <anupritaisno1[m]> strcat: no there's an exception on stock
+01:28:38 <anupritaisno1[m]> You can get signature for play services and a few other whitelisted apps without ever needing that permission
+01:28:59 <anupritaisno1[m]> The whitelist is quite small, only 2-3 apps can be queried without the permission
+01:29:18 <strcat[m]> just saying that any app can do that with that permission
+01:30:34 <ruddo[m]> <codebam "If you don't mind me asking, wha"> Qubes.
+01:36:26 * Dylanger[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/SSUXupLGryxUuwqSPKRQtjPl/message.txt >
+01:36:40 <Dylanger[m]> > even uninstalled ones
+01:36:47 <Dylanger[m]> What in the goddamn
+01:48:45 <Dylanger[m]> <Dylanger[m] "https://developer.android.com/re"> I wonder if we should yeet this
+01:49:07 <Dylanger[m]> Don't know how that would fit with the 'ye must blend in' ethos
+01:49:33 <Dylanger[m]> But I'd rather not have this API be available to apps
+01:54:07 <Dylanger[m]> https://proandroiddev.com/how-to-get-users-installed-apps-in-android-11-b4a4d2754286
+01:54:08 <Dylanger[m]> > There is one loophole that I noticed while exploring the <queries> element if you add android.intent.action.MAIN as the action element in the intent filter, you can see almost all the apps of the user without adding the permission since almost all apps would have this element in the AndroidManifest.
+01:54:09 <Dylanger[m]> 🙃
+01:56:03 <strcat[m]> Dylanger: that's how it's supposed to work
+01:56:06 <strcat[m]> apps have to declare what they use
+01:56:20 <strcat[m]> so it can be statically determined what they can see
+01:56:35 <strcat[m]> they can add whatever they want to queries though
+02:00:11 <Dylanger[m]> Hm, I'm gonna neuter this API and see how it goes
+02:02:06 <strcat[m]> Dylanger: it will break Auditor without changing it
+02:02:09 <strcat[m]> or giving it an exception
+02:02:25 <strcat[m]> also will break apps that use it unnecessarily too
+02:02:40 <strcat[m]> sure they could generally do things properly if they aren't intended to actually scan for apps for some reason (like Auditor)
+02:02:50 <Dylanger[m]> I'll find a good exception
+02:02:51 <strcat[m]> but if they used that, not much can be done about it without breaking them
+02:03:06 <strcat[m]> and you can do essentially the same thing with queries just more manually
+02:03:15 <Dylanger[m]> It's a trade off I'm willing to live with
+02:03:20 <Dylanger[m]> Yeah I'll look at that as well
+02:04:31 <strcat[m]> there is no Samsung 970 Pro 2TB and the 980 Pro 2TB isn't out yet?
+02:04:33 <strcat[m]> what...
+02:04:55 <strcat[m]> I have a 2TB 960 Pro from 2016
+02:06:51 <JTL> strcat[m]: I have a 970 EVO Plus 2TB
+02:07:11 <renlord> is this a monologue?
+02:07:18 <JTL> lol?
+02:08:33 <strcat[m]> JTL: looking at the Pro line though
+02:09:08 <JTL> Ah okay
+02:30:10 <MattV111[m]> Since most recent update my alarm turns itself off pixel 4 xl
+02:37:15 <RanAwayNow> This is probably a rather naive question, but I couldn't find an answer - does GrapheneOS encrypt the phone by default and also is the password still limited to 16 characters?
+02:45:51 <ruddo[m]> <RanAwayNow "This is probably a rather naive "> Yes and no.
+02:46:04 <louipc> he quit already
+02:46:30 <louipc> the nick fits
+02:51:04 <TheJollyRoger> *snicker*
+03:04:43 * Lia[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/LRjzkfkRDzeoSLyFciOcCVrJ/message.txt >
+03:05:02 <Lia[m]> (Or not so useless on the case of Auditor or Vanadium)
+03:05:25 <Lia[m]> https://github.com/chromium/chromium/commit/cdc6f38e3e4a994df8c40c6f0b4b7db14da2dd35
+03:07:48 <Dylanger[m]> Still not totally sure what it does, I can't locate the whitelist mentioned above
+03:08:00 <Dylanger[m]> There are apps in Location Providers
+03:08:34 <strcat[m]> Lia: queries and QUERY_ALL_PACKAGES are useful for forcing apps to statically declare which other apps they can query and directly contact
+03:09:05 <strcat[m]> Lia: it is not supposed to restrict what apps are allowed to do but rather have them declare what they do in the static manifest instead of not having a way to statically determine it
+03:09:24 <strcat[m]> Lia: that's the purpose of the low-level, non-dangerous permissions in general, they are not user-facing
+03:09:33 <strcat[m]> they're for opportunistic attack surface reduction and static analysis of apps
+03:10:03 <strcat[m]> it's a lot easier to judge whether an app is doing sketchy things based on static, declarative rules that are enforced by the OS
+03:59:20 * Lia[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/xxhddQTatUUynSMgiVXzpfaf/message.txt >
+04:00:18 <Lia[m]> Which I find useless if it will not stop apps from reading what apps are installed (no disagreements on strcat tho)
+05:03:31 <CarpeDiem[m]> Anyone else experiencing battery drain on the 3a - 3aXL models as of the last 2 or so months?
+05:04:44 <CarpeDiem[m]> I'd normally get 2 & 1/2 days battery, now getting around 30 or so hours with same phone usage
+05:15:45 <Lia[m]> <CarpeDiem[m] "Anyone else experiencing battery"> Yeah
+05:21:02 <CarpeDiem[m]> <Lia[m] "Yeah"> Might be a factor of the latest security updates then I guess... Doing the old forced phase out like apple is relentless for
+05:28:27 * Lia[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/SRbTKusLGywoJQuDoMqOiOXN/message.txt >
+05:47:39 <strcat> Lia[m]: it does stop them from doing that
+05:47:51 <strcat> Lia[m]: they have to declare the permission and then they can do it
+05:47:57 <strcat> or declare broad queries parameters
+05:48:36 <strcat> I don't see how declaring queries parameters is any different than the low-level permission, it's not a bypass, you have to declare it either way
+05:48:39 <strcat> that's the point
+05:48:47 <strcat> there is no toggle for the permission, it's not user-facing
+05:49:14 <strcat> it works like iOS now
+05:49:29 <strcat> an app can be rejected in review based on what it declares it can query
+05:49:35 <strcat> that's the same approach as iOS
+05:50:02 <strcat> it's not a runtime thing (it's not a runtime permission, it's not user-facing)
+05:53:50 <irmbrady[m]> Hi guys, is there any way to disable the 'you have a different OS installed' warning message on boot? This is on a 4a
+05:54:42 <TheJollyRoger> Ahoy irmbrady[m] on Pixel 4as that cannot be disabled; that's a, very important security feature and it's a part of the qualcomm bootloader.
+05:56:50 <TheJollyRoger> Theoretically, we could "fix" this problem... by paying an OEM, Google and Qualcomm some great big fat stacks of cash to get our own hardware, but they wouldn't be pixels anymore at that point and I do not think anyone here would pay the price that they would likely be asking.
+05:57:19 <irmbrady[m]> Thanks for confirming TheJollyRoger ! I was initially worried I goofed the install.
+05:57:19 <irmbrady[m]> Got my 4a yesterday and happily running GOS now
+05:57:34 <TheJollyRoger> Arr, welcome aboard the ship, shipmate!
+05:58:37 <TheJollyRoger> Yep, if you see that sign, that's a *good* sign, because it means your bootloader is locked, and the Verified Boot is now enforcing and doing its job as we expect it to. You can check via remote attestation that it's verifying to the correct Android Verified Boot keying by using Auditor and https://attestation.app via remote attestation.
+05:59:09 <TheJollyRoger> It does mean you aren't running the Google operating system, but in our case, this is what we want.
+06:00:07 <TheJollyRoger> It's only if it turns orange and gives you an ominous message about "Software Integrity is Not Guaranteed. Do not store anything personal on this device." that you have to worry.
+06:00:55 <irmbrady[m]> Great stuff. I'll check out attestation. Thanks again!
+06:00:59 <TheJollyRoger> Anytime!
+06:12:36 <poizn[m]> I've got this weird issue on the Pixel 3a. Sometimes the phone only notifies me that I've received an SMS only if i unlock/turn the screen on. Just now it happened again, the SMS was time-stamped being received 17 mins ago. Yesterday there was one with 32mins. Why is this happening?
+06:13:47 <anupritaisno1[m]> TheJollyRoger: signal
+06:13:54 <anupritaisno1[m]> I'm going to tell you something
+06:17:41 <CarpeDiem[m]> <poizn[m] "I've got this weird issue on the"> Same on 3aXL.
+06:22:10 <poizn[m]> It's almost like battery optimisations are used for some processes that handle receiving SMS
+06:23:35 <poizn[m]> And there's the alarm that has some similar behavior, it rings but a few minutes late
+06:24:31 <strcat[m]> the clock has a battery optimization exception
+06:24:34 <strcat[m]> are you up-to-date?
+06:27:05 <Dylanger[m]> Is is possible to disable IMS?
+06:27:24 <Dylanger[m]> LTE only, and I can still send/receive SMSs, I assume this is IMS
+06:32:25 <Dylanger[m]> Better yet, have this removed from RILQ
+06:33:21 <poizn[m]> I'm on latest release available
+06:33:48 <poizn[m]> 201105.002
+06:36:41 <anupritaisno1[m]> Dylanger: you can remove it in your builds
+06:37:07 <anupritaisno1[m]> Remove CNE, DPM and IMS
+06:37:22 <anupritaisno1[m]> Not going to happen in graphene though
+06:37:50 <Dylanger[m]> Removing it from the Java layers, IMS messages will still be processed at RILQ
+06:37:59 <Dylanger[m]> I should patch libril
+06:38:19 <anupritaisno1[m]> Dylanger: I would advise against that
+06:38:39 <Dylanger[m]> Why's that?
+06:38:57 <Dylanger[m]> Hell there's prob an NV item I could disable, disable it at the modem
+06:47:10 * Dylanger[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/rpFfEArTFvdcwrnQrbcJJSku/message.txt >
+06:47:14 <Dylanger[m]> 🤮
+06:47:47 <CarpeDiem[m]> dylanger just entered the matrix IRL
+06:47:51 <anupritaisno1[m]> Dylanger: don't do it like that
+06:48:18 <anupritaisno1[m]> public static final String = "insert signature here"
+06:48:20 <poizn[m]> Also. There's an issue with the activity manager and android.ext.services when trying to use the new Android inline auto fill:. W ActivityManager: Unable to launch app android.ext.services/1010049 for service Intent { act=android.service.autofill.InlineSuggestionRenderService cmp=android.ext.services/.autofill.InlineSuggestionRenderServiceImpl }: user 10 is stopped
+06:48:37 <anupritaisno1[m]> Get the signature and check the package name as well as the signature
+06:48:57 <Dylanger[m]> Nah this is just to stop that annoying 'Are you sure you want to install xyz'
+06:49:11 <Dylanger[m]> When updating with Aurora it sucks if you have a bunch of updates
+06:49:18 <Dylanger[m]> This just yeets that
+06:49:29 <Dylanger[m]> And it's cursed
+06:50:10 <CarpeDiem[m]> Dyl you have a 4a right? Did you purchase from jb HiFi or google?
+06:50:29 <CarpeDiem[m]> Just want to know jbhifi is unlocked
+06:50:49 <Dylanger[m]> 4a was from Google, yeah it's unlockable
+06:51:19 <CarpeDiem[m]> The jb model? Mmk I'll head in store tomorrow and update while I grab the wife's Xmas gift.
+06:51:31 <CarpeDiem[m]> upgrade* same same
+06:53:43 <CarpeDiem[m]> Be prepared to guide this nub brain through the install process tomorrow guys >.> my mate installed GoS on this device for me so I've technically never done so, but fingers crossed I won't need help
+06:59:39 <TheJollyRoger> Ahoy CarpeDiem[m], no problem, we can walk you through it, but likely the first thing you'll want to do is make sure you check only the official instructions on https://grapheneos.org/install and make sure if you've taken knowledge from any other guides on the internet, to disregard everything they say.
+07:00:36 <TheJollyRoger> Since a few of them are dangerously out of date, and one even recommended disabling an important safety check that prevents devices from having the incorrect partition written to.
+07:00:57 <TheJollyRoger> correction: Since many of them are unsafe or dangerously out of date,
+07:01:21 <CarpeDiem[m]> I'll always go off the official install instructions posted on the graphene website, YouTube tutorials are known to be shonky at the best of times
+07:01:27 <TheJollyRoger> Great!
+07:01:42 <TheJollyRoger> You may find it easiest to simply use Windows 10. When you do, be sure to use POWERSHELL, and not cmd.
+07:02:10 <TheJollyRoger> If you do use cmd, it will give you the "fastboot too old" error regardless of anything you do, you will need to use Powershell.
+07:02:50 <CarpeDiem[m]> Great can't wait to get this new phone setup and hand my 3aXL to a friend who's in dire need of a more privacy based phone ( currently using a galaxy s9 :O )
+07:03:26 <CarpeDiem[m]> I have a laptop with w10 available besides my Linux PC so I'll use that for simplicity
+07:03:37 <CarpeDiem[m]> Thanks rog :)
+07:04:10 <TheJollyRoger> Arr!
+08:25:45 <r0tt0r[m]> have a weird issue somehow. when opwning a photo, click share i see several icons to share on. lets say 1st tg, 2nd matrix 3rd signal. i choose tg it opens matrix, ichoose matrix it opens signal, i choose signal it opens tg. thought i pin tg to overcome but.its still occuring
+08:52:28 <NewGrapheneUser> Hello everyone
+08:53:06 <Lia[m]> Hello
+08:53:53 <NewGrapheneUser> I'm having some trouble downloading the image for the pixel 4A. Is anyone else getting a 403?
+08:54:59 <NewGrapheneUser> https://releases.grapheneos.org/sunfish-factory-2020.11.05.18.zip
+08:55:46 <Lia[m]> <NewGrapheneUser "https://releases.grapheneos.org/"> Cant download here
+08:55:59 <NewGrapheneUser> Oh, thanks for letting me know
+08:56:24 <Lia[m]> Any images cant be downloaded for some reason
+08:56:56 <Lia[m]> https://github.com/GrapheneOS/releases.grapheneos.org
+08:57:01 <Lia[m]> Maybe reporting this in releases.grapheneos.org issue tracker will help
+08:57:41 <Dylanger[m]> huh
+08:57:41 * Dylanger[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/nAIONdSFTGfAoAwwBZipeSYu/message.txt >
+08:59:17 <NewGrapheneUser> I'll open an issue on Github. What's the best way for me to proceed?
+09:00:11 <zyxt128[m]> Every link in https://grapheneos.org/releases returns a 403
+09:00:11 <zyxt128[m]> Maybe there is a pending deploy?
+09:00:22 <Lia[m]> <NewGrapheneUser "I'll open an issue on Github. Wh"> Make an account, tell how to reproduce issue,m
+09:01:15 <NewGrapheneUser> I will do that, thank yu
+09:01:59 <Lia[m]> > <@zyxt128:matrix.org> Every link in https://grapheneos.org/releases returns a 403
+09:01:59 <Lia[m]> > Maybe there is a pending deploy?
+09:01:59 <Lia[m]> Probably
+09:05:09 <NewGrapheneUser> Thanks for the help. I'll give it some time and give it another go later today
+09:16:28 <strcat[m]> zyxt128: it's fixed now
+09:16:29 <strcat[m]> there was an in-progress change
+09:16:49 <strcat[m]> adjusting stuff to deal with repeated denial of service attacks
+09:19:47 <Lia[m]> Want to ask how to fix this issue in building Chromium: (not sure what went wrong here)
+09:19:58 * Lia[m] posted a file: failed_ninja_build_chromium.txt (26KiB) < https://matrix.org/_matrix/media/r0/download/the-apothecary.club/7572e7094d78fae8a4238d7ed7e6e5578428e0ab/failed_ninja_build_chromium.txt >
+09:31:35 <strcat[m]> Lia: do you have the latest Vanadium patches applied?
+09:32:54 <strcat[m]> Lia: it looks like you don't, seems they are only partially applied or something
+09:33:01 <strcat[m]> reset to the upstream revision and reapply patches
+10:45:28 <Lia[m]> <strcat[m] "reset to the upstream revision a"> Already did that like twice and the same error persist
+10:46:38 <strcat[m]> Lia: well don't see any way that could happen with the patches properly applied
+10:46:39 <strcat[m]> think you're doing something wrong
+10:47:33 <Lia[m]> <strcat[m] "Lia: well don't see any way that"> Should I execute the command on strings manually?
+10:48:56 <strcat[m]> no
+10:49:05 <strcat[m]> you're supposed to apply all the patches with the provided command
+10:49:11 <strcat[m]> you don't appear to have done that
+10:49:54 <strcat[m]> reset back to the upstream code, sync it fully
+10:50:23 <strcat[m]> apply the patches via the provided command
+10:50:27 <strcat[m]> are you applying them manually or something? I don't see how you could end up with them partially applied
+10:51:05 <Lia[m]> <strcat[m] "you don't appear to have done th"> Been building Chromium for a while and I always use
+10:51:49 <strcat[m]> and are you using the latest patches and the correct Vanadium version?
+10:51:52 <Lia[m]> And it is the first time the build broke. Maybe will try again with old instructions
+10:51:54 <Dylanger[m]> Anyone have any views on disabling IMS as part of a security model?
+10:51:56 <anupritaisno1[m]> Dylanger: no not really
+10:52:05 <strcat[m]> Lia: are you forgetting to clear out/ ?
+10:52:14 <Lia[m]> <strcat[m] "and are you using the latest pat"> Yes
+10:52:27 <Lia[m]> wait let me check...
+10:52:43 <Lia[m]> Ah, I forgot
+10:53:03 <Lia[m]> Probably that's the problem. I'll wait for the next stable release to try again
+10:53:50 <Dylanger[m]> <anupritaisno1[m] "Dylanger: no not really "> Aw you should mayne, it's attack surface
+10:55:18 <strcat[m]> we can't just outright disable support for traditional calls / texts for everyone
+10:55:23 <strcat[m]> we need the OS to be usable
+10:55:28 <strcat[m]> we want to support the same stuff AOSP does
+10:55:43 <strcat[m]> there can be toggles to enable/disable features but we can't just outright disable traditional call support
+10:55:48 <strcat[m]> carriers are dropping 2G/3G
+10:55:57 <strcat[m]> the only way to get traditional calls etc. will be via IMS
+10:56:02 <anupritaisno1[m]> Dylanger: fastboot erase boot_a; fastboot erase boot_b
+10:56:08 <anupritaisno1[m]> Attack surface: 0
+10:56:29 <Dylanger[m]> anupritaisno1: wat
+10:57:13 <Dylanger[m]> <strcat[m] "there can be toggles to enable/d"> Fair enough, I'm gonna see if there's something in NV I can disable, I'd like nothing at all to handle anything IMS
+10:57:35 <Dylanger[m]> For my usecase (Data only) I don't need to have code handling IMS
+10:57:39 <Dylanger[m]> Modem or AP
+10:58:08 <Dylanger[m]> If there's nothing something I can toggle in the modem, I'll try patch qc-libril
+10:59:05 <Lia[m]> Try flashing bramble with sunfish bootloader, zero attack surface
+11:07:55 <strcat[m]> gonna work on DoS mitigation a bit more
+11:08:00 <strcat[m]> servers are under attack a lot lately
+11:08:32 <Dylanger[m]> <Lia[m] "Try flashing bramble with sunfis"> Lol 😆
+11:08:45 <Dylanger[m]> <strcat[m] "servers are under attack a lot l"> What are you using currently?
+11:08:54 <Dylanger[m]> For hosting
+11:09:03 <strcat[m]> nginx
+11:09:17 <strcat[m]> probably need to massively increase the # of allowed connections
+11:09:20 <strcat[m]> and lower timeouts
+11:09:25 <strcat[m]> just don't want to break anything
+11:09:27 <Dylanger[m]> Oh you have a doc somewhere
+11:09:30 <Dylanger[m]> I remember reading it
+11:10:02 <strcat[m]> it's too bad nginx doesn't support io_uring yet
+11:10:07 <anupritaisno1[m]> strcat: how good/bad is nginx, #ot
+11:10:08 <strcat[m]> could enable thread-based aio for releases server
+11:10:25 <strcat[m]> well it really annoys me that nginx has paywalled features
+11:10:34 <strcat[m]> they have a closed source version of it
+11:10:37 <strcat[m]> with extra features
+11:10:41 <strcat[m]> but they paywall some really basic stuff
+11:11:01 <strcat[m]> so, for example, you can define upstream servers in blocks with various configuration to use as backends
+11:11:08 <strcat[m]> you can set max # of connections allowed to them etc.
+11:11:57 <strcat[m]> but in order to enable a queue when the # of connections goes above that, rather than just dropping them, you have to have the paid nginx plus
+11:12:06 <Dylanger[m]> <strcat[m] "they have a closed source versio"> Wooooooow
+11:12:11 <strcat[m]> http://nginx.org/en/docs/http/ngx_http_upstream_module.html#queue paywalled basic configuration option that I need
+11:12:14 <strcat[m]> it's probably simple to implement too
+11:12:45 <wunderharke[m]> <Dylanger[m] "Lol 😆"> Hello guys, I'm new here :) so that's not a great idea? I'm getting a brumble this week and would really love to see grapheneos running on there
+11:12:50 <strcat[m]> I don't really understand how they can paywall queue
+11:12:53 <anupritaisno1[m]> Dylanger: they call it nginx plus
+11:12:55 <strcat[m]> it's such a basic thing
+11:12:55 <anupritaisno1[m]> wunderharke: there is no progress on bramble
+11:13:09 <anupritaisno1[m]> We have a volunteer maintaining redfin and I'm going to do redfin
+11:13:20 <strcat[m]> anupritaisno1:  a lot less bad than apache
+11:13:39 <anupritaisno1[m]> Bramble will be easy to support after redfin is doing but somebody needs to have a device
+11:13:45 <anupritaisno1[m]> Even then there is no timeline
+11:13:52 <strcat[m]> but it's still a big pile of C code with some memory corruption bugs found occasionally
+11:14:01 <anupritaisno1[m]> There's a lot of stuff that needs to be done and somebody needs to volunteer to help
+11:14:08 <Dylanger[m]> You could do a unikernel if you wanted to, or even use something like ipfs
+11:14:30 <wunderharke[m]> I can do testing but my knowledge is by far not advanced enough to do a port myself
+11:14:41 <anupritaisno1[m]> strcat: how do I go about finding those?
+11:15:09 <strcat[m]> finding what?
+11:15:21 <anupritaisno1[m]> I ran hardened malloc, asan, boundsan and a couple other sanitizers on public servers for months
+11:15:21 <anupritaisno1[m]> Never had a crash in nginx
+11:15:58 <strcat[m]> wouldn't expect to find bugs like that with regular input with any battle tested software
+11:16:34 <strcat[m]> it's pretty embarrassing for software to have bugs found by ASan when running their own test suite
+11:16:37 <anupritaisno1[m]> Yeah I just left it for users to access
+11:16:38 <strcat[m]> shows a lot of negligence
+11:16:40 <anupritaisno1[m]> There was no experienced attacker attacking it
+11:16:40 <strcat[m]>  * it's pretty embarrassing for software to have bugs found by ASan when running their own test suite or during regular usage
+11:16:59 <strcat[m]> not about 'experience'
+11:21:16 <strcat[m]> nginx has some weird stuff paywalled
+11:21:31 <strcat[m]> for example they paywall configuring the Server header to a custom value but you could just change it in the source
+11:21:38 <strcat[m]> and queue seems to simple to reimplement
+11:21:53 <strcat[m]> wonder if there's a fork adding this basic stuff that's well maintained
+11:23:49 <jpds> There won't - all the people working on it will probably be working for Nginx Inc.
+11:24:15 <zyxt128[m]> Are you aware of HAProxy?
+11:24:39 <jpds> zyxt128[m]: Similiarly seems to have an enterprise version now
+11:24:41 <zyxt128[m]> it can be helpful for your DoS issues
+11:26:32 <strcat[m]> zyxt128: nginx should work well for this main issue is queue being paywalled
+11:26:37 <strcat[m]> for upstream servers
+11:44:06 <Golli[m]> Use NGINX and have a ratelimit setup. Easy.
+11:45:08 <strcat[m]> Golli: rate limiting based on IP isn't going to accomplish much
+11:45:32 <strcat[m]> and also thanks to carrier grade NAT many users can be behind 1 IPv4 address
+11:46:12 <Golli[m]> My bad, thought someone was attacking the site.
+11:47:16 <strcat[m]> they are, regularly
+11:47:59 <strcat[m]> I really need that queue feature for upstreams
+11:48:33 <anupritaisno1[m]> Which is why we need help guys
+11:48:48 <Golli[m]> Who's the upstream?
+11:49:07 <anupritaisno1[m]> Please pm me. james, copperhead and others are spreading misinformation and people are believing it
+11:49:15 <renlord> strcat[m]: what are you queuing exactly?
+11:49:17 <anupritaisno1[m]> Please pm me if you can help
+11:49:27 <renlord> http requests?
+11:49:32 <strcat[m]> Golli: a backend server
+11:49:37 <strcat[m]> renlord: well that's what I need
+11:49:59 <anupritaisno1[m]> Also if I don't accept your pm within 1 second of you inviting me
+11:50:05 <anupritaisno1[m]> Just be patient
+11:50:21 <anupritaisno1[m]> I can't really be on matrix all the time
+11:50:30 <renlord> so weird, in C its just one line listen(sock, queuesize)
+11:50:44 <renlord> lol
+11:50:46 <Golli[m]> So is the hosting at its limits then? strcat
+11:51:43 <renlord> does it not already queue by default?
+11:51:56 <renlord> i'd assume sane implementations have a default queue size
+11:52:39 <strcat[m]> renlord: I'm not talking about the accept queue
+11:52:53 <strcat[m]> Golli: no, the issue is DDoS attacks on the site
+11:52:57 <strcat[m]> people being really annoying
+11:53:09 <strcat[m]>  * Golli: no, the issue is DDoS attacks on the services
+11:53:32 <jpds> There's only one way to deal with a DDoS, and that's to talk to your ISP
+11:53:45 <strcat[m]> for multiple servers
+11:53:47 <strcat[m]> OVH detects some of it and sends me emails about DoS mitigation starting and ending but I have no clue what they do
+11:54:22 <Golli[m]> Then rate limiting would solve the majority of it, if it's http/s.
+11:54:26 <renlord> pay CF to take care of it for you
+11:54:55 <renlord> does not cost much
+11:55:03 <renlord> and saves you engineering headache
+11:55:19 <jpds> Yeah, or stick it in static S3 site hosting
+11:55:20 <Golli[m]> If it's l4, then either get a host who handles DDoS protection better, or use a protection service.
+11:55:58 <renlord> CF will throw annoying captchas at your adversaries on behalf of you
+11:55:59 <strcat[m]> renlord: http://nginx.org/en/docs/http/ngx_http_upstream_module.html#queue
+11:55:59 <renlord> kek
+11:56:00 <strcat[m]> this is what I need
+11:56:11 <strcat[m]> cloudflare isn't an option
+11:56:19 <strcat[m]> it breaks the services for the actual users
+11:56:30 <strcat[m]> Auditor and Updater don't know how to answer a captcha
+11:56:54 <jpds> strcat[m]: Surely you can host that bit separately?
+11:57:07 <strcat[m]> jpds: that bit is the main issue
+11:57:17 <strcat[m]> that's why I need this queue feature
+11:57:20 <Golli[m]> In that case, run the rate limiting and what not on another server, and just use round robin (upstream) for whatever servers you have in the back.
+12:00:44 <renlord> strcat[m]: traefik with the retry middleware?
+12:00:45 <renlord> https://github.com/traefik/traefik/pull/7460
+13:04:48 <hozz> Hello
+15:20:42 <nscnt> asdssd
+15:20:59 <nscnt> whoops :D
+16:40:11 <TheLynx> A question I have wanted to ask for quite a while. Not sure if it belongs more in offtopic. A few years ago there were some attempts to build secure phones (OpenMoko). The phone back then even had its own hardware platform (OpenHardware). One of the main reasons for this was the baseband modem, because practically all GSM chips come from one country. Even from more or less only one manufacturer. In
+16:40:17 <TheLynx> addition, there were already baseband vulnerabilities in the past. But since the baseband modem has direct memory access in most cases, in case of an exploit, this would be a game over. OpenMoko solved this problem with a baseband firewall. The question is now:
+16:40:21 <TheLynx> Is there a similar solution or a hardening of baseband exploits in GrapheneOS on e.g. Pixel 3a to protect against baseband exploits or is it possible to prevent baseband exploits by running it in '4G only' mode?
+16:40:39 <TheLynx> I know very particular question ^^
+16:58:49 <madaidan[m]> <TheLynx "addition, there were already bas"> Any half-decent phone not manufactured in the ice age already isolates the baseband via an IOMMU. It does not have direct memory access.
+17:23:10 <TheJollyRoger> Hello TheLynx, to build on that, all modern handsets already isolate the modem via system memory management (IOMMU on ARM). System Memory Management was implemented in a draft form in 2011, the year the OpenMoko Freerunner stopped shipping. The Pixels are chosen because they have the best in class modem isolation. The drivers for the Pixels are open source and the modem is only allowed to write
+17:23:11 <TheJollyRoger> to or read from the host memory that the driver in the kernel explicitly allows it to.
+17:23:36 <TheJollyRoger> Baseband exploits might have been all the craze many years ago, but technology has moved on.
+19:50:58 <dar_gomml[m]> an recommendation regarding password managers?
+19:51:11 <dar_gomml[m]> * any recommendations regarding password managers?
+19:52:26 <TheJollyRoger> hi dar_gomml[m], third-party apps are offtopic here and you're likely to find more help in the -offtopic channel. Nevertheless, I can confirm that KeePassDroid will work with and open KeePass2 database files created on the desktop, but I have no other information.
+19:53:02 <TheJollyRoger> I think if you want more information and more detail than that, you're likely to find it in the #grapheneos-offtopic channel.
+20:00:33 <alzxjm[m]> dar_gomml: KeepassDX works great on GrapheneOS, including Biometric unlock.
+20:00:54 <dar_gomml[m]> ups sorry, thought I switched to the correct channel, wanted to post there :/
+20:01:58 <alzxjm[m]> dar_gomml: KeepassDX on GrapheneOS with keyfile. Database syncs with Nextcloud just fine and autofill works either via the auto-fill API or with the KeepassDX keyboard.
+21:34:02 <Coffee[m]1> Is GrapheneOS coming to Pixel 4a 5g or Pixel 5 anytime soon?
+21:34:21 <TheJollyRoger> Hello Coffee[m]1, it's not on our roadmap until we have more available maintainers.
+21:35:09 <Coffee[m]1> Aww, bummer! I guess I will buy just the regular 4a for now so I can at least explore the OS
+21:35:21 <TheJollyRoger> Yep! That's probably the best course of action.
+21:35:37 <TheJollyRoger> GrapheneOS has a policy that official releases will only be made if they can be made sustainable, with enough maintainers to support them, with full production-quality releases.
+21:36:18 <TheJollyRoger> So as a result, the attitude taken by the GrapheneOS developers is extremely pragmatic, it's to avoid spreading developer time too thin.
+21:36:57 <Coffee[m]1> I see
+21:36:58 <TheJollyRoger> A good rule of thumb is to imagine for each device family, another full-time maintainer is needed to keep them viable.
+21:37:58 <TheJollyRoger> The Pixel 4a5G may *look* like a regular 4a, but it's not. I believe that while the phones may look the same, and act the same, the chip underneath is very different, meaning that the 4a5G will require an entirely different kernel, entirely different drivers, and entirely different work to maintain releases up to GrapheneOS' standards.
+21:37:59 <Coffee[m]1> What skills must one know to maintain a device for this OS?
+21:39:25 <TheJollyRoger> You'll need to be very familiar with viewing, applying, and merging patches. Some programming skills are definitely a strong asset; the kernel and the drivers are written in C, much of the Android Ecosystem is in Java and Kotlin.
+21:40:17 <TheJollyRoger> More importantly though, is the time committment; the devices are expected to remain in service for around three years, which is the amount of time Qualcomm commits to releasing firmware updates for the SoC powering those phones.
+21:40:33 <TheJollyRoger> A maintainer must be able to commit to doing the job for that length of time.
+21:41:24 <Coffee[m]1> Wow, that's a lot of work. I'd be willing to help fund this project to help with the maintenance
+21:41:54 <TheJollyRoger> That definitely helps! Donations fund the project and it helps the maintainers cover costs, especially where equipment and servers is concerned.
+21:43:40 <Coffee[m]1> I will donate to help keep this project alive. I've been wanting to switch over since I first learned about Copperhead years ago
+21:44:57 <TheJollyRoger> Yarr! Donations are much appreciated! The developers do accept Bitcoins if you want to keep your donations anonymous: https://grapheneos.org/donate although Github sponsorship is the best way to do recurring donations since that goes directly to the lead developer.
+21:46:13 <TheJollyRoger> (The Github donation matching plan has ended though, so they no longer match donations.)
+21:48:17 <Coffee[m]1> Would Pixel 4a be the best current device for Graphene, or would I be better off with the flagship 4 or 4 xl? Or perhaps a 3 or 3a?
+21:49:08 <TheJollyRoger> The 4a is sort of at this moment your "best value for the money" option. The 4 and 4XL are sort of premium, but the 4a is newer and offers some features such as fingerprint sensor and headphones that the 4 and 4XL don't.
+21:49:37 <TheJollyRoger> On the other hand, the 4 and 4XL do have some other features of their own that aren't present on the 4a, such as facial recognition unlock.
+21:50:11 <TheJollyRoger> I unfortunately cannot comment on the camera differences between the 4/4XL and 4a since I don't have those two devices.
+21:50:42 <Coffee[m]1> 4a it is then!
+21:50:49 <TheJollyRoger> The 3 and 3a I would say if you have one already, do so, but if not, I would not spend the money on one because you're likely to end up with a Verizon Locked one if you purchase secondhand at this point in time.
+21:51:45 <TheJollyRoger> What typically happens is just before the phones end up being pulled from the Google Store, Verizon vendors often will bail their unwanted handsets to try to be rid of them as quickly as possible, flooding the market with Verizon Locked handsets. These cannot have GrapheneOS installed to them because Verizon asks Google to set a Carrier ID which prevents bootloader unlocking.
+21:52:50 <TheJollyRoger> From time to time, someone gets tricked into buying one because they often end up seeing that the prices are low, and the seller may confuse "carrier unlocked" with "bootloader unlocked". It often appears as a bargain but these phones cannot run GrapheneOS because they cannot be unlocked, save with exploits, which could stop working at any moment.
+21:56:58 <TheJollyRoger> I have to step off the computer for a little bit, but if you have any more questions, just ping me and I'll try to get back to you.
+22:00:44 <freelon[m]> I'm a web developer, and I'd certainly be interested in trying to collaborate to maintain for the Pixel 5. I'm relatively inexperienced and as such I don't have a lot of skill to offer, but I'm willing to devote time and commit for the long term and learn what I can.
+22:00:44 <freelon[m]> If there are people experienced in Android dev who are interested I'd certainly love to speak with them.
+22:06:49 <arisu[m]1> i'd definitely buy 5a when it's out, 4a isn't so much of a big upgrade from 3a
+22:07:39 <arisu[m]1> otherwise yes, 4a is the best rn
+22:08:00 <arisu[m]1> (cool codename as well)
+22:12:27 <TheJollyRoger> Ahoy freelon[m]! The developers (including the lead developer!) are mostly in this channel! Activity tends to be sporadic though, so catching them here sometimes can require a little bit of luck and good timing. I do have some notes I've taken about setting up your host for android development, if you like I can show them to you.
+22:12:52 <TheJollyRoger> hi arisu[m]1, yeah, I am definitely interested in the next generation of phones, I'm not sure when I'll be able to penny up and buy one but I would like to sometime.
+22:15:47 <TheJollyRoger> freelon[m]: I've got the start of setting up your host operating system for GrapheneOS development and testing, let me gather a few links for you. A few of my notes are a tad bit out of date since I've been away for a while but I could polish them up a bit...
+22:16:07 <TheJollyRoger> In interim though, I have some notes about what you'll need to set up a work environment for doing GrapheneOS building. https://github.com/Peter-Easton/GrapheneOS-Knowledge/blob/master/For%20Maintainers/Setting-Up-Your-Host.md
+22:16:54 <TheJollyRoger> I also have some notes for running the Android Compatibility Test Suite. This tutorial is fairly old since it was written for Android 10, you'll need the 11 compatibility test suite: https://github.com/Peter-Easton/GrapheneOS-Knowledge/blob/master/For%20Testers/The-Compatibility-Test-Suite.md
+22:41:11 <lallerx[m]> My 4a is perfect
+22:41:26 <TheJollyRoger> lallerx[m]: woohoo!
+22:42:10 <lallerx[m]> My only problem is maps. Openstreetmaps is not accurate nere in south Italy :(
+22:42:21 <TheJollyRoger> Aw, crud!
+22:42:22 <lallerx[m]> Here*
+22:44:58 <freelon[m]> TheJollyRoger  Perfect  thank you! I'll dig into them a bit, start scoping it out.
+22:45:46 <TheJollyRoger> Awesome!
+22:46:07 <TheJollyRoger> freelon[m], you rock! Let me know if there's any resources I can start digging up for you. I've been wanting to learn how to do this myself.
+22:46:08 <jpds> lallerx[m]: Edit the map
+22:46:49 <TheJollyRoger> What I've learned about computers has been mostly part and piecemeal, so my knowledge unfortunately is extremely patchwork and incomplete.
+22:47:51 <lallerx[m]> <jpds "lallerx: Edit the map"> Maybe yes
+22:48:07 <jpds> I've found it a great way to pass some time
+22:49:48 <makingaliasesisa> lallerx: yeah on osmand+ you can help map out the streets by activating some setting.
+22:51:53 <jpds> arisu[m]1: As someone that went from a 3a to 4a, I am so happy I did it
+22:52:37 <makingaliasesisa> I went from a one plus 7 pro to 4a lol
+22:52:57 <TheJollyRoger> I went from a 3 to a 4. The 4 is a nice phone in its own ways, but I actually find I really miss the fingerprint scanner, because the facial recognition doesn't work very well in the dark (this is not specific to GrapheneOS, the regular Android has this issue too.)
+22:53:01 <makingaliasesisa> Mainly because I broke the charger connection
+22:53:08 <TheJollyRoger> Oh yikes, you too?
+22:53:33 <makingaliasesisa> And it is the biggest pain to replace it.
+22:53:38 <TheJollyRoger> yeah.
+22:53:51 <Dylanger[m]> <TheJollyRoger "I went from a 3 to a 4. The 4 is"> I can't go back to 60Hz from 90, it's just too smooth
+22:53:52 <lallerx[m]> <makingaliasesisa "lallerx: yeah on osmand+ you can"> Thanks, I LL try to contribute for sure
+22:54:05 <Dylanger[m]> Was going to from 4 to 4a, but need dat 90Hz
+22:54:35 <TheJollyRoger> Oh huh. I should check this out a bit more then. I didn't quite notice the difference.
+22:56:45 <makingaliasesisa> I miss 90Hz but my next phone I get might be a more expensive one in the future but I am happy with my 4a and then I would miss the fingerprint scanner and the headphone Jack.
+22:57:01 <lallerx[m]> My prev was a mi9t, removing more than 40 packages of amazon, facebook, shit and miui analytics with adb was sufficient for the mind
+22:57:09 <TheJollyRoger> Yeah. For the 3 and the 4 I have to make do with one of those little bluetooth dongles.
+22:57:27 <lallerx[m]> Grapheneos is so mind relaxing
+22:58:30 <lallerx[m]> * My prev was a mi9t, removing more than 40 packages of amazon, facebook, shit and miui analytics with adb was not sufficient for the mind
+22:58:45 <makingaliasesisa> If they ever do a *a series phone with 90 Hz I would think of buying it but not in the next year atleast.
+22:59:02 <makingaliasesisa> > Grapheneos is so mind relaxing
+22:59:02 <makingaliasesisa> Yeah I agree
+23:00:45 <arisu[m]1> <jpds "arisu: As someone that went from"> well give me 350€ then i'll buy it ahah
+23:01:17 <makingaliasesisa> Lol
+23:03:04 <unnotchslayer[m]> What do y’all think of calyxosv
+23:03:10 <unnotchslayer[m]> * What do y’all think of calyxos?
+23:04:21 <makingaliasesisa> I liked it for what it was but I just liked having the stronger security of grapheneOS
+23:05:59 <TheJollyRoger> Hey unnotchslayer[m], non-GrapheneOS operating systems are kinda offtopic here so I'd like to direct you to the #grapheneos-offtopic channel.
+23:06:18 <unnotchslayer[m]> Well that’s a completely separate room
+23:06:24 <TheJollyRoger> Yeah.
+23:06:43 <TheJollyRoger> I forget how to join different channels on Matrix >_<.
+23:14:50 <Aldous[m]> <nazgulc[m] "Screenshot_20201122-214219.png"> If u use open streetmap or Google maps, is the location working ?
+23:44:49 <anupritaisno1[m]> Help is needed
+23:44:49 <anupritaisno1[m]> @unnotchslayer:matrix.org is spreading misinformation about grapheneos and slandering strcat in other chats
+23:44:49 <anupritaisno1[m]> If you see him, please stop him
+23:45:11 <louipc> any news
+23:45:56 * Lia[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/OuGLzmSVCknxPaiUazyWnUZE/message.txt >
+23:46:46 <anupritaisno1[m]> Lia: yes but we need help with this
+23:46:47 <Lia[m]> Some people don't want to be corrected or already bringing some mindset that doesn't wanted to be changed
+23:47:01 <anupritaisno1[m]> We don't want more people spreading bullshit
+23:48:14 * anupritaisno1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/MGWDnnDDsqhAZIdWbOdGowfh/message.txt >
+23:48:34 <anupritaisno1[m]> Not confirmed BTW
+23:48:47 <anupritaisno1[m]> Just my intuition
+23:51:14 <YaoiFangirl420[m> I'm not, but yeah hearing about people getting accused of spreading misinformation does make me curious about what the actual information is
+23:51:34 <YaoiFangirl420[m> I'm also broadly interested in alternate android builds
+23:51:45 <YaoiFangirl420[m> I've been using lineage on my own phone for a while
+23:53:29 <anupritaisno1[m]> YaoiFangirl420: join in OT for discussions on alternative OSes
+23:53:41 <anupritaisno1[m]> If you want to know what happened with the other guy, pm me
+23:54:16 <anupritaisno1[m]> Getting banned off here is quite hard unless you really cross a limit and ignore multiple warnings
+23:54:44 <YaoiFangirl420[m> well maybe a topical question here is what, if anything, makes graphene a better choice for an android os than any of the several other ones that exist?
+23:54:51 <YaoiFangirl420[m> I've just only ever used lineage myself
+23:55:29 <makingaliasesisa> Security is the biggest one :)
+23:55:49 <YaoiFangirl420[m> I've found it a pain to actually get alternate builds installed on my phone, which discourages experimentation. I don't want to risk bricking my only phone that I use daily
+23:56:16 <renlord> YaoiFangirl420[m: how do phones even get bricked
+23:56:23 <renlord> (shrugs)
+23:56:54 <makingaliasesisa> A big con for most though is you require a pixel device
+23:56:59 <makingaliasesisa> As of rn
+23:57:09 <YaoiFangirl420[m> ah, don't have one of those
+23:57:11 <renlord> nobody knows how to brick a pixel devices
+23:57:42 <renlord> a brickable device sounds like a defect to me tbh
+23:58:21 <makingaliasesisa> renlord: you can forget your password and disable OEM unlocking and USB debugging.
+23:58:51 <makingaliasesisa> And then the phone is useless to everyone
+23:59:02 <renlord> makingaliasesisa: that's fine though
+23:59:09 <renlord> it is working as intended.
+23:59:35 <makingaliasesisa> Yeah it is

@@ -1,0 +1,878 @@
+00:01:01 <cn3m[m]> I am too lazy to switch
+00:02:09 <cn3m[m]> sorry I am lagging a little on my end
+00:02:54 <cn3m[m]> Linus Sex Tips: how do you tell age?
+00:02:58 <nikitalita[m]> and the fluffychat repo is still down
+00:03:13 <cn3m[m]> I got it from Aurora
+00:04:05 <cn3m[m]> ah true
+00:04:13 <cn3m[m]> firefox and windows seem to be their thing too
+00:04:56 <cn3m[m]> pixulus: I am sorry, but you know what I have to do...
+00:06:19 <cn3m[m]> instinct kicked in and I saw the image I was ready to ban. Then I saw the username
+00:06:27 <cn3m[m]> be careful guys :)
+00:06:47 <cn3m[m]> I jest you all can send images just don't spam them
+00:06:49 <nikitalita[m]> cn3m: they're probably using firefox with "resist fingerprinting" turned on
+00:06:55 <nikitalita[m]> "resist fingerprinting" spoofs your UA
+00:07:29 <cn3m[m]> ah
+00:07:38 <cn3m[m]> it forces windows right
+00:07:56 <nikitalita[m]> yeah
+00:08:27 <nikitalita[m]> yeah
+00:09:47 <Linus_Sex_Tips> so this is IRC hmm
+00:18:21 <cn3m[m]> Linus_Sex_Tips: hi
+00:18:43 <Linus_Sex_Tips> hello
+00:33:49 <nikitalita[m]> man
+00:33:59 <nikitalita[m]> application management is hard if you're not on the play store
+00:38:54 <nikitalita[m]> it seems like most of the open source apps for android that have brand recognition either don't have their shit in f-droid repositories or maintain their own
+00:39:22 <nikitalita[m]> they make you download an apk
+00:39:40 <nikitalita[m]> and it's a crapshoot whether or not they support staying resident in the background so you get notifacitons
+00:40:37 <strcat[m]> neither
+00:40:59 <strcat[m]> the main F-Droid repository is managed by a group of packagers for F-Droid
+00:41:13 <strcat[m]> a developer can't put their app into the main F-Droid repository, developers don't upload their apps like the Play Store
+00:41:21 <nikitalita[m]> yeah
+00:41:31 <nikitalita[m]> this is why many of them just choose to maintain their own repositories
+00:41:32 <strcat[m]> a developer can't update their app or remove it if it's unmaintained or replaced
+00:41:38 <strcat[m]> it's not their repository
+00:43:03 <nikitalita[m]> it's like, you have to either choose between the debian model, where the package maintainers can do shit like just remove RNG from your app because it made valgrind complain, or you have to go through a broker like the play store which maintains strict guidelines and makes you integrate proprietary services into your app
+00:43:20 <nikitalita[m]> still bitter about the openssl debian incident
+00:43:28 <burlycootz[m]> Potentially silly question: when connecting to a Bluetooth that demands a passcode is there any way to pre-load the passcode? I don't get prompted for passcode and wanted to.see if there is a workaround.
+00:49:33 <strcat[m]> nikitalita: the Play Store does not make you integrate proprietary services into your app
+00:49:50 <nikitalita[m]> aren't you required to use firebase for push notifications?
+00:49:59 <strcat[m]> no
+00:51:12 <nikitalita[m]> huh
+00:51:44 <strcat[m]> you can do push notifications however you want
+00:51:58 <strcat[m]> there are rules around which apps are allowed to request power optimization exceptions to bypass doze / app standby
+00:52:03 <nikitalita[m]> https://hub.packtpub.com/android-8-forces-foss-apps-to-use-firebase-for-push-notifications-or-label-them-as-using-too-much-battery/
+00:52:07 <strcat[m]> there is nothing forbidding using another push notification implementation
+00:52:08 <nikitalita[m]> yeah, this is what I meant
+00:52:17 <strcat[m]> nikitalita: that's misinformation
+00:52:37 <strcat[m]> apps are not required to use FCM for push notifications
+00:53:03 <nikitalita[m]> hmmm
+00:53:44 <nikitalita[m]> is there an example of a foss app in the play store that does push notifcations without either using firebase or using a perma-notification to stay resident in the background
+00:54:13 <strcat[m]> many and I'm not sure why it matters if it's open source or not
+00:54:27 <strcat[m]> apps are not required to use FCM for push notifications in the Play Store
+00:54:39 <strcat[m]> and your initial claim went further and made it sound like that was somehow a requirement of any store with that model too
+00:56:46 <nikitalita[m]> <strcat[m] "many and I'm not sure why it mat"> mostly so I can just look at what they did
+00:56:57 <strcat[m]> the same as they do outside the Play Store
+00:57:13 <strcat[m]> the only difference is that in the Play Store you aren't allowed to explicitly prompt the user to disable battery optimizations except specific cases of apps
+00:57:18 <strcat[m]> but users can ALWAYS disable it themselves
+00:57:27 <strcat[m]> so you can put it in documentation
+00:57:45 <strcat[m]> there is NO REQUIREMENT to use FCM
+00:57:56 <strcat[m]> that's an example of common misinformation being spread and doesn't have an actual basis
+00:58:00 <nikitalita[m]> I wasn't aware of other implementations because pretty much all the apps that I'm using right now that I get  notifications from are using the perma-notification to stay resident
+00:58:35 <strcat[m]> if they implement their own push notifications using a foreground service is the best way to do that
+00:58:59 <strcat[m]> they are not required to use FCM for being on the Play Store
+00:59:06 <strcat[m]> simply not true and that's what you claimed
+00:59:51 <strcat[m]> pixulus: no, it's not
+01:01:21 <strcat[m]> speculating about this isn't necessary
+01:01:25 <strcat[m]> it's clearly documented
+01:01:29 <strcat[m]> in an easy to understand way
+01:01:52 <nikitalita[m]> strcat: IMO, this is semantics. Having the user jump through hoops to make the app function as designed without the use of a proprietary library is functionally a requirement
+01:02:00 <strcat[m]> they do not have to jump through hoops
+01:02:21 <strcat[m]> and it applies whether the app uses a proprietary library or not
+01:02:54 <strcat[m]> and using FCM doesn't require using a proprietary library anyway since there is an open source implementation of that part of the client side SDK
+01:03:43 <strcat[m]> I suggest as step one people read and understand the power management restrictions placed on apps: https://developer.android.com/topic/performance/power/power-details
+01:04:11 <strcat[m]> this applies to all apps, even system apps
+01:04:37 <strcat[m]> the user granting a battery optimization except simply disables the network restriction
+01:05:24 <strcat[m]> if the user actively uses the app then it's not going to be in the 'rare' bucket anyway
+01:06:16 <strcat[m]> FCM doesn't bypass these restrictions, it's part of them
+01:06:51 <strcat[m]> if a messaging app actually ends up in the rare bucket then it can only send you 5 push notifications via FCM per day when you aren't actively using it
+01:07:06 <strcat[m]> and if it's NOT in the rare bucket it can just access the network when not active itself
+01:07:18 <strcat[m]> except when the device is in deep sleep (doze)
+01:07:40 <strcat[m]> and then it still works - there are just active windows
+01:07:49 <strcat[m]> which grow progressively longer the longer the phone sits there unused
+01:08:06 <strcat[m]> there is nothing that forces you to use FCM
+01:08:27 <strcat[m]> a battery optimization exception simply bypasses the Doze and Rare bucket network restrictions
+01:09:29 <strcat[m]> the device can't doze is there's a foreground service
+01:09:36 <strcat[m]>  * the device can't doze if there's a foreground service
+01:10:42 <strcat[m]> a foreground service allows the app to continue running and they aren't impacted by doze
+01:11:19 <strcat[m]> so if the app has a foreground service it doesn't really need a battery optimization exception unless it's worried about ending up in the rare bucket because the user hardly ever interacts with the app
+01:12:18 <nikitalita[m]> ah hah, I see
+01:12:29 <strcat[m]> take away the battery optimization from Signal and it should still work fine
+01:12:44 <strcat[m]> the only restriction on the Play Store is you can't ask for a battery optimization exception except very specific cases
+01:12:53 <strcat[m]> so a messaging app can't request that exception but... it doesn't really need one
+01:12:53 <nikitalita[m]> so the foreground service is mostly out of an abundance of caution
+01:13:10 <strcat[m]> the foreground service lets the app continue running and avoids it being killed
+01:13:43 <strcat[m]> so the foreground service is what allows an app to do push notifications itself reliably, rather than depending on starting itself via an alarm and hoping the device isn't in doze mode (i.e. user is not using the device)
+01:14:13 <strcat[m]> an app like an email app can just use jobs and ignore all this stuff
+01:14:23 <strcat[m]> just use a job set to require network access
+01:14:31 <strcat[m]> and look how that works there
+01:14:40 <strcat[m]> app is currently active -> no delay
+01:14:52 <strcat[m]> app is in working set (one of the apps the user regularly uses) -> every 2 hours
+01:15:16 <strcat[m]> frequent use -> every 8 hours (if you use it at least daily and don't use that many apps it'll be in the working set though)
+01:15:22 <strcat[m]> rare -> every 24 hours
+01:16:05 <strcat[m]> and when the user is not using the device at all, it goes into doze pretty quickly, and then only runs jobs, etc. during active windows more than long enough to check for emails, etc.
+01:16:14 <strcat[m]> and those active windows get increasingly spread out
+01:16:27 <strcat[m]> so for example when you sleep it starts having a 30 min delay, then 1 hr, then 2 hrs, then 4 hrs, etc.
+01:16:41 <strcat[m]> then when you wake up and use the phone it's out of doze
+01:17:18 <strcat[m]> nikitalita: so if an app doesn't really need push (like email) it can just do that as the baseline
+01:17:28 <strcat[m]> and then they can offer the user the option of push via a foreground service
+01:17:36 <strcat[m]> and they do not need a battery optimization exception at all either way
+01:19:05 <strcat[m]> an app only needs a battery optimization exception to make absolutely sure their foreground service will always have network access even if the device wants to doze or the user rarely ever uses the app
+01:19:33 <strcat[m]> and the ONLY Play Store restriction is that most apps can't explicitly request an exception
+01:19:35 <strcat[m]> via a prompt
+01:19:54 <strcat[m]> but you can try on GrapheneOS
+01:20:01 <strcat[m]> disable Signal's battery optimization exception
+01:20:04 <strcat[m]> it's still going to work fine
+01:20:23 <nikitalita[m]> yeah, apps like fairmail get around this by having a link to battery exception settings and instructions on how to disable optimization
+01:20:57 <strcat[m]> an email app doesn't really need push unless up to 2 hr delay (or longer when using the phone) isn't good enough
+01:21:08 <strcat[m]> they can just use a job to fetch otherwise
+01:21:17 <strcat[m]> I personally don't want push notifications for emails
+01:21:36 <strcat[m]> don't want notifications at all
+01:21:54 <strcat[m]> I always have email - that's a given shrug
+01:21:57 <JTL> I guess it depends on your usecase
+01:22:28 <nikitalita[m]> I'm fortunate that people don't really email me unless its for something important
+01:22:56 <nikitalita[m]> if they break that rule then I usually just put them in the unfocused bucket
+01:23:09 <strcat[m]> I think email apps should just use a job to check by default (and of course check when you use the app)
+01:23:19 <strcat[m]> and offer the option of checking via push
+01:23:32 <strcat[m]> which requires a foreground service without FCM
+01:23:53 <strcat[m]> and even then I wouldn't expect an email app to have notifications by default
+01:24:57 <nikitalita[m]> mmm, I dunno, smartphones have pretty much trained people to expect push notifications for everything by default
+01:25:03 <strcat[m]> at least, not notifications that make a sound/vibration
+01:25:22 <strcat[m]> silent low priority notifications that simply show an icon wouldn't be that bad if it doesn't spam them
+01:25:28 <nikitalita[m]> yeah
+01:25:47 <strcat[m]> I don't see how I could be productive if I got pinged for every email
+01:26:13 <aeonsolution[m]> ^
+01:26:15 <strcat[m]> if people want a prompt reply from me they shouldn't be using email
+01:26:56 <nikitalita[m]> this is kinda why I've segmented all my emails
+01:27:12 <nikitalita[m]> I have 7 seperate email accounts according to tiers
+01:27:31 <nikitalita[m]> There are like two that i regularly check, one I get notifications for
+01:27:47 <nikitalita[m]> the rest are basically just in case I need a password reset
+01:28:46 <strcat[m]> if people have something to email about for GrapheneOS they should be using the GrapheneOS emails on the site
+01:29:26 <cn3m[m]> ^
+01:29:36 <strcat[m]> and they can expect a 1-4 day delay when I go through a batch of 50 emails
+01:30:16 <strcat[m]> https://grapheneos.org/contact also tries and fails to get people to use more appropriate methods to get info
+01:30:59 <strcat[m]> it just gets flooded with requests for supporting more devices, etc. and people add security⊙go trying to get higher priority
+01:31:04 <strcat[m]> for unrelated things
+01:31:14 <nikitalita[m]> welp
+01:31:37 <strcat[m]> it's a bit better now that I have strict enforcement of SPF / DKIM / DMARC
+01:31:55 <strcat[m]> sadly gmail.com doesn't set their DMARC policy to reject yet
+01:32:09 <strcat[m]> so that's a problem
+01:32:26 <strcat[m]> oh and for some reason a spam filtering service used by icloud.com blacklisted the mail server's IP
+01:32:42 <strcat[m]> so I can't respond to those anyway
+01:32:47 <nikitalita[m]> heh
+01:33:01 <JTL> :/
+01:33:10 <strcat[m]> I think people reported attestation.app alerts (which are limited to once per day per device now) as spam
+01:33:15 <cn3m[m]> I love email such a well designed platform /s
+01:33:26 <nikitalita[m]> it seems that's happening a lot to most email servers that aren't controlled by the big mail providers
+01:33:31 <cn3m[m]> <strcat[m] "I think people reported attestat"> really...
+01:33:32 <cn3m[m]> wow
+01:33:35 <strcat[m]> instead of just removing their email from the attestation.app account
+01:33:41 <nikitalita[m]> yeah, that happens
+01:33:52 <strcat[m]> a lot of people forget their password and can't remove the email because I don't support email recovery (login is username/passphrase)
+01:34:13 <strcat[m]> because the alerts are important for security
+01:34:29 <strcat[m]> so for example lets say someone's email service doesn't use DANE or at least MTA-STS
+01:34:37 <strcat[m]> that means an attacker can get the plain text alert emails
+01:34:43 <strcat[m]> so I can't just put an unsubscribe link in them
+01:34:55 <strcat[m]> so it instead asks people to email contact⊙aa to unsub
+01:35:00 <strcat[m]> and I have to manually verify each one
+01:35:11 <strcat[m]> and a lot of people forget their password
+01:35:43 <nikitalita[m]> perhaps you could put a "why we don't support unsubscribe" link in the email, disguised as a regular unsubscribe link, to trick people into reading the reason why you don't support it
+01:35:48 <strcat[m]>                                 message.setText("The following devices have failed to provide valid attestations before the expiry time:\n\n" +
+01:35:48 <strcat[m]>                                         expired.toString() + "\nLog in to https://attestation.app/ for more information." +
+01:35:48 <strcat[m]>                                         "\nIf you do not want to receive these alerts and cannot log in to the account,\nemail contact⊙aa from the address receiving the alerts.");
+01:36:27 <strcat[m]> this is an example of an alert email:
+01:36:29 * strcat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/oyXefvEwSxpMrLSBdEvfvZub >
+01:36:33 <nikitalita[m]> yeah, they don't read those things; I know when I get spam, my eyes just kinda glaze over and I scroll to the bottom of the email looking for an unsubscribe link
+01:37:18 <strcat[m]> and if the email they send to contact⊙aa does not pass SPF/DKIM/DMARC verification then I can't unsubscribe based on it
+01:38:02 <nikitalita[m]> also, I know that some email providers are now starting to punish mail servers (who don't come from the big providers like mailchimp) who send email without a proper List-Unsubscribe embedded
+01:38:26 <nikitalita[m]> so that's possibly part of the reason
+01:38:31 <strcat[m]> the thing is ppl enabled these emails themselves
+01:38:41 <strcat[m]> and then they report them as spam instead of disabling it
+01:38:45 <nikitalita[m]> yep
+01:38:54 <strcat[m]> and if they forget their password everyone using attestation.app gets punished
+01:39:05 <strcat[m]> by having the alerts classified as spam and even the mail server blocked as is the case for icloud now
+01:39:20 <strcat[m]> I probably have to blacklist using icloud emails in the frontend
+01:39:24 <strcat[m]> and server
+01:39:27 <nikitalita[m]> yeah
+01:39:46 <nikitalita[m]> and I'm guessing there's no process though apple to unblacklist your server
+01:39:53 <strcat[m]> it's not apple that did it
+01:39:58 <strcat[m]> it's a service they use that did it
+01:40:06 <strcat[m]> and they do not respond via their contact form for getting unblacklisted
+01:40:10 <nikitalita[m]> mmm
+01:40:13 <strcat[m]> they say they respond in a couple days
+01:40:23 <strcat[m]> sent multiple forms and it has been months
+01:40:34 <strcat[m]> if people want to help with that let me know
+01:40:57 <nikitalita[m]> yeah
+01:41:00 <strcat[m]> in general I find the best way to deal with this stuff is to identify as many people as possible in their company and just start sending emails to all of them repeatedly and eventually they deal with it
+01:41:15 <nikitalita[m]> basically the only real way to fix that nowadays is to send your emails through a trusted broker
+01:41:20 <strcat[m]> that's how you have to deal with big companies
+01:41:25 <strcat[m]> figure out the emails of all their executives
+01:41:39 <strcat[m]> and one of them will read it, realize they are doing something bad
+01:41:40 <nikitalita[m]> yeah, definitely
+01:41:41 <strcat[m]> and actually fix it
+01:42:00 <nikitalita[m]> that's how one of me exes got her company to cover her work injusry
+01:42:08 <strcat[m]> you can't go via the normal support mechanism because it's flooded with messages and isn't really taken care of
+01:42:12 <nikitalita[m]> she actually tracked down the phone number of the CEO and called him directly
+01:42:17 <nikitalita[m]> and basically shamed him into doing it
+01:42:37 <strcat[m]> yeah in general when you get in contact with an actual specific person without anonymity you get results
+01:43:12 <strcat[m]> I've also gotten results from using twitter
+01:43:19 <strcat[m]> @reply and keep talking about it
+01:43:32 <strcat[m]> and don't just stop talking in public about it when they want to do DM
+01:43:51 <nikitalita[m]> public shaming is basically the only legal tool we really have now to hold companies accountable
+01:44:18 <strcat[m]> I have an essentially unused facebook account with 0 content, 0 friends added to it, etc. solely to use facebook's developer tool nonsense and log into things that only support facebook login
+01:44:22 <strcat[m]> so it gets repeatedly banned
+01:44:32 <nikitalita[m]> yeah, that'd do it
+01:44:39 <strcat[m]> you need a facebook account to disable other people posting ads on behalf of your site
+01:44:52 <nikitalita[m]> sigh
+01:45:15 <nikitalita[m]> remember like, back in the mid 90s, people proposed utopian visions of what the internet would be?
+01:45:28 <nikitalita[m]> "A NEW COUNTRY, FREE FROM RESTRICTIONS, INFORMATION FREEDOM FOR ALL"
+01:46:06 <nikitalita[m]> now it's just a giant surveillance tool where you can play in the sandbox of a few big companies
+01:53:05 <Kruger[m]> Sorry for interrupting, some countries like US, India etc do need high Internet Surveillance because of many reasons, one of them being - enemies
+01:53:16 <rickza[m]> Can anybody help or do i have to post on reddit regarding this issue, The following devices have failed to provide valid attestations before the expiry time. But when i log into attestation.app it gives me : Last verified time: Fri Aug 07 2020 02:10:08 , my verify interval is set to 4 hours and permitted delay until alerts is set to 48 hours but i keep on getting emails everyday
+01:53:25 <nikitalita[m]> lol
+01:53:33 <nikitalita[m]> we were just talking about that rickza
+01:53:36 <strcat[m]> rickza: sounds like you have multiple device registrations
+01:53:59 <strcat[m]> rickza: do you have multiple devices registered? perhaps you set it up, disabled it, and set it up again
+01:54:03 <Kruger[m]> Well you can laugh at that if you like, but sadly it is true
+01:54:04 <strcat[m]> and haven't deleted the old registration
+01:54:27 <nikitalita[m]> Kruger: off-topic: https://matrix.to/#/!NKqyWWNTlbuXwOPMCt:matrix.org?via=matrix.org&via=privacytools.io&via=tchncs.de
+01:54:38 <strcat[m]> rickza: the alert email gives you the fingerprint of the impacted devices, you shouldn't look at other ones
+01:54:42 <strcat[m]> only look at the one it emailed you about
+01:54:54 <strcat[m]> copy the fingerprint, ctrl-f to go to the section for that device
+01:54:58 <strcat[m]> others aren't relevant
+01:55:40 <rickza[m]> Thanks dude, this makes sense, ill look into it
+01:55:45 <strcat[m]> every pairing has a unique fingerprint, if you disable remote attestation and enable it again the service still expects attestations from the previously registered device
+01:56:00 <strcat[m]> if you redo it, as far as the service knows it's a 2nd device you just registered
+01:56:32 <strcat[m]> a device cannot be allowed to delete themselves from the attestation service
+01:56:54 <rickza[m]> The hash that im getting emailed is different to my pixel 3a's hash
+01:57:05 <strcat[m]> so look at the list of devices
+01:57:12 <strcat[m]> you have multiple registered then
+01:58:01 <strcat[m]> if you disable remote attestation on a device you need to log into the service and delete that remote attestation pairing
+01:58:03 <rickza[m]> where do i find the list of devices ?
+01:58:07 <strcat[m]> or it'll start sending you alerts
+01:58:17 <strcat[m]> rickza: the page there lists out devices based on fingerprints of the pairing
+01:58:24 <strcat[m]> https://attestation.app/
+01:58:35 <strcat[m]> the whole page is a list of devices in sections with their fingerprint at the top as a header
+01:59:05 <strcat[m]> sounds like you enabled remote attestation and paired with the service, then disabled it, then enabled it again
+01:59:13 <rickza[m]> I only see one device which is my device
+01:59:14 <strcat[m]> so you have a previous device registered that's inactive and not sending attestations
+01:59:22 <strcat[m]> rickza: did you make a previous account
+01:59:50 <strcat[m]> I could add the account username to the emails perhaps
+01:59:57 <rickza[m]> Yeah i did make a previous account but i unfortunately forgot why i made a 2nd one
+02:00:13 <strcat[m]> rickza: well that's the issue previous account has an inactive device registered
+02:00:44 <strcat[m]> rickza: when you disabled + enabled again for the new account, previous account stopped getting attestations
+02:00:49 <strcat[m]> so the alerts are coming from there
+02:01:27 <strcat[m]> rickza: you need to email the contact⊙aa address it gives at the bottom of the alert email from the email address receiving the alerts
+02:01:34 <strcat[m]> and ask to disable them
+02:01:58 <strcat[m]> probably going to have to disable them for both accounts since I won't know which is which
+02:02:03 <strcat[m]> and then you can add back the alert email to the account you use
+02:02:25 <rickza[m]> I will do so, thanks man, i appreciate your help
+02:02:41 <strcat[m]> I don't have a fancy UI to do this, I just verify the authenticity of the email asking to disable alerts and remove it from any accounts
+02:03:07 <strcat[m]> nikitalita: but yeah we were just talking about this
+02:03:21 <nikitalita[m]> yeah, this sounds like a support nightmare
+02:03:28 <strcat[m]> so in general what happens is people just report it as spam
+02:03:33 <strcat[m]> because they forgot their account info
+02:03:44 <strcat[m]> and then the alerts start being classified as spam
+02:03:44 <nikitalita[m]> yeah, it sucks
+02:04:06 <rickza[m]> Sorry for making more work for you but i am learning and definitely wont repeat this again.
+02:04:07 <strcat[m]> I could start disallowing capital letters in usernames
+02:04:12 <strcat[m]> rickza: it's okay
+02:04:13 <nikitalita[m]> yeah
+02:04:17 <strcat[m]> as long as you don't report the emails as spam
+02:04:19 <nikitalita[m]> make it case insensitive
+02:04:27 <strcat[m]> not case insensitive
+02:04:31 <strcat[m]> just disable using capital letters
+02:04:52 <strcat[m]> there may be existing accounts with case variants
+02:04:56 <nikitalita[m]> just curious, how many full developers are on the project right now? Github lists three, including yourself
+02:05:45 <strcat[m]> membership in the github org isn't public for everyone in it
+02:05:48 <strcat[m]> there are 4 in the org
+02:05:55 <strcat[m]> and people aren't necessarily in the org who are working on it
+02:06:02 <strcat[m]> like aeonsolution isn't in the org atm
+02:06:07 <strcat[m]> they could be
+02:06:10 <nikitalita[m]> ah hah
+02:06:44 <rickza[m]> Thanks again man, ill sort this out in the evening after work, really appreciate you guys going out of your way to develop GOS, seriously you guys are legends.
+02:07:09 <strcat[m]> nikitalita: https://github.com/GrapheneOS/AttestationServer/blob/master/src/main/java/app/attestation/server/AttestationServer.java#L288
+02:07:18 <strcat[m]> that's the sanity check I added for usernames (and the same check in the frontend code)
+02:07:31 <strcat[m]> so maybe I should just disallow capital letters so it's harder for people to forget username
+02:07:32 <strcat[m]> might help
+02:08:12 <aeonsolution[m]> yeah, if you're interested in helping out you don't have to be a part of the org to contribute 🙂
+02:09:34 <aeonsolution[m]> hey strcat if i wanted to contribute to GrapheneOS/hardened_malloc where could i start researching?
+02:10:22 <nikitalita[m]> I'm considering getting a pixel 4a and helping out getting grapheneos on that
+02:11:36 <aeonsolution[m]> nikitalita: nice, well you can start already, what are you interested in?
+02:12:41 <cn3m[m]> yeah there is a lot of work that could be done before release
+02:14:05 <nikitalita[m]> I dunno; I've a bit of everything
+02:14:17 <aeonsolution[m]> im going to piggyback on that cn3m, i need help testing Pixel 3 family devices
+02:14:32 <nikitalita[m]> i've done a fair amount of systems programming before
+02:14:46 <nikitalita[m]> linux kernel hacking and drivers and such
+02:15:39 <aeonsolution[m]> nikitalita: have you looked at https://github.com/GrapheneOS/os_issue_tracker/issues?
+02:15:44 <JTL> nikitalita[m]: good luck
+02:16:49 <aeonsolution[m]> preferably i need to find people with Pixel 3, Pixel 3L, and Pixel 3a XL
+02:17:01 <cn3m[m]> One issue on my wishlist is have Vanadium respect the no network permission on other apps like the Download Manager does. If I wasn't committed to other areas I would work on that issue
+02:17:30 <aeonsolution[m]>  * preferably i need to find people with Pixel 3, Pixel 3 XL, and Pixel 3a XL
+02:18:11 <cn3m[m]> <aeonsolution[m] "preferably i need to find people"> I would help, but my Pixel is basically dead I am on a backup phone now. xD
+02:18:47 <aeonsolution[m]> no worries, it would be better for new people so we can expand the community support
+02:19:10 <cn3m[m]> ^
+02:19:14 <nikitalita[m]> ideally we'd be able to get this on a shitbox $99 burner phone but I doubt they have the hardware security requirements that grapheneos is looking for :P
+02:19:31 <nikitalita[m]> a $349 midrange is a good compromise though
+02:19:46 <strcat[m]> there are 650 total attestation.app accounts
+02:20:06 <strcat[m]> if I lowercase all the usernames, there are 646 unique usernames
+02:20:12 <strcat[m]> so there are 4 accounts that are case variants of others
+02:20:31 <strcat[m]> I also think it might be a bad idea to case normalize usernames
+02:20:31 <aeonsolution[m]> we need to mob programming for new comers to help with device support and then grow our device maintainers from 1.5 to 10
+02:20:32 <strcat[m]> dunno
+02:20:45 <aeonsolution[m]>  * we need to mob program with new comers to help with device support and then grow our device maintainers from 1.5 to 10
+02:21:17 <nikitalita[m]> strcat: do the variants have emails that you can notify them about changes to their usernames
+02:21:35 <strcat[m]> if they have no devices registered I can just delete them as inactive accounts
+02:21:37 <strcat[m]> let me see
+02:23:03 <strcat[m]> yeah there are 4 accounts with a case variant of the same username
+02:23:20 <strcat[m]> see right now it's ASCII only
+02:23:31 <strcat[m]> so dealing with these and then storing all accounts in lowercase is an option
+02:23:38 <strcat[m]> but you don't want to deal with case normalization with unicode
+02:23:45 <strcat[m]> so if I expand what's allowed in usernames I wouldn't want that
+02:23:52 <strcat[m]> atm your username is exactly what you enter
+02:24:00 <strcat[m]> if you enter FooBar that's your username, foobar is not related
+02:24:15 <strcat[m]> if I decide to case normalize I can't undo that
+02:24:45 <cn3m[m]> strcat: is it correct that Auditor is the only defense from a root exploit installing accessibility services for persistence?
+02:24:51 <strcat[m]> because I'd probably want to convert all existing usernames to lowercase and then just lowercase what users enter
+02:25:13 <strcat[m]> cn3m: I mean you could probably boot in safe mode
+02:25:40 <cn3m[m]> right, but you wouldn't know it happened unless you had auditor
+02:25:44 <strcat[m]> I don't think a third party accessibility service would run in safe mode
+02:25:46 <strcat[m]> you could check
+02:25:51 <cn3m[m]> I didn't think of that though thanks
+02:26:03 <strcat[m]> cn3m: well in general if someone gets root via exploit they can modify any persistent state
+02:26:16 <strcat[m]> so they can install any app, give it any permissions that are possible to grant to third party app
+02:26:36 <strcat[m]> and even though they'll lose root after reboot any changes they made to persistent state would be around
+02:26:46 <strcat[m]> and they could exploit the OS again if it isn't patched
+02:27:02 <strcat[m]> Auditor having the patch level from hardware is an important part of it
+02:28:21 <cn3m[m]> thanks good explanation
+02:29:41 <strcat[m]> yeah I don't see a way to fully case normalize usernames due to those 4 cases of overlap
+02:29:58 <strcat[m]> I think a major source of confusion for users is that they register Foobar and then try to use foobar or vice versa though
+02:30:05 <strcat[m]> I could start only permitting lowercase usernames
+02:30:24 <strcat[m]> existing usernames with uppercase will continue to remain as is
+02:30:28 <strcat[m]> but I could stop creation of new ones
+02:30:41 <strcat[m]> going to do this
+02:31:22 <aeonsolution[m]> <aeonsolution[m] "hey strcat if i wanted to contri"> shameless signal boost 😀
+02:31:37 <strcat[m]> dunno just start with hardened_malloc repo?
+02:31:39 <strcat[m]> and README
+02:32:14 <cn3m[m]> the documentation is quite good
+02:32:14 <cn3m[m]> imo
+02:32:30 <cn3m[m]> as a super novice to security I reference it a lot
+02:36:21 <aeonsolution[m]> youre not a super novice!
+02:36:36 <aeonsolution[m]> i appreciate the morale support
+02:37:06 <aeonsolution[m]> 😎
+02:37:24 <cn3m[m]> <aeonsolution[m] "youre not a super novice!"> I beg to differ xD
+02:38:21 <strcat[m]> yeah I think I prefer forcing all lowercase
+02:38:32 <cn3m[m]> <strcat[m] "yeah I think I prefer forcing al"> all new?
+02:38:36 <strcat[m]> yes
+02:38:44 <cn3m[m]> I think that is wise
+02:38:46 <strcat[m]> and eventually I could convert all the old accounts to lowercase
+02:39:04 <strcat[m]> only 4 are ambiguous
+02:39:13 <renlord> shouldnt usernames be case sensitive
+02:39:21 <renlord> the onus is on the user to remember what username they used
+02:39:28 <cn3m[m]> people forget them
+02:39:34 <strcat[m]> renlord: well atm they are case sensitive
+02:39:34 <renlord> Foobar should not be equal to foobar
+02:39:40 <cn3m[m]> then it gets reported as spam to make it go away
+02:39:42 <strcat[m]> but people are forgetting if they use Foobar or foobar
+02:39:48 <strcat[m]> and then they can't login to disable alerts
+02:39:51 <strcat[m]> and they report alerts as spam
+02:40:02 <strcat[m]> and they require support from me to disable alerts
+02:40:06 <renlord> then we probably should implement forgot username or something
+02:40:13 <cn3m[m]> could you send the username with the attestation report?
+02:40:22 <strcat[m]> cn3m: yes
+02:40:26 <cn3m[m]> <renlord "then we probably should implemen"> he doesn't want email recovery
+02:40:39 <cn3m[m]> understandably
+02:40:41 <strcat[m]> renlord: if I disallow uppercase in usernames
+02:40:45 <strcat[m]> usernames are still case sensitive
+02:40:52 <strcat[m]> people just can't make new accounts with uppercase letters
+02:41:03 <renlord> that's just an odd thing to do imo
+02:41:12 <strcat[m]> -        if (username.length() > 32 || !username.matches("[a-zA-Z0-9]+")) {
+02:41:12 <strcat[m]> +        if (username.length() > 32 || !username.matches("[a-z0-9]+")) {
+02:41:21 <strcat[m]> ```-        if (username.length() > 32 || !username.matches("[a-zA-Z0-9]+")) {
+02:41:21 <strcat[m]> +        if (username.length() > 32 || !username.matches("[a-z0-9]+")) {
+02:41:21 <strcat[m]> ```
+02:41:30 <strcat[m]> matrix markdown formatting is so broken
+02:41:43 <JTL> I agree
+02:42:01 <strcat[m]> renlord: https://gist.github.com/thestinger/58dd7eac3a98512075ca0ac358a45822
+02:42:21 <strcat[m]> renlord: we already heavily restrict username characters (passwords can be anything)
+02:42:57 <renlord> the underlying problem is user forgetfulness, dont think just patching it to restrict to lowercase actually addresses the problem
+02:43:05 <renlord> what if you have a user who has a pref for uppercase characters?
+02:43:08 <renlord> lol
+02:43:16 <strcat[m]> most services have case insensitive usernames
+02:43:31 <cn3m[m]> isn't it best to truncate passwords around 128?
+02:43:31 <renlord> should just have a report that says Hi <Username>, this is your attestation details...
+02:43:49 <renlord> cn3m[m]: why? they get hashed anyways
+02:43:57 <strcat[m]> case insensitivity is a really big problem with unicode
+02:44:01 <strcat[m]> but we only permit latin characters anyway
+02:44:33 <strcat[m]> renlord: in cases where usernames are displayed to others lowercase has advantages like not being able to confuse I with l in a font where they look the same
+02:44:44 <strcat[m]> which one of those is an L and which one is an i
+02:44:46 <strcat[m]> in this case that's not an issue
+02:45:00 <cn3m[m]> <renlord "cn3m: why? they get hashed anywa"> that is fair, I see it all the time which is why I thought it must have a reason. Though in all fairness terrible reason when talking about security
+02:45:28 <strcat[m]> ideally fonts would all have the bars on top and bottom of I so it doesn't look like l
+02:45:31 <strcat[m]> but most don't
+02:45:41 <renlord> the impression i get when password lengths are restricted to 32 characters is the password is stored in plain text in SQL as VARCHAR(32)
+02:45:43 <renlord> LOL
+02:45:54 * renlord runs away from service
+02:46:02 <strcat[m]> we restrict passwords to 4096 characters
+02:46:03 <strcat[m]> lol
+02:46:07 <strcat[m]> arbitrarily
+02:46:12 <strcat[m]> there has to be some limit
+02:46:18 <strcat[m]> I'm not letting people upload a 2GB password
+02:46:23 <strcat[m]> to be hashed with scrypt
+02:46:43 <renlord> it also consumes their upload bandwidth
+02:46:45 <renlord> 2gb password
+02:46:48 <renlord> kek
+02:47:12 <strcat[m]> it doesn't really make any sense to have > 128 characters or so and you don't need NEARLY that long for 128-bit entropy if it's just random + stored in pw manager
+02:48:14 <strcat[m]> so for example with a fully random passphrase with only hex characters 32 characters is 128-bit
+02:48:49 <renlord> *fully random* passphrase
+02:48:54 <renlord> many people dont use a password manager
+02:48:59 <cn3m[m]> ^
+02:49:12 <strcat[m]> but even just alphanumeric (a-z A-Z 0-9) has 62 possibilities per character
+02:49:14 <strcat[m]> renlord: sure but
+02:49:21 <strcat[m]> how many people are going to write an essay as their passphrase then
+02:49:28 <strcat[m]> > 256 characters really seems overkill
+02:49:30 <cn3m[m]> you can't have a not random 128 character password unless it is a scripture verse or something idk
+02:49:35 <strcat[m]>  * more than 256 characters really seems overkill
+02:49:46 <renlord> a literature major might use a poem
+02:49:47 <cn3m[m]> Google has 128 iirc
+02:50:00 <cn3m[m]> which would be terrible
+02:50:03 <strcat[m]> well the limit is 4096
+02:50:11 <cn3m[m]> not in any objective way, but in a sensical way
+02:50:17 <strcat[m]> if someone has a more than 4096 character passphrase
+02:50:20 <strcat[m]> there is something wrong
+02:50:41 <cn3m[m]> I use the Linux 4.4 source code as my password for everything
+02:50:48 <strcat[m]> cause password manager even with just lowercase latin + digits wouldn't even hit 32 for a 128-bit passphrase
+02:50:51 <renlord> cn3m[m]: @_@
+02:50:54 <strcat[m]> and if you are typing it out by hand
+02:51:00 <strcat[m]> i don't see how you hit 4096
+02:51:00 <strcat[m]> lol
+02:51:34 <cn3m[m]> anyway how big of a threat is brute forcing that anyway?
+02:51:50 <nikitalita[m]> depends on the algorithm and your threat model
+02:52:19 <strcat[m]>     private static byte[] hash(final byte[] password, final byte[] salt) {
+02:52:19 <strcat[m]>         return SCrypt.generate(password, salt, 32768, 8, 1, 32);
+02:52:19 <strcat[m]>     }
+02:52:23 <strcat[m]> that's what's being used
+02:52:46 <nikitalita[m]> also depends on the implementation, of course
+02:52:55 <renlord> server would probably go down before it actually gets overwhelmed by traffic with all that scrypt hashing
+02:53:16 <strcat[m]> random tokens used by the server are all 32 bytes (subscribe key, salts, cookie token, request token for JS)
+02:53:28 <strcat[m]> i.e. 256-bit
+02:53:35 <strcat[m]> so that there's always 128-bit+ security
+02:53:45 <nikitalita[m]> WPA2 used to be just semi-feasible to brute-forcing the aes key that you get from the handshake if they were using a weak password that could be looked up in a dictionary file
+02:53:58 <strcat[m]> in theory the JS request token can be removed if all browsers supported SameSite=Strict
+02:53:58 <cn3m[m]> with rate limiting and the fact the data is on the server there is no reason for me to use more than 6 characters in my online passwords
+02:54:00 <strcat[m]> since that's used
+02:54:16 <strcat[m]> there's not really rate limiting other than hashing speed
+02:54:18 <cn3m[m]> my google account was 6 characters fully random
+02:54:38 <cn3m[m]> <strcat[m] "there's not really rate limiting"> I meant in general, but yeah not sure it is needed here
+02:55:32 <strcat[m]> anyway yeah
+02:55:33 <nikitalita[m]> but then they found that on certain implementations on routers you could actually expose the PMKID, which made it feasible to brute force any key on router that did this easily: https://www.ssl247.nl/over-ons/blog/new-wpa-wpa2-network-attack
+02:55:36 <strcat[m]> I'll add the username to the alert emails
+02:56:11 <strcat[m]> the thing is that accounts are not really tied to an email - intentionally
+02:56:15 <strcat[m]> you don't need an email to make an account
+02:56:30 <strcat[m]> and under the hood it's set up so that you could actually add multiple alert emails, it's just not exposed via the UI or API yet
+02:56:44 <strcat[m]> because email is just considered 1 possible alert mechanism
+02:56:49 <strcat[m]> it could support others
+02:57:09 <strcat[m]> it knows how to alert multiple emails for 1 account already it just doesn't let people add multiple atm
+02:57:47 <nikitalita[m]> also, speaking of PSK
+02:57:55 * strcat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/OlECeogGmmdvFIHSCdcSXoIq >
+02:58:09 <strcat[m]> when it sends alerts it iterates through emails for that user
+02:58:18 <strcat[m]> it just only currently allows setting one
+02:58:31 <strcat[m]> could fairly easily set it up to support 3 or w/e
+02:58:39 <nikitalita[m]> well, this is really an #freenode_#grapheneos-offtopic:matrix.org  thing
+03:12:09 <strcat[m]> renlord: I think it would really be best to move to case insensitive usernames so there's less support burden
+03:12:23 <strcat[m]> I've checked and most services use case insensitive
+03:13:10 <cn3m[m]> I can't think of a case sensitive one off the top of my head
+03:13:26 <renlord> my bank uses case sensitive
+03:13:28 <renlord> lol
+03:13:40 <renlord> anyways, i dont have strong opinions on this
+03:13:52 <renlord> i just wanted to highlight that the underlying cause of this is user forgetfulness
+03:14:11 <strcat[m]> yeah and users are forgetful so we have to design to avoid that being a problem as much as we possibly can
+03:14:18 <strcat[m]> this places a substantial support burden on us
+03:15:02 <renlord> if email was not associated with an account
+03:15:08 <renlord> how do said user get alerts??
+03:15:21 <renlord> s/do/does/
+03:15:23 -SEdbot[m]- > <@freenode_renlord:matrix.org> s/do/does/
+03:15:23 -SEdbot[m]- s/does/does/
+03:15:31 <renlord> wtf
+03:15:36 <renlord> stupid bot
+03:16:01 <renlord> cant even regex properly
+03:16:30 <strcat[m]> what is that bot even trying to do
+03:16:38 <strcat[m]> s/that/the/
+03:16:47 <renlord> the bot got booted off irc
+03:16:48 <renlord> lol
+03:16:57 <renlord> SEdbot[m] (sedmaunium@gateway/shell/matrix.org/x-xnaoiiclvienyvpk) has quit (Killed (Sigyn (Stay safe off irc)))
+03:17:26 <renlord> its trying to do my sed replacement
+03:17:38 <renlord> but replaced it weirdly
+03:17:43 <strcat[m]> failing pretty hard at it
+03:18:09 <strcat[m]> it looks like they accidentally input the pattern as the message
+03:18:40 <strcat[m]> like instead of replace(pattern, message) they did replace(pattern, pattern)
+03:19:11 <strcat[m]> and I don't get why it underlines the end
+03:19:26 <strcat[m]> anyways that's gone
+03:20:28 <strcat[m]> https://github.com/GrapheneOS/AttestationServer/commit/629d22beb1722a85e993e6b726f77029fd2411ad
+03:21:20 <strcat[m]> renlord: I do think it's probably best to make usernames case insensitive but I'm unsure how to do that at this point
+03:23:29 <strcat[m]> due to the 4 usernames with an uppercase variant that conflicts
+03:23:58 <nikitalita[m]> do they have devices attached to them
+03:24:12 <nikitalita[m]> ccccccnekcfgtiefultnicgllnfrtnihdbbukjlkgetc
+03:24:28 <nikitalita[m]> fucking cat keyboard
+03:25:58 <strcat[m]> some do
+03:27:44 <strcat[m]> deleted one that's inactive
+03:27:47 <strcat[m]> no devices
+03:28:10 <nikitalita[m]> anyway to inform them?
+03:31:04 <strcat[m]> meh
+03:31:08 <strcat[m]> they're inactive will just delete them
+03:31:11 <strcat[m]> 2 gone
+03:31:20 <strcat[m]> one of them had 2 accounts both with 0 devices
+03:31:33 <renlord> strcat[m]: any plans to mirror ota updates?
+03:31:38 <strcat[m]> one of them was 2 accounts, one inactive since 2019 so I deleted the inactive one
+03:31:50 <strcat[m]> renlord: well I could add multiple servers
+03:31:59 <strcat[m]> and add multiple DNS entries so it round robin load balances across them
+03:32:04 <renlord> why not use a cdn to push them
+03:32:07 <strcat[m]> if we had geodns we could also have regional servers then
+03:32:12 <renlord> so there's more geographical locality
+03:32:15 <strcat[m]> renlord: what CDN will let me host 1GB files
+03:32:19 <strcat[m]> unlimited bandwidth
+03:32:24 <strcat[m]> no charge based on bandwith
+03:32:28 <strcat[m]>  * no charge based on bandwidth
+03:34:20 <renlord> fair point
+03:34:32 <renlord> none i guess LOL
+03:34:41 <strcat[m]> yeah so for example this other account
+03:34:47 <strcat[m]> 3 devices all active
+03:35:00 <strcat[m]> but another case variant of the account with 3 devices that stopped updating last month
+03:35:11 <strcat[m]> so I expect they forgot they used an uppercase char and made new account
+03:35:18 <strcat[m]> I'm fine with just deleting the inactive one to deal with this
+03:35:23 <strcat[m]> then doing case normalization from now on
+03:35:34 <nikitalita[m]> yeah
+03:35:39 <renlord> do you think it might be a good idea to post some statistics?
+03:35:42 <renlord> on the landing page?
+03:35:51 <renlord> just to show how much usage
+03:40:11 <strcat[m]> ok 1 account left to deal with
+03:40:18 <strcat[m]> then can do case normalization
+03:41:50 <strcat[m]> yup another clear case where account became inactive
+03:41:58 <strcat[m]> and there's a case variant that's active
+03:42:00 <strcat[m]> deleting inactive
+03:45:24 <renlord> i only have 1 device for my attestation account
+03:45:29 <renlord> but what does it look like with multiple accounts
+03:45:41 <renlord> is there a button for each device and all devices print on the same page?
+03:45:55 <renlord> looking at the code, that's how its rendered i think
+03:46:00 <renlord> strcat[m]:
+03:48:59 <strcat[m]> yes
+03:55:57 <strcat[m]> ok that's all dealt with
+03:56:11 <strcat[m]> can implement case normalization now
+03:58:06 <strcat[m]> could still let people set a preferred case
+03:58:13 <strcat[m]> but allow logging in with any case
+03:58:21 <nickcalyx[m]> <strcat[m] "renlord: what CDN will let me ho"> Github? Archive.org?  Other thought is bit torrent
+03:58:46 <strcat[m]> can't host files on archive.org
+03:58:52 <strcat[m]> github doesn't work either
+03:58:56 <strcat[m]> it has 100MB file size limit
+03:59:14 <nickcalyx[m]> Ah ok
+03:59:35 <strcat[m]> I can just do DNS-based load balancing myself
+03:59:38 <nickcalyx[m]> Calyx runs mirrors
+03:59:55 <nickcalyx[m]> Such as tor.calyxinstitute.org
+03:59:57 <strcat[m]> and then could do geodns to have regional mirrors but it's really not needed
+04:00:02 <strcat[m]> the latency doesn't really matter
+04:00:04 <strcat[m]> for releases
+04:01:32 <strcat[m]> ok I'll have 2 columns perhaps
+04:01:40 <strcat[m]> username and usernameNormalized
+04:01:57 <strcat[m]> just add a new column, enforce that it's unique and use that one to login
+04:02:03 <strcat[m]> and then won't lose people's preferred case
+04:02:21 <anupritaisno1[m]> strcat: BTW check signal
+04:02:28 <strcat[m]> okay in a bit
+04:02:31 <strcat[m]> busy with multiple things
+04:03:50 <strcat[m]> or hmm
+04:03:56 <strcat[m]> I can just set a unique constraint with collate nocase
+04:24:12 <nikitalita[m]> https://twitter.com/moxie/status/1281353123584327680
+04:24:37 <nikitalita[m]> im just curious, how would you even do this type of thing without analytics and trackers
+04:35:21 <strcat[m]> https://github.com/GrapheneOS/AttestationServer/commit/b8284160f2fe7c4ddc19e6b84f93ac51fdf95775
+04:35:22 <strcat[m]> okay this works
+04:35:25 <strcat[m]> and I did the migration
+04:35:44 <nikitalita[m]> nice
+04:35:55 <strcat[m]> so now I can login to my account strcat with Strcat or strCAT or whatever
+04:36:02 <strcat[m]> and it prevents making a new account with a case variant of that
+04:36:11 <strcat[m]> and it preserves the case the account was created with
+04:36:36 <strcat[m]> so if I login with Strcat, still calls it strcat since that's how it was created
+04:36:41 <strcat[m]> can let people change username at some point
+04:36:49 <strcat[m]> not important atm
+04:37:21 <strcat[m]> hopefully this reduces support issues
+04:37:25 <strcat[m]> fewer ppl forgetting how to loginm
+04:37:28 <strcat[m]>  * fewer ppl forgetting how to login
+05:00:49 <M0xC0ncord[m]> <analtenderloin[m] "Is there any matrix client that "> Element if you use the F-Droid version, but it will rape your battery
+05:00:59 <nikitalita[m]> ^
+05:01:16 <nikitalita[m]> they implemented the foreground service in a very stupid way
+05:02:46 <nikitalita[m]> I tried to set up fluffychat, but the f-droid repo is down
+05:03:02 <nikitalita[m]> the web client is also down
+05:03:05 <nikitalita[m]> everything is down
+05:13:21 <citypw> https://github.com/secmob/TiYunZong-An-Exploit-Chain-to-Remotely-Root-Modern-Android-Devices
+05:17:19 <anonhat[m]> Scary stuff.
+05:17:59 <renlord> strcat[m]: https://github.com/GrapheneOS/AttestationServer/pull/52
+05:18:22 <renlord> ok with this approach?
+05:21:24 <nikitalita[m]> yeah
+05:21:37 <nikitalita[m]> defcon and black hat happening right now so a lot of exploits are getting disclosed
+05:21:44 <nikitalita[m]> https://www.defcon.org/html/defcon-safemode/dc-safemode-speakers.html#Makkaveev
+05:22:05 <nikitalita[m]> like this one
+05:22:44 <nikitalita[m]> I'm curious to see if this works on grapheneos, so I'm gonna attend the talk tomorrow and try it on the wiped pixel 2
+07:34:11 <kryptonymous[m]> ty... for everything
+07:34:26 <kryptonymous[m]> @cn3m
+07:38:01 <cn3m[m]> gada.southy: hello cheers
+07:38:13 <cn3m[m]> please PM me next raid
+07:38:16 <cn3m[m]> my DMs are open
+07:38:24 <kryptonymous[m]> ok
+07:40:52 <pyxel3aXL[m]> what the hell!!
+07:44:23 <cn3m[m]> so sorry everyone
+07:44:29 <cn3m[m]> I screwed up the deletion
+07:44:37 <cn3m[m]> my apologies
+07:45:36 <erhcetua[m]> its fine
+07:45:52 <kryptonymous[m]> no reason to apologize bud. You're trying. People who do this lead sad lives
+07:46:05 <cn3m[m]> it is a direct attack on our community
+07:46:27 <cn3m[m]> @c3nmfaggot:matrix.org is hilarious and definitely targeted
+07:47:14 <cn3m[m]> I haven't banned anyone
+07:47:18 <cn3m[m]> I was made a mod to fight this
+07:47:31 <cn3m[m]> I haven't banned anyone in this community ever even on reddit
+07:47:32 <cn3m[m]> until this
+07:48:15 <kryptonymous[m]> Oh really? I thought you did. But I didn't know because I always ignore them.
+07:48:38 <cn3m[m]> I ban everyone who spams
+07:48:46 <kryptonymous[m]> good
+07:48:51 <cn3m[m]> I was made moderator to counter this
+07:49:05 <cn3m[m]> so it isn't revenge from me banning someone
+07:49:36 <cn3m[m]> this is a direct attack on our community
+07:49:53 <kryptonymous[m]> of course not. Dude, these posts are inhumane. Whether you're targeted or not should't matter. It's sick
+07:49:55 <cn3m[m]> I am in many matrix rooms and haven't seen this elsewhere
+07:50:13 <cn3m[m]> <kryptonymous[m] "of course not. Dude, these posts"> of course yes, this is terrible
+07:50:16 <kryptonymous[m]> that's a shame
+07:50:19 <cn3m[m]> I am deeply sorry to anyone who has seen this
+07:50:36 <cn3m[m]> if you need help configuring your system please ask here or dm me privately if you prefer
+07:50:51 <cn3m[m]> I am trying to watch the chat every moment I can
+07:51:17 <cn3m[m]> <analtenderloin[m] "what happens when this fuck star"> we are working on a bot solution that will improve this
+07:51:23 <kryptonymous[m]> again, thanks very much for all you do. I've been here- quietly- for 2 months. You're very helpful
+07:51:44 <cn3m[m]> Techlore set this up and has been as a community very supportive of trying to help us with this issue
+07:52:01 <kryptonymous[m]> Henry's a good egg too
+07:52:15 <cn3m[m]> <kryptonymous[m] "again, thanks very much for all "> of course again I am here if anyone needs help setting up the settings to not see this crap
+07:52:30 <cn3m[m]> here or dm which ever you are more comfortable with
+07:52:48 <cn3m[m]> FluffyChat or disabling previews in settings for most of it
+07:54:00 <cn3m[m]> mwkim: are you here for real or are you brigading?
+07:55:37 <cn3m[m]> also anyone feel free to ping me if this comes up, but dm is definitely more effective
+07:55:43 <cn3m[m]> I have keywords on here
+07:55:57 <cn3m[m]> if you want to open a dm ahead of time to make it quicker I will accept all dm requests
+07:58:12 <renlord> whats going on
+07:58:44 <renlord> i dont see it on the irc side
+07:59:01 <renlord> maybe we should just stop using matrix
+07:59:28 <kryptonymous[m]> another moron troll posting foul pics. wasn't up too long though
+07:59:36 <cn3m[m]> renlord: tons of spam took my eye off for a moment
+07:59:42 <cn3m[m]> sorry again to everyone who saw that
+07:59:42 <renlord> in this channel?
+07:59:45 <renlord> or offtopic?
+08:00:03 <kryptonymous[m]> here
+08:00:32 <cn3m[m]> this channel
+08:00:43 <cn3m[m]> I deleted another hundred messages and images
+08:01:04 <cn3m[m]> I will keep a closer eye
+08:02:25 <renlord> yep, didnt come thru to the IRC side
+08:04:04 <erhcetua[m]> if matrix registration forced using email, it would reduce trolls
+08:04:36 <cn3m[m]> it does
+08:04:37 <cn3m[m]> lol
+08:06:07 <erhcetua[m]> mhh, well dunno then
+08:08:05 <cn3m[m]> either way just use gmailinator you get past that easy
+08:10:58 <renlord> why dont people just use irc?
+08:11:55 <cn3m[m]> <renlord "why dont people just use irc?"> everyone is on Matrix and it has e2ee for messages
+08:12:10 <cn3m[m]> it is the better platform, but immature
+08:14:19 <theultron[m]> WTF! I just got my lunch. I though will see what's going on matrix and get see to gore.
+08:16:00 <cn3m[m]> theultron: I am very sorry
+08:16:29 <theultron[m]> You don't need to be. These trolls have no other work to do!
+08:16:36 <cn3m[m]> I am working on it best I can we will get the bot soon
+08:17:02 <cn3m[m]> my dms are wide open anyone can dm me and I will check right away
+08:40:07 <MRK[m]> Can someone remove pictures sent by beanniggas. So illegal
+08:42:20 <kryptonymous[m]> InternetWithout"I.P": cn3m is trying his best. Best thing to do in the short run is "Ignore" them.
+08:42:53 <cdesai> If matrix is set to invite only for a bit again people can still get in via irc
+08:43:27 <very_sneaky> what's the state of pixel 4 support at the moment? i just did a search for 4a support in the logs and looks like strcat isn't happy with the current level of support for the pixel 4? the website indicates that production support is available - indicating not experimental, is this not the case?
+08:43:40 <very_sneaky> or are there just very few devs with the 4
+08:46:52 <cn3m[m]> InternetWithout"I.P": I deleted them all
+08:46:53 <cn3m[m]> refresh?
+08:48:49 <cn3m[m]> if I missed some please copy the timestamp on the message and I will fix it
+08:53:43 <MRK[m]> 3 photos still there.
+08:53:58 <MRK[m]> "cn3m" (https://matrix.to/#/@cn3m:privacytools.io)
+08:54:42 <MRK[m]> 1 left
+09:01:31 <cn3m[m]> sorry my bad
+09:16:18 <kryptonymous[m]> Lots of people subscribed to this channel. Hope others are learning as much as I have over the last 2 months running GOS on my P3XL. I've been in IT over 25 years and have learned more relevant tech in this community than any other. So I'm definitely not going to let some hateful morons stop my learning process. Not happening. There are good people here that'll figure it out. Hang in there. Thanks Firemancn3m:
+09:16:18 <kryptonymous[m]> 🧑‍🚒👍️
+09:33:11 <strcat[m]> I recommend that everyone disables URL previews
+10:17:06 <kuantem[m]> > Lots of people subscribed to this channel. Hope others are learning as much as I have over the last 2 months running GOS on my P3XL. I've been in IT over 25 years and have learned more relevant tech in this community than any other. So I'm definitely not going to let some hateful morons stop my learning process. Not happening. There are good people here that'll figure it out. Hang in there. Thanks Firemancn3m:
+10:17:06 <kuantem[m]> 🧑‍🚒👍️
+10:17:06 <kuantem[m]> Yea, I'm in the same boat. Great channel.
+10:18:56 <kuantem[m]> Been using LineageOS for years with my OnePlus 5t. When I realized that LineageOS wasn't going to release Android 10 for the 5t, I decided to give GrapheneOS a try. Picked up a Pixel 3a XL. GrapheneOS is great!
+10:19:54 <cn3m[m]> <3
+10:21:34 <MRK[m]> Question: should I disable OEM Unlocking once LineageOS is installed on my phone? And they said it will brick your phone, is it true?
+10:22:12 <za_warudo-vilfp8> Off topic but it depends on your phone
+10:22:19 <cn3m[m]> InternetWithout"I.P": take this too off topic?
+10:22:57 <MRK[m]> You can answer it on Techlore if we can't talk about it here.
+10:35:58 <anupritaisno1[m]> <strcat[m] "I recommend that everyone disabl"> *enables it*
+10:50:58 <theultron[m]> I am joining the GrapheneOS bandwagon soon. Does GrapheneOS firewall allows lan connection seperately? For example :- I use VLC. I want it to connect to my local network to fetch videos. I want to disable wifi and data access but retain lan access.
+10:52:27 <cn3m[m]> <theultron[m] "I am joining the GrapheneOS band"> it doesn't work that way tied in with the network permission
+10:52:38 <cn3m[m]> welcome aboard
+11:06:00 <nikitalita[m]> theultron: if you want to do that, you may want to think about setting up a vlan
+13:50:41 <Mathijs[m]> <Vicarious[m] "What is this abuse management ma"> it's a bot hosted by matrix.org
+13:54:42 <MRK[m]> If anyone can sell GrapheneOS phone in cheap price. Send it here or PM.
+13:56:13 <dallemon[m]> InternetWithout"I.P": if you just need help setting up a new device with GrapheneOS just ask in here, people will gladly help and guide you
+13:58:14 <FinTECHology[m]> <MRK[m] "If anyone can sell GrapheneOS ph"> https://shoppy.gg/@FinTeCHology All Brand New
+13:59:18 <dallemon[m]> lol £300 for installing graphene os
+14:00:59 <FinTECHology[m]> <dallemon[m] "lol £300 for installing graphene"> Includes DHL Shipping to anywhere in the world, OEM Unlocked, and The fact i have to cash that BTC out and pay fees.
+14:01:58 <FinTECHology[m]> Pixel 3A is £400 Brand new in Carphone Warehouse, so i don't know where you are getting your devices from
+14:02:20 <FinTECHology[m]> <Vicarious[m] "Appreciate it, but I don't think"> i never advertise here thats the first post i've made
+14:02:43 <erhcetua[m]> installing graphene takes 20 minutes to set up
+14:02:51 <erhcetua[m]> not an evening, just saying
+14:03:26 <MRK[m]> I don't have a pixel phone because of the price. I'm using a $150 phone right now but I'm looking for price of $200 just to get grapheneos. I'll just wait :)
+14:03:29 <za_warudo-vilfp8> It's as easy as a bunch of commands, assuming you had the files downloaded and extracted
+14:03:59 <FinTECHology[m]> <za_warudo-vilfp8 "It's as easy as a bunch of comma"> Thats assuming someone has access to a PC, understands how to use adb.  etc
+14:04:16 <FinTECHology[m]> And to be honest.   Some people would just rather pay someone to do it, and provide support.
+14:04:17 <erhcetua[m]> you don't need adb to install graphene
+14:04:46 <za_warudo-vilfp8> <FinTECHology[m] "Thats assuming someone has acces"> the first one is true, second not so much
+14:05:00 <za_warudo-vilfp8> The commands you need to know are pretty much the one on instructions
+14:05:31 <za_warudo-vilfp8> Guess we had a volunteer now
+14:06:11 <za_warudo-vilfp8> Nice
+14:06:12 <FinTECHology[m]> <erhcetua[m] "you don't need adb to install gr"> i'm using Arch, so fastboot/adb/android-sdk i installed all together
+14:06:37 <FinTECHology[m]> the point remains some people have money, and not time
+14:06:48 <erhcetua[m]> cool, and ? guide doesnt use adb
+14:06:55 <za_warudo-vilfp8> platform-tools is what it is called
+14:07:01 <dallemon[m]> @Fint
+14:07:04 <za_warudo-vilfp8> Which has both adb and fastboot?
+14:07:15 <za_warudo-vilfp8> <erhcetua[m] "cool, and ? guide doesnt use adb"> Agreed
+14:07:20 <za_warudo-vilfp8> <FinTECHology[m] "the point remains some people ha"> True
+14:07:32 <FinTECHology[m]> <Vicarious[m] "Yeah, there will always be a mar"> Omerta is worse imho
+14:07:44 <za_warudo-vilfp8> <Vicarious[m] "Yeah, there will always be a mar"> The price tax is way too ridiculous that I'd buy CopperheadOS before that
+14:07:45 <FinTECHology[m]> Its one step down from CopperHeadOS
+14:07:48 <dallemon[m]> FinTECHology: ok had a look at carphonewarhouse, you are actually charging closer go an additional £430, not £330
+14:08:09 <dallemon[m]> pixel 4 btw
+14:08:12 <FinTECHology[m]> <dallemon[m] "FinTECHology: ok had a look at c"> Show me where you can get an Pixel for this price you are mentioning
+14:08:20 <ghostcat[m]> FinTECHology: This is not the place to market yourself here.
+14:08:22 <FinTECHology[m]> because i'll go and buy 10
+14:08:31 <erhcetua[m]> anyway please talk on offtopic room instead
+14:08:50 <za_warudo-vilfp8> <MRK[m] "I don't have a pixel phone becau"> Ngl, it'll be hard to find $200 pixel 3a secondhand. Pixel 2 support is ending
+14:09:31 <erhcetua[m]> i don't really think daniel wanna hear about that impostor, so please go to offtopic
+14:09:44 <FinTECHology[m]> £359.00 Pixel 3a XL Sim-Free UK Carphone Warehouse
+14:10:01 <za_warudo-vilfp8> * Ngl, it'll be hard to find $200 pixel 3a secondhand. Pixel 2 support is ending, which may get a price of $200,...
+14:10:39 <za_warudo-vilfp8> Anyways, I had a little problem on some apps... Is there a reason an app wont run on another non-main profile
+14:10:51 <ghostcat[m]> FinTECHology: Again this is not the place. Did you even read the rules?
+14:10:51 <FinTECHology[m]> <Vicarious[m] "Not here to bash either or. You "> Omerta actually "Brands" their phones.   Something i would never do.
+14:11:06 <FinTECHology[m]> <ghostcat[m] "FinTECHology: Again this is not "> i'm not advertising anything.
+14:11:18 <za_warudo-vilfp8> <za_warudo-vilfp8 "Anyways, I had a little problem "> It feels like just a not well-designed app.
+14:11:23 <FinTECHology[m]> We are discussing how much a new Pixel costs
+14:11:26 <ghostcat[m]> <FinTECHology[m] "i'm not advertising anything.   "> You are contradicting yourself.
+14:12:00 <FinTECHology[m]> <Vicarious[m] "And approximately £250 on eBay s"> Big difference between a second hand device and a brand new boxed device isn't there.
+14:13:32 <FinTECHology[m]> <Vicarious[m] "Not really, if the device is in "> I would say the battery is far from in good or excellent condition after 12months use
+14:15:04 <MRK[m]> It needs to be unlocked pixel 3a, am I right?
+14:16:26 <za_warudo-vilfp8> <MRK[m] "It needs to be unlocked pixel 3a"> Yes.
+14:16:39 <za_warudo-vilfp8> OEM-unlockable
+14:19:18 <MRK[m]> <Vicarious[m] ""InternetWithout"I.P"" (https://"> Is it on GrapheneOS to do this step or PixelOS?
+14:19:35 <dallemon[m]> <Vicarious[m] "So that'll be £100, please."> LOL
+14:44:12 <za_warudo-vilfp8> Nice
+14:44:18 <za_warudo-vilfp8> Guess you're brocking it
+14:44:40 <za_warudo-vilfp8> * Guess you're brockin' it there
+14:56:34 <alzxjm[m]> brockin042: Any updates about MMS on Fi?
+15:01:52 <Knull[m]> is Fi actually ok to use?
+15:03:08 <alzxjm[m]> Knull: I like it. It's Googley though.
+15:03:24 <alzxjm[m]> Great security. Immune to SIM swapping (at least as immune as a Google account).
+15:04:43 <Knull[m]> Googley is what I'm afraid of. That's why I'm on graphene. How so do you mean, though?
+15:06:23 <alzxjm[m]> The on-topic part of the Google Fi discussion is that it doesn't (AFAIK) completely work on GrapheneOS. MMS messages cannot be received and visual voicemail doesn't work. Calls, SMS, and data all work. I'm interested in finding out if anyone can get MMS working on Graphene (say by messing with APN settings - which I tried and couldn't solve).
+15:06:49 <alzxjm[m]> I run Google Fi on CalyxOS. That's not on-topic but I'm happy to chat about it in the CalyxOS room or the offtopic room.
+15:08:45 <crixtnn[m]> it would be great if Daniel could setup some sort of store where one could buy grapheneos pixels. i bet a lot of people would gladly pay a premium knowing it goes to supporting the project rather then filling the pockets of opportunistic parasites like the one before.
+15:09:36 <d3s7nth[m]> > opportunistic parasites
+15:09:36 <d3s7nth[m]> Yikes
+15:15:56 <Knull[m]> well I'm concerned for the privacy of using Fi. but I was unaware of that, thx
+15:28:48 <tim_> Please spread the subreddit r/SpenderWasRight
+15:28:57 <tim_> Thanks for your attention
+16:02:11 <Joeri[m]> I am not sure whether there will ever be a confirmation for every app. but most apps which require Google mobile services work fine (if not perfectly) without them. I suggest you look at it on an app by app basis.
+16:02:53 <Joeri[m]> you might also be interested in different roms which offer a hard level of security but do allow MicroG, the Google mobile services alternative, to be installed.
+16:05:29 <Joeri[m]> also I don't think installing Google mobile services would keep enough of the security you wish for. you're handing all the trust to Google, I would go as far as saying that that hurts your security more than installing a custom rom could increase security.
+16:05:32 <firefightingphys> > > <@crixtnn:matrix.org> it would be great if Daniel could setup some sort of store where one could buy grapheneos pixels. i bet a lot of people would gladly pay a premium knowing it goes to supporting the project rather then filling the pockets of opportunistic parasites like the one before.
+16:05:32 <firefightingphys> > While the idea is nice, it wouldn't be feasible. Dealing with orders, returns, problems, troubleshooting etc.
+16:05:32 <firefightingphys> That is what /e/ is doing though. You can buy a smartphone with /e/ installed already
+16:08:38 <crixtnn[m]> a-1_2 You can get playstore apps anonymously and keep them updates with Aurora store from fdroid. WhatsApp works perfectly. Banking usually do work if not you could use the website. google maps works in browser as a PWA decently. tried ms word and worked as well. if you are interested in privacy there are better options for each of these available.
+16:10:45 <jaxson[m]> The only problem with whatsapp is that notifications sometimes arrive late all at the same time.
+16:11:06 <firefightingphys> Ask your bank if they cover fraud you if you installed the banking app using Aurora. Mine does
+16:14:57 <firefightingphys> > > <@firefighting.physicist:matrix.org> Ask your bank if they cover fraud you if you installed the banking app using Aurora. Mine does
+16:14:57 <firefightingphys> > How come? I can ask no a problem, tbh I can shift Banking off to my iPad if needed
+16:14:57 <firefightingphys> Well my bank covers fraud if you use their app if the app was not obtained from a "dubious" source. They considered Aurora "not dubious" and said that it would be covered
+16:16:20 <jaxson[m]> You can always use bank account in browser
+16:17:50 <jaxson[m]> Maybe it's safer using the app
+16:26:02 <nikitalita[m]> :o
+16:55:22 <Biv[m]> whatcha guys think about kiwi browser
+16:55:37 <Biv[m]> now that its open
+17:19:55 <erhcetua[m]> use vanadium
+17:29:08 <BlackWinnerYoshi> <erhcetua[m] "use vanadium"> What about adding extension support to Vanadium, or nah?
+17:32:39 <BlackWinnerYoshi> <Biv[m] "whatcha guys think about kiwi br"> Well, I would love if they added Kiwi Browser to F-Droid, the only thing I can see is Kiwix
+17:42:19 <refragable[m]> extension support for Vanadium doesn't seem to be likely https://freenode.logbot.info/grapheneos/20200602#c4036919
+17:49:52 <BlackWinnerYoshi> <Vicarious[m] "Bromite "> I like that too, and I use it as my default browser
+17:54:39 <ghostcat[m]> <refragable[m] "extension support for Vanadium d"> Doesn't need it if you use a system wide ad block. Private DNS.
+17:55:09 <refragable[m]> I know, but the topic was extension support
+17:57:00 <ghostcat[m]> <refragable[m] "I know, but the topic was extens"> I understand the topic but you do know extensions make yourself more browser fingerprint able right?
+17:57:24 <refragable[m]> Yes, please don't explain it. I read Daniels reasons and the web browsing section on the site
+17:57:49 <refragable[m]> The ad blocking thing was incidental to the statement regarding the possibility of extension support
+17:58:26 <cn3m[m]> features from extensions would be better off built into the browser like Bromite handles it(but better)
+17:59:17 <ghostcat[m]> Built in Vanadium would be best if I am understanding cn3m here.
+17:59:36 <ghostcat[m]> * Built in extensions Vanadium would be best if I am understanding cn3m here.
+18:00:09 <cn3m[m]> if you incorporated the features in yes ^
+18:00:18 <cn3m[m]> as a reasonable patchset
+18:00:20 <cn3m[m]> which Bromite does
+18:01:06 <ghostcat[m]> Couldn't we argue the official Tor browser also does this?
+18:01:26 <cn3m[m]> I use and recommend Vanadium
+18:01:43 <cn3m[m]> <ghostcat[m] "Couldn't we argue the official T"> not really those are real extensions
+18:01:50 <cn3m[m]> Bromite and kinda Safari though
+18:03:31 <alzxjm[m]> Vicarious: Use a custom dns. `dns.adguard.com`
+18:04:22 <ghostcat[m]> <cn3m[m] "not really those are real extens"> Elaborate if you will cause I was under the impression that they were built in? How can you tell the difference from built in to non built in?
+18:10:57 <alzxjm[m]> <Vicarious[m] "I think cn3m is some AI bot and "> He's at least 3 people.
+18:11:20 <cn3m[m]> :/
+18:16:55 <cn3m[m]> yes
+18:17:40 <cn3m[m]> https://www.youtube.com/watch?v=tD_snjarJuU
+18:22:11 <Knull[m]> <alzxjm[m] "He's at least 3 people."> ☝️☝️☝️
+18:22:36 <cn3m[m]> that is speculation I am only confirmed to be 2
+18:25:22 <cn3m[m]> fuck
+18:27:40 <Knull[m]> I meant to quote the AI comment lol
+19:34:54 <erhcetua[m]> element android is ass tbh
+19:35:37 <erhcetua[m]> fluffychat is better, you can even record your voice directly
+19:37:28 <hypokeimenon[m]> <erhcetua[m] "fluffychat is better, you can ev"> Is there somewhere I can see a good feature comparison?
+19:39:40 <erhcetua[m]> besides gitlab's project no
+19:55:43 <albedoirl[m]> <persistentpixel[m] "Seems really poor"> I agree the battery life is pretty bad, but it beats google/Microsoft/apple knowing you better than you know yourself
+19:58:08 <cn3m[m]> from a technical perspective that is more Facebook that knows you best. But I digress offtopci
+19:59:29 <albedoirl[m]> They all know you just as well only from different directions. YouTube watch history says a lot about a person.
+21:04:14 <Knull[m]> <albedoirl[m] "They all know you just as well o"> I could see how that may be true on an individual basis, but in sheer metrics, might not be as measurable
+21:05:01 <Knull[m]> Amazon is probably a little scarier
+21:05:30 <cn3m[m]> <analtenderloin[m] "Does graheneOS have any long-ter"> fallbacks, but they are that effective
+21:05:58 <cn3m[m]> hopefully more people will degoogle and the experience will improve
+21:06:34 <cn3m[m]> Google, Huawei, and Amazon have all cut off into their own corner
+21:06:34 <cn3m[m]> a universal solution may eventually be preferable
+21:09:07 <cn3m[m]> <analtenderloin[m] "So basically is there no way to "> signature spoofing is not inherently the issue
+21:09:11 <cn3m[m]> microg is a mess
+21:09:54 <cn3m[m]> Do you really want messages being piped through google servers for notifications and such?
+21:10:40 <cn3m[m]> iOS does this in a sane way with e2ee if Google copied that maybe a less bloated microg could make some sense(idk). Though it not super stable and not very privacy friendly right now
+21:11:07 <cn3m[m]> <analtenderloin[m] "Doesnt signature spoofing signif"> yes, but it can be done properly
+21:11:22 <cn3m[m]> you can stub out fallbacks for google play
+21:11:23 <cn3m[m]> and sig spoof them only
+21:11:28 <cn3m[m]> if they are really simple it will be pretty safe
+21:11:39 <cn3m[m]> it will make the app think Play Services are there just offline
+21:15:27 <cn3m[m]> the fallback is on GitHub issues
+21:15:39 <cn3m[m]> not even that hard to do
+21:16:05 <cn3m[m]> you just make an app that is signature spoofed to look like play services and tell apps there is no internet
+21:16:21 <cn3m[m]> good first issue maybe(correct me if I am wrong smarter people)
+21:38:21 <erhcetua[m]> yeah it should
+21:40:18 <erhcetua[m]> 50$
+21:40:28 <erhcetua[m]> if it's new
+21:40:59 <erhcetua[m]> around 50 then
+22:29:39 <aeonsolution[m]> Hi everyone, are the any people new comers or first-time callers(long time supporters) of GrapheneOS that have Pixel 3, Pixel 3 XL, and/or Pixel 3a XL that would like to help me (a device maintainer) test kernel patches for the Android 11 kernel on you phones!?
+22:34:02 <aeonsolution[m]> nice, well i can help you get started on building the development version today
+22:34:21 <aeonsolution[m]> are you interested in trying to build GrapheneOS's development branch
+22:35:32 <aeonsolution[m]> I'd be happy to walk you through the process 😎
+22:36:07 <aeonsolution[m]> the hard requirement is a Linux distro and patience
+22:36:29 <aeonsolution[m]> and these dependencies <https://grapheneos.org/build#build-dependencies>
+22:37:38 <aeonsolution[m]>  * [correction] Hi everyone, are the any people new comers or first-time callers(long time supporters) of GrapheneOS that have Pixel 3, Pixel 3 XL, and/or Pixel 3a XL that would like to help me (a device maintainer) test kernel patches for the Android 11 kernel on your phones!?
+22:45:02 <aeonsolution[m]> you can use the built-in backup system SeedVault
+22:45:15 <aeonsolution[m]> you can try the logs or maybe someone else can add their 2 cents
+22:47:15 <refragable[m]> You need an USB drive or to make a local backup and then transfer it to your pc. Seedvault currently only backs up apps and not your data (downloads, pictures, etc). Some apps don't allow backups (like Signal) so you'd have to check if those sorts of apps have their own backup mechanisms (Signal does have its own backup method).
+22:47:53 <refragable[m]> Seedvault also supports using a Nextcloud account to do cloud backups
+22:48:30 <refragable[m]> There's some more info at https://calyxinstitute.org/projects/seedvault-encrypted-backup-for-android
+22:53:47 <aeonsolution[m]> This is a super simplification so please bear with me. Vanadium is hardened browser and webview based on Chromium. It doesn't include any of Google's proprietary features.
+22:54:34 <aeonsolution[m]> Here is more information if you're interested: https://grapheneos.org/usage#web-browsing
+22:56:03 <aeonsolution[m]> I would really encourage you and everyone that asks about degoogled applications to ask more specific questions. Degoogle is very, very broad.
+22:56:28 <aeonsolution[m]>  * I would really encourage you and everyone that asks about degoogled applications to ask more specific questions. [correction] Asking if something is degoogled is very, very broad.
+22:58:11 <aeonsolution[m]> Phoning what home?
+22:58:27 <aeonsolution[m]> Here is the project <https://www.chromium.org/Home>
+22:59:37 <aeonsolution[m]> Here is the project <https://github.com/GrapheneOS/Vanadium> and here are the patches <https://github.com/GrapheneOS/Vanadium/tree/10/patches>
+23:02:58 <aeonsolution[m]>  * [correction] This is a super simplification so please bear with me. Vanadium is hardened browser and webview based on Chromium. It doesn't include any of Google Chrome's proprietary features.
+23:07:02 <cn3m[m]> Vanadium has no telemetry and gets updates with the system
+23:07:04 <cn3m[m]> it can be slightly out of date, but it is more secure
+23:07:17 <cn3m[m]> this will be fixed at some point completely
+23:07:37 <aeonsolution[m]> the project updates the version of Vanadium faster than Chromium as prebuilts and can be built from scratch as well when the new release is pushed
+23:07:59 <aeonsolution[m]> also i second everything cn3m says 😉
+23:10:33 <aeonsolution[m]>  * [correction] the project updates the version of Vanadium as fast as Chromium's release generally. When it is updated, GrapheneOS puts the prebuilts up on Github but if you want it faster you can be build it from scratch as well when the new release is pushed on <https://chromiumdash.appspot.com/releases?platform=Android>
+23:11:31 <aeonsolution[m]> please ignore the initial statement, it was incomplete and had some incorrect info-the correction clears it all up
+23:12:37 <aeonsolution[m]> and ontop of that like cn3m said you can wait for Vanadium to get updated when a new release of GrapheneOS is made available
+23:13:11 <aeonsolution[m]> via the system update
+23:14:37 <aeonsolution[m]> strcat spoke about it too this week, it should be in the logs if you're curious
+23:15:53 <aeonsolution[m]> analtenderloin: https://github.com/GrapheneOS/Vanadium/issues
+23:22:45 <refragable[m]> analtenderloin: if you're want the latest Vanadium build, you can always download and install the prebuilts manually https://github.com/GrapheneOS/platform_external_vanadium/tree/10/prebuilt/arm64
+23:23:05 <refragable[m]> You install the TrichromeLibrary.apk first and then the other two in any order
+23:23:20 <refragable[m]> those are the same apks that are bundled into the OS

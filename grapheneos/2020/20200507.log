@@ -1,0 +1,304 @@
+01:02:47 <TheJollyRoger> leohopper[m]: the part for the udev rules is specific to Linux distributions, such as Debian (and all the distributions that use Debian as an upstream provider, such as Ubuntu, Mint, TAILS, Whonix, etc) that use udev for device management and permissions.
+01:03:03 <yzernik> should i use a VPN or not?
+01:03:37 <madaidan[m]> yzernik: we can't answer that for you
+01:03:41 <TheJollyRoger> If you run Windows or a Macintosh, or a Linux distribution that does not use udev, that step not apply to you. I have a PR outstanding for udev but it hasn't been merged yet.
+01:06:44 <TheJollyRoger> yzernik: my answer is that depends on whether you trust your VPN service provider (which could be operating out of a different jurisdiction, or even lie about their security or the measures they take to protect your privacy) more than you trust your ISP.
+01:08:13 <TheJollyRoger> Since you're essentially moving the man in the middle.
+01:08:20 <TheJollyRoger> That's all a VPN is doing for you.
+02:53:10 <renlord> strcat[m]: how do you deal with weak DH params for weaker cipher usage
+02:53:28 <renlord> non-EC key exchange
+02:59:08 <TheJollyRoger> Good evening, renlord.
+03:01:43 <renlord> morning
+03:02:08 <renlord> my dkim milter keeps rejecting bad signatures lol
+03:02:36 <renlord> since my institution maintains a broken mailserver, i cant receive any mail from uni anymore
+03:03:42 <JTL> funny
+03:04:12 <JTL> "Your mail server is incompetent, and I can't receive the feedback on my assignment. Therefore I pass."
+03:05:00 <renlord> the uni MTA is actually unauthenticated, everyone can use it
+03:05:07 <renlord> can actually mail out fake grades, in reality.
+03:05:32 <renlord> flabbergasted when I was told by IT about it
+03:05:36 <JTL> renlord: something something prescription drug spam?
+03:05:52 <JTL> Shouldn't it be blacklisted to hell and back?
+03:18:52 <bseeinu[m]> I suck at Regex
+03:19:37 <bseeinu[m]> Trying to create a filter to exclude the words COVID, covid-19, covid19, coronavirus, quarantine from RSS feeds
+03:19:45 <bseeinu[m]> Not succeeding lol
+03:22:07 <TheJollyRoger> renlord: holy cow.
+03:26:47 <strcat[m]> renlord: look at my ssl-dhparams option
+03:26:48 <strcat[m]> for postfix
+03:27:15 <strcat[m]> sec
+03:27:34 <renlord> https://paste.xinu.at/xKF
+03:27:37 <renlord> just a file
+03:27:39 <renlord> @_@
+03:28:07 <renlord> i wanted to just remove EDH ciphers, but someone told me i'd stop receiving many mail
+03:28:15 <renlord> anupritaisno1[m] told me
+03:30:03 <TheJollyRoger> DHE? Hey wait a moment, I thought we were phasing out DHE.
+03:30:46 <TheJollyRoger> Hey strcat, er... when you have a moment sometime later tonight, if it's not too mouch trouble...
+03:32:41 <TheJollyRoger> Could I PM you later?
+03:32:44 <strcat[m]> renlord: smtpd_tls_dh1024_param_file = /etc/postfix/ssl-dhparams.pem
+03:32:48 <strcat[m]> renlord: did you dl the file for that
+03:32:52 <strcat[m]> dl 3072 standard params
+03:33:03 <renlord> where do i dl that file?
+03:42:23 <strcat[m]> renlord: ffdhe3072
+03:42:58 <strcat[m]> renlord: https://github.com/internetstandards/dhe_groups/blob/master/ffdhe3072.pem
+03:43:24 <strcat[m]> or 4096
+03:43:54 <renlord> how long would it take to generate these numbers?
+03:49:28 <renlord> thansk
+05:26:31 <zxwayland> gosh, it took forever to set up and secure my system. like the whole day!
+05:26:43 <zxwayland> i wish it was more simpler and easier
+05:28:07 <renlord> zxwayland: graphene os/
+05:29:25 <zxwayland> yes, and setting up the password manager. changing all my passwords. and setting up 2fa
+05:33:04 <zxwayland> i was scanning a million 2D bar codes too
+05:58:00 <renlord> archlinux ships systemd-resolved that supports dnssec and dane queries, so no need unbound
+06:21:20 <TheJollyRoger> Hey, I didn't know that about systemd.
+06:23:47 <renlord> specifically systemd-resolved
+06:23:57 <renlord> there are plenty of other systemd stuff that are broken af
+06:24:16 <JTL> Lennart Pottering needs to find something else to do
+06:24:20 <JTL> then systtemd will improve
+06:24:33 <JTL> (I think that's what happened to pulseaudio)
+06:24:38 <JTL> </joke>
+06:24:57 <renlord> oh no
+06:25:03 <JTL> Oh?
+06:25:15 <renlord> linux sound is a fkin mess
+06:25:23 <renlord> i really dont know how someone can fix it
+06:25:31 <JTL> I did some have some configuration pains with PulseAudio
+06:25:47 <JTL> TheJollyRoger: Remember chatting on Mumble and I had some strange "auto mic boost" issue
+06:25:49 <JTL> lol
+06:46:35 <TheJollyRoger> Oh goodness gravy, yes X(
+06:47:02 <JTL> But I fixed it
+06:47:24 <TheJollyRoger> I'm actually not even sure what happened there, except for the time I thought you were playing the Timpani :P.
+06:47:35 <JTL> Ahahhaaha
+06:48:04 <TheJollyRoger> *BWANG BWONG BWA-BWONG BWANG BWONG BWUNG BWANG BWANG*
+06:48:26 <JTL> That was funny
+06:48:41 <JTL> Maybe I should "play" again for you sometime
+06:48:50 <TheJollyRoger> Bwahahahaha yes! XD
+06:51:10 <TheJollyRoger> So far this project has been credited with: Porting PAX patches to the kernel, achieving production-quality releases granting privacy on Android, improving the memory handling routines of Linux and operating systems in general with the hardened_malloc, Improving the Bionic C Library, making remote attestation and online verification available to the masses and easy... and inventing the
+06:51:11 <TheJollyRoger> E-Timpani.
+06:51:47 <JTL> Ahahaha
+06:51:51 <JTL> That last one
+08:30:19 <chris42> renlord: regarding postfix, you should probably generate your own DH parameters, as recommended by postfix. If you want to get rid of EDH, you should use the exclude list: http://www.postfix.org/postconf.5.html#smtp_tls_exclude_ciphers
+08:31:41 <chris42> renlord: the warning for "you might not get email" is for smtpd. That one should basically accept everything, even unencrypted, as you never know how dumb a sending E-Mail Server is
+08:42:37 <chris42> renlord: Oh and for the exclude list it is then kEDH
+09:18:59 <joshman[m]> So stocked about GrapheneOS. During months of heavy usage it taught me valuable things I'd never learn otherwise. Bitcoin taught me to save money, Graphene taught me to stay safe. A shiny light bulb in these dark times.
+09:23:17 <joshman[m]> I count myself as a off-the-grid redneck, having no social network accounts, no Spotify, no WhatsApp, no SIM card, even broken Open Camera became a feature to me. No impulse photos. Insane
+09:30:20 <renlord> lol broken camera is a feature
+09:30:35 <dazinism> *as a feature
+09:31:52 <dazinism> lol... but I guess some folks do take too many photos...
+09:32:19 <dazinism> ....thinking of my mother
+09:40:50 <shurke> oh matrix
+10:32:29 <anupritaisno1[m]> <zxwayland "according to MBTI, (Myers–Briggs"> This test is dubious and cannot be used as an indicator
+10:37:01 <anupritaisno1[m]> <josh.man "So stocked about GrapheneOS. Dur"> "BiTcOiN tAuGhT mE tO sAvE mOnEy"
+10:48:49 <anupritaisno1[m]> <renlord "lol broken camera is a feature"> How?
+10:49:30 <anupritaisno1[m]> https://github.com/GrapheneOS/os_issue_tracker/issues/56
+10:49:44 <anupritaisno1[m]> I can confirm I had this issue
+10:50:06 <renlord> it was just in response to a user
+10:50:14 <renlord> a joke really
+10:50:40 <anupritaisno1[m]> It works on blueline now?
+10:52:06 <anupritaisno1[m]> For me the manufacturer updated the vendor blobs and the issue was gone
+10:54:02 <renlord> there's a workaround patch
+10:54:13 <renlord> that's need to be reverted to confirm if upstream patches have fixed the issue
+10:57:25 <anupritaisno1[m]> <renlord "there's a workaround patch"> Can I see it?
+11:17:23 <renlord> anupritaisno1[m]:  https://github.com/GrapheneOS/hardened_malloc/commit/9dd50939f1cb22ea6dc64783f5d56dfd71074fa7
+11:32:27 * jacksonpollock19 sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/gfoLTJArUMwmVQjxuoLGuIsR >
+11:36:13 <renlord> jacksonpollock19: imo, we have better privacy defaults than ios at least.
+11:56:04 <joshman[m]> And breaking into GOS device is highly unpopular due to lack of users. What's the point after all? There's millions of iOS and billions of Android users walking around
+11:57:07 <shad0wbit[m]> But GOS is AOSP and so is Android
+12:15:01 <mezzanine[m]> Hey, newpipe downloads empty files(0 b) on pixel 3. Someone faced the issue?
+12:31:27 <algebro[m]> Wait there was an upstream camera patch?
+12:33:09 <algebro[m]> Or am I misunderstanding the backscroll
+13:01:20 <magicos[m]> I'm thinking about switching to iPhone because a lot of the government apps I need to function like a normal person in society aren't working because of missing Play Services.
+13:01:20 <magicos[m]> Are the iPhone still recommended over lets say an Pixel with a Google account where data collection is turned off? If so, why?
+13:01:20 <magicos[m]> My threat model is more the annoyance of the mass surveillance going on, rather than being targeted or advertising.
+13:06:00 * cx2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/VTesLUaBIJgkNLalVbNHKmRV >
+13:14:34 <magicos[m]> <cx2[m] "> <@magicos:matrix.org> I'm thin"> In lack of a better word in English. Train, banking, driver license, 2FA to government sites and such.  The government own most of that in my country. Kinda.
+13:18:11 <joshman[m]> You from Denmark
+13:18:36 <magicos[m]> <joshman[m] "You from Denmark "> Yep
+13:19:13 <chris42> magicos: not only an issue in Denmark. A lot of things are not working without certain google services.
+13:19:37 <dallemon[m]> magicos: I live there as well and most stuff works, only the 2FA started not working recently. They said I should try clearing data and reinstalling.
+13:19:57 <joshman[m]> You need to learn to live without those apps government is pushing on you
+13:20:09 <chris42> Especially push notifications is the one that is keeping me away from graphene so far, asa much as I would want to use it
+13:20:10 <dallemon[m]> And I use a travelcard after they made the transport app rely on a location provider instead of GPS
+13:21:41 <amsurana> > Especially push notifications
+13:21:42 <joshman[m]> Guys. It's your choice. Either they push notifications or you chose
+13:22:05 <dallemon[m]> Not having reliable push has made me use my phone a lot less, quite nice actually.  😁
+13:22:26 <joshman[m]> Yes
+13:22:31 <amsurana> Push notifications is issue in every custom OS. MicroG can be viable option, but I am not sure how far it is good for production.
+13:22:56 <chris42> I use microg on my AOSP... For push notifications it is working fine
+13:23:23 <chris42> same with the additional location provider (I use local databases)
+13:23:52 <chris42> but I am not sure if it would work on graphene... will probably try one day
+13:24:14 <chris42> issue with microg is, that the project owner is quite busy so there is little progress.
+13:24:43 <chris42> Would love to see certain funtions within graphene... properly implemented and maintained
+13:24:59 <chris42> but that is a question of basic philosophy
+13:26:42 <magicos[m]> <dallemon[m] "magicos: I live there as well an"> Which of course didn't work.
+13:28:01 <dallemon[m]> <magicos[m] "Which of course didn't work."> Haven't actually bothered. Just been using the physical card 😅
+13:46:19 * cx2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/PVEfaHOKbIcrifyKterTpDGF >
+13:47:32 <cx2[m]> <chris42 "issue with microg is, that the p"> The issues with microg are FAR bigger than that.
+13:48:04 <ransome[m]> <chris42 "but I am not sure if it would wo"> It won't as in Graphene (as also for instance in regular LineageOS) signature spoofing is disabled for a reason. And that is needed for MicroG. So you will be able to install it, but it won't work properly. Unless you tamper hardly with Graphene which makes the whole idea useless. I have it (MicroG) installed isolated with Netguard on Graphene though, to get the magic Gcam
+13:48:04 <ransome[m]> working, but please don't tell this to the project owner ;)
+13:48:10 <cx2[m]> chris42: Spoofing signatures? No one sees a problem with that, or the slippery slope that could lead down?
+13:49:10 <ransome[m]> @cx2
+13:49:14 <ransome[m]> solid timing mate ;)
+13:54:33 <chris42> cx2: i know about the signature spoofing and the discussion around CM and then Lineage.
+13:55:31 <chris42> That is why I say there should be a proper implementation in graphene OS, probably without a "public" signature spoofing permission
+13:55:40 <chris42> should = I would like
+13:56:30 <chris42> The issue i have is, that as much as I love security and privacy, I am use it out of principle, not because I am under threat or anything
+14:00:42 <cx2[m]> <chris42 "The issue i have is, that as muc"> same scenario here.... but boy have those principles grown strong.
+14:01:18 <cx2[m]> chris42: I dont' even know that Daniel, et al. would even approve something like that IF someone took the time to develop it. Can't speak for them though.
+14:01:53 <chris42> cx2: Yes, but if I would be under thread, I would use a dumb phone and hide away. For a regular person that loves security and privacy that needs to be accessible
+14:03:20 <chris42> I think we can agree that the gold standard would be to have a smartphone with all the comforts you see nowadays, just with security and privacy
+14:03:32 <cx2[m]> <chris42 "cx2: Yes, but if I would be unde"> Well that's just not true at all... it certainly doesn't "need" to be accessible. Not at all. I can honestly say that I have absolutely zero need for microG or gapps in general. Not a single instance.
+14:04:39 <cx2[m]> chris42: I would venture to say there are a lot of GrapheneOS users that would agree. If all of a sudden my work required that I have a specific app for something (hard to imagine) Then I would hope they are also providing the phone.
+14:05:54 <cx2[m]> chris42: Otherwise, I don't know that there is an app that anyone "Needs". 13 years ago, no one even knew apps really existed
+14:06:13 <cx2[m]> Largely because they didn't
+14:10:12 <chris42> cx2: <13 years ago, no one even knew apps really existed> That is quite a shitty argument, then we would still live in caves. :-D Of course I can stop communicating with friends and family, banking, ticketing, etc. but then why do I need a smartphone?
+14:14:24 <chris42> I think GOS is really a great project, as it looks on android with the security and privacy first focus. And you can see how Daniels work is carried into AOSP that it is highly appreciated.
+14:16:18 <chris42> Would love to see that for other parts as well. E.g. the location backends. Basically show that a secure and usable implementation is possible.
+14:18:40 <chris42> And as next step notifications. Possibly implement something open to show again, that it is possible to do such thing securely. If I approach app developers and ask them to add another mechanism, I always get, there is no better alternative.
+14:19:40 <chris42> Sorry for dreaming here... :-D
+15:05:48 * k-sloth[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/cQtNvfDVHGFLRHRtBxNFWqVs >
+15:07:18 <joshman[m]> People want to leave google, apple to get back to Google/Apple. Nonsense in a sense
+15:08:40 <k-sloth[m]> <joshman[m] "People want to leave google, app"> That's like moving from qubesOS back to Microsoft RIP lmfao
+15:16:13 <seaclown> I love my qubes setup.
+15:16:13 <seaclown> Unfortunately I have to work with windows for work... Fuckers
+15:17:47 <cx2[m]> <seaclown "Unfortunately I have to work wit"> Same.... but I won't lie, I think windows UI is trash.... but im a huge fan of OneNote. LIke... .a MASSIVE fan. But would absolutely never use it outside of a work environment.
+15:18:28 <algebro[m]> Does riotx not support push notifications without google play services? I don't see an option under settings anywhere
+15:18:43 <cx2[m]> FORK WANTED!!
+15:18:43 <cx2[m]> https://www.reddit.com/r/Keybase/comments/gf682y/keybase_has_been_acquired_by_zoom/
+15:19:39 <k-sloth[m]> <seaclown "Unfortunately I have to work wit"> The irony lol. At least powershell has got a lot better 😃
+15:20:43 <k-sloth[m]> <algebro[m] "Does riotx not support push noti"> Im using riotx and no doesn't seem to need google services
+15:21:40 <algebro[m]> You're getting notifications?
+15:31:20 <dazinism> algebro: I've used it a bit and pretty sure I was getting notifications
+15:31:42 <dazinism> Also heavy power drain than Riot Android.
+15:32:11 <algebro[m]> I got that one, thanks!
+15:32:15 <algebro[m]> I was expecting a sync icon or something
+15:32:15 <dazinism> But then I do dial back the sync settings to every 300 secs
+15:32:40 <dazinism> On riot
+15:33:17 <dazinism> Because I use it for rooms and IRC chans. Not really as an instant messenger
+15:44:34 * DannyWorkOrderPr sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/INUmssBuKOVXHLhrWgSZSYCs >
+15:45:14 <cx2[m]> Reallly like it.... but... she gone
+15:45:42 <cx2[m]> I'll make some concessions.....but Zoom?? not fucking today, China.
+15:47:22 <magicos[m]> <k-sloth[m] "> <@magicos:matrix.org> I'm thin"> Not everything got a web app.
+15:51:17 <DannyWorkOrderPr> mezzanine: Is it updated to latest?
+15:51:28 <DannyWorkOrderPr> <cx2[m] "I'll make some concessions.....b"> They should have just sold them the UI that they wanted....they don't give a fuckin hoot about security. Just the image of such.
+15:51:32 <DannyWorkOrderPr> Another betrayal of the tech/security community. Next thing you know, New Vector sells to AOL...
+15:51:34 <DannyWorkOrderPr> <magicos[m] "Not everything got a web app."> Sounds like you need to start a referendum to convince your king it's time to make things more accessible to those without smartphones, then.
+15:56:04 <limitless0[m]> Anyone knows is adb thr only other option to uninstall an app? I havr an app that it wont unistall either by holding on it and unistall ot through thr settings apps uninstall
+16:04:00 <dazinism> limitless0: on GrapheneOS or another OS?
+16:07:40 <limitless0[m]> Graphene,but i dont think its os fault i think the app its faulty
+16:08:06 <dazinism> An app you installed?
+16:08:10 <limitless0[m]> It just freezes
+16:08:13 <limitless0[m]> Yes
+16:08:18 <limitless0[m]> Jami app
+16:08:33 <dazinism> Oh yeah, remember you mentioning
+16:08:44 <limitless0[m]> Yea i asked before
+16:09:07 <dazinism> That is weird. Think it is an issue. OS should have full control of apps
+16:09:20 <limitless0[m]> Would adb solve it?
+16:10:30 <dazinism> Wonder if it happens on stock at all? May be worth a search see if anyone is complaining that they have apps they cant uninstall from whatever Pixel model you have
+16:10:50 <dazinism> I guess it might
+16:10:55 <limitless0[m]> I searched on reddit and couldn find anything
+16:15:23 <DannyWorkOrderPr> <limitless0[m] "Anyone knows is adb thr only oth"> What happens instead? is an error thrown? Does state change at all?
+16:17:07 <limitless0[m]> <DannyWorkOrderPr "What happens instead? is an erro"> Nothing , when i try to uninstall iy just doesnt do anything
+16:17:38 <limitless0[m]> Sometimes it freezes and have to lock phone and unlock to get back to normal
+16:17:45 <DannyWorkOrderPr> As in, it doesn't give you UI feedback saying it's uninstalling? Or literally nothing happens, and you get sent to the homescreen?
+16:18:32 <limitless0[m]> It doesn give me any feedback
+16:18:42 <limitless0[m]> I click uninstall and no response
+16:18:56 <DannyWorkOrderPr> Okay, so the Uninstal process is crashing, not failing.
+16:19:39 <limitless0[m]> Is there  a screen recorder to record the process?
+16:20:55 <DannyWorkOrderPr> I found ScreenCam on F-Droid, but no idea if I'd trust that more than screenshots
+16:21:35 <limitless0[m]> Screen recorder would show exactly what happens
+16:21:51 <cx2[m]> Dont think it requires permissions?
+16:21:52 <limitless0[m]> I'll try that
+16:22:26 <DannyWorkOrderPr> <cx2[m] "Dont think it requires permissio"> It requires assloads
+16:22:35 <DannyWorkOrderPr> Including network(!?)
+16:22:45 <cx2[m]> screen cam?
+16:23:27 * DannyWorkOrderPr uploaded an image: image.png (99KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/FCjZSVUHjapPXXCBULGYRsOe >
+16:24:48 * limitless0[m] uploaded a video: recording_20200507_182307.mp4 (5563KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/hPUntXXMbuTIdmVaEYMAXEuZ >
+16:25:16 <limitless0[m]> I blocked internet access anyway
+16:25:26 * cx2[m] uploaded an image: screencam.jpeg (69KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/kDdSOgYLnXrwOaeWlshCNVTU >
+16:25:41 <cx2[m]> works fine when I don't give it anything
+16:27:42 <DannyWorkOrderPr> <cx2[m] "works fine when I don't give it "> Which begs the question why it's asking for it all.
+16:27:55 <cx2[m]> yea true
+16:28:34 <cx2[m]> well.... i trust all of you smartass geeks to figure it out for me.
+16:28:34 <cx2[m]> As far as I am concerned, if i can deny it, it's denied. Change my mind
+16:34:43 * DannyWorkOrderPr sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/MIhHXEvZMBSbLKNhcoxPkvMS >
+16:35:09 <DannyWorkOrderPr> I've just been trained to be wary of apps that ask for permissions they don't need. Either points to incompetence, or malice.
+16:35:35 <cx2[m]> <DannyWorkOrderPr "> <@cx2:matrix.org> well.... i t"> 🤣Stupid question. None. Duhhhh.... like, I turned, like all the permissions off.
+16:36:12 <cx2[m]> Privacy 101.... all you have to do is turn ooff the switches and it fixes everything.
+16:37:42 <DannyWorkOrderPr> That's dangerous satire for the reader at home, mate....having said that, "LOL"
+16:37:47 <limitless0[m]> <cx2[m] "Privacy 101.... all you have to "> Prevention is better than cure
+16:38:25 <limitless0[m]> Im not techy enough to know of an app can communicate with other apps if i denied permission lets say internet
+16:38:30 <cx2[m]> <DannyWorkOrderPr "That's dangerous satire for the "> yeahhh i tried making it obvious
+16:39:25 <cx2[m]> hopefully the reader understands the satire given the channel if not :
+16:40:11 <cx2[m]> Danny@WorkOrderPro:
+16:40:56 <cx2[m]> Danny@WorkOrderPro: is that an Australia accent i hear?? I was in the blue mountains this time last year
+16:41:19 <DannyWorkOrderPr> Nope, that's Steve Irwin's fault
+16:41:27 <DannyWorkOrderPr> I'm just a boring North American.
+16:42:20 <cx2[m]> eh, there are worse places to be boring.... like one of the poles? yikes.
+16:42:34 <cx2[m]> Not getting gigabit speeds there buddy. you can count on it.
+16:44:41 <DannyWorkOrderPr> Not above ground, anyway....see leaked Kiva data, that's all I've got on that topic.
+16:45:28 <DannyWorkOrderPr>  * Not above ground, anyway....see leaked Strava data, that's all I've got on that topic.
+17:09:25 <brenneke[m]> I have Signal installed from APK on GrapheneOS, should I be blacklisting updates in Aurora?
+17:40:51 <skwisgaar[m]> If you wish to update with the apk, then yes. Others have said the apk version will prompt you to update automatically, but this never happened for me, so I use the aurora version.
+17:52:12 <dazinism> brenneke: I've found you can install it from pretty much any source. Think they all have the identical apk
+17:52:36 <dazinism> Although I've never checked
+17:54:30 <dazinism> Guess checking the SHA256 of the apk file would give an idea?
+17:54:39 <dazinism> https://hub.libranet.de/wiki/graphene-os/wiki/Apps
+17:59:13 <dazinism> I've found that the apk version is scraped by the version Calyx and RFC2822 fdroid repos
+17:59:22 <dazinism> https://forum.f-droid.org/t/known-repositories/721
+18:00:09 <dazinism> All the same apk signed with the same cert, so any will install over the other.
+18:00:30 <JTL> Is the Play Store and website APK identical
+18:00:36 <JTL> (in terms of file checksum, etc)
+18:00:45 <dazinism> I've not checked
+18:00:48 <JTL> Okay
+18:02:27 <dazinism> Think I've heard their apk download and Play version are the same apk, but wouldnt like to state that as a fact
+18:02:40 <JTL> Right
+18:02:52 <dazinism> The apk version does self update
+18:03:34 <dazinism> But maybe thats just if it sees you dont have Play?
+18:03:41 * JTL shrugs
+18:04:57 <dazinism> I've found that the Calyx and RF2822 (thats by one of the DAV5x devs) repos appear to offer updates before it wants to self update.
+18:08:28 <cdesai> those repos pull from the site directly, and I guess the app itself might have a backoff
+18:08:37 <cdesai> otherwise it could get annoying fast
+18:08:58 <Manouchehri> bit off topic, but what getprop flag is it again that enables the OEM unlocking option in the developer options?
+18:09:53 <JTL> dazinism: Seems the Signal APK on the website doesn't match the play version, but for starters the "version" number on Play is greater
+18:10:19 <JTL> Could be benign laziness of Signal team :p
+18:10:49 <rgeturk[m]> signal does staged rollouts, and the website release is the last to get updates
+18:10:59 <JTL> right
+18:11:10 <JTL> hence the "benign" remark
+18:15:52 <Manouchehri> sys.oem_unlock_allowed
+18:23:27 <k-sloth[m]> <magicos[m] "Not everything got a web app."> That's painful. Govt products suck. In my home country they use google authentication to log on. Hate it so much
+18:36:20 <demonMachina> @appservice-irc:matrtix.org is doing some WORK
+18:39:30 <demonMachina> '/home/xxdemon-machinaxx/Pictures/Appservice.png
+18:39:32 <demonMachina> '
+19:05:33 <brenneke[m]> <skwisgaar[m] "If you wish to update with the a"> Have never seen that prompt, was using web APK previously when on Nanodroid.
+19:13:55 <brenneke[m]> <JTL "dazinism: Seems the Signal APK o"> I will leave it blacklisted for now and keep an eye on it to see if it updates when APK version changes.
+19:14:05 <JTL> Yeah okay
+19:15:41 <TheJollyRoger> The reason the Signal APK is different than the Play Store APK is because the play store APK's self-updating functionality is not compiled with it.
+19:15:59 <TheJollyRoger> GPlay has a standing policy that apps are not supposed to push out of band updates, even for themselves.
+19:16:07 <TheJollyRoger> That's very clear in the rules of Google Play.
+19:16:37 <TheJollyRoger> If you are to compile from source, something you might notice is that the output will give you a separate APK for play store.
+19:16:59 <JTL> Oh right
+19:17:04 <JTL> I remember that
+19:17:06 <JTL> Silly me
+19:17:09 <JTL> TheJollyRoger: Gdau
+19:17:11 <JTL> Gday
+19:17:49 <TheJollyRoger> Ahoy!
+20:22:00 <bseeinu[m]> Hey hey
+20:22:09 <bseeinu[m]> Does anyone have a favorite Insta to RSS service?
+20:22:31 <bseeinu[m]> Idk about RSSHub https://docs.rsshub.app/en/social-media.html#facebook
+20:23:57 <bseeinu[m]> Or https://rss.nixnet.xyz¥
+20:24:00 <bseeinu[m]> https://rss.nixnet.xyz
+20:32:57 <overheadscallop[> https://bibliogram.art/
+20:35:20 <cx2[m]> <bseeinu[m] "Does anyone have a favorite Inst"> Feeder
+20:35:52 <cx2[m]> Shit.... didn't read all of that.
+20:44:49 <bseeinu[m]> overheadscallop: although with all the public instances, the address of the images returns as "localhost" for the files, so they simply don't show up...
+20:45:40 <bseeinu[m]> overheadscallop: Plus RSS feeds are disabled on the instance you linked :/
+20:47:09 <dazinism> https://research.checkpoint.com/2020/mobile-as-attack-vector-using-mdm/
+20:47:13 <overheadscallop[> <bseeinu[m] "overheadscallop: Plus RSS feeds "> my bad, check out the other instances https://github.com/cloudrac3r/bibliogram/wiki/Instances
+20:48:21 <dazinism> Dont ever grant an app accessibility services powers, unless you really need that.
+20:48:32 <dazinism> Also MDM
+20:50:03 <cx2[m]> <dazinism "Dont ever grant an app accessibi"> There are plenty of Apps on F-Droid that will gladly use accessibility services.....So agreed.... watch out
+20:50:16 <dazinism> Makes life easy, but can never been a good idea for security
+20:51:13 <dazinism> Flyve MDM Agent (Manage and secure effectively your mobile devices and applications) - https://f-droid.org/app/org.flyve.mdm.agent.mqtt
+20:57:31 <overheadscallop[> bseeinu: so it looks like those bibliogram intsances weren't set up properly if it returns localhost as the image url https://github.com/cloudrac3r/bibliogram/issues/31 sorry about recommending something that doesn't actually work
+21:13:52 <zxwayland> hello
+21:19:03 <seaclown> Hey
+21:35:14 <bseeinu[m]> Np, I also had noticed the localhost problem
+23:57:55 <mezzanine[m]> Is it possible to run both netguard and ovpn client on graphene?

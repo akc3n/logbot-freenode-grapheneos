@@ -1,0 +1,248 @@
+00:04:41 <bson989[m]> Just received my first update on GOS. Is there somewhere I can read exactly what was updated. Thanks
+00:23:17 <cn3m[m]> bson989: the official site
+00:24:36 <arouzing[m]> https://grapheneos.org/releases#about-the-releases
+00:24:36 <arouzing[m]> Change logs are towards bottom
+00:58:01 <retry0x[m]> Vanadium doesn't support u2f?
+02:41:19 <nickcalyx[m]> <engulf[m] "Changing IMEI is illegal in many"> > > <@lickidyspl1t:matrix.org> Is there a way to force change imei on graphene?
+03:37:53 <strcat[m]> @retry0x:matrix.org: the library Chromium uses for it is part of Play services so it's not available on GrapheneOS
+03:37:56 <strcat[m]> we need someone to reimplement it
+03:38:55 <retry0x[m]> Wow fuck google
+03:38:57 <retry0x[m]> Ok
+03:39:04 <strcat[m]> lev: updates are only activated after being fully finished and verified
+03:39:30 <strcat[m]> lev: the power can cut out at any point (ripping out the battery for example) and it's still safe
+03:40:28 <strcat[m]> and it doesn't actually get locked in as the new OS until it successfully boots
+03:40:30 <strcat[m]> if it does the update, verifies it and then marks it active (switching over to it as the active OS to boot)
+03:40:31 <strcat[m]> and then it fails to boot N times
+03:40:34 <strcat[m]> it will just roll back to the old version
+03:41:10 <strcat[m]> it's only once it actually makes it to late userspace boot phase of the new version that it locks it in and disables rolling back to the old OS version (the old OS version is technically still there until the next update starts being installed but it's inactive with rollback disabled)
+03:46:13 <lev[m]> oh awesome, that's smart, and very comforting to know
+03:46:30 <adsasd> Hi,first time building aosp here.I am trying to follow the build instructions, but getting this message:As it says: "You likely want to use the most recent stable tag, not the development branch"So I move on and just do: ```mkdir grapheneos-aosp_sargocd grapheneos-aosp_sargorepo init -u https://github.com/GrapheneOS/platform_manifest.git -b
+03:46:31 <adsasd> refs/tags/aosp_sargo```Error: ```repo init -u https://github.com/GrapheneOS/platform_manifest.git -b refs/tags/aosp_sargoDownloading Repo source from https://gerrit.googlesource.com/git-reporemote: Counting objects: 1, doneremote: Finding sources: 100% (31/31)remote: Total 31 (delta 11), reused 31 (delta 11)Unpacking objects: 100% (31/31), 55.05
+03:46:31 <adsasd> KiB | 732.00 KiB/s, done.Downloading manifest from https://github.com/GrapheneOS/platform_manifest.gitfatal: couldn't find remote ref refs/tags/aosp_sargomanifests:fatal: couldn't find remote ref refs/tags/aosp_sargofatal: couldn't find remote ref refs/tags/aosp_sargomanifests:fatal: couldn't find remote ref refs/tags/aosp_sargofatal: cannot obtain
+03:46:32 <adsasd> manifest https://github.com/GrapheneOS/platform_manifest.git```
+03:46:42 <lev[m]> dazinism: hmm cool, I will investigate this further, that sounds like a decent solution
+03:54:58 <aeonsolution[m]> adsasd you aren't building vanilla AOSP, you are building GrapheneOS. It looks like you didn't download all the dependencies.
+03:55:56 <aeonsolution[m]> did you run the commands on separate lines or split them?
+03:56:32 <aeonsolution[m]> `mkdir grapheneos-aosp_sargocd grapheneos-aosp_sargorepo init -u https://github.com/GrapheneOS/platform_manifest.git -b`
+03:56:36 <aeonsolution[m]> this is wrong
+03:57:12 <strcat[m]> aeonsolution: they left already
+03:57:51 <aeonsolution[m]> oh wow, didn't notice lol love talking to myself i guess
+04:05:23 <arouzing[m]> rip
+04:09:55 <f3mK9xxXMgmXb5Hd> aeonsolution[m] hey, thanks for answering my question. Yes i split them or use && for these separate commands. But, someone told me that even the TAG_NAME used "aosp_sargo" doesn't exist
+04:10:35 <f3mK9xxXMgmXb5Hd> aeonsolution[m] how do I download the source for building to Google Pixel 3a?
+04:17:47 <inthewaves[m]> f3mK9xxXMgmXb5Hd: the tags look like QQ3A.200805.001.2020.09.11.14, and you can find them at https://grapheneos.org/releases#2020.09.11.14 where it lists the tags for each release and device
+04:18:44 <adeus[m]> Anyway you can leverage power of android device policies and enforce device restrictions without requiring services of a MDM? Like, just manually generate a profile and load onto the targeted device ?
+04:21:42 <aeonsolution[m]> f3mK9xxXMgmXb5Hd: go to the pixel 3a section and get the tag from the release page like inthewaves suggested
+04:22:00 <aeonsolution[m]> if you want to do a development build, use 10
+04:22:11 <f3mK9xxXMgmXb5Hd> thx
+04:22:38 <aeonsolution[m]> f3mK9xxXMgmXb5Hd: you use aosp_sargo on the choosecombo section
+04:23:03 <f3mK9xxXMgmXb5Hd> check
+04:59:52 <porcupine> Hi everyone! Have grapheneOS installed, and am using opencamera, camera2 api. I keep getting "Serious Camera Error" every time I attempt to take a picture at a higher frames per second. Does anyone have any advice for what to try?
+05:00:39 <porcupine> (Also, the "Please read our rules" link seems dead on my end)
+05:04:47 <aeonsolution[m]> porcupine: theres two links, here is the one for the logs, i added the camera search for you https://freenode.logbot.info/?ch=grapheneos&q=camera
+05:04:51 <aeonsolution[m]> gl
+05:08:33 <strcat[m]> porcupine: there are unfortunately serious upstream bugs in the camera drivers which are often uncovered by GrapheneOS hardening features
+05:08:54 <strcat[m]> we expect Android 11 to greatly improve the situation due to upstream hardening which should have uncovered some of the same problems
+05:09:46 <strcat[m]> as one example zero-based initialization is now adopted upstream and they have a security-aware allocator which they've hopefully used for that code
+05:10:16 <strcat[m]> hardened_malloc goes much further with much stronger security properties but it's nice that the baseline is now a security-aware allocator with some overlap with the optional hardened_malloc features
+05:10:26 <strcat[m]> it'll make it less disruptive
+05:17:00 <porcupine> Thank you guys for the information. Will wait out until Android 11 and see if that fixes the issue
+05:38:42 <Jimmehh[m]> does anyone know what the "adaptive" color profile does exactly on the pixel phones?
+06:26:03 <Partyush[m]> Hello, when will we get android 11 version of Graphene os ?
+06:35:34 <Jimmehh[m]> nevermind my question about the "adaptive" color profile. ambient eq seems to be what i was looking for
+06:35:39 <Jimmehh[m]> sucks he 4a doesn't have it
+06:35:43 <Jimmehh[m]> maybe the 5a will get it
+06:42:35 <Partyush[m]> <strcat[m] "Partyush: when we've finished br"> strcat  Okay i guess max to max a month ?
+06:43:24 <Partyush[m]> <strcat[m] "it's based on how much work peop"> True
+06:45:14 <Partyush[m]> I know how to make android apps but never touched a rom like this one any help i can do ?
+07:23:03 <aeonsolution[m]> Partyush: you can setup the development branch as step 0 https://grapheneos.org/build#development-branch, once you finish that send me a message and we can try to see how you can help out
+07:23:17 <aeonsolution[m]> change the 11s to 10 for now
+07:23:31 <aeonsolution[m]>  * change the 11s to 10s for now
+07:30:42 <aeonsolution[m]> bungeetaco: was also trying to help out, so give it a shot
+07:58:08 <Partyush[m]> <aeonsolution[m] "Partyush: you can setup the deve"> Hey thanks for your response. I am setting up dev environment repo sync is takeing time i guess it will take some more time.
+13:39:28 <derpy> Anyone else experience YouTube freezing when playing full screen in the default browser?
+13:40:07 <derpy> Exiting & entering full screen fixes it - and it happens more quickly with motion pictures - not with static videos (audio only)
+14:06:58 <propertype[m]> <derpy "Exiting & entering full screen f"> Which build are you using?
+14:08:24 <derpy> stable
+14:08:40 <derpy> It just updated last night... not sure where to see the version
+14:29:34 <DannyWorkOrderPr> Who's this renlord guy? 😜
+14:29:58 <louipc> hacker
+14:31:22 <Ultron[m]> <DannyWorkOrderPr "Who's this renlord guy? 😜"> GOS developer.
+14:33:14 <DannyWorkOrderPr> Just friendly jokes - I'm familiar =]
+15:01:05 <snowkeld[m]> I've been using GrapheneOS on 3a xl for a few months. The Bluetooth lags and crashes to the point that it is unusable. Is this a known issue?
+15:06:24 <NorbertTretkows4> <snowkeld[m] "I've been using GrapheneOS on 3a"> Bluetooth works without any issues on my Pixel 3.
+15:07:16 <Autopsy[m]> <snowkeld[m] "I've been using GrapheneOS on 3a"> Search the logs and on GitHub? I haven't heard of it, though.
+15:25:20 <djee737ejdd[m]> Anyone else having problems with timers since last update?
+15:36:06 <Partyush[m]> <aeonsolution[m] "Partyush: you can setup the deve"> Yeah it's done
+16:13:13 <snowkeld[m]> <NorbertTretkows4 "Bluetooth works without any issu"> pixel 3a xl
+16:13:45 <snowkeld[m]> were not tested with stock image they shipped with unfortunately
+16:27:11 <Autopsy[m]> snowkeld only thing I could recommend is a reinstall of GrapheneOS after flashing the latest Google release. Shouldn't matter, but I had memory leak issues with WiFi a couple of months ago on the 4XL and that fixed it.
+16:27:50 <snowkeld[m]> ouch. reinstall would suck
+16:28:23 <NorbertTretkows4> snowkeld: You can make a backup using Seedvault.
+16:28:38 <Autopsy[m]> If you have seedvault to back up your apps and stuff, it'll be fine.
+17:50:06 <arouzing[m]> I know and use fdroid for foss apps, currently use aptiod for non foss apps. If there is a better alternative let me know!
+17:51:01 <Partyush[m]> <arouzing[m] "I know and use fdroid for foss a"> I guess aroura store
+17:58:24 <arouzing[m]> Just downloaded it! Much nicer then aptoid.
+17:59:16 <Partyush[m]> Huurreeey :enjoy
+17:59:34 <Ultron[m]> <arouzing[m] "Just downloaded it! Much nicer t"> It's just a front end to download apps from Google Play without using the actual Google Play app. Aptoid cannot be trusted imo.
+18:01:45 <arouzing[m]> I did not trust aptoid to begin with just did not know any other option.
+18:03:16 <arouzing[m]> Thanks again!
+18:05:47 <eNCkUVduEqmGdeAK> hi, need some help building for 3a -> trying to follow the guide : `` Desktop/grapheneos-QQ3A.200805.001.2020.09.11.14/kernel/google/crosshatch$ ./build.sh crosshatch``
+18:05:59 <eNCkUVduEqmGdeAK> getting : ``../scripts/basic/fixdep.c:105:10: fatal error: 'sys/types.h' file not found#include <sys/types.h>         ^~~~~~~~~~~~~``
+18:06:38 <eNCkUVduEqmGdeAK> i tried ./build.sh sargo   but it wasnt found
+18:13:57 <M8383n550n[m]> Does anyone knows when GOS will approx realize firmware/support for Pixel4a? I am thinking to get a new Pixel4a and hope to don't buy it for nothing. Thank you.
+18:17:05 <Ultron[m]> It should get supported eventually. Developer of CalyxOS said today that they are close with Pixel 4a support. Graphene should follow provided some body volunteer to be the device maintainer. If not then you can use CalyxOS when it's ready.
+18:17:25 <Autopsy[m]> <M8383n550n[m] "Does anyone knows when GOS will "> Search the logs. But basically, when it's ready.
+18:17:26 <LinusSexTips[m]> has anyone had the error "Can't find valid operating system. the device will not start."?
+18:17:26 <LinusSexTips[m]> I got it after relocking the bootloader
+18:18:08 <LinusSexTips[m]> I cant unlock it again anymore :(
+18:18:12 <Autopsy[m]> Was just gonna say that ^
+18:18:46 <Autopsy[m]> <LinusSexTips[m] "has anyone had the error "Can't "> Did you follow a guide or a video?
+18:18:57 <Autopsy[m]> The guide*
+18:19:40 <Autopsy[m]> Video, as you've just stated in CalyxOS room.
+18:20:01 <LinusSexTips[m]> yeah, but I used the commands from the official website
+18:20:21 <Autopsy[m]> Still shite. Henry tried his best but he has caused so many problems.
+18:20:32 <LinusSexTips[m]> yeah I heard haha
+18:21:05 <Autopsy[m]> Anyways, best thing you can do is use flash.android.com and see if that lets you update to the latest stock.
+18:22:54 <Autopsy[m]> Another thing
+18:23:19 <Autopsy[m]> <LinusSexTips[m] "yeah I heard haha"> After relocking the bootloader. I assume you closed your terminal / PowerShell?
+18:23:40 <LinusSexTips[m]> yes
+18:24:03 <Autopsy[m]> If so, set up your environment path again, using platform-tools, and then try to unlock the bootloader again.
+18:24:17 <Autopsy[m]> That's probably what's causing your issue
+18:26:35 <LinusSexTips[m]> I will try
+18:27:07 <LinusSexTips[m]> though adb devices isnt even picking up my phone right now
+18:28:54 <Autopsy[m]> <LinusSexTips[m] "though adb devices isnt even pic"> It won't
+18:28:55 <eNCkUVduEqmGdeAK> invalid device codename
+18:29:46 <Autopsy[m]> Just set your environment up again, boot into bootloader, and try fastboot flashing unlock.
+18:30:00 <LinusSexTips[m]> <Autopsy[m] "Just set your environment up aga"> I cant get into the bootloader interface though
+18:30:09 <Autopsy[m]> You can
+18:30:18 <bypassbob[m]> Hello people just wanted to confirm if the GrapheneOS changes MAC address?
+18:30:23 <LinusSexTips[m]> how
+18:30:50 <LinusSexTips[m]> <bypassbob[m] "Hello people just wanted to conf"> yes by default, you can check in network settings
+18:31:43 <bypassbob[m]> Haven’t installed it yet. Was planning on getting a pixel 4 this week but just wanted to make sure MAC address changing was possible
+18:31:45 <Autopsy[m]> <LinusSexTips[m] "how"> Power and volume down?
+18:32:08 <Autopsy[m]> Volume up ^
+18:33:05 <Autopsy[m]> One of the two
+18:33:14 <Autopsy[m]> Can't remember off the top of my head
+18:33:15 <LinusSexTips[m]> thats what I was trying
+18:33:21 <LinusSexTips[m]> did both
+18:34:06 <bypassbob[m]> Is the pixel 4 the best phone to buy currently to run GrapheneOS?
+18:34:13 <eNCkUVduEqmGdeAK> how do i build the kernel for 3a ?
+18:34:22 <LinusSexTips[m]> nevermind
+18:34:26 <stdcerr> Hi All, I have a question: I have a pixel4 phone and am considering to De-Google it with GrapheneOS. One thing I'm wondering however, would I still be able to use Google maps e.g. even with GrapheneOS loaded?
+18:34:27 <LinusSexTips[m]> finally worked
+18:34:28 <Autopsy[m]> <bypassbob[m] "Is the pixel 4 the best phone to"> 4, 4XL, 4a will be around one day.
+18:34:39 <Autopsy[m]> <LinusSexTips[m] "finally worked"> Yay!
+18:34:47 <Autopsy[m]> <stdcerr "Hi All, I have a question: I hav"> Yes
+18:34:55 <Ultron[m]> Depends hardware wise - Pixel 4 and 4XL are the best. Top of the line SOC, etc.
+18:34:55 <Seplx[m]> <eNCkUVduEqmGdeAK "how do i build the kernel for 3a"> Read the google aosp docs. I can give a link
+18:35:01 <eNCkUVduEqmGdeAK> thx
+18:35:04 <LinusSexTips[m]> ok bootloader is unlocked
+18:35:17 <LinusSexTips[m]> so I need to figure out what went wrong last time
+18:35:26 <stdcerr> <Autopsy> excellent! Thanks!
+18:35:27 <Autopsy[m]> <LinusSexTips[m] "so I need to figure out what wen"> Let's go through it together
+18:35:28 <eNCkUVduEqmGdeAK> trying to build kernel for 3a ```  rapheneos-QQ3A.200805.001.2020.09.11.14/kernel/google/crosshatch/out'  HOSTCC  scripts/basic/fixdep../scripts/basic/fixdep.c:105:10: fatal error: 'sys/types.h' file not found#include <sys/types.h>         ^~~~~~~~~~~~~1 error generated.make[2]: *** [scripts/Makefile.host:101: scripts/basic/fixdep] Error 1make[1]:
+18:35:28 <eNCkUVduEqmGdeAK> *** [/home/shifted/Desktop/grapheneos-QQ3A.200805.001.2020.09.11.14/kernel/google/crosshatch/Makefile:449: scripts_basic] Error 2make[1]: Leaving directory '/home/shifted/Desktop/grapheneos-QQ3A.200805.001.2020.09.11.14/kernel/google/crosshatch/out'make: *** [Makefile:152: sub-make] Error 2 ```
+18:35:41 <Ultron[m]> <stdcerr "Hi All, I have a question: I hav"> You won't be able to login and download offline maps or login based functionality. But most of the maps will work fine normally. Google maps only rely on gapps for signing in functionality.
+18:35:46 <Autopsy[m]> Drop me a PM
+18:36:20 <Seplx[m]> eNCkUVduEqmGdeAK: you are missing some .h files in your distro I think
+18:36:54 <eNCkUVduEqmGdeAK> Seplx[m] means i need to install some packages?
+18:37:07 <eNCkUVduEqmGdeAK> its ubuntu 20
+18:37:45 <Seplx[m]> The aosp docs recommend ubuntu 14.04
+18:38:00 <bypassbob[m]> As anyone heard of tox messenger? And what are your opinions on the safety of using this through Tor?
+18:38:03 <Seplx[m]> Run it in a vm if you can because it's outdatef
+18:38:18 <Seplx[m]> * Run it in a vm if you can because it's outdated
+18:38:57 <eNCkUVduEqmGdeAK> no other workaround ;/ ?
+18:39:07 <Ultron[m]> Please join the off-topic room. #freenode_#grapheneos-offtopic:matrix.org
+18:39:23 <Ultron[m]> <bypassbob[m] "As anyone heard of tox messenger"> Please join the off-topic room. #freenode_#grapheneos-offtopic:matrix.org
+18:40:06 <eNCkUVduEqmGdeAK> so the idea is to run a vm of ubuntu 14 , build the kernel, then move the files out to my development env ?
+18:40:11 <Seplx[m]> <eNCkUVduEqmGdeAK "no other workaround ;/ ?"> You can make an include folder in the folder where it's missing, but you will have to find those .h files manually which might not even work
+18:43:36 * strangefinder[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/oHntQeMfYXISgAHLvytkxKlD/message.txt >
+19:23:10 <i_remember_touch> is it possible to install different versions of the same app in different graphene profiles?
+19:25:28 <Autopsy[m]> If they're installed in different profiles, yes
+19:35:28 <i_remember_touch> that's strange, i am getting an error "A conflicting package exists"
+19:36:02 <arouzing[m]> Anyone know an ebay client that works on gos?
+19:37:07 <Autopsy[m]> <arouzing[m] "Anyone know an ebay client that "> Have you tried the official one?
+19:37:36 <arouzing[m]> Yep, does not work as it needs play services.
+19:38:13 <Autopsy[m]> Then browser?
+19:39:04 <Autopsy[m]> Don't think they have a web app, but make a shortcut on the home screen?
+19:39:50 <arouzing[m]> That's what i have at the moment. I guess it will have to do.
+19:46:57 <bypassbob[m]> I’ve found Firefox is always the best for requesting desktop sites I use Facebook via it instead of the app
+19:49:53 <crixtnn[m]> i_remember_touch: the app needs to be the same version on all users. try making a work profile using shelter app from fdroid and you might get lucky
+19:50:39 <crixtnn[m]> users =/= profile
+19:52:42 <crixtnn[m]> strangefinder: for managing bookmarks and sync them with the pc I use xbrowsersync from fdroid
+20:34:22 <aeonsolution[m]> <Partyush[m] "Yeah it's done "> cool, try flashing it on your phone
+20:35:30 <faxing[m]> Is it better to use the default one that comes with Graphene or Signals SMS features for SMS and all of that?
+20:35:31 <aeonsolution[m]> go to out/target/product/DEVICE in the folder and the run `fastboot flashall -w`
+20:35:40 <aeonsolution[m]> this only applies to development builds FYI
+20:39:02 <Partyush[m]> Basically i have to reflash with m debug build same things as apk
+20:40:48 <Autopsy[m]> <faxing[m] "Is it better to use the default "> Either one is fine. It is up to you whether you want the Signal app to be "cluttered" with all your SMS messages, or just have a nice clean Signal and dedicated SMS app.
+20:41:33 <aeonsolution[m]> <eNCkUVduEqmGdeAK "i tried ./build.sh sargo   but i"> the kernel for Pixel 3a XL and Pixel 3a is bonito. thats why you are getting that error. they share the same kernel. so build bonito.
+20:42:27 <aeonsolution[m]> Partyush: something is wrong with your encryption key so i cant decrypt your messages
+20:42:40 <aeonsolution[m]> check your settings and reenter your keys
+20:43:59 <Partyush[m]> aeonsolution sorry for that i fixed that
+20:44:05 <Partyush[m]> Come again
+20:46:53 <Autopsy[m]> <Partyush[m] "Come again "> ( ͡° ͜ʖ ͡°)
+20:48:16 <aeonsolution[m]> <M8383n550n[m] "Does anyone knows when GOS will "> Your monetary donations support the work that goes into supporting the Pixel 4a in the future. https://grapheneos.org/donate. The preferred method at the moment is Paypal and Github sponsorship. Anything helps.
+21:01:34 <aeonsolution[m]> <stdcerr "Hi All, I have a question: I hav"> Hey everyone in the channel. It is very important for us to all clarify that GrapheneOS does not actually remove Google proprietary software from AOSP because AOSP does not include Google apps and services to begin with. Using the phrase De-google is very misleading and we as a community should do better to describe GrapheneOS.
+21:03:36 <aeonsolution[m]> As a fall back, there is nothing wrong with saying "GrapheneOS is an open source privacy and security focused mobile OS with Android app compatibility." https://grapheneos.org/
+21:05:25 <cn3m[m]> yes, there is nothing to degoogle from GrapheneOS since there is no google service in the first place to remove
+21:07:48 <aeonsolution[m]> exactly 💯
+21:12:17 <Autopsy[m]> Although, to OP's defense, they did say that they want to degoogle their phone *with* GrapheneOS, so removing stock. But I totally agree with your connotations!
+21:12:53 <cn3m[m]> true
+21:16:23 <bypassbob[m]> Is the pixel 4 the best phone at the moment? I’m going to buy one next day or so if this is the case I seen a processor in an older one which looked pretty powerful
+21:17:31 <aeonsolution[m]> <Autopsy[m] "Although, to OP's defense, they "> Yeah, I thought about that too but this is where we can jump in to clarify that GrapheneOS doesn't remove G apps and services. It builds the OS without them. So technically they are flashing an OS that doesn't include them.
+21:18:51 <aeonsolution[m]> They aren't flashing an OS that removes them if that makes sense and the distinction is important because its what people use to describe GOS incorrectly.
+21:19:10 <aeonsolution[m]> I hate the semantics of it, but people dont follow up on it.
+21:19:33 <Autopsy[m]> Yeah. It's more about the services that they offer, rather than AOSP
+21:19:43 <aeonsolution[m]> exactly
+21:19:46 <Autopsy[m]> No Google, no AOSP. Well, at least currently
+21:25:45 <cn3m[m]> <bypassbob[m] "Is the pixel 4 the best phone at"> yeah it probably will be for quite a while it might be faster than the Pixel 5 even
+21:25:49 <cn3m[m]> it also has the IR array
+21:25:53 <cn3m[m]> which is really cool
+21:27:09 <louipc> stdcerr: https://plexus.techlore.tech/applications/google-maps
+21:27:18 <louipc> google maps wont work
+21:28:58 <bypassbob[m]> <cn3m[m] "it also has the IR array "> Is that the facial recognition? To be honest I think 2FA is the way forward but I don’t like the idea of having the phone store my face on it
+21:29:53 <cn3m[m]> <bypassbob[m] "Is that the facial recognition? "> it is a fuzzed mathmatical representation stored in the Titan M
+21:29:59 <cn3m[m]> it is definitely safe
+21:30:12 <cn3m[m]> kills the shoulder surfing vector or CCTV
+21:30:19 <cn3m[m]> times out after 48 hours
+21:35:51 <faxing[m]> Or does it even make a difference which one?
+21:36:22 <bypassbob[m]> What times out? The image deletes itself?
+21:44:20 <Autopsy[m]> <louipc "google maps wont work"> Well, that's funny, because it works for me.
+21:46:33 <bypassbob[m]> The encros had a remote wipe feature that would be pretty cool in the form of an open source app
+21:53:33 <bypassbob[m]> Also a code you could type in lock screen that was customisable that would wipe too
+21:54:41 <faxing[m]> <Autopsy[m] "Either one is fine. It is up to "> Alright, thanks
+22:36:34 <louipc> hmm interesting
+22:54:29 <VincentLeRoux[m]> <cn3m[m] "yeah it probably will be for qui"> What about the battery? Does it lasts longer than 3a?
+23:02:22 <dazinism> Think the 3aXL has  better battery life than any of the other supported devices. Then I think the 3a. The XL versions have bigger batteries so should outperform their smaller counterparts.
+23:13:53 <bypassbob[m]> So would you recommend an XL over standard size? I’m getting a 4 next few days
+23:21:10 <ThomCat[m]> The 4 XL has a much larger battery (3700mAh vs 2800)
+23:46:55 <bypassbob[m]> <ThomCat[m] "The 4 XL has a much larger batte"> No brainier then
+23:47:49 <ThomCat[m]> Yep.  I have the 4 XL, and honestly if you can hold out for a $a XL it might be worth it to consider.  I really really miss having a fingerprint sensor
+23:47:56 <cn3m[m]> yeah Pixel 4 battery is bad
+23:48:04 <cn3m[m]> Pixel 4 XL is the sweet spot
+23:48:12 <cn3m[m]> decent battery, great performance, best security
+23:48:15 <cn3m[m]> longest support
+23:48:16 <ThomCat[m]> COVID has shown just how insipidly stupid it is to get rid of a fingerprint sensor
+23:48:27 <ThomCat[m]>  * Yep.  I have the 4 XL, and honestly if you can hold out for a 4a XL it might be worth it to consider.  I really really miss having a fingerprint sensor
+23:48:33 <cn3m[m]> <ThomCat[m] "COVID has shown just how insipid"> Facial Recognition is a lot more secure
+23:49:02 <ThomCat[m]> That's something I didn't consider
+23:50:12 <JTL> Another problem with facial scanning is it's a high frequency LED near the infrared spectrum
+23:50:18 <JTL> Can be issue with epilepsy or other medical conditions
+23:50:22 <cn3m[m]> Fingerprints for example work while you are sleeping and generally are easier to fake. Facial recognition on devices with a good IR array(pretty much just iPhones and Pixel 4) are the ideal way to go
+23:51:00 <faxing[m]> Does all of the Face Unlock and the gesture above the phone stuff work on the 4 on Grapene?
+23:51:12 <JTL> Didn't the first iteration of Pixel 4's face unlock not have awareness detection? :P
+23:51:30 <ThomCat[m]> Yep.
+23:51:31 <cn3m[m]> <JTL "Didn't the first iteration of Pi"> correct it required an update
+23:51:39 <JTL> lol fail
+23:51:47 <cn3m[m]> <faxing[m] "Does all of the Face Unlock and "> not the gestures iirc, but the Face Unlock yes
+23:51:58 <JTL> Personally I think 2FA for any form of biometrics is a good future goal
+23:52:11 <cn3m[m]> <JTL "lol fail"> yes, but now there is no real shortcoming compared to say an iPhone(at least if you use GrapheneOS)
+23:52:17 <JTL> right
+23:52:36 <cn3m[m]> it is still rather questionable on stock for locally security when you don't have restricted USB
+23:52:42 <cn3m[m]> which GrapheneOS and iOS would
+23:53:05 <cn3m[m]> Pixel 4 has generational improvements for security as well
+23:57:09 <bypassbob[m]> <JTL "Personally I think 2FA for any f"> I agree. Also a button combination with the encro phones if you pressed just the power once it would start a fake android os. If you clicked the power 3 times then held on 3rd it would start up the real os
+23:58:59 <cn3m[m]> the better way would probably be a profile can be more resistant forensics in some cases
+23:59:14 <cn3m[m]> there is a GrapheneOS issue for that iirc on GitHub

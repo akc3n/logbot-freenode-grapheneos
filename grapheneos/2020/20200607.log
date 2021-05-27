@@ -1,0 +1,975 @@
+00:00:18 <nikoleos[m]>  * and the first boot may be long ? i  am on Google screen for many minutes
+00:00:21 <nickcalyx[m]> > and the first boot may be long ? i  on Google screen for many minutes
+00:00:21 <nickcalyx[m]> That part sounds somewhat unusual
+00:01:34 <nikoleos[m]> did i risk some weird thing to turn it off and on on that screen white screen with google on it ?
+00:01:50 <TheJollyRoger> Nope, don't think so. Let it boot.
+00:03:23 <nikoleos[m]> oops im on fastboot again and says enter reason no valid slot to boot
+00:04:06 <nickcalyx[m]> Maybe some part of the.flash.failed
+00:04:51 <nikoleos[m]> so i need to unlock the bootloader again and try to do again the flash script ?
+00:05:38 <nickcalyx[m]> Do you still,have the output from when you flashed the first time,in a terminal window
+00:05:57 <nikoleos[m]> no, i have already close the window
+00:07:29 <TheJollyRoger> If bootloader's locked, then you will need to unlock the bootloader prior to flashing.
+00:07:39 <nickcalyx[m]> OK, just wondering. Its not the end of the world,that you don't have it anymore. But it might have explained what went wrong
+00:08:11 <nikoleos[m]> <nickcalyx[m] "OK, just wondering. Its not the "> so i can just try to run the script again ?
+00:08:23 <TheJollyRoger> Yeah. Also - make sure you're using the official fastboot. This "no operating system found" error can sometimes happen if you've used an incorrectly versioned release of Fastboot that doesn't support autodetection.
+00:09:13 <nikoleos[m]> <TheJollyRoger "Yeah. Also - make sure you're us"> on my desktop ?
+00:09:21 <nickcalyx[m]> Yes
+00:09:36 <nickcalyx[m]> If you run it a second time save the output
+00:09:41 <TheJollyRoger> Yes. if `fastboot --version` doesn't return something like 29.0.something or 30.0.something, then you're likely to end up with a softbrick.
+00:10:15 <nikoleos[m]> sudo fastboot version 30.0.0-6374843
+00:10:31 <TheJollyRoger> Ok, that looks to be OK.
+00:13:40 <nikoleos[m]> <TheJollyRoger "Ok, that looks to be OK."> oh there is an error
+00:16:56 <nikoleos[m]> del.dog is not working
+00:17:00 <TheJollyRoger> Hmm. Might have to ask around here a bit, I'm not all that knowledgeable with the inner workings of fastboot X(
+00:17:28 <nikoleos[m]> fastboot: error: failed to create temporary file for /home/nicolas/sargo-factory-2020.06.02.02/tmp/fastboot_userdata_em9jBa with template boot.img: No such file or directory
+00:18:49 * TheJollyRoger frowns...
+00:21:46 <nikoleos[m]> oh it seems that i gorgot mkdir tmp
+00:21:57 <nikoleos[m]>  * oh it seems that i forgot mkdir tmp
+00:22:23 <TheJollyRoger> Oh XP.
+00:23:29 <generateduser392> anyone able to get protonvpn to work?
+00:23:47 <generateduser392> opens up to white screen
+00:24:03 <generateduser392> not sure if graphene issue or fdroid issue
+00:24:22 <nikoleos[m]> <nickcalyx[m] "If you run it a second time save"> is it ok ? https://pastebin.com/hJ8dURsW
+00:30:59 <VincentWantsToBa> XP is so much nostalgia
+00:36:15 <nikoleos[m]> it worked now , good bye
+00:43:26 <nickcalyx[m]> Awesome
+00:44:22 <nickcalyx[m]> > anyone able to get protonvpn to work?
+00:44:22 <nickcalyx[m]> Someone mentioned that earlier, that you should go into fdroid and choose the older version
+01:09:56 <TheJollyRoger> There are times where I feel like the computer's laughing at me. Anytime OpenSSL is involved is one of those times.
+01:11:38 <VincentWantsToBa> TheJollyRoger: lol
+02:27:49 * TheJollyRoger flops.
+03:34:11 <TheJollyRoger> Hmm. Looks like I can't calculate the Android attestation certificate fingerprints with OpenSSL alone. There must be more to this.
+04:21:17 <strcat[m]> TheJollyRoger: dunno why you're using openssl
+04:21:20 <strcat[m]> or what you mean by fingerprints
+04:21:25 <strcat[m]> you should be using the attestation code
+04:21:33 <strcat[m]> also it outputs the correct values in the errors now
+04:21:49 <TheJollyRoger> Oh.
+04:22:13 <strcat[m]>             throw new GeneralSecurityException("invalid verified boot key fingerprint: " + verifiedBootKey);
+04:22:24 <TheJollyRoger> OH
+04:22:30 <strcat[m]>             throw new GeneralSecurityException("attestation version " + attestationVersion + " below " + device.attestationVersion);
+04:22:36 <strcat[m]>             throw new GeneralSecurityException("keymaster version " + keymasterVersion + " below " + device.keymasterVersion);
+04:23:41 <strcat[m]> adding devices just involves putting them into the certificates array then running it to get the appropriate data
+04:23:55 <strcat[m]> adding the entry to the table, string for device name
+04:24:01 <strcat[m]> you can see all the existing commits adding devices
+04:24:02 <TheJollyRoger> Got it, I'll use a more up to date version. I was trying to find another way of seeing if I could make this automated.
+04:24:06 <strcat[m]> it's only 5 mins of work per device
+04:24:07 <TheJollyRoger> Okay!
+04:24:11 <TheJollyRoger> I'll do my best.
+04:24:18 <strcat[m]> you just build it
+04:24:32 <strcat[m]> if you want it more automated you should use the AttestationServer version of the code as I suggested
+04:24:42 <strcat[m]> and turn it into a program that just reads in the certificates and outputs the appropriate values
+04:24:52 <strcat[m]> basically what it's doing via the app without all the hassle
+04:25:13 <strcat[m]> you should also be aware there are devices with quirks or that are broken
+04:25:19 <TheJollyRoger> Jeez.
+04:25:30 <strcat[m]> and the earlier samples that weren't used probably all have weird issues that weren't figured out
+04:25:40 <strcat[m]> so you should probably start with newer samples
+04:25:47 <strcat[m]> although newer devices probably need an overhaul of the app
+04:25:53 <strcat[m]> at least ones with latest keymaster like Pixel 4
+04:25:58 <strcat[m]> it is development work
+04:26:02 <TheJollyRoger> Jeez.
+04:26:06 <strcat[m]> don't expect to just add entries for all of them to the table
+04:26:15 <strcat[m]> requires spending a day figuring it out
+04:26:20 <strcat[m]> a developer doing that
+04:26:27 <strcat[m]> most older devices will just be 5 mins of work each
+04:26:55 <TheJollyRoger> Yeah... I'm trying to teach myself how to program and how to use the tools concurrently. I don't want to raise any false hopes on this.
+04:28:47 <TheJollyRoger> I thought I'd made some headway and then realized I was fucking up... but that seems to be part of the process for me it seems >_<.
+04:32:19 <JTL> We all start somewhere
+06:54:01 <TheJollyRoger> Night guys.
+06:54:30 <analog[m]> Good night TheJollyRoger, sleep well.
+06:54:41 <TheJollyRoger> Thanks analog[m], you too.
+06:55:08 * DannyWorkOrderPr waves goodnight
+08:07:49 <galyoninion[m]> hi
+08:07:57 <galyoninion[m]> I have questions
+08:07:59 <galyoninion[m]> Does Google Pixel 3a have a security chip?
+08:08:40 <galyoninion[m]> I heard security chip called Titan-M is important
+08:08:46 <aeonsolution[m]> it should be the Titan M
+08:08:53 <galyoninion[m]> yea
+08:10:21 <galyoninion[m]> But I don't know which Pixel 3a has Titan M or not.
+08:10:27 <galyoninion[m]> please tell me
+08:10:48 <aeonsolution[m]> ?
+08:12:07 <aeonsolution[m]> where did you hear that the pixel 3 line doesnt have the titan m
+08:12:08 <galyoninion[m]> "which "is "that"
+08:12:11 <galyoninion[m]> I missing
+08:13:03 <aeonsolution[m]> you can check the device specs to see if it has it
+08:14:06 <stuux[m]> the pixel 3a has the titan m
+08:14:46 <cn3m[m]> The Pixel 2 was the last device before Titan M
+08:14:47 <cn3m[m]> Pixel 3, 3a, and 4 all have it
+08:16:28 <galyoninion[m]> Thanks
+08:16:38 <galyoninion[m]> and one more qu, ok?
+08:17:32 <galyoninion[m]> I will install Graphene OS on Nexus 5x that I am not using now.
+08:18:15 <cn3m[m]> Nexus 5x doesn't have GrapheneOS support anymore
+08:18:23 <JTL> It never did
+08:18:33 <JTL> (Well it did long ago when things were different)
+08:18:36 <galyoninion[m]> Really?
+08:18:43 <JTL> Nexus 5x is old news sadly
+08:18:58 <galyoninion[m]> yea
+08:19:06 <aeonsolution[m]> galyoninion: I really encourage you to check out https://grapheneos.org/faq#supported-devices
+08:19:35 <galyoninion[m]> So what mobile OS should I install on Nexus 5x?
+08:19:41 <aeonsolution[m]> The website has everything you need to know about the project, we'd love to answer questions that aren't on the site
+08:19:47 <galyoninion[m]> Android ? or LineageOS?
+08:20:30 <aeonsolution[m]> That's up to you. We don't push a mobile OS because we don't know your threat model.
+08:21:11 <galyoninion[m]> I wanna privacy and security on Nexus 5x
+08:21:30 <aeonsolution[m]> If you want privacy Lineage is not an option.
+08:21:41 <galyoninion[m]> why?
+08:21:49 <galyoninion[m]> it is open source
+08:22:03 <JTL> Open source doesn't magically make it good
+08:22:20 <aeonsolution[m]> Check out https://freenode.logbot.info/grapheneos/ and see what the group has discussed on the subject of Lineage
+08:25:08 <galyoninion[m]> I know Lineageos is not perfect, but I don't know what else of Graphene are solutions
+08:25:53 <galyoninion[m]> Graphene is not worked, and Android is include Google Service
+08:26:07 <galyoninion[m]> Whats else solutions?
+08:26:21 <aeonsolution[m]> building Android without GAPPs or researching how to make Lineage fit your threat model
+08:26:43 <aeonsolution[m]> those things require your time and effort
+08:28:28 <galyoninion[m]> How difference for privacy and security, Android or LineageOS?
+08:28:56 <aeonsolution[m]> the log covers that better than I probably can elaborate on
+08:30:57 <galyoninion[m]> OK, thanks. good bye
+08:31:26 <aeonsolution[m]> good luck!
+08:47:51 <cn3m[m]> <galyoninion[m] "How difference for privacy and s"> Lineage butchers security in almost everyway especially the unofficial versions they are hard to compare
+08:49:11 <strcat[m]> galyoninion: you can't have privacy or security on a device without privacy/security updates like the 5X
+08:49:27 <strcat[m]> are you going to keep Wi-Fi, cellular, Bluetooth and NFC disabled?
+08:50:08 <strcat[m]> because you won't have security updates for any of those components and there are a bunch of known issues including available exploits
+08:50:31 <strcat[m]> there is no OS you can run on it where you will have decent privacy/security
+08:51:14 <strcat[m]> if you want to get a relatively cheap phone to use for many years and have decent privacy and security your best bet is a current generation iPhone SE
+09:04:50 <jalb66> Will this work with GOS 🙂 https://nexdock.com/blog/nexdock-touch/
+09:05:00 <jalb66> Will this work with GOS? 🙂 https://nexdock.com/blog/nexdock-touch/
+09:05:56 <cn3m[m]> jalb66: iirc it doesn't I don't think pixels do usb-c to video
+09:06:25 <jalb66> Hm... 🙁
+09:07:52 <cn3m[m]> <jalb66 "Hm... 🙁"> You have to do some funky wireless thing with an app iirc
+09:08:12 <jalb66> yes, maybe, IDN how this works
+09:08:41 <jalb66> I imagine "share screen" is not what it works here
+09:09:03 <jalb66> It'd be great GOS as a laptop 😉
+09:11:09 <cn3m[m]> jalb66: you should do some research it's been a while since I looked into it
+09:11:18 <jalb66> Ok, thanks
+09:12:20 <cn3m[m]> jalb66: you might want to look into Windows 10 Secure Core PCs. They aren't GrapheneOS level, but especially with Windows X on the horizon the leaps and bounds they are making are insane
+09:13:02 <jalb66> cn3m[m], I know you trust Windows but I don't, sorry, but thank you.
+09:14:00 <jalb66> You were right: The devices you can use with USB-C input port are;
+09:14:00 <jalb66>     USB-C smartphones that support video output
+09:14:00 <jalb66>     USB-C Macbooks, iPad Pro
+09:14:41 <jalb66> https://nexdock.com/support/other-devices/
+09:16:16 <jalb66> Although NexDock is not fully compatible with any other Android phones at the moment, we believe “Desktop mode” will be included with most upcoming phones in the future with native support from Google with Android updates.
+09:16:16 <jalb66> If you have a phone with video output support over USB-C and Android 10 you can start testing hidden desktop mode with your NexDock.
+09:20:15 <cn3m[m]> jalb66: I guess you need an iPad Pro then
+09:20:19 <cn3m[m]> For multiple reasons
+09:20:23 <cn3m[m]> They are very secure and private and they could even work that if you wanted
+09:20:30 <jalb66> yes, you're right
+09:22:55 <cn3m[m]> iOS broadly is comparable to GrapheneOS. The distinctions are tiny in security and privacy compared to any other systems imo. Both are fantastic
+09:23:38 <cn3m[m]> I'm rocking 3a and iPad Pro
+09:24:52 <jalb66> cn3m[m], do you disable "Screenlock camera access toggle" to deactivate the camera access when the device is locked?
+09:25:41 <cn3m[m]> <jalb66 "cn3m, do you disable "Screenlock"> I don't recall
+09:26:19 <jalb66> i saw that option in Security
+09:28:24 <cn3m[m]> <jalb66 "i saw that option in Security"> That's probably not a worthwhile setting to chance
+09:28:25 <cn3m[m]> Change*
+09:29:12 <jalb66> It could be if you want to access your camera with some buttons or something like that, I think...
+09:29:22 <jalb66> Like in Gestures
+09:29:38 <cn3m[m]> <jalb66 "It could be if you want to acces"> That's the default config
+09:30:17 <jalb66> Yes... and do you think that Vanadium webview needs Network access, or only Vanadium browser?
+09:30:44 <jalb66> I know it works without that permission but maybe I'm missing something
+09:31:12 <cn3m[m]> <jalb66 "Yes... and do you think that Van"> Don't mess with that it's not needed to worry about
+09:31:20 <jalb66> cn3m[m], ok
+09:31:38 <joshman[m]> Came summer and finally I understand how far is Google behind Apple and Samsung display wise. I can't see shit in bright sunlight. 400nits in pixel is less than on my desktop monitor. Let alone iPhones 1100nits
+09:31:42 <skratchnsniff[m]> Yeah, I was wondering if things like Gallery need Background data..
+09:31:59 <skratchnsniff[m]> And network access.
+09:32:14 <skratchnsniff[m]> Does disabling this break anything?
+09:32:40 <jalb66> skratchnsniff[m], no, it doesn't
+09:32:55 <cn3m[m]> skratchnsniff: it's not really needed TBH what's the threat model where that would be helpful?
+09:32:57 <joshman[m]> Disbale storage and you won't see your pictures
+09:33:47 <skratchnsniff[m]> Just wondering? Just curious cat questions.
+09:34:28 <jalb66> I also disabled all sensors and all works ok
+09:34:59 <jalb66> But I don't use an app needing sensors
+09:35:21 <joshman[m]> Sensors don't do anything in most cases. Read GOS FAQ
+09:36:12 <joshman[m]> Navigation is probably one of the few apps where they are needed
+09:37:05 <jalb66> And track you
+09:37:22 <cn3m[m]> <joshman[m] "Navigation is probably one of th"> But what about spyware? That needs it
+09:38:24 <furofuro_01[m]> Can live OS protect me from privacy invasion of Zoom?
+09:38:28 <joshman[m]> Do you install spyware? I doubt
+09:38:39 <jalb66> Navigation is where you should disable that permission
+09:38:42 <furofuro_01[m]> <furofuro_01[m] "Can live OS protect me from priv"> Zoom's web client by the way
+09:42:11 <joshman[m]> Zomm will invade your Live OS. Will that protect you?
+09:42:19 <joshman[m]> * Zoom will invade your Live OS. Will that protect you?
+09:43:13 <joshman[m]> <jalb66 "Navigation is where you should d"> You are right. I have it disabled btw
+09:43:31 <jalb66> joshman[m], me too 🙂
+10:05:28 <furofuro_01[m]> <joshman[m] "Zomm will invade your Live OS. W"> Well, at least my files?
+10:05:41 <furofuro_01[m]> They would probably be safe I guess?
+10:07:11 <prisonplanet[m]> I would like to donate to grapheneos but not in anything other than Monero
+10:07:25 <prisonplanet[m]> Im requesting a Monero adresse to donate to Grpaheneos
+10:24:23 <fomijafi[m]> Daniel doesn't want to spend time/energy messing with other cryptocoin. Maybe try xmr.to to send bitcoin
+10:33:05 <joshman[m]> prisonplanet do you need a lesson on how to swap xmr 2 btc anonymously ?
+10:34:06 <joshman[m]> Monero is good for privacy, but it is a total waste as an investment asset
+11:11:24 <joshman[m]> * Monero is good for privacy, and a total waste as an investment asset
+11:19:03 * M1eyeJack[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/ibtqvBHmXHbWwnNfQSUOOMjz >
+11:21:46 <skratchnsniff[m]> Cheap google phone?
+11:22:27 <skratchnsniff[m]> Nokia Ones are pretty cheap without the non google bloatware.
+11:24:59 <M1eyeJack[m]> Nice idea.
+11:24:59 <M1eyeJack[m]> Didn't know Nokia was still around, thought they died like Alcatel lol
+11:25:42 <skratchnsniff[m]> It seems pointless removing the google nastiness and then trying to put it back in.
+11:26:06 <skratchnsniff[m]> Maybe that Calyx thing has opengapps?
+11:27:07 <M1eyeJack[m]> I agree, I love not using google. Just wish uber or what ever service had webapps
+11:27:19 <M1eyeJack[m]> Maybe a project to make on holochain ;)
+11:27:32 <M1eyeJack[m]> New business idea for someone ;)
+11:27:44 <skratchnsniff[m]> I just walk.
+11:27:53 <M1eyeJack[m]> Decentralized open source ride sharing service
+11:28:05 <skratchnsniff[m]> Good luck.
+11:28:19 <M1eyeJack[m]> Lol I walk, tram, train, but some times need to get to places that out the way to walk
+11:28:37 <skratchnsniff[m]> Moped?
+11:29:19 <M1eyeJack[m]> Don't have one. And not worth buying at the present time
+11:29:26 <M1eyeJack[m]> But I'm down for a horse lol
+11:29:56 <joshman[m]> I cycle
+11:30:03 <joshman[m]> Everywhere
+11:30:10 <skratchnsniff[m]> Good plan
+11:30:26 <skratchnsniff[m]> Roller blades?
+11:30:43 <M1eyeJack[m]> Nice, I have a skateboard but last weekend had to go country, 20km from train station
+11:30:50 <joshman[m]> My car's battery died long ago idling
+11:30:52 <M1eyeJack[m]> Can't skateboard there
+11:31:42 <joshman[m]> Bike gets me distances up to 50-60km. And that's not even electric
+11:31:58 <skratchnsniff[m]> <skratchnsniff[m] "Roller blades?"> Be cool like Tsutomu Shimomura.
+11:32:51 <M1eyeJack[m]> josh.man: might look into one. Thanks great idea. Also green way of transport so i like it
+11:33:20 <skratchnsniff[m]> Probably cheaper than a new phone too.
+11:33:54 <skratchnsniff[m]> Until you reach the shaved legs level.
+11:34:24 <M1eyeJack[m]> Bahaha right ;)
+11:36:05 <skratchnsniff[m]> But I accept shaved legs if it saves the planet.
+11:36:28 <skratchnsniff[m]> No disrespect Joshman
+11:36:29 <joshman[m]> Cheap won't suffice. 5-10k is fine, going 20-40k to grandmas you will struggle
+11:37:45 <skratchnsniff[m]> Do what he says.
+11:40:38 <skratchnsniff[m]> Leg powered coders unite.
+11:41:02 <dazinism> <M1eyeJack[m] "I agree, I love not using google"> I thought Uber or something similar worked via vanadium?
+11:42:09 <dazinism> Also theres
+11:42:09 <dazinism> Transportr - Open Source Public Transit (Public Transport Companion) - https://f-droid.org/app/de.grobox.liberario
+11:42:50 <Hirppa> M1eyeJack[m]: Nokia phones are not manufactured by Nokia, the brand is licensed to HMD Global, a smaller company based in Finland -- so in that sence Nokia is no longer around
+11:42:52 <dazinism> and
+11:42:52 <dazinism> Offi (King of public transit planning!) - https://f-droid.org/app/de.schildbach.oeffi
+11:43:16 <jalb66> Please never buy a Nokia (HMD Global) phone!
+11:43:40 <jalb66> I had to buy a Ppixel 3a because Nokia has destroyed my smartphone...
+11:43:50 <jalb66> I had to buy a Pixel 3a because Nokia has destroyed my smartphone...
+11:44:35 <jalb66> Wrong updates, never booting and in a constant loop, sound problems, etc, etc
+11:45:23 <skratchnsniff[m]> I was trying to suggest cheap phone if he must have google. I did not mean to sound like I was shilling it
+11:45:23 <skratchnsniff[m]> Sorry all
+11:45:30 <jalb66> We're 6 months waiting a solution... Read for example this Nokia forum here: https://community.phones.nokia.com/categories/nokia-7-1
+11:45:52 <jalb66> Meanwhile my Nokia is always off
+11:47:05 <jalb66> skratchnsniff[m], I know, I think people don't know what HMD Global are doing if they don't own a smartphone. Only my experience
+11:47:46 <jalb66> I wish Nokia will solve this situation. Until now my ols smartphone is broken.
+11:47:52 <jalb66> I wish Nokia will solve this situation. Until now my old smartphone is broken.
+11:48:01 <skratchnsniff[m]> Just trying to keep the graphene unsullied
+11:55:12 <skratchnsniff[m]> Raid a phone recycling bin?
+11:59:51 <skratchnsniff[m]> (If not illegal of course)
+12:10:29 <prisonplanet[m]> <fomijafi[m] "Daniel doesn't want to spend tim"> I want to donate monthly anonymously to grapeheneos, Bitcoin is a garbage its not private. Monero is the best way for this. Please consider openning Monero adress seriously
+12:36:15 <fll[m]> prisonplanet: can you not convert monero anonymously to bitcoin and send that?
+12:36:45 <fll[m]> Why put the work on graphene?
+12:41:14 <xabi[m]> > <@1eyejack:matrix.org> Learnt a big lesson from now using GrapheneOS, ride services and ride sharing apps are pretty much useless now. So now I have to go back to ringing a taxi.
+12:41:14 <xabi[m]> >
+12:41:14 <xabi[m]> ...(truncated)
+12:41:42 <xabi[m]> Garmin connect works fine on graphene, I have it in a isolated profile
+12:44:36 <meltedcheddar[m]> Is RiotX using google play services? Do you know if notifications work well in GrapheneOS?
+12:51:04 <yolotrolo[m]> it work well without gplay services
+12:52:04 <yolotrolo[m]>  * they work well without gplay services
+13:09:56 <meinbenutzername> Is Whats App (I know it sucks) and Telegram usable on GrapheneOs without gplay services?
+13:11:03 <sel[m]2> <meinbenutzername "Is Whats App (I know it sucks) a"> Telegram has a FOSS client that doesn't rely on FCM so it works
+13:11:12 <sel[m]2> WhatsApp should work as well but I haven't verified that 100%
+13:11:33 <meinbenutzername> Okay thanks :)
+13:12:01 <meinbenutzername> And any problems with banking apps in general?
+13:16:01 <skratchnsniff[m]> <meinbenutzername "Is Whats App (I know it sucks) a"> Workx
+13:16:08 <skratchnsniff[m]> WA
+13:17:46 <skratchnsniff[m]> Just remember to update it like every 2 days.
+13:18:24 <skratchnsniff[m]> It won't remind you.
+13:20:00 <meinbenutzername> Oh okay good to know
+13:22:36 <skratchnsniff[m]> <meinbenutzername "Oh okay good to know"> And maybe put it in a separate user profile which is what I learnt from here.
+13:24:50 <skratchnsniff[m]> "You gotta keep em separated..." Enter drumz.
+13:26:52 <joshman[m]> <prisonplanet[m] "I want to donate monthly anonymo"> Learn about Bitcoin. If you are smart you'll know it's as anonymous as xmr
+13:26:53 <joshman[m]> <meinbenutzername "Is Whats App (I know it sucks) a"> Yes
+13:26:53 <joshman[m]> <prisonplanet[m] "I want to donate monthly anonymo"> Last 365 days moneros value dropped -24%, btc grew by +22%
+13:29:21 <joshman[m]> Why wouldn't Graphene consider my monthly donations in Indian rupees? Because it is volatile piece of crap dropping in value permanently.
+13:38:32 <prisonplanet[m]> <joshman[m] "Why wouldn't Graphene consider m"> I don't want to get into useless debates here, Bitcoin is a cryptomony with no confidentiality, no privacy, it's the worst cryptomony that exists, it's just shit compared to Monero which is digital cash with total anonymity.  To donate Bitcoin anonymously, I have to take extreme measures to buy Bitcoin with cash by moving hundreds of miles away from my home, it's
+13:38:32 <prisonplanet[m]> total crap, I want to donate anonymously for security reasons.  I don't want to go through the conventional banking system or Bitcoin which are anything but private.  With the Monero I can donate anonymously ensuring my security and anonymity, no one will know that I have donated to GrapheneOS, I want to support GrapheneOS because it is a very important project for our privacy but not with currencies devoid of any
+13:38:32 <prisonplanet[m]> confidentiality.
+13:40:17 <prisonplanet[m]> The current volatility of the Monero is not a problem, Daniel will just have to convert the Monero into fiat currency as soon as he receives it, it's not complicated.
+13:44:02 <joshman[m]> Ok. No further comments. You know Jack sh about Bitcoin. Do your due diligence and come back later.
+13:44:02 <joshman[m]> Just a quick tip. Convert xmr to btc in your trust wallet, coinomi wallet or any other Dex. Quick, cheap, anonymous
+13:46:24 <prisonplanet[m]> I live in a totalitarian state, anonymity and confidentiality is not an option for me, it is an obligation for my safety.  I hope you understand that.
+13:47:21 <joshman[m]> I live in a State where cash is no longer available. I hope you understand
+13:47:38 <renlord> joshman[m]: australia?
+13:47:57 <joshman[m]> Nah. You guys ran out of cash??
+13:48:06 <renlord> no
+13:48:15 <joshman[m]> Norway is officially cashless society
+13:49:00 <prisonplanet[m]> <joshman[m] "I live in a State where cash is "> And you don't mind using Bitcoin, the worst totally traceable and transparent digital currency?  When there's monero specifically designed for total anonymity?  It's paradoxical.
+13:49:42 <silkbrain[m]> prisonplanet: Can you please provide some source with regard to Monero anonymity?
+13:49:42 <joshman[m]> I don't mind because I know how to use BTC anonymously
+13:50:01 <silkbrain[m]> prisonplanet: "total anonymity" sounds like snake oil red flag.
+13:50:36 <renlord> anonimity operates on a spectrum.
+13:50:45 <joshman[m]> He is wrong. Though xmr is pretty good it's not bulletproof
+13:51:11 <renlord> there's no boolean classification for anonymity.
+13:51:36 <renlord> especially so with bitcoin and xmr
+13:52:03 <renlord> you mix until you find the degree of obfuscation is satisfactory to meet your anonymity criterion
+13:52:53 <joshman[m]> He is just xmr fanboy. Otherwise he would know that ZEC has been proven "better" anonymity, not "total anonymity"
+13:53:23 <renlord> joshman[m]: not really either, the set of people that use zec is so small and the subset of people that use sheilded transactions even smaller
+13:53:30 <renlord> the moment you use it, you're already flagged.
+13:53:33 <prisonplanet[m]> <joshman[m] "I don't mind because I know how "> To buy Bitcoin anonymously, you have to..:
+13:53:35 <renlord> lol
+13:54:33 <joshman[m]> Someone needs to kick this guy's ass. This is getting too far 🙄
+13:55:44 <renlord> anyways, this is not the appropriate forum to be shilling cryptocurrencies
+13:55:48 <prisonplanet[m]> <silkbrain[m] "prisonplanet: Can you please pro"> https://www.reddit.com/r/Monero/comments/7ongx5/is_monero_truly_100_anonymous/
+13:55:56 <renlord> the donatee can elect whatever method they wish to collect their donations
+13:56:07 <renlord> if you're not happy with the methodology, you can opt not to donate.
+13:57:02 <renlord> the donatee has expressed on many occasion that he does not wish to be inundiated with the overhead processes of supporting additional donation methods.
+13:57:37 <renlord> *inundated
+13:57:53 <prisonplanet[m]> <joshman[m] "Someone needs to kick this guy's"> I just proposed a confidential donation method and since you know absolutely nothing about it and have no argument, you want to banish me right away.  You really are a poor guy, a totalitarian dictator who doesn't tolerate being contradicted.  It's pathetic.
+13:58:23 <renlord> prisonplanet[m]: please take your personal grievances offline
+14:00:31 <prisonplanet[m]> It's unbelievable that this guy wants to banish me right away because he has no argument, he's wrong and can't tolerate being wrong.
+14:01:50 <prisonplanet[m]> Anyway, I said what I had to say, I came up with an idea.  Now it's not up to me.  I propose ideas and I have the right.  That's all I had to say.
+14:04:13 <prisonplanet[m]> Just one question, does the Signal program consume a lot of battery power on GrapheneOS?  Because there are no googleplay services in it.
+14:05:01 <skratchnsniff[m]> Damn a lot happened since I went to the bathroom.
+14:06:49 <yolotrolo[m]> <prisonplanet[m] "Just one question, does the Sign"> it consume more battery than whatapps for me, even with the recent fix about it
+14:06:54 <skratchnsniff[m]> The graphene boot logo looks sick (awesome) by the way.
+14:06:57 <sel[m]2> > Norway is officially cashless society
+14:06:57 <sel[m]2> yikes man
+14:07:15 <renlord> so is sweden
+14:07:19 <renlord> when i visited.
+14:07:27 <sel[m]2> Double yikes
+14:07:40 <sel[m]2> Glad I'm not there :)
+14:07:41 <renlord> i dont eeven know what the swedish krona cash looks like in real life.
+14:08:11 <yolotrolo[m]> <yolotrolo[m] "it consume more battery than wha"> whatapps battery usage is pretty low
+14:08:26 <prisonplanet[m]> <yolotrolo[m] "it consume more battery than wha"> Seriously ? How long is the battery life?
+14:09:01 <yolotrolo[m]> i don't know i have uninstalled signal, plus i'm not using a pixel, i was just replying to about signal without google play
+14:09:25 <yolotrolo[m]>  * i don't know i have uninstalled signal, plus i'm not using a pixel, i was just replying to about signal without google play services
+14:10:10 <prisonplanet[m]> Ok thanks
+14:11:56 <prisonplanet[m]> Googe maps work on Graphene?
+14:18:20 <meltedcheddar[m]> <prisonplanet[m] "Just one question, does the Sign"> Consumes same battery power compared to whatsapp.
+14:22:54 <meltedcheddar[m]> U can use dark mode in apps to consume less power.
+14:49:16 <joshman[m]> Battery is better because no Google services
+14:49:17 <joshman[m]> 8hrs display on time
+14:49:17 <joshman[m]> Google maps work, so is Google camera, Gboard
+15:16:43 * xabi[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/cOHngBTVccEqAPqlcwpLBqDW >
+15:31:00 <joshman[m]> 3xl
+15:45:35 <brenneke[m]> Stock Contacts app that comes with GrapheneOS has no dark mode AFAICT.
+15:45:36 <brenneke[m]> I have tried Simple Contacts (nice app) but when I import my VCF file it only allows me to target Signal, the result is that all my contacts show but those who are not in Signal have no phone numbers showing.
+15:45:36 <brenneke[m]> ...(truncated)
+15:50:22 <joshman[m]> Stay with no dark
+15:50:54 <fluoridatedsheep> may be a stupid question, but are all gapps off the table with graphene?
+15:53:06 <brenneke[m]> <joshman[m] "Stay with no dark"> Makes sense thanks.
+15:54:45 <brenneke[m]> Finding pic quality with Open Camera bad, any tips to improve this?
+15:54:45 <brenneke[m]> Has stock camera app been improved at all with latest updates?
+15:54:57 * prisonplanet[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/MdVrRdkxZXiIkiJXqEOVOGAQ >
+15:55:10 <prisonplanet[m]> What is the best camera app for 3XL grapheneos
+16:07:22 <nickcalyx[m]> I haven't tried every camera app but I really think the google camera app is great.. with night mode and panoramas and that 3d sphere stuff
+16:09:36 <madaidan[m]> That name is borderline impersonation
+16:11:06 <xabi[m]> It is
+16:13:39 <skratchnsniff[m]> Brand protection....
+16:14:03 <xabi[m]> grapheneos: you are using the name of something that you are not developing
+16:17:04 <skratchnsniff[m]> <grapheneos[m] "how do i change it?"> https://about.riot.im/help#:~:text=How%20can%20I%20change%20my,the%20web%2Fdesktop%20app).
+16:18:29 * skratchnsniff[m] uploaded an image: IMG_20200608_021754.jpg (94KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/AlKmLJWWyXZWPhoTqaFAUoZm >
+16:19:02 <skratchnsniff[m]> I assume using riot. Maybe make an ass of myself.
+16:19:43 <skratchnsniff[m]> (Me not you)
+16:22:30 <skratchnsniff[m]> Do you mean network time?
+16:23:34 <skratchnsniff[m]> Backspace?
+16:23:45 <skratchnsniff[m]> Sim card?
+16:24:57 <skratchnsniff[m]> Coz the SiM card is in the phone?
+16:25:47 <skratchnsniff[m]> Do you mean how does the app know what country your SIM card is from?
+16:27:22 <skratchnsniff[m]> I am not qualified for that question.
+16:30:56 <skratchnsniff[m]> I am still a bit unsure of the question actually.
+16:36:14 <skratchnsniff[m]> Is the SIM card from the same country?
+16:38:25 <skratchnsniff[m]> But the SIM is in the phone.
+16:39:59 <cn3m[m]> <grapheneos[m] "so what info do apps get from si"> This is answered on the FAQ please read the whole site
+16:42:46 <fll[m]> Can you make accounts without phone number on signal or whatsapp now?
+16:43:44 <fll[m]> And they don't use country from that phone number but a different country?
+16:44:49 <brenneke[m]> <nickcalyx[m] "I haven't tried every camera app"> Where do you get Google Camera from? Can't find it with Aurora.
+16:45:30 <fll[m]> Maybe they use registered country of the IP the divce connects from?
+16:49:43 <fll[m]> How do you even test that? Factory rest phone, turn off all connections, set country then install apk?
+16:55:10 <fll[m]> Hmm...don't know how that works but that's what I would expect. I would expect a 2nd user to have access to the basic phone functions and therefore apps just the same as on the main user
+16:57:24 <brenneke[m]> <brenneke[m] "Where do you get Google Camera f"> Anyone know?
+16:57:59 <generateduser392> on graphene?
+16:58:19 <generateduser392> you need apk and google play services for it to work
+16:59:07 <generateduser392> why bother installing graphene when you're going to reinstall google spyware?
+17:00:41 <nickcalyx[m]> You can find it on apkmirror
+17:01:18 <nickcalyx[m]> And I don't think it can spy on you without Google play framework, though I could be wrong
+17:01:31 <generateduser392> <nickcalyx[m] "And I don't think it can spy on "> you need that for gcam to work
+17:03:09 <xabi[m]> <generateduser392 "you need that for gcam to work"> You can use microg without signature spoofing and 0 permission
+17:03:45 <generateduser392> does graphene even support microg?
+17:03:51 <xabi[m]> Then not allow network connections on gcam, all on a separate profile
+17:04:03 <generateduser392> don't think it does based on daniel's posts
+17:04:41 <xabi[m]> <generateduser392 "does graphene even support micro"> It doesn't, but gcam works with  non working microg
+17:06:24 <xabi[m]> Gcamera checks if gplay services are installed but doesn't check the signature, microg has same package name as gplay services but the wrong signature, so it doesn't get instegrated in graphene os but gcam thinks it's legit
+17:06:45 <brenneke[m]> <nickcalyx[m] "You can find it on apkmirror"> Thanks.
+17:07:59 <generateduser392> <xabi[m] "Gcamera checks if gplay services"> does gplay services run in background? or just a folder for gcam to refer to?
+17:08:10 <generateduser392> > <@xabierd:matrix.org> Gcamera checks if gplay services are installed but doesn't check the signature, microg has same package name as gplay services but the wrong signature, so it doesn't get instegrated in graphene os but gcam thinks it's legit
+17:08:10 <generateduser392>  * does microg run in background? or just a folder for gcam to refer to?
+17:08:25 <jalb66> I'll post some service you can use with gcam, I'll see when it is
+17:09:17 <jalb66> Here it is: https://github.com/LumenReaper/Gcam-Services-Provider/releases
+17:09:48 <jalb66> Try the app if it works
+17:11:06 <xabi[m]> <jalb66 "I'll post some service you can u"> Seems like a good idea, what's better than microg?
+17:11:21 <dallemon[m]> <jalb66 "Here it is: https://github.com/L"> Currently using this with latest Gcam without issue.
+17:11:55 <jalb66> dallemon[m], 🙂
+17:12:53 <jalb66> dallemon[m], I suppose that it sends information to Google anyway
+17:13:19 <jalb66> Do you use it in another profile and without Network permission?
+17:13:22 <DannyWorkOrderPr> <fll[m] "Hmm...don't know how that works "> This is exactly the case.
+17:13:27 <jalb66> Which Pixel?
+17:14:04 <dallemon[m]> Haven't checked, but it's without network enabled.
+17:14:08 <dallemon[m]> <jalb66 "Which Pixel?"> Using a Pixel 2 XL
+17:14:14 <jalb66> dallemon[m], thanks
+17:14:36 <brenneke[m]> <dallemon[m] "Currently using this with latest"> Nice thanks!
+17:14:46 <jalb66> I thought about using it because in Pixel 3a HDR+ works!
+17:14:53 <jalb66> But using a Google app...
+17:14:54 <dallemon[m]> Waiting for a seller to respond in regards with getting a 4 XL
+17:15:46 <generateduser392> <jalb66 "But using a Google app..."> same, not willing to risk it
+17:16:28 <dallemon[m]> <jalb66 "But using a Google app..."> Using Gboard and Gallery Go anyway, so I'm pretty happy to replace OpenCamera
+17:16:37 <generateduser392> would like night mode and slightly better pics
+17:16:38 <jalb66> Anyway I don't need a good camera and I only use Simple Camera
+17:17:00 * joshman[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/LRzeeZzpKqOoThSMWpRdlZuh >
+17:17:25 <generateduser392> <dallemon[m] "Using Gboard and Gallery Go anyw"> openboard can replace gboard
+17:17:37 <generateduser392> get it from fdroid
+17:17:55 <jalb66> Or the stock app
+17:18:02 <xabi[m]> Open board is good enough
+17:18:17 <joshman[m]> <prisonplanet[m] "What is the best camera app for "> Gcam is best. opencam is second best.
+17:18:17 <greenmoon[m]> <grapheneos[m] "ok just installed phone informat"> But it seems to require Phone permission for that, even if you dont give phone permission to signal it still fill the phone field with your country code
+17:18:17 <generateduser392> stock doesn't have swipe to move cursor
+17:18:17 <dallemon[m]> Does it do gesture typing as well? And work with other languages than English?
+17:18:49 <generateduser392> I find swipe typing to be slower
+17:18:59 <jalb66> joshman[m], but you need Camera, Storage and Microphone permissions, maybe you mean about disabling Network permission
+17:19:14 <generateduser392> <dallemon[m] "Does it do gesture typing as wel"> most languages other than asian languages
+17:19:22 <jalb66> generateduser392, yes I know, I don't need it
+17:20:41 <joshman[m]> <generateduser392 "you need apk and google play ser"> You don't need it. Wrong info
+17:20:45 <dallemon[m]> <generateduser392 "most languages other than asian "> Ok i will give it a try. Just found all other keyboards to have significantly worse gesture typing
+17:21:04 <generateduser392> <joshman[m] "You don't need it. Wrong info"> so just install apk and it works?
+17:22:01 <generateduser392> no need to install any other things?
+17:22:06 <generateduser392> and on graphene?
+17:22:18 <dallemon[m]> generateduser710: you need the APK from the github link that was just posted and Gcam APK
+17:22:25 <dallemon[m]> Nothing else
+17:22:36 <xabi[m]> Those gcam services don't work on my pixel 3, latest grapheneOS, back to microg
+17:24:15 <generateduser392> <dallemon[m] "generateduser710: you need the A"> either app phones home to Big Bro (google)?
+17:24:43 <joshman[m]> <xabi[m] "Those gcam services don't work o"> Something is wrong for you. Works like a charm on my p3xl
+17:24:51 <generateduser392> and all gcam features?
+17:26:03 <dallemon[m]> <generateduser392 "either app phones home to Big Br"> Gcam probably does. But haven't checked.
+17:26:30 <generateduser392> <dallemon[m] "Gcam probably does. But haven't "> even with network access denied?
+17:26:46 <dallemon[m]> <generateduser392 "even with network access denied?"> No, it can't.
+17:27:00 <joshman[m]> It doesn't. I checked. Network disabled. Only concern whether it connects outside through partner apps
+17:27:47 <dallemon[m]> <generateduser392 "and all gcam features?"> And yes, all features for my 2XL work
+17:28:00 <cn3m[m]> No direct connections and most indirect ones are cut off
+17:28:11 <cn3m[m]> Theres no better options right now
+17:29:07 <joshman[m]> Works great for my threat model. Degoogled Google phone with Google apps 🏃
+17:30:06 <generateduser392> I already have gboard installed, hate to rely on another google app
+17:30:34 <generateduser392> default and openboard don't have language I need
+17:31:08 <joshman[m]> Yeah. Gboard is superior
+17:31:21 <generateduser392> unfortunately
+17:31:30 <dallemon[m]> It's a secure, hardened AOSP based OS. Never seen it as a means for getting "Degoogled", personally.
+17:31:31 <cn3m[m]> The only device I could use with no Google apps is my iPad Pro
+17:33:30 <generateduser392> can I get gcam from aurora store?
+17:34:02 <jalb66> generateduser392, no, apkmirrror
+17:34:10 <jalb66> generateduser392, no, apkmirror
+17:34:11 <generateduser392> why?
+17:34:21 <jalb66> Ask Aurora, IDN
+17:36:57 <generateduser392> fuck, its on google play but not aurora
+17:38:14 <nickcalyx[m]> Once you install gcam from apkmirror it will pick up updates from aurora
+17:39:59 * brenneke[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/wVEHpEmJBVeYfKSdjsByCrJA >
+17:42:38 <joshman[m]> brenneke what version are you on ?
+17:49:39 <brenneke[m]> <joshman[m] "brenneke what version are you on"> Latest from the XDA link.
+17:51:33 <DannyWorkOrderPr> <generateduser392 "fuck, its on google play but not"> Are there settings to toggle unsupported devices or something? Not sure of a reason it wouldn't be there.
+17:52:10 <joshman[m]> It's not latest on XDA
+17:58:04 <generateduser392> <DannyWorkOrderPr "Are there settings to toggle uns"> just checked, nope
+18:12:26 <brenneke[m]> <joshman[m] "It's not latest on XDA"> It is a modified APK so it is latest there AFAIK.
+18:13:16 <jalb66> Gcam is not opensource, is it?
+18:14:40 <nickcalyx[m]> Nope, its proprietary
+18:15:05 <jalb66> Ok.. I thought so
+18:15:39 <generateduser392> maybe download older version from apkmirror and use aurora to update to latest version?
+18:17:18 <joshman[m]> brenneke that app hasn't gotten any update since January
+18:17:41 <brenneke[m]> <joshman[m] "brenneke that app hasn't gotten "> Its just a camera.
+18:17:59 <joshman[m]> generateduser710 Aurora won't see it. I just updated manually
+18:18:43 <joshman[m]> brenneke it is better camera since January
+18:18:44 <generateduser392> <joshman[m] "generateduser710 Aurora won't se"> do you check apkmirror every so often?
+18:18:54 <generateduser392> or there some other way to get update notification?
+18:19:39 <joshman[m]> I checked latest version on play store. Mine was outdated. Last time I checked was in March
+18:19:57 <brenneke[m]> <joshman[m] "brenneke it is better camera sin"> Better how?
+18:20:10 <generateduser392> there's a june version
+18:20:23 <joshman[m]> Care to read changelog?
+18:21:16 <brenneke[m]> <joshman[m] "Care to read changelog? "> Please.
+18:21:36 <joshman[m]> Gcam is superior camera app because of its sophisticated software rendering, updates make sense
+18:24:18 <joshman[m]> Current cameras are not so different hardware wise. It is all about post processing
+18:28:00 <generateduser392> recommended gcam settings for 3a?
+18:29:04 <brenneke[m]> <joshman[m] "Gcam is superior camera app beca"> Thought you offered to send me changelog.
+18:30:38 <joshman[m]> I realized too many things changed ever since. There are 5 major changes between March and June version let alone January
+18:31:00 <generateduser392> gcam services provider doesn't have network access toggle?
+18:34:13 <nickcalyx[m]> > or there some other way to get update notification?
+18:34:13 <nickcalyx[m]> It can get updates via aurora
+18:35:38 <generateduser392> I'm unable to open photo after taking it
+18:35:49 <generateduser392> gives black screen
+18:36:02 <generateduser392>  * I'm unable to open photo in app after taking it
+18:36:50 <cyredanthem[m]1> generateduser710: you need Google gallery
+18:40:54 <joshman[m]> You need Google Fotos
+18:43:22 <jalb66> With Simple Gallery you can view them and it's free and opensource
+18:46:53 <brenneke[m]> <jalb66 "With Simple Gallery you can view"> Photo viewing working from gcam her,  Simple Gallery installed, stock Gallery disabled.
+18:47:13 <brenneke[m]> No Google Photos installed.
+18:48:50 <joshman[m]> Can you open last picture from gcam directly, cause that's what generateduser710  was asking
+18:49:22 <brenneke[m]> Yes.
+18:49:50 <generateduser392> you use xda or apkmirror version?
+18:50:20 <brenneke[m]> XDA.
+18:51:27 <generateduser392> thats older version and edited by someone else
+18:52:33 <brenneke[m]> Snap photo, select round picture icon bottom right, opens pic and lets me scroll to other pics in gallery. Also lets me delete without confirmation which I like.
+18:53:36 <joshman[m]> Simple gallery sucks big time. viewing is not smooth. basic photo editing tools missing. Needs Snapseed or something to edit. Google Fotos is ideal
+18:54:18 <joshman[m]> Delete without confirmation is dope though
+18:57:10 <brenneke[m]> Mine allows pic editing without an extras. Careful with Simple apps, there are other developers also using Simple name. Tibor Kaputa is the right developer.
+18:58:03 * brenneke[m] uploaded an image: walking.jpg (250KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/cKmLBSiRGUmlkOiKBlDRaLDh >
+18:58:18 <jalb66> brenneke[m], that's right 🙂
+18:58:38 <greenmoon[m]> I juste use Google markup to edit pictures in simple gallery
+18:58:44 * brenneke[m] posted a file: Screenshot_20200607-115817.png (1298KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/GmiWgOTwaWgXbEpeOXnLGJTJ >
+18:58:45 <jalb66> The point is that I don't use closed source apps
+18:58:47 <greenmoon[m]> * I just use Google markup to edit pictures in simple gallery
+18:59:47 <greenmoon[m]> * I just use Google markup to edit pictures in simple gallery and everywhere else
+19:00:43 <generateduser392> <jalb66 "The point is that I don't use cl"> hard but doable
+19:00:49 <generateduser392> > <@freenode_jalb66:matrix.org> The point is that I don't use closed source apps
+19:00:49 <generateduser392>  * hard but do-able
+19:01:12 <cereal_eater> are Simple apps trustworthy regarding safety and privacy?
+19:01:12 <joshman[m]> Open source apps is false feeling of security
+19:01:39 <generateduser392> they're good and simple
+19:01:53 <generateduser392> only covers basics, no fancy features
+19:02:02 <jalb66> joshman[m], if someone can review the code, is it false?, you don't know what's inside a closed source app
+19:02:23 <joshman[m]> Simple apps are open source yet people ask is it safe and secure?
+19:02:27 <jalb66> But I won't begin a discussion about it, it's only a choice
+19:02:30 <cereal_eater> I am thinking of replacing the stock sms and phone app, but I am hesitating
+19:02:30 <generateduser392> <jalb66 "josh.man, if someone can review "> in theory, they're good
+19:02:47 <joshman[m]> Nobody is reviewing code. Graphene OS lacks developers
+19:03:11 <jalb66> joshman[m], I mean when I install a new app
+19:03:16 <generateduser392> as someone who knows jack-shit about code, I have to trust that others have reviewed the code
+19:03:25 <generateduser392> and trust their judgment
+19:03:34 <brenneke[m]> <cereal_eater "are Simple apps trustworthy rega"> Their mission statement here:
+19:03:35 <jalb66> And it doesn't mean safe and secure, only that it doesn't contain backdoors
+19:04:08 <joshman[m]> When were Simple apps code last audited? Never?
+19:04:42 <generateduser392> <cereal_eater "I am thinking of replacing the s"> signal or qksms, I use graphene default for phone
+19:04:48 <jalb66> You can check the code at least, it's better than being impossible to do it
+19:05:06 <joshman[m]> We all know they all have good intentions. Yet Brave sucked big time lately
+19:05:07 <generateduser392> > <@freenode_cereal_eater:matrix.org> I am thinking of replacing the stock sms and phone app, but I am hesitating
+19:05:07 <generateduser392>  * signal or qksms or graphene default, I use graphene default for phone
+19:05:44 <jalb66> joshman[m], with Internet access it's another story...
+19:07:17 <joshman[m]> They can access Internet through partner apps
+19:07:30 <generateduser392> <joshman[m] "They can access Internet through"> anyway to detect that?
+19:07:38 <jalb66> Not always
+19:07:44 * brenneke[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/iipwKdSllHzBZRdrAbKFGYeF >
+19:08:43 <generateduser392> no need extra fancy features
+19:09:19 <generateduser392> don't think signal works for sms only
+19:09:27 <generateduser392> without registering for their service
+19:09:55 <nickcalyx[m]> signal would probably work for sms only but you can't really enter the app until you register
+19:10:19 <joshman[m]> AOSP stock apps are such a mess in design. Phone app no dark mode, clock app electro blue. What are those guys smoking when they code?
+19:10:29 <brenneke[m]> <generateduser392 "without registering for their se"> Not sure but Signal is much better to use than WhatsApo, Messenger etc.
+19:11:27 <generateduser392> <joshman[m] "AOSP stock apps are such a mess "> rolled up bills from ad money
+19:12:09 <joshman[m]> Better not to mix signal with SMS from 1980s. They should be avoided not embraced. If I was lead dev I'd remove that option
+19:12:44 <generateduser392> Why?
+19:13:17 <TheJollyRoger> joshman[m]: this is actually by design. Remember that network effect, and transparency of use is what drives adoption.
+19:13:39 <TheJollyRoger> The idea being, Signal wants users to not feel like they're going out of their way to use encryption, and can use it opportunistically.
+19:14:18 <TheJollyRoger> So far, Signal holds my personal record of "Time between falling back to plaintext" of three years, since roughly 2017, with one exception that was actually /my fault./
+19:14:46 <cereal_eater> what daoes that mean that the terms of use of the phone app leads to a google website. is it that it just uses code from aosp?
+19:15:01 <generateduser392> yea
+19:15:22 <joshman[m]> Nah. I prefer iPhone approach. No other sms apps other than stock. SMS is 40 years old. How many more years do people need that pigeon mail is outdated?
+19:15:23 <TheJollyRoger> So it's not a misfeature or a bug. You should read the paper Obstacles to Adoption of Secure Communication Tools released by the University of Bonn and University College London (You may recognize several of its authors, one of them wrote the improved EFF Diceware Worldlist)
+19:16:08 <generateduser392> minimizing number of apps and services on phone
+19:16:25 <joshman[m]> * Nah. I prefer iPhone approach. No other sms apps other than stock. SMS is 40 years old. How many more years do people need to understand that pigeon mail is outdated?
+19:16:28 <TheJollyRoger> Again, it's your own personal preference, but for the majority of people, they don't /want/ to have 20 different messaging apps that they need to check separately.
+19:17:00 <TheJollyRoger> It's a principle of harm reduction.
+19:17:07 <generateduser392> thats why people install entire google spyware bundle (I mean suite)
+19:17:30 <joshman[m]> We are speaking about two apps not 20 and one of them is 40 years old
+19:18:00 <TheJollyRoger> Even two apps is a cognitive load on most users who'd just prefer their apps to work, and the SMS userbase is very entrenched.
+19:18:22 <generateduser392> similar idea, just number difference
+19:18:59 <TheJollyRoger> Remember, you're experienced enough to install GrapheneOS. Most people aren't going to go that far. Most people would rather just tap through the launcher and not even change the defaults!
+19:19:12 <TheJollyRoger> So how can you expect them to maintain two separate apps for what appears to them to inevitably do the same thing?
+19:19:28 <generateduser392> FOSS masterrace? /s
+19:19:51 <joshman[m]> Most people use messenger, WA, Instagram direct and a bunch of other messengers
+19:19:54 <TheJollyRoger> In fact, for people like those, which is to say a majority of the population, it's better that the platform be consolidated, since at least that way they can't fall back to the insecure one out of /simple laziness/.
+19:19:58 <dallemon[m]> Plus Signal also keeps your SMS stored securely
+19:20:08 <aeonsolution[m]> i don't think we should characterize people as by default not caring about their privacy generateduser710
+19:20:13 <TheJollyRoger> Yes -- so the fact we can get them to use Signal is a massive milestone.
+19:20:19 <aeonsolution[m]> people just don't know
+19:20:19 <joshman[m]> SMS app ja only for banking confirmation which is absolutely insane in 2020
+19:20:41 <TheJollyRoger> Agreed on that point, but I think you should read that study. I'll link it to you...
+19:20:52 <aeonsolution[m]> hey everyone, here's another call to help those wanting to help out with Vanadium
+19:20:56 <generateduser392> <aeonsolution[m] "i don't think we should characte"> didn't say that, was saying they prioritize ease of use over privacy
+19:21:02 <brenneke[m]> <joshman[m] "* Nah. I prefer iPhone approach."> Signal started as TextSecure which encrypted SMS messages. They now have evolved away from that, but kept SMS in their app so you can invite non-Signal users.......if I have it right.
+19:21:29 <aeonsolution[m]> right, because they don't know what they are giving up
+19:21:50 <TheJollyRoger> https://www.ieee-security.org/TC/SP2017/papers/84.pdf joshman[m] , check this out.
+19:22:18 <joshman[m]> Will do !
+19:22:28 <TheJollyRoger> brenneke[m]: yes. These days, contact discovery is expected to be automatic, is expected to be transparent, and is expected to be human-meaningful. Without those, there's no hope for meaningful adoption.
+19:24:40 <TheJollyRoger> A large takeaway from this paper is that there is a disparity between what users want in a secure messaging app, and what we, the crypto/ITSec nerds believe them to want in a secure messaging app, and why previous efforts to introduce secure messaging tools have faced a lot of problems in the past and still continue to today.
+19:25:40 <generateduser392> technical jargon confuses and is a major turnoff for most
+19:26:29 <TheJollyRoger> Yes. In fact, something that may blow your mind: many ordinary average users that this study interviewed actually believed /obscurity was a benefit/ and percieved open source as a drawback!
+19:28:26 <jalb66> 🙂
+19:28:34 <TheJollyRoger> jalb66: I'm talking about a study.
+19:28:51 <TheJollyRoger> Where they were trying to find out /why/ people didn't adopt secure communication tools even given their prevalance and ease of use.
+19:28:54 <jalb66> I know
+19:29:28 <joshman[m]> They are right in a way. Apple's obscurity helps security
+19:29:34 <generateduser392> same thing holds true for all fields, not just tech
+19:30:21 <TheJollyRoger> Yeah. To /us/ it seems obvious and totally "whaa?!", but to us it's hard for us to place ourselves in the shoes of someone with no knowledge, an incomplete threat model, no understanding of how things work, and who can only rely on what they see.
+19:31:03 <generateduser392> plus few want to spend time to start from basics
+19:31:09 <TheJollyRoger> Yeah!
+19:31:12 <generateduser392> they expect to jump in and understand everything
+19:31:13 <joshman[m]> Signal is older than WhatsApp yet latter is #2 in the world
+19:31:14 <joshman[m]> Xmpp is safer than Signal yet nobody uses it in daily conversations
+19:32:12 <jalb66> joshman[m], I use xmpp in daily conversations but I think Signal is safer
+19:32:22 <TheJollyRoger> I disagree: XMPP suffers from the same problem where you need to trust the server with your contact list and there's no domain fronting nor cover traffic.
+19:33:05 <jalb66> But it's because I use some channels too in xmpp
+19:33:23 <TheJollyRoger> So essentially if you're using a private XMPP server, even if you trust the server, someone with the ability to pervasively and passively monitor the network can simply see all the connections and packets flowing to it.
+19:33:32 <TheJollyRoger> Since you and your buddies will be the only ones on it.
+19:34:29 <jalb66> TheJollyRoger, but I think Matrix is worst in privacy than xmpp, but it's making many efforts lately
+19:34:33 <joshman[m]> Signal has got many drawbacks as well, so I wouldn't be so sure about who's safer here
+19:34:44 <joshman[m]> * Signal has got many drawbacks too, so I wouldn't be so sure about who's safer here
+19:35:24 <TheJollyRoger> jalb66: yes, I think a bit back I did a bit of smalltalk on Matrix/Riot, few days ago or last week. It was one of those "get a drink because we could be here for a long time" ones.
+19:35:40 <jalb66> And consume many resources
+19:36:01 <jalb66> xmpp is fast and easy
+19:36:08 <TheJollyRoger> Indeed Signal's not a perfect, but it's a hell of a lot safer than the dumpster fire that's XMPP with storing the contact list in plaintext, the messy state of addons and fragmented clients --
+19:36:40 <TheJollyRoger> in fact, one of the reasons I abandoned XMPP is because the software plugins to use OMEMO are mostly written in Python2.
+19:36:44 <TheJollyRoger> They're going to stop working soon.
+19:36:52 <TheJollyRoger> If not, they already have.
+19:37:16 <TheJollyRoger> *contact list in plaintext on the server,
+19:38:09 <jalb66> TheJollyRoger, interesting
+19:39:04 <jalb66> maybe an update?
+19:39:15 <TheJollyRoger> Then the issue is, what happens when your contact is located on a different server? On Signal, this is no problem, because with Sealed Sender, half the metadata is encrypted and inaccessible to the server anyways.
+19:39:49 <TheJollyRoger> On XMPP? Well you'd better hope that your recieving server enforces STS-TLS with strict validation and no fallback, and yours does too.
+19:39:56 <jalb66> TheJollyRoger, but note that in xmpp the contact is not a phone, it's a nickname
+19:40:09 <TheJollyRoger> You'd also better hope that you can trust not one, but now /TWO/ service providers!
+19:40:31 <TheJollyRoger> jalb66: on Signal the contact list isn't sent to the server, it's matched via hashes.
+19:40:45 <jalb66> I don't allow the contact list in xmpp
+19:40:55 <jalb66> I only add accounts
+19:40:55 <joshman[m]> Nicknames Are soon to hit Signal
+19:41:16 <jalb66> joshman[m], that would be great
+19:41:20 <TheJollyRoger> jalb66: look at the standard for XMPP when you add a contact to your XMPP account.
+19:41:40 <TheJollyRoger> It's not your phone's contact list, it's who you contact via XMPP.
+19:41:46 <jalb66> TheJollyRoger, it always ask me for that permission in Conversations, but I don't allow it
+19:41:52 <jalb66> Ah ok
+19:42:06 <joshman[m]> Nicknames and conference calls pretty much are coming same time
+19:42:08 <jalb66> But all people are only nicknames
+19:42:25 <jalb66> It could be anyone
+19:42:42 <TheJollyRoger> yes. Nicknames are coming to Signal in the near-future and they're hoping to improve the anonymity properties of it.
+19:42:56 <TheJollyRoger> Again though, this is something addressed by the paper.
+19:43:07 <TheJollyRoger> Of why they chose phone numbers initially.
+19:44:48 <joshman[m]> They've been hiring recently. Only US folks allowed. No good imo
+19:45:00 <nickcalyx[m]> how is it only US folks allowed
+19:45:38 <joshman[m]> The excuse was due to time difference productiveness would suffer
+19:46:49 <joshman[m]> Only US devs could apply for open positions
+19:47:12 <jalb66> TheJollyRoger, and what about USA requering access to all the servers or apps/programs in the country?, is that true?
+19:47:20 <joshman[m]> *  US based devs only could apply for open positions
+19:47:35 <jalb66> They also want to avoid encryption
+19:47:44 <jalb66> Or only a rumour
+19:48:19 <joshman[m]> Not a rumour
+19:48:19 <joshman[m]> The law is under development
+19:48:34 <joshman[m]> * Not a rumour
+19:48:34 <joshman[m]> The law is in development
+19:48:49 <nickcalyx[m]> there are always proposals but there is no such access
+19:49:17 <jalb66> ok
+19:49:51 <TheJollyRoger> jalb66: if EARN-IT passes, we'll have to move platforms, or Signal will need to relocate. Or we can start simply compiling from source.
+19:49:57 <nickcalyx[m]> I mean, the NSA spies on everything, we know this from Snowden.  But that doesn't mean they can break crypto at scale
+19:50:16 <jalb66> Yeah
+19:50:24 <TheJollyRoger> After all, the rationale behind the Signal client software is that we /distrust the server./
+19:50:32 <jalb66> That's true
+19:50:48 <jalb66> Even there are some forks out there
+19:52:45 <joshman[m]> The deal is to get as much folks on Signal as possible then pass the bill and voila you're decrypted. WeChat 2.0
+19:53:29 <joshman[m]> I read Signal won't relocate servers if Bill gets through
+19:53:59 <jalb66> Briar then
+19:54:25 <jalb66> Maybe Session, but I don't trust it yet
+19:54:38 <jalb66> Maybe Session, but I don't trust in it yet
+19:55:06 <fire-water56[m]> Hello everyone...I hope this is the right area for GrapheneOS install questions
+19:55:15 <TheJollyRoger> Hi fire-water56[m], yes, it is.
+19:55:18 <TheJollyRoger> What can I do for you?
+19:55:30 <fire-water56[m]> I am having troubles with my instlall right now....
+19:55:40 <joshman[m]> And the story starts again. SMS to iMessage to Whatsapp to signal to briar and on and on
+19:56:00 <TheJollyRoger> Ok, let's start at the beginning: have you saved the output history?
+19:56:10 <fire-water56[m]> I am using Elementary os on my pc, I am trying to follow the instructions on the graphene os website...
+19:56:30 <fire-water56[m]> It seams I am at the point of "Flashing factory images"
+19:56:36 <skratchnsniff[m]> <TheJollyRoger "jalb66: if EARN-IT passes, we'll"> Holy crap
+19:56:59 <jalb66> joshman[m], but in Briar is a connection without a centralized server
+19:57:25 <fire-water56[m]> I am also not the most savy using linux. I have a Pixel 3a, fully up todate, I have enable OEM unlocking, and the boot loader is unlocked.
+19:57:36 <TheJollyRoger> fire-water56[m]: can you paste output somewhere for us?
+19:57:57 <TheJollyRoger> (also, what does `fastboot --version` tell you?)
+19:58:01 <fire-water56[m]> sure... do you mean take a screenshot? sorry for my newbeness
+19:58:35 <TheJollyRoger> Copy-paste the output from terminal into text, or that.
+19:58:58 <fire-water56[m]> Thank you
+19:59:02 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/OFdrehSUOkmMvBRFOVRecGph >
+20:00:21 <TheJollyRoger> No problem, I think what's happening is you're entering it into curl wrong.
+20:00:31 <TheJollyRoger> Ah wait up.
+20:00:33 <TheJollyRoger> Just a sec.
+20:00:56 <fire-water56[m]> Thank you
+20:01:15 <TheJollyRoger> You're on a pixel 3a, correct?
+20:01:33 <TheJollyRoger> You're going to need sargo.
+20:01:35 <TheJollyRoger> Not crosshatch.
+20:01:43 <TheJollyRoger> Crosshatch is for 3XL.
+20:02:05 <fire-water56[m]> correct, pixel 3a
+20:02:12 <TheJollyRoger> I'm seeing you're entering both in.
+20:02:23 <TheJollyRoger> It's not finding it, and then curl is saying "I can't write this."
+20:02:38 <fire-water56[m]> As you can see, I am confused...lol
+20:02:39 <TheJollyRoger> Then when you try to unzip it it's saying "I'm not finding a proper zip."
+20:02:52 <TheJollyRoger> Ok. Try this one:
+20:03:30 <TheJollyRoger> curl -O https://releases.grapheneos.org/sargo-factory-2020.06.02.02.zip. && echo "Done!"
+20:03:36 <TheJollyRoger> Whoops!
+20:03:39 <TheJollyRoger> Sorry, this:
+20:03:42 <TheJollyRoger> curl -O https://releases.grapheneos.org/sargo-factory-2020.06.02.02.zip && echo "Done!"
+20:03:52 <TheJollyRoger> Sorry, there shouldn't be a period on the end there.
+20:03:59 <fire-water56[m]> ok, so just copy that and paste in to the terminal then enter
+20:04:17 <TheJollyRoger> The second one, I accidentally added a "." onto the end there.
+20:04:21 <TheJollyRoger> Yes.
+20:04:37 <fire-water56[m]> Ok... stand by
+20:04:55 <fire-water56[m]> patriot--os@patriotos-System-Product-Name:/usr/lib/android-sdk/platform-tools$ curl -O <a href="https://releases.grapheneos.org/sargo-factory-2020.06.02.02.zip" class="linkified" target="_blank" rel="noreferrer noopener">https://releases.grapheneos.org/sargo-factory-2020.06.02.02.zip</a> &amp;&amp; echo
+20:04:55 <fire-water56[m]> bash: syntax error near unexpected token `&'
+20:04:55 <fire-water56[m]> patriot--os@patriotos-System-Product-Name:/usr/lib/android-sdk/platform-tools$
+20:05:08 <TheJollyRoger> Ok, my mistake, try:
+20:05:08 <fire-water56[m]> I did and that is what popped up
+20:05:16 <TheJollyRoger> curl -O https://releases.grapheneos.org/sargo-factory-2020.06.02.02.zip
+20:05:19 <TheJollyRoger> Try that on its own.
+20:05:36 <TheJollyRoger> I like to use && echo "Done" to indicate the last error code, curl didn't like that >_<.
+20:05:39 <TheJollyRoger> (Again, my oopsie)
+20:06:08 <fire-water56[m]> I added the sudo in front of it and i looks like it is downloading
+20:06:17 <TheJollyRoger> Stop.
+20:06:23 <TheJollyRoger> DON'T use curl with sudo.
+20:06:25 <TheJollyRoger> Please.
+20:06:26 <skratchnsniff[m]> <jalb66 "josh.man, but in Briar is a conn"> Briar is awesome but I am my only contact haha
+20:06:40 <jalb66> skratchnsniff[m], lol
+20:07:22 <skratchnsniff[m]> It makes me cry coz, like so many awesome apps, no one will freakin use it.
+20:07:33 <jalb66> skratchnsniff[m], that's why I only tested it with a friend of mine and nothing more, uninstalling it later
+20:07:47 <jalb66> Yeah
+20:07:49 <fire-water56[m]> I copied and pasted your command and this is what came up....
+20:07:52 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/JkpcwEUqMAvJkFjQYpuOSqBb >
+20:08:03 <fire-water56[m]> then I used the sudo in front of it
+20:08:18 <TheJollyRoger> fire-water56[m]: you're in a location you're not privileged to write to.
+20:08:27 <TheJollyRoger> "cd ~"
+20:08:31 <TheJollyRoger> Er, without quotes
+20:08:49 <TheJollyRoger> Then "ls -lah" and see if you have write permission in your home directory.
+20:09:20 <TheJollyRoger> You'er in /usr/
+20:09:32 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/JDvmVWqNYKGjsTyuHbSWuoME >
+20:09:35 <TheJollyRoger> Also - are you using the official release of adb or the one that came in your operating system repository?
+20:09:57 <fire-water56[m]> that is my latest in terminal
+20:10:01 <TheJollyRoger> no, "cd ~" and "ls -lah" are separate commands
+20:10:04 <fire-water56[m]> after you said to stop , I was already download and foolish me typed stop... as you can see it
+20:10:29 <TheJollyRoger> If you want to put them on the same line, do "cd ~ && ls -lah"
+20:11:51 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/poSUfojTebKXkvSLtKvbsTvY >
+20:11:52 <TheJollyRoger> You're in a location that's only writable by root.
+20:12:19 <TheJollyRoger> Ok. Now try this:
+20:12:31 <fire-water56[m]> <TheJollyRoger "Also - are you using the officia"> honestly I don't know
+20:12:35 <TheJollyRoger> curl -O https://releases.grapheneos.org/sargo-factory-2020.06.02.02.zip
+20:13:33 <fire-water56[m]> <TheJollyRoger "curl -O https://releases.graphen"> I tried that command and now it is downloading again
+20:13:41 <TheJollyRoger> fire-water56[m]: ok, when that command is finished, I want you to try "fastboot --version" If it says anything less than "29.0" then stop right there because it will likely softbrick your phone.
+20:13:48 <fire-water56[m]> Thank you very much for your help so far
+20:14:10 <TheJollyRoger> Anytime!
+20:14:21 <fire-water56[m]> ok will do. It looks like I am at 21% and then I will try the fastboot version
+20:14:31 <TheJollyRoger> Or, while it's downloading, open up another terminal window.
+20:14:48 <TheJollyRoger> "fastboot --version" will simply print out the version of fastboot you have.
+20:15:49 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/PiaTwODveLcVGpenUYZEGfRr >
+20:15:54 <TheJollyRoger> It looks like Elementary OS is an Ubuntu fork, so we're going to need to set your udev rules next.
+20:16:28 <TheJollyRoger> Ok. You're about to brick your phone -- you will need to uninstall fastboot because you've installed the version from Elementary.
+20:16:44 <TheJollyRoger> So you'll need to uninstall it and then we'll install the official release.
+20:17:27 <fire-water56[m]> Wheew....dang
+20:17:29 <fire-water56[m]> thank you
+20:17:33 <TheJollyRoger> (It won't be hardbricked, it'll just say "No operating system found" because it'll likely fail autodetection. It won't be permanent.)
+20:17:48 <TheJollyRoger> (But it's annoying because you'll have to do it a second time)
+20:17:50 <fire-water56[m]> ok the download is complete
+20:19:11 <TheJollyRoger> Ok. Before we go any further, we've got to get that obsolete version of fastboot off your system. I don't remember the command sequence from Ubuntu but I think it's something like "sudo apt remove fastboot" if it was installed as fastboot, but I'm not sure what the name is so give me a moment.
+20:19:36 <fire-water56[m]> <TheJollyRoger "Ok. Before we go any further, we"> absolutely... thank you
+20:21:02 <generateduser392> <TheJollyRoger "(It won't be hardbricked, it'll "> is it because there are 2 slots (A and B)?
+20:21:03 <TheJollyRoger> Can you do me a quick favour and run "apt search android-platform-tools" ? If it doesn't return anything, try "apt search fastboot"
+20:21:51 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/KnAIdjjqHANMJaDEfrgZjazn >
+20:22:05 <TheJollyRoger> generateduser392: yeah. If I recall right, older versions of fastboot don't respect that, the version of ADB will be butchered so it won't report it as obsolete, and then they'll not set it correctly.
+20:22:30 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/wpUzEauPCACFQdtmzylgsrzj >
+20:24:58 <TheJollyRoger> ok fire-water56[m] can you run for me "sudo apt remove android-sdk-platform-tools-common" ?
+20:25:25 <fire-water56[m]> sure hold on
+20:25:54 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/xMIjOHAmyFrPfxRfqXSfOpgx >
+20:26:03 <TheJollyRoger> It looks like indeed installed fastboot with it, hopefully this'll remove it...
+20:26:43 <TheJollyRoger> Ok, try "fastboot --version" and see if it gives you "command not found." If it does, we're looking good. If not, "sudo apt remove fastboot" .
+20:28:23 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/mgRlBcpOBvsFegizTvCwBCbA >
+20:28:40 <TheJollyRoger> Excellent!
+20:29:14 <TheJollyRoger> Ok. So now we're going to get you the official platform tools from upstream which should be correctly versioned, and then we're going to set your udev rules.
+20:29:34 <TheJollyRoger> Yikes Matrix seems disconnect-ey today.
+20:30:20 <TheJollyRoger> Ok. I'm going to want you to run the following:
+20:31:05 <graphman2020[m]> Thanks for this
+20:32:15 <TheJollyRoger> mkdir -p ~/Applications/; cd ~/Applications/ && curl -O https://dl.google.com/android/repository/platform-tools-latest-linux.zip && unzip platform-tools-latest-linux.zip && ls
+20:32:32 <TheJollyRoger> Yep anytime!
+20:33:09 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/RRcZtQLTmYIGVALnwDjZDcVg >
+20:33:49 <fire-water56[m]> ok
+20:34:02 <TheJollyRoger> Hey that's odd, it seems to be inserting <'s and other symbols into what you're copy pasting.
+20:34:05 <TheJollyRoger> Hang on a moment.
+20:34:19 <TheJollyRoger> (I'm not sure what Matrix is displaying on your side of things, so I'll give you a link.)
+20:34:26 <fire-water56[m]> ok
+20:35:34 <fire-water56[m]> <TheJollyRoger "Hey that's odd, it seems to be i"> I tried it again...patriot--os@patriotos-System-Product-Name:~$ mkdir -p ~/Applications/; cd ~/Applications/ && curl -O https://dl.google.com/android/repository/platform-tools-latest-linux.zip && unzip platform-tools-latest-linux.zip && ls
+20:36:02 <TheJollyRoger> What is it giving you?
+20:36:20 <TheJollyRoger> I'm putting a script up for you.
+20:36:27 <fire-water56[m]> ok
+20:37:05 <TheJollyRoger> Send me the output?
+20:37:24 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/fMuMIofmtQxKDxeWIDpNILwZ >
+20:37:41 <fire-water56[m]> That is the latest.
+20:39:09 <generateduser392> so need to flash 2 times, once for each slot?
+20:39:35 <TheJollyRoger> generateduser392: no, it needs to support autodetection.
+20:39:43 <generateduser392> was it slot B for you when you installed graphene?
+20:40:15 <TheJollyRoger> fire-water56[m]: I'm going to send you a script.
+20:40:29 <TheJollyRoger> https://jollyrogers.ca/public/prepare-elementary.txt
+20:41:04 <TheJollyRoger> Can you run "wget -v" for me and see if it produces a help page?
+20:41:29 <TheJollyRoger> generateduser392: I have no idea, if your fastboot supports autodetection it will determine which is the correct one and set the correct one properly.
+20:41:35 <TheJollyRoger> Er, sorry,
+20:41:41 <TheJollyRoger> fire-water56[m]: "wget -h"
+20:42:03 <TheJollyRoger> Then download this script, save it as a .sh, change the permissions so you can execute it via the commandline, and then run it.
+20:42:18 <fire-water56[m]> <TheJollyRoger "Then download this script, save "> it does produce a help page.
+20:42:24 <TheJollyRoger> Ok, great.
+20:42:39 <TheJollyRoger> download that script, save it as a .bash file.
+20:43:26 <generateduser392> <TheJollyRoger "generateduser710: I have no idea"> it was on device bootloader screen
+20:43:32 <TheJollyRoger> Before you run it, make sure I, or someone on the network hasn't included something like "rm -rf /" or "send-bitcoin-private-keys-to-peter" or the like.
+20:43:49 <TheJollyRoger> generateduser392: when I installed GrapheneOS I didn't make a note of it.
+20:43:52 <fire-water56[m]> <TheJollyRoger "download that script, save it as"> ok, I think I downloaded it...
+20:44:01 <TheJollyRoger> My phone has updated a few times since.
+20:44:30 <TheJollyRoger> fire-water56[m]: ok. Rename it to prepare-elementary.sh
+20:45:50 <TheJollyRoger> The command to set it to an executable is "chmod u+x [filename]" with the path to prepare-elementary.sh instead of [filename]. So if you've downloaded it to /home/patriot--os/Downloads/prepare-elementary.sh that's where it'll be.
+20:46:06 <fire-water56[m]> <TheJollyRoger "fire-water56: ok. Rename it to p"> Ok, I renamed it. Should I scan the document for the rm -rf or send bitcoin.... stuff?
+20:46:42 <TheJollyRoger> fire-water56[m]: Yes. Make sure there's nothing in there that looks malicious. Never run any script from the internet you get from strangers that you don't trust without having a good look over it first.
+20:47:03 <fire-water56[m]> <TheJollyRoger "fire-water56: Yes. Make sure the"> Ok, thank you. I will search it now.
+20:47:22 <TheJollyRoger> If that script executes successfully, it should tell you in plain English what you need to do.
+20:48:16 <fire-water56[m]> <TheJollyRoger "If that script executes successf"> Ok, I scanned the document and nothing appeared. It should be safe then.
+20:49:09 <TheJollyRoger> Great. "chmod u+x" it to give it permission to execute as a program, and run it by typing its relative filename into the command window.
+20:49:41 <fire-water56[m]> I opened up a new terminal window and changed the directory to downloads... is this correct?
+20:49:42 <fire-water56[m]> patriot--os@patriotos-System-Product-Name:~$ cd downloads
+20:49:42 <fire-water56[m]> patriot--os@patriotos-System-Product-Name:~/downloads$
+20:50:03 <fire-water56[m]> I just run the chmod u+x command here
+20:50:05 <TheJollyRoger> Remember that Unix is case sensitive: downloads is going to be a different directory than "Downloads"
+20:50:13 <fire-water56[m]> oh
+20:50:40 <TheJollyRoger> You can check the contents of the working directory with the list-segments command: "ls"
+20:52:05 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/IZMfLAnLFxhQxuKtzSODikjr >
+20:52:29 <TheJollyRoger> cd Downloads
+20:52:32 <TheJollyRoger> ls
+20:52:59 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/rcSIrMpfpdnbfOFvIYowUNya >
+20:53:16 <fire-water56[m]> now i just run the chmod u+x command
+20:53:29 <TheJollyRoger> no
+20:53:46 <fire-water56[m]> Again, sorry for my lack of understanding.
+20:53:59 <TheJollyRoger> No problem, let me just check, sorry. I'm a bit of a slow reader.
+20:54:48 <TheJollyRoger> Ok, here it is. "mv prepare-elementary.txt prepare-elementary.bash && chmod u+x prepare-elementary.bash && ./prepare-elementary.bash"
+20:55:19 <TheJollyRoger> Since it includes sudo commands in there it may ask you for your sudo password a few times.
+20:56:00 <fire-water56[m]> I copied and pasted into my terminal window....
+20:56:03 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/kPZAEnnznAbgeWFWhSNWkYoj >
+20:56:21 <fire-water56[m]> there was a lot more than just this in my window, but I just copied the last part of it.
+20:57:01 <TheJollyRoger> Great. It ran successfully.
+20:57:14 <fire-water56[m]> 👍
+20:57:44 <TheJollyRoger> Can you run "echo $PATH" and tell me what it says?
+20:58:12 <fire-water56[m]> patriot--os@patriotos-System-Product-Name:~/Downloads$ echo $PATH
+20:58:12 <fire-water56[m]> /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+20:58:12 <fire-water56[m]> patriot--os@patriotos-System-Product-Name:~/Downloads$
+20:59:40 <TheJollyRoger> ls ~/GrapheneOS/platform-tools/
+20:59:58 <anupritaisno1[m]> Btw recommended archlinux here
+21:00:09 <TheJollyRoger> Yeah.
+21:00:14 <anupritaisno1[m]> Even a chroot will do
+21:00:21 <anupritaisno1[m]> But I advise staying away from the fuckery Debian is
+21:00:27 <anupritaisno1[m]> Unless you don't have a life
+21:00:27 <TheJollyRoger> Yeah really >_<.
+21:00:43 <fire-water56[m]> <TheJollyRoger "ls ~/GrapheneOS/platform-tools/"> patriot--os@patriotos-System-Product-Name:~/Downloads$ ls ~/GrapheneOS/platform-tools/
+21:01:01 <TheJollyRoger> fire-water56[m]: it's not returning anything?
+21:01:34 <fire-water56[m]> <TheJollyRoger "fire-water56: it's not returning"> patriot--os@patriotos-System-Product-Name:~/Downloads$ ls ~/GrapheneOS/platform-tools/
+21:01:35 <TheJollyRoger> I notice you have platform-tools in Downloads though, so eh... even if it didn't respect the script, let's try using that one.
+21:01:55 <TheJollyRoger> export PATH=$PATH:$HOME/Downloads/platform-tools/
+21:01:59 <TheJollyRoger> That one will return no output.
+21:02:07 <TheJollyRoger> So try "fastboot --version"
+21:02:31 <fire-water56[m]> patriot--os@patriotos-System-Product-Name:~/Downloads$ export PATH=$PATH:$HOME/Downloads/platform-tools/
+21:02:31 <fire-water56[m]> patriot--os@patriotos-System-Product-Name:~/Downloads$
+21:02:54 <TheJollyRoger> Yep, now try "fastboot --version"
+21:03:08 <fire-water56[m]> patriot--os@patriotos-System-Product-Name:~/Downloads$ fastboot --version
+21:03:08 <fire-water56[m]> fastboot version 1:8.1.0+r23-5~18.04
+21:03:08 <fire-water56[m]> ...(truncated)
+21:03:31 <TheJollyRoger> Ok, that version of fastboot is bad.
+21:03:37 <fire-water56[m]> I did notice I have a Home: fastboot terminal window open.
+21:03:40 <TheJollyRoger> Is it telling you the install location?
+21:04:04 <TheJollyRoger> We could continue here but I actually have to go and get some chores done... in all honesty though anupritaisno1[m] is correct.
+21:04:16 <anupritaisno1[m]> BTW if you want a hacky fix
+21:04:23 <anupritaisno1[m]> Debian sid
+21:04:38 <anupritaisno1[m]> Though they sometimes bundle prerelease
+21:05:05 <anupritaisno1[m]> When your packages are newer than what arch has you can only imagine how it could destroy you
+21:05:19 <TheJollyRoger> fire-water56[m]: we've encountered this problem a lot with Ubuntu derivatives and Mint derivatives, can you tell me the output of `which fastboot` ? I'm running out of time.
+21:05:21 <anupritaisno1[m]> But if it's just for building android you're fine
+21:05:48 <anupritaisno1[m]> <TheJollyRoger "fire-water56: we've encountered "> BTW this doesn't matter if you're building
+21:05:59 <fire-water56[m]> fastboot version 1:8.1.0+r23-5~18.04
+21:05:59 <fire-water56[m]> Installed as /usr/lib/android-sdk/platform-tools/fastboot
+21:06:03 <TheJollyRoger> anupritaisno1[m]: yeah we're just trying to install it.
+21:06:15 <TheJollyRoger> fire-water56[m]: ay carumba what the hell, it's back.
+21:06:21 <anupritaisno1[m]> Ah
+21:06:31 <anupritaisno1[m]> There's an easy way to do that
+21:06:40 <fire-water56[m]> <TheJollyRoger "fire-water56: ay carumba what th"> I might be in a different terminal window than where I need to be?
+21:06:42 <anupritaisno1[m]> flash just boot.img
+21:06:50 <anupritaisno1[m]> Boot the recovery
+21:07:00 <anupritaisno1[m]> Sideload the OTA
+21:07:16 <anupritaisno1[m]> Go back to bootloader and flash the avb key then lock
+21:07:20 <TheJollyRoger> anupritaisno1[m]: mind if I hand that over to you then?
+21:07:35 <anupritaisno1[m]> ¯\_(ツ)_/¯ okay
+21:07:42 <TheJollyRoger> He's currently got an old and butchered version of fastboot and it seems to keep persisting on his system even though we uninstalled it.
+21:07:53 <TheJollyRoger> So apt is messing up again.
+21:08:02 <fire-water56[m]> <TheJollyRoger "anupritaisno1: mind if I hand th"> Thank you very much TheJollyRoger. I appreciate that.
+21:08:10 <anupritaisno1[m]> Hmmm
+21:08:12 <anupritaisno1[m]> fire-water56: just a second
+21:08:21 <fire-water56[m]> ok
+21:08:43 <cn3m[m]> anupritaisno1: saw your post about Pixel 4
+21:08:44 <TheJollyRoger> fire-water56[m]: in all honesty, I would probably suggest running one of the supported distributions. Either that or we're going to have to excise fastboot from your system manually.
+21:08:51 <anupritaisno1[m]> <TheJollyRoger "export PATH=$PATH:$HOME/Download"> Found the problem
+21:09:16 <TheJollyRoger> anupritaisno1[m]: oh yeah, shoot, should've been the other way around.
+21:09:19 <TheJollyRoger> My bad.
+21:09:27 <anupritaisno1[m]> export PATH=$HOME/Downloads/platform-tools/:$PATH
+21:09:36 <TheJollyRoger> Thanks anupritaisno1[m]
+21:09:37 <fire-water56[m]> Run that then?
+21:09:49 <TheJollyRoger> Yeah run anupritaisno1[m]'s command.
+21:09:56 <TheJollyRoger> then try "fastboot --version"
+21:10:17 <anupritaisno1[m]> Also I'd suggest using :? in front of HOME or ~ to make sure it never evaluates to /
+21:10:30 <fire-water56[m]> patriot--os@patriotos-System-Product-Name:~/Downloads$ export PATH=$HOME/Downloads/platform-tools/:$PATH
+21:10:30 <fire-water56[m]> patriot--os@patriotos-System-Product-Name:~/Downloads$
+21:10:33 <fire-water56[m]> I ranf the command
+21:10:43 <anupritaisno1[m]> Now run
+21:10:46 <TheJollyRoger> Ok, now try "fastboot --version"
+21:10:46 <anupritaisno1[m]> which fastboot
+21:11:01 <anupritaisno1[m]> Or that
+21:11:18 <TheJollyRoger> "export" will produce no output
+21:11:18 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/slCsadWvrvKnoNZGOcdwDGAG >
+21:11:33 <fire-water56[m]> Ok, I ran the fastboot version
+21:11:34 <anupritaisno1[m]> Nice
+21:11:41 <TheJollyRoger> Great. It's the correct one.
+21:11:47 <anupritaisno1[m]> Now just run the flash all script
+21:11:52 <anupritaisno1[m]> And you're done
+21:11:55 <TheJollyRoger> Connect your phone and start it in fastboot.
+21:12:05 <TheJollyRoger> Hold your finger on Volume Down and then hold down Power.
+21:12:13 <TheJollyRoger> It should boot to fastboot.
+21:12:21 <fire-water56[m]> my phone is connected to my computer.... and it is in fastboot mode.
+21:12:34 <TheJollyRoger> Ok! Do as anupritaisno1[m] says.
+21:12:52 <fire-water56[m]> I should literally just run the flash all command?
+21:12:56 <TheJollyRoger> You'll need to unzip the sargo-factory
+21:13:11 <TheJollyRoger> the sargo-factory zip file, and then run the flash-all.sh command contained in there.
+21:13:18 <anupritaisno1[m]> <fire-water56[m] "I should literally just run the "> bash flash-all.sh
+21:13:31 <fire-water56[m]> <anupritaisno1[m] "bash flash-all.sh"> Ok
+21:13:52 <fire-water56[m]> patriot--os@patriotos-System-Product-Name:~/Downloads$ bash flash-all.sh
+21:13:52 <fire-water56[m]> bash: flash-all.sh: No such file or directory
+21:13:52 <fire-water56[m]> patriot--os@patriotos-System-Product-Name:~/Downloads$
+21:14:02 <fire-water56[m]> I ran the command and that showed up.
+21:14:12 <TheJollyRoger> fire-water56[m]: you'll need to unzip the sargo-factory zip file first and cd into the directory it unpacks.
+21:14:25 <TheJollyRoger> the flash-all.sh script is contained in there.
+21:15:52 <fire-water56[m]> would the command be: unzip sargo-factory-2020.06.02.02.zip
+21:15:58 <TheJollyRoger> Yes.
+21:16:26 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/hHIgPrLZKJEBWKTQCWXmWxtB >
+21:16:32 <fire-water56[m]> I ran the command
+21:17:10 <TheJollyRoger> I have to go, about fifteen minutes ago. Good. "cd sargo-factory-2020.06.02.02 && ./flash-all.sh"
+21:17:31 <TheJollyRoger> So once that command starts running I'll tell you what to do.
+21:17:43 <TheJollyRoger> You'll get to a screen that says "fastbootd" with blue text.
+21:17:55 <fire-water56[m]> I ran it and stuff is going on....
+21:17:59 <TheJollyRoger> Once the flash all script finishes, your phone will end up in fastbootd.
+21:18:23 <TheJollyRoger> ONCE you get to fastbootd, you're going to want to use the volume keys to scroll to "restart to bootloader" and that will get you back to fastboot.
+21:18:24 <fire-water56[m]> I'm in hte fastbootd
+21:18:37 <TheJollyRoger> Ok. At this point, you will want to lock.
+21:18:53 <TheJollyRoger> anupritaisno1[m]: whew. Thanks for bailing me out.
+21:19:17 <fire-water56[m]> Ok I'm at the fast boot mode... just run the fastboot flashing lock command then?
+21:19:24 <TheJollyRoger> Yes.
+21:19:38 <TheJollyRoger> Once it completes, use your volume keys to scroll back to "start"
+21:20:08 <TheJollyRoger> It's going to tell you (and every time from hereon in, until you reinstall the factory OS in the same way) your device will be loading a different operating system.
+21:20:22 <TheJollyRoger> If you see this in yellow text, that's a /good sign/.
+21:20:45 <TheJollyRoger> You should see that warning each time you restart your phone.
+21:20:59 <TheJollyRoger> If it turns orange and says "Software integrity not guaranteed!" then you should start to worry.
+21:21:34 <fire-water56[m]> Now i'm  stuck on the fastboot mode screen.
+21:21:41 <TheJollyRoger> Once your phone starts and you get past the launcher, I want you to head over to https://attestation.app/tutorial on your desktop, and read everything there very carefully.
+21:21:43 <fire-water56[m]> I hit start and it comes right back to it.
+21:22:26 <TheJollyRoger> OK. Save the scrollback in the terminal window. Save it to a .txt file.
+21:22:29 <TheJollyRoger> I'm out of time.
+21:23:06 <TheJollyRoger> I will return later.
+21:23:17 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/zbERVUocOGMXFBsnTNrFbWzs >
+21:23:31 <fire-water56[m]> <TheJollyRoger "OK. Save the scrollback in the t"> Thanks for all the time you spent helping me out.
+21:25:16 <anupritaisno1[m]> Uhhhhh
+21:26:35 <anupritaisno1[m]> You kinda fucked up there
+21:26:43 <fire-water56[m]> My phone is in the fasboot mode screen.... locked... but it says no valid slot to boot
+21:27:06 <anupritaisno1[m]> Unlock again
+21:27:39 <fire-water56[m]> ok it's unlocked now
+21:29:03 <anupritaisno1[m]> You see another zip there?
+21:29:11 <anupritaisno1[m]> Unpack it
+21:29:55 <fire-water56[m]> I'm not sure where another zip is?
+21:30:26 <anupritaisno1[m]> There is
+21:31:21 <fire-water56[m]> OK. Should I look in my downloads folder for another zip?
+21:31:39 <anupritaisno1[m]> No
+21:32:10 <anupritaisno1[m]> It will be in the same location as the script
+21:32:29 <fire-water56[m]> ok
+21:33:54 <fire-water56[m]> I opened up a new terminal window. I'm back in my Downloads folder and this is what I have.
+21:33:55 * fire-water56[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/GgKySwrXqcDcKdmZnzqVtQbD >
+21:44:46 <fire-water56[m]> I don't know why I'm having such a difficult time with this. I think I really bit off more than I can chew. I'm going to take a break for a couple hours and try again. Thank you everyone for the help.
+21:50:06 <aeonsolution[m]> fire-water56: it just takes time and patience, if you veer off from the instructions on the website; issues will usually occur
+22:10:16 <anupritaisno1[m]> fire-water56: cd sargo-
+22:10:16 <anupritaisno1[m]> It'll be there

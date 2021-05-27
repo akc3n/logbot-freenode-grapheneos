@@ -1,0 +1,548 @@
+00:38:50 <brenneke[m]> <TheJollyRoger "Besiiiiiides. I've seen what hap"> Started asking for advice on how to flash GOS but didn't have or know he needed a cord.
+00:43:15 * TheJollyRoger chuckles. Oh boy.
+01:10:28 <M2liz[m]> pixel 4a release works for 5g too yeah?
+01:21:35 <TheJollyRoger> Hi M2liz[m], resoundingly no, the Sunfish release *will not* work for the 4a5G.
+01:21:57 <TheJollyRoger> Even though the 4a resembles the 4a5G externally, the two devices are extremely different underneath that glossy black polycarbonate shell.
+01:22:17 <TheJollyRoger> They use different kernels, different chips, and different drivers, and most importantly, different bootloaders.
+01:22:52 <TheJollyRoger> Although I believe fastboot does have a safety check in place to prevent accidental mis-installation, I would not advise trying to test this.
+01:45:26 <M2liz[m]> thanks
+01:45:27 <M2liz[m]> sadly i did learn the hard way
+01:45:36 <M2liz[m]> paper weight
+01:46:22 <TheJollyRoger> Oh shit!
+01:46:32 <TheJollyRoger> Oh shit shit man, that really sucks.
+01:46:34 <louipc> what about jtag
+01:47:09 <M2liz[m]> yeah hard brick wont turn on nothing
+01:47:12 <M2liz[m]> ill look into jtag
+01:47:37 <louipc> need a person with skillz
+01:48:29 <TheJollyRoger> M2liz[m]: yeah makes sense... if the bootloader is messed up, then that phone is hardbricked forever. I don't know if you could do it with the JTAG headers, you would need to remove the phone's screen and you would also need something that can talk directly to the phone's SSD... I don't know what kind of a programmer you would need for that.
+01:49:39 <TheJollyRoger> Or what the pinout would be.
+01:50:33 <louipc> its already bricked so have fun with it
+01:51:26 <TheJollyRoger> Any word on an RMA to Google?
+01:51:55 <oldperson_newuse> Hello all.  Got grapheneos installed and it has been rock solid.  Only missing one thing .  When someone leaves a voice mail I do not get a notification.  Specifically in the default dialer there usually is a 4th tab for voicemail.  Does grapheneos support visual voice mail ?  The carrier is verizon USA and the device is crosshatch aka pixel3xl.
+01:51:56 <oldperson_newuse> thanks
+01:52:55 <M2liz[m]> going through the process now so we'll see
+01:53:41 <TheJollyRoger> Hi oldperson_newuse, huh. I haven't had any problems with it, but I think some other people on Verizon have reported a similar problem.
+01:53:57 <M2liz[m]> sadly i did try looking it up but all i got was some rando on reddit saying something to the effect of "yeah 5g should work" a few months ago so thats on me
+01:54:00 <TheJollyRoger> (I'm not on Verizon, though, so I don't think I'm able to reproduce it.)
+01:54:15 <TheJollyRoger> Aw, shoot!
+01:54:43 <oldperson_newuse> thanks for the replies. I was thinking this may be relevant but it is over my head https://source.android.com/devices/tech/config/voicemail
+01:55:16 <oldperson_newuse> note that visual voice mail did work with aosp11 and with lineageos_10
+01:55:21 <TheJollyRoger> Let me take a look...
+01:55:36 <oldperson_newuse> ty
+01:56:00 <TheJollyRoger> Heh, I actually haven't seen this before, then again, I haven't studied much in this area yet. (I'm not actually a developer, not yet :P)
+01:56:37 <oldperson_newuse> TheJollyRoger yes was on here late at night a couple nights ago and spoke with you about this.  so Maybe I am the 'other people'  :-)
+01:56:53 * TheJollyRoger laughs
+01:56:58 <TheJollyRoger> Well there's that then, hee hee.
+01:57:24 <oldperson_newuse> I flashed from lineageos but I wouldnt think that would matter as the flash should have erased everything.  is that a correct assumption ?
+01:58:28 <TheJollyRoger> Yeah. When you lock and unlock bootloader state, all userdata is wiped. When you install the new system image, and lock the bootloader, it shouldn't matter; all GrapheneOS system images for a given device are signed, verified, and bitwise identical.
+01:59:05 <TheJollyRoger> So this is why we can use auditor to determine the authenticity of the signing keys, which attest to the authenticity of the entire system image.
+01:59:29 <TheJollyRoger> (Provided the bootloader is locked! If the bootloader isn't locked then verified boot is disabled.)
+02:00:40 <TheJollyRoger> Sec, I'll repost...
+02:00:48 <TheJollyRoger> > Yeah. When you lock and unlock bootloader state, all userdata is wiped. When you install the new system image, and lock the bootloader, it shouldn't matter; all GrapheneOS system images for a given device are signed, verified, and bitwise identical.
+02:00:52 <TheJollyRoger> > So this is why we can use auditor to determine the authenticity of the signing keys, which attest to the authenticity of the entire system image.
+02:00:55 <oldman_newUser> sorry I got disconnected.  tethering thru phone at work.  using graphene :-)
+02:00:57 <TheJollyRoger> > (Provided the bootloader is locked! If the bootloader isn't locked then verified boot is disabled.)
+02:01:03 <TheJollyRoger> No problem! There's what you missed earlier.
+02:01:09 <oldman_newUser> ty
+02:02:47 <oldman_newUser> ok.  I think I will subscribe to the visual voice mail plus from verizon for 30 days and see if it installs the correct bits on my phone.  not ready to give up on this yet.  I know voice mail is old tech but sometimes business and doctors and related people calling just need to leave a message.  I do get a missed call notification but no VM notice
+02:03:13 <TheJollyRoger> Makes sense in that respect!
+02:03:17 <TheJollyRoger> Alrighty, fingers crossed man.
+02:03:35 <louipc> huh.. i hope it doesnt install junk
+02:04:14 <louipc> voicemail is good but needs to be done better
+02:04:20 <oldman_newUser> yea i know.  plus verizon warns ' you are changing your plan'  and I have several discounts for the plan I currently have.
+02:04:24 <TheJollyRoger> (If you're curious or want to know more about the process, you can actually try peeling open the factory image .zip file, and you will find a bunch of ext4 sparse images inside. Those are exact copies of the partition, sowhen you install those to your phone, the entire old system partition will be replaced.)
+02:07:09 <oldman_newUser> TheJollyRoger  thanks.  I may have to do that.  prolly need to read the doc I posted earlier about VMM and maybe see if that gives me any clues.  I do know LIneageos had some apps called carrier_provisioning_sp?  prolly should look and see if grapheneos has thos along with some sim_manager stuff.
+02:08:39 <TheJollyRoger> Got it. I unfortunately am out of my depth here, but fingers crossed for you!
+02:09:53 <oldman_newUser> yea graphene doesnt show a carrier provisioning app but it does show a sim_toolkit.  but not the same as lineageos.  One of the things I love about graphene is they state to relock the bootloader.  so thanks again and I will check back in later
+02:31:24 <BugHunter1000> Can one unroot after installing Graphene to drop back down to "user" privileges?
+02:32:08 <TheJollyRoger> BugHunter1000: I don't think rooting, then unrooting is really doable on GrapheneOS, not without an exploit of some sort.
+02:32:43 <TheJollyRoger> If you did find an exploit, the phone's verified boot will simply undo any changes you make to the system partition upon next restart.
+02:40:22 <Hamilton_Hamster> Hello everyone! Does anyone one know reasonably when to expect pixel 4a5g and pixel 5g support?
+02:41:27 <TheJollyRoger> Ahoy Hamilton_Hamster, at this moment the 4a5G and the 5 is not on the project's roadmap; currently we're looking for another maintainer to help out with that.
+02:42:09 <TheJollyRoger> The rule of thumb is that for every new device (or new device family, if it's close enough and uses the same SoC, kernel, and drivers) that is to be supported, the project will need one more maintainer for it dedicated full time.
+02:43:34 <Hamilton_Hamster> I see, I am looking around the grapheneos site, and can't find a roadmap. Is there onee hiding out somewhere?
+02:44:21 <TheJollyRoger> Don't think there's one made up for it yet, not specifically.
+02:45:22 <Hamilton_Hamster> Ok, thank you guys btw! Graphene is such a better os than stock android
+02:45:39 <TheJollyRoger> With respect to new devices though, GrapheneOS has a policy of "we do it properly, or not at all" so this is why if the manpower is'nt there to support the new device, it won't be supported.
+02:46:05 <Hamilton_Hamster> Thats a good policy
+02:46:22 <TheJollyRoger> This is so we don't end up in a situation where we've got a large number of devices and none of them are getting enough attention to not only meet, but also exceed the security and privacy properties of the factory operating system.
+02:46:38 <TheJollyRoger> Yep!
+02:46:42 <Hamilton_Hamster> I've been using the os for a few months, and its really great thank you guys!
+02:47:11 <TheJollyRoger> Hey, glad to hear you're getting good use out of it! If you do find it good, please be sure to donate at https://grapheneos.org/donate - this project's kept funded by donations and that permits the developers to keep going!
+02:47:20 <Hamilton_Hamster> A small question, are there any apps you guys recomend that often get overlookd?
+02:47:31 * TheJollyRoger starts thinking.
+02:48:07 <TheJollyRoger> I'm hesitant to recommend other apps, because this is largely going to be a personal choice for everyone who is on GrapheneOS. In the future, we'd like to have a first-party app store, but that's for the future.
+02:48:34 <TheJollyRoger> I very much like Signal Private Messenger, and that's a pretty safe bet, a lot of people here run Signal.
+02:48:42 <Hamilton_Hamster> yeah im just asking in general, because discovering stuff on foss is difficult
+02:48:52 <TheJollyRoger> Yeah.
+02:48:58 <Hamilton_Hamster> yeah signal was the first thing I installed
+02:50:04 <TheJollyRoger> It's a bit of a sore spot that apps are the difficult part in the FOSS ecosystem. But I can also recommend Super Tux Kart, it's a great game and can really help melt a lot of long hours waiting for the bus away.
+02:54:54 <TheJollyRoger> I'll be back shortly!
+02:56:22 <Hamilton_Hamster> Cool! Ill check it out, thank you!
+03:14:40 <thomasJefferson> Hi can somebody do Auditor remote verification with meWe can upload screenshots / to scan QR Codes
+03:26:04 <thomasJefferson> Do you guys have a reccomended Antivirus for Graphene OS? Such as ESET Mobile apk?
+03:26:19 <thomasJefferson> I just want to scan my GOS filesystem for viruses/
+03:26:53 <rny> thomasJefferson: userland applications dont have access to the entire fs
+03:27:01 <thomasJefferson> Wonderful
+03:27:24 <thomasJefferson> Does Graphene OS have any defence against Maliscious IMSI catcher- over the air updates
+03:27:34 <thomasJefferson> IMSI Catchers can push fake system updates which are actually malware onto phones
+03:27:52 <thomasJefferson> Does Graphene have any protection against maliscious Over the air updates
+03:28:00 <rny> thomasJefferson: grapheneos does ota updates using a pre-installed application that ships with the OS itself.
+03:28:05 <thomasJefferson> I think the Encrypted Connection to the update server
+03:28:10 <rny> and does not rely on carrier ota updates
+03:28:14 <thomasJefferson> Perfect
+03:28:27 <thomasJefferson> I think Graphene should increase its security against IMSI catcher MITM-style attacks
+03:29:16 <rny> thomasJefferson: this is not a os concern, you should raise this with the LTE working group
+03:30:08 <thomasJefferson> Where are they?
+03:30:13 <thomasJefferson> You mean the LTE standards body itself
+03:30:20 <rny> thomasJefferson: yes ^
+03:30:25 <thomasJefferson> I think the Protocol has intentional weaknesses to allow LE interception
+03:30:32 <thomasJefferson> similar to NSa bullrun program
+03:30:50 <rny> thomasJefferson: conspiracies and speculations are offtopic in this channel
+03:31:02 <rny> please take it elsewhere.
+03:31:41 <oldman_newuser> hello.  working on building grapheneos for my device.  crosshatch aka pixel3xl.  Notice an abnormality with the docs at https://grapheneos.org/build.  that page states under the kernel section: Pixel 3: crosshatchPixel 3 XL: blueline.  This seems reversed ?  whatdoya think ?
+03:32:34 <rny> oldman_newuser: crosshatch/blueline builds the same kerneel
+03:32:51 <rny> they share identical SoCs
+03:32:54 <oldman_newuser> ty.  appreciate it
+03:42:30 <brenneke[m]> <thomasJefferson "I think the Protocol has intenti"> Were you not just banned for 7 days Adam?
+03:43:12 * brenneke[m] uploaded an image: imsi.png (177KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/HZuLJfgDZvayncXwIvgauLIN/imsi.png >
+03:46:03 <thomasJefferson> i think thats someone else
+04:19:52 <TheJollyRoger> Well, looks like someone's not getting their ban lifted.
+06:30:59 <CaptainBlackton> Just curious, do the zoom and astro-photo features of the pixel 4 work in Graphene OS by default?
+06:56:50 <Lynn[m]> <cyborgninjaneer[ "Orbot is an option, but some peo"> Malicious Tor nodes should not be able to do anything as long as you're using a strong TLS connection. The main thing malicious Tor nodes will do is attempt to track you, do time correlations, etc.
+06:57:10 <Lynn[m]> > <@cyborgninjaneer:matrix.org> Orbot is an option, but some people are afraid of malicious tor exit nodes. I don't know enough about https to know for sure whether or not that's a real concern.
+06:57:10 <Lynn[m]>  * Malicious exit nodes should not be able to do anything as long as you're using a strong TLS connection. The main thing malicious exit nodes will do is attempt to track you, do time correlations, etc.
+06:58:16 <Lynn[m]> I've had cases where some Tor nodes will attempt to intercept TLS traffic, but the browser will scream because the CA doesn't match up.
+07:05:16 <Lia[m]> <CaptainBlackton "Just curious, do the zoom and as"> On bundled camera? Zoom works, astro-photo seems to only work on Gcam, unsure
+07:10:35 <Lia[m]> Zooming is a basic functionality tbh
+07:16:07 <r0tt0r[m]> <oldman_newuser "ty.  appreciate it"> hi, may i ask if you would like to test a bootanimation generation script i created for gos?
+07:17:18 <r0tt0r[m]> <CaptainBlackton "Just curious, do the zoom and as"> astro works
+07:17:48 <oldman_newuser> I could try.  but let me get this first one done to see if I can do it.  I do remember seeing something about a different boot animation as a pull request, but when I booted up i didnt see it
+07:18:24 <CaptainBlackton> OK, thanks <Lia[m]> and <r0tt0r[m]>! That's good to know! It's just that I had bought a previous device for LOS, but the camera and light didn't work at all, so I thought I would double-check before trying a new device/OS
+07:18:50 <CaptainBlackton> I actually just ordered it, so no turning back now anyway!
+07:19:26 <r0tt0r[m]> <oldman_newuser "I could try.  but let me get thi"> sure no hurry. i created it freshly so not sure which was that
+07:19:32 <oldman_newuser> oh this is what I saw https://www.reddit.com/r/GrapheneOS/comments/byo51d/boot_animation_sketch/
+07:20:36 <r0tt0r[m]> <oldman_newuser "oh this is what I saw https://ww"> oh ok dont know that
+07:22:33 <oldman_newuser> I'm compiling to get the source to see why visual voice mail doesnt work on verizon .  I saw this commit https://github.com/GrapheneOS/platform_packages_services_Telephony/commit/fa6c9d723cb47a540be721aec57b877937302237 . however when I looked at the plain aosp vm3 was not enables and visual voice mail aka vvm , is working.  I am thinking it has
+07:22:34 <oldman_newuser> something to do with the carrierconfig.  anyway give me a bit to get more accsustomed to what is going on here.  I really like grapheneos
+07:33:23 <clox[m]> Hi guys, is signal still secure. I read a post that it has been decrypted
+07:33:49 <somenerd[m]> this is a bit ot
+07:33:57 <somenerd[m]> might want to go to the offtopic channel?
+07:34:04 <somenerd[m]> #grapheneos-offtopic
+08:30:52 <Thatcher[m]> Are apps in Graphene sandboxed?
+08:31:03 <somenerd[m]> yes
+08:42:15 <Flatline> Quick question about the contact app in graphene if anyone knows the answer. Just tried to add a contact and the app suggested me to "log into my gmail account", what is that about?
+08:48:57 <Lia[m]> Can you record and reproduce that occurence?
+08:59:19 <emsyna[m]> just press "cancel"
+09:09:14 <Flatline> Lia[m] after adding contacts i had the option to click a popup for synchronizing my contacts automatically.
+09:11:10 <Flatline> And in the window that came up it says "Synchronize changes not only in Google contacts but in all apps"
+09:11:20 <Flatline> not word for word but in the sense
+09:11:47 <Flatline> (Translated the gist from german)
+09:19:10 <Flatline> https://imgur.com/a/gmdZivE
+09:19:15 <Flatline> this is what it looks like
+09:42:58 <arpysco[m]> very strange
+09:46:04 <Flatline> it's in german but you get the gist. Maybe a localization leftover?
+09:49:32 <arpysco[m]> I don't know
+10:01:27 <fll[m]> Flatline: do you have any sync accounts set up at all? Like maybe davx?
+10:01:47 <Flatline> Didn't set any accounts up at all
+10:02:34 <Flatline> My account section is literally empty
+10:03:09 <Flatline> And the default "Account" for the contact list is "Device"
+10:06:43 <fll[m]> Hmm...weird that it tells you about syncing even though it's not set up.
+10:06:43 <fll[m]> Either way, all those included aosp apps are not really maintained. I would assume that the message is a symptom of that.
+10:08:59 <Lia[m]> <Flatline "Lia after adding contacts i had "> Yep, that option is definitely there
+10:10:23 <Albakham[m]> Is the OpenCamera app really terrible compared to Google Camera?
+10:10:28 * Lia[m] uploaded a video: trim_20201211_100959.mp4 (2970KiB) < https://matrix.org/_matrix/media/r0/download/privacytools.io/tBZbulauwrpcVnJBRPVDsHGe/trim_20201211_100959.mp4 >
+10:10:52 <Flatline> oop, lost connections
+10:10:52 <Lia[m]> Definitely a translation ledtiver
+10:10:55 <Lia[m]> <Albakham[m] "Is the OpenCamera app really ter"> Not really
+10:12:19 <arpysco[m]> haven't tried gcam so I can't say, but open camera's good enough for me
+10:12:31 <Albakham[m]> Okay
+10:12:54 <Albakham[m]> I think I'll buy a pixel 4a in the following days
+10:13:20 <Lia[m]> <Flatline "oop, lost connections"> It's not only you. It prompts that stuff,but doesn't say "google account". Probably not removed in translations (not really the priority rn)
+10:13:49 <Flatline> i could just switch to english and have a look. sec
+10:17:45 <Flatline> It's similar, it just says at the end "A Google Account works this way". So yeah, lost in translation
+10:47:52 <emsyna[m]> opencamera is really good, if you know how to use it
+10:49:34 <oldman_newuser> hi y'all.  got grapheneos compiled and trying to flash a pixel3xl.  currently it has the latest google factory image.
+10:50:15 <oldman_newuser> Device version-bootloader is 'b1c1-0.3-6623201'.Update requires 'b1c1-0.3-6863019'.fastboot: error: requirements not met!
+10:50:34 <oldman_newuser> fastboot version 30.0.5-6877874
+10:50:40 <ultrabo0k[m]> Hi guys... I still have my problem with NO SERVICE on my Pixel 4 XL... I swapped sims between my GrapheneOS devices and everything is working properly on my Pixel 3 but  Pixel 4 XL having an issue to find services... Ive changed mobile operators as well but still nothing...  In About phone I can see my phone and IMEI number.. In Mobile settings I can see which mobile operator I am using but there is NO SERGICE at
+10:50:40 <ultrabo0k[m]> all... I reset the device few times as well... Any suggestions?
+10:53:01 <oldman_newuser> ultrabo0k[m] I guess everyone is sleeping :-)
+10:53:03 <Lia[m]> You sure you have updated to latest version?
+10:53:11 <Lia[m]> Your bootloader looks very outdated
+10:53:56 <oldman_newuser> yea I flashed the factory image using their new fancy way thru the web browser
+10:54:14 <ultrabo0k[m]> <oldman_newuser "Device version-bootloader is 'b1"> oldman_newuser: if you are following everything and something is wrong juat change operation system of your pc  and will work. I have to change 3 machines until get it rightoldman_newuser:
+10:58:27 <oldman_newuser> yea this linux pc is my main one. i was thinking something like 'fastboot flash bootloader'
+10:59:20 <oldman_newuser> Lia[m]  I can flash factory image again with fastboot and not the web route.  before it had factory_latest it had LOS on it
+11:00:36 <oldman_newuser> I am trying to flash on a different computer than I compiled on.  I compliled on a VM and copied all the img files and android-info.txt
+11:01:02 <oldman_newuser> and set the export ANDROID_PRODUCT_OUT=./
+11:01:38 <oldman_newuser> then running 'fastboot flashall -w'
+11:11:54 <oldman_newuser> the lastest bootloader from https://developers.google.com/android/images#crosshatch is b1c1-0.3-6623201 .  the aosp 11 that I built a couple days ago is the Sam[m]1
+11:12:11 <oldman_newuser> jperkins@aosp:~/src/out/target/product/crosshatch$ head -n 1 bootloader.img FBPKb1c1-0.3-6623201(g�partition tableh
+11:26:35 <oldman_newuser> Ok I was mistaken.  I had flashed the latest verizon official google image which was from last month.  the very latest official which says 'except verizon'  does have the bootloader that the graphene I compiled tonight is using
+11:26:54 <oldman_newuser> s/using/wanting
+12:18:52 <Thatcher[m]> Is there any documentation as to how apps in Graphene are sandboxed?
+12:19:14 <Thatcher[m]> If so, I'd like to know more!
+12:33:35 * kopolee11[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/bFBcLLCYbrlOdGejsgwbDnOh/message.txt >
+12:36:14 <ruddo[m]> How do I enable NFC file transfers in GrapheneOS?  This works out of the box with the built-in Google Android.
+12:39:14 <fll[m]> <Thatcher[m] "Is there any documentation as to"> Not exactly about sandboxing, but hardened malloc also helps with processes not being able to access each others stuff in memory. See https://github.com/GrapheneOS/hardened_malloc
+12:44:38 <ruddo[m]> Effectively what I'm asking is, is there anything like Beam File for GrapheneOS?
+12:58:31 <dazinism> Thatcher: App sandboxing is the same in GrapheneOS as Android/AOSP
+12:58:56 <dazinism> This whitepaper explains the whole AOSP security model in detail
+12:59:00 <dazinism> https://arxiv.org/abs/1904.05572
+13:04:31 <digiscales[m]> <ruddo[m] "Effectively what I'm asking is, "> Not sure about security but I use Feem app as is cross platform windows/android/iOS for quick transfers via WiFi or WiFi direct
+13:25:41 <Thatcher[m]> <dazinism "This whitepaper explains the who"> Thank you for this. This is exactly what I was looking for!
+13:56:10 <dazinism> Thatcher: GrapheneOS maintains that security model (unlike most Android custom ROMs) and does extra hardening that increases security
+13:57:05 <Lia[m]> <dazinism "Thatcher: App sandboxing is the "> Then what does it mean on grapheneos.org/features on stronger app sandbox? Isn't that the hardened SELinux?
+14:01:10 <dazinism> Not sure exactly.
+14:01:42 <dazinism> Thatcher: if you like that you may also like to see https://www.blog.google/products/android-enterprise/security-whitepaper/
+14:59:45 <xenonverse-com> Hey, I'm in the market for a Pixel 4a, to install GrapheneOS on. Will this get me through the day on 50% brightness with a little bit of local music (1-2h) and some internet usage, daily?
+15:03:15 <arpysco[m]> definitely
+15:04:20 <xenonverse-com> When I had a 3a, I easily got 8H SOT. Will this be similar on the 4a? NOTE: I do not own the 3a anymore, currently have a OnePlus, that I'm returning to Amazon, due to backbleed issues.
+15:18:28 <sst_76> Does anyone else have issues with the graphene connectivity check using HSTS?
+15:37:43 <dwkr[m]> <xenonverse-com "When I had a 3a, I easily got 8H"> When I installed Graphene on a 4a my screen on time probably doubled.
+15:38:27 <dwkr[m]> I haven't kept up on exact SOT, but I get a lot of life out of my 4a on GOS
+15:50:06 <xenonverse-com> dwkr[m] you'd recommend it as a daily driver?
+16:01:52 <ruddo[m]> 3a battery life > 3.
+16:01:52 <ruddo[m]> I expect the same is true for 4a / 4.
+16:01:52 <ruddo[m]> It truly is great battery life.
+16:34:20 <Thatcher[m]> 4a here, I get around 16 hours SOT with GOS
+16:34:20 <cyborgninjaneer[> <fluoridatedsheep "stupid question: does graphene u"> It should use file-based encryption now, which is far more secure as it only decrypts what's in use. The whole kaboodle is encrypted one way or another.
+16:34:43 <cyborgninjaneer[> If the phone is off, it's unreadable until it's booted up and the correct passphrase is entered
+16:36:37 <fluoridatedsheep> I see, i just wasnt sure if it had any implementation of block-level encryption with that
+16:38:54 <cyborgninjaneer[> You'd have to ask strcat
+16:38:59 <cyborgninjaneer[> I don't remember
+16:39:00 <Golli[m]> Just found a bug:
+16:39:00 <Golli[m]> Settings -> Apps and notifications -> SEE ALL * APPS -> Tap the search icon (top right) -> Tap on any app -> Go back -> You're now missing 1/3 of the screen in that menu.
+16:39:00 <Golli[m]> 4 XL, latest update.
+16:39:12 <sst_76> I occasionally try to connect to my work WiFi. It worked up until a week or so ago - then it refused to do the connectivity check or take me to the sign in page. Brave Browser said it was because the graphene connectivity check webpage was using HSTS. Can't use WiFi. Anybody see anything like that?
+16:40:00 <arpysco[m]> I have my connectivity check set to google, no issues here
+16:41:14 <sst_76> Didn't see that setting. Will try that later. Thanks.
+16:41:30 <strcat[m]> sst_76: I'm not sure what it would have to do with HSTS
+16:41:49 <sst_76> Me either. It made no sense.
+16:42:04 <strcat[m]> HSTS is not implemented by UrlConnection
+16:42:25 <strcat[m]> and we don't change the connectivity check pages that browsers choose to use
+16:42:59 <strcat[m]> sst_76: it seems more likely that the network somehow special cases the Google addresses, which you can still use
+16:43:05 <strcat[m]> interested to know more but that information you're getting from Brave just seems baseless
+16:43:14 <sst_76> So if I attempted to sign in via the browser lite, it would throw a certificate error. Trying to sign in via the browser throws the HSTS error.
+16:43:29 <strcat[m]> the connectivity check does
+16:43:33 <strcat[m]> HTTPS -> HTTP -> HTTP fallback -> HTTP other fallback
+16:43:37 <jpds> sst_76: Are you using a VPN?
+16:43:49 <strcat[m]> sst_76: yeah but what does that have to do with HSTS
+16:44:08 <strcat[m]> if you're getting a certificate error... that's a problem
+16:44:11 <strcat[m]> that means the network is trying to do TLS interception
+16:44:15 <strcat[m]> that's not just a captive portal
+16:44:20 <strcat[m]> that's an active MITM attack
+16:45:55 <sst_76> Heh. This is a govt WiFi so that doesn't surprise me.
+16:46:26 <strcat[m]> sst_76: when you say that you tried to sign in via a browser, what do you mean?
+16:46:32 <strcat[m]> sst_76: describe exactly what you mean by that
+16:46:35 <sst_76> So the sign
+16:46:46 <strcat[m]> you opened up the browser, went to example.com, and got an error?
+16:46:59 <sst_76> Yeah, that would throw the HSTS error.
+16:47:19 <strcat[m]> the only reason our connectivity check URL would be relevant is if what you tried to open is https://connectivitycheck.grapheneos.org/
+16:47:39 <strcat[m]> sst_76: be clear
+16:47:40 <strcat[m]> what URL
+16:47:47 <strcat[m]> what URL did you open in the browser
+16:47:50 <sst_76> Hang on
+16:48:13 <strcat[m]> you need to give a clear explanation of what you did, such as pressing a notification from the OS and say what it opened
+16:51:48 <seashield[m]> Quick question about Graphene/AOSP encryption, if I may?
+16:51:48 <seashield[m]> If my phone is on standby (ie as it would be if it were in my pocket during daily use), is the content
+16:51:48 <seashield[m]> of my phone encrypted, or is it only encrypted when it is shut down (ie switched off)?
+16:54:02 <sst_76> 1) connect to govt WiFi.
+16:54:02 <sst_76> 2) receive "sign in to network" notification.
+16:54:02 <sst_76> 3) click on notification.
+16:54:02 <sst_76> 4) receive certificate error
+16:54:02 <sst_76> 5) select "continue via browser"
+16:54:02 <sst_76> 6) sign on page opens in Brave
+16:54:03 <sst_76> 7) "when brave tried to connect to connectivitycheck.grapheneos.org this time, the website sent back unusual and incorrect credentials. This may happen when an attacker is pretending to be connectivitycheck.grapheneos.org, or a Wi-Fi sign-in screen has interrupted the connection.
+16:54:03 <sst_76> ...
+16:54:04 <sst_76> You cannot visit connectivitycheck.grapheneos.org right now because the website uses HSTS. Network errors and attacks are usually temporary, so this page will probably work later."
+16:55:16 <strcat[m]> seashield: the data on storage is *always* encrypted
+16:55:53 * r0tt0r[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/gxGVkFLJaCoFqhskIPVAlqgJ/message.txt >
+16:55:56 <strcat[m]> seashield: it's never stored unencrypted, that's not how disk encryption works
+16:55:56 <seashield[m]> <strcat[m] "seashield: the data on storage i"> Thanks, good to know.
+16:56:10 <strcat[m]> seashield: when you're logged into a profile, the encryption key for the data stored in that profile is available to the OS
+16:56:13 <strcat[m]> including when the screen is locked, until you logout of the profile
+16:56:28 <strcat[m]> secondary profiles can be logged out at all time
+16:57:18 <strcat[m]> sst_76:  okay that makes sense, that's indeed an issue
+16:57:33 <strcat[m]> sst_76: you should just connect to another URL like http://neverssl.com/
+16:58:08 <strcat[m]> perhaps we should buy another domain for the connectivity checks for when browsers try to open them, they do work as captive portal / connectivity checks already though
+16:58:11 <strcat[m]> you can use the standard URLs if you want
+16:58:12 <strcat[m]> you don't need them though
+16:59:07 <sst_76> So I tried to go to google.com in browser and it redirected me to connectivitycheck.grapheneos.org
+16:59:18 <sst_76> So I will switch it to google and see what happens.
+16:59:20 <strcat[m]> sst_76: connectivity checks are definitely working fine as is though
+16:59:35 <strcat[m]> there's a difference between that and whether you can use a browser to open that URL
+16:59:42 <strcat[m]> behind a captive portal
+16:59:44 <arpysco[m]> strcat: Thanks for keeping the Google captive portal check as an option in GOS, it's nice not having to out myself as a Graphene user whenever I connect to a public network.
+16:59:45 <sst_76> OK.
+17:00:06 <strcat[m]> google.com won't work either, that uses HSTS / HTTPS
+17:00:14 <strcat[m]> you have to use neverssl.com
+17:00:26 <sst_76> OK I will try that.
+17:01:06 <strcat[m]> anyway as I said above
+17:01:48 <strcat[m]> we could register another domain so that you don't need to do that
+17:02:59 <strcat[m]> but our connectivity / captive portal checks work fine as is
+17:03:33 <sst_76> I also tried ace.mu.nu , which I believe is also never secured, if that makes a difference.
+17:05:12 <strcat[m]> and you have the option to use the standard ones
+17:36:53 <strcat[m]> Calyx was supposedly collaborating with us but instead they've focused on causing harm to us through giving a platform to people to spread misinformation about GrapheneOS while doing their best to support it and take advantage of it. Not going to be collaborating with people who on the one hand claim to support our project while at the same time they aid Copperhead and others in causing harm to it. I've tried to reach
+17:36:53 <strcat[m]> out to them and they've made it clear they don't want to hear from us anymore. Their developers / contributors are no longer welcome in our community and promoting it here is no longer permitted, as with Copperhead.
+17:37:05 <cyborgninjaneer[> Do captive portal checks get sent if you're using a VPN/proxy?
+17:37:12 <strcat[m]> cyborgninjaneer:  yes, but through the VPN
+17:37:16 <strcat[m]> so it doesn't work
+17:37:19 <ruddo[m]> <strcat[m] "Calyx was supposedly collaborati"> How did you reach these conclusions?
+17:37:41 <strcat[m]> through them giving a platform to James Donaldson to spread misinformation about GrapheneOS, along with others
+17:37:53 <strcat[m]> and the fact that they response to people spreading falsehoods / attacks on us in a way that gives support to it
+17:37:53 <ruddo[m]> <strcat[m] "through them giving a platform t"> Yes, I would like specifics on that.
+17:37:56 <strcat[m]> while trying to keep their hands clean
+17:38:26 <strcat[m]> they permit him to use their channels to spread misinformation and actively engage with him / legitimize it, along with making misleading claims themselves
+17:38:53 <ruddo[m]> OK hang on, where did you see this?
+17:39:11 <strcat[m]> on a regular basis in their channels and subreddit
+17:39:33 <strcat[m]> also, tired of them gaslighting me and falsely pretending to supporting us
+17:39:33 <xenonverse-com> Why on the reviews of Pixel 4a do people say the battery is poor, when GOS users get 8-14 hours SOT?
+17:39:54 <strcat[m]> xenonverse-com: probably mean in comparison to a Pixel 4 XL?
+17:40:03 <strcat[m]> although it really depends on what you're doing
+17:40:22 <strcat[m]> for example if you're running a game that renders at native resolution
+17:40:42 <strcat[m]> you're likely going to have significantly worse battery life on a device that has a higher resolution
+17:40:47 <strcat[m]> even if it has a somewhat larger battery
+17:41:42 <strcat[m]> on the other hand, something like playing a movie is so well hardware accelerated that the resolution may not make a substantial difference
+17:41:47 <cyborgninjaneer[> Wasn't seedvault from Calyx?
+17:42:08 <strcat[m]> no, it existed before CalyxOS and they contributed to it to make it better
+17:42:19 <cyborgninjaneer[> Oh
+17:42:21 <strcat[m]> and it's still an independent project - at least according to the person they've paid to work on it
+17:42:28 <strcat[m]> I specifically reached out to them and asked them about this based on concern about CalyxOS
+17:42:42 <strcat[m]> we're going to stop using CalyxOS as the base for our setup wizard and switch to the LineageOS one which is what they forked, since we don't want any of the changes made to it by CalyxOS
+17:49:38 <ruddo[m]> Question: why do you care if they are assholes, if their code is good?
+17:49:58 <ruddo[m]> You have permission by license to use it.  Use it.
+17:52:22 <strcat[m]> I don't want to use code from untrustworthy people
+17:52:29 <strcat[m]> and we have no use for their SetupWizard fork
+17:52:46 <strcat[m]> we might as well just use the LineageOS one instead of having a downstream project in the way
+17:52:52 <strcat[m]> we don't use any of their changes to it anymore
+17:52:58 <strcat[m]> and it's just a more out-of-date version of it
+17:53:06 <ruddo[m]> If the LineageOS fork does the exact same or is functionally equivalent, IDGAF.  If the CalyxOS fork is somehow better, it doesn't matter if you can't trust them — what matters is whether the code is trustworthy.
+17:53:19 <strcat[m]> the LineageOS one is the upstream project
+17:53:24 <ruddo[m]> I don't trust or mistrust people when I can trust or mistrust code.
+17:53:29 <strcat[m]> we do not use any of the CalyxOS changes to it downstream
+17:53:54 <ruddo[m]> Cool then, their setup wizard is the same = IDGAF.
+17:54:02 <ruddo[m]> 😀
+17:54:03 <strcat[m]> yeah, well, I do not have the ability to fully review the entirety of each upstream project
+17:54:18 <strcat[m]> ruddo: it will just be a newer version of the same thing
+17:54:28 <strcat[m]> we have no reason to be using an out-of-date fork that I can see
+17:54:50 <strcat[m]> also they've framed us using it as "profiting off their work" and I'm done with them
+17:54:56 <ruddo[m]> K.  For the record, regardless of whatever drama may exist behind the scenes, I doubt Calyx will add anything malevolent to the code.  That would be monumentally idiotic and self-destructive.
+17:55:22 <strcat[m]> ruddo: they don't need to, they don't have the last 3 months of security patch levels, right?
+17:55:26 <strcat[m]> why would they need to add anything malevolent
+17:55:31 <ohbeejay[m]> Hello! I'm a newb and have graphene on my phone thanks to the help of you all, but have a couple of questions.
+17:56:35 <ruddo[m]> <strcat[m] "why would they need to add anyth"> I was referring to adding malevolence to the setup wizard GOS used and doesn't plan to use anymore.
+18:01:51 <LesleyLesbian> Please add a charging percentage to offline charging mode
+18:02:59 <ohbeejay[m]> Yesterday the lower 2/3rds of my phone's screen started to flash and blink uncontrollably, which only stopped until I shut off my phone. When I turned it on, I noticed that changing the brightness stopped it, but only temporarily. I assumed this was due to a screen malfunction (because I would occasionally see the blinking at boot, so I started uninstalling things to send to a repair person. This morning, I turned on
+18:02:59 <ohbeejay[m]> the phone and it's not having any issue. Is this a known software issue in GrapheneOS?
+18:03:46 <LesleyLesbian> It hasnt happened to me
+18:03:50 <LesleyLesbian> What device are you using?
+18:03:57 <strcat[m]> ohbeejay: no, not a known issue or something that I've heard of before, sounds like a hardware issue
+18:03:58 <strcat[m]> expect that even if it went away, it starts happening again
+18:03:58 <ruddo[m]> Sounds like a hardware issue.
+18:03:59 <strcat[m]> I'd get it replaced while you can
+18:04:00 <strcat[m]> if it's on warranty
+18:04:02 <ohbeejay[m]> I got it used, but will look into a replacement. Thank you.
+18:04:09 <strcat[m]> well, might as well keep using it then
+18:04:13 <strcat[m]> but it sounds like a hardware issue with the screen
+18:04:14 <strcat[m]> it could just be a loose connection though
+18:04:14 <ohbeejay[m]> <strcat[m] "well, might as well keep using i"> It is super annoying
+18:04:23 <LesleyLesbian> Pixels have weak screen durability from tests Ive seen
+18:04:27 <strcat[m]> I'd guess there's a high chance of it being a loose connection
+18:04:32 <LesleyLesbian> So it might be good to get a stiff case for your pixel
+18:04:33 <strcat[m]> LesleyLesbian: you mean when the device is actually off?
+18:04:48 <LesleyLesbian> Yes I turn off the phone to charge it
+18:05:01 <strcat[m]> LesleyLesbian: we can't change the firmware one when it doesn't have enough power to boot the OS
+18:05:05 <LesleyLesbian> And the little battry icon should have an accompanying charge % percentage
+18:05:15 <strcat[m]> there are 2 of those screens: low-level firmware (when it doesn't have enough power to boot the OS) and healthd
+18:05:20 <LesleyLesbian> Theres a little battery icon indicating charge-fullness
+18:05:22 <strcat[m]> they look similar but are different
+18:05:26 <LesleyLesbian> It would be good if it had a percentage
+18:05:42 <LesleyLesbian> It has power to boot
+18:05:46 <LesleyLesbian> Its at like 70% then I charge it
+18:05:59 <LesleyLesbian> The charging icon should also have a % showing charge completion
+18:06:05 <LesleyLesbian> battery charge levels *Spock voice*
+18:06:20 <strcat[m]> the UX for charging also varies since some devices automatically boot the normal OS when they get power again
+18:06:44 <strcat[m]> ohbeejay: it's probably a loose connection based on your description, so maybe having a repair person take it apart and put it back together would be enough to fix it
+18:06:46 <strcat[m]> LesleyLesbian: it's better not to do that
+18:06:54 <strcat[m]> LesleyLesbian: the OS charging is faster than the firmware charging
+18:07:04 <ohbeejay[m]> <strcat[m] "ohbeejay: it's probably a loose "> yeah will do. makes sense. Thanks!
+18:07:20 <strcat[m]> I think the firmware charging is more conservative
+18:07:48 <strcat[m]> so I guess it's probably healthd then
+18:07:52 <LesleyLesbian> yeah the current battery icon is good enough
+18:07:59 <LesleyLesbian> It would just be nice to have the percentage %
+18:08:16 <LesleyLesbian> Does Graphene OS drain the battery faster than stock android?
+18:08:31 <LesleyLesbian> Or is it the same, or save battery ?
+18:08:42 <LesleyLesbian>  Because the phone doesnt ping google, Id imagine the battery life could last longer
+18:08:59 <LesleyLesbian>  What are the weaknesses of Graphene OS?
+18:09:09 <LesleyLesbian> Backdoored applications? Stingrays/IMSI Catchers?
+18:09:23 <LesleyLesbian> I think we should red team Graphene to make it more secure
+18:09:26 <LesleyLesbian> Theoretically
+18:09:29 <jpds> LesleyLesbian: There's a battery percentage option in the settings
+18:09:39 <LesleyLesbian> Yes thats when the device is fully on
+18:10:03 <LesleyLesbian> Is there any APP sandbox service I can run to test if an application is backdoored?
+18:16:32 <LesleyLesbian> Is GOS fully encrypted once I set a pin/passphrase?
+18:16:58 <LesleyLesbian> How can I check? The full disk encrypted setttings?
+18:17:05 <brenneke[m]> <strcat[m] "the only reason our connectivity"> Just curious:
+18:18:29 <jpds> LesleyLesbian: Android's had encryption by default for some years now
+18:18:56 <LesleyLesbian> Full disk ecnryption? Does GOS improve upon the FDE any way? Such as a stronger cipher?
+18:19:27 <jpds> LesleyLesbian: I recommend having a good read of all the information on grapheneos.org
+18:19:54 <strcat[m]> brenneke: there is no connectivitycheck.grapheneos.org page
+18:20:43 <LesleyLesbian> maybe the server recognizes the mere fact that the webpage is loaded at all
+18:20:53 <LesleyLesbian> And consider a successful 404 page load, internet connectivity
+18:21:11 <LesleyLesbian> An indication of working internet connectivity
+18:21:40 <strcat[m]> brenneke: the OS uses https://connectivitycheck.grapheneos.org/generate_204 to check for connectivity, it returns a 204 response code
+18:21:45 <strcat[m]> it's not meant to be a web page that users open themselves
+18:21:54 <LesleyLesbian> Nice!
+18:22:02 <LesleyLesbian> ;)  *Guy Fawkes Smiles*
+18:22:17 <strcat[m]> the server doesn't do anything beyond serving a 204 response code for /generate_204
+18:22:18 <strcat[m]> that's the point
+18:22:19 <strcat[m]> it's not up to the server to do anything else
+18:22:29 <strcat[m]> the OS uses the fact that it can get the proper response code to an HTTP(S) GET request of /generate_204 to indicate that there's internet connectivity
+18:22:33 <strcat[m]> the server doesn't recognize anything
+18:22:41 <strcat[m]> that's a standard approach used across operating systems
+18:22:42 <strcat[m]> including iOS and elsewhere
+18:22:54 <strcat[m]> the only thing that appears to be an issue is that once it has detected there isn't connectivity and has determined that it's due to a captive portal
+18:23:13 <strcat[m]> the URL it asks a web browser to open doesn't work for that purpose
+18:23:26 <LesleyLesbian> perfect
+18:23:30 <strcat[m]> due to HSTS for grapheneos.org
+18:23:37 <LesleyLesbian> Does the GOS team reccomend any specific VPN companies, Server Countries, or Protocols?
+18:23:42 <strcat[m]> so we'll need another domain to make that work as expected in browsers
+18:23:42 <LesleyLesbian> Im using Wireguard with Mullvad app
+18:24:03 <LesleyLesbian> usually connecting to non-14 eyes countries such as Africa/Romania
+18:24:12 <strcat[m]> this was just our initial deployment though, it made sense to use the existing domain
+18:24:23 <strcat[m]> no
+18:25:31 <TheJollyRoger> LesleyLesbian: Adam####, know it's you.
+18:25:32 <LesleyLesbian> thank you friend
+18:25:48 <TheJollyRoger> *I know it's you.
+18:25:52 <LesleyLesbian> *TIPS Greyhat and putson sunglasses in dramatic exit*
+18:25:54 <TheJollyRoger> Stop playing us.
+18:28:31 <brenneke[m]> <TheJollyRoger "LesleyLesbian: Adam####, know it"> Lol.....was just thinking that too!
+18:29:03 <TheJollyRoger> I asked him to stay away for seven days, and then I'd be willing to consider his apology.
+18:29:17 <TheJollyRoger> That is now off the table.
+18:29:43 <TheJollyRoger> brenneke[m]: heh, yeah.
+18:31:47 <aragorndr[m]> What exactly is AOSP Alliance?
+18:31:52 <aragorndr[m]> And how important it is for GOS?
+18:33:00 <strcat[m]> it's not important
+18:33:20 <strcat[m]> it was supposed to be an organization for collaboration between projects based on AOSP
+18:33:49 <strcat[m]> we can do things on our own as we've always done in the past
+18:41:01 <fll[m]> <strcat[m] "Calyx was supposedly collaborati"> Sad to hear that. Did not expect those guys to not take a stand against JD/CH :(
+18:45:55 <MorsThagalis> Hi Guys! I Need help, first time trying to install GrapheneOS on a Pixel 3, and guess what, fastboot is too old.. can't find any way to make it work. doing it from win10.
+18:51:19 <fll[m]> MorsThagalis: I guess you followed https://grapheneos.org/install ?
+18:52:22 <fll[m]> Because if so you must have missed something. Fe. do everything in one power shell window. Don't close it
+18:54:46 <MorsThagalis> yeah but i cant find a fastboot version that isnt too old
+18:56:12 <fll[m]> The ones linked ( https://developer.android.com/studio/releases/platform-tools ) are too old?
+18:56:47 <fll[m]> That would be weird and I'd be lost too then
+18:58:39 <fll[m]> What is the version it sees when you put in 'fastboot --version'?
+19:15:14 <MorsThagalis> im too dumb to make it work -_-
+19:15:25 <pacman37[m]> strcat strcat  : Do you think the new standard: Oblivious DNS-over-HTTPS differ significantly from DoH or add much?
+19:15:25 <pacman37[m]> The link for the paper: https://odns.cs.Princeton.edu/pdf/pets.pdf
+19:15:25 <pacman37[m]> The link for the announcement from Cloudflare: https://blog.cloudflare.com/oblivious-dns/
+19:16:17 <nscnt> MorsThagalis: Do you use the PowerShell?
+19:16:56 <MorsThagalis> nope
+19:17:12 <MorsThagalis> should i?
+19:21:48 <nscnt> MorsThagalis: Yes, you should.
+19:21:58 <nscnt> As stated in the installation guide
+19:37:30 <TheJollyRoger> MorsThagalis: if you are not using PowerShell, then you will get "Fastboot too old" because cmd does not support the logic needed to make the safety check properly and errors out.
+19:39:37 <TheJollyRoger> Even though some people have advocated bypassing the safety check, please don't do this, because the safety check was added to prevent people from corrupting the OS install.
+19:40:35 <MorsThagalis> thanks guys
+19:40:40 <MorsThagalis> i manage to do it via powershell
+19:41:04 <TheJollyRoger> Great!
+20:15:12 <njha[m]> Is there a way to bypass the anti-screenshot thing built into some apps
+20:15:57 <njha[m]> I remember there's something for rooted devices but we don't really have root :)
+20:20:10 <oldman_newuser> hey there.  Just following up from last night :-)   I got my compiled version of grapheneos installed.  I had failed to finish the instructions and was trying to flash using 'fastbiot flashall -w'  before signing the build and having it zipped up properly.  So wanted to report that verizon visual voicemail is still now working for me.  when I
+20:20:11 <oldman_newuser> diffed packages/services/Telephony/  between graphene and aosp it seems whole sections related to carrierconfig and simconfig have been pruned.  Is this something that grapheneos considers important ?  How should I follow up if so?  maybe open an issue ?  I can help test but am not a programmer.  thanks for all the hard work on grapheneos
+20:21:23 <oldman_newuser> all I really need is some type of notification that a voicemail message is waiting
+20:23:09 <oldman_newuser> s/now/not
+20:24:23 <joehandcockandja> Mine says there's a voicemail when there is one without any config on ATT
+20:26:17 <strcat[m]> oldman_newuser: what exactly do you mean by AOSP
+20:26:41 <strcat[m]> we haven't pruned anything from there
+20:28:29 * strcat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/tZbXnZtTAkqNTpLIZcRUxwIc/message.txt >
+20:28:45 <strcat[m]> here's the diff of GrapheneOS packages/services/Telephony with AOSP
+20:28:51 <strcat[m]> I don't know what you think you're comparing with
+20:29:00 <oldman_newuser> I followed this https://source.android.com/setup/build/building and used a release or tag that matched the latest  https://developers.google.com/android/images
+20:29:46 <strcat[m]> RQ1A.201205.010 (android-11.0.0_r20) is the most recent stable release of AOSP in the normal maintenance release branch
+20:30:01 <strcat[m]> what I posted above is the diff of that to GrapheneOS
+20:30:24 <strcat[m]> I don't know why you're saying we pruned substantial amounts of code, all we do is change the value of a boolean in the resources
+20:30:35 <oldman_newuser> strcat[m]  thanks for the reply. I started several dir higher which could be a mistake .jperkins@aosp:~/grapheneos-RQ1A.201205.003.2020.12.08.08/packages/services$ diff -x .git -x strings.xml -r Telephony/ ~/src/packages/services/Telephony/ | less
+20:31:07 <strcat[m]> doesn't sound like you're comparing to the latest stable release of AOSP
+20:31:10 <strcat[m]> don't know what you're comparing against but it's not that
+20:31:22 <strcat[m]> the complete diff is what I posted above
+20:33:36 <strcat[m]> android11-qpr1-release is the current main AOSP branch (1st quarterly maintenance branch for Android 11) and the latest tag for that branch isandroid-11.0.0_r20 (RQ1A.201205.010)
+20:33:43 <strcat[m]>  * android11-qpr1-release is the current main AOSP branch (1st quarterly maintenance branch for Android 11) and the latest tag for that branch is android-11.0.0_r20 (RQ1A.201205.010)
+20:34:47 <strcat[m]> njha: you can bypass the screenshot thing with adb, a device manager, an accessibility service, the screen recording option, etc.
+20:34:57 <strcat[m]> njha: different options
+20:35:06 <strcat[m]> what they disable is the keybind to do a screenshot, that's it really
+20:35:20 <strcat[m]> idea is essentially supposed to be stopping you accidentally taking a screenshot of something sensitive
+20:35:32 <strcat[m]> and it removes the app contents from being listed in recent apps, etc.
+20:35:43 <strcat[m]> Signal has a setting to toggle it on / off
+20:36:19 <xenonverse-com> strcat[m] Is there a method of taking screenshots of UK banking apps, under GOS. Screen recording wouldn't work, I know ADB does, but I'd prefer an on-device solution.
+20:36:31 <oldman_newuser> Ok.  I am sure I am mistaken.  Where is the proper place to open an issue where I can post some screenshots of the missing 4th tab (voicemail ) and the differences in the default dialer-->settings--->Voicemail
+20:38:37 <oldman_newuser> I have flashed Graphene(binary and source), LOS, Calyx, google_official, and AOSP within the last week.  Graphene is the only one where VMM is unavailable on a Pixel3xl on Verizon
+20:39:03 <oldman_newuser> did notice Calyx is several months behind. August if I recall
+20:41:48 <strcat[m]> oldman_newuser: GrapheneOS is based on Android 11
+20:41:54 <strcat[m]> how many of the things that you tested other than the stock OS are?
+20:42:04 <strcat[m]> you say you tested AOSP, what do you mean by AOSP, you built AOSP 11 with android-prepare-vendor?
+20:42:18 <strcat[m]> AOSP doesn't have official builds released
+20:42:20 <strcat[m]> other than from the master branch
+20:42:58 <strcat[m]> oldman_newuser: since Android 11, people have been having problems with visual voicemail on GrapheneOS, due to upstream changes
+20:43:01 <strcat[m]> on some carriers
+20:43:37 <strcat[m]> oldman_newuser: so, if you're comparing to OSes that are not up-to-date and don't have the current OS version or current security patches (they come together, for Pixels, you don't get one without the other)
+20:43:43 <oldman_newuser> strcat[m] repo init -u https://android.googlesource.com/platform/manifest -b android-11.0.0_r17  this is what I built aosp
+20:44:14 <strcat[m]> android-11.0.0_r20 is the current release now (that was last month) and what did you use to build it?
+20:44:19 <strcat[m]> did you use android-prepare-vendor?
+20:44:35 <strcat[m]> oldman_newuser: it sounds like you might have built an incomplete OS and continued using the stock OS vendor and product images
+20:44:44 <strcat[m]> including a bunch of Verizon apps in product which aren't part of AOSP
+20:44:52 <oldman_newuser>  61  tar -xg google_devices-crosshatch-rp1a.201105.002-454e3547.tgz    62  tar -xf google_devices-crosshatch-rp1a.201105.002-454e3547.tgz    63  ls   64  ./extract-google_devices-crosshatch.sh    65  ls   66  tar -xf qcom-crosshatch-rp1a.201105.002-4bd5167f.tgz    67  ls   68  ./extract-qcom-crosshatch.sh
+20:45:00 <strcat[m]> oldman_newuser: you aren't comparing to AOSP, you're comparing to *something* you think is AOSP
+20:45:04 <strcat[m]> oldman_newuser: yeah that's not a complete OS
+20:45:09 <strcat[m]> you were partially using the stock OS
+20:45:16 <oldman_newuser> I believe is how I got the vendor bits into the aosp
+20:45:29 <strcat[m]> oldman_newuser: compare GrapheneOS with AOSP + android-prepare-vendor, same tag
+20:45:32 <strcat[m]> doubt there is a difference
+20:45:52 <strcat[m]> perhaps android-prepare-vendor is missing something, or perhaps your carrier doesn't support Visual Voicemail without their bundled apps anymore
+20:47:14 <oldman_newuser> Ok.  I am sure you are correct about  the source.  However I can use vmm without the bundled app.  It works on all the firmwares I listed above.     Where is the proper place to open an issue where I can post some screenshots of the missing 4th tab (voicemail ) and the differences in the default dialer-->settings--->Voicemail
+20:48:16 <strcat[m]> oldman_newuser: again, it worked on GrapheneOS in Android 10
+20:48:35 <strcat[m]> oldman_newuser: comparing against OSes that are based on Android 10 is unhelpful because we already know it worked on GrapheneOS before
+20:48:59 <strcat[m]> oldman_newuser: Android 11 has been out since September and is required to full security updates on Pixels - you're comparing largely against out-of-date, insecure OSes
+20:49:14 <strcat[m]> oldman_newuser: we were aware that we lost support for this as part of moving to production builds of Android 11
+20:49:25 <strcat[m]> oldman_newuser: what you built with AOSP is not a production release providing a full OS
+20:49:51 <strcat[m]> compare GrapheneOS with the current AOSP tag (android-11.0.0_r20) using android-prepare-vendor and I expect you get the same result
+20:50:16 <strcat[m]> oldman_newuser: there's an open issue on the tracker already, you're welcome to help with it
+20:50:43 <oldman_newuser> ty for your time.  I will try to locate the issue on the tracker then
+20:51:47 <strcat[m]> we don't strip anything out and the diff for that repo is what I posted above
+20:52:05 <strcat[m]> we do use android-prepare-vendor to provide production, fully signed builds of the full OS
+20:52:44 <strcat[m]> perhaps we simply need to revert enabling VVM3 and it will work via a different mechanism - I don't know, you're welcome to test
+20:53:37 <strcat[m]> but it's unhelpful to compare to Android 10: it worked fine on GrapheneOS with Android 10, the problem is something to do with the migration to Android 11
+20:53:51 <strcat[m]> perhaps it's an android-prepare-vendor issue
+20:54:06 <strcat[m]> perhaps reverting enabling VVM3 will allow it to work another way if that doesn't work as is anymore
+20:54:18 <strcat[m]> no one with access to the carrier has looked into it
+20:54:30 <strcat[m]> I can't, Verizon doesn't exist here
+20:54:33 <strcat[m]> anupritaisno1 similarly can't
+20:54:37 <oldman_newuser> ty.  I found the issue on the tracker.  https://github.com/GrapheneOS/os_issue_tracker/issues/356  .  I will follow up there.
+20:55:19 <oldman_newuser> yes that would make it hard to troubleshoot without using that carrier. I agree.
+20:57:17 <oldman_newuser> now I see that the calyx is android 10 also
+20:59:44 <oldman_newuser> I will research the android-prepare-vendor .  I dont remember that when I compiled aosp.  I do remember getting the proprietary binaries though
+21:00:58 <oldman_newuser> thanks again for your time and effort with me and grapheneos.  I am off to work now :-)   see y'all later
+21:29:27 <digiscales[m]> I just switched matrix server migrated account off topic didn't migrate
+21:29:44 <digiscales[m]> Can't find in search room however this group migrated fine
+21:48:00 <Janik[m]> I just installed grapheneOS on my pixel 4a when I start I see a yellow triangle. Is this nromal?
+21:48:34 <r0tt0r[m]> <Janik[m] "I just installed grapheneOS on m"> yes
+21:48:54 <Janik[m]> alritght, thx  thought I failed to lock the bootloader
+21:49:40 <strcat[m]> it means you locked it
+21:49:43 <r0tt0r[m]> <Janik[m] "alritght, thx  thought I failed "> its just a warning that you dont run stock.. all fine
+22:40:40 <madaidan[m]> >jay joined the room
+22:59:34 * Pratyush[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/tbgBPVLmaGTPnZAPLHpTwUUW/message.txt >
+23:06:44 <mrxx_0[m]> Pratyush what version of the gcam do you have ? On my test device I have the version 7.4.201.322479879 and it's working fine on latest version of GrapheneOS.
+23:07:24 <Pratyush[m]> I guess i have 7.5
+23:10:17 <mrxx_0[m]> What's the app doing ? Can you open it ?
+23:10:58 <mrxx_0[m]> Pratyush
+23:13:16 <Pratyush[m]> <mrxx_0[m] "What's the app doing ? Can you o"> It's stuck on canera logo in center just in a min I send you screenshot
+23:15:27 <mrxx_0[m]> Pm Pratyush
+23:41:12 <Thatcher[m]> What's with the calendar app that comes with Graphene? It seems to have no functionality for me.
+23:43:08 <dwkr[m]> It's a placeholder
+23:43:28 <dwkr[m]> You'll want to download another calendar app if you want functionality
+23:43:45 <Pratyush[m]> <Thatcher[m] "What's with the calendar app tha"> AOSP calendar apps doesn't offer anything so you should get one that you like.
+23:44:14 <dwkr[m]> There are plans to replace a lot of the stock Graphene apps in the future with better versions, but there's a lot of higher priority work atm
+23:45:56 <dwkr[m]> I've been using Simple Calendar because I had issues importing ical calendars into eTar. Both are pretty similar visually.

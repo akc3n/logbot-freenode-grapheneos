@@ -1,0 +1,440 @@
+00:04:25 <aeonsolution[m]> https://grapheneos.org/usage#web-browsing
+00:05:26 <aeonsolution[m]> Vanadium is both the browser and the webview, you might be able to install the browser but the issues you come across will be for you to resolve since the goal of Vanadium is be both the hardened browser and webview for GrapheneOS
+00:06:55 <aeonsolution[m]> there are policies in GrapheneOS that work in synergy with Vanadium's hardening, there is a lot more detail in it than i can describe, but the logs and the devs could provide more insight
+00:08:04 <aeonsolution[m]> this explanation is a huge simplification that leaves out a lot of technical details
+00:33:54 <dcosk[m]> <aeonsolution[m] "Vanadium is both the browser and"> I know, only i'll want know if this, will be possible
+00:36:16 <aeonsolution[m]> its possible to install it, theres no gurantee itll work and you'll have to do the updates on your own since Vanadium doesnt have a dedicated update server. it gets updates when GOS gets a new release
+00:37:37 <aeonsolution[m]> like i mentioned before, the issues you come across will be for you to resolve because Vanadium isn't developed for OSes other than GrapheneOS at this point in time
+00:43:29 <faxing[m]> Still can't get it to work
+00:44:13 <faxing[m]> Every time I get a voicemail, I go to the voicemail tab - nothing, i click on the new voicemail notification - it calls the voicemail box and I can retrieve my voicemails
+00:44:29 <faxing[m]>  * Every time I get a voicemail, I go to the voicemail tab in the phone app - nothing, i click on the new voicemail notification - it calls the voicemail box and I can retrieve my voicemails
+00:44:48 <faxing[m]> I'm using the stock phone app for Graphene
+00:47:13 <dcosk[m]> <aeonsolution[m] "its possible to install it, ther"> How its possible? I want to try it. Dont care if dont work. I read a awesome words about this browser
+00:48:31 <strcat[m]> Vanadium is for GrapheneOS
+00:48:57 <strcat[m]> we don't make builds for other OSes and we include functionality for it in the OS rather than the browser
+00:49:01 <strcat[m]> such as the hardened allocator in the OS
+00:49:35 <dcosk[m]> <strcat[m] "Vanadium is for GrapheneOS"> Okey. No more questions.
+00:53:15 <faxing[m]> I know my carrier is compatible with Visual Voicemail, so I don't need to do anything with my carrier, I should just be able to do it all from the phone, right?
+00:53:32 <anupritaisno1[m]> <dcosk[m] "Okey. No more questions. "> You'll find it on glassrom too. It replaces the (now) dead glassrom browser
+01:14:30 <strcat[m]> Pixel 4a tags were finally pushed in case anyone is interested in working on that
+01:14:35 <strcat[m]> need android-prepare-vendor support of course
+01:22:30 <aeonsolution[m]> im building the Pixel 4a right now with this tag https://android.googlesource.com/device/google/sunfish/+/refs/tags/android-10.0.0_r45
+01:23:21 <aeonsolution[m]> cdesai shared the info
+01:24:14 <cdesai> Tracking progress on #AOSPAlliance
+01:25:31 <brockin042[m]> Pixel 4a for graphene? Its the only reason why I haven't bought one as of yet.
+01:27:09 <anupritaisno1[m]> cdesai: there's one thing you really need to track
+01:27:42 <cdesai> What
+01:28:08 <anupritaisno1[m]> Did you fix the DTC issue
+01:28:23 <cdesai> Merged revert for now
+01:28:39 <anupritaisno1[m]> Here's basically what happens
+01:28:46 <anupritaisno1[m]> I did a boot to recovery
+01:28:54 <anupritaisno1[m]> Recovery complained it could not find misc
+01:28:58 <cdesai> Check gerrit I left a comment for options for coral that wouldn't affect other devices.
+01:29:05 <anupritaisno1[m]> Tried flashing
+01:29:12 <anupritaisno1[m]> Failed
+01:29:15 <anupritaisno1[m]> Understood what was up
+01:29:24 <anupritaisno1[m]> Storage never initialized
+01:29:28 <cdesai> Ah
+01:29:40 <anupritaisno1[m]> Restoring dtbo fixed it
+01:29:51 <anupritaisno1[m]> Was DTC issue from that commit
+01:30:15 <anupritaisno1[m]> Also idk what exactly that commit does
+01:30:21 <cdesai> Its off topic here anyway but I merged a revert already
+01:30:31 <anupritaisno1[m]> But I've been struggling with this for 4 days
+01:31:07 <cdesai> :(
+01:31:13 <anupritaisno1[m]> Basically clean build + that commit -> doesn't boot
+01:31:13 <anupritaisno1[m]> dirty build + reverted -> doesn't boot
+01:31:13 <anupritaisno1[m]> Clean build + revert -> boots
+01:31:59 <anupritaisno1[m]> Idk why but this is the reason I've been struggling with it for all that time
+01:32:29 <anupritaisno1[m]> Also cdesai I for one ain't going to the lineage gerrit
+01:32:46 <anupritaisno1[m]> They aren't going to support glassrom stable kernels anyway
+01:33:01 <anupritaisno1[m]> And I am not using that messed up kernel lineage has for op7
+01:36:40 <anupritaisno1[m]> cdesai: https://review.lineageos.org/c/LineageOS/android_device_google_wahoo/+/271045
+01:37:28 <anupritaisno1[m]> Adapt this instead
+01:39:29 <cdesai> No that won't work
+01:40:04 <cdesai> That's prebuilts which is too old and $out isn't set when BoardConfig is included
+01:42:20 <anupritaisno1[m]> ...
+01:42:27 <anupritaisno1[m]> Just edit it to what you did in vendor
+01:43:01 <anupritaisno1[m]> That's exactly how it's done on grapheneos
+01:43:23 <anupritaisno1[m]> That's exactly how lineage implements linkage again clang lld for the kernel
+01:43:55 <anupritaisno1[m]> * That's exactly how lineage implements linkage against clang lld for the kernel
+01:45:57 <anupritaisno1[m]> It should look like
+01:45:57 <anupritaisno1[m]> TARGET_KERNEL_ADDITIONAL_FLAGS := \
+01:45:57 <anupritaisno1[m]>     DTC=$(KERNEL_BUILD_OUT_PREFIX)$(DTC)
+01:47:12 <cdesai> Go ahead, try that.
+01:48:04 <cdesai> Kernel_build_out_prefix just isn't available, the variables it needs just haven't been set when the build system includes boardconfig
+01:48:25 <cdesai> If it was so simple why would I even do that change.
+01:48:33 <cdesai> And again, this is all off topic for this channel
+01:48:58 <anupritaisno1[m]> Solution 2: just update DTC and call it a day
+01:56:52 <faxing[m]> No settings that I see on my carriers website.
+01:56:58 <faxing[m]> Anyone have any ideas?
+01:57:26 <anupritaisno1[m]> faxing: Verizon visible?
+01:57:37 <faxing[m]> I'm using Mint Mobile
+01:57:50 <faxing[m]> They're a T-Mobile MVNO
+01:58:05 <anupritaisno1[m]> What device?
+01:58:16 <faxing[m]> Pixel 3a XL running GrapheneOS
+01:58:37 <anupritaisno1[m]> Can't do much for that sadly
+01:59:33 <faxing[m]> Oh
+01:59:37 <faxing[m]> Okay, Thanks
+01:59:44 <faxing[m]>  * Okay, thanks anyway
+01:59:52 <aeonsolution[m]> what are you trying to do faxing
+02:00:08 <faxing[m]> I'm just trying to get Visual Voicemail to work
+02:00:21 <faxing[m]> I've been trying all of today and a while yesterday with no success
+02:00:27 <aeonsolution[m]> brockin042: don't get your hopes up, this is a first for me and i see the learning process being very painful
+02:00:33 <anupritaisno1[m]> aeonsolution: if you have a 3a I can point you to the direction you need to look in
+02:00:42 <anupritaisno1[m]> But I can't do anything without the phone myself
+02:01:05 <aeonsolution[m]> yeah i have a pixel 3a too
+02:01:13 <aeonsolution[m]> cool, i can help there
+02:01:19 <faxing[m]> So now after trying to troubleshoot on my own for this long I figured I'd try and hope that someone here could help
+02:01:54 <faxing[m]> whenever I get a voicemail I just get a notification to call my voicemail box but when I go to the voicemail tab in the stock phone app i see nothing
+02:02:05 <aeonsolution[m]> anupritaisno1: anything helps
+02:02:15 <faxing[m]> it works if I call the voicemail box but it's a pain if I don't have to
+02:08:18 <aeonsolution[m]> let me see what i can figure out
+02:19:23 <anupritaisno1[m]> Oh great
+02:19:38 <anupritaisno1[m]> Accidentally compiled with that commit. This issue is going to haunt me for a while it seems
+02:41:34 <anupritaisno1[m]> cdesai: https://github.com/GlassROM-devices/kernel_google_coral/commits/10
+02:44:11 <steve9> Hey folks, quick question: I have fallen two releases behind on updates (was using a different phone). This the device still auto-update, or do I need to reinstall?
+03:31:12 <nickcalyx[m]> > Hey folks, quick question: I have fallen two releases behind on updates (was using a different phone). This the device still auto-update, or do I need to reinstall?
+03:31:12 <nickcalyx[m]> You'll be fine, just let it auto update
+03:31:42 <steve9> Great! Thank you, I appreciate it.
+03:32:11 <nickcalyx[m]> 🤘
+03:50:08 <steve9> word to the wise...make sure time/date are correct before hoping for an update haha
+04:30:24 <retry0x[m]> P4xl here on stable channel. My camera does a weird thing. There seems to be a lag from pressing the capture button. Sometimes it can take up to 10 seconds for the press to register.
+04:30:24 <retry0x[m]> Same exp using builtin camera and open camera. Verified using both the volume up key and the regular capture button on the screen.
+09:45:05 <justifiablemadne> If I'm buying a new phone how should I decide between Pixel 4a or iPhone SE? I hear this is the place to ask
+09:46:19 <cn3m[m]> justifiablemadness: https://matrix.to/#/!NKqyWWNTlbuXwOPMCt:matrix.org
+09:46:20 <cn3m[m]> The offtopic chat is what you are looking for
+09:46:34 <cn3m[m]> or search logs https://freenode.logbot.info/grapheneos
+09:47:46 <justifiablemadne> cn3m: that link is bad
+09:48:32 <cn3m[m]> invited you directly
+09:50:10 <shdudbdjdj[m]> <cn3m[m] "invited you directly "> Can you Invite me too? (:
+09:50:50 <justifiablemadne> Ok
+09:50:54 <justifiablemadne> Thanks
+09:51:46 <cn3m[m]> shdudbdjdj: done
+09:52:14 <shdudbdjdj[m]> Thanks (:
+10:09:58 <DrWhax> 22
+10:19:31 <anupritaisno1[m]> renlord
+10:19:31 <anupritaisno1[m]> https://github.com/GrapheneOS/os_issue_tracker/issues/255
+10:19:41 <anupritaisno1[m]> Can you reword this to
+10:20:18 <anupritaisno1[m]> "Remove sepolicies for several apps where it isn't required or the app isn't included in the base system"
+10:21:34 <cdesai> anupritaisno1[m]: does that DTC port work?
+10:22:24 <anupritaisno1[m]> cdesai: that's pretty much what every device is doing
+10:28:47 <anupritaisno1[m]> Just one thing
+10:28:56 <anupritaisno1[m]> Do not upstream beyond that version
+10:31:55 <renlord> anupritaisno1[m]: ok done
+10:44:33 <arept> hello anyone here?
+10:48:49 <cn3m[m]> arept: yes
+10:49:34 <arept> i want to install graphene on a refurbished pixel 3a. Propably buying it online. Since you need a unlocked device, is there a way to see if it is unlocked, in the settings or something? Is there anything else important it needs for the installation to work?
+10:53:22 <pikey[m]> I just make SURE the phone was purchased NEW UNLOCKED. So long as that's the case it should be fine. I buy my phones second hand and if I can't verify it was factory unlocked I give it a miss.
+10:55:06 <arept> so i should just ask for a pic of something proving it is unlocked like the manual or sth
+11:01:31 <arept> is there something that ships with the phone that proves its unlocked?
+11:17:05 <applescruff_53[m> <anupritaisno1[m] "That's exactly how it's done on "> Autopsy: When I went to make a call on my 3axl yesterday I saw at the top of the listings of received calls the phone symbol w/' Voicemail ' next to it. I tapped on it and a robot operator comes on and instructs to enter my password. On the third attempt robofem replies "I'm sorry you're having this difficulty." This morning on the drawdown from the top edge
+11:17:06 <applescruff_53[m> of the pixel one of the line messages is, ' 2 Voicemails Dial +1 248-224-0128. I called this number with my iPhone6, which no longer has a sim and uses the WiFi to connect phone calls, and the called number immediately fails. Very strange.
+11:21:19 <Autopsy[m]> Sounds very fishy to me.
+11:21:36 <Autopsy[m]> Like, it sounds like they're trying to phish you.
+11:23:05 <Autopsy[m]> Does the voice sound like your normal voicemail from your carrier?
+11:31:49 <rafff[m]> Hi, how can I make a search within this channel?
+11:34:15 <noctux> https://freenode.logbot.info/grapheneos and use the searchfield?
+11:36:11 <rafff[m]> Thx
+11:43:10 <applescruff_53[m> Autopsy: yes it does sound like an automated voicemail operator.
+11:45:34 <rafff[m]> What version of riot are you using, just got now a message to install element and uninstall riotx?
+11:58:17 <dazinism> rafff: riot and RiotX are discontinued, likely best installing element
+11:59:16 <dazinism> there are other matrix clients by other developers, but element is OK(ish) and under heavy active development
+11:59:32 <dazinism> its basically RiotX with a new name
+12:00:17 <dazinism> The other option that is also OK(ish) is fluffychat
+12:00:34 <dazinism> they have their own fdroid repository with their app
+12:00:35 <rafff[m]> <dazinism "rafff: riot and RiotX are discon"> OK thx, will try element then
+12:01:14 <dazinism> Currently both of them miss some features and have some bugs which can be annoying
+12:06:36 <applescruff_53[m> I am going to re-install GOS. When I first got this phone I installed GOS before I did anything with it. Afterwards I did download some questionable apps which I uninstalled soon after. Then while using Vanadium this pop up page appears from yourphoneboost.com with the message Cleaner Update for Phone is recommended. Your phone Phone can work faster. We released a Cleaner update, and it is recommended for every
+12:06:36 <applescruff_53[m> phone. Mistakenly, I clicked on it, after it repeatedly came on every time I used that browser. When I finally clicked on it, it change screens but didn't seem to be doing anything. I restarted the phone and stopped using Vanadium. Now I'm convinced this phone has been inflected. I opened Vanadium this morning and first thing this same page appears with a countdown clock to update. I'll be back on after new GOS
+12:06:36 <applescruff_53[m> is installed.
+12:07:57 <ruddo[m]> How about you change the home page of the browser, or erase the browser's app data, and try again?
+12:08:54 <applescruff_53[m>  It is persistent and not responsive.
+12:09:42 <applescruff_53[m> It has taken over Vanadium browser.
+12:15:11 <theultron[m]> <applescruff_53[m "It has taken over Vanadium brows"> Have you tried clearing app data?
+12:18:26 <applescruff_53[m> I just did that and it appears to have solved that issue.
+12:18:39 <ruddo[m]> 😊
+12:18:45 <ruddo[m]> there you go, we saved you an entire day's of phone setup
+12:19:50 <applescruff_53[m> Thank you, I was not looking forward to that job.
+12:23:39 <applescruff_53[m> For now I am going to just ignore the 2 Voicemails notice on my phone call listings.
+12:31:50 <bson989[m]> <arept "i want to install graphene on a "> I have had very good experiences with swappa.com. They are usually always accurate with determining carrier versions. I believe the first two numbers in the IMEI determine the model as well. For instance my pixel 3 begins with 99 which tells me it's a Google edition unlocked.
+12:55:29 <xmwv[m]> Swappa seems US only. Is there international alternative?
+13:46:11 <faxing[m]> <blueuser[m] "faxing: did u managed to get vis"> I got a few voicemails to show up, but only older ones that I haven't had time to delete yet. I had someone leave me a voicemail and it didn't show up and some of the newer ones didn't show up either, but I can still get them if I call the voicemail box
+13:46:29 <faxing[m]> <xmwv[m] "Swappa seems US only. Is there i"> ebay?
+13:54:55 <bson989[m]> <faxing[m] "ebay?"> Maybe Gazelle or Glyde
+13:55:53 <bson989[m]> <xmwv[m] "Swappa seems US only. Is there i">
+14:15:54 <retry0x[m]> Who has issues with screen flickering in GOS on p4s
+14:19:04 <bson989[m]> Yes you're not the first to ask that. They commented on it earlier I believe it has something to do with the 90 HZ refresh rate, but I could be wrong
+14:42:00 <Autopsy[m]> <retry0x[m] "Who has issues with screen flick"> Sup?
+15:29:32 <nikitalita[m]1> @retry0x:matrix.org: it's mostly gone away after the latest updates for me
+15:29:48 <nikitalita[m]1> ymmv
+15:35:13 <nikitalita[m]1> but yeah, if it's persisting, you can switch to 60hz mode and that will fix it
+15:39:14 <applescruff_53[m> ruddo: I am wondering, is there a method to reset my password for the OS?
+15:40:05 <ruddo[m]> Yes, from the Settings -> Security -> Screen lock panel.
+16:25:58 <applescruff_53[m> ruddo: OK, that is the password for the screenlock. Good.
+16:34:33 <applescruff_53[m> On the phone app there is Voicemail. How do I get or change my Voicemail password?
+16:34:33 <applescruff_53[m> The Voicemail # is 1-248-224-0128
+16:34:33 <applescruff_53[m> I have two messages but I don't have a password.
+16:48:37 * Autopsy[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/wGjMwKLWlAnIOoQnkyXITnUN/message.txt >
+16:50:05 <Autopsy[m]> Are you calling that number specifically and it says you have two voicemails, is there a notification on your phone stating you have two voicemails, or are you calling YOUR PHONE PROVIDER'S voicemail service and they are telling you you have two voicemails?
+16:54:16 <blueuser[m]> it's just some kind fo scam
+16:55:53 <Autopsy[m]> Exactly
+16:56:15 <Autopsy[m]> Phone Phishing
+16:59:03 <M1enrique3[m]> hi
+16:59:12 <blueuser[m]> they probably hope that people give some real password and so they can get control over your accounts
+17:00:42 <Autopsy[m]> <M1enrique3[m] "hi"> Hello
+17:08:51 <derpy> possible to change the allowed amount of fingerprint reader attempts?
+17:09:29 <derpy> pixel1 reader sucked... now the pixel3a reader works really well.. so if it doesn't work on the 1st or 2nd attempt, then I want it to force whomever stole it to use the pin code :)
+17:14:04 <M1enrique3[m]> does the google pixel 4 works good with graphene os?
+17:14:22 <kickstart> yup
+17:14:32 <kickstart> no complains
+17:14:36 <M1enrique3[m]> oh
+17:14:39 <kickstart> sometimes camera app crash
+17:14:49 <kickstart> but i was told to use opencamera
+17:15:05 <kickstart> aslo they are still working on the screen
+17:15:10 <kickstart> refresh rate
+17:15:20 <M1enrique3[m]> and how long would it take to get support to 4a
+17:15:47 <M1enrique3[m]> cause it taken months to get support for pixel 4
+17:17:32 <kickstart> above my knowledge
+17:17:50 <M1enrique3[m]> alright
+17:25:23 <Autopsy[m]> <M1enrique3[m] "and how long would it take to ge"> When Google releases the AOSP branch for the 4A and then having someone step up to maintain the phone for GrapheneOS.
+17:27:30 <blueuser[m]> they released it already
+17:32:01 <Autopsy[m]> Link?
+17:32:31 <blueuser[m]> on android googlesource com it's the sunfish device
+17:33:59 <Autopsy[m]> Ah, released yesterday lol
+17:39:40 <blueuser[m]> why new pixels require to connect to internet to unlock bootloader, what kind of informations do it send?
+17:41:38 <blueuser[m]> once you have done it the first time to install grapheneos and relocked the bootloader, do you need to connect to internet the next times that you want to unlock it?
+19:13:04 <BlackWinnerYoshi> <blueuser[m] "why new pixels require to connec"> You mean the Pixel 4[a] [XL]? Because to my knowledge, Pixel 3[a] [XL] doesn't do that. About what kind of informations that sends, it might be some stuff that identifies the device, but I am not sure
+19:17:18 <strcat[m]> blueuser: Pixels do not require it
+19:17:23 <strcat[m]> it's not a hardware/firmware thing
+19:17:45 <strcat[m]> the stock OS has factory reset protection as an anti-theft feature, this is explained in the FAQ
+19:17:46 <strcat[m]> read the FAQ
+19:17:50 <strcat[m]> https://grapheneos.org/faq
+19:28:11 <bkeys> Hello guys, I ran fastboot flashing get_unlock_ability on my new pixel 3 xl (which is unlocked) and it is returning 0
+19:28:19 <bkeys> Is there any hope for me to put GrapheneOS on this device?
+19:28:57 <bkeys> Hello guys, I ran fastboot flashing get_unlock_ability on my new pixel 3 xl (which is unlocked) and it is returning 0
+19:28:57 <bkeys> Is there any hope for me to put GrapheneOS on this device?
+19:29:38 <bkeys> I can enter developer mode on a clean factory reset, then go into the developer options and the OEM unlock is greyed out
+19:29:45 <bkeys> And the bootloader confirmed that it is LOCKED
+19:30:27 <jpds> bkeys: Is this a Pixel from Verizon?
+19:30:31 <bkeys> No
+19:30:59 <bkeys> The bootloader says nothing about it, there is no verizon logo physically on the device
+19:31:10 <bkeys> No verizon logo at boot or anything like that; it was also listed as unlocked
+19:39:02 <Autopsy[m]> <bkeys "No verizon logo at boot or anyth"> When people sell unlocked, they usually mean sim free, not bootloader.
+19:39:14 <Autopsy[m]> Most people don't care and/or have no idea about that stuff.
+19:43:14 <Autopsy[m]> Searched the logs... Check this bkeys
+19:43:24 <Autopsy[m]> https://store.google.com/us/repaircenter
+19:43:28 <Autopsy[m]> Put in your IMEI number
+19:43:48 <Autopsy[m]> If it says anything to do with Verizon, you're screwed and you should return the phone.
+19:44:08 <nikitalita[m]1> bkeys: was it used
+19:44:20 <Autopsy[m]> Quick way to get IMEI is *#06* from the dialer.
+19:47:33 <Autopsy[m]> Also look at the original box, if it came with it, and see if it says anything.
+19:51:01 <bkeys> nikitalita[m]1: Yes it came used
+19:53:07 <bkeys> Autopsy[m]: Where would I put in the IMEI number?
+19:56:08 <bkeys> Nevermind I see it
+19:57:26 <bkeys> Autopsy[m], jpds: I punched it in on Google, and it is saying nothing about Verizon
+19:58:31 <nikitalita[m]1> yup
+19:59:39 <blacktwig[m]>  Has anyone been having trouble getting Signal notifications recently? On my Pixel 3a running GOS I think they stopped showing up sometime in the past couple days, and I can't really figure out what's happening. The in-app and out-of-app settings for notifications are both on, and I just redownloaded the APK from their site to make sure I didn't accidentally update it through Aurora, but I'm still not getting any.
+19:59:41 <bkeys> My guess is I am going to have to return this thing?
+20:00:03 <nikitalita[m]1> it's possible it's a verizon phone and its just not showing the logo, and its also possible it's a verizon phone that was soft-unlocked and then sold on as an unlocked phone (not sure if you can actually do this with Pixel 3s though)
+20:00:23 <bkeys> I mean doesn't Verizon usually stamp their logo on phones they lock?
+20:00:24 <nikitalita[m]1> bkeys:  either way, use the tool that autopsy linked
+20:00:29 <bkeys> I did
+20:00:34 <bkeys> That tool is not saying anything about Verizon
+20:03:04 <Autopsy[m]> You'll have to use a Google account... Either make one up or use the one you have (assume you have one, most people do), then follow the web page and input the IMEI when Google tells you to
+20:03:12 <bkeys> I did that
+20:03:15 <bkeys> I already did that
+20:03:20 <bkeys> It is not saying anything about Verizon
+20:03:27 <Autopsy[m]> Disclaimer, I've never used it - I'm merely suggesting what someone already has previously.
+20:04:15 <bkeys> I know but I cannot find any evidence that this phone was locked by Verizon
+20:04:35 <bkeys> I signed in using a google account, the oem unlock is still greyed out
+20:10:03 <Autopsy> So it is still greyed out
+20:10:08 <nikitalita[m]1> bkeys: i'd just return it
+20:10:09 <Autopsy> Have you updated to the latest version?
+20:10:30 <bkeys> Autopsy Yes it is the lastest version
+20:10:35 <bkeys> nikitalita[m]1: I probably will end up doing that
+20:10:47 <bkeys> I am talking with google customer support confirming or denying my fate
+20:10:47 <nikitalita[m]1> there are a number of things that could have happened here, none of them good
+20:10:55 <Autopsy> Yeah, for sure.
+20:11:06 <Autopsy> Have you tried factory resetting yet, just in case?
+20:11:31 <nikitalita[m]1> do you have a sim card in this now? if so, which network?
+20:11:32 <Autopsy> You can use Google's web page to flash the latest update and whatnot
+20:11:41 <bkeys> Yes SIM card, Visible
+20:14:33 <bkeys> Is this something I can avoid or am I just gonna have to keep ordering and returning phones until I get a good one?
+20:15:03 <Autopsy> @bkeys no, what you can do is ask the seller to check to see if OEM unlocking is able to be toggled on or off prior to them selling the phone.
+20:15:18 <bkeys> Yeah other than that I mean
+20:15:23 <bkeys> No keyword to look out for
+20:16:01 <Autopsy> Nothing, really. You got the 3XL, yeah?
+20:16:05 <bkeys> Yes
+20:16:51 <Autopsy> All variations use the same G013C code, regardless.
+20:18:10 <Autopsy> If the item has the box in the eBay listing (as an example) look at the photos and see if anything mentions Verizon. Also see if the seller has listed it being used on Verizon in the past. Other than that, you're just going to have to do what I said regarding asking them to toggle the OEM switch. You *may* have to guide them through that, though, as they might not know what they're doing.
+20:19:18 <Autopsy> As a side note.. The IRC / Matrix Bridge is a bit buggy. There aren't many Matrix messages coming through, at least from my side.
+20:20:04 <blueuser[m]> it have been buggy for months now
+20:20:12 <nikitalita[m]1> yeah, you could make the seller show the oem unlock option on the phone
+20:20:12 <nikitalita[m]1> I've been burned on stuff like this before; I got an iphone that was sold as unlocked but it was actually just jailbroken and soft-unlocked, which meant that after a factory reset it was locked again.
+20:20:13 <nikitalita[m]1> in general i just dont trust used phones if i'm going to be using this as my daily driver
+20:21:37 <bkeys> Well is there a way I can buy a Pixel 3 XL that is certain to be OEM unlocked?
+20:21:37 <Autopsy> Sorry we can't be any more help than that, bkeys :(
+20:21:44 <bkeys> It is fine y'all have been helpful
+20:22:05 <nikitalita[m]1> bkeys: why a pixel 3 xl specifically
+20:22:19 <bkeys> I am going up and down eBay asking all the 3 XL sellers if their phone is OEM unlocked
+20:22:23 <Autopsy> Well, Google have stopped shipping them a while back. Apart from having potluck with the device, it's just asking the seller.
+20:22:24 <Autopsy> Haha
+20:22:31 <bkeys> nikitalita[m]1: I like bigger screens, I want GrapheneOS support, and it needs to work on Visible
+20:22:45 <bkeys> 3 XL does all of those
+20:23:03 <blueuser[m]> better wait for the 4a no? it will have much longer support
+20:23:14 <bkeys> I am not at all a heavy phone user
+20:23:24 <bkeys> I live out in the country and 99% of this thing will just sit there and be a wifi hotspot
+20:23:34 <nikitalita[m]1> bkeys: again, the only real way to know for sure is if they actually show you a picture of the settings screen showing that the oem unlocking option is toggleable
+20:23:53 <Autopsy> *Duelling Banjos intensifies*
+20:24:30 <bkeys> I will be certain to ask for screenshots if any of them say yes
+20:24:47 <botter_otter> man, love duelling banjos
+20:25:02 <bkeys> I love banjos in general
+20:25:34 <Autopsy> bkeys, if it makes any difference, I usually go for sellers that are obviously just selling them because they've got an upgrade. A lot of the time, those are the nicer ones to communicate with.
+20:26:14 <botter_otter> btw, a question for anyone who knows, since I don't know really anything about rooting: can I root my grapheneOS pixel 3a? That is, will rooting it delete data/brick the phone?
+20:26:57 <botter_otter> ik that magisk by itself supports the 3a, I'm just not aware if having grapheneOS on it will mess with the rooting or vice versa
+20:27:03 <Autopsy> Unsupported here, botter otter
+20:27:37 <botter_otter> ? as in grapheneOS doesn't support rooting, or this isn't the place to ask, or?
+20:31:43 <nikitalita[m]1> both
+20:31:58 <Autopsy> While rooting can be done, it pretty much negates the security that is built into GrapheneOS. Using it will mean bypassing the verified boot, and having a tonne of extra attack surface.
+20:32:03 <nikitalita[m]1> not recommended to root your phone at all
+20:32:14 <Autopsy> The question is: Why do you want to root your phone?
+20:32:29 <bkeys> Guise, so if the seller says it is "Verizon unlocked" then I want to avoid it, yes?
+20:32:41 <Autopsy> bkeys, yes
+20:32:45 <nikitalita[m]1> yes
+20:32:49 <botter_otter> nothing important, just was going to if it was convenient/not an actively bad idea to do
+20:32:56 <nikitalita[m]1> it may not be locked to verizon, but the bootloader is still locked
+20:33:04 <botter_otter> if it opens up a bunch of security vulnerabilities then I won't root it
+20:33:10 <bkeys> That is what I thought
+20:33:59 <Autopsy> botter_otter, no worries, it's totally normal to ask. Tbh, before GrapheneOS, I genuinely thought root was the answer to my prayers regarding privacy and security; how wrong I was.
+20:34:19 <botter_otter> anyway, thanks for the info
+20:35:40 <bkeys> The seller of the device I have now does not accept returns, but it is eBay so there is some hope I will not get burned
+20:35:52 <bkeys> I guess worst case I resell it
+20:40:42 <derpy> possible to change the allowed amount of fingerprint reader attempts?
+20:42:55 <nikitalita[m]1>  * first one
+20:45:01 <nikitalita[m]1> I don't think so
+20:45:17 <nikitalita[m]1> I believe that may be controlled by the hardware?
+20:52:35 <derpy> nikitalita[m]1 that a reply to my question? sry not sure
+20:53:50 <nikitalita[m]1> derpy: yes, that's right. I dont think you have the ability to set the number of attempts, at least I don't see it on the Pixel 2
+20:54:17 <blueuser[m]> it's hardcoded in source but maybe it's different for pixels with titan m idk
+20:54:54 <derpy> pixel 3a here... would be a good question for one of the main devs...
+20:55:10 <derpy> having the right balance seems key for security & convenience
+20:55:23 <derpy> I think 3 attempts and then failing to the pin code forever is ideal
+20:55:44 <derpy> that way if you get caught having to unlock it you could purposefully use the wrong finger :)
+20:55:53 <derpy> and the conveniently forget your pin code
+20:57:10 <nikitalita[m]1> yeah, I think the Titan-Ms rate-limit PIN and password entry on the Pixel 3-4s, not sure if that extends to fingerprint attempts
+20:57:21 <Autopsy[m]> Let's check pins
+20:57:53 <Autopsy> 5 times and it locks for 30 seconds
+20:58:03 <Autopsy> Incorrect using the pin 5 times ^
+20:59:02 <Autopsy> And 5 times for face unlock causes the face unlock to be disabled.
+21:01:41 <derpy> so in the time of an hour someone could try all of your fingerprints
+21:01:52 <derpy> so if you don't want that attack vector you have to not use the fingerprint scanner at all
+21:01:54 <derpy> :(
+21:02:16 <derpy> Damn... Will have to look into if it can lock fingerprint scanner after x attempts -> pincode
+21:02:38 <Autopsy[m]> Try another finger a few times.
+21:03:10 <derpy> so it does say "too many attempts. fingerprint disabaled"
+21:03:13 <derpy> I wonder how long
+21:03:21 <Autopsy_2> Indefinitely
+21:03:24 <derpy> oh sweet
+21:03:30 <derpy> ok so it is smart
+21:03:33 <derpy> just 5 attempts is the max
+21:03:36 <derpy> not bad
+21:03:51 <derpy> just gotta get the person torturing you to use your index fingers or something
+21:03:52 <derpy> haha
+21:04:22 <kickstart> use a toe
+21:04:33 <derpy> hahha security master!
+21:04:37 <kickstart> the torturer will never guess
+21:04:46 <kickstart> :')
+21:05:12 <blueuser[m]> oh that's a grapheneos feature
+21:05:52 <blueuser[m]> on non graphene roms it just lock the fingerprint for a moment and allow you to use it again after a while
+21:06:21 <blueuser[m]> or after 20 attempts it block it indefinitely
+21:06:37 <blueuser[m]> https://github.com/GrapheneOS/platform_frameworks_base/commit/8d09d1c7e37b75d1731fb9031fbfbd5c7f99aecc
+21:06:45 <kickstart> use a password
+21:08:31 <blueuser[m]>  * oh that's a grapheneos change
+21:29:46 <kryptonymous[m]> <bkeys "nikitalita: I like bigger screen"> When I installed GOS 2+ months ago, Visible service would not work with GOS. Search the logs above for "Visible". Hate to see you go to all the trouble of finding a non-Verizon Pixel 3XL (which I also have incidentally) only to find the service won't work. FWIW I switched to PureTalk USA- low cost, high data, great coverage in my region. YMMV. Good luck.
+21:30:43 <nikitalita[m]1> I believe that's been recently fixed
+21:30:55 <nikitalita[m]1> Search for Verizon in the os issue tracker
+21:32:42 <kryptonymous[m]> That could be true- I have no idea. Since it was no longer relevant to my situation, I didn't follow up. But I do try to scan this board almost every day and hadn't noticed any talk of Visible. But you're right- a search is in order.
+21:51:04 <jpds> derpy: You can also enable the lockdown feature in Display > Lock screen display
+21:51:20 <derpy> jpds right, tnx
+21:51:30 <jpds> Hold down the power button, hit Lockdown, no fingerprints
+21:51:47 <derpy> blueuser[m] didn't know about it... its a good choice, glad to have GOS
+21:52:49 <derpy> jpds if I hold power, I see: power off, restart, screenshot, emergency
+21:53:20 <blueuser[m]> you need to enale lockdown in settings if i remember
+21:53:30 <blueuser[m]>  * you need to enable lockdown in settings if i remember
+21:53:57 <derpy> ah got it tnx
+22:14:24 <dazinism>  @freenode_bkeys:matrix.org did you have a network connection when you tried to do the OEM unlock toggle?
+22:23:27 <blueuser[m]> I and another guy have been censored when we spoke about that  exactly 3H ago lol " Pixels do not require it" "go read the faq"
+22:23:52 <blueuser[m]> the other guy said only newer devices such as the 4a require it
+22:24:01 <blueuser[m]>  * the other guy said only newer devices such as the 4 require it
+22:30:14 <BlackWinnerYoshi> «I and another guy have been censored
+22:30:14 <BlackWinnerYoshi> Am I dumb to not understand this? Like, how, why, and where have you been censored? For me, the information on [Discord server here] has been censored for me, so I can't prove that [subject admin here] and others are the bad guys. Also, I still wonder why Goolag requires you to connect to the internet just to unlock the bootloader of a Pixel 4[a] [XL]... it looks real suspicious»
+22:30:38 <BlackWinnerYoshi> * «I and another guy have been censored»
+22:30:38 <BlackWinnerYoshi> Am I dumb to not understand this? Like, how, why, and where have you been censored? For me, the information on [Discord server here] has been censored for me, so I can't prove that [subject admin here] and others are the bad guys. Also, I still wonder why Goolag requires you to connect to the internet just to unlock the bootloader of a Pixel 4[a] [XL]... it looks real suspicious
+22:31:00 <BlackWinnerYoshi> * «I and another guy have been censored»
+22:31:00 <BlackWinnerYoshi> Am I dumb to not understand this? Like, how, why, and where have you been censored? For me, the information on [Discord server here] has been censored for me, so I can't prove that [subject admin here] and others are the bad guys.
+22:31:00 <BlackWinnerYoshi> Also, I still wonder why Goolag requires you to connect to the internet just to unlock the bootloader of a Pixel 4[a] [XL]... it looks real suspicious
+22:31:34 <blueuser[m]> what
+22:31:38 <BlackWinnerYoshi> * «I and another guy have been censored» \n Am I dumb to not understand this? Like, how, why, and where have you been censored? For me, the information on [Discord server here] has been censored for me, so I can't prove that [subject admin here] and others are the bad guys. \n Also, I still wonder why Goolag requires you to connect to the internet just to unlock the bootloader of a Pixel 4[a] [XL]... it looks
+22:31:38 <BlackWinnerYoshi> real suspicious
+22:32:05 <blueuser[m]> what do i mean, anyways it seems to be a part of the anti theft feature that grapheneos do not use
+22:32:50 <blueuser[m]>  * what do u mean, anyways it seems to be a part of the anti theft feature that grapheneos do not use
+22:34:37 <BlackWinnerYoshi> <blueuser[m] "what do i mean, anyways it seems"> Yeah, sounds like the most logical explanation to this
+22:37:48 <strcat[m]> Autopsy: your response earlier about Magisk, etc. is not really correct since if you are using any of those things you aren't using GrapheneOS in the first place since major portions of it are replaced with other things
+22:38:06 <strcat[m]> it's not just that it cripples the security model and adds substantial attack surface
+22:38:24 <strcat[m]> it is not GrapheneOS, it cannot use the official updates, it cannot be locked with verified boot since it isn't GrapheneOS and isn't signed with the GrapheneOS keys
+22:38:29 <strcat[m]> Auditor will show that it isn't GrapheneOS
+22:38:51 <strcat[m]> Autopsy: also the throttling for unlock attempts is not simply a 30 second lockout every 5 tries - that's wrong
+22:39:28 <strcat[m]> derpy: the information above about unlock attempts and fingerprinting unlocking is wrong
+22:39:58 <strcat[m]>  * derpy: the information above about unlock attempts and fingerprint unlocking is wrong
+22:40:05 <Autopsy[m]> <strcat[m] "Autopsy: also the throttling for"> The first five tries are. I didn't say every five tries.
+22:40:54 <strcat[m]> fingerprint unlocking has a hard limit of 5 attempts on GrapheneOS
+22:41:28 <strcat[m]> the primary unlock method has an exponentially increasing lockout timer with hardware enforcement (for decryption) up to 1 day
+22:42:12 <strcat[m]> the only differences compared to the stock OS is that the hard lockout for fingerprints is 5 instead of 20 and the non-managed password length limit is 64 instead of 16
+22:43:54 <strcat[m]> blueuser: posts containing misinformation are removed from the Matrix scrollback history
+22:44:02 <strcat[m]> it's likely that the IRC logging will be ended
+22:45:21 <strcat[m]> it's not
+22:45:51 <strcat[m]> if you aren't on GrapheneOS the official GrapheneOS updates via the official update client will not work
+22:45:56 <strcat[m]> if you modify the OS it is not GrapheneOS
+22:46:06 <strcat[m]> you will not have functional updates and Auditor can confirm that it is not GrapheneOS
+22:46:27 <strcat[m]> this channel is about GrapheneOS, not derivatives/forks of it
+22:46:31 <Autopsy[m]> Daniel
+22:46:36 <Autopsy[m]> Can you root GrapheneOS?
+22:46:44 <strcat[m]> I don't know what you mean
+22:46:58 <strcat[m]> if you build a userdebug build it has `adb root` and `su` for `adb shell` but that's a debug build, not a production release
+22:47:22 <Autopsy[m]> Can a user root GrapheneOS?
+22:47:29 <Autopsy[m]> Is it recommended? No.
+22:47:35 <Autopsy[m]> Can they? Yes.
+22:47:40 <strcat[m]> no, they can't
+22:47:42 <strcat[m]> that's not GrapheneOS
+22:47:52 <strcat[m]> unless you mean making a userdebug build
+22:47:54 <Autopsy[m]> And I'm saying that's semantics
+22:47:58 <strcat[m]> it's not
+22:48:07 <strcat[m]> Auditor can be used to check if something is running GrapheneOS
+22:48:21 <strcat[m]> if it does not say it's GrapheneOS in Auditor, it's not GrapheneOS
+22:48:29 <strcat[m]> a fork / derivative of GrapheneOS is not GrapheneOS
+22:48:32 <Autopsy[m]> And you won't get updates and auditor says it isn't GrapheneOS. Yes. I get that.
+22:48:33 <strcat[m]> this channel is not about forks / derivatives
+22:48:40 <strcat[m]> because it isn't GrapheneOS
+22:48:56 <strcat[m]> if you replace substantial components of the OS that is not GrapheneOS
+22:49:29 <strcat[m]> if you replace the boot partition including the init system and SELinux policies, that really isn't GrapheneOS anymore
+22:49:33 <strcat[m]> it is a fork
+22:49:35 <strcat[m]> and it's off-topic here
+22:49:48 <Autopsy[m]> Hence why I said it isn't recommended.
+22:49:59 <strcat[m]> it isn't GrapheneOS or GrapheneOS related - it's about forks
+22:50:24 <strcat[m]> forks should have their own channels
+22:51:29 <Autopsy[m]> Gotcha. So rooting = fork. Therefore, no longer GrapheneOS. Not recommended etc.
+22:52:00 <strcat[m]> making substantial modifications to the OS including replacing the core OS partition, init, SELinux policies, etc.
+22:52:03 <strcat[m]> is making a fork
+22:52:12 <strcat[m]> that is not GrapheneOS anymore
+22:52:16 <strcat[m]> it's simple
+22:53:56 <strcat[m]> the only way that user-accessible root accessible is made available is via `adb root` and `su` in a userdebug build (i.e. a development build for developers)
+22:54:17 <strcat[m]> there is never app-accessible root or root accessible to the high-level OS / application layer
+22:56:13 <strcat[m]> if people are taking GrapheneOS and applying substantial modifications like replacing the boot image with a Magisk boot image then they are not running GrapheneOS
+22:56:23 <strcat[m]> they may be confused and think they're running it, but they're really not
+22:56:59 <strcat[m]> this channel is only about the upstream GrapheneOS project and support is only provided to people using that or working on that
+23:19:29 <cdesai[m]> One can think of this as closer to stock
+23:19:50 <cdesai[m]> You wouldn’t ask Google for help with using magisk on stock
+23:21:22 <cdesai[m]> In the same vein, you shouldn’t ask help with rooting or any such modifications here, since the OS is shipped as a full set of unmodifiable images
+23:33:27 <nickcalyx[m]> But i need root to change the icon shape
+23:56:15 <andresbs[m]> <nickcalyx[m] "But i need root to change the ic"> I think Lawnchair allows to change icon shapes for the launcher
+23:58:49 <nickcalyx[m]> I was only kidding, at the reasons people come up with sometimes to justify undermining the security model

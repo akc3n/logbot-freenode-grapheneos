@@ -1,0 +1,705 @@
+00:00:10 <esec2[m]> Also check environment variables and path. If fastboot works everywhere except in the script there's probably a soft link used, or script pointing to custom location.
+00:00:20 <esec2[m]> <graphenefan "or if you can't figure the env p"> What he said
+00:08:06 <M8942w[m]> ok. I did not understand "$env:Path" and what the directory is in GrapheneOS/install. so i looked up a vid to help me understand and they told me what to do put did not tell me what those terms mean
+00:08:29 <M8942w[m]>  * ok. I did not understand "$env:Path" and what the directory is in GrapheneOS/install. so i looked up a vid to help me understand and they told me what to do but did not tell me what those terms mean
+00:10:40 <aeonsolution[m]> 8942w: i can help explain
+00:11:13 <aeonsolution[m]> the video you are probably watching isnt explaining why you need to keep one powershell window open when you set the path
+00:11:16 <M8942w[m]> I think PATH means the file address put in the command
+00:11:24 <Partyush[m]> Is it possible to downgrade from beta version to stable one in Graphene os ?
+00:12:17 <aeonsolution[m]> the official instructions go through the steps using just one tgerminal shell for linux/macos or one powershell window on win10
+00:12:28 <entry1[m]> Yeah the videos by Techlore and The Hated One aren't that great to go by. Its much easier to read the install instructions on the official GrapheneOS website and do it all in powershell for win10
+00:12:37 <aeonsolution[m]> so my advise
+00:12:49 <aeonsolution[m]> delete the folders you have downloaded already
+00:12:58 <esec2[m]> <M8942w[m] "I think PATH means the file addr"> PATH is a environmental variable. On Unix systems you can check this with $PATH. EG echo $PATH
+00:13:07 <aeonsolution[m]> close all your windows
+00:13:20 <aeonsolution[m]> and open 1 powershell window
+00:13:38 <aeonsolution[m]> that powershell window is all you need to download the required files and flash your device
+00:13:50 <aeonsolution[m]> let me know when you do that
+00:13:52 <esec2[m]> Listen to aeonsolution, he knows. I'll correct him if he screws up lol
+00:15:01 <M8942w[m]> get rid of zip files to?
+00:15:23 <aeonsolution[m]> yes
+00:15:27 <aeonsolution[m]> everything
+00:15:31 <entry1[m]> aeonsolution helped me about a few months back. Was doing the same things watching videos and trying out cmd instead of the copy and paste power shell commands on the grapheneos install page. Just make sure to put .exe after curl and to put the correct image file in the command
+00:16:01 <aeonsolution[m]> you'll understand after we finish why
+00:16:29 <esec2[m]> Starting from scratch like suggested.might be quickest and most painless. Don't ruin his flow
+00:17:57 <M8942w[m]> ok everything is gone but this browser and powershell of course
+00:18:15 <aeonsolution[m]> cool
+00:18:54 <aeonsolution[m]> in powershell type the command `cd ~/Downloads`
+00:19:27 <aeonsolution[m]> it will move into your Downloads folders
+00:19:30 <aeonsolution[m]> from there
+00:19:48 <aeonsolution[m]> follow the steps on here https://grapheneos.org/install#obtaining-fastboot to get fastboot
+00:20:41 <aeonsolution[m]> remember not to close your powershell or open up new ones
+00:24:07 <M8942w[m]> should i type in "fastboot --version" now? and what does "curl.exe -O" mean?
+00:24:22 <esec2[m]> <aeonsolution[m] "remember not to close your power"> This point is about variables. Either set in script, environment or that specific shell.
+00:25:19 <esec2[m]> <M8942w[m] "should i type in "fastboot --ver"> don't mind the exe stuff. Follow aeonsolutions instructions we'll take the questions when you're done
+00:26:29 <esec2[m]> <M8942w[m] "should i type in "fastboot --ver"> curl.exe -O https://dl.google.com/android/repository/platform-tools_r30.0.4-windows.zip
+00:26:45 <esec2[m]> Write that in your same powershell window
+00:26:54 <M8942w[m]> oh sorry I forgot to say that I put in the command cd ~/Downloads
+00:28:02 <esec2[m]> curl.exe -O https://dl.google.com/android/repository/platform-tools_r30.0.4-windows.zip
+00:28:02 <esec2[m]> (Get-FileHash platform-tools_r30.0.4-windows.zip).hash -eq "413182fff6c5957911e231b9e97e6be4fc6a539035e3dfb580b5c54bd5950fee"
+00:28:02 <esec2[m]> tar xvf platform-tools_r30.0.4-windows.zip
+00:28:59 <aeonsolution[m]> cool, just follow the steps
+00:29:45 <M8942w[m]> ok so i put "curl.exe -O https://dl.google.com/android/repository/platform-tools_r30.0.4-windows.zip' in to powershell now right?
+00:30:24 <esec2[m]> Yes
+00:30:29 <esec2[m]> Same window
+00:31:01 <esec2[m]> This will download the zip file in the link if that makes sense
+00:31:09 <M8942w[m]> ok did it
+00:31:21 <M8942w[m]> thank you for being patient with me
+00:31:54 <esec2[m]> Next step please
+00:32:58 <esec2[m]> Nevermind the hash
+00:33:00 <esec2[m]> tar xvf platform-tools_r30.0.4-windows.zip
+00:33:10 <esec2[m]> Unzip that shit
+00:33:15 <M8942w[m]> so i put in $env:Path = "$pwd\platform-tools;$env:Path" right?
+00:33:28 <M8942w[m]> oh
+00:33:31 <aeonsolution[m]> if you unzipped already yes
+00:33:50 <aeonsolution[m]> that section with the three commands are supposed to be run individually
+00:33:52 <esec2[m]> Nono just follow the instructions on the site or here please.
+00:34:30 <esec2[m]> We'll hold your hand and wipe your ass, don't worry
+00:34:31 <aeonsolution[m]> if you got an error thats the reason why
+00:35:16 <esec2[m]> When youre done let us know
+00:35:28 <M8942w[m]> was i supposed to type in (Get-FileHash platform-tools_r30.0.4-windows.zip).hash -eq "413182fff6c5957911e231b9e97e6be4fc6a539035e3dfb580b5c54bd5950fee" ?
+00:35:39 <M8942w[m]> be for
+00:35:45 <M8942w[m]>  * before
+00:36:37 <esec2[m]> No not necessary
+00:37:26 <esec2[m]> You could if you're very worried that you're not getting the proper file. Did you do the tar command?
+00:37:54 <esec2[m]> Please type "pwd" and post the output
+00:39:13 <esec2[m]> Also type "echo $Path" or "echo $env:Path" and post output
+00:39:26 <esec2[m]> No quotes
+00:39:29 <M8942w[m]> i put in tar xvf platform-tools_r30.0.4-windows.zip and it did its thing then i put $env:Path = "$pwd\platform-tools;$env:Path" in and it did not do anything
+00:39:56 <esec2[m]> Sounds good
+00:40:09 <esec2[m]> <M8942w[m] "i put in tar xvf platform-tools_"> Also type "echo $Path" or "echo $env:Path" and post output
+00:40:40 <esec2[m]> <esec2[m] "Also type "echo $Path" or "echo "> Also post output of "pwd"
+00:41:23 <M8942w[m]> i got this  C:\Users\campb\Downloads\platform-tools;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Users\campb\AppData\Local\Microsoft\WindowsApps;
+00:41:23 <M8942w[m]> PS C:\Users\campb\Downloads>
+00:41:39 <esec2[m]> Gotta piss. aeonsolution can you proceed?
+00:41:54 <esec2[m]> > <@8942w:matrix.org> i got this  C:\Users\campb\Downloads\platform-tools;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Users\campb\AppData\Local\Microsoft\WindowsApps;
+00:41:54 <esec2[m]> > PS C:\Users\campb\Downloads>
+00:41:54 <esec2[m]> Looks good
+00:42:56 <aeonsolution[m]> follow the steps on https://grapheneos.org/install#enabling-oem-unlocking and go down the list until you flash your device
+00:43:02 <aeonsolution[m]> if you get stuck reach out here
+00:43:11 <aeonsolution[m]> dont close your powershell window
+00:43:26 * M8942w[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/haMHqRycoNzwcarfLwksUZbj/message.txt >
+00:43:48 * esec2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/oKOuuNWkOMFirCYdkvsWbbga/message.txt >
+00:44:19 <esec2[m]> Post output, or move down the official checklist and let us know if something isn't right
+00:46:04 <M8942w[m]> i put in fastboot --version and got this  fastboot version 30.0.4-6686687
+00:46:04 <M8942w[m]> Installed as C:\Users\campb\Downloads\platform-tools\fastboot.exe
+00:46:30 <esec2[m]> Aces. Just follow the guide
+00:47:40 <M8942w[m]> can i skip Obtaining signify?
+00:47:56 <esec2[m]> You may drop the signify part if you have no reason to believe someone wants you to flash malware
+00:48:16 <esec2[m]> I.e no cartel affiliation etc and you should be fine
+00:49:40 <esec2[m]> Verifying checksums is good practice, especially if you have a corrupt file. In this case, don't worry about the 5-eyea
+00:49:50 <esec2[m]> * Verifying checksums is good practice, especially if you have a corrupt file. In this case, don't worry about the 5-eyes
+00:54:23 <M8942w[m]> im at "Obtaining factory images" should i put in  curl -O https://releases.grapheneos.org/factory.pub  or skip?
+00:56:37 <esec2[m]> Well. Best practice dictates that in your supply chain there could be someone wanting you to download a modified ROM. Try following the guide with the keys and ask when stuck
+00:57:11 <esec2[m]> You're not that hopeless. Don't worry
+00:59:11 <M8942w[m]> ok so last thing i did was put in "fastboot flashing unlock"  so now i put in curl -O https://releases.grapheneos.org/factory.pub  right?
+01:00:25 <esec2[m]> Did you have your phone in fastboot mode and plugged in when you issued the unlock command?
+01:00:37 <M8942w[m]> yes
+01:00:53 <esec2[m]> Did your phone respond?
+01:01:01 <M8942w[m]> yes
+01:01:45 <M8942w[m]> it says divice state: unlocked on phone
+01:02:03 <aeonsolution[m]> cool, keep following the steps
+01:02:08 <aeonsolution[m]> you are almost there
+01:02:49 * M8942w[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/CjvdJnPgkkprTfAsQZLXNBty/message.txt >
+01:04:15 <entry1[m]> You can skip that step to my knowledge
+01:04:26 <M8942w[m]> i for got the exe after curl
+01:04:45 <esec2[m]> What device are you flashing?
+01:05:00 <M8942w[m]> pixel 3a
+01:06:04 <esec2[m]> curl -O https://releases.grapheneos.org/factory.pub
+01:06:05 <M8942w[m]> what do i do now?
+01:07:02 <M8942w[m]> <esec2[m] "curl -O https://releases.graphen"> i put in   curl -O https://releases.grapheneos.org/factory.pub    and got
+01:07:15 <esec2[m]> My bad
+01:07:32 <esec2[m]> curl.exe -O https://releases.grapheneos.org/factory.pub
+01:08:33 <esec2[m]> Then:
+01:08:33 <esec2[m]> curl.exe -O https://releases.grapheneos.org/sargo-factory-2020.10.06.02.zip
+01:09:07 <esec2[m]> And then:
+01:09:07 <esec2[m]> curl.exe -O https://releases.grapheneos.org/sargo-factory-2020.10.06.02.zip.sig
+01:09:39 <esec2[m]> Just follow the instruction, I'm more or less copy / pasting
+01:09:41 <M8942w[m]> powershell is on  "Uri:"  right now can i put that in as is?
+01:09:54 <esec2[m]> What?
+01:11:16 <aeonsolution[m]> if powershell is stuck and doesnt give you a clean prompt with `>`
+01:11:19 * M8942w[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/ahSFqnQgCQkkgkvllyPsfoKB/message.txt >
+01:11:38 <aeonsolution[m]> press the "ctrl" button and click c
+01:11:47 <aeonsolution[m]> to kill the command
+01:12:34 <aeonsolution[m]> then run the commands from here https://grapheneos.org/install#obtaining-factory-images
+01:12:41 <aeonsolution[m]> but using the release for sargo
+01:12:57 <aeonsolution[m]> https://grapheneos.org/releases#sargo-stable
+01:13:00 <M8942w[m]> ok it is now PS C:\Users\campb\Downloads>
+01:13:07 <aeonsolution[m]> cool
+01:13:13 <aeonsolution[m]> continue with the steps
+01:13:15 <esec2[m]> Send a screenshot. Haven't used windows in years.
+01:13:19 <esec2[m]> Hold Ctrl key and press  c
+01:13:23 <esec2[m]> Cancel that command and reissue with .exe behind curl
+01:13:49 <esec2[m]> Sorry, VPN lag
+01:15:11 <strcat[m]> 8942w: just follow the guide at https://grapheneos.org/install exactly as written, this is covered explicitly there
+01:15:24 <strcat[m]> > You can either download the files with your browser or using a command like curl. It's generally easier to use the command-line since you're already using it for the rest of the installation process, so these instructions use curl. On Windows, you need to reference curl as curl.exe since PowerShell has a legacy curl alias.
+01:19:21 <M8942w[m]> i put in curl.exe -O https://releases.grapheneos.org/factory.pub  now do i put in untrusted comment: GrapheneOS factory images public key
+01:19:21 <M8942w[m]> RWQZW9NItOuQYJ86EooQBxScfclrWiieJtAO9GpnfEjKbCO/3FriLGX3 ?
+01:22:33 <esec2[m]> Then:
+01:22:33 <esec2[m]> curl.exe -O https://releases.grapheneos.org/sargo-factory-2020.10.06.02.zip
+01:22:38 <esec2[m]> And then:
+01:22:38 <esec2[m]> curl.exe -O https://releases.grapheneos.org/sargo-factory-2020.10.06.02.zip.sig
+01:23:54 <esec2[m]> <strcat[m] "8942w: just follow the guide at "> Maybe some real tight cygwin minimal install would eliminate some of these.... "pitfalls"?
+01:26:22 <M8942w[m]> i skiped Obtaining signify should i still put in the .sig as well?
+01:26:54 <esec2[m]> Yea
+01:27:38 <esec2[m]> Then you have.it at least hehe
+01:28:07 <M8942w[m]> ok did it
+01:28:20 <strcat[m]> esec2: no, it wouldn't, don't use cygwin
+01:28:44 <strcat[m]> just follow the instructions as written on the site
+01:28:44 <strcat[m]> Windows is fully supported and it's not any harder to do it there
+01:29:01 <esec2[m]> <M8942w[m] "ok did it"> tar.exe xvf sargo-factory-2020.10.06.02.zip
+01:29:01 <strcat[m]> typically easier, in fact, since USB works sanely there
+01:29:32 <esec2[m]> <strcat[m] "typically easier, in fact, since"> Probably just a habit, never had any USB issues with Linux since 2005
+01:30:19 <strcat[m]> yet until recently the kernel didn't have properly working USB 3.x so it's still broken on most distributions which are on an older LTS
+01:30:35 <strcat[m]> and desktop Linux lacks a reasonable way of handling USB permissions
+01:30:52 <strcat[m]> needing to write udev rules for each new kind of USB device and add them to the rule database as root doesn't qualify as reasonable
+01:31:20 <strcat[m]> the instructions are at https://grapheneos.org/install and work fine - don't need to be pasting them here, just follow those
+01:31:50 <esec2[m]> <strcat[m] "needing to write udev rules for "> I've written two udev rules last 20 years.. 1 for adb and 1 for a HWRNG
+01:32:27 <M8942w[m]> it says "Reboot into the bootloader interface to begin the flashing procedure." do i need to do a reboot command? the phone is in fastboot mode still.
+01:32:42 <esec2[m]> <strcat[m] "the instructions are at https://"> 89 is obviously not comfortable with them so some guidance isn't spam is it?
+01:33:28 <esec2[m]> <M8942w[m] "it says "Reboot into the bootloa"> Did you tar.exe the file?
+01:33:44 <M8942w[m]> not yet
+01:33:55 <esec2[m]> Do that.
+01:34:00 <M8942w[m]> it said it before
+01:34:04 <M8942w[m]> ok
+01:34:14 <strcat[m]> https://grapheneos.org/install
+01:34:35 <strcat[m]> esec2: you're deviating from the official instructions and as you said yourself you haven't used Windows
+01:34:49 <strcat[m]>  * esec2: you're deviating from the official instructions and as you said yourself you haven't used Windows for this
+01:35:56 <strcat[m]> and talking about cygwin (which is terrible and irrelevant in 2020) just demonstrates how badly suited you are to be giving help to someone there
+01:36:21 <strcat[m]> so just don't, the official instructions work, they just need to be followed top to bottom
+01:36:33 <strcat[m]> don't skip steps, read what's written there
+01:36:43 <strcat[m]> copy-pasting it here can be done if that's really needed
+01:36:48 * M8942w[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/dxwzLstqFFHeILiieSVAIxNQ/message.txt >
+01:36:58 <strcat[m]> it doesn't say to use 'tar.exe' but sure
+01:37:17 <strcat[m]> deviating from the installation guide and doing your own thing is a mistake
+01:37:40 <esec2[m]> <strcat[m] "esec2: you're deviating from the"> Deviating as in skipping hashsums? Obviously he's not in terrible need of checking that, and in actual need of someone holding his hand through it. Stick around, help him out then?
+01:37:44 <M8942w[m]> wait no its ok now
+01:38:06 <strcat[m]> it says to skip signify on Windows already
+01:38:16 <strcat[m]> so that's per the official instructions
+01:38:29 <strcat[m]> it says to skip it anywhere it's not part of the OS (including Linux distributions without it packaged)
+01:38:30 <M8942w[m]> it says   PS C:\Users\campb\Downloads>  now
+01:38:52 <esec2[m]> He wants GrapheneOS installed and test it, not some bullshit "RTFM" comment or your knowitall attitude. No offense
+01:39:23 <louipcm> chill dude
+01:39:40 * esec2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/rYmmtWNXsVTVAhvVBqRqshEl/message.txt >
+01:41:21 <M8942w[m]> i am about to put in flash-all wish me luck
+01:41:47 <louipcm> goodluck
+01:41:49 <M8942w[m]> <M8942w[m] "i am about to put in flash-all w"> ./flash-all.bat
+01:47:14 <M8942w[m]> it's doing stuff thats better then before
+01:47:31 <M8942w[m]>  * it's doing stuff. thats better then before
+01:49:43 <graphenefan> strcat[m] why doesn't the zip archive bundle the current fastboot/adb binaries in it, for all platforms? license issues?
+01:50:24 <graphenefan> this can potentially skip the platform-tools download, env var setting, etc
+01:51:55 <graphenefan> this can make it noob proof, when you click flash-all.xx and it will call the binary from the current dir
+01:51:56 <esec2[m]> <M8942w[m] "it's doing stuff thats better th"> How's it progressing? Admin gave me a time out
+01:51:59 <M8942w[m]> it said "Press any key to exit..." i did. and now its back to PS C:\Users\campb\Downloads\sargo-factory-2020.10.06.02>  do I put in "fastboot flashing" lock now?
+01:54:29 <esec2[m]> <M8942w[m] "it said "Press any key to exit.."> What's the output before that? Yes, the guide dictates that locking bootloader is next step
+01:55:49 <M8942w[m]> how do i get into "bootloader interface" is it talking about "PS C:\Users\campb\Downloads\sargo-factory-2020.10.06.02>" the phone or something else?
+01:57:18 <esec2[m]> Bro. Issue this : "fastboot flashing lock"
+01:59:08 <esec2[m]> The guide for installing Graphene is one of the most straight forward and no nonsense guides I've seen. It's hard to screw it up.
+01:59:22 <esec2[m]> You'll do fine
+01:59:23 <M8942w[m]> is says "PS C:\Users\campb\Downloads\sargo-factory-2020.10.06.02>" can i type "fastboot flashing lock" as it?
+02:00:03 <M8942w[m]>  * is says "PS C:\Users\campb\Downloads\sargo-factory-2020.10.06.02>" can i type "fastboot flashing lock" as is?
+02:00:43 <strcat[m]> yes
+02:00:55 <strcat[m]> just make sure the phone is still in the bootloader menu
+02:01:03 <strcat[m]> it will ask you to confirm locking
+02:01:05 <strcat[m]> and then you're done
+02:01:10 <strcat[m]> after locking
+02:02:01 <esec2[m]> Then you can smoke a cigar with a tall glass of cognac, enjoy the Graphene experience!
+02:04:01 <M8942w[m]> i did it and the phone is still in  fastbootmode but says that it is locked. do i just press start now?
+02:05:18 <esec2[m]> <M8942w[m] "i did it and the phone is still "> What do you think?
+02:05:31 <esec2[m]> Use your best judgement
+02:07:02 <M8942w[m]> i dont know man the vid said it would be EZ. and then I had a bad time. just want be carfull
+02:08:32 <esec2[m]> strcat wrote "and then you're done". Start your phone 😃
+02:08:37 <M8942w[m]> we did it! thank you guys!
+02:09:11 <M8942w[m]> im going though the setup now
+02:09:29 <esec2[m]> Better to be careful than brick your phone lol. Congratulations! Have a cigar and a tall glass of cognac
+02:09:47 <M8942w[m]> thank you for your patience with me
+02:10:53 <esec2[m]> NP, a small ban was in order lol. Cool to have you up and running. Next time you can help someone else with the same thing in here 😉
+02:11:11 <M8942w[m]> ya so i do not know why the vid did not work but now i know better
+02:11:50 <esec2[m]> <M8942w[m] "ya so i do not know why the vid "> Where was the video posted and by whom?
+02:13:35 <esec2[m]> Check out your setup and familiarize yourself with the clean environment :). Try to stick with f-droid and f-droid repositories and not thrash down your phone with all kinds of proprietary software apks
+02:15:02 <esec2[m]> * Check out your setup and familiarize yourself with the clean environment :). Try to stick with f-droid and f-droid repositories and not trash down your phone with all kinds of proprietary software apks
+02:15:26 <louipc> i would say stay away from fdroid
+02:15:36 <louipc> fdroid has bad packaging practices
+02:15:38 <dazinism> 8942w: this may be useful https://hub.libranet.de/wiki/graphene-os/wiki/Apps
+02:15:55 <M8942w[m]> the hated one and techlore. everyone else seemed to follow there vid and was fine
+02:16:06 <louipc> get apps from the developer themselves or through aurora store
+02:16:24 <louipc> and fdroid app/server itself is slow and buggy
+02:16:51 <esec2[m]> <louipc "get apps from the developer them"> Aurora Droid uses f-droid repositories? What's the real difference?
+02:17:04 <louipc> no it uses play store
+02:17:04 <dazinism> Found the foxy droid app works pretty good
+02:17:16 <louipc> oh aurora droid
+02:17:22 <dazinism> Theres lots of other fdroid repos also
+02:17:24 <louipc> theres another aurora that uses play store
+02:17:44 <louipc> yea but avoid the main fdroid repo
+02:17:57 <dazinism> Aurora Store or Aurora Droid
+02:18:02 <esec2[m]> <esec2[m] "Aurora Droid uses f-droid reposi"> Yeah, Aurora Droid imports from F-droid. Aurora Store is the play store front..
+02:18:06 <louipc> aurora store
+02:18:18 <louipc> fdroid app is still buggy anyway. given their packaging practices i would not trust them
+02:18:31 <esec2[m]> Makes no.sense
+02:18:43 <esec2[m]> To me at least
+02:19:04 <louipc> they sign all apps themselves and use bad signatures and API version
+02:19:11 <esec2[m]> Follow Graphene best practice, will get you far
+02:19:15 <M8942w[m]> aurora store got it thank you
+02:19:23 <louipc> the proper way is for each developer to sign their own app
+02:19:38 <LinusSexTips[m]> aurora droid has a bunch of other repositories by default, too
+02:19:39 <louipc> if fdroid gets compromised that means all your fdroid apps are compromised
+02:19:40 <esec2[m]> <M8942w[m] "aurora store got it thank you"> Aurora droid, not store. Very important
+02:19:54 <LinusSexTips[m]> aurora store is fine
+02:20:11 <dazinism> A few apps in the fdroid repo do have developers sigs
+02:20:13 <LinusSexTips[m]> if they need play store apps
+02:20:20 <louipc> well i guess aurora droid could be better than fdroid :p
+02:20:26 <graphenefan> >if fdroid gets compromised that means all your fdroid apps are compromised  not really. how so?
+02:20:33 <LinusSexTips[m]> looks better, too
+02:20:37 <LinusSexTips[m]> fdroid has an ugly ui imo
+02:20:44 <louipc> graphenefan: because fdroid does their own builds and signs them
+02:20:49 <esec2[m]> <louipc "if fdroid gets compromised that "> Personally I use repositories that suits my needs. Never had any issues with bad content in packages etc from official fdroid repos
+02:21:14 <graphenefan> yes but you need to re-download the apps
+02:21:24 <graphenefan> with a pwned signature
+02:21:28 <dazinism> I find Aurora Droid a bit buggy. Best experience has been with Foxy Droid
+02:21:46 <esec2[m]> Avoid GSF dependent bs as much as possible.
+02:22:13 <esec2[m]> Haha bet this pissing contest makes sense for 89 here
+02:22:29 <graphenefan> louipc if your threat model is f-droid getting malicious, then...
+02:22:32 <louipc> anyway.. best for offtopic by now
+02:22:43 <LinusSexTips[m]> <dazinism "I find Aurora Droid a bit buggy."> It used to be quite buggy but seems better recently
+02:22:54 <louipc> my threat model is this is all fun in games
+02:22:58 <M8942w[m]> im in set up and it is asking me if i want to allow apps to use my location info. will apps still ask me latter to know my location?
+02:23:18 <LinusSexTips[m]> they will still ask
+02:23:26 <LinusSexTips[m]> so its fine to enable if you want
+02:23:31 <dazinism> ???
+02:23:39 <esec2[m]> <M8942w[m] "im in set up and it is asking me"> Use Google or read the manual for these types of questions 😉
+02:23:49 <graphenefan> just don't set auto-update in both fdroid, aurora, shit* you have, wait for a week, and if it doesn't hit the fan you are ok
+02:23:54 <graphenefan> isnt it right?
+02:24:32 <esec2[m]> <graphenefan "just don't set auto-update in bo"> Yeah having a conflict and apps competing to be first to update is a Royal Pain
+02:24:45 <M8942w[m]> ok ill leave you guy then. thank you again
+02:24:56 <graphenefan> i dont know any app that will stop working if you dont update it for a week. but then you can see a backdoor
+02:25:07 <esec2[m]> <M8942w[m] "ok ill leave you guy then. thank"> Stick around. Maybe you can help?
+02:25:57 <M8942w[m]> i got to go eat. see you guys latter
+02:27:48 <esec2[m]> So.. that was fun. Everything allright with you girls? :😀
+02:29:13 <graphenefan> esec2[m] are you here for helping or troiiling?
+02:48:08 <joltman[m]> Ugh! I just got my second 3XL that I'm sending back because the sellers keep swearing up and down that it's bootloader unlocked and they aren't, so I'm done with refurbs and just want to get a new phone from Google that I know is unlocked and has a warranty. That being said, how close is GOS development on the 4a (regular, not 5G)? Is it anywhere close to being stable or supported?
+02:51:16 <louipcm> joltman:  theres some test builds. talk to anupritaisno1
+03:02:51 <lev[m]> <joltman[m] "Ugh! I just got my second 3XL th"> Yeah I went through similar suffering to find a 3xl, the trick was to ask for the first few digits of the IMEI.  At least one range of the Google ones start with 99 (and I believe the Verizon ones started with 35?)
+03:03:24 <lev[m]> that's probably not definitive though
+03:04:01 <joltman[m]> Didn't help for me. Even got a fake screen shot of the "OEM Unlocking" feature not grayed out.
+03:04:14 <lev[m]> I just got a new 4xl on prime day (they were clearing stock), and unfortunately I sold my 3xl already otherwise I'd offer
+03:04:50 <lev[m]> finding a sealed new Google phone was a challenge lol
+03:04:57 <joltman[m]> How much was the 4XL? My only problem with 4XL is no fingerprint reader.
+03:05:45 <lev[m]> it's way faster than the 3xl, and the face scanner tech is more secure from what folks have said here, though I don't know the specifics
+03:06:10 <lev[m]> it was like 450? but they accepted a trade in too, so I got another 140 off
+03:06:37 <lev[m]> 64gb though, the 128gb ones were still full price
+03:07:26 <joltman[m]> 4a has fingerprint reader and headphone jack, but doesn't have the water resistance and of course is slower cpu. Also, I really kinda need 128gb anyway. I have a lot of music local to stay more off grid.
+03:07:55 <lev[m]> yeah, I do lament the lack of storage a bit
+03:08:07 <lev[m]> but mostly my offline content is books, which are small
+03:09:04 <lev[m]> you can also transcode your music to like 256kbps ogg or something if you want to conserve space, no need for huge files if you're going to use that onboard dac anyway
+03:32:26 <joltman[m]> Well, it sounds like 4a is next in line for support, so I'm going with it and hoping for the best.
+03:39:33 <entry1[m]> <joltman[m] "Ugh! I just got my second 3XL th"> Just look up the IMEI on Google Pixel Repair screen and if it says unlocked, you are all set
+03:47:19 <joltman[m]> That's fine after you receive it, but it's too late then and you have to go through return process. Most sellers won't provide IMEI in advance for obvious reasons and they may lie about it anyway.
+03:58:20 <dmatrixs[m]> <strcat[m] "and talking about cygwin (which "> I use cygwin for rsync like commands to  back up  my media drive preserving hard links  etc.. Is it bad an irrelevant even for a case like this?
+04:02:38 <strcat[m]> yes
+04:03:43 <strcat[m]> cygwin is broken and awful
+04:03:43 <strcat[m]> makes no sense anymore either
+04:04:10 <strcat[m]> you can either use proper native builds of programs or the official support for running Linux programs on Windows
+04:04:28 <strcat[m]> so why use sketchy stuff that's super broken and has issues with large files etc.
+04:05:26 <dmatrixs[m]> BC its the first way I found to clone multiple directories with hardlinks and I haven't made the full switch to Linux :(
+04:07:35 <dmatrixs[m]> Appreciate the candor as always. Will  have to inform myself some more on this one
+06:05:05 <NickoHristov[m]> Hello together,
+06:05:05 <NickoHristov[m]> I am looking to switch from a non-Pixel to a Pixel phone to check out GrapheneOS. I saw that the Pixel 5 was recently unveiled officially and I wonder if and when Pixel 5 support will arrive.
+06:10:29 <renlord[m]> Oh banning from irc side will kick users on matrix too.
+06:21:00 <strcat[m]> yes the irc service does
+06:26:22 <lpcvoid[m]1> > <@nicko.hristov:matrix.org> Hello together,
+06:26:22 <lpcvoid[m]1> > I am looking to switch from a non-Pixel to a Pixel phone to check out GrapheneOS. I saw that the Pixel 5 was recently unveiled officially and I wonder if and when Pixel 5 support will arrive.
+06:26:22 <lpcvoid[m]1> That depends on contributors
+06:26:58 <lpcvoid[m]1> Check github, but AFAIK there is no kernel repo for p5 yet
+06:52:36 <devnull[m]3> Graphene is not supporting the always on display on the 4?
+06:53:07 <anupritaisno1[m]> <devnull[m]3 "Graphene is not supporting the a"> No
+06:53:26 <devnull[m]3> Any reason for that? Just curious
+06:53:47 <anupritaisno1[m]> <devnull[m]3 "Any reason for that? Just curiou"> Missing overlays
+06:53:58 <devnull[m]3> OK, ty
+07:04:01 <lpcvoid[m]1> <anupritaisno1[m] "No "> I authored a commit on p4xl that removed product properties which (as I was told) was the sole reason AOD doesn't work on p4xl - was that wrong? Been looking forward to the next release for this reason lol
+07:05:16 <lpcvoid[m]1> https://github.com/GrapheneOS/device_google_coral/commit/27cbf15b5bc113656f212b19aeee6e73a5786ffc
+07:05:19 <lpcvoid[m]1> This
+07:07:31 <lpcvoid[m]1> * https://github.com/GrapheneOS/device_google_coral/pull/9
+07:47:59 <anupritaisno1[m]> <lpcvoid[m]1 "I authored a commit on p4xl that"> I don't even know how that was approved
+07:48:16 <anupritaisno1[m]> The one line you deleted doesn't change anything. I had already tried it a long time ago
+07:50:28 <lpcvoid[m]1> Aw alright, it indeed seemed too good to be true :(
+07:51:34 <anupritaisno1[m]> <lpcvoid[m]1 "Aw alright, it indeed seemed too"> You copied a solution given by someone that nobody confirmed was working, didn't test it yourself and didn't contact the maintainer
+07:51:48 <anupritaisno1[m]> We definitely need that commit in because we don't have oslo/soli in AOSP
+07:51:54 <anupritaisno1[m]> But that doesn't fix anything
+07:53:29 <lpcvoid[m]1> Yeah, in hindsight I should have tested it myself, but I kind of naively expected that to be done at build by testers, and since the guy said it would work I went with it. Probably best to revert that commit then, unfortunately
+07:53:44 <anupritaisno1[m]> No
+07:53:47 <anupritaisno1[m]> <anupritaisno1[m] "We definitely need that commit i"> .
+07:53:55 <anupritaisno1[m]> It is a necessary commit
+07:53:59 <lpcvoid[m]1> ah, right, sorry
+07:54:03 <anupritaisno1[m]> But you wrongly thought it does something else
+07:55:05 <lpcvoid[m]1> I was under the impression that the settings checked for this prop for the decission to show AOD as an option, but yeah probably pretty far from the truth
+07:55:19 <lpcvoid[m]1> never grepped source myself to confirm
+08:12:42 <anupritaisno1[m]> [lpcvoid](https://matrix.to/#/@lpcvoid:matrix.org) it's an overlay, not some prop
+08:16:48 <anupritaisno1[m]> And this overlay isn't in the stock OS
+08:17:20 <anupritaisno1[m]> Stock uses oslo/soli
+08:24:11 <dazinism> joltman: did you give the devices a network connection when you tried OEM unlock?
+08:25:59 <lpcvoid[m]1> man that sounds like a harder fix then. But I have no clue about android architecture unfortunately
+08:26:19 <lpcvoid[m]1> can you drop a few keywords that I can google to learn how to approach this?
+08:27:08 <lpcvoid[m]1> i'd guess that it would boil down to implementing that overlay from scratch
+08:27:25 <lpcvoid[m]1> and then hooking it up accordingly
+08:58:22 <xv73j[m]> Hi I briefly glanced at some discussion yesterday about how graphene on android 11 seems to dispose of memory really quickly. I have experienced this where apps reload if I tab out from them or even if I just home and come back, and some things take a second to launch rather than being instant. Is this by design from hardened_malloc or is this a bug (to be investigated)?
+09:01:56 <zyxt128[m]> There are complaints about android 11 in general, this seems not to be a GOS specific issue
+09:01:56 <zyxt128[m]> https://support.google.com/pixelphone/thread/71720691
+09:03:12 <zyxt128[m]> Someone on this thread has proposed a solution
+09:29:57 <xv73j[m]> 👍that link has a solution, hopefully it works
+09:57:01 <louipc> rule 1: always test your patches
+10:59:07 <Arch2k[m]> <xv73j[m] "👍that link has a solution, hope"> This solution seems to have fixed the problem for me
+11:07:21 <TheLynx> Does anyone know if GrapheneOS is affected by CVE-2020-12351/12352/24490 aka BleedingTooth or does the hardening of GrapheneOs again does the job? xD
+11:36:32 <r0ckl0bst3r[m]> Anyone else unable to find location in the Waze app?
+12:00:37 <redu321[m]> I see a lot of apps on graphene use "Sensors" right. I can turn it on or off. For what is that option. Lots of apps use it and i dont know if i can turn it off and still use tha app fine?
+12:46:51 <ruddo[m]> Do we have support for Pixel 4a?
+12:48:37 <alex-resist> https://grapheneos.org/faq#recommended-devices
+12:51:37 <alex-resist> Alternatively: https://grapheneos.org/releases#stable-channel
+12:51:43 <alex-resist> It's not so difficult to find out :P
+13:35:44 <joltman[m]> <dazinism "joltman: did you give the device"> Yes. The IMEIs on both began with "35" (Verizon) and not "99" (Google).
+13:39:36 <dazinism> joltman: don't think identifying from the IMEI is that simple. Although think someone shared a link (following your statements) where you can enter the whole IMEI and confirm.
+13:40:04 <dazinism> Think you may need to be logged in with a Google account to do so??
+14:03:02 <joltman[m]> I checked on Google warranty site and it confirmed "US VZ"
+14:08:56 <strcat[m]> redu321: Sensors is a permission added by GrapheneOS, which does not exist in Android
+14:09:16 <strcat[m]> redu321: doesn't exist in iOS either, Android and iOS just allow it
+14:09:25 <strcat[m]> so, since we're adding it, apps are not declaring whether they use it
+14:09:33 <strcat[m]> and they do not have code to request it
+14:09:39 <strcat[m]> so GrapheneOS has to add a toggle for every app
+14:10:20 <strcat[m]> you can disable it as you see fit, those apps won't get data from sensors anymore (the ones not falling into existing categories covered by Android permissions like microphone, camera, body sensors, activity recognition)
+14:19:13 <neo[m]> <strcat[m] "so GrapheneOS has to add a toggl"> Great feature, congrats!
+14:55:53 <WoC> trying to find a release for the Pixel 4 XL, do have to build it from source or is there a prebuilt somewhere ?
+14:58:15 <dontdisturbme[m]> <strcat[m] "you can disable it as you see fi"> By sensors u mean camera, gyroscope, microphone? Where to find the entire scope for "sensors"?
+14:59:26 <dontdisturbme[m]> NVM, found at source.android.com
+15:00:30 <strcat[m]> dontdisturbme: you're free to look through the list of standard supported sensors
+15:00:41 <strcat[m]> our Sensors permission is as I said for all other sensors not covered by existing permissions
+15:00:43 <strcat[m]> it's a fallback
+15:00:52 <strcat[m]> anything covered by an existing permission uses that, not our Sensors permission
+15:01:06 * makingaliasesisa sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/UdwSiLRDJlLzRfuppbewZpBy/message.txt >
+15:01:15 <strcat[m]> I mentioned above that Microphone, Camera, Body Sensors and Activity Recognition are existing permissions
+15:01:17 <devnull[m]3> Could somebody please share the off topic group?
+15:01:19 <strcat[m]> so that is not covered by Sensors
+15:01:51 <strcat[m]> makingaliasesisannoying: you're posting old version numbers
+15:02:00 <strcat[m]> not sure why you're posting that
+15:02:21 <dontdisturbme[m]> <strcat[m] "dontdisturbme: you're free to lo"> I'm checking from source.android.com. The list there should be as what you are referring to
+15:02:23 <makingaliasesisa> that is the stable branch?
+15:02:34 <makingaliasesisa>  https://grapheneos.org/releases#coral-stable
+15:02:50 <strcat[m]> dontdisturbme: I don't know why you're linking to that
+15:03:04 <dontdisturbme[m]> <strcat[m] "I mentioned above that Microphon"> Ok 👍
+15:03:07 <makingaliasesisa> oh
+15:03:16 <makingaliasesisa> i have javascript disabled
+15:03:25 <dontdisturbme[m]> <strcat[m] "dontdisturbme: I don't know why "> Wouldn't that list be the comprehensive set?
+15:03:31 <strcat[m]> what list?
+15:03:46 <makingaliasesisa> i use ublock origin hard mode on
+15:04:22 <makingaliasesisa> https://github.com/gorhill/uBlock/wiki/Blocking-mode:-hard-mode
+15:04:36 * dontdisturbme[m] uploaded an image: Screenshot_20201020-230350_1.png (110KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/kStTPeMimFzNgwmRGlYEJFWh/Screenshot_20201020-230350_1.png >
+15:05:08 * makingaliasesisa sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/gSCNWfcawBnquLkfAztHgYsO/message.txt >
+15:05:21 <makingaliasesisa> cool
+15:06:18 <makingaliasesisa> strcat:  sorry i had javascript disabled and i updated my post with the correct items
+15:06:54 <strcat[m]> dontdisturbme: you aren't linking to that
+15:06:59 <strcat[m]> you're linking to the overview page
+15:07:16 <WoC> Oh, the "factory" files are the release...
+15:08:33 <strcat[m]> WoC: there is an installation guide at https://grapheneos.org/install
+15:09:07 <makingaliasesisa> https://grapheneos.org/install#obtaining-factory-images
+15:09:08 <dontdisturbme[m]> <strcat[m] "dontdisturbme: you aren't linkin"> So where can I find the list of sensors that GrapheneOS is able to control the permissions for?
+15:09:09 <makingaliasesisa> adding onto strcats
+15:09:18 <strcat[m]> dontdisturbme: all of them
+15:09:19 <strcat[m]> as I said
+15:09:28 <strcat[m]> read what I wrote above
+15:10:25 <strcat[m]> Sensors (OTHER_SENSORS) is set as the default permission needed for all sensors (instead of nothing)
+15:10:39 <strcat[m]> anything already handled by a separate permission still uses that
+15:10:41 <strcat[m]> I explained above
+15:13:36 <dontdisturbme[m]> U misunderstood me. Nvm. I go other places and read up
+15:14:04 <strcat[m]> https://github.com/GrapheneOS/platform_frameworks_native/commit/25e24fcf0b7478c0bd81764c7e3d8444cdc7e332
+15:14:10 <strcat[m]> it's set as the default for all sensors not specific ones
+15:14:18 <strcat[m]> anything that already sets a permission ends up overriding that
+15:14:48 <strcat[m]> there are already permissions for body sensors and activity recognition - those override this, as they override the usual Android default of not requiring a permission
+15:15:09 <strcat[m]> Microphone and Camera are handled elsewhere rather than as part of this
+15:15:44 <strcat[m]> there is not a limit of which sensors are covered by this - there is a list of standard sensors, but devices can also have their own extensions (their own types of sensors)
+15:16:02 <strcat[m]> you can see the list of standard ones in that file
+15:16:19 <strcat[m]> that is not an exhaustive list, there is no limit on which sensors a device can add
+15:19:19 <WoC> strcat[m], ty. After install how would you enable root ?
+15:22:06 <dontdisturbme[m]> <strcat[m] "there is not a limit of which se"> Yup I was referring if there is an exhaustive list of such sensors which aren't covered explicitly like camera, microphone, body sensors.  I will have a look at said file.
+15:23:30 <strcat[m]> there is no exhaustive list because devices can add whatever custom sensors they want
+15:23:47 <strcat[m]> within the sensor framework, and those are covered by this 'other sensors' permission
+15:30:08 <WoC> oh i see, no root access of any kind...
+15:31:00 <anupritaisno1[m]> <WoC "strcat, ty. After install how wo"> Wat
+15:34:01 <WoC> i just realized, there is no root access nor can it be obtained
+15:36:21 <WoC> or am I mistaken ?
+15:37:57 <anupritaisno1[m]> <WoC "i just realized, there is no roo"> Hardened ROM and root is quite weird
+15:38:27 <anupritaisno1[m]> Why would we do so much for security then bypass the same security?
+15:38:44 <dontdisturbme[m]> <strcat[m] "within the sensor framework, and"> Yup. That is my understanding now. Thanks
+15:49:26 <lunar0[m]> Is there going to be support for the pixel 4a 5g?
+15:51:35 <anupritaisno1[m]> [lunar0](https://matrix.to/#/@lunar0:matrix.org) the answer is
+15:51:41 <anupritaisno1[m]> Need maintainer
+15:52:01 <anupritaisno1[m]> And I won't be doing the 4a 5g, not a chance
+15:52:14 <anupritaisno1[m]> It's not launching in my country
+15:52:51 <alex-resist> The phone or 5G?
+15:53:07 <anupritaisno1[m]> The phone
+15:53:13 <anupritaisno1[m]> 5g is already here
+15:53:35 <alex-resist> Any idea why they're not launching it?
+15:56:21 <anupritaisno1[m]> Idk
+15:59:33 <anupritaisno1[m]> [alex-resist](https://matrix.to/#/@freenode_alex-resist:matrix.org) how am I supposed to know?
+15:59:50 <anupritaisno1[m]> Basically 60 GHz frequencies are not allowed in India
+16:00:11 <anupritaisno1[m]> And soli/oslo offers them
+16:00:11 <alex-resist> Maybe they gave a reason for it
+16:08:04 <joltman[m]> <anupritaisno1[m] "And I won't be doing the 4a 5g, "> Same deal with the Pixel 5?
+16:15:57 <applescruff_53[m> I know the whole idea of GrapheneOS is to degoogle this pixel phone.
+16:15:57 <applescruff_53[m> Maybe my question is unnecessary, but I'll ask for input anyway. I just switched to Pulse for messaging services and I see Duo being offered for Video call service. I see this is a Goole sign in service. Will using this effectively make GrapheneOS pointless and or vulnerable?
+16:18:09 <strcat[m]> that is not the 'whole idea' of GrapheneOS and you seem to be completely misunderstanding the purpose of the project and what it does
+16:18:13 <strcat[m]> suggest reading more about it
+16:18:20 <joltman[m]> short answer: no
+16:19:45 <strcat[m]> we strongly recommend using end-to-end encrypted calls and texts via an application like Signal, Conversations, Element (Matrix) or others but it in no way defeats the purpose of the OS if you use something else
+16:19:47 <strcat[m]> doesn't make much sense
+16:24:52 <applescruff_53[m> I do understand GrapheneOs is a more secure and hardened OS than the Google OS. I have been having difficulties with Signal so I've been using the stock Messenger, but find trouble with that also. I'm merely wanting to be able to use these technologies without being part of some marketing scheme.
+16:25:19 <strcat[m]> I don't know what 'troubles' you mean
+16:25:26 <strcat[m]> you'll need to elaborate
+16:25:58 <strcat[m]> we strongly recommend against using legacy carrier-based calls and texts other than when you have no other choice
+16:26:10 <strcat[m]> they are insecure
+16:26:21 <strcat[m]> and actively monitored with records kept on them
+16:26:30 <applescruff_53[m> Thanks
+16:27:02 <strcat[m]> Signal should work well and you'll avoid any mess caused by carriers for texts/calls by just using data
+16:27:15 <strcat[m]> although legacy texts/calls should work fine they're just insecure
+16:27:40 <strcat[m]> advanced features for those may not work due to carrier-specific issues, most carriers essentially expect you to use a carrier phone with a ton of bloatware to get full functionality
+16:27:44 <strcat[m]> they deviate from standards
+16:29:25 <applescruff_53[m> Why do some of the messages received on Signal appear in decrypted form, and how do I decrypt them ?
+16:33:32 <applescruff_53[m> Encrypted form is what I meant
+16:39:23 <strcat[m]> unsure what you mean
+16:39:35 <strcat[m]> are you sure you're using the official Signal app?
+17:35:37 <vvv66> Hello everyone, peraps this question is already asked but : Is GrapheneOS rdy for 4a ?
+17:36:43 <joltman[m]> no
+17:37:35 <vvv66> k thanks
+17:48:04 <vvv66> Peraps a stupid question but : on  github, the milestone for 4a is 75% and it's seems like there is only one last issue : https://github.com/GrapheneOS/os_issue_tracker/milestone/3. do you think i can build one (i don't mind if i don't have this feature)
+17:49:47 <anupritaisno1[m]> <vvv66 "Peraps a stupid question but : o"> There are more issues
+17:49:59 <anupritaisno1[m]> Example there is no auditor support
+17:50:16 <vvv66> anupritaisno1[m] Mmmh ok mb
+17:50:19 <vvv66> Thanks
+17:54:14 <joltman[m]> Are there major usability issues in 4a currently or "just" privacy/security?
+17:58:59 <anupritaisno1[m]> Don't know what you mean by that
+17:59:25 <anupritaisno1[m]> If privacy and security which are core features of this ROM have issues
+17:59:38 <anupritaisno1[m]> Then that is a usability issue
+18:02:09 <joltman[m]> I mean could you run GOS on 4a and have a workable phone knowing that you'd be giving up some privacy/security, considering that you'd probably be giving up just as much or more if you were running stock OS on the 4a?
+18:02:31 <anupritaisno1[m]> No
+18:02:41 <anupritaisno1[m]> That's not how any of this works
+18:04:30 <joltman[m]> Would you be able to use the phone at all?
+18:06:26 <vvv66> Is it possible to help on the dev of the GOS for the 4a ? (i'm a dev)
+18:13:08 <dazinism> vvv66: think you could probably help out, even be the maintainer/part of the maintenance team going forward, if you were up for committing to helping with that it'd be ace
+18:15:04 <vvv66> Yes, but i think that there it will take me a lot of time in order to understand the project deeply. Any resources to get into it ?
+18:16:17 <anupritaisno1[m]> [vvv66](https://matrix.to/#/@freenode_vvv66:matrix.org) you can pm me
+18:19:08 <vvv111[m]> anupritaisno1: k
+18:59:10 <alex-resist> I'm really impressed how patient some of you devs are. Same questions every day, sometimes every hour....
+19:02:15 <anupritaisno1[m]> <alex-resist "I'm really impressed how patient"> Hmm
+19:02:23 * anupritaisno1[m] uploaded an image: IMG_20201021_003152_627.jpg < https://matrix.org/_matrix/media/r0/download/m.apex.to/CHSxEMBFrfGasMqnlXFMSRjt/IMG_20201021_003152_627.jpg >
+19:06:29 <alex-resist> What kind of work is needed to help with the 4a? What I could do: buy a 4a just for development purposes, set up a build environment if necessary, run extensive tests with provided or my own builds. Would that be a useful contribution or would I have to dive deeper into stuff?
+19:07:23 <anupritaisno1[m]> [alex-resist](https://matrix.to/#/@freenode_alex-resist:matrix.org) there's not much really
+19:07:40 <anupritaisno1[m]> Need auditor support which is really urgent and the only release blocker right now
+19:07:42 <alex-resist> So it's more the long-term commitment that is missing?
+19:08:25 <anupritaisno1[m]> [alex-resist](https://matrix.to/#/@freenode_alex-resist:matrix.org) it's easier to add auditor support if you have the device and are the maintainer
+19:08:28 <anupritaisno1[m]> I just did a bringup of 4a
+19:08:42 <anupritaisno1[m]> I don't have a 4a and I am not the maintainer for now
+19:09:23 <alex-resist> I will probably have a 4a for one or two days this week, that means I could do some simple things
+19:10:02 <alex-resist> But not sure if that makes sense
+19:10:26 <alex-resist> I do also have other GrapheneOS phones, so I could try auditing
+19:13:47 <joltman[m]> When auditor support works, does that mean the next step is beta release?
+19:14:04 <anupritaisno1[m]> If no other release blockers come up
+19:27:43 <h3rb_> Hi guys
+19:28:04 <h3rb_> Is there an option for wifi calling on grapheneos? Or is there a way to enable it?
+19:31:53 <junk[m]> <alex-resist "What kind of work is needed to h"> Hi, came here to ask the same.
+19:52:45 <anupritaisno1[m]> > <@junk:matrix.junk.technology> Hi, came here to ask the same.
+19:52:45 <anupritaisno1[m]> > My java skills are about 10 years outdated now, but C(++), shell, general linux work is something I could contribute.
+19:52:45 <anupritaisno1[m]> BTW C is not C++
+19:52:48 <anupritaisno1[m]> Please be very clear about what your skills are
+20:31:54 <junk[m]> <anupritaisno1[m] "> <@junk:matrix.junk.technology>"> Yes, indeed.
+20:32:54 * junk[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/GJVyGsjYIMkFpsiyAGIvgCgr/message.txt >
+20:33:02 <junk[m]>  * Yes, indeed.
+20:33:02 <junk[m]> Does not change the fact that I am proficient in both.
+20:33:02 <junk[m]> There is no need to use "by the way" in that sentence.
+20:36:15 <junk[m]> I am an embedded systems engineer and focus on hardware (as in SoC) security, internet and network security, hardware design and general embedded systems development.
+20:40:13 * M8942w[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/lototvxEBUSklKBDNdiUnnQp/message.txt >
+20:40:37 <anupritaisno1[m]> [8942w](https://matrix.to/#/@8942w:matrix.org) recommended to use aurora
+20:40:56 * anupritaisno1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/WokablXkJVWHUDVrkXGfPcjG/message.txt >
+20:44:45 <M8942w[m]> <anupritaisno1[m] "[8942w](https://matrix.to/#/@894"> are the trackers just based on what apps i get on aurora then? and does it also have opensource apps on it?
+20:44:58 <M8942w[m]> sorry im a slow typer
+20:45:16 <alex-resist> There are free/open source apps also in Google Play, for example Signal and Conversations
+20:46:03 <alex-resist> However not all of them are gratis, which is quite confusing
+20:48:20 <alex-resist> For example, I don't think you can download Conversations via Aurora Store, without an account, because it is not gratis in Google Play.
+20:48:48 * Lynn[m]2 sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/LOjrPDmDzoqRkkVmASMbSWMg/message.txt >
+20:51:41 <Lynn[m]2> But I don't know if there's much of a difference in terms of security between Aurora Store and F-Droid. I haven't looked at the source code ... so ... 😛
+20:52:51 <alex-resist> F-Droid works differently. The developers send their code to F-Droid, and they build and sign it. That way they can remove remaining trackers and unwanted components from otherwise clean apps, but it also makes them quite powerful. Many people prefer apps to be signed by the developers and just distributed by stores.
+20:53:40 <alex-resist> As a result, if F-Droid gets compromised, it would be catastrophical
+20:54:44 <Lynn[m]2> That's an architectural flaw with it, so is its use of v1 signing. However I believe they're finally working on getting support for v2 signing to work.
+20:56:20 <M8942w[m]> so when useing the aurora store I just need to be carefull what apps I download from it and I will be fine right?
+20:57:01 <Lynn[m]2> <alex-resist "As a result, if F-Droid gets com"> Especially since F-Droid doesn't even list whether or not the apps have reproducible builds, or anyway to cross-check it.
+20:57:25 <alex-resist> GrapheneOS has decided to not make a choice, that's why it doesn't come with an app store yet.
+20:58:05 <doobry[m]> In my eyes the concept to build software on a central (kinda trusted) infrastructure is more sustainable than having to trust random developers build environments.
+20:58:06 <M8942w[m]> Lynn: oh and thank you for showing me  Exodus Privacy I will make note to make use of it again.
+20:58:34 <doobry[m]> <doobry[m] "In my eyes the concept to build "> best is to combine this with reproducible builds, though.
+20:59:03 <anupritaisno1[m]> Sup I heard there were cryptographers here
+20:59:03 <anupritaisno1[m]> I'm arc4, by the way
+20:59:04 <Lynn[m]2> weak encryption Actually I'm into crypto lol
+20:59:07 <Lynn[m]2> Ob boy
+20:59:15 <Lynn[m]2>  * Oh boy
+20:59:35 <Lynn[m]2> Nothing like some of that RC4
+21:01:12 <anupritaisno1[m]> <Lynn[m]2 "weak encryption Actually I'm int"> I did it, hated it
+21:01:52 <anupritaisno1[m]> The math behind Edwards curves is a brain aneurism
+21:01:57 <Lynn[m]2> Well it is pretty hard. Sometimes I just get up and storm away from my computer in frustration.
+21:02:09 <anupritaisno1[m]> Throw in some chacha20
+21:02:28 <Lynn[m]2> Salsa and ChaCha are pretty easy, though.
+21:02:33 <anupritaisno1[m]> Or build an aead
+21:03:26 <anupritaisno1[m]> [Lynn](https://matrix.to/#/@lynn:spitetech.com) so why doesn't chacha20 do Galois counter mode?
+21:03:26 <Lynn[m]2> ChaCha20 is the encryption algorithm,
+21:03:35 <Lynn[m]2> and typically it is paired with Poly1305.
+21:03:48 <anupritaisno1[m]> Yeah you can skip that explanation
+21:03:57 <anupritaisno1[m]> Why poly1305 instead of gcm
+21:04:22 <Lynn[m]2> Wellllll
+21:04:27 <Lynn[m]2> A hint could be that
+21:04:47 <Lynn[m]2> Galois Counter Mode is hard and super frusterating to implement
+21:04:54 <Lynn[m]2> At least that's what I've heard
+21:04:56 <Lynn[m]2> I haven't implemented it myself
+21:05:30 <anupritaisno1[m]> So why is there no AES_POLY1305?
+21:06:16 <Lynn[m]2> 🤷 Because it's usually paired with GCM. For that reason I have no idea. I haven't checked NIST, but GCM may be a standard.
+21:06:38 <anupritaisno1[m]> Sounds arbitrary
+21:07:48 <Lynn[m]2> Pretty much. If you see ChaCha20 AEAD, it's almost always ChaCha20-Poly1305. And AES is AES-GCM.
+21:08:19 <Lynn[m]2> A lot of people are not a fan of GCM for multiple reasons, though. The complexity is a big one, and so is the really small nonce size.
+21:09:05 <Lynn[m]2> ChaCha20/Salsa20 by themselves also have a fairly small nonce size, but you can change that by using XChaCha20/XSalsa20.
+21:09:44 <Lynn[m]2> 64-bit for regular Salsa/ChaCha, 192-bit for X variants.
+21:10:25 <Lynn[m]2> 96-bit for AES in GCM, which is why NIST doesn't recommend encrypting more than 2^32 messages with random nonces.
+21:12:59 <anupritaisno1[m]> [Lynn](https://matrix.to/#/@lynn:spitetech.com) afaik nothing uses xchacha20
+21:13:22 <anupritaisno1[m]> I've only seen shadowsocks do it
+21:13:34 <Lynn[m]2> There are a few projects here and there that do. (Can't recall the projects, though.)
+21:13:46 <anupritaisno1[m]> For something that is so rarely used
+21:14:03 <anupritaisno1[m]> Why is it better over something that's widely used and audited?
+21:14:30 <anupritaisno1[m]> I'd assume regular chacha20 implementations are audited more?
+21:14:44 <Lynn[m]2> Yeah.
+21:14:47 <Lynn[m]2> BUT
+21:15:26 <anupritaisno1[m]> So that krechkoff (definitely misspelt) law holds true?
+21:15:31 <Lynn[m]2> Libsodium has support for XChaCha20. But it's not available via the `secretbox` api.https://doc.libsodium.org/secret-key_cryptography/secretstream
+21:15:38 <Lynn[m]2>  * Libsodium has support for XChaCha20. But it's not available via the `secretbox` api. https://doc.libsodium.org/secret-key_cryptography/secretstream
+21:16:00 <anupritaisno1[m]> https://en.m.wikipedia.org/wiki/Kerckhoffs%27s_principle
+21:16:18 <Lynn[m]2> There is an official implementation of XSalsa20. But XChaCha20.
+21:16:27 <Lynn[m]2>  * There is an official implementation of XSalsa20. But not XChaCha20.
+21:17:03 <Lynn[m]2> By that, I mean Daniel Bernstein himself.
+21:17:17 <anupritaisno1[m]> Ah
+21:18:03 <Lynn[m]2> However implementing the X variant is extremely simple. Daniel designed his ciphers to be easy to implement, and constant-time.
+21:18:18 <Lynn[m]2>  * However implementing the X variant is simple. Daniel designed his ciphers to be easy to implement, and constant-time.
+21:19:03 <anupritaisno1[m]> Isn't aes technically constant time now?
+21:19:23 <Lynn[m]2> Just use Libsodium's default secretbox API. ChaCha20 has better diffusion, but Salsa20 isn't broken either. At least not with 20 rounds.
+21:19:51 <Lynn[m]2> <anupritaisno1[m] "Isn't aes technically constant t"> Most of the time, yes. CPUs typically have built-in hardware instructions to do AES in constant time.
+21:19:51 <anupritaisno1[m]> Like
+21:20:02 <anupritaisno1[m]> AES-NI
+21:20:52 <Lynn[m]2> anupritaisno1 Yes, that's what I'm referring to. Most CPUs will do AES in constant time.
+21:21:04 <anupritaisno1[m]> <Lynn[m]2 "Most of the time, yes. CPUs typi"> So what about SSE2/3?
+21:21:53 <Lynn[m]2> I don't know. You can find out though, Intel lists whether or not they support AES-NI on their CPUs.
+21:23:51 <anupritaisno1[m]> Kk
+21:23:59 <anupritaisno1[m]> Thanks
+21:25:32 <ruddo[m]> <alex-resist "I'm really impressed how patient"> Chat is not the right medium for fielding questions, precisely because of this problem.  A forum is.
+21:27:54 <anupritaisno1[m]> [Lynn](https://matrix.to/#/@lynn:spitetech.com) so
+21:28:15 <anupritaisno1[m]> Do chacha20 hardware accelerators exist?
+21:28:16 <M8942w[m]> hey I just downloaded the aurora store on my GrapheneOS phone from https://auroraoss.com/  and my phone warned me not to install because it is unknown. is this normal?
+21:28:25 <dazinism> Lynn: can check the signatures once you download the apps, or check out the data fdroid uses to build an app to see if its reproducable.
+21:29:16 <dazinism> 8942w: check out https://hub.libranet.de/wiki/graphene-os/wiki/Apps
+21:30:04 <M8942w[m]> <ruddo[m] "Chat is not the right medium for"> is there a forum I can go to that would be better for my questions about GrapheneOS?
+21:30:07 <ruddo[m]> <M8942w[m] "hey I just downloaded the aurora"> Yes.  It is normal.  You must check manually whether the signatures match on the downloaded app.
+21:30:28 <ruddo[m]> For the record this problem goes away totally if you first download F-Droid (checking signatures), install it, then install Aurora Store from F-Droid.
+21:30:38 <dazinism> Would be nice if there was an fdroid client that let you know if it was a reproducable build.
+21:30:58 <dazinism> Also the target SDK of the app
+21:34:02 <Lynn[m]2> <anupritaisno1[m] "Do chacha20 hardware accelerator"> I don't think so. But ChaCha/Salsa is already fast.
+21:39:54 <Lynn[m]2> <dazinism "Would be nice if there was an fd"> Either that, or make an app that can obtain source code and build a decent UI for compilation.
+21:40:50 <Lynn[m]2> That'd be sweet.
+21:42:29 <dazinism> Imagine building chromium on a phone would be fun
+21:43:44 <Lynn[m]2> Well ... Not all applications will be millions of lines of code with a horrendous list of dependencies.
+21:44:11 <Lynn[m]2> But you'll definitely want a decent desktop for that. ;)
+21:45:08 <Lynn[m]2> Completely unrelated, but I've been checking out the new mobile FF version.
+21:45:08 <Lynn[m]2> I like that the URL bar is on the bottom.
+21:47:42 <dazinism> Don't darken this house with that name ; -)
+21:49:17 <Lynn[m]2> 🤷
+21:53:29 <Lynn[m]2> ~~Ff Is ToTaLlY sEcUrE~~
+21:54:25 <Lynn[m]2>  * /html <s>Ff Is ToTaLlY sEcUrE</s>
+21:54:31 <Lynn[m]2>  * <s>Ff Is ToTaLlY sEcUrE</s>
+21:54:39 <Lynn[m]2>  * Ff Is ToTaLlY sEcUrE
+22:03:40 <Lynn[m]2> Perhaps once Firefox has Fission it'll become more comparable to Chromium's security.
+22:06:10 <dazinism> Lynn Noticed that jquarks browser (a webview based browser on fdroid) has an option for URL bar down bottom
+22:08:13 <alex-resist> Firefox is at least trying to improve the root cause of insecurities rather than just mitigating it (shitstorm incoming)
+22:08:42 <alex-resist> *improve->abolish
+22:08:55 <Lynn[m]2> <alex-resist "Firefox is at least trying to im"> What are they improving on? I haven't been following FF's dev.
+22:09:44 <alex-resist> Rewriting stuff in Rust, for example
+22:10:16 <Lynn[m]2> Oh yeah
+22:10:39 <Lynn[m]2> Rust is a pretty good idea for mitigating memory issues.
+22:11:08 <dazinism> Apparently theres not much of that though?
+22:11:29 <alex-resist> Firefox is going through a dark valley currently. But in the long run it will certainly improve
+22:12:16 <Lynn[m]2> Ever since they switched to Rust, they've been seeing a lot of performance improvements.
+22:12:28 <Lynn[m]2> <dazinism "Apparently theres not much of th"> ???
+22:12:53 <alex-resist> Rust is actually a good idea, it just takes a llooooooottt of work
+22:12:59 <Lynn[m]2>  * Ever since they have replaced some of the internal components to Rust, they've been seeing a lot of performance improvements.
+22:13:00 <alex-resist> (to refactor things)
+22:13:25 <Lynn[m]2> Yeah. I've been programming in it.
+22:13:38 <Lynn[m]2> It's more work, initially.
+22:14:14 <Lynn[m]2> They documentation highly encourages unit testing, so it's really good. Makes it easier for refactoring once you have unit tests.
+22:14:29 <Lynn[m]2>  * The documentation highly encourages unit testing, so it's really good. Makes it easier for refactoring once you have unit tests.
+22:16:02 <alex-resist> Technicalities aside, it would be desirable to have at least one somewhat competent competitor for everything Chromium-based, otherwise we will soon have a toxic monoculture of browsers
+22:16:16 <alex-resist> (unless you prefer Links2 or so)
+22:16:50 <dazinism> Theres this pretty thorough comparison by madaiden
+22:16:52 <dazinism> https://madaidans-insecurities.github.io/firefox-chromium.html
+22:17:21 <dazinism> I've also got a load of links to problems with FF
+22:17:23 <alex-resist> dazinism ...which doesn't really appreciate the resources they're putting into Rust
+22:17:31 <dazinism> Its all a bit depressing
+22:18:25 <alex-resist> Chromium is like a very well equipped fire brigade, whereas Firefox is increasing its use of fireproof material
+22:18:38 <dazinism> The state of modern web/browsers
+22:19:04 <dazinism> Think chromium is also fireproofing
+22:19:32 <alex-resist> Yes sure, I just wanted to say that not all hope is lost with Firefox. Maybe we just have to wait a year or two
+22:19:52 <dazinism> Google have more resources, bigger browser share, fund Firefox....
+22:20:33 <dazinism> Thing is ff has been behind for years
+22:20:58 <dazinism> Can't really see how they can ever catch up
+22:21:23 <dazinism> More than likely chrome will keep moving ahead of any catch up
+22:21:50 <dazinism> Especially as Microsoft now working on that codebase as well
+22:22:22 <Lynn[m]2> 🤷 We'll see. It's mostly guesses at this point.
+22:23:06 <alex-resist> Isn't there an anti-trust measure going on in the US that Google might have to sell Chrome?
+22:23:23 <alex-resist> That might set them back (or not)
+22:24:13 <dazinism> I like the idea of a not-for-profit developed browser. Even use FF for some things (well mainly tor browser) but don't see things changing any time soon (from chromium being ahead)
+22:24:48 <dazinism> Ah yeah, did see a headline about antitrust cases being opened against Google. But didnt read them.
+22:25:51 <alex-resist> Also we should differentiate between Chrome and Chromium. Chromium-derived browsers can be fine, whereas Chrome/Edge are privacy disasters
+22:28:06 <dazinism> Yeah agree
+22:28:36 <dazinism> Was being a bit lazy/inaccurate with terms
+22:29:00 <alex-resist> I might have been too
+22:29:22 <alex-resist> I would be interested in a thorough comparison of Bromite + Orbot, Bromite + RiseupVPN and Tor Browser
+22:30:14 <dazinism> Guess it depends what you doing
+22:30:26 <alex-resist> Yeah, i mean I've used all three
+22:30:33 <dazinism> Think can only visit onions with tor browser
+22:30:43 <alex-resist> Currently I'm back to Tor Browser, but for trivial reasons
+22:31:21 <uchihaitachi[m]> Does someone knows if the project considers more phones to support alongside pixels?
+22:31:48 <dazinism> Daniel says tor gives best privacy (browser blends in with all other tor browsers) but has worse security.
+22:32:02 <dazinism> *tor browser
+22:32:09 <Lynn[m]2> <uchihaitachi[m] "Does someone knows if the projec"> I doubt it. Pixels are one of the most open phones, and have a lot of security features.
+22:32:21 <Lynn[m]2> A lot of other phones don't compare.
+22:32:43 <alex-resist> dazinism yes, in theory sure. But what if Tor Browser stays on highest security level, i.e. no JS. Then Tor Browser's security disadvantages suddenly don't matter that much anymore
+22:32:58 <uchihaitachi[m]> Lynn: Thanks!
+22:33:01 <dazinism> The way I use it
+22:33:12 <dazinism> Except for onions I trust
+22:33:15 <alex-resist> It's also extremely relaxing & minimalist
+22:34:05 <Lynn[m]2> Basically use Tor Browser if you want anonymity, Chromium for maximum security.
+22:34:24 <dazinism> uchihaitachi: the first/ main problem is few other devices have support for verified boot with alternative operating system
+22:34:33 <madaidan[m]> <uchihaitachi[m] "Does someone knows if the projec"> Other phones have been researched but one has yet to be found that lives up to the base security standards.
+22:34:34 <dazinism> *systems
+22:34:53 <alex-resist> Anonymity is likely more important in an activist context, whereas security is more important in a professional/corporate context
+22:35:13 <alex-resist> (in the browser world)
+22:35:14 <madaidan[m]> <alex-resist "dazinism yes, in theory sure. Bu"> They still matter. JS isn't the only attack surface. There's still HTML, CSS, images, videos, fonts, etc.
+22:35:41 <alex-resist> madaidan Tor Browser on highest security level doesn't load many of those things
+22:36:02 <alex-resist> html sure, but no remote fonts, videos are not playing etc
+22:36:05 <Lynn[m]2> <alex-resist "dazinism yes, in theory sure. Bu"> Eh. There are a lot more issues than JS. There is also CSS, images, rendering, etc. Those can be abused too.
+22:36:07 <dazinism> Then most (all?) other device manufacturers mess up device/hardware specific security
+22:37:11 <madaidan[m]> <alex-resist "dazinism ...which doesn't really"> Rust is barely used in Firefox. It's not used for any main attack surfaces.
+22:37:21 <dazinism> https://hub.libranet.de/wiki/and-priv-sec/wiki/verified-boot
+22:38:24 <alex-resist> madaidan but they're increasing the use of Rust. Currently it's not great, but it might be in 1-2 years
+22:41:55 <Lynn[m]2> Might being a key word.
+22:43:59 <alex-resist> Obviously :)
+22:44:35 <madaidan[m]> With the Servo team now fired, Rust adoption is probably going to be massively stalled.
+22:56:50 <martinonorcas> OK, not sure if this is the place to ask basic questions. I am here. I installed Graphene OS on my Pixel 4. I can call, message and web browse. But missing much of what made life good. Maybe there is a FAQ beyond the basic install FAQ. I need to pull in contacts from Google contacts or Apple contacts,  Can I safely install WhatsApp? Messenger? I
+22:56:51 <martinonorcas> need maps etc. etc. I used Dashlane contactmanager. Can I do that ? What Apps are safe to install. What not? Is it safe to use an ID from Google or Facebook?  I need the bigger FAQ. The outlines and some details. Thanks Martin
+22:58:52 <Lynn[m]2> martinonorcas GrapheneOS isolates apps, and has many other security features. If you *have* to use Messenger, and Facebook, etc you should consider using a separate Android profile and lock down those apps as much as possible.
+23:00:28 <sphinxcat[m]> [martinonorcas](https://matrix.to/#/@freenode_martinonorcas:matrix.org): You can use Aurora Store to download apps from Play Store.
+23:03:28 <dazinism> martinonorcas: check out https://hub.libranet.de/wiki/graphene-os/wiki/Apps
+23:07:23 <uchihaitachi[m]> martinonorcas:  I didn't see official recommendations for what apps to install on the project's website, unless the preinstalled apps and Bromite. I assume trusting which apps to use is totally up to you.
+23:27:15 <joltman[m]> Pretty much
+23:29:42 <joltman[m]> Not really the job of the GrapheneOS project to recommend or endorse 3rd party apps, but many individuals may have their opinions.  Depends on your requirements for functionality, security, and privacy.  Everyone's different.
+23:33:09 <uchihaitachi[m]> "GrapheneOS is also working on designing and implementing a first party repository with higher robustness and security than the existing options. Rather than bundling apps, it could just offer recommendations as part of an initial setup wizard.
+23:33:09 <uchihaitachi[m]> Users have unique needs and preferences and there has to be a very compelling reason to bundle additional apps with the OS".
+23:34:31 <joltman[m]> That's really more of an explanation of why GrapheneOS doesn't bundle many apps.
+23:43:23 <strcat[m]> https://grapheneos.org/faq#bundled-apps

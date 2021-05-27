@@ -1,0 +1,409 @@
+00:27:02 <pikey[m]> <hypokeimenon[m] "Is the Graphene off topic on mat"> I was hoping so but no, it's on freenode. I am using Riot client to access it. Wish it was on Matrix!
+00:38:44 <RedNovember[m]> When I do "echo '19c74e779f3d81f15ba21207ec405439416d99330c3f5a337dab6d58ea20b465 platform-tools_r30.0.3-linux.zip' | sha256sum -c" it says "OK"
+00:41:06 <RedNovember[m]> if I run "echo $PATH" it lists platform tools in the output:
+00:41:06 <RedNovember[m]> /home/myusername/platform-tools:/home/myusername/.local/bin:/home/myusername/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/var/lib/snapd/snap/bin
+00:45:31 <RedNovember[m]> I was looking to see if there was any other people who had this issue, because this looks to be like some kind of bug.
+02:23:41 <RedNovember[m]> I haven't tried any of the solutions in the troubleshooting section yet, I'll have to test that tomorrow.
+02:30:37 <abridgeacrack[m]> huh noticed Android R sources being GPL-released, any ETA on GrapheneOS switched to them? I can probably contribute some 40-60 hours on porting and testing things if needed
+02:35:34 <aeonsolution[m]> what device do you have abridgeacrack?
+02:36:36 <abridgeacrack[m]> blueline, tons of blueline with actual user and tester base... I foresee they'd be exploding my inbox tomorrow asking about that R  :D
+02:37:07 <abridgeacrack[m]> there was pixel 4 but some punk took it home from office  :/
+02:37:28 <aeonsolution[m]> blueline is the pixel 3 right?
+02:37:34 <abridgeacrack[m]> yup
+02:37:48 <aeonsolution[m]> nice, ok well step 0 is building the development branch
+02:37:52 <aeonsolution[m]> https://grapheneos.org/build
+02:39:48 <abridgeacrack[m]> figured out earlier this year I'm done with AOSP development on my own, seeing how my experience with exploiting and backdooring it is two years behind what they got in  China with Virualapp type of apps.. was detaling with networking mainly last months, VPLS and all of that. Think its a good way to refresh skills, by contibuting to R port
+02:40:19 <aeonsolution[m]> im going to try my best to port the kernel patches of the project to R-preview-4 this week and will try to build it on my device first before asking for others to help test
+02:40:27 <aeonsolution[m]> oh nice well if you think you can do that
+02:40:52 <aeonsolution[m]> let me send you some links in a PM
+02:41:03 <abridgeacrack[m]> oh cool
+02:46:35 <aeonsolution[m]> you're all set, good luck
+02:46:47 <aeonsolution[m]> if you have questions direct them to the chat
+02:54:37 <abridgeacrack[m]> on an unrelated node.. maybe someone had a chance to look into IMEI changing with 845 and newer snapdragons? I think I can get my hands on a test GSM station to test that kind of mod - just to MVP some cool stuff, not to abuse the law :D haven't seen it working on non-MTK devices tho.. got char_diag enabled kernel, but seems the modem firmware is loaded without participation of HLOS and takes no input from it
+02:54:37 <abridgeacrack[m]> after
+02:55:55 <JTL> > seeing how my experience with exploiting and backdooring it is two years behind what they got in  China with Virualapp type of apps..
+02:55:57 <JTL> Oh?
+03:08:20 <abridgeacrack[m]> well there was a lot of "WTF this is doing" coming from github/researchgate look. Dexposed, epic, pine.. think @zysyyz [github] had a good collection of that. Nvm :D
+03:21:30 <JTL> abridgeacrack[m]: I gotcha :)
+03:49:53 <renlord> strcat[m]: do you know if the cts sources are available so i can debug how the attr size is checked for the bionic tests?
+04:30:36 <strcat[m]> renlord: yes
+04:30:37 <strcat[m]> they are
+04:30:46 <strcat[m]> renlord: the bionic tests are in bionic
+04:30:50 <strcat[m]> just grep for the test name in bionic
+04:30:58 <strcat[m]> the cts is fully open source
+04:31:12 <strcat[m]> there's a cts directory with a lot of tests and then some test suites have dedicated repos
+04:31:21 <strcat[m]> most tests are just with the project they are testing
+04:34:52 <renlord> ok
+04:36:33 <anupritaisno1[m]> ok
+04:36:52 <renlord> strcat[m]: do you have the failure logs for pthread#pthread_attr_setstacksize
+04:36:57 <renlord> or just prints fail?
+04:37:08 <strcat[m]> Dunno
+04:37:11 <strcat[m]> You can run it
+04:37:22 <strcat[m]> Look at cts guide in our build guide
+04:37:30 <strcat[m]> Can run specific test alone
+04:39:41 <renlord> 07-15 14:38:56 I/ModuleListener: [1405/2851] pthread#pthread_attr_setstacksize fail:
+04:39:43 <renlord> invalid pthread_t 0x7f00000000 passed to pthread_join
+04:39:45 <renlord> pthread.pthread_attr_setstacksize terminated by signal: Aborted.
+04:40:09 <renlord> stack_base invalid?
+04:40:46 <renlord> look like test just dont accept randomized stack base
+04:40:52 <renlord> it is page aligned
+04:41:10 <renlord> strcat[m]:
+04:41:42 <strcat[m]> renlord: the actual stored stack base should be unchanged?
+04:41:56 <strcat[m]> it'll need to be figured out
+04:42:01 <strcat[m]> there are multiple changes to this stuff
+05:09:29 <TheJollyRoger> cts test just finished running.
+05:09:53 <TheJollyRoger> Report will be on the way. Total time >100h.
+05:10:27 <TheJollyRoger> Whoops, sorry, my mistake. Total time, 94 hours, 7m, 42s.
+05:10:49 <anupritaisno1[m]> Yeah basically 100
+05:13:21 <TheJollyRoger> So far I'm trying to use some basic bash scripting to remove the failed tests from test_results.html. If I can figure out how to run some of these as a batch it might go a long way to getting more reliable results.
+05:13:48 <TheJollyRoger> The ones that are marked intentional of course I'll just cross off.
+05:24:19 <anupritaisno1[m]> @paintedman:matrix.org: I still have no update on the patch
+06:03:43 <alicebobandeve> All I see in my feed when I check GOS is renor has left the room or renor has joined the room. This is a mystery.
+06:51:05 <anni3> So what is unique about vanadium?
+07:01:05 <cn3m[m]> <anni3 "So what is unique about vanadium"> many many hardening features
+07:01:07 <cn3m[m]> it is designed to blend in with Chrome on Pixels
+07:01:11 <cn3m[m]> which is ideal to avoid fingerprinting
+07:01:20 <cn3m[m]> it is the perfect fit for GrapheneOS
+07:02:46 <theultron[m]> Do we have any data on number of active GrapheneOS users?
+07:06:49 <cn3m[m]> <theultron[m] "Do we have any data on number of"> no
+07:26:52 <jknsec[m]> That would be counterintuitive to the purpose of the project
+07:28:03 <jknsec[m]> Part of having no telemetry means that you have little to no statistics regarding user info
+07:28:52 <jknsec[m]> Same goes for bugs, usability issues, etc. (which we rely on the Github for)
+07:29:56 <jknsec[m]> It makes development a bit harder to it makes GOS comparatively very private in its default configuration
+07:31:01 <jknsec[m]> * It makes development a bit harder but it makes GOS comparatively very private in its default configuration
+10:16:31 <cn3m[m]> https://freenode.logbot.info/grapheneos/20200715
+10:17:15 <cn3m[m]> np
+10:33:02 <cn3m[m]> orbischlorbi: NetGuard is useless use the network permission and private dns. They are far better alternatives.
+10:33:26 <cn3m[m]> you probably want to use user profiles. You can pick if phone works or not
+10:33:42 <cn3m[m]> VPN works yes and can make sense
+10:38:49 <pikey[m]> orbischlorbi: Many of these are common questions, I had all of those myself. I use VPN and make use of the "always on VPN" and "block connections outside VPN" settings of the OS. You might want to join the Graphene OffTopic chat room which is more general chat and less specific dev/installation stuff
+10:39:24 <pikey[m]>  * orbischlorbi: Many of these are common questions, I had all of those myself. I use VPN and make use of the "always on VPN" and "block connections outside VPN" settings of the OS. You might want to join the Graphene OffTopic chat room which is more general chat and less specific than dev/installation stuff in here
+10:44:39 <f8sai[m]> #grapheneos-offtopic:matrix.org
+10:44:45 <f8sai[m]> (Is that right?)
+10:46:03 <pikey[m]> no. but i can't do it either :D
+10:46:34 <pikey[m]> https://matrix.to/#/#freenode_#grapheneos-offtopic:matrix.org
+10:46:42 <pikey[m]> thats it
+11:21:15 <f8sai[m]> <dreth[m] "Hello, i have grapheneos install"> feature for Vanadium
+11:21:28 <f8sai[m]> If you look for something like in Bromite
+11:21:34 <f8sai[m]> It isn't there yet on Vanadium
+11:22:23 <f8sai[m]> Like the Javascript block, ad block, etc?
+11:22:40 * f8sai[m] uploaded an image: _20200715_192214.JPG (77KB) < https://matrix.org/_matrix/media/r0/download/privacytools.io/rQMUJUjiWxxoPNBDNdvNGnJV >
+11:24:39 <f8sai[m]> That's on bromite. Not on Vanadium though, you have to manually toggle or add it on settings > site settings
+11:25:49 <f8sai[m]> Oh, you may need to give the Vanadium/Bromite itself the necessary permissions
+11:26:39 <dazinism> orbischlorbi:  make sure you have a good read of grapheneos.org . Theres some more info https://hub.libranet.de/wiki/graphene-os/wiki/Home also some info on user & work profiles at https://hub.libranet.de/wiki/and-priv-sec/wiki/user-profiles
+11:27:01 <f8sai[m]> Clear browsing data then try again?
+11:27:12 <f8sai[m]> Including site setting clear
+11:29:41 <f8sai[m]> Tested it before on Jitsi and it works fine
+11:29:52 <f8sai[m]> Can't do it rn
+11:31:15 <f8sai[m]> <f8sai[m] "Tested it before on Jitsi and it"> On non-main user profike
+11:31:15 <f8sai[m]> profile*
+12:01:55 <theultron[m]> <orbischlorbi[m] "any recommendations für private "> I use NextDNS.
+12:11:04 <pikey[m]> i use adguard since reading about it on Grephene website
+12:11:23 <pikey[m]> Either are fine i think, NDNS is a more powerful
+12:19:34 <zxwayland> hello
+12:19:44 <zxwayland> any word on the pixel 4a?
+12:22:20 * crabman[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/GJsnfILdkCpKILzaeAZpDAhF >
+12:40:43 <f8sai[m]> <gretai[m] "i will do this tmr. i spent toda"> How
+12:40:48 <f8sai[m]> (Nvm)
+12:49:34 <dazinism> zxwayland: the 4a has got to be released first. Then it can't be supported for a few months before its on the same AOSP branch as existing devices
+12:49:43 <dazinism> Then someone has to step up to maintain it.
+12:49:52 <zxwayland> crap
+12:50:02 <zxwayland> i broke my pixel 3a ;(
+12:50:22 <zxwayland> i had graphene os installed
+12:50:51 <strcat[m]> how did you break it?
+12:50:59 <zxwayland> screen broke
+12:51:13 <zxwayland> i missed up the connecter on the motherboard
+12:51:14 <zxwayland> ;(
+12:51:24 <zxwayland> messed*
+12:51:31 <strcat[m]> you had it opened up?
+12:51:50 <zxwayland> yeah, i followed the instructions on i fixed it
+12:51:56 <zxwayland> ifixit
+12:52:14 <dazinism> ubrokeit
+12:52:49 <anupritaisno1[m]> No hefixedit
+12:52:59 <zxwayland> i broke it
+12:53:04 <strcat[m]> I need help with the latest Vanadium port to Chromium 84
+12:53:08 <strcat[m]> there's some issue with resources
+12:53:12 <strcat[m]> error isn't clear
+12:53:16 <anupritaisno1[m]> strcat: should have said before
+12:53:21 <strcat[m]> happens when trying to generate the apk with bundletool
+12:53:35 <anupritaisno1[m]> Where do you have an issue?
+12:53:59 <strcat[m]> when generating an apk with bundletool with generate_release.sh there's an error saying the resources didn't deserialize
+12:54:05 <strcat[m]> sadly it doesn't provide details
+12:54:16 <strcat[m]> and I don't know how to get verbose output from bundletool
+12:54:24 <strcat[m]> it says "check the logs" which is not helpful when it seems to delete all the intermediate files
+12:54:28 <strcat[m]> after failing
+12:54:32 <cdesai> There's newer bundletool releases on upstream
+12:54:43 <strcat[m]> anupritaisno1: I don't know if it builds without the patches
+12:54:52 <strcat[m]> cdesai: I use the Chromium bundletool
+12:55:03 <strcat[m]> I don't think bundletool is the issue, it's what finds the issue
+12:55:14 <cdesai> Otherwise I can check in a bit but it'll take some time to build it
+12:55:14 <cdesai> strcat[m]: if you can upload the aab I can try to sign that
+12:55:27 <strcat[m]> /tmp/12078211376679913353/proto.apk: error: failed to deserialize resources.pb: duplicate configuration in resource table.
+12:55:27 <strcat[m]> /tmp/12078211376679913353/proto.apk: error: failed to load APK.
+12:55:54 <cdesai> Didn't realise they included one.
+12:57:01 <anupritaisno1[m]> strcat (@strcat:matrix.org) this bundletool is built by the build system?
+12:57:07 <strcat[m]> cdesai: https://time.grapheneos.org/TrichromeChrome6432.aab
+12:57:12 <strcat[m]> cdesai: they include everything you need to do to build/sign
+12:57:15 <strcat[m]> anupritaisno1: no
+12:57:21 <strcat[m]> anupritaisno1: talking about building Vanadium not GrapheneOS
+12:57:29 <strcat[m]> it's one of the Chromium prebuilts
+12:57:36 <strcat[m]> it has prebuilts just like AOSP
+12:57:40 <strcat[m]> for reproducible builds / signing
+12:57:45 <strcat[m]> so I know I'm using the correct version
+12:57:59 <anupritaisno1[m]> strcat (@strcat:matrix.org): why not build the bundle tool yourself and add an artificial wait?
+12:58:05 <anupritaisno1[m]> Just pause when that message is printed and check logs
+12:58:09 <strcat[m]> there is probably an error somewhere in the patches
+12:58:11 <strcat[m]> that creates a duplicate resource
+12:58:22 <strcat[m]> anupritaisno1: I don't know where the logs are
+12:58:25 <strcat[m]> if they exist
+12:58:26 <strcat[m]> maybe by logs it means the output it prints
+12:58:27 <strcat[m]> don't know
+12:58:33 <strcat[m]> bundletool has really bad UX
+12:58:36 <anupritaisno1[m]> Okay
+12:58:39 <strcat[m]> it has no proper help output either
+12:58:43 <strcat[m]> it's a new thing with bad UX
+12:58:54 <strcat[m]> cdesai: https://github.com/GrapheneOS/Vanadium/blob/10/generate_release.sh
+12:58:56 <anupritaisno1[m]> strcat (@strcat:matrix.org): I can help in a few hours
+12:59:04 <anupritaisno1[m]> Will explain on signal
+13:00:25 <strcat[m]> cdesai: apksigner on the 2 other apks does work
+13:00:48 <strcat[m]> I'd guess my string rebranding or something broke it
+13:00:53 <zxwayland> dang, i guess i should save up for a pixel 4 and wait for a sale
+13:01:37 <dazinism> zxwayland: or hunt down another 3a
+13:01:38 <cdesai> strcat[m]: probably, I don't change any strings at all here so if it works we'll know this is it.
+13:01:41 <strcat[m]> maybe you can get it repaired but it sounds bad
+13:02:05 <strcat[m]> I really need help with this Vanadium issue if anyone is available to work on it
+13:02:09 <cdesai> upstream has https://github.com/google/bundletool/releases/tag/1.0.0
+13:02:12 <zxwayland> i don't know if i like the pixel 3a. it feels kind of cheap
+13:02:26 <strcat[m]> cdesai: I really don't think bundletool is an issue here
+13:02:45 <strcat[m]> it's just finding a problem with the resources
+13:02:49 <strcat[m]> and can't make it into an apk because of it
+13:03:02 <strcat[m]> it's not bundletool's fault - I definitely don't think that's the problem
+13:04:11 <cdesai> yeah. I'll fire off a build
+13:07:56 <strcat> https://android.googlesource.com/platform/frameworks/base/+/refs/heads/master/tools/aapt2/format/proto/ProtoDeserialize.cpp#513
+13:07:58 <strcat> this is the error
+13:08:25 <strcat> resources.pb
+13:10:17 <strcat[m]> cdesai: do you use 6432 builds thoughj
+13:10:22 <zxwayland> if, i get the pixel 3a from a t-mobile store. if i get it unlock, will it work?
+13:10:25 <strcat[m]>  * cdesai: do you use 6432 builds though
+13:10:28 <cdesai> strcat[m]: no just plain
+13:10:30 <strcat[m]> if you don't then it working doesn't mean that works properly upstream atm
+13:11:19 <strcat[m]> I don't even know where to begin figuring this out
+13:11:32 <cdesai> I'm trying to go through the string change patches
+13:12:21 <cdesai> I think out will have intermediates with strings.xml
+13:13:11 <strcat[m]> I don't know if that is the kind of resources the error is talking about
+13:23:34 <byolog[m]> Grapheneos website recommend to use vanadium browser, but given that I can't install add-ons, I feel I have more control over my data while using Firefox with add-ons like umatrix.. any idea which one really better?
+13:23:45 <strcat> ypi
+13:23:52 <strcat> you're misleading yourself about what those addons do
+13:24:17 <byolog[m]> <strcat "you're misleading yourself about"> How?
+13:25:09 <strcat> I don't know what you mean by how
+13:25:44 <strcat> enumerating badness isn't a security or privacy model
+13:26:06 <strcat> you don't stop sites from getting your data by blacklisting/whitelisting domains
+13:26:10 <strcat> doesn't make sense
+13:26:12 <byolog[m]> Do you mean that these add-ons not really useful for privac
+13:26:21 <strcat> I mean you don't seem to understand what they can accomplish
+13:26:27 <strcat> which is not nearly as much as you imply
+13:26:40 <strcat> and I'd seriously question whether you are making yourself better off rather than worse off
+13:26:54 <strcat> by making yourself stand out from everyone else so much
+13:26:56 <strcat> and for what
+13:27:23 <strcat> I don't understand what data you're talking about - they don't prevent any access to data
+13:27:36 <theultron[m]> Hey. Does it matter if I store important stuff in Main User Profile or Second User Profile?
+13:28:02 <strcat> theultron[m]: profiles can't access each other's data, the owner profile isn't special in that regard
+13:28:05 <byolog[m]> But at least they stop tracking
+13:28:09 <strcat> byolog[m]: no, they don't
+13:28:54 <strcat> byolog[m]: as I said above, I'd seriously question whether you are making yourself better off rather than worse off especially when you don't seem to understand what you're doing - you've been given the feeling that the effort you're putting in to customizing your browser is making you better off
+13:28:58 <strcat> that's a feeling you have
+13:29:02 <strcat> it doesn't mean you are better off
+13:29:12 <theultron[m]> <strcat "theultron: profiles can't access"> Excellent. Thanks!
+13:29:30 <strcat> byolog[m]: how do you think it stops tracking? and define what you mean by tracking
+13:29:41 <strcat> byolog[m]: it certainly does not stop tracking, sorry
+13:30:39 <strcat> and if your goal is obtaining real privacy/anonymity then standing out from everyone else with your own very custom setup with your own custom whitelists/blacklists (which sites can see) is counterproductive
+13:30:57 <strcat> sites can see what you've blocked/allowed
+13:31:17 <strcat> blocking third party assets / connections *client-side* also really does not mean those third parties don't get the data
+13:31:32 <byolog[m]> I'm really new with privacy but that's what I thought about the add-ons like ublock origin and umatrix are to stop big companies from tacking me.
+13:31:59 <strcat> no, they strip out lots of low hanging fruit but also create their own problems
+13:32:09 <strcat> they are not a viable way to stop yourself from being tracked
+13:32:28 <strcat> if you want to avoid being tracked you need anonymity not stripping out some low-hanging fruit while making yourself more unique/trackable
+13:33:25 <strcat> you can't achieve privacy by making a completely unique setup with your own unique set of addons, whitelist/blacklist rules, etc.
+13:34:10 <strcat> all you're doing is stripping out obvious, known tracking-related connections *that are not integrated into the functionality of the site* since they can't remove things that would break the site
+13:34:23 <strcat> really don't see how you can think you're avoiding tracking by doing that
+13:34:46 <byolog[m]> I'm trying to do what I find in privacytools website, they recommend firefox with some add-ons.
+13:34:46 <alzxjm[m]> byolog: I recommend you read the GrapheneOS [FAQ page](https://grapheneos.org/faq)
+13:34:46 <alzxjm[m]> > GrapheneOS leaves these set to the standard four URLs to blend into the crowd of billions of other Android devices with and without Google Mobile Services performing the same empty GET requests. For privacy reasons, it isn't desirable to stand out from the crowd and changing these URLs or even disabling the feature will likely reduce your privacy by giving your device a more unique fingerprint. GrapheneOS aims to
+13:34:46 <alzxjm[m]> appear like any other common mobile device on the network.
+13:34:58 <alzxjm[m]> It has lots of really great stuff
+13:34:59 <strcat> byolog[m]: it's not good advice
+13:35:12 <byolog[m]> Ok I'll do now
+13:35:37 <alzxjm[m]> If you don't want to be tracked then you should ask yourself how to (a) remove unique identifiers (such as your IP) and (b) blend in with lots of other people.
+13:36:01 <alzxjm[m]> GrapheneOS takes measures to appear identical to millions of other Android phones, which endeavors to solve (b).
+13:36:06 <byolog[m]> <alzxjm[m] "If you don't want to be tracked "> By using VPN!
+13:36:15 <strcat> your best bet is safari on an iphone either without a content blocker or with one of the most popular couple ones (but it'll make you more unique) + a very popular VPN (with their standard DNS)
+13:36:25 <alzxjm[m]> You can think about helping (a) by using a VPN and thus sharing an IP address with lots of other people.
+13:37:21 <strcat> other than that the least bad thing you can do is use Vanadium if you're on GrapheneOS
+13:37:30 <strcat> there aren't enough GrapheneOS users though
+13:37:43 <strcat> but using anything else is just going to make you stand out more
+13:37:57 <alzxjm[m]> byolog: If you are new to privacy/security, as you claim to be, you can save yourself and the devs in this room a lot of time/energy by reading through the official GrapheneOS website and searching in the graphene subreddit.
+13:39:12 <byolog[m]> Ok thank you.
+13:39:27 <cdesai> strcat[m]: does upstream use different trichrome targets now? trying to figure out what they're building now
+13:39:54 <byolog[m]> But what kind of questions I can ask in this room then?
+13:39:57 <strcat[m]> cdesai: I assume they use the ones without 6432 at the end
+13:40:08 <strcat[m]> cdesai: but maybe they do use 6432 in some cases now
+13:40:15 <cdesai> there was https://www.androidpolice.com/2020/07/03/chrome-for-android-is-finally-going-64-bit/
+13:40:17 <strcat[m]> orbischlorbi: importing contacts in the app
+13:40:35 <strcat[m]> cdesai:  how is your build going
+13:40:59 <cdesai> strcat[m]: about to start, just need to know what target to build, updating stock
+13:41:00 <strcat[m]> cdesai:  btw seems the issue happens when aapt generates resources
+13:41:11 <strcat[m]> to input to bundletool
+13:41:12 <strcat[m]> so it's really an error from aapt
+13:41:20 <cdesai> yeah
+13:41:27 <strcat[m]> cdesai: well 6432 variants of each is the 64-bit preferred mode
+13:41:33 <strcat[m]> so if they are using 64-bit preferred that's the right set of targets
+13:41:38 <strcat[m]> I don't know what they ship
+13:41:40 <cdesai> I couldn't spot anything in your resource patches (the smaller ones atleast)
+13:41:50 <strcat[m]> cdesai: they might still use 32-bit webview processes though don't know
+13:42:04 <strcat[m]> cdesai: could be something screwed up by the automated string rebranding don't know
+13:42:10 <strcat[m]> it takes me so long to build a clean build atm
+13:42:15 <strcat[m]> I need a new workstation
+13:42:19 <strcat[m]> I can't really productively resolve this
+13:42:21 <cdesai> takes 1h here
+13:42:25 <strcat[m]> really need help
+13:44:08 <cdesai> strcat[m]: http://www.lenovo.com/p620 if you can tolerate a prebuilt system
+13:44:47 <alzxjm[m]> <byolog[m] "But what kind of questions I can"> I invited you to a good room to ask non-GrapheneOS privacy/security questions.
+13:44:53 <strcat[m]> No I will just build one but it's difficult right now
+13:58:36 <strcat[m]> orbischlorbi: are you on GrapheneOS
+13:58:43 <strcat[m]> open the contacts app
+13:58:46 <strcat[m]> press import
+13:58:49 <strcat[m]> select vcf file
+13:59:24 <strcat[m]> it sounds like you aren't on GrapheneOS
+13:59:48 <cdesai> strcat[m]: I think they're still using the same targets, they added expected manifest files and I get a different certDigest
+14:00:00 <cdesai> trichrome_webview_apk trichrome_chrome_bundle
+14:03:18 <strcat[m]> cdesai: I doubt it because those still use is_64_bit_browser = false
+14:03:46 <cdesai> chrome 84 beta is still 32-bit
+14:03:59 <cdesai> that androidpolice link / issue mentions 85 as the switch
+14:04:04 <strcat[m]> orbischlorbi: where do you see any mention of a Google account
+14:04:05 <strcat[m]> in the phone app?
+14:04:14 <strcat[m]> because these apps do support arbitrary accounts
+14:04:21 <strcat[m]> you can install apps providing accounts
+14:04:26 <strcat[m]> and use them via contacts, etc.
+14:04:42 <strcat[m]> but I'm curious where you see a mention of the option to use a Google account
+14:04:50 <strcat[m]> because there isn't support for that included
+14:05:11 <strcat[m]> orbischlorbi: it said *Google* account?
+14:05:19 <strcat[m]> 'add account' does not mean Google
+14:05:53 <strcat[m]> it means any type of account providing contact sync
+14:05:58 <strcat[m]> via an app implementing the API
+14:06:06 <strcat[m]> did you see something that actually said Google?
+14:06:10 <strcat[m]> or you're assuming that
+14:06:15 <strcat[m]> I want to know if there is wording that has to be fixed
+14:06:23 <strcat[m]> somewhere
+14:06:45 <strcat[m]> orbischlorbi: where
+14:07:25 <strcat[m]> yeah so I click phone
+14:07:38 <strcat[m]> click add a favorite
+14:07:42 <strcat[m]> click create new contact
+14:08:11 <strcat[m]> "Take a minute to add an account that will backup your contacts."
+14:08:17 <strcat[m]> "Cancel" "Add account"
+14:08:21 <strcat[m]> it doesn't say Google
+14:08:41 <strcat[m]> clicking add account without installing some contacts sync app doesn't do anything
+14:08:49 <strcat[m]> if you install one it'll do it via that
+14:10:28 <strcat[m]> cdesai: no luck figuring this out
+14:10:44 <strcat[m]> I'll try building without my changing
+14:10:52 <cdesai> strcat[m]: I'm building the default targets
+14:10:54 <strcat[m]>  * I'll try building without my changes
+14:11:16 <strcat[m]> trying to build unmodified tag
+14:11:19 <strcat[m]> still 6432
+14:11:48 <strcat[m]> orbischlorbi: I don't think it says Google anywhere
+14:12:16 <strcat[m]> orbischlorbi: ah wait maybe you use a non-English locale?
+14:12:40 <strcat[m]> we only change strings in English
+14:12:40 <cdesai> trichrome_{chrome_bundle,library_apk,webview_apk}
+14:12:43 <cdesai> this is what I'm building
+14:13:15 <strcat[m]> ninja -C out/Default/ trichrome_webview_64_32_apk trichrome_chrome_64_32_bundle trichrome_library_64_32_apk
+14:13:20 <strcat[m]> is what I'm trying
+14:13:28 <strcat[m]> just without my changes
+14:13:37 <strcat[m]> it's what I usually build
+14:14:22 <strcat[m]> orbischlorbi: yeah we don't update those strings
+14:14:36 <strcat[m]> https://github.com/GrapheneOS/platform_packages_apps_Contacts/commit/fc73ecf4390962e9313739b9ea8e4916481d8fa3
+14:14:49 <strcat[m]> don't know what to do about that aside from removing translations
+14:15:15 <strcat[m]> it's too hard to maintain changes to more than english
+15:21:23 <strcat[m]> orbischlorbi:  it's not maintainable to do translations
+15:21:31 <strcat[m]> there's nothing hard about it we just need to drop translations
+15:22:00 <strcat[m]> maybe just disable the other locales because we can't support that
+15:34:32 <anupritaisno1[m]> strcat (@strcat:matrix.org): we shouldn't disable the other locales
+15:34:40 <anupritaisno1[m]> <strcat[m] "there's nothing hard about it we"> It is better to leave a few strings not translated
+15:34:58 <anupritaisno1[m]> Didn't mean to quite that
+15:35:43 <anupritaisno1[m]> Disabling other locales will just mean people who are not great at English won't use the ROM
+15:43:29 <strcat[m]> there is no process for translations
+15:43:34 <strcat[m]> we can't do translations
+15:43:36 <strcat[m]> we can't maintain that
+15:43:48 <strcat[m]> when we rebase onto a new release or add strings ourselves what are we supposed to do?
+15:44:16 <strcat[m]> anupritaisno1: well the issue is that when we change a string in English it doesn't change it for the locales we don't touch
+15:44:31 <strcat[m]> anupritaisno1: if we had a simple way to disable the translations from being used for that string that would be good
+15:44:41 <strcat[m]> don't want to edit 100 files removing the translated string
+15:44:51 <strcat[m]> and then have to deal with that for each rebase onto new versions
+15:45:01 <strcat[m]> it will have conflicts every time in most files
+15:45:40 <cdesai> strcat[m]: same error here
+15:46:01 <cdesai> and I only have one string patch
+15:46:30 <cdesai> and that's basically your old s/Chrome/Chromium/ in two places
+15:46:54 <cdesai> upstream bug? i was trying to find it ci.chromium.org would have build logs for this release/build
+16:10:15 <strcat[m]> cdesai: well it's good it isn't caused by our changes
+16:10:22 <strcat[m]> too frustrated to work on this more atm
+16:10:26 <strcat[m]> been trying to add debugging to aapt
+16:10:31 <strcat[m]> don't want to deal with it anymore
+16:11:00 <cdesai> strcat[m]: I'm trying to do the same,
+16:16:28 <cdesai> why is this so complicated :(
+16:39:32 <strcat[m]> cdesai: bundles D:
+16:55:22 <yxcvbnmlp[m]> Is 5G possible with pixel 3a?
+17:02:08 <anupritaisno1[m]> strcat: just
+17:02:10 <anupritaisno1[m]> Make a chrome public apk as a workaround?
+17:02:22 <anupritaisno1[m]> Unless you don't like that solution
+17:02:56 <g65434-2[m]> yxcvbnmlp:  nah
+17:05:21 <strcat[m]> anupritaisno1: that isn't a solution
+17:05:24 <strcat[m]> anupritaisno1: and we can't do that
+17:05:36 <strcat[m]> we need to provide both the browser and WebView with the modern target API level
+17:05:39 <anupritaisno1[m]> Okay
+17:05:41 <strcat[m]> this needs to be resolved
+17:06:03 <strcat[m]> help is needed to get this dealt with ASAP
+17:07:44 <anupritaisno1[m]> Will check
+17:07:48 <anupritaisno1[m]> Right now somehow got in touch with the guy who put the SCS patch. Trying to fix kpti in r-preview kernel
+17:08:11 <cdesai> there was a r-beta2 tag pushed earlier today
+17:09:43 <anupritaisno1[m]> Oh god
+17:09:45 <anupritaisno1[m]> Need to rebase again then?
+17:09:49 <anupritaisno1[m]> * Need to rebase again then
+17:31:57 <crabman[m]> Can you connect to hidden SSID?  I can not seem to do it.
+17:33:11 <anonymouserobot[> <crabman[m] "Can you connect to hidden SSID? "> I've had no issues
+17:35:21 <crabman[m]> <anonymouserobot[ "I've had no issues"> Even after connecting to visible SSID, then hiding SSID, the connection dicsonnects on when the SSID hides.
+17:43:59 * SchismXL[m] uploaded an image: 81ed5ead-8f69-490b-a1c4-bea368c5a8cf.png (134KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/msQRuUQQiPTTkVQZHPNLjWBo >
+17:44:47 <SchismXL[m]> Have you turned that on, @crabman:matrix.org?
+18:23:46 <crabman[m]> @SchismXL  Thanks.
+18:30:04 <cdesai> strcat[m]: doing a enable_resource_whitelist_generation=true build.
+18:40:08 <strcat[m]> cdesai: afaik I'm already doing that?
+18:40:10 <strcat[m]> isn't it the default with official build etc
+18:40:30 <cdesai> ah didn't notice
+18:40:43 <cdesai> I was going through the aapt code and this showed up
+18:41:19 <cdesai> trying to get aapt to print what resource it's failing at
+18:53:08 <hiya> How do some of the apps detect unlocked bootloader and state the device as rooted? Even if it is not.
+18:54:04 <cn3m[m]> here is an article on how Snapchat does it(one sec)
+18:54:39 <cn3m[m]> https://t.co/fy9EWnjfBM
+18:55:52 <cn3m[m]> hiya: there are many ways to do this
+18:55:59 <cn3m[m]> this goes over a lot
+19:16:44 <hiya> cn3m[m]: I see. So, basically locking the bootloader is the way to go?
+20:06:28 <cdesai> strcat[m]: it's an anim resource id 0x7f010001 if my logs are right.
+20:07:54 <cdesai> TrichromeChrome.aab.R.txt:int anim abc_fade_out 0x7f010001
+20:08:06 <cdesai> but I'm not sure what to do next or if this is even the bug.
+21:28:11 <jknsec[m]> A bit off topic but are there any links to further resources as the issues with the Linux kernel and desktop security model, including Daniel's sources if any?
+21:28:12 <dreth[m]> thats effective
+21:28:12 <cn3m[m]> <MysteriousWizard "Don't use fucking Snapchat's shi"> what else do I do when I am bored of TikTok /s
+21:29:45 <cn3m[m]> <jknsec[m] "A bit off topic but are there an"> yes Daniel shared this thoughts with madaidan in a comment on this article
+21:30:12 <cn3m[m]> https://forums.whonix.org/t/fixing-the-desktop-linux-security-model/9172
+21:30:43 <jknsec[m]> Are there any other sources for other security researchers or no?
+21:31:19 <cn3m[m]> jknsec: yes one sec
+21:34:00 <cn3m[m]> https://grsecurity.net/10_years_of_linux_security.pdf this is from Brad Spengler on what is still missing in the Linux kernel he is currently using Windows iirc
+21:34:03 <cn3m[m]> https://madaidans-insecurities.github.io/linux.html madaidan has a ton of sources here and the previously listed articles I think he did excellent research on those
+21:34:36 <cn3m[m]> jknsec: you can also search 'linux' 'DanielMicay' on redditcommentsearch.com
+21:35:35 <jknsec[m]> Thanks
+21:42:32 <jappie03> Hey i installed grapheneos. When my phone restarts i enter my 6 digit pin code on my lockscreen. That is the bootloader right? After entering the code its unlocked?
+21:49:20 <overheadscallop[> jappie03: That's not the bootloader. When you're at the lockscreen that means the OS has already been loaded
+21:50:21 <overheadscallop[> you get into the bootloader by powering off, then holding the power + volume down keys
+21:52:17 <strcat[m]> cdesai: any luck yet?
+21:52:25 <cdesai> strcat[m]: nope :(
+22:58:15 <jappie03> Anyone experienced in GrapheneOs and just general phone security who could join me in a private chat? Just having some rookie questions that i wanna be sure about. Will pay for it good ;)
+23:10:07 <BeingFrey[m]> <jappie03 "Anyone experienced in GrapheneOs"> Hello.  I've been using GrapheneOS for two weeks now and would be happy to answer any questions I may be able to assist you with.
+23:17:41 <cdesai> strcat[m]: https://bugs.chromium.org/p/chromium/issues/detail?id=1106115
+23:36:56 <pikey[m]> <jappie03 "Anyone experienced in GrapheneOs"> Pay?! Off topic room is full of Graphene users who I am sure will happily answer all your questions. https://matrix.to/#/#freenode_#grapheneos-offtopic:matrix.org

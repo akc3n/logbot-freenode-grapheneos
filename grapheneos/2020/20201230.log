@@ -1,0 +1,518 @@
+00:22:07 <ghost_matrix[m]> What is the best way to take advantage of user profiles?
+00:22:07 <ghost_matrix[m]> Or is it ok the use the owner profile as my day to day profile?
+00:22:25 <ghost_matrix[m]> I just realised I was able to make new users
+00:22:57 <strcat[m]> https://grapheneos.org/faq#encryption explains why you might want to use another profile as your main one
+00:23:13 <strcat[m]> lot of other information available from the @GrapheneOS Twitter account and elsewhere
+00:25:00 <ghost_matrix[m]> OK I see, will set it up now thanks
+00:31:39 <jpds> Is there a way to make all these different profiles go through the same VPN tunnel?
+00:32:49 <LinusSexTips[m]> just install your vpn client on each profile?
+00:33:37 <jpds> LinusSexTips[m]: Yes, but my VPN provider doesn't let me have that many clients
+00:33:49 <Snowstorm> Wait does Graphene have profiles?
+00:34:18 <anupritaisno1[m]> Yes
+00:34:37 <anupritaisno1[m]> We have 16 user profiles
+00:35:38 <LinusSexTips[m]> you can have that many?
+00:35:43 <LinusSexTips[m]> I only use three
+00:37:36 <anupritaisno1[m]> Linus Sex Tips: you can have 32
+00:37:50 <anupritaisno1[m]> A work profile inside every user profile
+00:39:13 <justanotherlurke> <anupritaisno1[m] "A work profile inside every user"> Work profiles by using the shelter app?
+00:39:41 <anupritaisno1[m]> Yeah
+00:39:49 <anupritaisno1[m]> Btw not really recommended
+00:40:16 <anupritaisno1[m]> When you do something like a work profile, the app owns the profile and not you
+00:40:49 <justanotherlurke> Was thinking of incarcerating WhatsApp in it. ..
+00:41:32 <justanotherlurke> ...so shelter owning ( just) that would not be too bad.
+00:41:50 <anupritaisno1[m]> It is
+00:42:13 <anupritaisno1[m]> Compromising shelter should be much easier than compromising the system
+00:44:18 <justanotherlurke> Would a compromised shelter just affect that work profile, or potentially the whole system? Thought the further...
+00:45:06 <justanotherlurke> ...and anything with WhatsApp in it is kind of compromised anyway..
+00:46:20 <strcat[m]> jpds: they aren't really separate clients, it'd be pretty weird if they didn't let you do that since only 1 is connected at a time
+00:46:45 <strcat[m]> if their app is problematic use WireGuard's app or an OpenVPN app to connect
+00:51:33 <anupritaisno1[m]> justanotherlurker: work profiles aren't really as strong isolation as user profiles
+00:56:31 <anupritaisno1[m]> * justanotherlurker: work profiles aren't really as strong as user profiles when it comes to isolation
+00:57:47 <justanotherlurke> <anupritaisno1[m] "justanotherlurker: work profiles"> Thanks - then I will probably give WhatsApp its own user and live with not getting notifications while working as the main (secondary, not owner) user.
+01:02:06 <jpds> strcat[m]: it's just tedious to have to copy the same config to say 10 different profiles
+01:02:56 <justanotherlurke> So that's four users then: owner (user admin), user (normal stuff), untrusted/prison ( e.g. WhatsApp with contact list limited to other WhatsApp users) and safe (e.g.banking) - does that make sense?
+01:03:46 <strcat[m]> justanotherlurker: not really, banking sounds like part of your usual personal identity
+01:03:53 <strcat[m]> unless you have a specific reason to put it in another profile
+01:03:58 <strcat[m]> apps are sandboxed
+01:04:05 <strcat[m]> profiles do not provide a stronger sandbox, that's not what they do
+01:04:15 <strcat[m]> they're isolated workspaces, the app sandbox is still what contains apps either way
+01:05:05 <strcat[m]> the purpose of profiles is having different sets of shared data
+01:05:15 <asfassa> Hello. I was hoping to find out if grapheneOS participates in any USA covid tracking features from within the OS? I'm hoping not. Sorry, I'm only a little techy--hope I asked this right.
+01:05:22 <strcat[m]> apps are always sandboxed, that's not a choice or something requiring manual setup
+01:05:39 <strcat[m]> asfassa: no, it doesn't, read usage guide / FAQ
+01:06:03 <asfassa> usage guide! thanks so much!!!!!!
+01:06:55 <strcat[m]> https://grapheneos.org/faq#default-connections
+01:07:38 <strcat[m]> asfassa: the only way you can use those kinds of apps is if you install one designed to work without Play services and give it access to Location in the background (for Bluetooth device scanning)
+01:09:33 <asfassa> I don't want any app/feature like that... your answers make me glad... don't want any kind of Play services stuff. I've run Lineage w/o gapps and I life it that way
+01:14:47 <justanotherlurke> <strcat[m] "the purpose of profiles is havin"> Thanks for the explanation. One ( stupid)  banking app needs Google play services, though, that's why I was thinking of keeping it separated. Until your implementation of microg (?)   is ready, that is...
+01:15:30 <asfassa> btw, thanks for the RAPID responses! I hope to be trying out you amazing OS soon. Cheers :]
+01:16:55 <strcat[m]> justanotherlurker: still doesn't make sense
+01:17:04 <Thatcher[m]> <asfassa "btw, thanks for the RAPID respon"> Graphene is a delightfully pure experience!
+01:17:20 <strcat[m]> justanotherlurker: GrapheneOS doesn't have Play services
+01:17:31 <strcat[m]> if that app has a hard dependency on Play services it's just not going to work
+01:18:02 <strcat[m]> justanotherlurker: think you're confused - you don't have the option to use Play services right now, either the official Play services or a reimplementation of those Google service APIs like microG
+01:18:10 <strcat[m]> if the app has a hard dependency and won't work without it, you can't use it
+01:18:19 <strcat[m]> don't know what profiles have to do with it
+01:18:47 <strcat[m]> once we support installing microG as a user app then you could have a specific profile with microG for apps that don't work without Play services but you don't have that as an option right now
+01:18:53 <strcat[m]> so I don't really understand what you're describing
+01:20:11 <TheJollyRoger> If an app requires Google services, what happens is that that the app will most likely abruptly halt when the app tries to dial out, not find the functionality it wants because GrapheneOS lacks Google Software Frameworks, and then the app will exit (or simply crash).
+01:21:24 <TheJollyRoger> It might say "cannot use Google Play Services. This app will now exit" prior to stopping.
+01:22:12 * brenneke[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/iQlidntYgIOGHYuoVgNnYODA/message.txt >
+01:23:53 <justanotherlurke> <strcat[m] "once we support installing micro"> You are right, that's exactly what I misunderstood: thought GPS or microg was not included, but possible. So this banking app will  have to wait for your microg - no problem. And I need one use less user for now.
+01:25:44 <strcat[m]> justanotherlurker: only if it can work with the small subset of Play services implemented by microG
+01:31:46 <justanotherlurke> <strcat[m] "justanotherlurker: only if it ca"> Well, if it does not work, I will learn to live without this banking app. Probably even spend less money that way. 😉
+01:32:30 <strcat[m]> if you haven't tested it, you shouldn't assume it won't work without Play services
+01:33:18 <TheJollyRoger> The instruments on GrapheneOS are working, but some apps do it the lazy way and simply get their location via functionality that Google Play provides. I don't know why they do this but I can presume it must be easier for them to do so.
+01:40:34 <justanotherlurke> <strcat[m] "if you haven't tested it, you sh"> Tested to not work on a kindle fire without Google services, asked the bank and they confirmed the dependency. But does not matter much, security comes first.
+01:41:32 <justanotherlurke> Must be off for now, thanks everybody for your patient help. 👍
+01:49:14 <moonarch20[m]> Is anyone else having complaints about call quality with grapheneos? I installed it just recently when I bought a pixel 4a and most people I call have been complaining that it is hard to hear me. I tested the mic with a voice recording app and it comes up clear on that so maybe it is just the phone application?
+01:49:28 <moonarch20[m]> I had a note 9 prior and there was never any complaints on call quality
+01:53:51 <strcat[m]> sounds like an issue specific to you
+01:54:31 <strcat[m]> maybe your carrier doesn't support VoLTE with AOSP and you had it before
+01:54:49 <strcat[m]> we'll be shipping expanded carrier-specific configurations soon to provide better support for VoLTE/VoWiFi
+01:54:56 <TheJollyRoger> moonarch20[m]: I haven't experienced any call quality issues over the Publicly Switched Telephone Network or on instant messaging apps.
+01:55:09 <strcat[m]> if you want consistent high quality calls though, use something better than legacy insecure calls
+01:57:18 <moonarch20[m]> Interesting
+01:57:33 <moonarch20[m]> So something like Signal should get better audio quality?
+01:57:37 <strcat[m]> yes
+01:57:43 <strcat[m]> it will have consistently better call quality
+01:57:59 <strcat[m]> because it's using WebRTC with high quality codecs and higher bandwidth
+01:58:28 <strcat[m]> VoLTE call quality is okay but VoLTE is often not available, often requires carrier apps, etc. integrated into the OS
+01:58:41 <moonarch20[m]> Gotcha, appreciate the help. This is just one more reason to push my friends/family to get signal
+01:59:00 <moonarch20[m]> I've been trying for awhile but most of them like the stock iOS messaging app better
+02:01:07 <TheJollyRoger> moonarch20[m]: Yes, signal will have consistently better quality.
+02:01:13 <TheJollyRoger> The pain is real on network effect though!
+02:02:50 <adjism> strcat: https://redandblack.io/blog/2020/using-google-camera-on-grapheneos/ ... this article shows how to install microG as an app from F-DROID in grapheneOS and use it without any permissions.
+02:03:20 <strcat[m]> no, microG is not working like that
+02:03:55 <strcat[m]> you could also install the more minimal app providing that placeholder, which isn't going to be broken
+02:04:10 <strcat[m]> either way strongly recommend against installing an app with that name in a regular profile
+02:04:15 <adjism> strcat: btw I still cannot try that thing since my pixel 4a hasn't arrived yet
+02:04:21 <strcat[m]> adjism: it's really bad advice not actually explaining what's happening and why
+02:04:25 <strcat[m]> and the consequences of it
+02:05:35 <strcat[m]> microG does not work installed as a regular user app without OS integration for it
+02:05:42 <strcat[m]> you're misinterpreting what's happening there
+02:06:16 <strcat[m]> and if you have something like that installed, other apps are going to be trying to use it, despite it not working
+02:06:28 <strcat[m]> and it's going to break them, and then you'll be here asking for help with problems you've caused
+02:07:10 <adjism> I'm not asking for support on that just that asked if that article is valid... since I cannot try that for the moment
+02:07:19 <adjism> And I understand your points around this
+02:07:27 <strcat[m]> I don't think you do
+02:07:34 <strcat[m]> adjism: no, it's not, it's bad advice and is not explaining what's happening
+02:08:12 <adjism> k
+02:08:28 <adjism> I was not advertising the article
+02:08:54 <adjism> just wondering if you could "fake" having gapps so at least not receive the error from google play services
+02:09:13 <strcat[m]> > and if you have something like that installed, other apps are going to be trying to use it, despite it not working
+02:09:16 <strcat[m]> > and it's going to break them, and then you'll be here asking for help with problems you've caused
+02:09:53 <strcat[m]> adjism: if you install microG, it's going to be completely broken / non-functional
+02:10:14 <strcat[m]> adjism: some apps are going to attempt to use it instead of their alternative approach when Play services isn't available
+02:10:18 <adjism> then I will not install it, thank you for the help
+02:10:58 <strcat[m]> if you've determined to use Google Camera then install it in a profile dedicated to it with that minimal fake Play services app
+02:11:07 <strcat[m]> so it doesn't interfere with other apps
+02:11:18 <strcat[m]> don't use microG, it will be broken
+02:11:42 <strcat[m]> either way not something that's supported or that's likely to continue working
+02:12:56 <strcat[m]>  * if you're determined to use Google Camera then install it in a profile dedicated to it with that minimal fake Play services app
+02:13:29 <adjism> got it
+03:04:35 <jandroid[m]> Where can I learn more about user profiles and best practices and examples?   I see very little documentation on this.
+03:12:54 <louipc> heres one place: https://hub.libranet.de/wiki/and-priv-sec/wiki/user-profiles
+03:13:19 * ghost_matrix[m] uploaded an image: IMG_20201230_141126.jpg (31KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/NbYDhtsxTkcGiiDETccehnap/IMG_20201230_141126.jpg >
+03:13:20 <ghost_matrix[m]> Is there a way around this?
+03:16:36 <ghost_matrix[m]> Is there a way to grant user  permissions?
+03:21:04 <LavenderKush16> Hello
+03:21:08 <LavenderKush16> My battery is draining fast
+03:21:10 <LavenderKush16> Using stock aps
+03:21:21 <LavenderKush16> Is there anyway I can check to see if my OS got compromised
+03:21:27 <LavenderKush16> Baseband or firmware exploit, etc
+03:22:25 <Liakdeuser[m]> <ghost_matrix[m] "Is there a way around this? "> It's by design
+03:22:32 <Liakdeuser[m]> Can't install it in non-owner user profiles
+03:23:04 <louipc> LavenderKush16: you can use auditor/attestation.app to verify your OS
+03:23:04 <Liakdeuser[m]> <Liakdeuser[m] "It's by design"> Maybe they'll fixed the hardwired "/data/data/..." one day
+03:23:19 <somenerd[m]> I think there's an issue trying to fix this (or add the feature)
+03:25:37 <ghost_matrix[m]> <Liakdeuser[m] "It's by design"> That makes sense I guess if I need to use of I can just use it on main profile.
+03:25:52 <ghost_matrix[m]> * That makes sense I guess if I need to use it I can just use it on main profile.
+03:26:48 <Liakdeuser[m]> <somenerd[m] "I think there's an issue trying "> Yeah, I can't use Termux until they fix the W^X violation (targetSdk="29") and support use cases for secondary user profiles (non-owner ones)
+03:27:01 <Liakdeuser[m]> Unsure if I got that first issue correcf
+03:27:06 <Liakdeuser[m]> correct*
+03:27:10 <Liakdeuser[m]> Gotta verify
+03:27:20 <ghost_matrix[m]> Do you just use it on main profile then?
+03:27:36 <ghost_matrix[m]> "Owner profile"
+03:41:33 <narcoli[m]> hello everyone I am stuck with the graphene os installation
+03:42:02 <narcoli[m]> i dl fastboot and it keeps saying seach any device
+03:42:17 <narcoli[m]> Im using pop os with a pixel 4a
+03:42:47 <narcoli[m]> been looking and reading how to fix this but no luck can anyone guide me in the right direction? thanks
+03:46:21 <LavenderKush16> Have you downloaded the latest version of Fastboot from the Installation guide URL?
+03:46:22 <LavenderKush16> Try that
+03:46:38 <ghost_matrix[m]> Debian and Ubuntu: android-sdk-platform-tools-common provides udev rules allowing fastboot and adb to work in local sessions without root. The udev rules in Debian and Ubuntu are out-of-date, but it has the necessary entries for Pixel phones. The adb and fastboot packages are currently both broken and far too out-of-date to be any use, so avoid those. The version check in the flashing script will prevent
+03:46:38 <ghost_matrix[m]> accidentally using these.
+03:47:14 <narcoli[m]> <LavenderKush16 "Have you downloaded the latest v"> I have didnt work \
+03:47:22 <LavenderKush16> It didnt work
+03:47:24 <LavenderKush16> Please elaborate
+03:47:25 <ghost_matrix[m]> Make she you sudo apt install android-sdk-platform-tools
+03:47:33 <bleachcrayon[m]> <narcoli[m] "Im using pop os with a pixel 4a"> Are you in fastboot mode on your phone? If not power off, then power on while holding volume down
+03:48:17 <narcoli[m]> <ghost_matrix[m] "Debian and Ubuntu: android-sdk-p"> where is the flashing script
+03:48:28 <narcoli[m]> <ghost_matrix[m] "Make she you sudo apt install an"> I have these tools
+03:48:46 <narcoli[m]> <narcoli[m] "I have didnt work \"> the guide from graphene os right?
+03:49:11 <narcoli[m]> <narcoli[m] "I have these tools"> I have the sdk platform tools
+03:50:01 <ghost_matrix[m]> Just make sure you actually do sudo apt install android-sdk-platform-tools
+03:50:19 <ghost_matrix[m]> I had a similar issue
+03:50:43 <ghost_matrix[m]> Its got to do with udev packages
+03:51:38 <ghost_matrix[m]> And I added fastboot and adb to my $PATH
+03:52:59 <narcoli[m]> <ghost_matrix[m] "Its got to do with udev packages"> how do I check that?
+03:53:20 <narcoli[m]> im little bit of a noob with linux
+03:53:58 <ghost_matrix[m]> I just literally typed sudo apt install android-sdk-platform-tools
+03:54:18 <ghost_matrix[m]> The correct udev is in that repository package
+03:54:33 <ghost_matrix[m]> Just try it it's what worked for me
+03:54:38 <narcoli[m]> Even when I type adb devices nothing shows
+03:54:39 <LavenderKush16> "sudo apt install android-sdk-platform-tools"
+03:55:58 <ghost_matrix[m]> > Even when I type adb devices nothing shows
+03:55:58 <ghost_matrix[m]> Does it show when not in fastboot?
+03:56:37 * narcoli[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/DXDmyJpYeOvyBbGnlvzwaCfv/message.txt >
+03:56:43 <narcoli[m]> its just onm
+03:56:50 <narcoli[m]> on*
+03:57:19 <ghost_matrix[m]> Is fastboot and adb added to your $PATH
+03:57:35 <narcoli[m]> whats tyhe command for that?
+03:58:10 <narcoli[m]> i did a similar command before from the graphene os site
+03:58:16 <narcoli[m]> nothing happened
+04:00:15 <Liakdeuser[m]> <ghost_matrix[m] "Do you just use it on main profi"> You can only use it there, but I don't use Termux
+04:00:53 <ghost_matrix[m]> <Liakdeuser[m] "You can only use it there, but I"> Got ya! 😉
+04:00:59 <Liakdeuser[m]> <narcoli[m] "whats tyhe command for that?"> https://grapheneos.org/install#standalone-platform-tools
+04:01:22 <ghost_matrix[m]> > i did a similar command before from the graphene os site
+04:01:22 <ghost_matrix[m]> Did you do
+04:01:22 <ghost_matrix[m]> Export PATH="$PWD/platform-tools:$PATH
+04:02:27 <Liakdeuser[m]> <narcoli[m] "nothing happened"> That's kinda to be expected for "nothing" to happen
+04:02:46 <Liakdeuser[m]> ```
+04:02:46 <Liakdeuser[m]> fastboot --version
+04:02:46 <Liakdeuser[m]> ```
+04:02:56 <Liakdeuser[m]> * ```
+04:02:56 <Liakdeuser[m]> fastboot --version
+04:02:56 <Liakdeuser[m]> ```
+04:04:37 <narcoli[m]> fastboot version 1:8.1.0+r23-8
+04:04:37 <narcoli[m]> Installed as /usr/lib/android-sdk/platform-tools/fastboot
+04:04:48 <narcoli[m]> thats what I get after I do the path command
+04:07:16 <TheJollyRoger> narcoli[m]: stop right there, you've got an incorrect version of fastboot installed; likely you installed it via your operating system's package repositories. Don't go further without uninstalling that version, unless you want to know what an unbootable device looks like.
+04:07:49 <TheJollyRoger> (most of the versions of fastboot packaged by distributions don't support autodetection and are incorrectly versioned, this tends to lead to softbricking.)
+04:08:08 <narcoli[m]> <TheJollyRoger "narcoli: stop right there, you'v"> how do I fix this
+04:08:58 <TheJollyRoger> You must have installed it via your operating system's repositories, you'll need to uninstall that version. I assume you're running debian, mint, or ubuntu?
+04:09:09 <narcoli[m]> pop os
+04:09:14 <narcoli[m]> its ubuntu
+04:09:47 <TheJollyRoger> ghost_matrix[m]: please don't use the version of android platform tools in debian or ubuntu. They don't support autodetection and may result in an unbootable device.
+04:10:25 <TheJollyRoger> You installed it via apt? You should be able to remove it via apt.
+04:10:41 <narcoli[m]> yes I installed it that way
+04:10:53 <narcoli[m]> what is the command to uninstall?
+04:11:20 <narcoli[m]> sudo apt uninstall?
+04:11:28 <TheJollyRoger> it's the same, except replace "apt install" with "apt remove". So for instance, "sudo apt remove my-program" would remove "my-program".
+04:11:54 <TheJollyRoger> So if you installed android-sdk-platform-tools via apt, then the command to remove it is "sudo apt remove android-sdk-platform-tools"
+04:12:47 <narcoli[m]> alright I removed it
+04:13:10 <narcoli[m]> what is the right process to install the correct fastboot
+04:13:13 <TheJollyRoger> Great. Let's check now with "fastboot --version". If it returns "fastboot: command not found" then we're in good shape.
+04:13:24 <narcoli[m]> ok
+04:13:36 <TheJollyRoger> (This is a quick sanity check, because I'm not looking over your shoulder.
+04:14:04 <narcoli[m]> fastboot --version
+04:14:04 <narcoli[m]> fastboot version 1:8.1.0+r23-8
+04:14:04 <narcoli[m]> Installed as /usr/lib/android-sdk/platform-tools/fastboot
+04:14:08 <narcoli[m]> still there
+04:14:36 <narcoli[m]> <TheJollyRoger "(This is a quick sanity check, b"> thanks for the help
+04:14:38 <TheJollyRoger> very strange. Try "sudo apt remove android-tools-fastboot" and see if that does it.
+04:14:57 <TheJollyRoger> Sure.
+04:15:47 <narcoli[m]> fastboot --version
+04:15:47 <narcoli[m]> fastboot version 1:8.1.0+r23-8
+04:15:47 <narcoli[m]> Installed as /usr/lib/android-sdk/platform-tools/fastboot
+04:15:51 <narcoli[m]> still there
+04:16:06 <narcoli[m]> maybe I should reinstall my disto and start from scratch?
+04:17:05 * narcoli[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/oEbKYGdUFNmmMZSENGhoMjmF/message.txt >
+04:17:28 <narcoli[m]> but i still get
+04:17:32 <narcoli[m]> fastboot --version
+04:17:33 <narcoli[m]> fastboot version 1:8.1.0+r23-8
+04:17:33 <narcoli[m]> Installed as /usr/lib/android-sdk/platform-tools/fastboot
+04:23:24 <TheJollyRoger> narcoli[m]: not sure what the operating system's doing then. I haven't run PopOS.
+04:25:58 <ghost_matrix[m]> I have the fastboot and adb Dowloaded from the guide/google website not repository's then added it to my $PATH but I still Dowloaded android-skd-platform-tools for the  udev rules and worked for me
+04:26:27 <TheJollyRoger> ghost_matrix[m] fancy that.
+04:26:40 <TheJollyRoger> narcoli[m], can I see your $PATH variable?
+04:26:44 <TheJollyRoger> The command is
+04:26:47 <TheJollyRoger> echo $PATH
+04:26:50 <ghost_matrix[m]> It was the udev rules that made my device not show up in fastboot
+04:27:36 <TheJollyRoger> For the udev rules, I like to use these: https://raw.githubusercontent.com/M0Rf30/android-udev-rules/master/51-android.rules
+04:28:53 <ghost_matrix[m]> > For the udev rules, I like to use these: https://raw.githubusercontent.com/M0Rf30/android-udev-rules/master/51-android.rules
+04:28:53 <narcoli[m]> <TheJollyRoger "narcoli: not sure what the opera"> yes im starting to think it may be this I dont know
+04:28:53 <ghost_matrix[m]> Oh sweet,
+04:28:53 <ghost_matrix[m]> Is the way I did it correct? Because I think that's the issue narcoli is having
+04:29:07 <narcoli[m]> im going to start fresh tmrw thanks for all your help
+04:29:32 <TheJollyRoger> narcoli[m]: good luck! If I'm on the channel tomorrow I'll try and give you a hand.
+04:30:53 * ghost_matrix[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/GiXSKPjIFoFpSkVXMvECHgSh/message.txt >
+04:30:56 <ghost_matrix[m]> Good luck
+04:31:38 <TheJollyRoger> ghost_matrix[m]: doing so with that probably was what installed that unwanted fastboot onto his computer which he now can't uninstall.
+04:31:50 <TheJollyRoger> And now I'm not exactly sure why (again, not an Ubuntu or PopOS user)
+04:32:41 <TheJollyRoger> So the better way is to simply obtain the udev rules from upstream and add those directly to /etc/udev/rules.d/ - At least this way he knows what he's getting and only obtains what he needs, exactly.
+04:33:51 <TheJollyRoger> The command shell reads the items in PATH in order.
+04:34:28 <TheJollyRoger> So, in your case, you prepended the working directory to your existing path, and likely that's why it found fastboot first and that's why it worked for you. But, I don't know why fastboot won't leave his computer now.
+04:34:38 <TheJollyRoger> *why it found the correct fastboot
+04:36:41 <TheJollyRoger> Will return shortly.
+04:36:56 * ghost_matrix[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/egOCpGKJBrZKUXTBZWaIcypT/message.txt >
+04:38:14 <ghost_matrix[m]> Just read your post makes sense now
+04:38:44 <ghost_matrix[m]> Also not sure why he can't uninstall it either
+04:40:46 <ghost_matrix[m]> He must have Installed the wrong fastboot or added the wrong one to his $PATH.
+04:41:47 <ghost_matrix[m]> I guess that's why it mentions to double check your --version
+04:45:43 <strcat[m]> narcoli: follow the official guide at https://grapheneos.org/install including the instructions on obtaining fastboot
+04:48:16 <the5000[m]> I convinced the guy on Windows 7 to update to windows 10 so now hopefully I can install graphene from the legit website. The win 10 update is free
+05:52:51 <DannyWorkOrderPr> <the5000[m] "I convinced the guy on Windows 7"> Via what method?
+05:53:06 <DannyWorkOrderPr> would love to take advantage of this on a few hundred machines, lmao
+05:55:46 <anupritaisno1[m]> Danny@WorkOrderPro: all of them
+05:55:46 <anupritaisno1[m]> Run the upgrade assistant
+05:56:58 <Guest58324> What requirements must a smartphone pass in order to be compatible with grapheneos? the google pixel 5 i see that it is not compatible. It is not compatible because it is a new phone and it will still take time or does it not meet the requirements?
+05:57:22 <strcat[m]> https://grapheneos.org/faq#device-support
+05:57:35 <strcat[m]> Guest58324: supporting a device properly is a substantial undertaking
+05:57:39 <strcat[m]> it's all explained there
+05:57:54 <strcat[m]> better to read the detailed documentation on the site than get an incomplete answer here
+06:00:14 <Guest58324> I still don't understand. I am Spanish and I don't understand much English. the translator is bad. Grapheneos will arrive for pixel 5 or not?
+06:06:15 <strcat[m]> did you read the sections at https://grapheneos.org/faq#device-support ?
+06:06:46 <strcat[m]> I don't think language barrier is the issue
+06:07:00 <strcat[m]> you're going to get the same answer here as what's on the site
+06:07:18 <strcat[m]> > The Pixel 4a 5G and Pixel 5 aren't currently supported.
+06:07:31 <strcat[m]> read https://grapheneos.org/faq#future-devices in particular
+06:08:00 <strcat[m]> > In order to support a device, the appropriate resources also need to be available and dedicated towards it. Releases for each supported device need to be robust and stable, with all standard functionality working properly and testing for each of the releases.
+06:08:07 <strcat[m]> https://grapheneos.org/faq#when-devices
+06:08:17 <strcat[m]> > Broader device support can only happen after the community (companies, organizations and individuals) steps up to make substantial, ongoing contributions to making the existing device support sustainable. Once the existing device support is more sustainable, early research and development work for other devices can begin. Once a device is deemed to be a worthwhile target, the project needs maintainers to develop and
+06:08:17 <strcat[m]> maintain support for it including addressing device-specific issues that are uncovered, which will include issues uncovered in the device support code by GrapheneOS hardening features.
+06:08:34 <anupritaisno1[m]> We are working on supporting pixel 5 but there are serious issues that need to be fixed first
+06:08:41 <strcat[m]> Guest58324: I think the content on the site covers this all quite well, I don't see a need to paraphrase it here
+06:29:43 <pakoloko> and what differences are there between graphene and calyxos to make graphene safer?
+06:43:45 <Liakdeuser[m]> <pakoloko "and what differences are there b"> Suggest asking that instead in #grapheneos-offtopic:matrix.org for OS comparisons and refrain from doing it here
+06:44:01 <Liakdeuser[m]> But for GrapheneOS, summary of features are in grapheneos.org/features
+06:44:32 <louipcm> How to make device support sustainable? More maintainers?
+06:44:44 <Liakdeuser[m]> Yeah
+06:45:23 <Liakdeuser[m]> Also needs a maintainer who has powerful enough workstation tbh
+06:46:00 <Liakdeuser[m]> maintainers* rather for each device
+06:47:34 <louipcm> need a grapheneos reference build machine :D
+06:48:07 <somenerd[m]> sounds nice lol
+06:55:12 <Liakdeuser[m]> Maybe some day
+07:14:26 <DannyWorkOrderPr> <anupritaisno1[m] "Run the upgrade assistant"> Interesting, weren't they charging for licenses for a bit? Ty!
+07:14:53 <DannyWorkOrderPr> <Liakdeuser[m] "Also needs a maintainer who has "> Hopefully secure enough, as well
+07:28:45 <ayaen_t[m]> Lia (kde user):  its almost like a conspiracy . the ones powerful enough wont have secure oses and the ones that run secure oses like mac chromeos are barely powerful enough or way tooooo costly
+07:32:00 <DannyWorkOrderPr> Heh. TheJollyRoger may have some insight on these tradeoffs. He's got a pretty dope setup.
+07:33:19 <ayaen_t[m]> Danny@WorkOrderPro: yes .
+07:33:47 <ayaen_t[m]> and it costs as much as dope too.
+07:36:19 <ayaen_t[m]> but if ones got the resources money,mentality his setup is the one to go for.
+07:41:40 <strcat[m]> take_a_deep_breath: the ARM Macbooks are among the most powerful laptops (even at high price ranges) despite only the low end ones being released - anyway, it's offtopic for here
+07:41:49 <strcat[m]>  * take_a_deep_breath: the ARM Macbooks are among the most powerful laptops (even at higher price ranges) despite only the low end ones being released - anyway, it's offtopic for here
+07:44:19 <ayaen_t[m]> well thats good to know but for me i primarily want a system to build grapheneOS.
+07:44:31 <lawsofthermodyna> Is there a way to install apps on the work profile and use it? Or is it still mostly being developed?
+07:51:06 <the5000[m]> Danny@WorkOrderPro: I hope it's real look it up
+08:01:37 <DannyWorkOrderPr> <lawsofthermodyna "Is there a way to install apps o"> You can use as many guest profiles as you'd like.
+08:01:53 <DannyWorkOrderPr> In fact, using a second profile as your main is being recommended.
+08:04:55 <DannyWorkOrderPr> See Security and Privacy section here https://grapheneos.org/faq
+08:05:38 <strcat[m]> you can link to the sections by clicking the headers or the entry in the table of contents btw
+08:05:48 <strcat[m]> like https://grapheneos.org/faq#encryption
+08:06:21 <strcat[m]> just uses html ids and is what URL fragments (#whatever) do by default
+08:08:29 <DannyWorkOrderPr> Totally forgot about that, thx man...for the reader, this works for Wikipedia and many other forward thinking wiki-style pages as well!
+08:09:41 <DannyWorkOrderPr> Hope you're well, strcat. Night all!
+08:13:48 <lawsofthermodyna> So does using shelter somehow reduce privacy?
+08:16:28 <somenerd[m]> it's mostly unnecessary
+08:16:37 <somenerd[m]> and the app controls the profile
+08:18:27 <lawsofthermodyna> Well if I only want it for a single app it's much more convenient than having to constantly switch profiles
+08:19:18 <lawsofthermodyna> At least IMO so if it doesn't actually hurt privacy then I'll probably just stick to that
+08:20:16 <ayaen_t[m]> you could always use something like classyshark3xodus to check your app for known tracker classes in the apps code
+08:20:29 <somenerd[m]> eh, that's mostly known trackers
+08:20:37 <ayaen_t[m]> that helps to some extent
+08:20:43 <somenerd[m]> first party tracking may be there
+08:20:47 <somenerd[m]> also https://hub.libranet.de/wiki/and-priv-sec/wiki/user-profiles#Shelter
+08:20:52 <ayaen_t[m]> atleast one is aware
+08:20:57 <somenerd[m]> and maybe come over to #grapheneos-offtopic:matrix.org
+08:21:05 <ayaen_t[m]> yes
+08:22:21 <lawsofthermodyna> How is this off topic? It's directly grapheneOS related. Or is this room only for installation assistance?
+08:23:06 <somenerd[m]> It's becoming more about shelter and trackers
+08:24:28 <somenerd[m]> so I suggested moving to the offtopic room
+08:24:50 <ayaen_t[m]> laws of thermodynamics debunked by fat people if we go offtopic it might get in the way of someone who comes here for some troubleshooting
+08:27:52 <lawsofthermodyna> You nerds really cannot into conversation. Is there another way to install apps into the work profile provided by grapheneOS without shelter or is that the only way?
+08:29:17 <ayaen_t[m]> dear man , please ask , dont demand.
+08:30:13 <lawsofthermodyna> Whatever I figured it out on my own thanks to the search feature.
+09:52:28 <fll[m]> Question that is more of a general android question than graphene: DefaultCarrierApp got its permissions removed automatically due to not being used for some time. Could that become an issue?
+09:52:55 <somenerd[m]> in what way? the app breaking?
+09:53:26 <somenerd[m]> or is the permission being removed an issue? (it's a feature)
+09:53:31 <somenerd[m]> also kinda off topic
+09:53:41 <somenerd[m]> #grapheneos-offtopic:matrix.org ?
+09:56:48 <fll[m]> I guess my question is what does CarrierDefaultApp do?
+09:56:56 <nscnt> It's not offtopic imo. It's a system app. If it actually breaks something, you need to do work on the operating system's level
+09:57:14 <somenerd[m]> true I guess
+09:57:33 <nscnt> fll[m]: Not sure, to be honest. I've got that, too
+10:00:18 <nscnt> I think the doc is this: https://source.android.com/devices/tech/connect/oob-users
+10:01:20 <nscnt> "The default carrier app is configured to provide a better experience for unconfigured carriers out of the box. Carriers can use this default behavior."
+10:02:47 <strcat> if it revoked it
+10:02:52 <strcat> it means your carrier doesn't use it
+10:03:06 <strcat> if you switch to a carrier that doesn't have proper configuration and needs it I guess it might break with that revoked
+10:03:18 <strcat> it doesn't seem to know how to ask for the permission again
+10:03:52 <fll[m]> Ah ok, thx. So it would only have a chance of being relevant if I change my carrier
+10:04:01 <pumpkineater69[m> How is Vanadium more secure than something like Bromite
+10:04:19 <fll[m]> I'm too slow typing :P
+10:04:30 <nscnt> pumpkineater69[m: https://grapheneos.org/usage#web-browsing
+10:04:42 <fll[m]> Thank you both!
+10:07:43 <pumpkineater69[m> <nscnt "pumpkineater69: https://graphene"> Thanks
+10:53:48 <duggalsu[m]> TTS settings are not working on secondary profile on Pixel 2. When I click on Accessibility > text to speech output, the activity closes and returns to the main settings activity. Is this a known issue?
+11:15:52 * faba[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/PZgLZFHwcayIfzsDwZSKVulc/message.txt >
+11:27:47 * trismous[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/euyAsfuHhEKuuitFFLhVxoBH/message.txt >
+11:27:58 <trismous[m]> But IMO you could just ditch Bromite
+11:28:52 <duggalsu[m]> Also, which apps count as accessibility services? Does that include TTS apps?
+11:33:16 * t0mo[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/PVUIrLaYnnDNfJwnOGTnJolB/message.txt >
+11:38:21 <Golli[m]2> faba That's what I use.
+11:49:25 <faba[m]> <Golli[m]2 "faba That's what I use."> Thanks!
+12:33:36 * faxing[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/PYtWunZZnpvdnWZQYRtnecji/message.txt >
+12:39:02 <dazinism> duggalsu: an app has to ask for you to grant it accessibilty services powers and will generally put you on the right page in Android Settings so you can throw the toggle.
+12:40:23 <duggalsu[m]> dazinism thanks! Any idea with the TTS issue in secondary profile?
+12:41:17 <dazinism> If I remember correctly you'll get extra options in the accessibilty settings page if you got an app installed that can act as an accessibilty service
+12:42:32 <dazinism> duggalsu: no had some issues with tts acting a bit weird over recent months. Maybe due to the tts app and/or changes with Android 11
+12:42:56 <dazinism> Working for me now in main. Not tried secondary
+12:57:09 <strcat[m]> a  normal TTS app isn't an accessibility service
+12:57:26 <strcat[m]> we have a fix for an upstream Android 11 bug with setting the active TTS app for the next release
+13:05:28 <duggalsu[m]> strcat I believe there will be no more updates for pixel 2 ?
+13:14:49 * ghost_matrix[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/IWxfOUQNfXttlFZmliuoeDgN/message.txt >
+13:15:17 * ghost_matrix[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/YgUJLXkcdrbZWehHAhSMDgSC/message.txt >
+13:16:06 * ghost_matrix[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/YpQRPmnvSKlJypaFKCNyHtIt/message.txt >
+13:24:41 <nscnt> duggalsu[m]: I think there will be updates to update e.g. Vanadium and similar stuff, but it's not an actual security patch. Security patches aren't possible anymore which is why moving to a newer supported phone is recommended
+13:27:10 <nscnt> Updates for e.g. Vanadium can only be provided through system updates. That's why I took it as an example
+13:28:12 * kopolee11[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/EJsBAbwYRTHVjkvzWWvrGaVC/message.txt >
+13:46:07 <duggalsu[m]> Is it possible to update the system contacts app to support vcard v.3.0+ ? This is the only app that works to display contacts in calls in the secondary profile, and there are issues importing/exporting/syncing contacts to other apps
+13:48:35 <duggalsu[m]> There is also an issue with Vanadium in the secondary profile. It does not redirect back to the app when using oauth signin
+13:57:01 * justanotherlurke sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/voaodHWQXBTUxsYvCyrncfao/message.txt >
+13:58:37 <nscnt> duggalsu[m]: Yes, a lot is possible. As long as someone gets the actual work done
+13:59:49 <nscnt> duggalsu[m]: Issues can be filed on the associated GitHub repo
+14:04:34 <duggalsu[m]> Will do, thanks
+14:37:05 <t0mo[m]> Can you change the  system accent color in GOS?
+14:37:58 <pumpkineater69[m> I dont think so
+15:52:03 <captchaphishingu> Is there any way to make the Pixel 3a camera quality higher than the stock camera / open camera?
+15:52:03 <captchaphishingu> (3a does not have the Pixel Visual Core so Open Camera API v2 doesn't look any better than then basic camera app)
+16:02:26 <im_a_robot[m]> Im currently installing grapheneos on windows, but when i clicked the flash all batch file it closed again. It says my  fastboot version is too old, but my fastboot version is 30.0.5-6877874 (newest). Does anybody know, where the problem could be?
+16:09:22 <anupritaisno1[m]> im_a_robot: pm me
+16:11:31 <buffmuffin[m]> Got my new pixel running graphene
+16:11:31 <buffmuffin[m]> Almost
+16:21:38 <Liakdeuser[m]> > <@buffmuffin:kde.org> Got my new pixel running graphene
+16:21:39 <Liakdeuser[m]> > Almost
+16:21:39 <Liakdeuser[m]> Almost?
+16:30:23 <dakotah[m]> They didn't lock the bootloader probably
+16:33:54 <eagle> i bought the pinephone waiting for it to reach one thing worries me is Updates
+16:33:58 <eagle> will it be over the air
+16:35:14 <Liakdeuser[m]> <eagle "will it be over the air"> https://grapheneos.org/faq#updates
+16:35:16 <buffmuffin[m]> Its done now
+16:35:16 <buffmuffin[m]> I got grapheneOS wrking
+16:35:18 <buffmuffin[m]> I very happy
+16:35:38 <Liakdeuser[m]> Congrats, and welcome
+16:35:50 <buffmuffin[m]> Ty
+16:42:58 <Liakdeuser[m]> <eagle "i bought the pinephone waiting f"> Wrong room
+16:43:27 <Liakdeuser[m]> (Misread it as Pixelphone, thus the link earlier)
+16:43:42 <eagle> super sorry
+16:44:00 <eagle> currently using graphonine but i like new toys :D
+17:00:43 <Liakdeuser[m]> <eagle "currently using graphonine but i"> Heh, wondering if you have seen the link in reply (iirc, freenode doesn't redact deleted messages in matrix)
+17:17:41 <tealopintoscom[m> Does GOS block lock screen controls from apps like antennapod? It's settings are showing there should be a lock screen play/skip buttons but I don't see them.
+17:18:33 <tealopintoscom[m> And is it strongly recommended using the non owner profile for daily use?
+17:27:17 * brenneke[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/SgsOGDlkunVZrenrFMiteUBD/message.txt >
+17:30:25 <LinusSexTips[m]> Happens to me as well
+17:31:13 <LinusSexTips[m]> Sometimes when switching, the app drawer of the profile I am switching to is shown for a few seconds despite the profile still being locked
+17:31:59 <brenneke[m]> K cool thanks.
+17:31:59 <brenneke[m]> A bug?
+17:32:45 <LinusSexTips[m]> Definitely not a feature in the case of the app drawer being shown
+18:54:44 * buffmuffin[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/OjkqwMlQeyBoSFRcWjGZpSse/message.txt >
+19:06:28 <buffmuffin[m]> No worries
+19:06:28 <buffmuffin[m]> Found a fix
+19:06:28 <buffmuffin[m]> Needed to enable location
+19:07:29 <graphiteos[m]> Is it expected that apps arent copied to a newly created user? I read that any user can update apps but do I need to install them again?
+19:08:39 <graphiteos[m]> Also does GOS support the new adaptive charging feature? I couldn't find it in settings
+19:12:56 <LinusSexTips[m]> <graphiteos[m] "Is it expected that apps arent c"> You will need to reinstall non-system apps
+19:13:27 <graphiteos[m]> but after I do so they share updates? This seems weird
+19:19:00 <textmate> Im installing GrapheneOS on a Pixel 4a. Want to recommend people that it says on the docs that you need internet, it did not work until I restarted it after having connected to internet first.
+19:20:09 <textmate> maybe someone can add this to the docs?
+19:20:34 <nscnt> textmate: Internet for what?
+19:22:30 <nscnt> You need internet access to enable the Developer options. That's it and that's written in the guide
+19:25:13 <textmate> nscnt:read my message again pls
+19:25:31 <textmate> And youre also wrong, although I think I know what you meant.
+19:27:27 <nscnt> I've read your message over and over. Seems like I still don't understand what you meant. Could you rephrase it?
+19:28:20 <nscnt> You don't need to restart or anything. There's nothing to add to the docs
+19:29:34 <nscnt> And yeah, I meant to enable OEM unlocking
+19:31:45 <textmate> nscnt:Yes
+19:32:12 <textmate> When I attempted to OEM unlock, it didnt work and it was obviously becuase I hadnt connected to internet before, so I did
+19:32:26 <textmate> However, it was still grayed out until I restarted the device.
+19:32:32 <textmate> Thats all im saying
+19:32:50 <textmate> You need to restart the device after connecting to internet for it to become an available option.
+19:33:18 <nscnt> Would be the first time for me hearing that after all this time
+19:33:38 <textmate> Well atleast that was my experience, on a Pixel 4a
+19:35:35 <textmate> haha I guess I managed to brick it
+19:36:12 <nscnt> textmate: It's hard to brick
+19:36:17 <nscnt> What's wrong?
+19:39:36 <textmate> oh
+19:39:43 <textmate> well I didnt brick it but sum ting wong for sure
+19:39:55 <textmate> Im using Qubes and also a shitty cable
+19:40:11 <textmate> Im going to set up Tails on another machine where there is native USB-C and I can use the original cable
+19:44:02 <textmate> What could have been a contributing factor was that after each step when it reboots I have to reattach it
+19:46:33 <nscnt> Not sure. You're both using a not officially supported operating system and a (as stated by yourself) a bad cable
+19:46:53 <nscnt> There are many variables
+19:47:24 <textmate> nscnt:Technically I am
+19:47:32 <textmate> I used a Debian Buster TemplateVM
+19:48:08 <nscnt> I don't have practical experience with QubesOS myself, but I think that's not the same at all
+19:49:30 <nscnt> as running Debian natively
+19:50:32 <nscnt> Trying to flash from a VM isn't recommended as well. Doesn't matter what the host is
+19:54:45 <textmate> It is, just that I need to essentially attach the USB device to the specific VM
+19:58:48 <textmate> Im doing it natively now from Tails. Don't worry about it.
+20:04:32 <nscnt> That's also not officially supported so don't be surprised if it won't work, but you should know as you've read the guide
+20:07:03 <simpletech[m]> <nscnt "I don't have practical experienc"> File transfer is a mess (e.g. where do you store your keepassxc-database? It's harder than you might think) but besides that and maybe PGP-keys (and there is a tutorial for splited gpg-keys) there isn't much difference. Oh, and maybe ssh :D
+20:07:24 <simpletech[m]> sorry, off topic :))
+20:07:50 <simpletech[m]> > <@freenode_nscnt:matrix.org> I don't have practical experience with QubesOS myself, but I think that's not the same at all
+20:07:50 <simpletech[m]>  * <del>File transfer is a mess (e.g. where do you store your keepassxc-database? It's harder than you might think) but besides that and maybe PGP-keys (and there is a tutorial for splited gpg-keys) there isn't much difference. Oh, and maybe ssh :D</del>
+20:26:58 <Spartan117> Hallo
+20:27:22 <Spartan117> What VPNs do you guys reccomend
+20:28:07 <eu> protonvpn
+20:29:14 <dar_gomml[m]> offtopic
+20:31:42 <Spartan127> Hallo, what's are the best VPNs to use with GOS
+20:35:19 <fll[m]> Spartan127: first off all: that question is something for grapheme off topic channel. Secondly, there's no such thing as "best VPN". Totally depends on why you need a VPN.
+20:47:00 <textmate> btw
+20:47:15 <textmate> is it not possible to remove the "You are loading a custom OS" warning at boot?
+20:47:42 <nscnt> textmate: No, it's not possible
+20:47:58 <textmate> nscnt:what about the google logo
+20:48:12 <nscnt> Same thing
+20:50:30 <textmate> I know on some Samsung devices this is possible
+20:50:50 <nscnt> Not here
+20:52:41 <nscnt> It's a hardware thing and can't be changed
+20:55:11 <nscnt> The warning is part of the bootloader security and expected
+20:55:24 <textmate> ok
+21:30:03 <Alex16847> Hallo
+21:30:10 <Alex16847> Recommended VPN apps?
+21:34:35 <dar_gomml[m]> > Spartan127: first off all: that question is something for grapheme off topic channel. Secondly, there's no such thing as "best VPN". Totally depends on why you need a VPN.
+21:34:36 <dar_gomml[m]> ..
+21:42:33 <diotitus> Hello
+21:45:11 <diotitus> Hi. I just wanted inquire on if GrapheneOS had support for a custom hosts file to block certain domains via a method such as Adb root. Thanks.
+21:45:51 <sb13x[m]> Alex16847: https://grapheneos.org/faq#vpn-support
+21:48:22 <strcat[m]> diotitus: hosts file really isn't a reasonable way to do ad-blocking, libc scans it line by line for every DNS request and it's part of the system image
+21:48:39 <strcat[m]> it's not meant to have more than a couple entries to set up localhost
+21:48:46 <strcat[m]> it shouldn't really exist at all anymore
+21:56:13 <diotitus> Alright thank you.
+22:00:56 <strcat[m]> https://grapheneos.org/faq#ad-blocking
+22:36:16 <Baobab> The best way to ad block is not visit websites that give you ads (^_^)
+22:37:06 <Baobab> The best way to ad block is not to visit the websites that give you ads in the first place (^_^)
+22:37:33 <strcat[m]> https://grapheneos.org/faq#ad-blocking says how to do system wide ad-blocking
+22:37:36 <strcat[m]> doesn't require any horrible hacks
+23:27:26 <anupritaisno1[m]> Guys a lot of misinformation is being spread about graphene. Please pm me if you would like to help us against it
+23:40:33 <textmate> uhhhh
+23:40:34 <textmate> guys
+23:40:37 <textmate> I might be fucking retarded
+23:40:47 <textmate> I accidentally set a PIN
+23:40:50 <textmate> and I dont remember it
+23:41:00 <textmate> is it even possible to reset it or did I just brick my phone?
+23:41:07 <textmate> can I like reset it?
+23:45:47 <louipc> textmate: can't you boot into bootloader and reset?
+23:46:36 <encryptocat> Hi everyone, i have a pixel 4 and i am using 2 profiles, onlt every time i switch from the second to the main , it takes about 1 minute before i can enter it, background stays black etc , anyone knows why this happen?
+23:48:40 <textmate> louipc: most likely
+23:48:48 <textmate> I will try to.
+23:49:06 <louipc> kewl
+23:49:16 <encryptocat> From main to second always goes smoothly, only the other way around not
+23:49:29 <louipc> it will wipe your data btw
+23:51:38 <textmate> louipc:From what I see I cant enter the recovery mode
+23:52:17 <textmate> All I do is get to the "No command" screen
+23:53:06 <louipc> oh try it with usb plugged in
+23:53:21 <textmate> ok
+23:53:38 <encryptocat> Textmate
+23:53:59 <encryptocat> Pres and hold power button, then once press volume up in no command screen
+23:54:35 <louipc> oh yea
+23:55:01 <textmate> ah I see
+23:55:11 <textmate> let me try
+23:55:19 <textmate> works
+23:55:39 <textmate> lol
+23:55:41 <textmate> im so stupid
+23:55:52 <textmate> good thing I didnt have anything set up on there yet
+23:56:07 <encryptocat> You ll be fine now, good luck
+23:56:24 <textmate> ok
+23:56:43 <louipc> hey a pin is not that hard to crack i guess anyway
+23:56:58 <louipc> last resort

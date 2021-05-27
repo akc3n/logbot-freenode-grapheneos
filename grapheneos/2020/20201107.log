@@ -1,0 +1,429 @@
+00:06:53 <strcat[m]> working on the extended support release for Pixel 2
+00:07:23 <strcat[m]> main thing that has to be done is disabling the BUILD_ID sanity check for the build and lowering the patch level to 2020-11-01 since the firmware, etc. for the full patch level is unavailable
+00:07:33 <strcat[m]> not quite sure how it should be organized
+00:07:48 <strcat[m]> easy to build it but in terms of branches / tags, etc.
+00:11:39 <madaidan[m]> <strcat[m] "working on the extended support "> Is that a new GrapheneOS-specific thing? It sounds awesome.
+00:12:10 <strcat[m]> yes
+00:16:49 <strcat[m]> madaidan.: it just means having separate branches / tags for obsolete devices to help people transition to modern secure ones like the Pixel 4a
+00:17:05 <strcat[m]> just providing some extra best effort updates past EOL
+00:17:08 <strcat[m]> it won't make sense for long
+00:17:34 <strcat[m]> there is supposed to be a final update in December so it makes sense to do a 2020-11-01 release (can't do 2020-11-05 - don't have updates for firmware, etc. available)
+00:17:52 <strcat[m]> ideally, if they get the full December update, we can do another release for them with the other devices - remains to be seen
+00:18:09 <strcat[m]> and then maybe do 2021-01-01 and call it there since it'd be the last possible security patch level
+00:18:33 <strcat[m]> remains to be seen what gets released in December
+00:18:51 <strcat[m]> I don't remember exactly how that went for the Pixel 1
+00:19:00 <strcat[m]> we didn't know it was going to happen for the Pixel 1
+00:19:09 <strcat[m]> can't recall patch level etc
+00:21:16 <madaidan[m]> Can't you backport various critical security fixes / hardening in the long term? I know it's not going to be very secure but it'll be "less atrocious" for those that can't afford a newer device.
+00:21:45 <strcat[m]> madaidan.: we could continue applying AOSP security patches but the patch level would be stuck at the final available vendor support
+00:22:13 <strcat[m]> and someone would have to do maintenance of the kernel and make a best effort attempt at fixing things in the userspace device support code
+00:22:17 <strcat[m]> which wouldn't be maintained
+00:22:31 <strcat[m]> madaidan.: I think it'd give a false sense of security
+00:23:11 <strcat[m]> keep in mind Pixel 2 and 2 XL don't have a maintainer, I just pick up all that slack myself
+00:23:29 <strcat[m]> now they don't have anyone supporting their device support code including firmware, libraries, kernel, etc.
+00:23:43 <JTL> I know Lineage (yes yes) has seperate "AOSP" and "vendor" patch levels listed for this sort of use case, but unfortunatly with all things Lineage it's not consistently used as intended
+00:23:44 <strcat[m]> November has firmware and vendor security updates they need
+00:24:11 <strcat[m]> JTL: well, they're just using them wrong
+00:24:21 <strcat[m]> there are boot, vendor and overall patch level
+00:24:23 <strcat[m]> in AOSP
+00:24:27 <JTL> Not surprising
+00:24:36 <strcat[m]> the overall patch level is supposed to be 2020-11-01 if you don't have 2020-11-05 patches
+00:24:44 <JTL> Knew that
+00:25:04 <strcat[m]> also 2020-12-01 implies having all previous patch levels including 2020-11-05
+00:25:28 <strcat[m]> so once it's EOL you can go from 2020-10-05 (last update) -> 2020-11-01
+00:25:37 <strcat[m]> but then it is stuck there without getting the other patches
+00:25:46 <strcat[m]> you can keep applying AOSP security patches completely - doesn't increase the actual patch level
+00:26:01 <strcat[m]> unless you set it to an incorrect value, and I think that only serves to mislead people
+00:26:26 <strcat[m]> the whole point of patch level is supposed to be  that it implies having all of these security fixes in a simple way
+00:26:51 <strcat[m]> JTL: basically only sensible way to use separate boot, system, vendor patch levels would be if you displayed the MINIMUM of all 3
+00:27:00 <strcat[m]> as the main patch level
+00:27:03 <JTL> I can agree with that
+00:27:10 <JTL> hence my latter disclaimer
+00:27:32 <strcat[m]> JTL: if you want to display final grained values, that shouldn't impact the main well-defined one
+00:27:36 <strcat[m]> because that just serves to mislead
+00:27:39 <JTL> Agrede
+00:27:53 <strcat[m]> for example add an AOSP patch level field but don't misuse the well defined Android patch level
+00:28:01 <strcat[m]>  * for example add an CustomOS patch level field but don't misuse the well defined Android patch level
+00:28:35 <strcat[m]> I don't see it as any different if a vendor like Samsung misled people with it
+00:28:55 <strcat[m]> I don't see why there should be lower standards of honesty about security for an aftermarket OS
+00:29:08 <strcat[m]> if you don't have the patch level, don't claim to have it, simple
+00:29:13 <strcat[m]> let people know they are insecure, don't mislead them
+00:37:37 <louipc> yes
+00:49:23 <madaidan[m]> I am insecure
+00:50:23 <louipc> same
+00:57:30 <madaidan[m]> The real reason I use GrapheneOS is to mask my insecurities :(
+01:02:40 <aeonsolution[m]> <madaidan[m] "The real reason I use GrapheneOS"> lol where's the plug after this, you missed a perfect opportunity
+01:03:44 <aeonsolution[m]> https://madaidans-insecurities.github.io/ for those wondering what i mean
+01:14:13 <louipc> that uri bugs me for some reason
+01:15:30 <madaidan[m]> <aeonsolution[m] "lol where's the plug after this,"> I'll preserve the little dignity I have left
+01:34:11 <Erraverunt> Is the removal of needing to put screenlock open method during boot grapheneos feature or newest android versions remove it?
+01:36:48 <strcat> Erraverunt: encryption has been per-profile for quite a while, if that's what you mean
+01:37:15 <strcat> Erraverunt: it was never needed to boot the OS - the OS always asked for it
+01:37:24 <strcat> not firmware
+01:38:01 <strcat> but yes, there was a global password at boot based on the owner profile's lock method instead of per-profile encryption keys based on each profile's lock method
+01:39:04 <strcat> all data and metadata is encrypted with the current implementation in AOSP, with each profile having a separate encryption key based on the lock method, and it's possible for profiles to be logged out which wipes the key from memory / hardware (like a reboot would)
+01:39:37 <strcat> data can be explicitly stored as device encrypted data instead of protected by a profile
+01:39:49 <strcat> but that's rare, and only has a few use cases
+01:40:38 <strcat> for example before, accessibility services used to need to disable credential-based encryption in order to be available as soon as the device starts, and that's no longer a thing, instead they can explicitly use device encrypted data and implement Direct Boot aware services
+01:41:16 <strcat> our Updater app uses it so that it can run before unlocking (so you can update your device over-the-air without decrypting your profile data)
+01:42:19 <strcat> Erraverunt: this is done via ext4 / f2fs filesystem encryption which support setting up per-directory keys (technically each file gets their own key, but it's basically an implementation detail)
+01:42:58 <strcat> Erraverunt: so all data and filenames for the data stored in profiles (ce - credential encrypted data) is protected by a key specific to that profile, based on the lock method
+01:43:12 <strcat> you can make multiple profiles and those are not decrypted until you log into them
+01:43:14 <strcat> and you can log them out
+01:43:21 <strcat> which gets rid of the key again
+01:45:52 <strcat> the OS always booted up before you entered a passphrase though - never not the case, it's the OS that asked for it and you could even make emergency calls before you did that (required by law to be supported)
+01:45:59 <Erraverunt> Complete noob in android things, but once again thanks for your great answer. I might learn something =)
+01:46:17 <strcat> it's just that before, there was a single dm-crypt key for userdata
+01:47:14 <strcat> now, there's a device encryption key for data outside profiles, and each profile has a key based on their lock method for the data in them (everything in them except for data *explicitly* move to device encrypted storage by an app with direct boot support)
+01:47:48 <strcat> userdata is entirely encrypted either way
+01:48:44 <strcat> Erraverunt: it'd be entirely possible to use filesystem-based encryption with a single passphrase on boot, encrypting everything (all data, filenames and metadata) with that one key, it's just not how it's used
+01:49:24 <strcat> we're capable of using it in a finer-grained way, etc
+01:49:38 <strcat> need to be careful to only do things where we can maintain backwards compatibility with our filesystem format though
+01:51:33 <strcat> we made a change to the format early on when reviving the project, before we had any stable release again, and we ended up not being able to maintain compatibility for the few users who were on that (they didn't lose any data, but they had to backup + accept wipe + restore - rejecting it would just roll back the upgrade)
+01:52:18 <strcat> we changed filename padding from 4 / 16 bytes to 32 bytes (max) before our first beta or stable release for the revived project
+01:52:42 <strcat> and in Android 11, it was too complicated to figure out how to continue supporting the old format
+01:53:00 <strcat> it would probably be easier if we did something like that now because the filesystem encryption format is now versioned in AOSP
+01:53:09 <strcat> but still, I'd be really hesistant to change it
+03:08:26 <ludicrous_speed[> Just received a push update, is that the clock fix?
+03:18:49 <TheJollyRoger> I think so. I'm going to test it.
+03:22:05 <TheJollyRoger> Alarm set for two hours from now.
+03:48:30 <strcat[m]> ludicrous_speed: it was released a few hours ago, yeah
+03:48:39 <strcat[m]> https://grapheneos.org/releases#2020.11.05.18
+03:48:45 <strcat[m]> https://grapheneos.org/releases#stable-channel
+03:56:57 <ludicrous_speed[> Great! Thank you much.
+04:11:47 <TheJollyRoger> Yarr, thank ye strcat[m]. I be running the test now.
+04:15:21 <strcat[m]> btw, since I really need some comedy relief atm
+04:15:30 * strcat[m] uploaded an image: coppperhead.png (24KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/BUREoqwxPmowWxowxyFEPQcf/coppperhead.png >
+04:15:36 * strcat[m] uploaded an image: clip.png (49KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/EzSKlpsKNboXwDMzBlgJMPMo/clip.png >
+04:16:29 <louipc> lol
+04:17:10 <TheJollyRoger> Ha!
+04:24:51 <strcat[m]> Very Serious Company using a lawyer based out of a WeWork office
+04:26:52 <louipc> isn't copperhead itself based out of a officeshare?
+04:27:06 <strcat[m]> no clue
+04:29:03 <strcat[m]> don't know how well darknet jimmy's grifting is really going for him these days
+04:29:21 <strcat[m]> he was always convinced he was weeks away from riches
+04:47:04 <timeistruevalue[> Copperhead does it for the money, graphene does it for the cause.
+04:47:36 <TheJollyRoger> Arr!
+04:48:23 <aeonsolution[m]> TheJollyRoger: welcome back matey!
+04:48:26 <aeonsolution[m]> its been to long
+04:48:31 <TheJollyRoger> Yarr, good to see ye, shipmate!
+04:48:44 <louipc> hmm looks like a ups postbox
+04:52:17 <strcat[m]> timeistruevalue: GrapheneOS does it, Copperhead rips it off and sells it as their own work
+04:52:32 <strcat[m]> sorry I mean Coppperhead
+05:22:46 <TheJollyRoger> Works.
+05:25:28 <ludicrous_speed[> Guys, what the best terminal emulator for phone?
+05:25:58 <ludicrous_speed[> TheJollyRoger: sweet!
+05:33:07 <TheJollyRoger> strcat[m]: test results for Pixel 3: https://gist.githubusercontent.com/Peter-Easton/fdda2ef4afc82f6ece1a529b8efaa073/raw/605fc3cc2ab0f91ce19a1c6dd0680679c63faa61/pixel3-alarmclocktest-part4
+05:37:47 <ludicrous_speed[> TheJollyRoger: damn jolly, that is thorough, lol
+05:39:19 <TheJollyRoger> Heh heh, well... I sometimes find that it's easier if I over write, and list everything exhaustively on the exact steps, then to go over "wait you did this, in this order? No, do that..." later :P.
+05:42:27 <TheJollyRoger> Ah, crud, to answer your question about terminal emulators, I'm actually not sure. I did try Termux at one point but I've been searching for an alternative for reasons.
+05:43:04 <ludicrous_speed[> Yeah just installed termux
+05:43:32 <ludicrous_speed[> Gonna try and install monero daemon
+05:52:00 <anupritaisno1[m]> Mining on phones
+05:52:01 <anupritaisno1[m]> Interesting
+05:52:12 <anupritaisno1[m]> There might be advantages to that
+05:53:50 <dar_gomml[m]> > There might be advantages to that
+05:53:50 <dar_gomml[m]> which might be?
+05:54:04 <TheJollyRoger> You will be paying for it with your phone's battery though.
+05:57:27 <ludicrous_speed[> Not gonna mine, just served out the monero block chain
+05:57:37 <TheJollyRoger> Ah, whew.
+05:57:58 <ludicrous_speed[> ...and hook into it with monero wallet
+05:58:08 <TheJollyRoger> I unfortunately don't know much of anything about cryptocurrencies though, so, gonna have to defer to someone who does :P.
+05:58:39 <sirukin> Howdy, just installed grapheneos on my pixel 3a
+05:58:42 <TheJollyRoger> Ahoy!
+05:58:46 <TheJollyRoger> Yarr, welcome aboard the ship!
+05:58:53 <ludicrous_speed[> I know lots, just haven't run a full node on android yet
+05:59:22 <ludicrous_speed[> sirukin: how you like it
+05:59:32 <sirukin> Kinda bare tbh
+05:59:36 <sirukin> But that'll be fixed soon
+05:59:57 <ludicrous_speed[> Yeah, just add your apps
+06:00:03 <ludicrous_speed[> Best way
+06:03:04 <TheJollyRoger> Yeah, at the moment a first-party app store is on the roadmap; help from the community will be required to make that happen though. In interim other app stores will run, or sourcing APKs if you have a trustworthy source for them and don't mind keeping them updated yourself.
+06:03:20 <sirukin> Is there a way to get rid of the "Your phone is booting a diff device" message at boot?
+06:03:40 <anupritaisno1[m]> [sirukin](https://matrix.to/#/@freenode_sirukin:matrix.org) no
+06:03:43 <TheJollyRoger> No, there isn't, that's a part of the bootloader.
+06:04:28 <sirukin> Affirm
+06:04:50 <sirukin> What about the google splash image before the grapheneos logo?
+06:05:14 <ludicrous_speed[> Does anybody know if there is any telemetry before grapheneos loads up?
+06:05:17 <TheJollyRoger> Sadly, we can't change that either, that's also a part of the bootloader.
+06:06:31 <sirukin> Wll that's pretty uncool. Though I had paid for this phone so I could do whatever I wanted with it
+06:06:50 <sirukin> Installing F-Droid now.
+06:07:56 <ludicrous_speed[> Need custom hardware to modify bootloader I think
+06:08:05 <TheJollyRoger> sirukin: the late-stage qualcomm bootloader is open source, but it is signed and it is verified. Google does pay extra to Qualcomm to allow us to rekey the bootloader, this is why we see that warning, it's to let you know the bootloader has been rekeyed to a key that google doesn't own, but if it's yellow, then that lets you know that it is verifying to that key.
+06:08:29 <TheJollyRoger> It's only if that screen turns orange do you need to start to worry.
+06:09:29 <ludicrous_speed[> Yellow means good
+06:09:33 <TheJollyRoger> Yes, we'd need to negotiate with Qualcomm. The OEM's keys (or key hash? can't recall which) are actually burned into the chip permanently with e-Fuses.
+06:09:41 <ludicrous_speed[> Just like my urine
+06:09:51 <TheJollyRoger> Hahahaha JARATE!
+06:10:33 <TheJollyRoger> So once those fuses are set we can't un-set them.
+06:11:15 <ludicrous_speed[> Once fuses are blown, that's it.
+06:11:23 <TheJollyRoger> Yeah.
+06:11:45 <sirukin> A Linux phone might be the way to go then
+06:11:51 <ludicrous_speed[> Source: I used to work with semiconductors
+06:12:38 <anupritaisno1[m]> [sirukin](https://matrix.to/#/@freenode_sirukin:matrix.org) no
+06:12:38 <sirukin> I setup my fingerprint to unlock, but can I combine with the pin?
+06:12:45 <sirukin> Or unlock pattern
+06:12:51 <ludicrous_speed[> My dream phone is open hardware phone running linux
+06:13:08 <sirukin> We're getting to the point where it might be possible
+06:13:24 <TheJollyRoger> Linux phones are unfortunately a dead end; the unfortunate thing about them so far is that so far all they're doing is just hiding the firmware in EEPROM, then loading them outside of the host.
+06:13:38 <sirukin> That's because we want native "phone" support
+06:13:43 <anupritaisno1[m]> <TheJollyRoger "Yes, we'd need to negotiate with"> No
+06:13:45 <TheJollyRoger> So this gives you only the *illusion* that your phone is not using firmware, but really, it's just that it's now hidden from the host.
+06:13:55 <TheJollyRoger> Hey anupritaisno1[m], yeah?
+06:14:20 <sirukin> Seperate the "phone" which just needs wifi from the cellular modem
+06:14:30 <TheJollyRoger> ludicrous_speed[: at one point for April Fools, I made a "RaptorPhone" which was just that, by plugging a 4G rocketstick into my Talos.
+06:14:40 <sirukin> Preferably with a physical power switch for the cellular modem
+06:15:06 <TheJollyRoger> sirukin: I've got an article for you and I can sum it up briefly. Give me a moment and I'll retrieve it.
+06:15:49 <sirukin> The mitm spoofing capabilities and the general lack of security for cell networks is why you shouldn't trust anything cellular
+06:16:01 <TheJollyRoger> https://madaidans-insecurities.github.io/linux-phones.html The long story short, physical switches aren't much more than a marketing frill. By the time you're assuming that the phone is compromised to the point where it needs components excised, you've lost.
+06:16:50 <TheJollyRoger> "Desktop Linux" phones are a major step backwards for security in this respect; the lack of sandboxing and reliance on the old desktop "all or nothing" model is several giant steps backward.
+06:16:52 <sirukin> Combine an rtl-sdr chipset, and a cellular modem as a portable AP for serving wifi that the phone then uses for calls, messaging, internet access.
+06:17:23 <sirukin> And with an rtl-sdr you could detect IMSI catchers in action
+06:17:44 <TheJollyRoger> Secondly, yes, while the cellular network is security agnostic, this is why you use instant messaging applications that offer strong authenticated encryption, rather than trusting the network.
+06:18:14 <sirukin> Which is pointless if the baseband hardware is tied to the OS
+06:18:51 <TheJollyRoger> Modern phones like the Pixel 3 separate the modem from the host memory via IOMMU -- system memory management has been a thing on ARM since roughly 2011.
+06:19:05 <sirukin> Interesting
+06:19:18 <TheJollyRoger> Secondly, just because the software defined radio is on a different chip doesn't mean it's isolated.
+06:19:30 <anupritaisno1[m]> <ludicrous_speed[ "My dream phone is open hardware "> Linux phones are really not recommended
+06:19:46 <anupritaisno1[m]> <TheJollyRoger "Secondly, just because the softw"> Ya might as well paste the link by now
+06:19:59 <anupritaisno1[m]> Also ignore that no, element is buggy
+06:20:00 <Remu[m]> I think it's about time to have a new free and open source OS to replace Linux
+06:20:05 <Remu[m]> And kernel too
+06:20:57 <anupritaisno1[m]> [TheJollyRoger](https://matrix.to/#/@freenode_TheJollyRoger:matrix.org) you're sure the firmware is in EEPROM?
+06:21:19 <anupritaisno1[m]> It might be upgradable
+06:21:42 <ludicrous_speed[> Isn't purism make a Linux phone
+06:21:42 <ludicrous_speed[> And some other company
+06:21:46 <sirukin> I think what we need is a seperation of the device that you hold in your hand from your cell service.
+06:22:40 <TheJollyRoger> A lot of older phones, such as virtually all phones supported by Replicant, relied on the USB interface for modem isolation, which... heh. Not a great way to go, given the horrors of USB being security agnostic itself.
+06:22:40 <TheJollyRoger> sirukin: yep, it's interesting. A lot of these concerns you're raising honestly, are old myths that refuse to die in the Privacy circles because many types which I call TPUs (Toxic Power Users) keep repeating them.
+06:22:40 <TheJollyRoger> Partially because they feel good to pass on.
+06:22:40 <TheJollyRoger> (Hey, punching down is psychologically rewarding, I get it.)
+06:22:40 <TheJollyRoger> anupritaisno1[m]: hey is Element not showing links now or something?
+06:23:02 <Remu[m]> The day where SIM, Linux kernel, and email is depreciated is a pleasant day of improving standards
+06:23:10 <sirukin> There's nothing like an on/off switch for disabling anything from happening in software
+06:23:26 <sirukin> no power = no processing
+06:23:28 <Remu[m]> Maybe Linux would still exist as a compatibility layer
+06:23:32 <ludicrous_speed[> I see links
+06:23:56 <TheJollyRoger> sirukin: the baseband in modern phones only sees an In-Out Memory Management Unit. The driver in the kernel tells the kernel what areas of memory that the baseband explicitly allows it to.
+06:24:39 <sirukin> Can it be used to introduce code to be executed?
+06:25:11 <TheJollyRoger> So, no, it's not like the baseband is "a backdoor processor" that "allows full control over the host." If we were talking 2014, this might have been the case, but that was years ago.
+06:25:19 <anupritaisno1[m]> [TheJollyRoger](https://matrix.to/#/@freenode_TheJollyRoger:matrix.org) you ever hear of external GPUs?
+06:26:01 <TheJollyRoger> anupritaisno1[m]: well I've heard some bits and pieces about what rendering farms do.
+06:26:24 <TheJollyRoger> I figured that those distributed rendering systems almost might be kind of like a GPU.
+06:26:30 <anupritaisno1[m]> The way they actually connect allows DMA [TheJollyRoger](https://matrix.to/#/@freenode_TheJollyRoger:matrix.org)
+06:26:37 <ludicrous_speed[> Nah, ext GPU is exactly that
+06:27:01 <TheJollyRoger> Huh, makes sense and makes sense.
+06:28:32 <anupritaisno1[m]> [TheJollyRoger](https://matrix.to/#/@freenode_TheJollyRoger:matrix.org) so basically that protocol can be abused
+06:28:34 <TheJollyRoger> anupritaisno1[m]: whoops sorry just saw your response now. For the Librem 5, they're actually doing some weird hinky insane design involving putting the firmware in write protected SPI flash memory (my mistake, not EEPROM) and loading it by a second processor to hide it from the host. Absolutely retarded design, since now they've placed firmware initialization outside of host control.
+06:28:56 <anupritaisno1[m]> There's off the shelf devices
+06:29:08 <anupritaisno1[m]> That can read all the memory of the host
+06:31:24 <TheJollyRoger> I remember sometime ago I discussed with someone on IRC about connecting to someone's displayport adapter and dumping host memory but... that's what we've got IOMMU for, right? To constrain Direct Memory Access and prevent a malicious device from simply dumping host memory by virtualizing DMA?
+06:32:53 <anupritaisno1[m]> Yes but there's other mitigations
+06:33:02 <TheJollyRoger> Makes sense.
+06:33:14 <anupritaisno1[m]> You can set DMA devices to user authorization
+06:35:16 <TheJollyRoger> Hey, cool, I didn't know that.
+06:38:13 <anupritaisno1[m]> Or just get a motherboard with no external DMA ports
+06:38:45 <dan-v[m]> what's up TheJollyRoger. seems like i haven't seen your name scroll by here recently
+06:40:32 <anupritaisno1[m]> <TheJollyRoger "anupritaisno1: whoops sorry just"> Yeah because EEPROM should be erasable and reprogrammable
+06:57:04 <r0tt0r[m]> hi all, is there anywhere a changelog about new updates?recieved one today and would like to know what changed/was maybe added
+06:57:37 <JTL> dan-v[m]: Nice to see you too
+06:59:58 <dan-v[m]> <JTL "dan-v: Nice to see you too"> you as well!
+07:04:37 <strcat[m]> r0tt0r: https://grapheneos.org/releases#changelog
+07:08:58 <sirukin> Cool cool, liking it so far. Installed the latest from the 5th
+07:09:54 <TheJollyRoger> dan-v[m]!! Ahoy! \o/
+07:10:17 <TheJollyRoger> Not much, life got in the way for a bit but I'm back!
+07:12:40 <Remu[m]> Having problems recently on building Chromium/Vanadium
+07:12:40 <Remu[m]> `jinja2.Exception: Template not found $somefile.here`
+07:16:19 <CarpeDiem[m]> test
+07:17:58 <r0tt0r[m]> <strcat[m] "r0tt0r: https://grapheneos.org/r"> thx
+07:55:08 <strcat[m]> starting to push out Pixel 2 extended support release
+07:55:12 <strcat[m]> for Pixel 2 XL (beta channel) first
+07:55:43 <strcat[m]> it's just the last officially supported release but set to have 2020-11-01 patch level
+07:56:07 <strcat[m]> https://github.com/GrapheneOS/platform_build/tree/11-wahoo
+08:10:16 <Remu[m]> Having problems recently on building Chromium/Vanadium
+08:10:16 <Remu[m]> `jinja2.Exception.Template ot found $somefile.here`
+08:10:32 <Remu[m]>  * Having problems recently on building Chromium/Vanadium
+08:10:33 <Remu[m]> `jinja2.Exception.TemplateNot found $somefile.here`
+08:11:03 <Remu[m]>  * Having problems recently on building Chromium/Vanadium
+08:11:03 <Remu[m]> `jinja2.Exception.TemplateNotFound: webgpu.h`
+08:14:56 <strcat[m]> Remu: make sure to run hooks with gclient
+08:15:05 <strcat[m]> gclient sync -D --with_branch_heads -r 86.0.4240.185 --jobs 32
+08:15:19 <strcat[m]> don't use git alone without gclient
+08:15:28 <strcat[m]> need gclient to update the equivalent to submodules
+08:15:45 <strcat[m]> and it runs post-checkout hooks
+08:19:34 <Remu[m]> Will do, though I find it weird that I already did it before, and by changing the OS from Ubuntu to another flavor of Ubuntu breaks thos
+08:19:55 <Remu[m]> Should I stick on GNOME Ubuntu?
+10:09:16 <eglssm[m]> I am glad to see that the OP of the reddit posts is getting his ass kicked
+10:11:22 * eglssm[m] uploaded an image: Screenshot_20201107_111058.jpg (93KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/vdIKIrCbkmXfKWIPZgLHBtzP/Screenshot_20201107_111058.jpg >
+10:12:06 <eglssm[m]> I am just sorry Daniel has to spend so much energy on this crap
+10:12:22 <mrxx_0[m]> eglssm: OP isn't getting his ass kicked
+10:12:56 <eglssm[m]> I read all the comments, it looks to me
+10:13:49 <mrxx_0[m]> The post is for a reason, to let people know the situation and that Copperhead is trying to destroy GrapheneOS
+10:14:43 <mrxx_0[m]> And we can clearly see that in the comment, people are trying to make false claims etc
+10:14:44 <eglssm[m]> Well the post is ok, but the discussion with Daniel, let's call unfortunate so say the least
+10:15:30 <mrxx_0[m]> OP has nothing to do with that, Daniel answers to the false claims but in the other end a lot of people understand the situation and support Graphene and Daniel
+10:15:50 <mrxx_0[m]> And they are a lot of messages deleted
+10:15:53 <mrxx_0[m]> By the mods
+10:16:18 <mrxx_0[m]> Because misinformation and false claims
+10:16:23 <eglssm[m]> Agree, I meant unfortunate from the OP's side
+10:17:53 <eglssm[m]> I read them all before they were deleted, in my opinion he tried to appear as impartial.. But then just saying that Daniel had a tantrum when he was trying to correct his information in the matter
+10:18:45 <eglssm[m]> Among other thing is what I called unfortunate
+10:19:56 <eglssm[m]> In any case if most of his comments are deleted by the mods, that is what I called getting you ass kicked haha, figuratively
+10:23:44 <nscnt> Reading the thread is really nerve-racking ._.
+10:26:13 <nscnt> You're just a guy working on a project because you're very passionated about the matter (no profit whatever, you name it) and then you have to deal with this shit
+10:28:35 <mrxx_0[m]> Many people would have already give up
+10:29:24 <mrxx_0[m]> Daniel didn't, so we can at least support him and the project
+10:29:51 <mrxx_0[m]> You don't need to code, just answer to the false claims you can find about Daniel or GrapheneOS
+10:30:26 <mrxx_0[m]> Everybody can do that
+13:41:21 <somenerd[m]> yeah it is tiring for someone
+13:41:33 <somenerd[m]> to have these sorts of things happen
+13:51:31 <vinterneti[m]> Do developers consider solution to prevent SensorID fingerprint attack on OS level? Because Pixels are valnurable and it is the only option GrapheneOS users have.  https://sensorid.cl.cam.ac.uk/
+13:58:29 <dazinism> vinterneti: with GrapheneOS you can deny sensor permission to apps(including browsers), which blocks that data being sent
+13:59:37 <dazinism> Does put you in a small pool of folks who'd return such results.
+14:05:49 <dazinism> But its not just GrapheneOS users. Also folks with broken sensors, people who use developer options to block sensors, any browsers that block connection. Also people using other more hacky ways to block
+14:23:25 <signalarch[m]> If I'm using airplane mode (with WiFi on) and reboot and/or update, is there any chance airplane could turn off in the update process, even just for a bit?
+15:16:05 <CarpeDiem[m]> <signalarch[m] "If I'm using airplane mode (with"> I couldn't replicate this issue trying restarts / hard rebooting so I don't think so
+15:17:52 <CarpeDiem[m]> The update procedure is very narrow and doesn't interfere with the bands unless there where to be a specific update with the airplane mode or something I'm pretty sure
+15:18:59 <Remu[m]> <dazinism "vinterneti: with GrapheneOS you "> But fingerprint does not count there right?
+15:19:26 <Remu[m]> Using keepassdx permissionless, yet it can perfectly detect fingerprint
+15:20:21 <Remu[m]> Oh wait, it was not that "fingerprint"
+15:21:02 <purefallen[m]> From what i understand the attack´s "fingerprint" actually means an unique identifier that can be created by the offset of several sensors
+15:21:06 <Remu[m]> So yeah, deny every single app possible with sensor permission
+15:21:27 <Remu[m]> Even system apps just in case
+15:22:37 <toxicfrog[m]> I installed GrapheneOS on a Pixel 3A yesterday. Downloaded the Aurora Store app but it wont let me login either anonymously or with Google account. Any ideas?
+15:23:08 <Remu[m]> <toxicfrog[m] "I installed GrapheneOS on a Pixe"> Aurora Store broken, provided Network permission is granted
+15:24:16 <Remu[m]> <dazinism "Does put you in a small pool of "> I think the "small pool" is better than even more unique sensor daga
+15:24:24 <Remu[m]> data*
+15:25:33 <toxicfrog[m]> <Remu[m] "Aurora Store broken, provided Ne"> Not sure what you mean, if I deny permission will it work?? Im new to Android by the way
+15:26:10 <Remu[m]> <toxicfrog[m] "Not sure what you mean, if I den"> Oh, I mean the Aurora Store is broken if it does not work and network permission is granted
+15:26:31 <anupritaisno1[m]> <Remu[m] "Even system apps just in case"> No
+15:26:34 <Remu[m]> Otherwise, if the network permission is denied, it's not working because you denied it
+15:26:59 <Remu[m]> <anupritaisno1[m] "No"> Why not? Trust the system apps, yeah, but it is better to minimize it
+15:27:10 <CarpeDiem[m]> Use aptoide ?
+15:27:17 <anupritaisno1[m]> <Remu[m] "Why not? Trust the system apps, "> This is because you will break things
+15:27:20 <Remu[m]> Like Vanadium Webview, Vanadium (browser), Auditor
+15:27:37 <Remu[m]> <anupritaisno1[m] "This is because you will break t"> Nothing was broken and I have did this for months
+15:27:46 <CarpeDiem[m]> Or check the version of aurora you're using. The one starting in 3 is not working
+15:27:47 <Remu[m]> Except for Camera
+15:28:09 <Remu[m]> Gotta give it sensors to properly capture landscape pictures
+15:28:35 <Remu[m]> Otherwise I don't see how a "Captive Portal" app needs a sensor permission, for instance
+15:28:51 <Remu[m]> Or keyboard, launcher
+15:29:52 <toxicfrog[m]> <Remu[m] "Otherwise, if the network permis"> When I opened the app for the first time I allowed permissions. So the app is broken then?
+15:30:07 <Remu[m]> Yeah
+15:30:09 <Remu[m]> Probably
+15:30:25 <Remu[m]> Sometimes anonymous account creation is broken
+15:30:51 <toxicfrog[m]> neither anon or Google account works
+15:31:17 <Remu[m]> <toxicfrog[m] "neither anon or Google account w"> If your connection is stable, consider reinstalling the app
+15:31:40 <toxicfrog[m]> tried that, also tried an older version of the app
+15:32:11 <Remu[m]> Yeah, maybe check the issue tracker on gitlab?
+15:34:09 <Remu[m]> <anupritaisno1[m] "This is because you will break t"> What things? I don't do cts, there were no apps complaining in logcat
+15:34:54 <Remu[m]> I'm genuinely curious. If crashes, Network permissions causes more apps to crash when denied than sensord
+15:35:11 <Remu[m]>  * I'm genuinely curious. If crashes, Network permissions causes more apps to crash when denied than sensors, or break functionalities
+15:36:13 <Remu[m]> Is this room version 5 or 6?
+15:40:00 <dazinism> toxicfrog: Carpe~Diem aptoide is a bit dodgy. Have a look at
+15:40:06 <dazinism> https://hub.libranet.de/wiki/and-priv-sec/wiki/apps
+15:41:21 <dazinism> Among other things there is some info about a something you can do that may make Aurora Store work
+15:51:15 <anupritaisno1[m]> [strcat](https://matrix.to/#/@strcat:matrix.org) can I haz mod
+15:51:28 <makingaliasesisa> lol
+15:51:39 <anupritaisno1[m]> Shhh xD
+15:53:26 <Remu[m]> Is this room version really 1?
+15:53:39 <Remu[m]> It appears as such here
+15:53:58 <Remu[m]> On settings > advanced on web
+15:55:48 <toxicfrog[m]> <Remu[m] "If your connection is stable, co"> It just started working after not working all day. Weird.
+16:00:37 <strcat[m]> Remu: yes because of irc bridge
+16:00:39 <heyaheyaheya[m]> <Remu[m] "Is this room version really 1?"> Yes, it is.
+16:00:49 <strcat[m]> you can also see it's busy kicking people for not saying anything for 30 days
+16:00:51 <strcat[m]> it sucks
+16:01:27 <strcat[m]> I want to try to get that addressed - people who read messages here should not be kicked
+16:01:56 * heyaheyaheya[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/XMUOUqNCdgjITcgbConWIwXs/message.txt >
+16:03:30 * heyaheyaheya[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/sAIDqsLOcYZosdpvRyZZemHd/message.txt >
+16:04:10 <louipcm> so room version needs upgrade?
+16:05:17 <strcat> I don't know if that's a good idea due to the irc bridge
+16:06:09 <strcat[m]> https://github.com/matrix-org/matrix-doc/blob/master/proposals/1501-room-version-upgrades.md
+16:06:14 <strcat[m]> upgrading a room is done by replacing the room
+16:06:39 <louipcm> ouch
+16:11:01 <louipcm> looks like it gives a link to the new room if done properly
+16:11:19 <makingaliasesisa> yeah that is a big oof
+16:12:24 <louipcm> privacy tools lounge upgraded. not sure how tho
+16:13:14 <Remu[m]> <louipcm "privacy tools lounge upgraded. n"> Could be something like replacing the room
+16:19:29 <makingaliasesisa> thry could have like moved a database or something
+16:19:36 <makingaliasesisa>  * they could have like moved a database or something
+16:19:55 <makingaliasesisa> not sure how the room work exactly
+16:20:01 <makingaliasesisa>  * not sure how the rooms work exactly
+16:21:09 <louipcm> they don't :p
+16:41:08 <strcat[m]> Pixel 2 and 2 XL November extended support release pushed out to beta
+16:41:33 <strcat[m]> will go to stable soon assuming no issues reported
+16:41:47 <strcat[m]> not going to be keeping it in beta for long since the release was essentially already tested on the other devices
+17:06:07 <Remu[m]> Wait, Pixel 4 and 4a does not have HSM strongbox, or...
+17:06:42 <Remu[m]> Is it not supported yet by Auditor? Just asking, from a Pixel 3 series user
+17:08:14 <anupritaisno1[m]> <Remu[m] "Is it not supported yet by Audit"> It's supported
+17:08:33 <Remu[m]> The HSM with strongbox?
+17:09:46 <Remu[m]> Just to clarify, well, if it does, maybe attestation.app/about needs an update?
+17:09:59 <Remu[m]> only if*
+17:10:51 <Remu[m]> <anupritaisno1[m] "It's supported"> The devices are supported, yes, I was specirically asking for HSM with strongbox
+17:12:41 <strcat[m]> Remu: it's updated now
+17:12:43 <strcat[m]> was just out-of-date
+17:12:49 <anupritaisno1[m]> Yes
+17:12:54 <anupritaisno1[m]> Titan M
+17:12:57 <Remu[m]> <strcat[m] "Remu: it's updated now"> Thanks
+17:13:37 <Remu[m]> Just curious, so I assume any Pixel with Titan M will support it when they will get Auditor support?
+17:14:06 <strcat[m]> yes
+17:14:16 <strcat[m]> other devices are starting to use the Qualcomm SPU
+17:14:17 <strcat[m]> like those Samsung devices
+17:14:35 <strcat[m]> we haven't been adding devices not supported by GrapheneOS recently though due to lack of resources
+20:02:05 <ludicrous_speed[> Is there a resource to peruse concerning what needs tested, or will there be shoutouts in this channel?
+20:29:08 <anupritaisno1[m]> [ludicrous_speed](https://matrix.to/#/@ludicrous_speed:matrix.org) what device?
+20:40:18 <r0tt0r[m]> anupritaisno1: may i pm you?
+20:44:52 <anupritaisno1[m]> Yes
+21:12:54 <TheJollyRoger> I have some documentation on using the CTS available, I need to update it.
+21:37:49 <mrxx_0[m]> <TheJollyRoger "I have some documentation on usi"> I'm interested !
+21:38:49 <TheJollyRoger> Got it. Currently the majority of it is on my github, but I've found some stuff about it: namely, if you run the entire CTS in one go it's very liable to lock up halfway through. Even if you do run it to completion, what often happens is that it will create a webpage report so large that it will crash your browser simply trying to load it.
+21:44:44 <ludicrous_speed[> anupritaisno1: I have a new pixel 4a running grapheneos.
+21:45:09 <louipcm> lol how large?
+21:45:49 <mrxx_0[m]> <TheJollyRoger "Got it. Currently the majority o"> Lock up ? What do you mean ? Talking about adb ?
+21:47:02 <TheJollyRoger> Hey mrxx_0[m], the compatibility test suite program is what will lock up. What I've found that it may sometimes do is that it will stall on one test. I'm not sure which one does this yet since I didn't write it down, but what sometimes will happen is that the CTS will set a password on the phone, and reboot it, then lock itself out, and not recieving any answer from the phone, will remain
+21:47:04 <TheJollyRoger> waiting until the test is stopped or cancelled.
+21:47:07 <TheJollyRoger> louipcm: er, let me check.
+21:48:52 <TheJollyRoger> Aw crap, looks like I don't have those results saved, must have cleared them.
+21:50:31 <louipcm> did you build a CTS box
+21:52:20 <TheJollyRoger> Yeah. I got an old thinkpad and a pair of LED desk lamps, and one of those old folder stands to hold the phone.
+21:52:42 <louipcm> cool
+22:33:34 <anupritaisno1[m]> [TheJollyRoger](https://matrix.to/#/@freenode_TheJollyRoger:matrix.org) actually there's a known bug on 11
+22:33:55 <anupritaisno1[m]> Adb forgets authorized devices on reboot
+22:34:07 <anupritaisno1[m]> Can reproduce on stock too
+22:41:01 <TheJollyRoger> Makes sense. I was getting that issue on both the Google Android and Graphene.
+23:03:09 <mistazaki[m]> Hi, anybody can help me? I want flash factory image frist. But still error
+23:03:53 <TheJollyRoger> Hi mistazaki[m], where are you right now and are you following any instructions /except/ the installation instructions on Grapheneos.org?
+23:04:42 <mistazaki[m]> <TheJollyRoger "Hi mistazaki, where are you righ"> Yes. But before flash Graphene. I need install Factory Images For pixel.
+23:05:39 <TheJollyRoger> Your phone should already come with them. Are you trying to update to the latest version of the factory operating system, without connecting to the internet?
+23:07:55 * mistazaki[m] uploaded an image: 20201108_070727_8693249986735348942.jpg (132KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/TMziYrsheaWWtAFgZlbbkyML/20201108_070727_8693249986735348942.jpg >
+23:08:59 <TheJollyRoger> Someone other than me will have to take this one.
+23:09:04 <mistazaki[m]> stuck with fastbootd
+23:09:43 <mistazaki[m]> * stuck at fastbootd
+23:16:03 <TheJollyRoger> mistazaki[m]: I can't help you, but... someone who's more knowledgeable than I might be on. What might help them is if you were able to jot down, in exacting detail, all the steps you took to get there.
+23:16:15 <TheJollyRoger> Along with what the host operating system is.
+23:16:31 <TheJollyRoger> And whether you're connected using a USB-A to C cable or a USB-C to C cable.
+23:17:27 <mistazaki[m]> <TheJollyRoger "And whether you're connected usi"> A to C
+23:18:16 <TheJollyRoger> Host?
+23:18:29 <TheJollyRoger> Did you install using any other installation guide?
+23:21:52 <louipc> mistazaki[m]: hmm what about web flash tool :p
+23:22:18 <louipc> https://flash.android.com/
+23:23:13 <louipc> more info https://source.android.com/setup/contribute/flash
+23:25:17 <mistazaki[m]> im install factory image using manual
+23:25:31 <mistazaki[m]>  fastboot --slot=all flash bootloader
+23:25:38 <mistazaki[m]>  fastboot --slot=all flash radio
+23:25:54 <mistazaki[m]> fastboot --skip-reboot --slot=all update
+23:29:12 <ludicrous_speed[> mistazaki: that web flash tool works well
+23:29:41 <mistazaki[m]> web flash tool?
+23:30:03 <ludicrous_speed[> The one louipc is talking about
+23:30:18 <louipc> mistazaki[m]: https://source.android.com/setup/contribute/flash
+23:31:01 <ludicrous_speed[> I mean if you need to reset device back to stock os
+23:31:36 <mistazaki[m]> Ok im try
+23:33:53 * mistazaki[m] uploaded an image: 20201108_073325_5084046879293183817.jpg (96KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/LEVZGsfwmwgHuQGkmRwiTZtr/20201108_073325_5084046879293183817.jpg >
+23:34:28 <mistazaki[m]> <ludicrous_speed[ "I mean if you need to reset devi"> Yes. I need reset first stock os.
+23:35:02 <yehnahyeh[m]> Hi. Could anyone please help me troubleshoot my camera? After a system update, it just stopped working. The front-facing camera is still fine. The only error I'm getting is "Failed to start camera preview" when I launch Open Camera. I don't know how to access any more detailed debug information so if that would help, please let me know how. Cheers!
+23:35:26 <yehnahyeh[m]> I'm using a Pixel 3a.
+23:35:28 <TheJollyRoger> yehnahyeh[m]: are you using the Pixel 3?
+23:36:21 <TheJollyRoger> Since there's a bug from the upstream driver that occasionally causes that behaviour on Blueline (Pixel 3), temporary workaround is to close/dismiss, then restart OpenCamera, several times if necessary.
+23:40:27 <louipc> ouch
+23:40:32 <mrxx_0[m]> yehnahyeh I can't reproduce the issue, what version of the app do you have ? Are you on : RP1A.201105.002.2020.11.05.18 ?

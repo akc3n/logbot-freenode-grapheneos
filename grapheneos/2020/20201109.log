@@ -1,0 +1,513 @@
+01:25:07 <makingaliasesisa> close it fully and open the browser up again. i think that is how i did it.
+01:32:34 <name> anyone else having trouble verifying Platform Tools 30.05 in Linux? running  echo '5be24ed897c7e061ba800bfa7b9ebb4b0f8958cc062f4b2202701e02f2725891  platform-tools_r30.0.4-linux.zip' | sha256sum -c
+01:32:54 <name> but getting: No such file or directory
+01:34:30 <name> Assuming this is because the command is for Platform Tools 30.04...
+01:35:04 <makingaliasesisa> lol
+01:37:58 <name> Sorry new here is this not the right place to ask? should I just curl 30.04?
+01:45:34 <makingaliasesisa> what distro you running?
+01:46:08 <trevqr[m]> Hey all, I just got a Pixel 4a, trying to install from PopOS. Getting an error: ./flash-all.sh: 22: [: Illegal number: 1:81
+01:46:08 <trevqr[m]> fastboot too old; please download the latest version at https://developer.android.com/studio/releases/platform-tools.html
+01:46:08 <trevqr[m]> I did install the latest version, so I'm unsure what may be causing the issue.
+01:47:30 <name> arch
+01:47:43 <name> (also very new to linux)
+01:47:43 <makingaliasesisa> fastboot --version trevqr
+01:47:59 <makingaliasesisa> and you should be able to install it from arch fine
+01:48:17 <trevqr[m]> <makingaliasesisa "fastboot --version trevqr "> fastboot version 1:8.1.0+r23-8
+01:48:18 <makingaliasesisa> Arch Linux: android-tools provides fastboot and other useful tools not required for installation such as adb. android-udev provides udev rules allowing fastboot and adb to work in local sessions without root.
+01:52:44 * makingaliasesisa sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/DMKvCfwMhaspopishdEAIAAs/message.txt >
+01:52:52 * makingaliasesisa sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/GwJNtbXmxrmvDapYmtLYJMgJ/message.txt >
+01:52:59 * makingaliasesisa sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/ceCBOSVLRIyQpYcuMwUmDLyO/message.txt >
+01:53:08 * makingaliasesisa sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/LmSXzMvQMHUqhoNVhYSnWTNA/message.txt >
+01:54:26 <makingaliasesisa> it may be this as well export PATH="$PWD/platform-tools:$PATH"
+01:55:15 <name> I ran into the same issue as trevqr[m], was attempting to update fastboot
+01:55:22 <makingaliasesisa> because i think it is way too out of date  29.0.6 is atleast what you want
+01:55:55 <dontdisturbme[m]> Can any P4XL owners verify this?
+01:55:55 <dontdisturbme[m]> When toggle Airplane Mode, apps can still access internet. Whatsapp still able to send messages, Vanadium still can browse the web.
+01:55:55 <dontdisturbme[m]> When phone is rebooted with Airplane mode On, mobile data is off and cannot be enabled (can enabled but no internet). Internet cannot be used. Have to reboot with Airplane Mode Off again in order to switch back on Mobile data.
+01:56:10 <makingaliasesisa> name: for arch you can just install android-tools
+01:56:27 <makingaliasesisa> and android-udev just in case
+01:57:01 <makingaliasesisa> if you want to allow fastboot and adb to work in local sessions without root.
+01:59:46 * trevqr[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/lWXKZtQCCxXEZDdCXcqWPfzU/message.txt >
+02:00:36 <louipcm> looks like a problem in the shell script
+02:01:06 <louipcm> are you using bash?
+02:01:25 <name> ...had the same problem, even after reinstalling android-tools
+02:02:06 <trevqr[m]> I would assume so? Using the default terminal for PopOS, but I'm relatively new to Linux
+02:02:27 <makingaliasesisa> yeah popos uses bash by default
+02:03:34 <trevqr[m]> When I originally ran the adb/flashboot commands, it was unable to find them, so I just installed them manually. (sudo apt install flashboot). Dunno if that could be messing things up
+02:04:00 <trevqr[m]> And it's trying to use the flashboot I had installed
+02:04:06 <trevqr[m]> Which may be out of date
+02:04:38 <louipcm>  22: [: Illegal number: 1:81 is a script error
+02:04:39 <makingaliasesisa> i don't think the apt ones are ever up to date
+02:04:43 <name> tbh I got it to boot by deleting line 22 in the shell script, but wanted to try to get it booted without messing with the script
+02:04:46 <makingaliasesisa> as well tho
+02:04:48 <louipcm> something about your shell is incompatible with the script
+02:04:56 <louipcm> as far as i can tell
+02:06:03 <trevqr[m]> <name "tbh I got it to boot by deleting"> Were you also getting an out-of-date error as well? Did deleting the line mess anything up, or did it run okay?
+02:07:06 <trevqr[m]> Should I try to uninstall fastboot and just try to get it to run okay from the platform-tools? Unsure what to try
+02:07:19 <makingaliasesisa> line 22 is this one aye?
+02:07:19 <makingaliasesisa> > if ! [ $($(which fastboot) --version | grep "version" | cut -c18-23 | sed 's/\.//g' ) -ge 2802 ]; then
+02:07:25 <makingaliasesisa>  * line 22 is this one?
+02:07:25 <makingaliasesisa> > if ! [ $($(which fastboot) --version | grep "version" | cut -c18-23 | sed 's/.//g' ) -ge 2802 ]; then
+02:07:38 <name> no it runs perfectly
+02:07:46 <name> in my script line 22 is: if ! [ $($(which fastboot) --version | grep "version" | cut -c18-23 | sed 's/\.//g' ) -ge 2802 ]; then  echo "fastboot too old; please download the latest version at https://developer.android.com/studio/releases/platform-tools.html"
+02:08:11 <name> which is the exact error I was getting, even though fastboot was up to date
+02:09:00 <trevqr[m]> Yeah, it's that for me as well. Haven't tried deleting it yet though because I don't want to mess anything up
+02:09:41 <trevqr[m]> It seems like it is just preventing it from running if fastboot is out of date though? So, if I verified it in a previous step, maybe it's okay to delete and run anyway?
+02:09:52 <louipc> do this command in shell $(which fastboot) --version | grep "version" | cut -c18-23 | sed 's/\.//g'
+02:09:56 <makingaliasesisa> can you unistall the sudo apt'ed one
+02:10:17 <louipc> should give you a number
+02:10:34 <trevqr[m]> <louipc "do this command in shell $(which">  grep "version" | cut -c18-23 | sed 's/\.//g'
+02:10:35 <makingaliasesisa> yeah mine gives 3004 for me
+02:10:41 <name> I just get a syntax error
+02:10:44 <trevqr[m]> <makingaliasesisa "can you unistall the sudo apt'ed"> Lemme try
+02:11:01 <louipc> yea if you get an error then you have some shell problem
+02:11:07 <louipc> maybe cut, or sed
+02:11:10 <louipc> greps probly ok
+02:11:58 <makingaliasesisa> @name echo $SHELL
+02:12:40 <name> I get /bin/bash
+02:12:44 <trevqr[m]> Uninstalled fastboot, now get "fastboot not found; please download the latest version at https://developer.android.com/studio/releases/platform-tools.html and add it to the shell PATH"
+02:12:44 <trevqr[m]> when trying to run flash-all
+02:12:47 <louipc> break that command down into its parts to find out where its messing up
+02:13:02 <louipc> try that $(which fastboot) --version | grep "version"
+02:13:29 <name> syntax error near unexpected token `--version'
+02:13:51 <makingaliasesisa> fastboot version 30.0.4 for me
+02:13:54 <louipc> whattt
+02:14:09 <makingaliasesisa> name: that is wierd
+02:14:14 <makingaliasesisa>  * name: that is weird
+02:14:46 <louipc> `which fastboot` --version | grep "version"
+02:15:26 <name> bash: which: command not foundbash: --version: command not found
+02:15:45 <louipc> i dont think you are actually running bash
+02:15:56 <trevqr[m]> Gonna take a break for dinner, but will come back to try to trouble shoot 🙃
+02:16:33 <makingaliasesisa> bash --version
+02:17:07 <louipc> not having the which program is kindof a problem too
+02:17:32 <name> License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+02:18:19 <louipc> bash would understand $(command) syntax
+02:18:40 <name> hmm
+02:19:53 <louipc> can you install a program called 'which' at least?
+02:19:57 <makingaliasesisa> when i do the comand in sh i get
+02:19:57 <makingaliasesisa> > sh-5.0$ 'which fastboot' --version | grep "version"
+02:19:57 <makingaliasesisa> > sh: which fastboot: command not found
+02:20:09 <louipc> program or package
+02:20:43 <louipc> via your package manager... really it shoulda been installed by default
+02:20:51 <makingaliasesisa> for arch install base and base-devel as well
+02:23:39 <name> @louipc yeah was able to install 'which'
+02:23:46 <makingaliasesisa> huh
+02:23:55 <name> does not help though
+02:24:00 <louipc> thats good lol. now to figure out whats wrong with your shell
+02:24:20 <louipc> you still might run into problems becaue of your weird distro
+02:24:35 <makingaliasesisa> arch linux is not weird :P
+02:24:44 <louipc> names is weird
+02:24:50 <name> lol
+02:24:56 <makingaliasesisa> lol
+02:27:45 <name> thanks for the help troubleshooting, this seems more managable now
+02:27:54 <louipc> i really cant think of any reason it wouldnt work. unless you are using some bash fork
+02:28:10 <louipc> that removes $(command) substitution
+02:28:35 <louipc> in that case install normal bash and get rid of the fork
+02:30:07 <makingaliasesisa> also could you give me your output of "cat /etc/bash.bashrc"
+02:32:44 <louipc> also file a bug report with popos that their shell environment is screwed up
+02:32:57 <name> ## If not running interactively, don't do anything[[ $- != *i* ]] && return[[ $DISPLAY ]] && shopt -s checkwinsizePS1='[\u@\h \W]\$ 'case ${TERM} in  xterm*|rxvt*|Eterm|aterm|kterm|gnome*)    PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'    ;;  screen*)
+02:32:57 <name> PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033_%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'    ;;esac[ -r /usr/share/bash-completion/bash_completion   ] && . /usr/share/bash-completion/bash_completion
+02:33:56 <name> yeah definitely will
+02:37:01 <makingaliasesisa> mine looks similar
+02:40:05 <name> hmm
+02:42:28 * makingaliasesisa sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/eWHfecibrEhaVFSpUWYYkzFs/message.txt >
+02:42:46 <louipc> https://github.com/pop-os
+02:42:51 <makingaliasesisa> oops markdown is a thing
+02:43:37 <louipcm> anyway.. better ask popos for help. because their own scripts have the problematic syntax too
+02:43:50 <louipcm> somethine else is wrong
+02:44:30 <makingaliasesisa> yeah they do have a different shell from the norm as well
+02:46:29 <trevqr[m]> Okay, I have returned. Is the conclusion that something is wrong with popos? name , did you have success with simply deleting line 22 without any issue?
+02:47:06 <trevqr[m]> I have my bootloader unlocked. Dunno if there would be helpful commands to run in my platform-tools folder to get it to recognize that fastboot is there/up to date
+02:47:39 <louipc> deleting that line will get things going but you better make sure youre up to date. but the other concern is that if popos shell environment is messed up then you run into further problems down the road
+02:48:10 <louipc> if you both had the same problem then definitely a problem with popos
+02:48:26 <louipc> they should have `which` installed by default at very least
+02:48:36 <makingaliasesisa> @name i just installed a VM and popos doesn't error out when i did the $(which fastboot) --version
+02:49:05 <trevqr[m]> Hmm, yeah, I have PopOS on both my PC and laptop. My partner has a Mac which I could give a go. Would the safest way to disconnect from the install simply be to relock the bootloader and restart the phone? Then try it on the Mac?
+02:49:26 <makingaliasesisa> i get the fastboot version 1:8.1.0+r23-8 output
+02:49:30 <trevqr[m]> I installed GrapheneOS previously on Pixel 2 with Windows, but have since made the switch to Liunux
+02:49:38 <name> Yeah, my main concern is with my arch distro now - I've had no issues with graphene since installing last night.
+02:49:38 <makingaliasesisa> on popos VM
+02:50:54 <trevqr[m]> <makingaliasesisa "i get the fastboot version 1:8.1"> This is what I was getting when I installed it via sudo apt
+02:51:22 <trevqr[m]> Would you all recommend deleting line 22, or to try it on a Mac instead?
+02:51:25 <makingaliasesisa> yeah i was trying a command which disdn't work with names
+02:51:44 <louipc> i recommend installing from a supported OS
+02:52:19 <makingaliasesisa> name should be. i believe he is on arch Linux.
+02:52:33 <louipc> you dont need to relock bootloader until finished installing
+02:53:01 <trevqr[m]> Okay. So, simply restart to exit fastboot mode and then try again on the Mac?
+02:53:16 <louipc> sure
+02:55:16 <name> Yeah I'm on arch linux not popos
+02:56:03 <makingaliasesisa> which makes it even weirder
+02:56:20 <louipc> oh what. you were on arch this whole time?
+02:57:13 <makingaliasesisa> trev was Pop OS i beieve
+02:57:18 <makingaliasesisa>  * trev was Pop OS i believe
+02:58:21 <name> yes
+02:58:24 <name> sorry lol
+02:58:26 <makingaliasesisa> what terminal are you running name  aswelk
+02:59:12 <makingaliasesisa> I'm running Konsole
+02:59:16 <makingaliasesisa> atm]
+02:59:29 * louipcm sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/eIwVCJFoKzUcplJhRNteAGcm/message.txt >
+02:59:37 <louipcm> ffs matrix
+02:59:45 <louipc> `which fastboot`
+02:59:59 <makingaliasesisa> ah ok
+03:01:43 <louipc> terminal wont matter
+03:02:19 <makingaliasesisa> ST terminal is a thing :P
+03:02:27 <louipc> what
+03:03:05 <name> fwiw I've been using arch on a macbook for 2.5 days, I didn't even know there were different terminals lol
+03:03:54 * makingaliasesisa sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/gPFQmgqGzxCtNhHMssHzyrIj/message.txt >
+03:04:09 <louipc> lol i'd just reinstall the whole thing then. rather than try to figure out whats wrong
+03:04:49 <louipcm> oh.. yea i guess
+03:05:36 <louipc> except that points to bash in archlinux
+03:07:00 <louipc> hmm maybe arch is messed up.. which is part of base-devel rather than base
+03:07:04 <makingaliasesisa> ah ok true
+03:07:31 <makingaliasesisa> try install base-devel @name
+03:09:47 <makingaliasesisa> also have a look at this next install (if you didn't) https://wiki.archlinux.org/index.php/Mac#Post-installation
+03:09:54 <makingaliasesisa>  * also have a look at this next install (if you didn't) https://wiki.archlinux.org/index.php/Mac
+03:12:50 <makingaliasesisa> for pacstrap i also do this command:
+03:12:50 <makingaliasesisa> > pacstrap /mnt base base-devel linux linux-headers linux-firmware vim nano networkmanager man-db man-pages git openssh
+03:15:39 <louipc> pacman is part of base-devel... what
+03:15:45 <louipc> not base
+03:15:49 <louipc> i give up
+03:15:52 <makingaliasesisa>  * for pacstrap i also do this command (not for mac though it may be a little bit different):
+03:15:52 <makingaliasesisa> > pacstrap /mnt base base-devel linux linux-headers linux-firmware vim nano networkmanager man-db man-pages git openssh
+03:16:36 <makingaliasesisa> it is a requirement from another package
+03:17:09 <louipc> oh base is a metapackage now that includes pacman.. its all weird
+03:18:22 <makingaliasesisa> yeah it is made "simple"
+03:18:23 <makingaliasesisa> lol
+03:18:27 <louipc> i guess all distros are messedup. ohwell
+03:19:36 <name> lol
+03:21:28 <name> yeah for mac it was > pacstrap /mnt base linux-mbp linux-mbp-headers linux-firmware...
+03:22:09 <trevqr[m]> Hmm, I'm trying to do some more troubleshooting because it seems really odd to not be working. I'm trying on my laptop with PopOS now. If I follow the three step commands to install platform-tools + export PATH="$PWD/platform-tools:$PATH", it seems to recognize fastboot just fine. If I continue to extract the release image and try to flash, this time I get "<waiting for any device>"
+03:22:35 <makingaliasesisa> aye thats a good start
+03:22:49 <trevqr[m]> If I don't do it all consecutively in terminal, that's when I run into the "fastboot not found" error
+03:23:25 <trevqr[m]> ie, if I open up a new terminal window, it can't seem to find fastboot anymore unless it's all consecutive from the download and extract of platform-tools
+03:23:32 <makingaliasesisa> yeah for the export thing it is only for that terminal session
+03:25:35 <trevqr[m]> Maybe that was my issue all along then? Is there a reason the "waiting for any device" error might appear? I am in fastboot mode with the bootloader unlocked
+03:25:37 <makingaliasesisa> it says this on the wbsite:
+03:25:37 <makingaliasesisa> > This is a temporary change to PATH for the current shell and will need to be done again if you open a new terminal. Make sure that the fastboot command works in the current shell before trying to run the flashing script.
+03:27:03 <makingaliasesisa>  * it says this on the website:
+03:27:03 <makingaliasesisa> > This is a temporary change to PATH for the current shell and will need to be done again if you open a new terminal. Make sure that the fastboot command works in the current shell before trying to run the flashing script.
+03:29:01 <makingaliasesisa> so it is say unlocked as well
+03:29:08 <makingaliasesisa>  * so it is saying unlocked as well
+03:30:16 <makingaliasesisa> i am not not sure about this error i just got it to work luckily for me
+03:30:45 <trevqr[m]> on pop?
+03:31:00 <louipcm> trevqr:  check the phone. you need to confirm
+03:31:03 <makingaliasesisa> nah arch
+03:31:17 <trevqr[m]> Yeah, it has Device state: unlocked
+03:31:44 <louipcm> waiting for device is not an error
+03:32:12 <louipcm> though if you dont get a prompt on your phone then something is wrong
+03:32:28 <louipcm> either drivers, or cable
+03:32:34 <makingaliasesisa> try fastboot devices on the terminal
+03:32:36 <trevqr[m]> Lemme run through it from the top one more time and see what happens. I'll try adding sudo as well for the flash
+03:35:17 <trevqr[m]> If I run it as sudo, I get flashboot not found. If I run it without sudo, I get waiting for any device
+03:35:20 <trevqr[m]> Nothing happens on the phone
+03:37:36 <louipc> phone is in bootloader?
+03:38:55 <trevqr[m]> fastboot devices gives me "no permissions"
+03:38:59 <trevqr[m]> Phone is in bootloader
+03:39:23 <trevqr[m]> It seems my comp somehow loses fastboot when I "cd" into the factory image folder to run the flash
+03:39:44 <trevqr[m]> Up until then, it recognizes fastboot with the correct version number
+03:40:23 <trevqr[m]> I am close to surrendering and just borrowing a friends windows computer tho lol
+03:42:18 <trevqr[m]> Still got a Pixel 2 with graphene for the time being, was just trying to upgrade for timely updates
+03:43:30 <louipcm> could be the cable too
+03:44:14 <trevqr[m]> Yeah, it was the original cable I used to install it, but something could've happened to it in the meantime
+03:44:34 <trevqr[m]> I'll probably just shoot to borrow a friend's Windows computer. Seems more trouble than it's worth to figure out
+03:46:53 <name> ok so super embarassing but I either forgot to install linux-firmware or base-dev because I installed both and rebooted and all is working fine now lol
+03:48:12 <louipc> weird
+03:48:37 <louipc> name: u mean base-devel rite
+03:48:42 <trevqr[m]> Any commands to run to check that on my end?
+03:48:54 <name> yeah base-devel
+03:49:15 <louipc> trevqr[m]: no idea for popos
+03:51:24 <louipc> trevqr[m]: possible you need android-udev rules
+03:52:45 <yehnahyeh[m]> <dazinism "yehnahyeh: I think possibly you "> Can you think of a reason this would happen after a year of flawless function? And, can you please advise how/where I would go for help on troubleshooting a hardware issue like this? I'm at a  bit of a loss. Thanks!
+03:56:00 <trevqr[m]> I think I'll call it for now and give it another go on Windows. Thanks for all the help yall, it was much appreciated!
+03:56:42 <Guest18945> Hi, does tinder or bumble work on grapheneos phone?
+03:58:40 <Guest18945> Would it work in phone browers?
+04:16:03 <name> Any way to audit without second android device? (e.g. from ios, or linux?)
+04:46:37 <kkkkkkkkkkkkkkkk> <name "Any way to audit without second "> Wdym
+04:46:55 <kkkkkkkkkkkkkkkk> <name "Any way to audit without second "> Emulator?
+04:49:52 <louipc> but thats an android device then :D
+06:22:03 <kkkkkkkkkkkkkkkk> <louipc "but thats an android device then"> Read the code
+06:22:29 <kkkkkkkkkkkkkkkk> Isn't auditing like reading the code? But it is still different when you test it with a functional.android phone
+07:46:01 <strangefinder[m]> hi all, is there any way to modify the "always on display"  larger, color, whats on screen ?
+08:06:55 <cecemimi[m]> I can't get bromite to finish an install on fdroid, while downloading it always stops and install button appears again like nothing happened. Is this a common error?
+08:11:44 <chani> anyone in here formerly known as DannyWorkOrderPr?
+08:21:43 <dazinism> cecemimi: I found fdroid can be a bit buggy like that. Also Aurora Droid can fail to offer the update after downloading (if you have it set to download to its own private storage - which is safest). Started using foxy droid (from fdroid ) and it works fine.
+08:29:30 <dazinism> strangefinder: there are apps that offer customisable AOD functionality, but they have security implications (have ability to draw over other apps), also, I think, likely to be less battery efficient.
+08:51:13 <dazinism> yehnahyeh: things just break sometimes. The cameras on pixels do mess up occasionally, maybe search in the reddit for your phone and see if theres folks with the same issue as you have?
+08:54:13 <dazinism> In the EU, if bought new, all electrical goods get 2 years guarantee. Could send it back to where you got it and have it replaced (or maybe back to Google?). Guess if you do that would be best to flash stock OS again first.
+09:17:27 <cenapatop689[m]> Where can I Download the satelite app. In aurora isnt it
+09:18:23 <cenapatop689[m]> I have tried racoon but the install fails
+09:39:02 <dazinism> cenapatop689: for testing theres GPSTest (An app for testing GPS and GNSS capabilities of a device) - https://f-droid.org/packages/com.android.gpstest.osmdroid
+09:45:11 <cenapatop689[m]> No I mean this app https://www.satellite.me/
+09:46:22 <dazinism> cenapatop689: apkmirror is pretty safe. Maybe they have it?
+09:54:55 <dazinism> cenapatop689: its a VoIP service so guess you could alternatively use a generic voip app.
+10:32:59 <cenapatop689[m]> dazinism: Do you know one?
+10:49:18 <Ravenous> Hi there, I have a couple of questions about freeboot and fedora 32 in regard to installing grapheneOS.  Would someone be willing to help?
+11:02:34 <dxrwzy9y[m]> Hey why is there a short interruption when NewPipe goes into background play? Is this a NewPipe or system issue?
+11:11:22 <thematten[m]> dxrwzy9y:
+11:11:35 <thematten[m]>  * dxrwzy9y: May be switching between different players?
+11:12:09 <dxrwzy9y[m]> It's just NewPipe running
+11:12:47 <Ravenous> Has anyone had any problems installing GrapheneOS with Fedora 32?
+11:13:40 <thematten[m]> I mean, NewPipe may have different implementations of video players, where one is meant for background playback - it would then have to stop video in one and start in the other at same position, thus creating that interruption
+11:15:21 <dxrwzy9y[m]> I'm not the only one experiencing this, right?
+11:15:44 <thematten[m]> Yeah, I see the same behaviour
+11:17:18 <thematten[m]> From technical standpoint, if you wanted to remove the interruption, you would probably have to split player into video and sound part, which would be needless complication and potential source of different bugs (like sound getting out of sync)
+11:24:17 <Ravenous> Given that Pop_OS! is a fork of Ubuntu, would it be considered officially supported?
+12:04:35 <makingaliasesisa> Ravenous:  you should be able to install in most OS' popOS works fine if you do it in one hit.
+13:05:37 <vinterneti[m]> Why there is no threads of GrapheneOS on xda-developers?
+13:07:13 <vinterneti[m]> * Why there is no official topics of GrapheneOS on xda-developers?
+13:44:45 <engulf[m]> vinterneti Because XDA is a mess
+14:02:08 <vinterneti[m]> <engulf[m] "vinterneti Because XDA is a mess"> But there is official group on reddit. So it is distancing from developers.
+14:04:49 <vinterneti[m]> Because reddit is even more messy.
+14:20:27 <lolly> How secure is grapheneOS from being hacked if the phone is taken by a third party
+14:20:36 <lolly> and is there a remote wipe functionality to the phones
+14:20:46 <lolly> even if i need to setup a private server to use a remote wipe
+14:32:21 <engulf[m]> <lolly "How secure is grapheneOS from be"> It is as secure as your password is. Although with time they will be able to get into it, of course depending on the amount of effort the third party is willing to put into opening your phone. Also as the phone is in hands of third party it will likely not be updated and so it might become vulnerable to exploits that are found.
+14:34:12 <lolly> My company is currently looking into the recent poll discrepancy and need a phone that cannot have any data on it recovered by goverment or police officials not illegal communications just keeping sources private and names off the record
+14:34:53 <lolly> like if a phone is taken is there a way to get information off the memory inside the phone easily or even read it at all
+14:35:05 <lolly> we currently use a custom version of signal for communications
+14:35:24 <CryptRelay[m]> <lolly "and is there a remote wipe funct"> afaik, wipe functionalities are not needed, see: https://github.com/Peter-Easton/GrapheneOS-Knowledge/blob/master/GrapheneOS-Security-Q%26A.md#does-graphene-allow-me-to-nuke-my-data-if-say-the-phone-gets-ten-incorrect-guesses-at-the-pincode
+14:37:21 <lolly> But could government and police parties have backdoors into the titan M chip?
+14:37:49 <lolly> where they can bypass all that security by asking google themselves
+14:40:45 <engulf[m]> vinterneti: That is exactly why the subreddit of GrapheneOS is used for announcements. (of course there are occasional post by randoms).
+14:40:45 <engulf[m]> https://www.reddit.com/r/GrapheneOS/comments/fqdfea/join_the_grapheneos_irc_channel/
+14:41:37 <lolly> CryptRelay[m] thanks for that link ive been reading down it and looks like grapheneOS plus the pixel phones are perfect for our job, needed to make sure when a device is wiped its actually wiped because we used to have 'secure' iphones and a in house tech showed us that he can recover the data after wipe
+14:46:11 <projectmoon> 'secure' phones where someone forgot to turn on encryption?
+14:47:10 <lolly> we had all the phones access token on hand
+14:47:31 <lolly> he just showed me the fact that even when i press that "erase data" button the encrypted info can be recovered
+15:18:23 <leggychun[m]> lolly rest assured once you press wipe data recovery is not possible
+15:34:25 <anupritaisno1[m]> leggychun yes
+15:34:50 <anupritaisno1[m]> lolly when you press wipe the decryption key is wiped from the titan M
+15:35:35 <anupritaisno1[m]> Recovery is not possible even with the password
+15:42:03 <kkkkkkkkkkkkkkkk> <lolly "CryptRelay thanks for that link "> Maybe it's an old iPhone?
+16:09:03 <toxicfrog[m]> Pixel 3a - I'm not getting email notifications from Fastmail app or Protonmail app. Also not getting any red dot notifications including on Signal app. I have all notifications on in settings including 'Allow notification dot'. When I open Protonmail it says "Push Notifications do not work without updated Google Play services"
+16:15:15 <toxicfrog[m]> Signal is now working fine. Email apps still not. Didnt realise it isnt a red dot, its blue/grey. Not used Android before.
+16:17:29 <projectmoon> protonmail only has GCM push notifications
+16:17:37 <projectmoon> graphene os does not have play services or microg
+16:17:47 <fuu[m]1> normal for protonmail
+16:18:16 <toxicfrog[m]> if i install microg will i get notifications?
+16:18:23 <fuu[m]1> tutanota seem to care more about open source than proton
+16:18:39 <projectmoon> microG does not work properly if it's installed as a user app
+16:19:20 <fuu[m]1> perhaps you can try using protonmail via vanadium, and enabling notifications
+16:19:25 <fuu[m]1> idk if that would work
+16:19:59 <toxicfrog[m]> <fuu[m]1 "perhaps you can try using proton"> I doubt it. You mean access via the browser?
+16:25:25 <ludicrous_speed[> fuu: proton has opensourced their code.
+16:25:51 <louipc> you can run your own proton service?
+16:25:58 <ludicrous_speed[> They did that early this year.
+16:26:07 <louipc> hmm #graphene-offtopic anyways
+16:26:21 <louipc> hmm #grapheneos-offtopic anyways
+16:26:26 <ludicrous_speed[> Tutanota is based in Germany, big red flag there.
+16:28:21 <anupritaisno1[m]> ludicrous_speed https://en.m.wikipedia.org/wiki/Ad_hominem
+16:29:11 <anupritaisno1[m]> <projectmoon "microG does not work properly if"> It does
+16:29:33 <projectmoon> can it register and deliver push notifications?
+16:30:09 <anupritaisno1[m]> Yes
+16:30:16 <ludicrous_speed[> anupritaisno1: I'm not attacking anybody through an argument. Try again with your logic noobness.
+16:30:25 <anupritaisno1[m]> If you whitelist it from battery optimization
+16:31:17 <anupritaisno1[m]> The only thing that won't work is the geocoder projectmoon
+16:31:36 <anupritaisno1[m]> Which is why ROMs must implement the geocoder themselves
+16:31:46 <anupritaisno1[m]> And not let the microg geocoder really work
+16:34:20 <anupritaisno1[m]> projectmoon look at YouTube vanced
+16:34:40 <anupritaisno1[m]> They do push notifications without installing microg into system
+16:40:05 <anupritaisno1[m]> Btw I need some help
+16:42:44 <anupritaisno1[m]> https://copperhead.co/blog/copperheados-android11-release/
+16:42:51 <anupritaisno1[m]> Copperhead is claiming ownership of code I have written
+16:43:03 <anupritaisno1[m]> And things I have implemented
+16:43:33 <anupritaisno1[m]> Example
+16:43:38 <anupritaisno1[m]> ```
+16:43:38 <anupritaisno1[m]> CopperheadOS Android 11 now uses Scudo for legacy code (32-bit) executions and continues to use the CopperheadOS hardened allocator for 64-bit memory functions thereby covering all native code execution functions.
+16:43:52 <anupritaisno1[m]> I wrote the implementation for this. 2 months ago
+16:50:12 <anupritaisno1[m]> They are now openly stealing code written by developers and claiming it as their own
+16:50:48 <projectmoon> all the other things they do aside, wouldn't it mostly be about what licenses are distributed with their software, from a legal perspective?
+16:54:09 <louipc> part of the license is attribution
+16:54:33 <louipc> if they are not doing that, then that is a clear violation
+16:54:34 <projectmoon> yes
+16:54:54 <projectmoon> is it MIT license?
+16:56:12 <anupritaisno1[m]> Apache2
+16:57:20 <anupritaisno1[m]> We have a channel for countering James' attacks
+16:57:27 <anupritaisno1[m]> But very few are helping
+16:57:31 <projectmoon> not sure how the apache license governs attribution. but there can be a difference between keeping the attribution in the license distributed with the software and how it's marketed... certain BSD licenses explicitly prohibit marketing stuff without attribution to the original authors
+16:57:48 <projectmoon> if it was someting like the MIT license, pretty sure you can do basically whatever you want as long as you keep the notice in the license files
+16:57:58 <projectmoon> also i'm not a lawyer so all of this is probably wrong 🙃
+16:58:23 <projectmoon> it's at the very least unethical if not a license violation
+16:59:43 <anupritaisno1[m]> Anyway please pm me or madaidan. if you want to help against copperhead
+17:00:15 <anupritaisno1[m]> Here's proof the scudo on legacy implementation was done by me https://github.com/GrapheneOS/platform_bionic/commit/7cdda01156702f7b9839ef0abd9870634802c672
+17:00:29 <louipc> anupritaisno1[m]: oh what chan is that
+17:02:29 <strcat[m]> anupritaisno1: the decryption key isn't on the Titan M, it's not stored anywhere
+17:03:03 <strcat[m]> engulf: with a strong passphrase there is no amount of resources that would get an attacker through the encryption
+17:03:21 <strcat[m]> without one, you depend on the hardware-based security features, such as if you have a 6 digit PIN, you're depending on the Titan M throttling
+17:04:06 <strcat[m]> projectmoon: they do not provide the necessary attribution in the OS
+17:04:30 <strcat[m]> anupritaisno1: hardened_malloc was written by me in July / August 2018
+17:04:42 <strcat[m]> Copperhead had fully split from the project by June 2018
+17:04:43 <anupritaisno1[m]> <strcat[m] "anupritaisno1: hardened_malloc w"> Yes
+17:04:48 <anupritaisno1[m]> I am not claiming that
+17:04:50 <anupritaisno1[m]> Smh
+17:05:04 <strcat[m]> they are just thieves (literally, not a figure of speech, they stole > 100k of donations) and fraudsters
+17:05:09 <anupritaisno1[m]> Copperhead is claiming my implementation of scudo on 32-bit and hmalloc on 64-bit as their own
+17:05:15 <strcat[m]> people paying them are buying insecure phones from con artists
+17:05:25 <anupritaisno1[m]> <anupritaisno1[m] "Copperhead is claiming my implem"> strcat
+17:05:29 <strcat[m]> and are funding their attacks on developers
+17:05:40 <anupritaisno1[m]> That makes me so pissed aaaa
+17:05:58 <num8[m]> of course
+17:06:17 <anupritaisno1[m]> That shit was like
+17:06:20 <louipc> anupritaisno1[m]: i guess u could sue them for attribution
+17:06:31 <anupritaisno1[m]> 2 weeks with little sleep just getting hardened malloc on R
+17:06:36 <anupritaisno1[m]> So it really pisses me off
+17:06:51 <anupritaisno1[m]> A LOT of effort went into getting it to work on R
+17:07:19 <anupritaisno1[m]> And it was not just me
+17:07:45 <anupritaisno1[m]> strcat was handling the frameworks/base part while I was getting it to actually work on R
+17:08:24 <strcat[m]> they fraudulently take credit for years of my work
+17:08:40 <strcat[m]> and misrepresent their former relationship with the project
+17:08:41 <r0tt0r[m]> counter sue them
+17:08:45 <strcat[m]> we are
+17:08:50 <projectmoon> <strcat[m] "projectmoon: they do not provide"> Then it's definitely a license violation
+17:09:10 <strcat[m]> r0tt0r: you may not be aware that we have legal fees of up to ~5k / month
+17:09:15 <strcat[m]> and donations are not covering it all
+17:09:35 <strcat[m]> I don't really get paid for any of my work with that taken into consideration
+17:09:36 <r0tt0r[m]> <strcat[m] "r0tt0r: you may not be aware tha"> ouch
+17:10:32 <anupritaisno1[m]> <r0tt0r[m] "ouch"> Btw add 300-500 to that even more
+17:11:20 <anupritaisno1[m]> I quit my job to do grapheneos dev
+17:14:49 <num8[m]> yep, even if you can prove you're right in court, they are probably trying to let you run out of money during the run.
+17:14:49 <num8[m]> or something like that.
+17:14:49 <num8[m]> which doesn't suprise me at all, sadly
+17:15:53 <num8[m]> I really hope you guys win this thing, tho
+17:26:03 <anupritaisno1[m]> num8 you can help us
+17:26:14 <anupritaisno1[m]> Help counter their misinformation
+17:29:45 <num8[m]> <anupritaisno1[m] "Help counter their misinformatio"> sure, I'm glad to.
+17:36:28 <strcat[m]> some tech people were duped by him, primarily in the Bitcoin community
+17:36:30 <strcat[m]> and it's a serious problem
+17:36:40 <strcat[m]> they're the ones helping him continue to get funding to throw towards causing harm to us
+17:38:35 <num8[m]> uhm, I see :/
+17:40:11 <num8[m]> didn't know that, I'm not that much in that space
+17:40:11 <num8[m]> I was talking about the privacy/activism community
+17:40:25 <num8[m]> that's pretty sad tho
+18:08:11 <oaktilebarnland[> Anyone have suggestions on how to change app names/icons?
+18:08:45 <r0tt0r[m]> <oaktilebarnland[ "Anyone have suggestions on how t"> some launcher fe. omega allows to rename and change icons
+18:12:42 <oaktilebarnland[> I've used nova in the past. But thanks. Are there security concerns with launchers?
+18:13:10 <dazinism> oaktilebarnland: yeah can use a different launcher, although many appear to have permissions that have security implications
+18:14:40 <dazinism> Theres an app on fdroid called activity launcher that allows you to make custom app launchers. Can change the name and icons
+18:15:40 <dazinism> Although only select from the different icons of apps that are on your device (which includes some system apps, who's icons you dont normally see)
+18:34:36 <radec> hi all newb question. i just got a pixel3. it's on android 10....looks like it was last updated in august. do I need to update to stock android 11 before installing graphenos?
+18:35:02 <jpds> radec: No, though it is recommended for the latest firmware
+18:35:08 <anupritaisno1[m]> Not a requirement
+18:35:56 <radec> ok, thanks. so not required but not a bad idea
+18:38:45 <strcat[m]> radec: https://grapheneos.org/install covers this
+18:38:46 <strcat[m]> and explains why
+18:40:23 <anupritaisno1[m]> Tl;dr pixel 2 had to be updated beyond a certain version due to a bug in the bootloader
+18:40:48 <anupritaisno1[m]> It's usually to avoid such bugs
+18:40:53 <anupritaisno1[m]> Just one thing
+18:41:11 <strcat[m]> > It's best practice to update the stock OS on the device to make sure it's running the latest firmware before proceeding with these instructions. This avoids running into bugs, missing features or other differences in older firmware versions. You can either update the device via over-the-air updates or sideload a full update, which for Pixel phones can be obtained from the full update package page.
+18:41:14 <strcat[m]> it's a simple paragraph
+18:41:28 <anupritaisno1[m]> Updating doesn't mean you update and then never boot the slot
+18:41:46 <anupritaisno1[m]> Most people create more issues by updating and then jumping straight to the bootloader
+18:41:46 <strcat[m]> don't make it more complicated than it has to be
+18:41:50 <strcat[m]> the install guide has a good explanation
+18:42:13 <anupritaisno1[m]> strcat I've seen people who've done that
+18:42:28 <anupritaisno1[m]> Basically bootloader sees that the upgrade isn't completed yet
+18:42:39 <anupritaisno1[m]> And then refuses to flash grapheneos and throws errors
+18:42:57 <strcat[m]> okay just don't make things more complicated than they need to be
+18:43:03 <strcat[m]> the guide explains things, in the right order
+18:43:10 <strcat[m]> follow the guide
+18:43:13 <strcat[m]> don't skip steps
+18:43:17 <strcat[m]> don't improvise
+18:43:19 <strcat[m]> follow the install guide
+18:43:40 <strcat[m]> it says it's best practice to update BEFORE starting, and has you go into the OS to enable OEM unlocking after starting
+18:43:48 <radec> @strcat ok thanks. I was reading that. I guess I am just used to things on xda that get written and never updated
+18:43:50 <strcat[m]> so what you're saying is people didn't follow the guide and experienced problems
+18:43:54 <strcat[m]> and yeah, that's why you follow the guide
+18:44:31 <strcat[m]> radec: we don't write blog posts, we publish well maintained docs
+18:44:31 <anupritaisno1[m]> radec btw if you need help pm me
+18:44:44 <strcat[m]> the guide was last updated October 20th, it's fully up-to-date
+18:44:47 <anupritaisno1[m]> My help = I basically install it for you btw
+18:45:14 <radec> @strcat that's great thanks
+18:46:01 <radec> @anupritaisno1 thanks I think I got it. I was just making sure I wasn't going to screw something up by updating, but I guess that's not a concern lol
+18:46:24 <anupritaisno1[m]> <radec "@anupritaisno1 thanks I think I "> Basically update and fully boot the update
+18:46:39 <radec> great
+18:46:40 <anupritaisno1[m]> Then enable OEM unlocking on the latest update
+18:46:56 <anupritaisno1[m]> BTW what device?
+18:47:21 <radec> pixel 3. unlocked bootloader
+18:47:58 <anupritaisno1[m]> You should be able to continue without upgrading tbh
+18:48:50 <anupritaisno1[m]> radec so anyway you have the files for installation?
+18:49:01 <radec> yep
+18:49:34 <anupritaisno1[m]> radec extracted the platform tools?
+18:50:10 <radec> i'm on linux. I've just been using the adb/fastboot I have installed.
+18:50:37 <anupritaisno1[m]> You should be able to directly run ./flash-all.sh
+18:51:46 <certi[m]> Getting a new phone, no price limit. Should I get a Pixel 5 and assume Graphene will work on it eventually?
+18:52:04 <radec> ok cool
+18:52:11 <anupritaisno1[m]> certi nothing can be said yet
+18:52:52 <anupritaisno1[m]> Pixel 5 moves several drivers into techpack and has several more submodules
+18:52:58 <certi[m]> Should I get a Pixel 4 then? I kind of wanted 5G but could live without until it scales up more
+18:53:25 <anupritaisno1[m]> certi it's better if you ask after a while
+18:53:36 <anupritaisno1[m]> Remember pixel 5 doesn't even have vendor support yet
+18:53:36 <strcat[m]> Pixel 4, Pixel 4 XL and Pixel 4a are the recommended devices (see the FAQ)
+18:53:48 <strcat[m]> there isn't support for the Pixel 5 or Pixel 4a 5G
+18:54:13 <strcat[m]> there is no maintenance team for either the Pixel 5 or 4a 5G
+18:54:27 <strcat[m]> so you will be waiting an indefinite amount of time where there is currently no progress being made to support them
+18:54:42 <strcat[m]> unless you plan to work on developing support for them I wouldn't buy either of those devices with the intent of using GrapheneOS
+18:57:25 <radec> hey just out of curiosity ,in fastboot any thoughts on what "Secure Boot: DEVELOPMENT" vs "Secure Boot: PRODUCTION" means? the first pixel3 i bought said DEVELOPMENT. I am returning it because the IMEI is also real strange. I had never seen that before.
+18:57:42 <anupritaisno1[m]> Uhhhhhh
+18:57:56 <anupritaisno1[m]> How the hell did you get that
+18:58:07 <radec> ebay
+18:58:16 <anupritaisno1[m]> A development device can load stuff like custom bootloaders and radio
+18:58:25 <anupritaisno1[m]> It's not really something secure for use on graphene
+18:58:49 <strcat[m]> radec: goes to show the sketchy stuff that goes on with ebay
+18:58:55 <strcat[m]> probably a development device stolen from a developer
+18:59:04 <strcat[m]> that belongs to Google and is stolen property
+18:59:17 <strcat[m]>  * that belongs to Google (given to one of their developers) and is stolen property
+18:59:45 <radec> yeah interesting. it is true, you never know what you are going to get from ebay
+19:00:52 <certi[m]> Thanks strcat . I know I would be gambling with getting a P5. I am a noob when it comes to coding and programming, wouldn't mind helping tho
+19:38:39 <radec[m]> @anupritaisno @strcat got grapheneos installed no problem that is for your help and time.
+19:42:29 <radec[m]> *thanks for your help and time
+20:00:44 <dazinism> Donations and help always appreciated
+20:00:44 <dazinism> https://grapheneos.org/donate
+20:00:44 <dazinism> https://hub.libranet.de/wiki/graphene-os/wiki/Helping-graphene-os
+20:40:51 <engulf[m]> <strcat[m] "engulf: with a strong passphrase"> Unless there is a vulnerability in the encryption algorithm itself
+20:43:02 <strcat[m]> and you should not be claiming there is one without evidence
+20:44:18 <strcat[m]> also a 'break' in a cryptographic algorithm just means it doesn't provide the expected security level, it rarely means that it doesn't work at all
+20:44:45 <engulf[m]> I'm not claiming that there is one, I'm claiming that if one was found that would be a way to break the encryption
+20:44:53 <strcat[m]> is AES256 was broken to only provide 120 bits of security instead of 256 bits (which would be a massive break)
+20:45:00 <strcat[m]> it would not change anything about the actual real world security
+20:45:25 <strcat[m]> engulf: you said that an attacker just needed time / resources to break the encryption which is inaccurate
+20:45:29 <engulf[m]>  * I'm not claiming that there is one, I'm claiming that if one was found that would be a way to get into the device
+20:45:51 <TheJollyRoger> Heh, well, if there's a problem with AES, then bigger people than us would likely be in a lot more trouble - people like the United States Government are relying on it to secure their top secret level diplomatic communications.
+20:46:28 <strcat[m]> engulf: if someone uses a strong passphrase, that holds up against any attacker with any amount of resources due to how things are designed
+20:46:39 <strcat[m]> if someone uses a 6 digit PIN, then they depend on the security of the Titan M
+20:47:02 <TheJollyRoger> Remember, even though AES was designed in 1997, the NIST was very clear that the cipher might actually need to last until the end of time.
+20:47:41 <strcat[m]> for a profile that is logged out OS security isn't the weak point due to hardware enforcement of the delays
+20:48:20 <strcat[m]> if a profile is logged in and you're talking about data not protected by the keystore, and an attacker that's going to be trying to exploit the OS, it's not about encryption
+20:48:51 <louipcm> oops i was just screwing around with communities
+20:49:21 <TheJollyRoger> So it's no wonder why they gave the entries into the standard competition to academics to scrutinize and go over with a fine-toothed comb.
+20:49:52 <engulf[m]> strcat:  I said that depending on the length of the password a motivated attacker (with years of time and a lot of resources) would possibly be able to get into the device.
+20:50:35 <engulf[m]> I'm sorry if you misunderstood, I didn't mean to claim otherwise
+20:50:55 <strcat[m]> what you said was going to mislead people in the channel
+20:51:00 <strcat[m]> the issue is not that I misunderstood anything
+20:52:26 <engulf[m]> I do agree that it could have been phrased in a better way
+20:54:07 <engulf[m]>  * I do agree that it could have been phrased better
+20:54:23 <fomijafi[m]> What is considered a strong passphrase for these phones?
+20:54:38 <TheJollyRoger> Four randomly selected dictionary words.
+20:58:59 <engulf[m]>  * I'm sorry if the post seemed to mislead people, wasn't the intention.
+21:12:14 <rwhalen[m]> Do you typically use that kind of password for just unlocking your phone? I imagine at some point there's a usability hit and you would need to compensate by making the phone take longer before letting it lock again, right? Presumable that could decrease the security if it's not auto-locking as frequently.
+21:12:14 <rwhalen[m]> Not to say that you're wrong... this is just something I've been debating myself recently.
+21:13:18 <TheJollyRoger> Well, I actually find it somewhat easier to type four words in than hunt with shift with numbers and such.
+21:13:27 <TheJollyRoger> So it's a bit easier for me to type and easier for me to memorize.
+21:32:26 <r0tt0r[m]> use full spectrum of symbols chars numbers. when tested against my own wifi that made it not so easy to crack anymore. though a multi quantum crack server farm with thousands of gpus and stuff its quiet a matter of time
+21:33:34 <r0tt0r[m]> everytime i forget one of my passwords for an account i double it with special char in between
+21:34:21 <r0tt0r[m]> some are meanwhile aroumd 30char/numbers/symbols long and i can still memorize
+21:35:42 <r0tt0r[m]> * some are meanwhile around 30char/numbers/symbols long and i can still memorize
+21:37:11 <projectmoon> Does changing the lock screen password also change the existing encryption!
+21:37:14 <projectmoon> ?*
+21:39:45 <r0tt0r[m]> there was this xkcd comic with supersecure long passwords and the hammer solution. hit him with hammer till he gives you his password, or was it a wrench...
+21:41:17 <TheJollyRoger> There should be an addendum to that:
+21:42:07 <TheJollyRoger> Crypto nerd's imagination: "Oh no they'll hit me with a $5 wrench!" What happens in real life: "Here just use this canned exploit that takes advantage of one of the 30 unpateched vulnerabilities in the kernel."
+21:44:02 <r0tt0r[m]> ye indeed, sad truth
+21:45:21 <r0tt0r[m]> there should be an emergency pin code option when entered it wipes or triggered through xploit tries
+21:45:48 <r0tt0r[m]> that face to see finspy tech in action :)
+21:46:07 <r0tt0r[m]> aaaaaaaand its wiped
+21:48:00 <strcat[m]> projectmoon: profile's are protected with encryption derived from the lock method
+21:48:05 <strcat[m]>  * projectmoon: profiles are protected with encryption derived from the lock method
+21:48:18 <strcat[m]> projectmoon: this has been stated here a lot along with detailed information on it
+21:48:36 <strcat[m]> I recommend going back and reading explanations of it
+21:53:11 <louipc> TheJollyRoger: i use a $2 wrench
+22:18:00 <golli[m]1> > use full spectrum of symbols chars numbers. when tested against my own wifi that made it not so easy to crack anymore. though a multi quantum crack server farm with thousands of gpus and stuff its quiet a matter of time
+22:18:01 <golli[m]1> If you want something even better, use ALT codes.
+22:18:16 <golli[m]1> It's essentially like having a pin code for every character.
+22:19:23 <louipcm> wow how many quantum crack farms are there
+22:23:19 <r0tt0r[m]> <louipcm "wow how many quantum crack farms"> theres already cloud cracking options, i guess quantum crack farms are only military options

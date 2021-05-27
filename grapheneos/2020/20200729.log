@@ -1,0 +1,302 @@
+00:02:32 <clannad[m]> Send the abidiff
+00:02:37 <clannad[m]> Also 100% you messed up
+00:03:18 <JTL> aeonsolution[m]: That does look familar
+00:03:21 <aeonsolution[m]> whats the abidiff and how can you tell?
+00:03:33 <clannad[m]> It literally tells you
+00:03:40 <JTL> out/soong/.intermediates/frameworks/rs/libRS_internal/android_arm64_armv8-a_vendor_shared/libRS_internal.so.abidiff
+00:03:42 <aeonsolution[m]> lol, sorry
+00:03:45 <aeonsolution[m]> let me get that
+00:03:46 <JTL> heh it's okay
+00:03:57 <clannad[m]> Glassrom has a patch to shut this check up
+00:04:02 <clannad[m]> But don't use it here
+00:04:23 <JTL> clannad[m]: But is really shutting it up a good idea?
+00:04:53 <clannad[m]> Glassrom actually needs it because it bumps up the optimization level. It must not be used to create regressions
+00:04:54 <aeonsolution[m]> https://pastebin.com/pXQgEYae
+00:05:51 <clannad[m]> <JTL "clannad: But is really shutting "> For glassrom's use case yes because optimization is bumped to -O3
+00:06:03 <JTL> ah I gotcha
+00:06:34 <JTL> aeonsolution[m]: Thanks for starting work on that
+00:07:02 <aeonsolution[m]> you're welcome, its for the Pixel 3 family
+00:07:23 <aeonsolution[m]> anu helped me get started, give them the credit
+00:07:34 <aeonsolution[m]> ❤️
+00:07:36 <JTL> Fair
+00:08:00 <JTL> Just wasn't aware of that :P
+00:11:12 <aeonsolution[m]> if its easier, you all can message me whenever you're able too
+00:11:48 <JTL> Cheers
+00:12:25 <clannad[m]> aeonsolution: https://github.com/GrapheneOS/platform_prebuilts_abi-dumps_vndk/commit/f2bd5eaae6a72a07c6be92cbaf2f9defa30fcf38
+00:12:28 <clannad[m]> You're missing this
+00:12:41 <clannad[m]> Do NOT cherry-pick
+00:13:21 <clannad[m]> See upstream documentation https://source.android.com/devices/architecture/vndk/abi-stability
+00:14:07 <aeonsolution[m]> got it, let me read up on that. thank you for the help.
+00:14:50 <aeonsolution[m]> this is the fork with all the patches migrated: https://github.com/theaeonsolution/kernel_google_crosshatch/tree/11
+00:15:04 <aeonsolution[m]> just need to resolve the issues as they come, this one was the first
+00:49:29 <WokeBillKristol[> here's my stupid question of the month to avoid getting auto-kicked
+00:49:54 <WokeBillKristol[> why is it no longer suggested to change your user-agent string to a common user agent?
+01:25:42 <nickcalyx[m]> Well there is client side encryption
+01:27:20 <nickcalyx[m]> It would still be better if the host's business model was not based,on data mining
+01:27:38 <nickcalyx[m]> But instead, fee for service
+01:28:22 <nickcalyx[m]> Also you can administer it yourself
+01:29:18 <nickcalyx[m]> Then there are little server appliances you can host at home
+01:30:58 <nickcalyx[m]> Kind of like commercial versions of freedombox
+02:13:22 <acidbirt> Anyone here?
+02:14:31 <cn3m[m]> acidbirt: yes
+02:14:40 <cn3m[m]> check the description
+02:16:04 <acidbirt> It is probs a dumb question but , I need to install stock os on my pixel 3a again because my sister is going to get this phone , and everything went until i get the message "Erase successful, but not automatically formatting.
+02:16:32 <acidbirt> And i cant figure out how to format it
+02:27:18 <overheadscallop[> acidbirt: Exactly what did you do? Flash stock and then erase the avb custom key? Does it not boot after erasing the custom key?
+02:37:18 <clannad[m]> @freenode_acidbirt:matrix.org: ignore it
+02:37:31 <clannad[m]> And boot
+02:38:45 <overheadscallop[> Don't they still need to lock it?
+02:55:00 * overheadscallop[ sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/jiWqHhmCeGfERWodrwZRZwuZ >
+02:55:25 <overheadscallop[> Are you still able to reboot into bootloader? You could try reflashing the stock image
+03:03:45 <clannad[m]> acidbirt: sideload the boot.img
+03:03:52 <clannad[m]> fastboot flash boot boot.img
+03:04:02 <clannad[m]> Use the volume buttons to select recovery
+03:04:09 <clannad[m]> Select apply update from adb
+03:04:20 <clannad[m]> adb sideload the full OTA
+03:27:55 <Knull[m]> nickcalyx thx
+03:29:05 <nickcalyx[m]> sure!
+03:32:39 <Knull[m]> mailfence seems like a good option for storage but don't have an app yet
+04:11:11 <ruddo[m]> How do I set up a regular monthly donation to the project, going to strcat ?
+04:12:04 <overheadscallop[> https://github.com/sponsors/thestinger
+05:37:17 <clannad[m]> Tbh overheadscallop any way to irregularly donate?
+05:56:41 <nickcalyx[m]> I guess do it manually
+05:57:14 <nickcalyx[m]> Set up a calendar reminder
+05:59:54 <paynode> hire an accountant clannad[m] :)
+06:08:12 <paynode> clannad[m]: also, possibly github's 1yr donation match policy is still in place, so you may want to donate through there if you are okay with their platform's tos
+06:08:38 <JTL> paynode: it expired recently
+06:08:46 <JTL> fyi
+06:08:48 <paynode> ah
+06:09:09 <paynode> thx
+06:22:24 <galyoninion[m]> yeah a few GrapheneOS features are still from OpenBSD iirc
+06:22:52 <paynode> ?
+06:25:24 <paynode> i indeed see some mention of this (malloc) on main page...were the list of openbsd tech used made into a succint list/page?
+06:25:28 <paynode> this is interesting
+08:31:58 <maybemaybe[m]> I create a second user profile for my work on GrapheneOS and try to install few apps. I was not able to install an app. I suppose that the reason for this is that the work user is not admin. Is there a solution for this? Or another way to make the work user to an admin as well?
+08:32:32 <cn3m[m]> <maybemaybe[m] "I create a second user profile f"> let me guess it is an F-Droid or an app you installed in F-Droid?
+08:32:50 <cn3m[m]> F-Droid really messes up multi profile(but there are workarounds)
+08:45:07 <cdesai> how does F-Droid mess things up / whats the expected?
+08:46:33 <cn3m[m]> cdesai: F-Droid doesn't have the latest build for F-Droid on their site usually. This means it fails to install the store. Then people get non F-Droid versions of apps. Which will fail as virtually everything on F-Droid is not signed by the dev and uses the centralized F-Droid cert
+08:47:07 <maybemaybe[m]> <cn3m[m] "F-Droid really messes up multi p"> cn3m: On my private profile i installed Aurora Droid and few apps over the f-droid repo. The work user was „clean“ from any apps.
+08:48:06 <cdesai> cn3m[m]: got it. the latest should be bumped, just asked about it in the dev channel.
+08:48:45 <cn3m[m]> <cdesai "cn3m: got it. the latest should "> thanks ^
+08:49:01 <cn3m[m]> > <@maybemaybe:matrix.org> cn3m: On my private profile i installed Aurora Droid and few apps over the f-droid repo. The work user was „clean“ from any apps.
+08:49:01 <cn3m[m]> > When I tried to install Aurora Droid in the work profile I just say „App not installed“.
+08:49:01 <cn3m[m]> make sure they are the same version and signer
+08:49:55 <maybemaybe[m]> <cn3m[m] "> <@maybemaybe:matrix.org> cn3m:"> Okay. Thanks!
+08:50:12 <cdesai> work profile isn't really meant for installing random apks like that anyway, that's part of the issue.
+08:54:37 <ruddo[m]> Just out of curiosity, what's the sandbox intended to do in the work profile thing?
+08:54:56 <ruddo[m]> In my mind, please correct me if I'm wrong, it's precisely to install bullshit APKs I don't want on my phone otherwise.
+08:55:02 <ruddo[m]> Like Uber or WhatsApp.
+08:55:18 <cn3m[m]> <ruddo[m] "Just out of curiosity, what's th"> technically everything is already sandboxed
+08:55:36 <ruddo[m]> Yes, agreed, but most of these apps want shared storage access.
+08:55:42 <ruddo[m]> (and other bullshit like it)
+08:55:46 <maybemaybe[m]> <cdesai "work profile isn't really meant "> Do have a suggestion for a better way forward? I want a separation for Signal for privat and work
+08:56:01 <cn3m[m]> Generally the project recommends a dedicated profile instead of a work profile
+08:56:11 <ruddo[m]> That's a good question!  Can I have a signal in my work profile and another one in my regular profile?
+08:56:21 <ruddo[m]> Ah I see like a totally diferent user.
+08:56:24 <cn3m[m]> Shelter adds attack surface and allows for more access to the clipboard
+08:56:30 <ruddo[m]> What's the difference between a work profile and a separate user?
+08:56:43 <cn3m[m]> <cn3m[m] "Shelter adds attack surface and "> this
+09:00:14 <SchismXL[m]> Whilst not recommended, it fundamentally depends on your threat model. If you just want to have the aforementioned apps "compartmentalised" in a profile using Shelter, then go for it. If you're running from the feds, then you got more problems.
+09:01:01 <cn3m[m]> You shouldn't use F-Droid in that case xD
+09:01:41 <SchismXL[m]> Just make sure the apps you're installing are from "trusted sources"
+09:01:47 <SchismXL[m]> <cn3m[m] "You shouldn't use F-Droid in tha"> Haha
+09:02:38 <clannad[m]> Just use
+09:03:13 <ruddo[m]> <ruddo[m] "What's the difference between a "> ?
+09:03:26 * clannad[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/mQGwuUEZTPYDMfeJKrwpXnmV >
+09:03:28 <clannad[m]> ...
+09:41:14 <dazinism> ruddo: see https://hub.libranet.de/wiki/and-priv-sec/wiki/user-profiles
+09:41:50 <ruddo[m]> Thank you!
+10:28:42 <syrupslog[m]> are there any self-hostable device management solutions out there that anyone's using with grapheneos? for stuff like remote lock/wipe/find/etc
+13:05:04 <international> Hello
+13:05:17 <international> Everyone
+13:05:42 <international> I'm new to all this and i just installed graphene os
+13:06:09 <international> And i just have few questions and I would really appreciate your help
+13:07:49 <international> Is anyone here with me 😅
+13:08:20 <overheadscallop[> clannad: bitcoin or paypal, I guess: https://grapheneos.org/donate
+13:08:26 <overheadscallop[> international: go a head and ask your questions
+13:08:53 <international> 1.every restart keeps telling me : your device is loading a different operating system2.google logo is still here every logo and i saw in videos that this is doesn't show after the 1st loadis this normal i should leave it or i missed something during the install and i have to redo it ?
+13:09:48 <overheadscallop[> both are normal and expected
+13:10:34 <international> Thank you very much
+13:10:47 <international> Is there away to make it not happen
+13:11:01 <overheadscallop[> no
+13:11:02 <international> Just start directly with Graphene logo
+13:11:14 <international> Thank you so much for your help
+13:11:21 <za_warudo-vilfp8> Not really, that's how it works
+13:11:26 <international> I really appreciate it
+13:12:00 <international> May i ask one more question about app cloning
+13:12:31 <international> For example running two telegrams
+13:12:36 <international> Or such
+13:13:43 <overheadscallop[> ask whatever questions you have and if anybody knows they'll answer
+13:14:17 <overheadscallop[> the supported method of having multiple instances of apps is to use separate user profiles
+13:15:12 <international> And they can run both at the same time
+14:34:06 <za_warudo-vilfp8> Six months since we had a full month update interval
+16:21:50 <q22[m]> You only receive notifications of your active profile afaik
+16:58:05 <M3m7pxucpi7[m]> I'm trying to change my keyboard language but I don't see the language I want. What do I need to do?
+16:58:43 <BalooRJ> M3m7pxucpi7[m] Not sure if GrapheneOS Keyboard supports all languages
+16:58:50 <BalooRJ> what language are you looking for. There are other keyboards in F-Droid
+17:00:03 <M3m7pxucpi7[m]> Japanese and Korean
+17:00:53 <M3m7pxucpi7[m]> I can change the system language to them but not the keyboard
+17:02:01 <BalooRJ> so what I'm seeing is
+17:02:07 <BalooRJ> did you add a second language
+17:02:26 <BalooRJ> I am in Languages & Input, then clicking Languages
+17:02:29 <BalooRJ> I add what I think is Japanese
+17:02:30 <M3m7pxucpi7[m]> No
+17:02:59 <BalooRJ> hmmm, it looks like the GrapheneOS keyboard does not have support from those languages in the list I see
+17:03:32 <M3m7pxucpi7[m]> Then do I need to install an external app for those languages?
+17:03:38 <BalooRJ> it looks like you might
+17:03:48 <BalooRJ> a quick view of the F-Droid store there is an app that is six years old called OpenWnn
+17:05:27 <BalooRJ> there is also nicoWnnG
+17:05:31 <BalooRJ> that's 4 years old
+17:08:18 <BalooRJ> yeah it looks like I can set the system language as Japanese but if I have the GrapheneOS keyboard to just use system languages it does not support Japanese
+17:10:16 <BalooRJ> I got the nicoWnnG keyboard working in GrapheneOS for Japanese characters
+17:10:48 <BalooRJ> if you download that app from F-Droid and then hit the keyboard icon in the bottom right in whatever app you have the keyboard open up you can select that keyboard and then use it. And turn off GrapheneOS keyboard as the default if you want
+17:11:01 <M3m7pxucpi7[m]> It also works for me, thanks
+17:11:14 <BalooRJ> no problem, glad you were able to find it
+17:11:30 <M3m7pxucpi7[m]> But those keyboards are very old, even the OS is warning me
+17:11:50 <BalooRJ> the issue, like any other open source project is that maintainers are needed to keep it updated
+17:12:12 <BalooRJ> I am using Flite TTS as well and that is 5 years old to avoid Google's Text to Speech service
+17:12:52 <M3m7pxucpi7[m]> Yeah you're right
+17:13:15 <M3m7pxucpi7[m]> I guess making keyboards is not as easy as just bringing those that exist on vanilla android
+17:14:19 <BlackWinnerYoshi> <M3m7pxucpi7[m] "But those keyboards are very old"> Actually, GrapheneOS warns about an old app everytime when the app's target API is less than the Graphene's API
+17:15:20 <BalooRJ> I have gotten some notifications in GOS for newly updated apps
+17:15:32 <BalooRJ> but that one is indeed 4 years old
+17:15:49 <M3m7pxucpi7[m]> So I will be warned everytime I switch keyboards ok
+17:16:04 <M3m7pxucpi7[m]> Ah I don't see a Korean keyboard though
+17:16:17 <BalooRJ> yeah I don't see a Korean one either
+17:18:09 <M3m7pxucpi7[m]> Are Japanese and Korean keyboards not available on normal android too? Wasn't expecting this
+17:18:58 <M3m7pxucpi7[m]> Recently switched to Graphene from iOS so I don't know much about Android
+17:19:30 <BlackWinnerYoshi> <M3m7pxucpi7[m] "So I will be warned everytime I "> No, just one time, that's it
+17:20:00 <M3m7pxucpi7[m]> oh great
+17:20:28 <M3m7pxucpi7[m]> I guess no texting in Korean on Graphene then :(
+17:20:44 <M3m7pxucpi7[m]> Maybe someday I'll make one myself
+17:22:17 <BalooRJ-phone> You might be able to find a korean keyboard if you dig online enough
+17:23:05 <nickcalyx[m]> Try gboard?
+17:40:00 <cdesai> google has these other keyboards on the play store for various imes
+17:40:59 <cdesai> https://play.google.com/store/apps/details?id=com.google.android.inputmethod.korean&hl=en
+17:41:05 <BlackWinnerYoshi> <nickcalyx[m] "Try gboard?"> I doubt GBoard will work on GrapheneOS, because it depends on GSF
+17:49:20 <alzxjm[m]> <BlackWinnerYoshi "I doubt GBoard will work on Grap"> gBoard works on GrapheneOS
+17:49:36 <M0xC0ncord[m]> <alzxjm[m] "gBoard works on GrapheneOS"> Can confirm this.
+17:52:00 <BlackWinnerYoshi> <alzxjm[m] "gBoard works on GrapheneOS"> Aurora Store does say that it's GSF dependent, so is there something that doesn't work in Gboard?
+17:52:42 <alzxjm[m]> Black Winner Yoshi: I'm not sure how that "GSF dependent" label is generated. Lots of apps with that tag work perfectly well without GPS.
+17:52:56 <alzxjm[m]> I guess it's the difference between a dependency and a "hard dependency"?
+17:53:16 <M0xC0ncord[m]> <alzxjm[m] "Black Winner Yoshi: I'm not sure"> I'm pretty sure the tag just means it pulls in GSF for some functionality, but the app may still function without it.
+17:53:35 <BlackWinnerYoshi> <alzxjm[m] "I guess it's the difference betw"> Kind of like how Signal depends on GSF, but only to send notifications (I think)
+17:53:39 <M0xC0ncord[m]> Google Maps as of late functions fine without GSF (even on Graphene) despite its complaining.
+17:53:54 <alzxjm[m]> The Philips Hue app works perfectly fine on GrapheneOS with, afaik, zero loss of functionality.
+17:54:39 <alzxjm[m]> Despite saying "GSF depenent"
+18:13:41 <BalooRJ-phone> GrapheneOS with Google Maps just seems like a paradox
+18:20:35 <BlackWinnerYoshi> <BalooRJ-phone "GrapheneOS with Google Maps just"> That's why I use OsmAnd+
+18:26:23 <alzxjm[m]> If you live in an area with worst-in-the-US congestion and often have to commute during peak hours, using Google Maps amazing traffic features is a no brainer.
+18:26:58 <alzxjm[m]> Freedom is important too: not just privacy and security. I'm glad I'm free to use Google Maps but I don't have to.
+18:27:13 <BalooRJ> Yeah I'm an OSM And+ suer as well
+18:29:58 <BalooRJ> M3m7pxucpi7 - Did some more looking yeah I don't even see a korean keyboard that's not from Google
+18:31:26 <BalooRJ> the other options I see are in the playstore: ALKeyboard - Korean Hangul, and Swiftkey which is not private
+18:32:52 <BalooRJ> AnySoftKeyboard does not have Korean or Japanese support
+19:05:27 <broda721[m]> OSMAnd+ is amazing
+19:20:22 <applescruff_53[m> Does anyone have experience with Magic Earth?
+19:20:43 <SchismXL[m]> <applescruff_53[m "Does anyone have experience with"> Yep
+19:20:49 <SchismXL[m]> Love it
+19:22:22 <applescruff_53[m> I had OSMAnd then replaced it with Magic Earth.
+19:23:12 <SchismXL[m]> Same. Used OSMAnd for a long time, but they really do need to make the user experience a bit better
+19:23:41 <restf[m]> do you run Magic Earth in a separate profile?
+19:24:04 <SchismXL[m]> No, I don't use separate profiles
+19:24:05 <alzxjm[m]> Magic Earth is great.
+19:26:41 <SchismXL[m]> If there's only one thing I'd want from Magic Earth, is for it to not be closed source. Other than that, it is perfect
+19:30:09 <SchismXL[m]> But, obviously, closed source ≠ malicious
+19:30:51 <alzxjm[m]> Their privacy policy is awesome.
+19:31:04 <alzxjm[m]> Being based in the EU is a real asset.
+19:33:29 <restf[m]> yeah, I'm surprised to see so much support for it in this room
+19:34:03 <restf[m]> anybody know how they make their money?
+19:40:07 <BlackWinnerYoshi> <SchismXL[m] "If there's only one thing I'd wa"> Well, maybe someone will R/E Magic Earth, and then it will be open source
+19:40:23 <BlackWinnerYoshi> <SchismXL[m] "But, obviously, closed source ≠ "> Try saying that to Free Software Foundation
+19:42:26 <SchismXL[m]> 🥀
+19:43:42 <SchismXL[m]> Anyways, just wanna let peeps know that there's an offtopic GrapheneOS room, which can be found here: https://matrix.to/#/!NKqyWWNTlbuXwOPMCt:matrix.org
+21:11:24 <Knull[m]> <SchismXL[m] "Anyways, just wanna let peeps kn"> how you get to that in elements?
+21:14:57 <SchismXL[m]> Try this https://matrix.to/#/#freenode_#grapheneos-offtopic:matrix.org
+21:16:04 <SchismXL[m]> or #grapheneos-offtopic for IRC
+21:16:05 <Knull[m]> "not implemented in riotx"
+21:17:09 <Knull[m]> if I search for that last part, #freenode_#grapheneos-offtopic:matrix.org, nothing found
+21:18:11 <SchismXL[m]> https://develop.element.io/#/room/#freenode_#grapheneos-offtopic:matrix.org
+21:19:05 <SchismXL[m]> Linked wrong thing.
+21:19:26 <SchismXL[m]> #freenode_#grapheneos-offtopic:matrix.org
+21:19:36 <SchismXL[m]> Can you not click that?
+21:20:23 <Knull[m]> 😕 same thing
+21:21:09 <overheadscallop[> use the web/desktop app, the element mobile app doesn't have the join feature yet
+21:21:36 <Knull[m]> I'll check it out on the web, haven't been there yet
+21:21:39 <Knull[m]> thx
+21:25:11 <entry1[m]> Quick question. Can a user revert back to Android 10 from GrapheneOS on a Pixel 3a? Thank you
+21:25:34 <SchismXL[m]> <entry1[m] "Quick question. Can a user rever"> Yes
+21:26:17 <entry1[m]> <SchismXL[m] "Yes"> Is that process listed on the website or how would one go about doing it? I appreciate it
+21:26:31 <SchismXL[m]> One sec
+21:27:19 <overheadscallop[> https://grapheneos.org/install#replacing-grapheneos-with-the-stock-os
+21:28:36 <SchismXL[m]> <entry1[m] "Is that process listed on the we"> https://flash.android.com/ you can use this
+21:28:36 <entry1[m]> Thank you two.
+21:47:34 <Knull[m]> I feel dirty..I gave up on anysoft and installed Gboard
+21:48:53 <jfbourdeau> Hi all, I am having difficulty to use my Pixel 3a, GrapheneOs phone as a HotSpot. I tried those suggestions :
+21:48:55 <jfbourdeau>  Usually hotspot uses hardware acceleration and bypasses ybr VPN
+21:48:55 <jfbourdeau> <clannad[m]> But the VPN can block this
+21:48:55 <jfbourdeau> <clannad[m]> * Usually hotspot uses hardware acceleration and bypasses the VPN
+21:48:55 <jfbourdeau> <clannad[m]> Disable tethering hardware acceleration in developer options
+21:49:20 <jfbourdeau> laptop can connect to the phone, can ping it, but can't surf.... Anything else I could try ?
+21:49:44 <BlackWinnerYoshi> <Knull[m] "I feel dirty..I gave up on anyso"> Everyone here feels dirty when they abandon libre software for proprietary software
+21:51:08 <Knull[m]> wish polls were a thing, I'd love to know how many other ppl here hopped over to Gboard as well
+21:52:38 <SchismXL[m]> <Knull[m] "wish polls were a thing, I'd lov"> OpenBoard from F-Droid for me.
+21:53:21 <BlackWinnerYoshi> <Knull[m] "wish polls were a thing, I'd lov"> Well, Framadate exists: https://framadate.org - I could make a poll about what keyboard app do you use on your phone
+21:53:34 <SchismXL[m]> <jfbourdeau "Hi all, I am having difficulty t"> Have you tried it without your VPN first?
+21:55:08 <BalooRJ> Knull: Why not use the GrapheneOS keyboard? What is the functionality you are looking for
+21:55:52 <BalooRJ> I also liked the Hacker's Keyboard when I used it
+21:58:49 <Knull[m]> <BlackWinnerYoshi "Well, Framadate exists: https://"> that would be interesting
+21:59:02 <Knull[m]> <BalooRJ "Knull: Why not use the GrapheneO"> swiping
+21:59:03 <jfbourdeau> SchismXL[m],   Yes I tried without the VPN.... But you make me think, I had that problem with NordVPN and when VPN was OFF it was working...  Weeks ago I installed OpenVPN instead of NOrdVPN to not depend on a commercial product and I think the problem started at the same time !! I will uninstall OpenVPN to see... tks !!!
+22:03:18 <Knull[m]> open board no swipe. sad
+22:05:57 <BlackWinnerYoshi> <Knull[m] "open board no swipe. sad"> Is there any libre keyboard that has swiping, besides AnySoftKeyboard, anyway?
+22:05:57 <BalooRJ> ah, I see
+22:07:48 <Knull[m]> <BlackWinnerYoshi "Is there any libre keyboard that"> not that I'm aware of
+22:18:25 <M114z[m]> <BlackWinnerYoshi "Is there any libre keyboard that"> OpenBoard
+22:20:11 <paynode> / j qubes
+22:20:14 <paynode> oops
+22:20:44 <BlackWinnerYoshi> <paynode "/ j qubes"> What?
+22:21:56 <paynode> the space between / and j made my msg post here rather than just joining the qubes room
+22:22:05 <paynode> BlackWinnerYoshi:
+23:10:49 * entry1[m] uploaded an image: IMG_20200729_190946_1.jpg (190KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/xCMHQWioKiTZHjhEgJxCOkkP >
+23:11:38 <entry1[m]> Currently here and getting the fastboot too old error. I want to try the process from the start again, any suggestions? I restarted my computer with a different fastboot and it gives the same error
+23:12:09 * entry1[m] uploaded an image: 20200729_191144_6682605594097128721.jpg (81KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/cCCRiJfCboseZCNbOrIGsAmZ >
+23:12:58 <JTL> entry1[m]: hold on. I can help you in a sec
+23:13:30 <JTL> It doesn't look like fastboot is in your PATH?
+23:14:51 <entry1[m]> So that needs to be included into the command line? I downloaded the platform tools from Google after I tried using and adb portable from Techlore's tutorial
+23:15:08 <JTL> Only use Google's versions of fastboot
+23:16:29 <entry1[m]> Yessir that's what I'm on now. I have platform-tools folder extracted and pasted in the GrapheneOS Pixel 3a stable files into it (extracted)
+23:16:56 * entry1[m] uploaded an image: 20200729_191638_3007970750329667726.jpg (92KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/rpAQdzALaREItGMpBVGljJwH >
+23:17:35 <JTL> I don't have a win10 machine here atm, but there are instructions on the website on how to properly download platform-tools and temporarily alter the PATH for a PowerShell instnace
+23:18:12 <JTL> I'd rather do that then attempt to merge the platform-tools binary with the contents of the factory zip
+23:18:15 <JTL> https://grapheneos.org/install#standalone-platform-tools
+23:19:53 * entry1[m] uploaded an image: Screenshot_20200729-191919.png (81KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/amlGEyLIocINVscNjKpSMmcS >
+23:20:11 <JTL> Yes
+23:20:28 <JTL> Need to start from PowerShell and not cmd, just to make that clear
+23:21:05 <entry1[m]> I see this, do I paste the script under "On Windows:" into Powershell?
+23:21:20 <JTL> what script?
+23:21:21 * entry1[m] uploaded an image: 20200729_192108_1618369916271162673.jpg (60KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/EQiQFnTdnazgrgvMzWdudSZZ >
+23:21:50 <entry1[m]> $env:Path = "$pwd\platform-tools;$env:Path"
+23:22:12 <JTL> Yes
+23:22:22 <JTL> Well
+23:22:38 <JTL> Need to download platform-tools using curl as directed
+23:23:54 <entry1[m]> Okay great. I ran that and it shows the following now
+23:24:05 * entry1[m] uploaded an image: 20200729_192356_3926723743731036474.jpg (239KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/rWhJPCjJtCCTTDHxXFhjTRWt >
+23:24:20 <entry1[m]> Sorry for spamming, should I move to dms
+23:24:33 <JTL> That looks fine
+23:24:43 <JTL> I'm going to have to leave for a bit, but I wish you well
+23:30:19 * entry1[m] uploaded an image: 20200729_192958_7342332346852667772.jpg (63KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/bHOckqCeUnEOxGxwwKLeiTgI >
+23:30:39 <entry1[m]> Unsure what value to supply for the parameters
+23:32:27 <overheadscallop[> I think you're supposed to use `curl.exe` on Windows
+23:32:35 <overheadscallop[> not just curl
+23:32:38 <BlackWinnerYoshi> <entry1[m] "Unsure what value to supply for "> I guess it's the URI, it even says so
+23:33:10 <JTL> overheadscallop[: I know curl.exe in powershell isn't the same as the Unix curl, just a symlink to some Microsoft thing iirc
+23:34:46 <overheadscallop[> JTL: plain `curl` is the alias for the Powershell Invoke-WebRequest commandlet
+23:34:56 <JTL> Yes
+23:35:14 <overheadscallop[> you need to specifically use `curl.exe` in powershell for actual curl
+23:35:40 <entry1[m]> I'll try .exe in about an hour and post, I appreciate the help!
+23:46:35 <Knull[m]> <entry1[m] "20200729_191144_6682605594097128"> I had to edit the flash all .bat to replace all instances of fastboot with .\fastboot when I did it
+23:46:56 <JTL> Knull[m]: Because it wasn't properly added to PATH I think
+23:47:06 <Knull[m]> probably
+23:58:43 <Knull[m]> can vanadium search engine settings be changed? it offers Google, Yahoo, Bing (ddg by default), but no startpage, qwant, or searx

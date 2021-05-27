@@ -1,0 +1,329 @@
+00:00:03 <strcat[m]> at Basic and Enterprise adds the lower option
+00:03:46 <madaidan[m]> Ah, I forgot about that
+00:06:24 <JTL> I'd be curious to see an audit of some sort
+00:14:04 <zaxxa[m]> How are audits carried out?
+00:20:49 <renlord> what audits
+00:21:19 <cn3m[m]> <zaxxa[m] "How are audits carried out?"> I run a lot of MITMs both privately and I used to do them professionally. You want to do the monitoring not on the device. mitmproxy to another device and make sure you can decrypt all communications. "privacy" companies like Apple can make this hard since e2ee will bypass this. If there's something I can't read that's my main focus. I just have to look around a lot
+00:25:01 <cn3m[m]> Wireshark is a great tool as well. I also monitor the device in the wild to make sure it doesn't act wildly different. Malware is usually what changes when you try to audit it so companies are extremely careful to not do that. Things like VM and MITM while mostly detectable are not going to generally abuse that, it's very likely you'll catch them doing it too. Try it on malware analysis
+00:26:57 <cn3m[m]> that's what I'd do to test Windows 10
+00:28:18 <zaxxa[m]> I see, thanks
+00:49:38 <renlord> cn3m[m]: do you share your results publicly?
+00:49:43 <TheJollyRoger> Cripes, one family problem after another... I get back and the threads seem to have vanished.
+00:50:11 <renlord> madaidan[m]: win10 seems to be moving towards that direction with UWP applications
+00:50:23 <renlord> but momentum seems to have died.
+00:50:25 <renlord> :(
+00:50:42 <cn3m[m]> <renlord "cn3m: do you share your results "> I don't since it's too much work to organize.
+00:50:59 <renlord> developers for windows dont seem to want to develop UWP apps
+00:52:05 <cn3m[m]> it's a lot of work to just setup. Sorting and explaining the data and filtering out some things that are needed for OS functions that are not things I want shared publicly
+00:52:14 <cn3m[m]> it's just not feasible
+00:52:21 <renlord> fair enough
+00:52:39 <renlord> maybe just sharing the dump without an interpretation piece?
+00:53:10 <cn3m[m]> I could find a way to do that. Just redact some info
+00:53:31 <cn3m[m]> I'll do that the next time I test a Windows machine
+00:59:32 <madaidan[m]> <renlord "madaidan.: win10 seems to be mov"> You mean the mobile stuff?
+00:59:52 <madaidan[m]> There's W10S
+01:00:18 <renlord> they seem to have pivoted to calling them 'universal' for both desktop and mobile
+01:00:28 <renlord> but ya -- they look tablet-ish
+01:01:59 <renlord> but the windows store is pretty shitz
+01:02:27 <renlord> if i want something like win10s, i'd probably just shell out for an ipad
+01:02:32 <cn3m[m]> I might try a Windows 10 Enterprise MITM at some point
+01:08:21 <emucla> are huawei devices supported by grapheneOS?
+01:09:23 <cn3m[m]> <emucla "are huawei devices supported by "> no
+01:09:28 <cn3m[m]> Check the FAQ
+01:09:39 <cn3m[m]> in fact read the whole site in it's entirety
+01:09:41 <emucla> ok
+01:09:46 <emucla> thanks
+01:10:14 <cn3m[m]> https://grapheneos.org/faq#device-support
+01:10:38 <cn3m[m]> The rest of the FAQ and at least the Usage Guide should help you understand what this project is about
+01:11:26 <cn3m[m]> emucla: https://grapheneos.org/usage
+01:36:14 <emucla> 7list
+01:44:09 -madaidanTelegram- Please log in before inviting Telegram puppets.
+01:46:34 <madaidan[m]> lmao
+01:46:39 <madaidan[m]> analog what are you doing
+04:02:34 <thelearner[m]> Chrome duet Home-Search-TabSwitcher variation not working for anyone else in Bromite (83)? Any fix? Tried everything uninstalled it, cleared storage etc.
+04:05:29 <renlord> can confirm bt is broken
+04:05:34 <renlord> for calls
+04:16:20 <joshman[m]> Bluetooth calls are broken
+04:27:50 <cyredanthem[m]> renlord (@freenode_renlord:matrix.org): hey how do you set Edge in the virtualization to have sane privacy settings everytime?
+04:28:13 <TheJollyRoger> Running cts.
+04:32:14 <zoraver[m]> thelearner: https://github.com/bromite/bromite/issues/580
+04:41:26 <strcat[m]> josh.man: have you tried rebooting
+04:43:39 <renlord> with bt calls, its random
+04:43:46 <renlord> sometimes it works, sometimes it doesnt
+04:44:32 <TheJollyRoger> Is there a CTS test plan I could run that might give us more information?
+04:50:10 <TheJollyRoger> My phone is back on the rack now. One emergency lead to another and I didn't get back until friggin' late.
+04:50:47 <thelearner[m]> zoraver: thank you :)
+04:57:00 <joshman[m]> <strcat[m] "josh.man: have you tried rebooti"> Yes sir. Various Times
+05:01:35 <joshman[m]> I just tried again. And it worked. Weird. Will test it more during the day
+05:07:24 <dan-v[m]> i haven't been following along with the bluetooth issues very closely; why is stock aosp not experiencing this? i'm assuming it's hardening related?
+05:07:50 <JTL> iirc it's an issue exposed by hardened_malloc
+05:09:26 <dan-v[m]> JTL: gotcha
+05:10:41 <TheJollyRoger> Crazy to think how upstream probably has this bug but like... not realized it because they haven't figured out the potential for that being an exploit.
+05:11:04 <TheJollyRoger> Makes me nervous thinking about what other kinds of bugs could be lurking down below, that don't get found by upstream.
+05:11:15 <TheJollyRoger> Not in like Android specifically, but other things.
+05:13:06 <JTL> Oh sure
+05:13:38 <TheJollyRoger> Like the uh... kernel >_<.
+05:13:55 <cyredanthem[m]> 85-90% of exploits in Android are memory related iirc
+05:14:24 <TheJollyRoger> Oh jeez.
+05:18:32 <cyredanthem[m]> I tried to do the math on what percentage of exploits GrapheneOS would stop
+05:20:55 <cyredanthem[m]> My guess is effectively 40% of all exploits should be thwarted by GrapheneOS
+05:22:50 <TheJollyRoger> Wow.
+05:22:53 <thelonewolf[m]> When will armv8.5 hardware be available? It has MTE.
+05:24:07 <thelonewolf[m]> A14 would probably use armv8.5
+05:24:45 <cyredanthem[m]> <TheJollyRoger "Wow."> TheJollyRoger: the tough part is vendor images are different every time
+05:25:06 <cyredanthem[m]> You also have to ask if they are trying to exploit GrapheneOS or just stock Android
+05:25:22 <TheJollyRoger> Got it.
+05:25:47 <cyredanthem[m]> May if I recall correctly was all vendor for the pixels
+05:27:14 <cyredanthem[m]> Which would be very unlikely to be effected by GrapheneOS hardening
+05:28:09 <cyredanthem[m]> Though all of those were medium severity
+05:37:12 <strcat[m]> btw let me know if you have issues with the clock app
+05:37:17 <strcat[m]> an issue was reported with that
+05:37:42 <strcat[m]> it is expected that there's a warning about the API level on first launch though
+05:37:43 <strcat[m]> https://github.com/GrapheneOS/os_issue_tracker/issues/218
+05:38:32 <strcat[m]> I am not sure the issue is correct
+05:38:34 <strcat[m]> there may be no new issue
+05:38:42 <renlord> post-updated, phone rebooted and alarm rang on time to wake me up for a very important meeting
+05:38:47 <renlord> dont seem to have an issue
+05:39:04 <renlord> this was 2 days ago
+05:41:04 <cyredanthem[m]> Though all that said the hardening and especially on the webview is very helpful so looking at what I did specifically would be misleading
+05:41:23 <renlord> cyredanthem[m]: what sort of privacy settings? i just keep everything on default
+05:41:32 <renlord> and have dns-level ad blocking
+05:42:01 <cyredanthem[m]> A few random privacy settings and DuckDuckGo
+05:42:03 <cyredanthem[m]> I don't remember I'll check
+05:42:31 <renlord> meh, i gave up using DDG, i sometimes use startpage.com if i have the patience
+05:42:35 <renlord> otherwise just load google.com
+05:42:55 <renlord> DDG gives me very subpar search results for very specific things i look for
+05:43:24 <strcat[m]> cyredanthem: we do harden the vendor components
+05:43:26 <strcat[m]> just not firmware
+05:43:35 <cyredanthem[m]> I doubt Google is doing much effective tracking with a temporal browser any way
+05:44:51 <cyredanthem[m]> strcat (@strcat:matrix.org): oh thanks I stand corrected. Does it effect it if the vendor is partially built from source or not?
+05:45:20 <strcat[m]> as we build more it applies stuff like zero-on-init for stack variables to more code
+05:45:30 <strcat[m]> but most of the hardening applies to it already
+05:46:33 <cyredanthem[m]> Gotcha thanks good to know
+05:47:08 <cg_droid> strcat[m], yes, I received a warning (but only the first time and the apps work) in Messages, Clock and Conversations (xmpp), but they work ok and no more warning after that.
+05:48:11 <strcat[m]> g2g for now
+05:48:16 <strcat[m]> really need help with the bluetooth stuff
+05:48:28 <strcat[m]> we need to figure out the order it gets in stock aosp and make sure this matches
+05:49:28 <cyredanthem[m]> In the code or on a live system?
+06:14:50 <renlord> both
+06:16:07 <cyredanthem[m]> Ah it's just the Pixel 3? If it's bonito as well I can boot the GSI(I think the AOSP May from Google is out with no gapps)
+06:19:02 <TheJollyRoger> https://gist.github.com/Peter-Easton/ab0333677b1ee1b3e22a3231bfdd84a7 Current test of the beta release. Looks like the CTS is just being dumb again.
+06:19:33 <TheJollyRoger> I think it's that CTS testing app not being installed/uninstalled properly which is responsible for the one "fail" result.
+06:21:39 <cyredanthem[m]> If I can help let me know. I should be able to do without my phone for a day or so
+06:22:01 <cyredanthem[m]> DSI Loader can't come soon enough
+06:22:24 <blacklight447[m]> Dsi?
+06:22:52 <cyredanthem[m]> It allows you to run stock images in a live boot on any phone
+06:23:15 <cyredanthem[m]> At least potentially it's uncertain if bootloader will need to be unlocked
+06:24:57 <renlord> gsi you mean
+06:25:03 <renlord> generic system image?
+06:25:54 <cyredanthem[m]> DSU
+06:25:56 <cyredanthem[m]> Not DSI sorry typo
+06:25:57 <cyredanthem[m]> So close
+06:26:54 <cyredanthem[m]> Dynamic system updates
+06:29:15 <cyredanthem[m]> It's supported in Android 10 or at least partially
+06:30:21 <cyredanthem[m]> Theoretically, if I understand correctly it could be used to develop on the same device you already have if you only have one
+06:30:38 <cyredanthem[m]> renlord (@freenode_renlord:matrix.org): https://developer.android.com/topic/dsu
+06:30:48 <cyredanthem[m]> It needs to be signed by Google or your vendor
+06:32:39 <cyredanthem[m]> It's only a GSI though so it's not great for testing I guess
+06:40:37 <cyredanthem[m]> Welcome
+06:49:42 <toaskoas[m]> Auto Dark Mode on a Pixel 2XL is not working.
+07:03:12 <bseeinu[m]> Wait, does BT work now with this update on Pixel 3?
+07:14:27 <joshman[m]> BT worked and works
+07:14:27 <joshman[m]>  BT calls are not stable
+07:15:22 <bseeinu[m]> Songs on BT did not work in the previous update
+07:15:32 <bseeinu[m]> Now it reversed to calls
+07:16:20 <JTL> Ahahaha
+07:16:36 <bseeinu[m]> Paired with serious camera errors in opencam for the pixel 3...
+07:16:38 <bseeinu[m]> Ouch.
+07:49:57 <travankor> pmn369[m]: good job
+07:50:28 <travankor> pmn369[m]: hope you upstream as device maintainer
+10:05:31 <hiya> strcat[m]: Can you help me with links or citation that Google uses this project's code?
+11:08:59 <thelonewolf[m]> <hiya "strcat: Can you help me with lin"> https://android-review.googlesource.com/q/owner:danielmicay%2540gmail.com
+11:10:15 <thelonewolf[m]> <hiya "strcat: Can you help me with lin"> https://android-developers.googleblog.com/2016/07/protecting-android-with-more-linux.html?m=1
+11:53:50 <hiya> thelonewolf[m]: hmm thanks
+14:09:36 <Arhu> Does anyone know why DisplayPort Alt Mode is disabled for Pixels in the stock ROM? The 3 and 4 should have hardware capable.
+15:24:17 <gnumdk[m]> Hello, I'm really curious, is there any documentation explaining how and why GrapheneOS bootloader is properly signed ?
+15:25:22 <renlord> gnumdk[m]: yes, read the android verified boot documentation
+15:25:43 <renlord> you will find a flow chart with some graphics, confirm your findings when you install grapheneos for the first time
+15:26:26 <renlord> gnumdk[m]: also, read the grapheneos.org website in its entirety, do not skip anything.
+15:31:34 <gnumdk[m]> ok
+15:41:03 <gnumdk[m]> But, are GrapheneOS key signed by Google ?
+15:51:31 <nickcalyx[m]> No
+15:52:28 <gnumdk[m]> ok, so it does not work like secure boot on PC...
+15:54:28 <Arhu> It is more secure
+16:05:50 <brenneke[m]> Hands-free call volume very low when paired with car audio. (after last update)
+16:47:41 <brenneke[m]> Pixel 2 XL.
+16:50:41 <DrWhax> gnumdk[m]: you can sign with your own keys..
+17:06:21 <cn3m[m]>  @gnumdk:matrix.org GrapheneOS loads their own keys. This means your device is locked to GrapheneOS code and can't be changed without wiping the device
+17:19:10 <nickcalyx[m]> Hey DrWhax  :)
+17:22:21 <dazinism> Krita made it onto android!
+17:22:25 <dazinism> https://play.google.com/store/apps/details?id=org.krita
+17:24:43 <dazinism> gnumdk: I've been documenting stuff to do with android verified boot over at https://hub.libranet.de/wiki/and-priv-sec/wiki/verified-boot
+17:53:40 <DrWhax> nickcalyx[m]: hey hey! :)
+17:55:33 <hypokeimenon[m]> nickcalyx: are you related to /aware of the Calyx institute and Android-based OS
+17:58:43 <dazinism> hypokeimenon: https://calyxinstitute.org/about/board/nicholas-merrill
+17:59:44 <hypokeimenon[m]> I see, thanks.
+18:01:17 <dazinism> After folks chatting yesterday about getting apps (GCam) from various, slightly shady app stores I did some more research
+18:01:53 <dazinism> Turns out Exodus Privacy display app signing certs SHA1 fingerprint in their reports
+18:03:32 <dazinism> Thats reports for, I think, for every app on the Play Store.
+18:03:44 <dazinism> https://hub.libranet.de/wiki/graphene-os/wiki/Apps#Verifying_apk_files
+18:04:45 <cg_droid> dazinism, maybe you'd like more Stanley app from F-droid if you are looking forr the certificate and some more information
+18:05:02 <dazinism> Guess thats not as nice as if they had the SHA256 fingerprints, but something
+18:05:19 <cg_droid> Only sha1 too...
+18:06:11 <dazinism> Most often apk downloads from the devs site or git repo will use the same cert
+18:14:53 <dazinism> cg_droid: yeah, prefer apps_packages info as it shows much more info about apps including the SHA256 fingerprint, but Stanley works for SHA1 fine
+18:15:11 <cg_droid> 😉
+19:17:22 <joshman[m]> <dazinism "After folks chatting yesterday a"> What's the bottom line I don't get it
+19:28:30 <nickcalyx[m]> <hypokeimenon[m] "nickcalyx: are you related to /a"> Yup
+19:48:48 <cn3m[m]> nickcalyx: I gotta try CalyxOS sometime
+19:48:54 <cn3m[m]> do you have the extra permissions?
+19:50:22 <nickcalyx[m]> What permissions
+19:54:26 <cn3m[m]> network and sensors nickcalyx:
+19:59:43 <cdesai> cn3m[m]: at the moment we don't
+20:01:57 <cn3m[m]> gotcha thanks, I don't use anything Google so I don't need CalyxOS would just like to try it sometime
+20:01:59 <cn3m[m]> I recommend it on Reddit a lot
+20:02:06 <cn3m[m]> haven't gone more then flashing it once on an old phone
+20:04:31 <cn3m[m]>  @eglssm:matrix.org hey eglssm. What device do you have now? Are you going to buy new?
+20:05:03 <madaidan[m]> strcat: https://old.reddit.com/r/privacytoolsIO/comments/gr8nue/brave_browser_sending_traffic_to_cryptocompare/fs0e03i?context=3
+20:05:15 <madaidan[m]> Using the exact same screenshot as the sockpuppet accounts
+20:05:25 <madaidan[m]> So reusing saintjohnny's bullshit points
+20:05:32 <madaidan[m]> Think we might have our guy
+20:05:45 <madaidan[m]> <madaidan[m] "So reusing saintjohnny's bullshi"> Also*
+20:07:02 <inquiree> Oh no that again
+20:09:15 <inquiree> "Firefox is superior because Tor browser is based on it"
+20:10:00 <cn3m[m]>  @eglssm:matrix.org did you disable the default apps?
+20:10:02 <cn3m[m]> <inquiree ""Firefox is superior because Tor"> Firefox is now a Target and a browser with 4% marker share leads everyone combined with zero days
+20:10:54 <madaidan[m]> <inquiree ""Firefox is superior because Tor"> You should show this to the people who say that https://trac.torproject.org/projects/tor/wiki/doc/ImportantGoogleChromeBugs
+20:12:08 <cn3m[m]> Chrome would be a perfect base beside proxy issues and other things
+20:12:14 <cn3m[m]> Firefox is a compromise
+20:12:52 <inquiree> madaidan: Thanks for the link. I see that stupid attempt at rebuttal being echoed really often
+20:13:44 <inquiree> strcat: local (VPN interface) address is no longer exposed with vanadium after latest update. Was that an upstream change?
+20:14:07 <strcat[m]> inquiree: no I changed the default IP handling policy, see changelog
+20:14:16 <strcat[m]> instead of you needing to configure it
+20:14:25 <inquiree> That's a nice change!
+20:14:48 <strcat[m]> there is a low more low-hanging stuff needing to be done
+20:16:09 <inquiree> madaidan, cn3m: It's easy to see why that anonymous dude cannot be left alone. He's been on a personal crusade to spread BS
+20:16:23 <inquiree> Anonymouse*
+20:17:29 <blacklight447[m]> <inquiree "madaidan, cn3m: It's easy to see"> is he at it again?
+20:18:01 <inquiree> When did he ever stop?
+20:18:24 <cn3m[m]>  @freenode_inquiree:matrix.org I'm on a personal crusade to do the same thing
+20:18:28 <cn3m[m]> let's see who breaks first
+20:18:34 <cn3m[m]>  @freenode_inquiree:matrix.org I'm sure he's asking the same thing about me
+20:18:47 <inquiree> I don't know how he hasn't been banned honestly
+20:19:28 <inquiree> With his extensive history of slandering anyone pointing out his logical inconsistencies/conspiratorial fearmongering
+20:19:35 <cn3m[m]> I am glad he's not we can spot him when he shills his guide
+20:19:58 <inquiree> Even the mods aren't spared. No idea why they're still putting up with his BS
+20:20:25 <cn3m[m]> I don't really care if he's just gonna make another account and I'm going to keep debunking him
+20:21:46 <cn3m[m]> I feel like no one actually trusts that username we all know he's bad news. it's for the best he's not banned
+20:29:58 <inquiree> cn3m: That should apply to people that know better. I don't think most people subscribed to the subreddits he patronizes can make that distinction
+20:33:23 <dazinism> eglssm: if they really bother you can disable or uninstall apps from your main user profile on the phone using adb. Some things may stop the phone working properly so have to be a bit careful.
+20:34:24 <inquiree> madaidan, cn3m: https://old.reddit.com/r/privacy/comments/em8doj/smartphone_hardening_guide_for_normal_people/fdmxqau/. You see that bit about the titan M? It's a point he loves to tout. We should probably address that
+20:51:09 <clathu[m]> After having read bad things about F-Droid, I don't know which App Store to use. Is Aurora Store the better alternative at the moment ?
+20:57:31 <brenneke[m]> <brenneke[m] "Hands-free call volume very low "> Rebooting phone fixes but only for a while, then require rebooting again. Latest thing is not low but no audio. Is this a known problem?
+21:03:04 <inquiree> clathu: what kind of apps?
+21:21:57 <chani> clathu[m]: what bad things have you read about F-Droid?
+21:24:35 <cx2[m]> <brenneke[m] "Rebooting phone fixes but only f"> It is...and it is being sorted out from what I understand.
+21:24:53 <nickcalyx[m]> I think the google play store has more malware than fdroid
+21:25:22 <brenneke[m]> <cx2[m] "It is...and it is being sorted o"> Will watch for developments thanks.
+21:27:16 <chani> I'm pretty new to this and trying to be careful, but I had thought F-droid was (generally speaking) safer than Aurora Store.
+21:27:57 <cx2[m]> <brenneke[m] "Will watch for developments than"> Of course! Give the guys time... there are some great minds working on this project....just working through a few kinks
+21:28:14 <cx2[m]> * and / or gals
+21:28:42 <cn3m[m]>  @nickcalyx:matrix.org depends
+21:28:55 <cn3m[m]> F-Droid has more insecure software that's a security threat
+21:29:03 <cn3m[m]> Play Store has more badware
+21:42:50 <hitchhooker[m]> what makes google play store apps so much more secure? there is code review?
+21:43:51 <hitchhooker[m]> hmalloc busts so many memory unsafe apps from play store that barely never happends with f-droid
+21:46:24 <nickcalyx[m]> Low
+21:46:24 <nickcalyx[m]> > F-Droid has more insecure software that's a security threat
+21:46:24 <nickcalyx[m]> How can you say that, quantitatively
+21:50:02 <hitchhooker[m]> https://developers.google.com/android/play-protect/ is there more than this?
+21:50:05 <hypokeimenon[m]> From what's already been said, it may be partly to do with F-droid apps shipping with a v1 signature instead of a v2. Read past chat
+21:56:12 <cn3m[m]>  @nickcalyx:matrix.org look at how long they don't patch stuff and random old programs
+21:56:33 <cn3m[m]> v2 signing is a nice addition from modern app stores yes
+21:56:58 <cn3m[m]> F-Droid does a lot right and with common sense it can be very good
+21:56:59 <nickcalyx[m]> Fdroid only distributes other people's software
+21:58:24 <nickcalyx[m]> In any case, I definitely support alternatives to google controlling the whole ecosystem of android app distribution
+21:58:44 <nickcalyx[m]> Probably we can all agree on that :)
+21:59:29 <hypokeimenon[m]> I'm opposed to Google's control
+22:00:02 <cn3m[m]>  @nickcalyx:matrix.org 100%
+22:00:05 <hypokeimenon[m]> but if they open-sourced their PHA(potentially harmful app) detection algorithms or something I wouldn't mind..
+22:00:42 <cn3m[m]> I'd put a warning on any network permission app that is over two years old. Require v2 signing and block all apps over 5 years old
+22:01:31 <hypokeimenon[m]> shouldn't be anything over 2 years old in the store tbh lol
+22:03:17 <cn3m[m]> I see comments on PTIO all the time about their disk change password and how GrapheneOS is unsuable since I said it didn't have it. I explain how it works and they say, but it's in F-Droid and it's security software section
+22:05:49 <madaidan[m]> <inquiree "madaidan, cn3m: https://old.redd"> I've already replied to that point but he doesn't listen. He's incredibly stubborn and ignorant. He doesn't care for the truth and no matter how much evidence you present to prove him wrong, he sticks to his biased agenda.
+22:06:09 <madaidan[m]> And btw, to ping me you need to add that dot at the end or I don't get a notification
+22:06:27 <madaidan[m]> "madaidan." instead of "madaidan"
+22:06:59 <cn3m[m]>  @madaidan.:matrix.org he's a madlad with a .
+22:07:21 <cx2[m]> <madaidan[m] "I've already replied to that poi"> Going to read.... but lemme guess... something about the spooky black box...
+22:07:30 <madaidan[m]> <cx2[m] "Going to read.... but lemme gues"> Exactly.
+22:08:10 <madaidan[m]> He likes to say Huawei phones are the best and Pixels are the worst because of the dreaded Titan M black box. It's crazy.
+22:09:29 <cn3m[m]>  @madaidan.:matrix.org I need to take up a prescription habit to handle this guy
+22:09:30 <blacklight447[m]> you know what i found funny about this guy
+22:09:36 <blacklight447[m]> hes always obessed about the USA and the 14 eyes
+22:09:49 <blacklight447[m]> because of this, he wants to use a huewei device, fine
+22:10:25 <blacklight447[m]> but here is the thing
+22:11:11 <madaidan[m]> I wish him and all his alts were banned. It's too much to deal with him. He's relentless.
+22:11:24 <blacklight447[m]> his proof for huewei being the only trustworthy oem comes from a report from the UK claiming they found no evidence of a backdoor
+22:11:25 <blacklight447[m]> and the uk is part of the 14 eyes
+22:11:33 <blacklight447[m]> so to avoid tech from the 14 eyes, your gonna rely on a report from the 14 eyes saying that something is not backdoored, where the fuck is the logic in that
+22:11:50 <madaidan[m]> The mods of r/privatelife are all his alts lol
+22:13:08 <blacklight447[m]> imagigne being banned on so many privacy subs that you just start your own
+22:13:15 <gervarouge[m]> <blacklight447[m] "and the uk is part of the 14 eye"> But they sided with me!?!
+22:13:15 <gervarouge[m]> They must be right
+22:13:21 <blacklight447[m]> look at it, its all just him posting news articles
+22:13:47 <blacklight447[m]> lol
+22:13:49 <madaidan[m]> <gervarouge[m] "But they sided with me!?!"> He's so hypocritical
+22:14:15 <madaidan[m]> It's not the only case of him discrediting a source until it fits his agenda
+22:15:36 <cn3m[m]> he has so many alts I'm starting too wonder I'm one of them
+22:15:41 <cn3m[m]> 😆
+22:16:28 <gervarouge[m]> We all are
+22:17:16 <cx2[m]> <blacklight447[m] "so to avoid tech from the 14 eye"> **ESPECIALLY** if that concern is likely due to “spycraft”... the Brits of all people?? haha
+22:18:44 <blacklight447[m]> <madaidan[m] "It's not the only case of him di"> this just shows weakness
+22:24:12 <gervarouge[m]> Can we just clone madaidan, blacklight, and cn3m?
+22:28:42 <analog[m]> why blacklight
+22:29:16 <gervarouge[m]> Le postage
+22:56:11 <blacklight447[m]> <analog[m] "why blacklight"> ?
+22:56:12 <blacklight447[m]> you got a problem with me? lol
+23:00:39 <aksuited[m]> When connecting a phone to a pc to transfer files or adb, does the pc see identifying info about the phone like imei hardware id etc or just the phone name?
+23:01:00 <aksuited[m]> Android phone by the way
+23:13:13 <strcat[m]> aksuited: no, just the phone name
+23:13:45 <strcat[m]> aksuited: if you enable ADB and whitelist the host, completely different story, you give it a massive amount of information and control over the device
+23:13:50 <strcat[m]> I thought that was clear?
+23:14:00 <strcat[m]> you shouldn't be using ADB on a production device, it is in developer options for a reason
+23:14:22 <strcat[m]> that's the purpose of ADB
+23:14:32 <aksuited[m]> I had to use it
+23:14:38 <strcat[m]> OS and app debugging, giving an attached computer a huge amount of information and control
+23:14:46 <aksuited[m]> I disableed the usb debug after it
+23:14:55 <strcat[m]> why did you have to use it
+23:14:59 <aksuited[m]> Amd reset the option of pc
+23:15:15 <aksuited[m]> I installed threema work app
+23:15:30 <aksuited[m]> And then i tried to uninstall and it just wouldn
+23:15:46 <aksuited[m]> So i had to use adb to uninstall it
+23:15:49 <strcat[m]> Secure PDF Viewer app version 4 released: https://github.com/GrapheneOS/PdfViewer
+23:16:00 <strcat[m]> https://twitter.com/GrapheneOS/status/1265781579621810176
+23:16:01 <strcat[m]> https://www.reddit.com/r/GrapheneOS/comments/grul23/secure_pdf_viewer_app_version_4_released/
+23:18:14 <cn3m[m]>  @strcat:matrix.org thanks
+23:19:03 <strcat[m]> https://github.com/GrapheneOS/PdfViewer/issues assorted easy issues to work on
+23:19:09 <strcat[m]> also, need someone to work on updating pdf.js
+23:19:13 <strcat[m]> last time there were issues with CSP
+23:19:43 <strcat[m]> https://github.com/GrapheneOS/pdf.js is the current one
+23:19:46 <strcat[m]> you build it with gulp
+23:19:48 <strcat[m]> need to update
+23:20:55 <aksuited[m]> <strcat[m] "OS and app debugging, giving an "> No way now to remove the information from pc? If i remove platform tools which i used adb from?
+23:21:13 <strcat[m]> aksuited: I don't know what you mean
+23:21:28 <strcat[m]> I'm explaining that ADB gives a massive amount of control over the device
+23:21:36 <strcat[m]> I doubt you needed it to uninstall an app, you could have used Settings
+23:22:05 <strcat[m]> there is nothing you can do to take back the fact that you trusted the computer like that before - you can revoke the trusted host keys from ADB and disable ADB
+23:22:27 <strcat[m]> if that computer was compromised it could have used ADB to gather data about the device and do all kinds of things like installing apps, granting permissions
+23:22:29 <strcat[m]> that's what ADB does
+23:22:39 <strcat[m]> don't use ADB if you aren't a developer is good advice
+23:23:02 <strcat[m]> if the computer wasn't compromised then no problem...
+23:23:17 <strcat[m]> there is nothing for you to remove in that case, don't overcomplicate things
+23:23:19 <aksuited[m]> The settings just freezed when tried to uninstall
+23:23:32 <cn3m[m]> <strcat[m] "don't use ADB if you aren't a de"> this is very good advice
+23:23:41 <cn3m[m]> along with don't use developer options
+23:24:00 <aksuited[m]> All day i tried from settings from holding the app and uninstall and nothing
+23:24:17 <strcat[m]> if you encounter bugs please report them on the issue tracker
+23:24:22 <aksuited[m]> <strcat[m] "there is nothing for you to remo"> Ok thanks
+23:27:30 <aksuited[m]> I thought it was a corrupt install and didnt want to create an issue about it
+23:28:27 <aksuited[m]> Meaning i didnt think it was an os probl

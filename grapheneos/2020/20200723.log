@@ -1,0 +1,897 @@
+00:00:20 <cn3m[m]> <nickcalyx[m] "Yeah but whats wrong with GPL3"> too restrictive for the project
+00:00:35 <cn3m[m]> it's in the FAQ one sec let me find it
+00:01:28 <cn3m[m]> never mind my bad it is not in the faq or the contribution section of the build guide
+00:13:11 <strcat[m]> nickcalyx: we want it to be permitted to make devices with GrapheneOS that don't support unlocking the bootloader
+00:13:28 <strcat[m]> nickcalyx: so we can't include any GPLv3 code since then people couldn't do that with GrapheneOS
+00:13:48 <strcat[m]> nickcalyx: we can certainly distribute builds of GPLv3 apps via a first party repository
+00:13:52 <strcat[m]> they just can't be preinstalled
+00:14:14 <strcat[m]> nickcalyx: so what I want to do is just hide the sample calendar app and keep that around for the CTS
+00:14:26 <strcat[m]> and if people want to install Etar they can do that
+00:14:40 <strcat[m]> and when we have a first party repo it's one of the apps that could be in there
+00:26:23 <anupritaisno1[m]> JollyRoger signal it's imports
+00:26:31 <anupritaisno1[m]> * JollyRoger signal it's important
+01:34:53 <RiotElement[m]> Does anyone know if Graphene OS has a built in read aloud feature or recommend a read aloud app?
+01:59:32 <RiotElement[m]> Does anyone know if Graphene OS can take live pictures?
+02:05:03 <cn3m[m]> <RiotElement[m] "Does anyone know if Graphene OS "> TTSUtil with Google Text to Speech works for me
+04:12:34 <greenmoon[m]> I have been told here that force stopping an app would prevent it from starting again if you don't explicitly start by clicking on the icon but it's false I have an app using sdk29 (user land) that still randomly start even when force stopped.
+04:12:54 <greenmoon[m]> * I have been told here that force stopping an app would prevent it from starting again if you don't explicitly start by clicking on the icon but it's false I have an app using sdk29 (Userland) that still randomly start even when force stopped.
+04:18:34 <anupritaisno1[m]> Apps can start even if force stopped
+04:18:36 <anupritaisno1[m]> Other apps can wake them up
+04:18:51 <anupritaisno1[m]> GCM, although not present on graphene is an example
+04:18:53 <RiotElement[m]> Their alarm clocks can also wake them up
+04:19:15 <greenmoon[m]> Yea I see
+04:29:27 * greenmoon[m] uploaded an image: Screenshot_20200723-062658.png (209KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/ppPaYBzfcLkymLzVVWeNSCcO >
+04:29:52 <greenmoon[m]> Was mislead by that, probably wrongly understand
+05:41:42 <strcat[m]> RiotElement: force stopping an app removes jobs/alarms
+05:41:52 <strcat[m]> and a fresh installed app cannot have those anyway
+05:44:19 <strcat[m]> greenmoon: you're probably doing something wrong
+05:44:34 <strcat[m]> per the security model an app that is force stopped can't start itself
+05:44:48 <strcat[m]> if you find a way to bypass that report the vulnerability for a bounty
+05:44:51 <strcat[m]> you probably didn't.
+05:45:48 <strcat[m]> greenmoon: perhaps you're confusing 'force close' for an unresponsive app with force stopping it
+06:25:28 <greenmoon[m]> I found out what was starting the stopped app, it is the file app.
+06:25:42 <greenmoon[m]> File manager
+07:58:23 <dazinism> greenmoon: yeah, I'd been  a bit confused, but came to conclusion apps could be started by other apps.
+07:58:45 <dazinism> Wondering when file manager is starting apps? Guessing its when you tap a file type which only that app supports?
+08:00:17 * greenmoon[m] uploaded a video: 2020_07_23_09_18_47.mp4 (12329KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/FeTkCiEyhctWvDmEqwhpfgtc >
+08:05:08 <dazinism> greenmoon: That a bit weird.
+08:06:17 * greenmoon[m] uploaded an image: Screenshot_20200723-100549.png (45KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/tLacxpmXlOKeoiJXAcydFDfL >
+08:06:58 <dazinism> I'd come to my conclusion by using apps_Packages info
+08:07:23 <dazinism> Using that to launch some activities of an app
+08:09:38 <Syrillic[m]> When the pixel 5 releases how long do you guys think it will take GrapheneOS to support?
+08:09:50 <dazinism> I'd noticed that force stop doesnt work reliably with apps running in a Shelter created work profile
+08:10:45 <dazinism> Syrillic: it needs someone to step up to work on porting Garphene to any new device.
+08:11:14 <Syrillic[m]> Makes sense but currently graphene supports all pixel devices?
+08:11:37 <dazinism> Also unlikely a new device will be added while its on a different version of AOSP
+08:12:38 <Syrillic[m]> What’s AOSP?
+08:12:58 <cn3m[m]> Android Open Source Project
+08:13:09 <Syrillic[m]> Ahh makes sense
+08:13:20 <Syrillic[m]> So what device do you guys recommend for GrapheneOS
+08:13:22 <Syrillic[m]> Currently
+08:13:48 <cn3m[m]> the FAQ covers it very well
+08:14:06 <cn3m[m]> https://grapheneos.org/faq#recommended-devices
+08:14:13 <greenmoon[m]> <dazinism "I'd noticed that force stop does"> I use his freeze feature for shelter its more powerful I think, you can add an icon to do it
+08:14:24 * greenmoon[m] uploaded an image: Screenshot_20200723-101344.png (28KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/TPRGcnCMegDvaMLvkfcsdVBM >
+08:15:16 <cn3m[m]> <greenmoon[m] "I use his freeze feature for she"> it is really crap actually
+08:15:27 <cn3m[m]> using client side checks
+08:15:32 <greenmoon[m]> Not u
+08:15:43 <Syrillic[m]> <cn3m[m] "the FAQ covers it very well"> Thanks
+08:15:48 <cn3m[m]> if you want to actually disable an app in shelter use the switch in the launcher to log off the whole profile
+08:16:37 <cn3m[m]> Pixel 4 is the most secure with the longer support. 3a is really reliable and great for value and support
+08:17:53 <dazinism> New devices start on a different aosp branch and it tends to be a few months until all existing devices move to the same branch.
+08:19:18 <greenmoon[m]> <cn3m[m] "using client side checks"> You say bs, the app is actually disabled you can see it in Settings-Applications-see all apps-work apps
+08:19:29 <greenmoon[m]> * Thats bs, the app is actually disabled you can see it in Settings-Applications-see all apps-work apps
+08:19:45 <dazinism> So the quickest it will happen is about 3 months from a device being launched. If someone (or company)works on porting GrapheneOS and someone commits to being the maintainer of the device.
+08:22:11 <dazinism> Yeah, using shelter to freeze apps apparently does do a really strong shutdown.
+08:22:32 <dazinism> Can't see them from settings>apps anymore
+08:22:38 <dazinism> Or app launcher
+08:22:48 <dazinism> Other apps can no longer see them
+08:22:54 <cn3m[m]> I will give it a test might have been thinking of the other one
+08:22:59 <cn3m[m]> what is that one called?
+08:23:14 <dazinism> Theres Super Freezz
+08:23:19 <dazinism> Never tried it
+08:23:21 <cn3m[m]> wait no I am thinking of greenify and one called Freez
+08:23:26 <cn3m[m]> <dazinism "Theres Super Freezz"> oh that
+08:25:24 <dazinism> I got the idea that Super Freezz may be a way to more easily  'force stop' apps. But I could be completely wrong as I've not tried it.
+08:25:55 <greenmoon[m]> We were speaking about the freeze feature of shelter
+08:26:09 <greenmoon[m]> Superfreeze is just force stopping
+08:27:17 <cn3m[m]> greenify is a stupid way too
+08:27:22 <cn3m[m]> and there is another
+08:28:08 * greenmoon[m] uploaded an image: Screenshot_20200723-102751.png (44KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/wJOiaqoRWFAXwdYPmrqCujxV >
+08:28:38 <greenmoon[m]> Dazim all those apps are freezed i made a folder on desktop to turn them on quickly
+08:28:56 <greenmoon[m]> Dazinism*
+08:28:59 <dazinism> Yeah I get the idea Super Freezz is the open source answer to Greenify. Imagine they work the same way, but I could be wrong
+08:29:33 <cn3m[m]> Anyone know if the VPN leak has been fixed?
+08:30:06 <cn3m[m]> my bad on shelter good catch guys
+08:30:31 <dazinism> greenmoon: yeah, I make homescreen icons to unfreeze apps that I freeze in shelter
+08:31:16 <dazinism> That includes signal, as I dont use it much and it can, under some conditions, eat a whole load of battery real quick.
+08:32:02 <greenmoon[m]> Ya signal is battery hungry sadly even with the recent battery fix
+08:34:23 <dazinism> Apps really vanish from the device when they are froozen in shelter. Without the unfreeze shortcuts the only way to find a trace of them is looking in the shelter app. And they are hidden right at the bottom of the work tab.
+08:41:35 <tvg[m]> Hi I'm kind of new to using customROM's and I have a question
+08:41:35 <tvg[m]> If I understand it correctly, installing GraphenOS will delete any memory on my device. This isn't a concern for me, because I'll be using an out-of-the-box new phone.
+08:41:35 <tvg[m]> I am however unsure what to do with my SIM card. Is it best to just pop it in, after I get Graphene up and running? Or should my SIM already be inserted during the installation and should I back up for example my contacts on it?
+08:42:41 <dazinism> tvg: it should be fine to stick it in after
+08:42:58 <dazinism> you've installed GrapheneOS
+08:43:05 <anonymouserobot[> I wish Etar had a widget though :(
+08:43:35 <tvg[m]> <dazinism "tvg: it should be fine to stick "> Thank you so much!
+08:44:05 <dazinism> tvg: no problem
+08:44:23 <greenmoon[m]> Yea but don't the 3a require internet access to unlock the bootloader? I think I have read that somewhere
+08:44:34 <greenmoon[m]> Unlike precious models
+08:44:43 <greenmoon[m]> Previous*
+08:45:25 <dazinism> greenmoon: oh yeah, think my 3XL did.
+08:45:52 <greenmoon[m]> :/
+08:46:30 <greenmoon[m]> Can you just use WiFi?
+08:46:47 <greenmoon[m]> Without sim
+08:48:02 <tvg[m]> So just connect my device to our WiFi before installing Graphene and still insert the SIM afterwards?
+08:48:03 <tvg[m]> Like that?
+08:49:04 <greenmoon[m]> Idk, I was asking also
+08:52:12 <dazinism> Yeah I just used WiFi
+08:52:40 <dazinism> Well, it was a while ago, but I'm pretty sure
+08:54:13 <takama02[m]> May I ask how much of a ram does system takes on your pixel 3a. I think out of box mine was around 1,5gb and while iddle the battery wouldn't drop a single %. Now on 2gb it drains faster, not sure if I caused it be downloading some fishy app or just switching to unstable beta.
+08:56:03 <greenmoon[m]> Check the battery stats but ram usage isn't what is draining your battery
+08:58:48 <takama02[m]> May turn on battery saver but no app runs in background anyway
+09:00:11 <takama02[m]> Usually I've experience things like airplane, battery saver mode not turning off sensors doesn't help at all
+09:01:24 <takama02[m]> Based on usage the top is launcher
+09:03:00 <greenmoon[m]> From my experience low/poor signal strength drain faster also
+09:03:44 <greenmoon[m]> I have also read that on the internet, not sure if true but I think it is
+09:03:46 <takama02[m]> Hm that may be it, constantly turning on and off the Wi-Fi
+09:05:45 <SchismXL[m]> Is there a way of changing the refresh rate in adb?
+09:06:59 <SchismXL[m]> I'm slowly losing my mind with the green flickering and I'm not a fan of dark mode, so battery saver is a no go at the mo.
+09:07:37 <SchismXL[m]> And I'm not a full brightness type of guy.
+09:07:47 <dazinism> Poor cell reception definately uses more battery. Particularly if you are changing 4g to 3g a lot
+09:08:14 <greenmoon[m]> Damn this flickering thing is really bad
+09:08:44 <greenmoon[m]> Can't u get a replacement? All phones are affected? Its not covered by warranty?
+09:12:58 <SchismXL[m]> It only seems to be on the 4XL (iirc). It is to do with the gamma calibration at 90hz. 60hz is fine. Yesterday, I tried the stock ROM, AOSiP, LineageOS GSI, and phhusson's GSI ROM. All but stock had the flickering. I tested the CleanSlate kernel and used the corresponding app, but I don't trust it.
+09:13:25 <greenmoon[m]> :/
+09:14:24 <travankor_> someone posted a custom kernel page that fixes the flickering
+09:14:32 <SchismXL[m]> So, Google have issued a fix, but it just isn't implemented in AOSP ROMs yet
+09:15:02 <travankor_> wait, it’s fixed upstream?
+09:15:16 <SchismXL[m]> <travankor_ "someone posted a custom kernel p"> Yeah, CleanSlate? Used it. It is okay, but a hacky fix and I don't want to use any other kernel.
+09:15:33 <greenmoon[m]> Yea that's a pretty bad idea
+09:15:36 <SchismXL[m]> It must be fixed upstream, as I don't get flickering using the stock ROM.
+09:16:03 <travankor_> hmm so graphene just needs to update their build, then
+09:16:15 <travankor_> unless the stock build uses proprietary stuff
+09:18:03 <SchismXL[m]> I'd kill, donate, pay, reach around, rusty trombone or anything to have the option to enable or disable 90hz, tbh.
+09:18:53 <SchismXL[m]> Without having to opt for battery saving and the dark mode. Dunno why dark mode themes are so popular, I've never got into it.
+09:19:31 <travankor_> 90hz seems like a mistake in general
+09:20:41 <SchismXL[m]> Don't get me wrong, it is smooth as silk and there is a noticeable difference if you have two devices side by side. But for day to day usage, it doesn't make a great deal of sense
+09:21:20 <greenmoon[m]> Some new phones have 120hz 👀
+09:21:50 <anupritaisno1[m]> <SchismXL[m] "I'd kill, donate, pay, reach aro"> It's not possible. Hope that answers your question
+09:21:55 <anupritaisno1[m]> Google did something to the rotation control app
+09:21:58 <anupritaisno1[m]> It no longer works
+09:22:00 <anupritaisno1[m]> At least not on custom roms
+09:22:13 <travankor_> srs??
+09:22:20 <anupritaisno1[m]> Yes
+09:22:21 <SchismXL[m]> Saw the ASUS Rog reviews yesterday. Gaming, yes. Everything else, no.
+09:22:40 <anupritaisno1[m]> They also refuse to fix it
+09:23:21 <Jimmehh[m]> hello, i have asked about this before, but if choosing a new phone was determined between imessages and maybe app selection, would a iphone or pixel be better? i keep seeing plenty about how iphones are "bad" now, or not quite as good for security
+09:23:39 <anupritaisno1[m]> <SchismXL[m] "Saw the ASUS Rog reviews yesterd"> Tbh I don't have any problem whatsoever with 90hz
+09:23:58 <Jimmehh[m]> app selection being access to some apps not available to non google play services apps
+09:24:07 <cn3m[m]> <Jimmehh[m] "hello, i have asked about this b"> here one sec the lead dev has a good writeup
+09:24:25 <cn3m[m]> you can't go wrong with either a pixel or iphone but read this
+09:24:37 <SchismXL[m]> <anupritaisno1[m] "Tbh I don't have any problem wha"> Luck of the draw, then?
+09:24:56 <Jimmehh[m]> i've read some of those, but i'm just so indecisive, probably get it from my mom lol
+09:25:22 <Jimmehh[m]> i'm kind of drunk too, so sorry if i spelt anything wrong
+09:25:30 <Jimmehh[m]> or sounded completely insane
+09:25:43 <Jimmehh[m]> oh wait
+09:25:47 <Jimmehh[m]> cn3rm
+09:25:49 <Jimmehh[m]> or whoever
+09:26:03 <Jimmehh[m]> you are on the
+09:26:03 <Jimmehh[m]> mod on the subreddit correct?
+09:26:04 <cn3m[m]> I use both platforms just pick what your gut says
+09:26:15 <greenmoon[m]> Better to get an iPhone for your mom than a grapheneos or a google android filled with adware apps
+09:26:54 <Jimmehh[m]> well ok, problem is. all my friend use ios, so imessages would be nice, but family uses android, so it doesn't matter
+09:27:02 <cn3m[m]> > <@jimmehh:matrix.org> you are on the
+09:27:02 <cn3m[m]> > mod on the subreddit correct?
+09:27:02 <cn3m[m]> yes
+09:27:03 <greenmoon[m]> And I phones have longer updates support
+09:27:12 <Jimmehh[m]> most of my gaming uses facebook and shit
+09:27:32 <Jimmehh[m]> <cn3m[m] "> <@jimmehh:matrix.org> you are "> good to talk!, i haven't spoke to you yet and i really wanna support the project
+09:27:43 <cn3m[m]> https://nm.reddit.com/r/GrapheneOS/comments/bddq5u/os_security_ios_vs_grapheneos_vs_stock_android/ekxifpa/
+09:27:53 <Jimmehh[m]> greenmoon: support is a major thing too
+09:28:04 <cn3m[m]> <Jimmehh[m] "good to talk!, i haven't spoke t"> :)
+09:28:06 <Jimmehh[m]> i'll check that post out some more
+09:28:46 <Jimmehh[m]> i'd love to get into security research mainly ios, but hopefully arm in general if possible. so if i can contribute to the project i'd love to
+09:29:06 <Jimmehh[m]> ios just seems so convenient over android
+09:29:19 <cn3m[m]> I'd get an iPhone as a daily and a used Pixel for development?
+09:29:27 <Jimmehh[m]> but id love to support graphene if possible
+09:29:37 <Jimmehh[m]> i got an 8 plus as of now
+09:29:56 <Jimmehh[m]> and id like a phone that isn't vulnerable to checkm8 and i won't jailbreak lol
+09:30:16 <greenmoon[m]> Oh a phone for you, not for your mom lol I have read it wrongly.
+09:30:31 <cn3m[m]> checkm8 is not a big concern. You have the SEP. Whenever you leave your device unattended reboot it
+09:30:32 <Jimmehh[m]> oh yeah, like i said i'm kinda drunk lol
+09:30:42 <cn3m[m]> the bigger thing it is missing is PAC, but not the end of the world either
+09:30:58 <Jimmehh[m]> well i have concerns now of sep being bypassed and i don't know the extent of the big
+09:31:09 <Jimmehh[m]> * well i have concerns now of sep being bypassed and i don't know the extent of the bug
+09:31:28 <cn3m[m]> SEP is very secure I wouldn't worry about them bypassing verified boot
+09:32:12 <Jimmehh[m]> i wouldn't mind staying on an iphone 8 plus(arm64) but i would like to have this jailbroken at all times cause i do jailbreak development and app development and i don't have a mac yet
+09:32:18 <cn3m[m]> checkm8 isn't that practical to pull off. Someone needs to take your phone, put it in DFU, and get it back to you and hope you don't reboot it
+09:32:44 <Jimmehh[m]> yeah i understand that, but the concerns above are the problem
+09:33:21 <cn3m[m]> well sounds like you know what you want it is just budget
+09:33:27 <Jimmehh[m]> imessages, access to apps, and jailbreaking
+09:33:34 <Jimmehh[m]> not so much access to apps
+09:33:39 <Jimmehh[m]> but maybe a little
+09:33:58 <Jimmehh[m]> i can live without snapchat and stuff if i have other apps, or even a phone number
+09:34:01 <cn3m[m]> jailbreaking is a security concern almost as bad as rooting Android
+09:34:16 <cn3m[m]> I would not recommend it
+09:34:17 <Jimmehh[m]> but i would prefer imessages
+09:34:39 <Jimmehh[m]> yeah that's why i would like a pixel or an se if they are not vulnerable to the sep bug or exploit
+09:34:48 <Jimmehh[m]> more so pixel cause i love android
+09:34:55 <cn3m[m]> yeah then get an iPhone and a used Pixel(for dev)
+09:35:01 <Jimmehh[m]> but the main concern is getting people to use signal or something
+09:35:09 <anupritaisno1[m]> My PC from 2001 is not vulnerable to SEP pls buy it from me
+09:35:09 <cn3m[m]> there is no sep bug
+09:35:17 <cn3m[m]> that is a bootrom issue
+09:35:20 <anupritaisno1[m]> It's collecting dust
+09:35:32 <Jimmehh[m]> and signal even seems to be having questionable decisions recently
+09:36:01 <cn3m[m]> even the iPhone 5s from 7 years ago the SEP is just fine. The iPhone 5 is the only one with the major checkm8 issues
+09:36:05 <anupritaisno1[m]> cn3m: Jimmehh reminder that this is not iPhone chat
+09:36:06 <cn3m[m]> since no SEP
+09:36:25 <Jimmehh[m]> <cn3m[m] "there is no sep bug"> cn3m: no there is one from like as of today, checkra1n devs mentioned before but it's bing brought up WAY more today
+09:36:35 <cn3m[m]> <anupritaisno1[m] "My PC from 2001 is not vulnerabl"> I will give you 200
+09:36:47 <cn3m[m]> cents
+09:37:10 <Jimmehh[m]> <anupritaisno1[m] "cn3m: Jimmehh reminder that this"> yes but iphone vs pixel is a major thing i'd say, not trying to flood the chat. just trying to get some advice
+09:37:53 <cn3m[m]> <Jimmehh[m] "cn3m: no there is one from like "> right same goes for Titan M or anything
+09:37:57 <cn3m[m]> <Jimmehh[m] "yes but iphone vs pixel is a maj"> It is well covered is the point
+09:38:04 <cn3m[m]> you have your answer
+09:38:17 <anupritaisno1[m]> Tbh both are overpriced bricks
+09:38:21 <cn3m[m]> you can't go wrong with either
+09:38:25 <anupritaisno1[m]> Toss a coin
+09:38:33 <Jimmehh[m]> hmmm, maybe i'm too decisive
+09:38:34 <anupritaisno1[m]> Buy whatever the coin says
+09:38:47 <Jimmehh[m]> i feel like i'll always pick the wrong decision
+09:39:13 <cn3m[m]> flip a coin yes
+09:39:13 <anupritaisno1[m]> Regardless of what it says you'll be buying an overpriced brick so don't worry about it
+09:39:23 <Jimmehh[m]> <cn3m[m] "right same goes for Titan M or a"> titan m hasn't had any public vulnerabilities to my knowledge yet
+09:39:42 <Jimmehh[m]> well i think problem is means of communication
+09:39:45 <Jimmehh[m]> ios has imessages
+09:39:54 <Jimmehh[m]> android has well, signal that's about it
+09:40:02 <travankor_> I like the pixel A series
+09:40:03 <Jimmehh[m]> i've had a hard time getting people to use signal
+09:40:54 <Jimmehh[m]> am i just too needy? lmao
+09:41:07 <cn3m[m]> the SEP and Titan M are both great either could fall but probably won't. Outside of 99% of people's threat models
+09:41:41 <cn3m[m]> Jimmehh: you probably should ask the offtopic chat this is not relevant anymore
+09:41:42 <Jimmehh[m]> ohhh thread model, good point. always forget that
+09:42:02 <cn3m[m]> you got everything you need to answer that question yourself
+09:42:08 <Jimmehh[m]> where's the off topic. mobile element is weird
+09:42:36 <Jimmehh[m]> always found it to be a pain to join other chats
+09:42:39 <Jimmehh[m]> especially find them
+09:42:47 <cn3m[m]> tbh your PC is way more insecure and less private than either of these phones. Neither would be a weakpoint. Just use what you want. GrapheneOS has more freedom
+09:43:09 <Jimmehh[m]> i actually don't have a pc as of now lol, but i understand
+09:44:06 <cn3m[m]> #freenode_#grapheneos-offtopic:matrix.org
+09:44:16 <anupritaisno1[m]> cn3m: brb gonna deblob kernel
+09:44:32 <anupritaisno1[m]> Will run it on my enemy's PC
+09:44:41 <Jimmehh[m]> thank you
+09:44:54 <cn3m[m]> <anupritaisno1[m] "cn3m: brb gonna deblob kernel "> add a little in the kernel instead
+09:45:06 <cn3m[m]> flappy bird kernel game
+09:46:27 <Jimmehh[m]> this has been something in the back of my head for a while tbh, that's why i ask so many stupid questions
+09:46:28 <Jimmehh[m]> i love android, but i wanna get in into ios development mainly
+09:47:19 <cn3m[m]> keep you 8 plus and play with Android in the development emulator(maybe build GrapheneOS)
+09:47:30 <cn3m[m]> see what you fall for
+09:48:00 <cn3m[m]> your iPhone 8 Plus is perfectly fine don't worry about checkm8 just reboot your device whenever you leave it unattended. That is always good advice though
+09:48:21 <Jimmehh[m]> well even going back to my old android(still gets custom rom support) i wanna switch lol
+09:48:28 <cn3m[m]> you can build and use GrapheneOS in a VM get a feel for it
+09:48:35 <cn3m[m]> mess around with Android dev
+09:49:17 <Jimmehh[m]> one of the main things about graphene that kind makes me not wanna switch is there is no "anti-theft" protection
+09:49:24 <Jimmehh[m]> but i understand why
+09:49:32 <Jimmehh[m]> it just isn't the goal of the project
+09:49:53 <cn3m[m]> anti theft is bullshit
+09:50:02 <anupritaisno1[m]> I mean there is anti theft protection
+09:50:06 <Jimmehh[m]> i do only keep my phone in my hand or pocket though
+09:50:15 <cn3m[m]> it's herd immunity which is good, but no thief is going to know you don't have it
+09:50:33 <Jimmehh[m]> <anupritaisno1[m] "I mean there is anti theft prote"> i don't remember there being any or even any half anti theft protection
+09:50:47 <anupritaisno1[m]> <Jimmehh[m] "i do only keep my phone in my ha"> Amateur
+09:50:52 <cn3m[m]> <Jimmehh[m] "i do only keep my phone in my ha"> keep your phone and spend your money on PC. If you want to be a dev you need a PC
+09:50:58 <cn3m[m]> this is just weird
+09:51:28 <cn3m[m]> you have a perfectly fine flagship from not too long ago and you have no PC and want to develop?
+09:51:39 <Jimmehh[m]> yeah i need a pc, i'm probably just gonna get a pinebook pro for the time being, it seems to be able to do anything i need and some
+09:51:46 <cn3m[m]> what?
+09:51:48 <Jimmehh[m]> and is quite affordable
+09:52:22 <Jimmehh[m]> i develop on my phone lol
+09:52:27 <Jimmehh[m]> as much as a hassle it is
+09:52:41 <cn3m[m]> I'd get a refurbished PC or maybe a used one
+09:52:42 <za_vilfp8kn0pcyh> Speaking of anti-theft, how does iOS compare to GrapheneOS
+09:52:42 <Jimmehh[m]> and i can see how it limits and makes me unproductive
+09:52:46 <cn3m[m]> Thinkpad
+09:53:00 <cn3m[m]> <Jimmehh[m] "i develop on my phone lol"> that is just a bad idea
+09:53:03 <cn3m[m]> <za_vilfp8kn0pcyh "Speaking of anti-theft, how does"> don't worry about anti theft
+09:53:11 <cn3m[m]> at all
+09:53:21 <Jimmehh[m]> well thinkpad was a consideration, but i'd probably need to upgrade it either way so a pinebook pro seems fine for my needs
+09:53:26 <cn3m[m]> it is a misnomer
+09:53:32 <Jimmehh[m]> <cn3m[m] "that is just a bad idea"> it really is, but it works for now
+09:53:33 <cn3m[m]> search anti theft in the logs
+09:54:03 <cn3m[m]> anti theft is to destroy the value of the device. It doesn't help you. The theif has no idea you don't use it
+09:54:09 <cn3m[m]> makes no difference to him
+09:54:21 <Jimmehh[m]> don't have anything too major i'm working on besides an app, but i doubt imma finish it on my phone, i'll probably get a laptop before then
+09:54:24 <cn3m[m]> https://grapheneos.org/faq#anti-theft
+09:54:37 <cn3m[m]> iOS technically has anti theft, but I don't use it
+09:54:45 <cn3m[m]> it is moot
+09:55:45 <za_vilfp8kn0pcyh> <cn3m[m] "iOS technically has anti theft, "> If I remember correctly, you can also reformat iOS to factory
+09:55:49 <za_vilfp8kn0pcyh> Right?
+09:55:58 <Jimmehh[m]> remotely ? yes
+09:56:05 <cn3m[m]> not bypassing the lock no
+09:56:09 <za_vilfp8kn0pcyh> * If I remember correctly, you can also reformat iOS to factory defaults
+09:56:29 <cn3m[m]> anti theft is destroying the value of the device
+09:56:31 <za_vilfp8kn0pcyh> Not even their recovery?
+09:56:36 <Jimmehh[m]> yeah if you have the passcode you can
+09:56:40 <cn3m[m]> that does no good for me
+09:56:57 <cn3m[m]> <za_vilfp8kn0pcyh "Not even their recovery?"> no the lock is permanent
+09:57:01 <Jimmehh[m]> you could recover but you'd still need a passcode
+09:57:09 <cn3m[m]> GrapheneOS tried it out once irrc, but people forgot their passwords and lost money.
+09:57:12 <Jimmehh[m]> iirc the passcode is stored on the device itself
+09:57:18 <Jimmehh[m]> not cloud
+09:57:19 <cn3m[m]> it is just a terrible idea
+09:57:20 <cn3m[m]> don't worry about it
+09:57:26 <za_vilfp8kn0pcyh> Yeah that
+09:57:47 <Jimmehh[m]> so the passcode needs to match the last one entered or set on the device
+09:57:54 <za_vilfp8kn0pcyh> <cn3m[m] "GrapheneOS tried it out once irr"> Whoa, alright. iOS parts is valuable anyways so yeah lol
+09:57:54 <Jimmehh[m]> it never gets wiped
+09:57:56 <cn3m[m]> no thief is going to know if you use it or not
+09:58:02 <cn3m[m]> it isn't going to stop him
+09:58:27 <cn3m[m]> don't use anti theft and don't ask for it
+09:58:44 <za_vilfp8kn0pcyh> Yeah just curious tbh
+09:58:47 <Jimmehh[m]> that is kind true, and to think of about it no one would steal a pixel around here lmao
+09:59:06 <Jimmehh[m]> people only have iphones
+09:59:09 <cn3m[m]> it is fine on iOS or Stock Android but
+09:59:11 <cn3m[m]> you still run a risk
+09:59:15 <za_vilfp8kn0pcyh> Kinda true lol
+09:59:28 <cn3m[m]> if you get locked out of your account(more of an Android concern)
+09:59:37 <za_vilfp8kn0pcyh> <cn3m[m] "you still run a risk"> I'm all ears
+10:00:04 <cn3m[m]> anti theft is designed to destory the value of the device
+10:00:12 <cn3m[m]> that can happen to you
+10:00:31 <Jimmehh[m]> i think the only things i'd miss from ios is a few apps, mainly stardew valley and some music production apps like garageband and such
+10:00:53 <Jimmehh[m]> not to get too off track again
+10:01:27 <cn3m[m]> get an iPad and have a Pixel that is where I am at
+10:01:48 <cn3m[m]> you can even iMessage with your email address
+10:02:26 <Jimmehh[m]> i was thinking i could remake some apps, like this app called chordology, basically shows how to play chords for piano, guitar, and ukulele
+10:02:33 <Jimmehh[m]> and almost all positions for them
+10:03:08 <Jimmehh[m]> i have yet to find something like that for android or fdroid more specifically
+10:03:43 <Jimmehh[m]> <cn3m[m] "you can even iMessage with your "> android doesn't have an easy way to send them though, correct?
+10:04:06 <cn3m[m]> no
+10:04:22 <Jimmehh[m]> hmmm, that kinda sucks. like a lot lol
+10:04:26 <Jimmehh[m]> damnit apple
+10:05:16 <za_vilfp8kn0pcyh> <cn3m[m] "that can happen to you"> In short, double-edged sword, got it
+10:07:27 <geritol[m]> <Jimmehh[m] "damnit apple"> iMessage wouldn't work on Android even if they wanted it too iirc
+10:07:43 <Jimmehh[m]> why's that?
+10:08:05 <geritol[m]> The whole number integration and how they do the crypto
+10:08:23 <geritol[m]> It wouldn't be easy at least, probably impossible
+10:09:08 <Jimmehh[m]> to my knowledge i guess it's completely possible, but i've only read into the papers they have on it and looked into some of the headers for frameworks and the app
+10:09:10 <Jimmehh[m]> so idk
+10:47:47 <za_vilfp8kn0pcyh> https://www.reddit.com/gallery/hw0gyi
+10:47:47 <za_vilfp8kn0pcyh> Not a feature request but how feasible is this to be translated on Android
+10:48:12 <za_vilfp8kn0pcyh> * https://www.reddit.com/gallery/hw0gyi
+10:48:12 <za_vilfp8kn0pcyh> Not a feature request but how feasible is this to have an equivalent implementatiom on Android
+10:48:57 <za_vilfp8kn0pcyh> It feels like overhauling some SELinux policies (not sure) and having to restrict the storage permissions
+11:01:39 <chaology> i saw a mention in the channel that there's no fix for the pixel 4 XL flicker issues, well apart from whacking the brightness up to max
+11:02:08 <chaology> i guess i'll just use dark mode at night on high brightness
+11:02:42 <chaology> i should have done some more research before buying this this model for grapheneos
+11:03:33 <cdesai> there was a mention of a fix in the R beta 2.5 release
+11:03:52 <chaology> cdesai: oh cool
+11:04:02 <chaology> that's good news
+11:04:08 <cdesai> "The screen no longer flickers on some devices when the screen is set to a low brightness level. (Issue #156051413)"
+11:04:33 <chaology> i'll take a look
+11:05:22 <chaology> also does anyone use orbot on grapheneos ?
+11:05:27 <chaology> didn't work for me
+11:06:01 <chaology> i guess that's the apps fault and not grapheneos
+11:06:11 <chaology> s/apps/app's
+11:06:15 -SEdbot[m]- > <@freenode_chaology:matrix.org> i guess that's the apps fault and not grapheneos
+11:06:15 -SEdbot[m]- i guess that's the app's fault and not grapheneos
+11:40:21 <x61[m]> moin
+11:40:38 <x61[m]> I am having a problem with my lycamobile sim, I cannot send sms
+11:40:45 <x61[m]> I can recive without problems, but can't send
+11:40:47 <x61[m]> any idea?
+11:40:57 <x61[m]> I have a Pixel 3a with the lastest
+11:45:06 <kryptonymous[m]> 𝚐𝚘𝚗𝚣𝚊𝚕𝚘: Best thing to do in this instance is to contact your carrier's technical support and have them verify your SIM settings. Strangely I lost mine after a recent upgrade and had to do the same. I'm sure they'll help.
+11:45:55 <g65434-2[m]> <x61[m] "I am having a problem with my ly"> is your phone carrier locked?
+11:46:00 <x61[m]> nop
+11:46:30 <x61[m]> there is a way to set the SMS gateway?
+11:46:41 <g65434-2[m]> mh, maybe its your sim then, is it working otherwise on another phone'
+11:47:51 <x61[m]> they call it: Message Centre Number (MCN)
+11:49:23 <kryptonymous[m]> 𝚐𝚘𝚗𝚣𝚊𝚕𝚘: By "SIM settings", I meant APN settings. It's late...🙂
+11:49:27 <x61[m]> plus I think anoter bug I found while trying to fix this, is if you modifiy an APN MCC and MNC it doesnt save the APN
+11:50:54 <x61[m]> <g65434-2[m] "mh, maybe its your sim then, is "> I dont have another to try, buut I could
+13:14:50 <dazinism> chaology: I've been using orbot for years with GrapheneOS, generally without issues. When there has been problems its due to orbot. Try a different build.
+13:15:01 <dazinism> Version.
+13:15:56 <dazinism> Guess you may have problems if you are running it in VPN mode, while also running another app using androids VPN functionality
+13:16:46 <RiotElement[m]> <dazinism "chaology: I've been using orbot "> I haven’t been able to run Tor from F-Droid, Aurora, nor the Android APK directly from the Tor website
+13:17:02 <dazinism> Running the other app,  which used VPN functionality, in another user or work profile
+13:18:09 <dazinism> *which uses VPN functionality
+13:18:11 * tvg[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/iSOgzvfAKdACdeaLCpsdvlOr >
+13:18:22 <dazinism> I may have an apk that works for me...hang on.
+13:18:36 <dazinism> Can also show you how to vetify
+13:20:46 <tvg[m]> Would be very welcome, thank you
+13:20:46 <tvg[m]> I am quite unexperienced in all this; just so you know xD
+13:27:39 * overheadscallop[ sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/QiZRykpnIPkasILsyxogWfIw >
+13:28:24 <tvg[m]> I'm running Windows 10 and I watchted Techlore's tutorial on YouTube, but his guide seemed pretty much the same as the official one
+13:28:36 <overheadscallop[> nope, Techlore's video is out of date
+13:28:43 <overheadscallop[> people keep coming here because of it
+13:29:09 <tvg[m]> Oh sorry, I didn't know
+13:29:11 <overheadscallop[> Ok, does that mean you edited the `flash-all.bat` script?
+13:29:21 <overheadscallop[> to remove the version check
+13:29:32 <tvg[m]> I did, because it kept saying fastboot was out-dated
+13:29:46 <overheadscallop[> the check was meant to prevent the exact scenario you currently have
+13:30:01 <overheadscallop[> have you tried entering fastboot mode on your phone?
+13:30:07 <overheadscallop[> and what device do you have
+13:30:19 <tvg[m]> Pixel 3a
+13:30:28 <overheadscallop[> you can try getting to fastboot mode by powering off completely and press power + vol down keys
+13:31:10 <overheadscallop[> if you can get to fastboot we can try reflashing properly
+13:31:23 <tvg[m]> I'm here now on my phone
+13:31:43 <tvg[m]> It's in fastbood mode and the device state is currently locked
+13:31:59 <overheadscallop[> ok first we need to fix the environment on your pc
+13:32:34 <overheadscallop[> did you download and unzip the platform tools from google?
+13:32:47 <tvg[m]> I did, yes
+13:32:53 <overheadscallop[> ok
+13:33:01 <RiotElement[m]> <overheadscallop[ "nope, Techlore's video is out of"> Also use the new program that’s linked on the Graphene OS download website. The “simple” program from TechLore’s video gave me this issue too.
+13:33:22 <overheadscallop[> So open up a new powershell and navigate to the folder right above the unzipped platform tools folder
+13:33:42 <overheadscallop[> like `C\Downloads` if platform-tools is in there
+13:34:04 <overheadscallop[>  * like `C:\Downloads` if platform-tools is in there
+13:34:38 <tvg[m]> Done
+13:35:07 <overheadscallop[> enter `$env:Path = "$pwd\platform-tools;$env:Path"` into the powershell window
+13:35:25 <overheadscallop[> then try `fastboot --version` and please paste the entire output here
+13:36:40 <tvg[m]> fastboot version 30.0.3-6597393
+13:36:40 <tvg[m]> Installed as C:\Users\thoma\Desktop\platform-tools\fastboot.exe
+13:36:55 <overheadscallop[> ok very good
+13:37:18 <overheadscallop[> you can plug in your phone to the pc
+13:37:32 <overheadscallop[> and run `fastboot flashing unlock` in powershell
+13:38:05 <tvg[m]> Confirm on my phone as usual, too?
+13:38:12 <overheadscallop[> yep
+13:38:19 <tvg[m]> Done
+13:38:34 <overheadscallop[> ok, do you still have the zip file for the grapheneos factory image?
+13:38:49 <overheadscallop[> I would like you to delete the unzipped files you edited and unzip it again
+13:39:01 <overheadscallop[> to get a fresh version of the scripts
+13:40:04 <overheadscallop[> then in your powershell window you can navigate to the newly unzipped files and run the `flash-all.bat` script
+13:40:52 <tvg[m]> It's going
+13:41:41 <tvg[m]> I'm getting a fastbootd screen on my phone
+13:41:51 <tvg[m]> "GraphenOS Fastboot"
+13:41:53 <overheadscallop[> don't do anything
+13:42:01 <tvg[m]> Okay
+13:42:08 <overheadscallop[> wait until your powershell window says it's done
+13:42:33 <tvg[m]> I'm waiting
+13:42:40 <overheadscallop[> it shouldn't take too long
+13:42:59 <tvg[m]> It says "press any key to exit..."; this means it's done, yes?
+13:43:03 <overheadscallop[> yes
+13:43:25 <overheadscallop[> if your phone is in fastboot mode you can relock it now `fastboot flashing lock`
+13:43:53 <overheadscallop[> then try booting the phone normally
+13:43:55 <tvg[m]> Now locked
+13:44:06 <tvg[m]> Is it good to go? Can I press Start?
+13:44:11 <overheadscallop[> yeah
+13:44:37 <overheadscallop[> you'll get a yellow warning screen that the phone is loading a different OS, that's OK and expected
+13:44:53 <tvg[m]> Jesus Christ it actually works
+13:44:56 <tvg[m]> Thanks you sooo much
+13:44:59 <overheadscallop[> you're welcome
+13:45:02 <tvg[m]> *Thank
+13:45:15 <overheadscallop[> might want to uninstall the "minimal adb" or whatever Techlore recommended installing
+13:45:29 <tvg[m]> Yeah good idea, thanks
+13:45:57 <tvg[m]> I've said it before and I'll say it again: this community is amazing
+13:45:57 <tvg[m]> I thank you again and wish you a good day xx
+13:46:20 <overheadscallop[> Hope you enjoy the GOS experience
+13:46:43 <tvg[m]> I'm sure I will
+13:47:28 <tvg[m]> I'm over the moon, because I've been at it all day trying
+13:47:52 <overheadscallop[> this is a fairly common problem, I'm glad it didn't really take too long this time
+13:48:02 <overheadscallop[> the last time it took a couple hours to walk the person through
+13:48:06 <RiotElement[m]> <tvg[m] "I'm over the moon, because I've "> Took me 12 hours until I figured out the error in my ways. I hear you brother 😭
+13:49:12 <LinusSexTips[m]2> oof
+13:49:28 <LinusSexTips[m]2> I followed a youtube video and it took me maybe 20min lol
+14:28:56 <dazinism> chaology: RiotElement  can definately get the latest orbot apk from https://github.com/guardianproject/orbot
+14:29:09 <dazinism> And  to verify  https://hub.libranet.de/wiki/graphene-os/wiki/Apps#Verifying_apk_files_and_apps
+14:31:39 <dazinism> The github, Play & Guardian Project Fdroid repo versions are all signed with the same keys
+14:52:55 <g65434-2[m]> I wouldnt advise using element app on android (at least from fdroid repo)
+14:53:24 <g65434-2[m]> it gets slower and slower overtime until it freezes so you need to kill the app and launch it again
+14:53:37 <g65434-2[m]> use riot.im app in the meantime
+14:59:46 <rridley[m]> yeah riotx/element have been great so far
+15:02:30 <LinusSexTips[m]2> I have had the same experience with Element, it eventually freezes until you need to kill it
+15:03:50 <joeri_poeri[m]> interesting. I haven't experienced that at all g65434-2
+15:23:37 <dazinism> Yeah element starts to lag heavy then freezes for me also.
+15:24:09 <dazinism> Think it may depend on how many rooms and how many other people in those rooms?
+15:25:26 <dazinism> I mainly use minivector from Fdroid - riot.im with analytics and stuff stripped out (also no calls)
+15:27:08 <dazinism> Sometimes it gets stuck on start screen when you reopen app though
+15:27:21 <dazinism> Which can also be annoying.
+15:27:48 <dazinism> Been meaning to try fluffy chat. They got their own Fdroid repo
+15:28:23 <dazinism> https://fluffychat.im/
+15:30:39 <dazinism> No end to end encryption yet though, but maybe good for public rooms
+15:31:52 <Wonderfall[m]> Tried it, but ditched it since there's an annoying message about missing Play Services every single time the app starts, at a terrible spot for at least a few seconds.
+15:33:12 <dazinism> I could handle that better than the app locking up just when you are in the middle of a quick fire conversation. Can be really annoying
+15:34:05 <dallemon[m]> dazinism: i tried fluffychat recently. not quite ready for usage, it bugs when trying to authenticate from a different client.
+15:34:37 <dazinism> Sometimes i leave Riot.im / minivector to fetch a link to share and when I switch back it instantly dies then gets stuck on the startup screen for a very long time
+15:35:46 <dazinism> dallemon: guess if end to end encryption isnt finished there is no point in authenticating?
+15:36:27 <dallemon[m]> Well it did show a prompt with emoji, just only 1 repeated several times
+15:36:31 <dazinism> Going from what it says on the readme on github, dont know the state of development
+15:38:54 <BalooRJ> Has there been any thought to adding some of the FLOSS projecs that are viewed as more essential to operation of a phone into GrapheneOS, or is it simply going to be more of a Pure AOSP experience allowing individual users to get the apps themselves
+15:39:29 <BalooRJ> Just asking since the removal of the busted email app, as well as the fact that the Calendar app is also unusable because Google wants to make sure you get that GSM license and use their apps. And with Daniel now calling for a replacement for the Gallery app as well
+15:40:18 <BalooRJ> Will we see the likes of K9-Mail, Konele, Flite TTS, Simple Calendar, Silence, etc included in a default install of GrapheneOS?
+15:41:21 <dallemon[m]> BalooRJ: There is a issue regarding making a GrapheneOS app store. But it is still far off as no one is working on it, too busy with the current things.
+15:41:52 <overheadscallop[> BalooRJ: check the log, Etar and some other apps use an incompatible license https://freenode.logbot.info/grapheneos/20200723#c4477212
+15:42:06 <overheadscallop[> so they can't be preinstalled
+15:42:10 <dallemon[m]> <BalooRJ "Will we see the likes of K9-Mail"> I doubt it. However you can roll your own builds with whatever you like.
+15:42:15 <overheadscallop[> but they can be distributed through a first-party app store
+15:42:39 <BalooRJ> I see, so basically the GPLv3 license bars them from being included with the project overall
+15:42:43 <prisonplanet[m]> Defaut program to be included in GrapheneOS : F-Droid, Simple Calendar, Simple Gallery, K9Mail, Signal, Osmand, Open Camera, VLC, Bromite
+15:43:36 <BalooRJ> dallemon: I don't mind using the F-Droid store, was just thinking in the context of maybe a more inexperienced user who doesn't know exactly which apps to get
+15:43:52 <BalooRJ> overheadscallop: thanks for sending that link
+15:44:00 <overheadscallop[> yes, there's a lot to be done to make GOS easier to people to use
+15:44:22 <overheadscallop[> s/easier to/easier for/
+15:44:23 <BalooRJ> I was just reading about that Tivoization clause
+15:44:37 <prisonplanet[m]> NewPipe (youtube)
+15:44:39 <prisonplanet[m]> Etc
+15:44:44 -SEdbot[m]- > <@overheadscallop:matrix.org> yes, there's a lot to be done to make GOS easier to people to use
+15:44:44 -SEdbot[m]- yes, there's a lot to be done to make GOS easier for people to use
+15:44:56 <BalooRJ> makes sense that Daniel from a security perspective would want to be able to have a hardware manufacturer be allowed to lock the bootloader on a GrapheneOS device
+15:46:32 <BalooRJ> Thanks for the info all
+15:46:44 <BalooRJ> prisonplanet: Think I have almost every single one of those apps on my GrapheneOS phone, heh
+15:49:37 <prisonplanet[m]> Binary Eye, NotePad (on Fdroid), Element (Riot), GPSTest, KeepassDX, Scrambled Exif, Unit Converter, Your Local Weather (formidable widget)
+15:49:40 <prisonplanet[m]> Etc etc
+15:50:44 <BalooRJ> I remember there being an issue with Your Local Weather during one of the previous updates with GrapheneOS and I deleted it, wonder if it got fixed
+15:51:05 <BalooRJ> F-Droid has gotten just so much more expansive than even a few years ago
+15:51:39 <prisonplanet[m]> İt work perfeclty (i set refresh rate every 6h, no battery consumption at all)
+15:51:56 <BalooRJ> I'll have to try it again
+15:52:09 <dazinism> BalooRJ: a few of the apps you mentioned arent getting updates any more which is problematic. Apps need to be updated for security issues and to target the latest SDK
+15:52:38 <dazinism> ...make use of the new security and privacy features being introduced to AOSP
+15:52:51 <dazinism> See https://hub.libranet.de/wiki/graphene-os/wiki/Apps for a load of info about apps
+15:53:05 <BalooRJ> Yeah, I think the main one not getting updates is Flite TTS but I haven't found an alternative for a FLOSS TTS.
+15:53:32 <BalooRJ> Silence as well has shaky development. Though I haven't used it in a while since it is not compatible with KDE Connect's SMS feature.
+15:53:38 <BalooRJ> thanks for that link dazinism
+15:55:19 <dazinism> Daniel also doesnt like the 'Simple' family of apps.
+15:55:52 <dazinism> eg. The file manager giving the impression it can restrict access to files
+15:56:00 <dazinism> When it cant really
+15:56:44 <prisonplanet[m]> <dazinism "Daniel also doesnt like the 'Sim"> İ use Simple Gallery which is very good and beautiful.opensource app
+15:56:52 <prisonplanet[m]> Any better gallery app recommanded ?
+15:57:13 <dazinism> I mainly use the built in one
+15:57:16 <cdesai> Not open source sadly but Google's gallery go is super nice
+15:57:31 <dazinism> For security the best bet is to use the built in apps
+15:57:54 <dazinism> Unless they are broken for the way you use them
+15:57:58 <dazinism> Works ok for me
+15:58:43 <BalooRJ> yeah the built in gallery I havent had a problem with so far, but apparently there is a glitch that causes it to freeze requiring a replacement
+15:58:49 <dazinism> Have to open gallery app then images from there to edit them. Rather than from another app via gallery
+15:59:18 <BalooRJ> There was another very good one called Camera Roll on F-Droid but I believed that was discontinued
+15:59:23 <BalooRJ> there is also Leafpic I think it was called
+16:01:36 <thufie[m]> hello
+16:03:48 <thufie[m]> I'm running flash-all.sh on Linux for the Pixel 3a and fastboot appears to hang indefinitely on the flash bootloader command, but every other command in the flash-all script works, meaning that the phone now has everything but the updated bootloader. Is it safe to boot into GrapheneOS and then run a system OTA update to resolve this, or should I wait to resolve the issue flashing the newer bootloader?
+16:18:02 <pikey[m]> "Fixed Dialling Numbers" in phone settings. What is this feature for?
+16:18:28 <pikey[m]> Sorry thufie, didn't scroll down before posting.
+16:19:17 <pikey[m]> and I am not qualified to answer but I would try the OTA update and use Attestation.app/Auditor, if something ain't right it should report
+16:19:50 <thufie[m]> nevermind it seems that most of my USB ports were just bad, works now
+16:20:22 <pikey[m]> <prisonplanet[m] "Any better gallery app recommand"> I have yet to find anything better than simple gallery, its very nice. I have their calculator and flashlight too, great stuff
+16:20:28 <pikey[m]> <thufie[m] "nevermind it seems that most of "> great :)
+16:20:56 <pikey[m]> nearly every problem i had was down to bad cable. eventually i took the hint and bought a high quality cable and stopped buying cheap junk, all went smoothly after that!
+16:23:20 <thufie[m]> I was using the stock cable its just my laptop's usb ports are all cruddy I guess.
+16:23:55 <thufie[m]> I've got that sweet GrapheneOS boot screen on my girlfriend's phone now though, so it worked!
+17:04:47 <anupritaisno1[m]> <thufie[m] "I've got that sweet GrapheneOS b"> Gg
+17:33:04 <pikey[m]> <thufie[m] "I've got that sweet GrapheneOS b"> pretty isn't it!
+17:33:36 <thufie[m]> It is pretty
+17:33:44 <ura[m]> Good day guys
+17:34:26 <ura[m]> I'm planning to use shelter for my 2 non-foss apps and maybe aurora too. Any major drawbacks I should be aware of?
+17:34:31 <anupritaisno1[m]> strcat how do I stop signal from restoring my chats
+17:34:56 <anupritaisno1[m]> Protecting chats behind a pin is a bad idea
+17:36:19 <pikey[m]> ura: Shelter didn't work well for me at all, not sure its still supported is it?
+17:36:26 <pikey[m]> Island I heard was better alternative, or second user
+17:36:52 <ura[m]> I'll try island. Is that on fdroid?
+17:38:57 <brenneke[m]> <anupritaisno1[m] "strcat how do I stop signal from"> How about using Disappearing messages?
+17:39:02 <pikey[m]> yes i think so
+17:39:30 <pikey[m]> <brenneke[m] "How about using Disappearing mes"> Don't think that's a good workaround. I use it, but also wish I could stop it restoring chats
+17:42:01 <strcat[m]> anupritaisno1: what do you mean restoring
+17:42:02 <brenneke[m]> But if they are disappeared than they can't restore right?
+17:42:05 <strcat[m]> anupritaisno1: just don't use backups?
+17:42:24 <strcat[m]> anupritaisno1: not really sure what you mean
+17:42:39 <strcat[m]> the local encrypted backup feature uses a strong key
+17:42:40 <strcat[m]> not a pin
+17:43:12 <brenneke[m]> <strcat[m] "anupritaisno1: just don't use ba"> You are right, just looked and there is a toggle for that.
+17:43:22 <rover1[m]> strcat: signal app auto backup, encrypt with pin
+17:43:28 <ura[m]> island isn't on fdroid :/
+17:44:08 <rover1[m]> dont see option turn off signal auto backup
+17:44:14 <strcat[m]> rover1: no, it doesn't backup messages with that
+17:44:41 <strcat[m]> that's contacts / groups / settings only and I recommend disabling it
+17:44:41 <za_vilfp8kn0pcyh> <ura[m] "island isn't on fdroid :/"> Insular#
+17:45:11 <strcat[m]> or setting a strong passphrase
+17:45:13 <za_vilfp8kn0pcyh> * Insular
+17:45:19 <strcat[m]> you're confused
+17:45:20 <ura[m]> oh
+17:45:23 <za_vilfp8kn0pcyh> <rover1[m] "dont see option turn off signal "> Advanced, disable PIM
+17:45:38 <strcat[m]> only the local backup feature which generates a strong key for you and has you write it down as a series of numbers backs up messages
+17:45:39 <za_vilfp8kn0pcyh> * Advanced, disable PIN
+17:45:42 <ura[m]> insular aint on there either
+17:45:47 <za_vilfp8kn0pcyh> <ura[m] "insular aint on there either"> Oh, didn't know. User profiles are more robust and recommended way of isolating apps.
+17:46:05 <za_vilfp8kn0pcyh> But it still depends on user-case (esp. if you need notifs for multiple accounts)
+17:47:56 <rover1[m]> or want convenience, reboot device after profile switch not most convenient
+17:48:58 <za_vilfp8kn0pcyh> Still protects and slashes some attack vectors
+17:49:05 <rover1[m]> start second guess which app can live without
+18:16:14 <sikisoki[m]> Is iOS still the superior choice for the average dude? If not, what are the advantages of GrapheneOS?
+18:16:59 <RiotElement[m]> <sikisoki[m] "Is iOS still the superior choice"> Precisely what I’ve been trying to decide on for the last few days 😭
+18:17:13 <cn3m[m]> Either is better than your PC setups
+18:17:14 <cn3m[m]> use what you want
+18:17:23 <cn3m[m]> app selection can go either way
+18:17:25 <cn3m[m]> pick off of that
+18:17:33 <cn3m[m]> that is it
+18:17:49 <cn3m[m]> if you want to develop and make GrapheneOS better please get a Pixel ;-P
+18:17:56 <rover1[m]> ios more restrictive
+18:18:00 <RiotElement[m]> <cn3m[m] "Either is better than your PC se"> Isn’t Linux Mint with Whonix or Tails the best for security and privacy? I typically hear that PC is more complete and secure than mobile
+18:18:19 <cn3m[m]> <rover1[m] "ios more restrictive"> which is good for privacy and security bad for freedom
+18:18:20 <cn3m[m]> <RiotElement[m] "Isn’t Linux Mint with Whonix or "> hell no
+18:18:29 <cn3m[m]> Linux Mint is probably the worst
+18:18:52 <sikisoki[m]> <cn3m[m] "Either is better than your PC se"> Currently using Mac and QubesOS on desktop. Is mobile OS above desktop/laptop PC's?
+18:19:19 <cn3m[m]> GrapheneOS is much stronger than both
+18:19:25 <cn3m[m]> so is iOS obviously
+18:19:54 <rover1[m]> if only grapheneos have desktop version
+18:20:10 <cn3m[m]> Windows 10 is pretty good if you make good use of WDAG, UWP, have core isolation, and use Windows Sandbox
+18:20:19 <tencarsb[m]> > Linux Mint is probably the worst
+18:20:19 <tencarsb[m]> Why is that so?
+18:20:29 <cn3m[m]> but no
+18:20:52 <sikisoki[m]> <cn3m[m] "GrapheneOS is much stronger than"> Would you explain more? I thought QubesOS was the best OS out there right now and GrapheneOS I working towards something along those lines
+18:20:53 <cn3m[m]> we should switch to offtopic
+18:20:58 <cn3m[m]> #freenode_#grapheneos-offtopic:matrix.org
+18:21:10 <rover1[m]> <sikisoki[m] "Is iOS still the superior choice"> usb c versus not standard connector
+18:21:38 <cn3m[m]> <sikisoki[m] "Would you explain more? I though"> Qubes is less secure than GrapheneOS. This is an on topic question so I will answer it here
+18:22:12 <tencarsb[m]> I am curious...
+18:22:20 <cn3m[m]> First Qubes doesn't have verified boot. A compromise is permanent. Verified Boot + Remote attestation(this is important) will do very well on GrapheneOS
+18:22:29 <cn3m[m]> GrapheneOS has far fewer trusted parties
+18:23:00 <cn3m[m]> You trust Daniel building it on an offline machine and signing it. The only person with access to the final product
+18:23:05 <tencarsb[m]> Are those chips in the pixels open as in source?
+18:23:29 <cn3m[m]> Qubes you trust everyone in the Fedora and Qubes repos which is a lot
+18:23:50 <sikisoki[m]> <cn3m[m] "First Qubes doesn't have verifie"> Isn't verified boot only for physical attacks and not remote?
+18:23:51 <RiotElement[m]> <cn3m[m] "You trust Daniel building it on "> But then again Graphene OS also has a lot less fewer eyes reviewing it than Linux, no?
+18:23:59 <cn3m[m]> Qubes also has very insecure guests(Desktop Linux is pretty terrible for security)
+18:24:11 <RiotElement[m]> * > <@cn3m:privacytools.io> You trust Daniel building it on an offline machine and signing it. The only person with access to the final product
+18:24:11 <RiotElement[m]> But then again Graphene OS also has a lot less fewer eyes reviewing it than Linux, no? (Linux has thousands of devs in its community)
+18:24:18 <cn3m[m]> <sikisoki[m] "Isn't verified boot only for phy"> no it is far more important for remote. If you get hacked the system rolls back
+18:24:36 <cn3m[m]> <RiotElement[m] "But then again Graphene OS also "> GrapheneOS is a very light patchset that is not changing AOSP really
+18:24:40 <sikisoki[m]> <cn3m[m] "You trust Daniel building it on "> This is NOT an attack on Daniel. But is there ANY way to prove the code running on my device is the same he posted on GitHub?
+18:24:45 <cn3m[m]> it is essentially all additive on top
+18:25:09 <cn3m[m]> <sikisoki[m] "This is NOT an attack on Daniel."> Yes, built it yourself he makes everything open source. Even the attestation server
+18:25:22 <justchill[m]> <cn3m[m] "First Qubes doesn't have verifie"> I'm not an expert so I'm not sure of the difference between the Verified boot and the Attestation done using HOTP in a Qubes + Heads installation. How is the former more secure?
+18:25:31 <cn3m[m]> or just trust him since he has stared down the military going after the keys before
+18:26:17 <sikisoki[m]> <cn3m[m] "or just trust him since he has s"> What? Please explain
+18:26:32 <cn3m[m]> <justchill[m] "I'm not an expert so I'm not sur"> Verified boot on GrapheneOS is built from the ground with hardware and software working together. It is one of the best setups. Heads is not even close Qubes isn't designed for it either
+18:27:14 <cn3m[m]> <sikisoki[m] "What? Please explain"> CopperheadOS? The company sponsoring Daniel for a while tried to force him to turn over keys to the military for "auditing"
+18:27:44 <cn3m[m]> Daniel left and the project was renamed GrapheneOS
+18:27:56 <cn3m[m]> CopperheadOS as we know it is dead, and a scammer is hanging onto the name
+18:28:39 <hypokeimenon[m]> <cn3m[m] "GrapheneOS is a very light patch"> Does this refer to its current state or future plans too? Assuming current development is about getting back to a certain standard before Copperhead died, it's still in the future plans to completely rework some elements of AOSP isn't it?
+18:29:14 <cn3m[m]> <hypokeimenon[m] "Does this refer to its current s"> From my understanding the goal is to stay pretty modular
+18:29:32 <cn3m[m]> makes development easier and less issues arise
+18:29:33 <cn3m[m]> the project adds a ton for security
+18:29:38 <cn3m[m]> without giving up much
+18:30:14 <cn3m[m]> the patchsets for linux-hardened and even the hardened_malloc "just work" on regular linux too
+18:30:18 <cn3m[m]> that is the goal
+18:31:01 <tencarsb[m]> cn3m: you are so knowledgeable, are you a dev in the graphene is project? Excuse my personal question...
+18:31:07 <cn3m[m]> Qubes is a cool research project, but it is definitely not as secure as a Pixel
+18:31:09 <cn3m[m]> or an iPhone
+18:31:31 <TheJollyRoger> justchill[m]: With respect to Verified boot, there's a big difference:
+18:31:37 <justchill[m]> <cn3m[m] "Verified boot on GrapheneOS is b"> I've read this from experts before. I'm interested in why though. What points in particular would you say are the biggest differences from a security perspective? If the answer's too long to post here, could you point me at appropriate references?
+18:31:46 <cn3m[m]> <tencarsb[m] "cn3m: you are so knowledgeable, "> I am not, I just read a lot of research papers and have a background in breaking stuff(working in ad tech). Mobile is my specialty.
+18:31:51 <cn3m[m]> I like tinkering
+18:32:05 <tencarsb[m]> Ok
+18:32:37 <TheJollyRoger> Android Verified Boot uses the late stage Qualcomm bootloader (which, tada, is actually open source!) to ensure that the entire system image, kernel, system partition, all the privileged components of the operating system (all of them!) are bitwise identical and valid to the keys that signed them, which only your developers should own.
+18:32:43 <TheJollyRoger> It does this every time the operating system boots.
+18:32:47 <sikisoki[m]> <cn3m[m] "CopperheadOS? The company sponso"> I have read about the story, but never seen anyone mention the military.
+18:32:51 <cn3m[m]> <justchill[m] "I've read this from experts befo"> Yeah, Apple did a great talk on this actually. Behind iOS and MacOS security at BlackHat 2019. They talk about the differences in secure boot, T2 chip verified boot on macOS, and iOS verified boot. It is a decent primer
+18:33:27 <cn3m[m]> Apple is extremely good and trustworthy on verified boot
+18:33:45 <cn3m[m]> they even made their own secure by design filesystem to better support it
+18:34:18 <TheJollyRoger> justchill[m]: Every time your Pixel 2 or a later reboots, what it will be doing is verifying the entire system image, to that digital signature, with the key set in the bootloader. If the signature doesn't match, then the bootloader will use parity blocks to try to revert the damage until it will.
+18:34:30 <cn3m[m]> Their research is excellent and Krstic is very knowledgeable
+18:35:28 <cn3m[m]> The breakdown between the current implementations on Windows and Linux vs how macOS does it are great. However do keep in mind Microsoft has the Secured Core PCs which are slightly better than the macOS verified boot. The video is a year old
+18:35:35 <cn3m[m]> still a good primer
+18:35:36 <TheJollyRoger> This essentially removes persistence from the system partition and means that should someone find an exploit for your phone, root the operating system, and modify your system partition, as soon as you reboot the phone, those modifications will either A) be undone, or B) your phone will catch it, warn you that something's not right, and stop you from using an operating system that's been
+18:35:38 <TheJollyRoger> modified beyond repair.
+18:36:59 <cn3m[m]> The thing to keep in mind with Android Verified Boot is if someone can get full access they can install accessibility services or device managers for effective spyware. Remote attestation with Auditor is effective at catching this
+18:37:03 <cn3m[m]> Use Auditor
+18:37:11 <cn3m[m]> use remote attestation
+18:37:13 <cn3m[m]> there is no reason not too
+18:37:24 <cn3m[m]> it is wonderful and my favorite GrapheneOS project
+18:37:30 <cn3m[m]> hands down
+18:38:08 <TheJollyRoger> Pixel 3s and later (3a, 4 et al) utilize the hardware security module for doing this, which is a huge reduction of the attack surface with specially created hardware and presents less attack surface than the previous generation of devices, which just used a commercial off the shelf NXP smartcard chip.
+18:38:14 <cn3m[m]> Auditor is wonderful even without GrapheneOS
+18:39:46 <cn3m[m]> In general nothing will come close to GrapheneOS or iOS on PC. If you want something close you can do what I do and use a Pixel and an iPad(if you get a good setup it can do most of what a PC can for me)
+18:40:10 <justchill[m]> <cn3m[m] "Yeah, Apple did a great talk on "> Thanks. I've found the relevant video on youtube. I'll definitely check it out!
+18:40:10 <cn3m[m]> but yeah definitely trust your GrapheneOS Pixel over your PC
+18:40:23 <cn3m[m]> x86 is not robust for verified boot
+18:40:55 <TheJollyRoger> What cn3m[m]  said. Even if we had some way to verify the boot partition, and even if we assume that this way of verifying the boot partition is secure and perfectly trustworthy...
+18:41:00 * TheJollyRoger gives a bleak little laugh at that.
+18:41:08 <cn3m[m]> definitely not paired with Linux Desktops
+18:41:31 <TheJollyRoger> ...the issue is that the chain of trust ends there because there's no further way to verify the system partition.
+18:42:11 <hypokeimenon[m]> Will the shift to Arm help macOS I  terms of verified boot
+18:42:22 <cn3m[m]> <hypokeimenon[m] "Will the shift to Arm help macOS"> 110%
+18:42:35 <cn3m[m]> Apple Silicon will have a better solution than Windows Secured Core PCs and less attack surface for sure
+18:43:18 <TheJollyRoger> Simply slapping on Full Disk Encryption doesn't change that fact either, because even if you were to use an authenticated mode of encryption to prevent offline tampering, it doesn't end up being as robust as verified boot anyways because there's still no signature validation on the system partition anyways.
+18:43:31 <justchill[m]> <cn3m[m] "The thing to keep in mind with A"> From my understanding, you need 2 android phones to use Auditor though. Also, wouldn't verified boot catch this? Or do you mean someone installing a different OS altogether and adding a different verified boot while they had physical access to the device?
+18:43:53 <hypokeimenon[m]> <cn3m[m] "definitely not paired with Linux"> What about ChromeOS? Is it still the case that those random Mediatek chip Chromebooks are a better idea than a modern Pixelbook Go?
+18:43:59 <cn3m[m]> <justchill[m] "From my understanding, you need "> no verified boot doesn't check for accessibility
+18:44:16 <TheJollyRoger> justchill[m]: If you don't have a second Android phone, you can use the GrapheneOS attestation server. You'll be trusting TLS, and the attestation server, and the device you use to display the audit data, but that's preferable to no attestation at all.
+18:44:53 <za_vilfp8kn0pcyh> <cn3m[m] "no verified boot doesn't check f"> On a tangential note, will rebooting to Safe Mode help in undoing and removing the said accessibility/device admin app?
+18:44:53 <cn3m[m]> <hypokeimenon[m] "What about ChromeOS? Is it still"> ChromeOS is too locked down. iPad makes way more sense for a secure locked down device
+18:45:03 <cn3m[m]> <TheJollyRoger "justchill: If you don't have a s"> this ^
+18:46:03 <za_vilfp8kn0pcyh> * On a tangential note, will rebooting to Safe Mode help in undoing and removing the said accessibility/device admin app, on the assumption some accessibility app has been installed unknowingly?
+18:47:23 <dazinism> za_vilfp8kn0pcyh-tfcfvapg77a: think this is the state of things https://hub.libranet.de/wiki/graphene-os/wiki/Apps#Accessibility_services
+18:47:45 <za_vilfp8kn0pcyh> * On a tangential note, will rebooting to Safe Mode (not sure how this works on GrapheneOS) help in undoing and removing the said accessibility/device admin app, on the assumption some accessibility app has been installed unknowingly?
+18:48:15 <dazinism> Actually I've got a newer version of that info elsewhere....
+18:48:42 <cn3m[m]> The other problem is Xen is anything but defensively coded. It isn't even near the top
+18:48:51 <dazinism> https://hub.libranet.de/wiki/and-priv-sec/wiki/apps#Accessibility_services
+18:48:52 <cn3m[m]> Xen is fine, but it is not ideal to rely entirely on
+18:49:15 <cn3m[m]> Qubes lacks defense in depth
+18:49:51 <dazinism> Need to sort that out, link one to the other, so dont need to update both.
+18:52:39 <rridley[m]> does the attestation need a second graphene os device or just android?
+18:52:53 <cn3m[m]> <rridley[m] "does the attestation need a seco"> ideally two, but 1 works
+18:54:13 <RiotElement[m]> How can I verify my Graphene OS if I only have 1 Android and 1 iPhone? Is verification through PC complicated?
+18:54:24 <za_vilfp8kn0pcyh> <dazinism "za_vilfp8kn0pcyh-tfcfvapg77a: th"> Nice, thanks
+18:54:46 <justchill[m]> <dazinism "https://hub.libranet.de/wiki/and"> I did not know this wiki existed. Thanks for that.
+18:55:15 <justchill[m]> OOC, is the wiki an unofficial one?
+18:55:44 <cn3m[m]> yes unofficial
+18:55:53 <cn3m[m]> the official sites are grapheneos.org and attestation.app
+18:56:13 <RiotElement[m]> Is there a way to make keyboard shortcuts for Graphene OS? The personal dictionary setting doesn’t seem to for example autocorrect “gos” with “Graphene OS”
+18:56:32 <cn3m[m]> the seamless update site is now rolled into GrapheneOS site
+18:56:33 <RiotElement[m]> * Is there a way to make keyboard shortcuts for Graphene OS? The personal dictionary setting doesn’t seem to for example autocorrect “gos” with “Graphene OS” when adding those terms
+18:57:58 <RiotElement[m]> Are Aurora apps any less secure/private than their F-Droid counterparts?
+18:58:48 <cn3m[m]> <RiotElement[m] "Are Aurora apps any less secure/"> they are technically more secure
+18:58:53 <justchill[m]> <RiotElement[m] "Are Aurora apps any less secure/"> Aurora is from my understanding just a way to install stuff available from the play store
+18:59:08 <TheJollyRoger> F-Droid acts as a trusted third party.
+18:59:15 <cn3m[m]> for two reasons v2/v3 signing and distributed signing
+18:59:20 <cn3m[m]> apps are sandboxed
+18:59:25 <cn3m[m]> they don't need to share keys
+18:59:37 <cn3m[m]> it is actually bad
+18:59:40 <cn3m[m]> F-Droid security is a downgrade
+18:59:42 <RiotElement[m]> <cn3m[m] "they are technically more secure"> Which one are you referring to by “they”?
+18:59:54 <cn3m[m]> Auror a
+19:00:24 <RiotElement[m]> <cn3m[m] "F-Droid security is a downgrade "> Gotcha, never mind
+19:01:02 <cn3m[m]> Ideally for security you would use Google Play Store, but not compatible
+19:01:19 <TheJollyRoger> Many of the apps on F-Droid as well end up lagging significantly behind upstream, and end up missing security patches. Not only that, but unless the app is built reproducibly /and/ uses the developer's signature, it's going to be signed with the F-Droid release keys, which are common to all the apps that F-Droid releases.
+19:01:23 <RiotElement[m]> Do you guys recommend any way to use swipe on keyboard?
+19:01:24 <cn3m[m]> the auto updates, the distributed trust, and much higher security standard help a lot
+19:01:44 <TheJollyRoger> On Distributed trust: the Android Security Model assumes that each app will be signed with its own developer's keys.
+19:02:16 <cn3m[m]> <TheJollyRoger "Many of the apps on F-Droid as w"> yeah you trust the devs to make the app you should trust them to build and sign them. Adding another party is questionable at best
+19:02:23 <TheJollyRoger> In miniature: let's assume that Tom develops iChat, Dick develops MessageNow, and Harry develops the FacePage app.
+19:02:33 <SchismXL[m]> <RiotElement[m] "Do you guys recommend any way to"> Any one of them. Just block network access.
+19:02:36 <cn3m[m]> <RiotElement[m] "Do you guys recommend any way to"> Gboard is good
+19:03:02 <anupritaisno1[m]> No
+19:03:19 <cn3m[m]> <SchismXL[m] "Any one of them. Just block netw"> If you distrust the app that much that might not be a good solution
+19:03:20 <anupritaisno1[m]> I've been told gboard is the best
+19:03:21 <TheJollyRoger> Since Android will pin the certificates and assume that they won't change for the lifetime of the app, if you install iChat, MessageNow, and FacePage, this means that they'll trust Tom, Dick, and Harry's keys for only their respective apps on first contact.
+19:03:42 <TheJollyRoger> So Tom can push updates for iChat, Dick can push updates for MessageNow, and Harry can push updates for FacePage.
+19:03:50 <anupritaisno1[m]> TheJollyRoger: keys can change
+19:04:03 <TheJollyRoger> anupritaisno1[m]: yeah?
+19:04:09 <anupritaisno1[m]> Apk signature v3 allows you to change signing keys
+19:04:13 <cn3m[m]> he is talking about F-Droid but ofc
+19:04:30 <TheJollyRoger> But Tom can't push updates for MessageNow or FacePage without compromising /both/ Dick and Harry's keys.
+19:04:36 <SchismXL[m]> <cn3m[m] "If you distrust the app that muc"> True, but the option is there.
+19:04:46 <TheJollyRoger> anupritaisno1[m]: ah I see.
+19:04:48 <anupritaisno1[m]> Older schemes require you to sign with all the keys
+19:04:57 <cn3m[m]> <SchismXL[m] "True, but the option is there."> network permission is not robust enough if you fully distrust an app
+19:05:17 <anupritaisno1[m]> <TheJollyRoger "But Tom can't push updates for M"> s/both/either
+19:05:17 -SEdbot[m]- > <@freenode_TheJollyRoger:matrix.org> But Tom can't push updates for MessageNow or FacePage without compromising /both/ Dick and Harry's keys.
+19:05:17 -SEdbot[m]- But Tom can't push updates for MessageNow or FacePage without compromising /either / Dick and Harry's keys.
+19:05:59 <cn3m[m]> F-Droid undermines the Android security model in so many ways
+19:06:09 <TheJollyRoger> Ok, lemme reword that: Tom can't push updates for both Messagenow and Facepage without compromising both Dick and Harry's Keys.
+19:06:14 <TheJollyRoger> Handy bot.
+19:06:25 <cn3m[m]> the whole point of sandboxing is other apps are fully seperated. If F-Droid is compromised and you use it a lot you are toast
+19:07:10 <cn3m[m]> it is a single point of failure(which is good when that is an OS that is privileged) bad for deprivileged things like apps
+19:07:18 <TheJollyRoger> Yeah. Since F-Droid bypasses Tom, Dick, and Harry at the same time and just serves their own build.
+19:07:20 <minz3[m]> Do you compare F-Droid wirh aurora droid or with aurora store ?
+19:07:23 <justchill[m]> <cn3m[m] "yeah you trust the devs to make "> I read in the linked wiki that Google has recently been asking devs to upload the signing keys and let Google sign on their behalf. Doesn't this add an extra required level of trust?
+19:07:35 <TheJollyRoger> Which may or may not be up to date with upstream.
+19:08:11 <cn3m[m]> <justchill[m] "I read in the linked wiki that G"> yes, but you trust Google to build AOSP
+19:08:13 <TheJollyRoger> justchill[m]: Not really. Individual developers can still choose to take charge of their own apps.
+19:08:19 <cn3m[m]> they are part of the trust model of your OS to some degree
+19:08:26 <cn3m[m]> <TheJollyRoger "justchill: Not really. Individua"> soon not anymore iirc
+19:08:36 <TheJollyRoger> Aw that's a pity.
+19:08:46 <cn3m[m]> Google is part of the trust model or your system F-Droid is not
+19:10:33 <RiotElement[m]> Is there a chat room where we can discuss general cyber security other than solely Graphene OS related?
+19:11:05 <pikey[m]> <RiotElement[m] "Is there a chat room where we ca"> graphene off topic room might be up your street
+19:11:33 <justchill[m]> <cn3m[m] "yes, but you trust Google to bui"> I see. I guess I misunderstood that a bit. In a GOS device, I was under the impression that we primarily trusted w.r.t. the hardware checks since we were using the GOS builds.
+19:11:34 <RiotElement[m]> <pikey[m] "graphene off topic room might be"> Thanks!
+19:12:22 <ura[m]> You can discuss Fdroid here, right?
+19:12:29 <justchill[m]> <justchill[m] "I see. I guess I misunderstood t"> s/trusted/trusted google
+19:12:29 <cn3m[m]> <justchill[m] "I see. I guess I misunderstood t"> Google writes code for almost everything and they build your device
+19:12:30 -SEdbot[m]- > <@nabeelms:matrix.org> I see. I guess I misunderstood that a bit. In a GOS device, I was under the impression that we primarily trusted w.r.t. the hardware checks since we were using the GOS builds.
+19:12:30 -SEdbot[m]- I see. I guess I misunderstood that a bit. In a GOS device, I was under the impression that we primarily trusted google w.r.t. the hardware checks since we were using the GOS builds.
+19:13:25 <RiotElement[m]> <pikey[m] "graphene off topic room might be"> These are the only ones that come up
+19:13:33 * RiotElement[m] uploaded an image: ima_f9e87fc.jpeg (188KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/qhbeMZbgIgVhqQTzwtfaECkh >
+19:13:51 <cn3m[m]> Google writes a lot of code for open source
+19:14:15 <justchill[m]> https://matrix.to/#/!NKqyWWNTlbuXwOPMCt:matrix.org?via=matrix.org&via=privacytools.io&via=tchncs.de
+19:14:25 <cn3m[m]> it is essentially a given to trust them
+19:14:30 <cn3m[m]> #freenode_#grapheneos-offtopic:matrix.org
+19:14:30 <pikey[m]> <ura[m] "You can discuss Fdroid here, rig"> kinda depends on the discussion really. since this room has all the brains in it (devs), i tend to think the off topic room is best place for general stuff, anything not specific to Graphene installation/usage issues and dev stuff. but thats just my opinion.
+19:14:32 <pikey[m]> <RiotElement[m] "These are the only ones that com"> trying to get you a link but i am struggling! sec
+19:14:45 <cn3m[m]> https://matrix.to/#/#freenode_#grapheneos-offtopic:matrix.org
+19:14:50 <cn3m[m]> https://matrix.to/#/#freenode_#grapheneos-offtopic:matrix.org this should do it
+19:15:40 <justchill[m]> <cn3m[m] "https://matrix.to/#/#freenode_#g"> How did you get it to appear like that? When I clicked share room, the link I posted came up.
+19:16:02 <cn3m[m]> <justchill[m] "How did you get it to appear lik"> I copied the part of the url
+19:16:16 <cn3m[m]> and then pasted it here
+19:16:16 <cn3m[m]> it turned into a link I could copy as that
+19:16:54 * pikey[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/JmrElrRumVNMsAePeBlfyBgm >
+19:18:32 <joshman[m]> I have never ever had a problem with my VPN on graphene. I have it on since day one and 24/7/365
+19:19:44 <joshman[m]> Though I have this huge issue with charging which was discussed here yesterday by someone. I thought it was my OEM charger yet I see it is not
+19:21:34 <interceptingfist> <joshman[m] "I have never ever had a problem "> Which vpn do you use
+19:21:55 <joshman[m]> VPN and hotspot are far superior stability wise on graphene than on iOS. It's a deal breaker for me
+19:22:33 <joshman[m]> I use various. Nord, proton, express
+19:22:57 <cn3m[m]> I have no VPN troubles on GrapheneOS or iOS do I get a prize?
+19:23:16 <RiotElement[m]> <joshman[m] "VPN and hotspot are far superior"> But since you have to choose, isn’t NetGuard preferable over using a VPN?
+19:23:18 <jknsec[m]> yes you get the VPN prize
+19:23:32 <interceptingfist> Free pizza from pizza planet
+19:23:54 <jknsec[m]> a free life subscription to super fast private ultra vpn
+19:24:04 <interceptingfist> But only if you buy a coke with it
+19:24:47 <joshman[m]> <RiotElement[m] "But since you have to choose, is"> How do I do Switzerland, Sweden, Japan, Vietnam, Russia connections on netguard?
+19:24:47 <Metro[m]> <interceptingfist "Which vpn do you use"> Mullvad. And thats because of wireguard on my router for the speed. On the phone I have absolutely no issues with it.
+19:25:01 <ura[m]> Or use tor? Not sure on the usecase
+19:25:02 <cn3m[m]> <RiotElement[m] "But since you have to choose, is"> NetGuard is terrible
+19:25:11 <cn3m[m]> use the default options
+19:25:12 <cn3m[m]> they are less bad
+19:25:31 <joshman[m]> Exactly. Netguard is crap
+19:25:59 <joshman[m]> Tor is irrelevant to vpn
+19:26:57 <joshman[m]> <Metro[m] "Mullvad. And thats because of wi"> All the current tip services provide wireguard. Mulvad is not a unicorn
+19:27:12 <joshman[m]> * All the current top VPN services provide wireguard. Mulvad is not a unicorn
+19:28:53 <joshman[m]> Having vpn on a router is a limitation. I prefer on-device option. Full control
+19:29:08 <RiotElement[m]> <cn3m[m] "use the default options"> So denying the “network permission” for an app in settings will do the same as denying its network and WiFi permission on NetGuard?
+19:29:36 <cn3m[m]> <RiotElement[m] "So denying the “network permissi"> much much stronger
+19:29:48 <joshman[m]> It will do better
+19:30:18 <cn3m[m]> the network permission is not fully robust though
+19:30:20 <cn3m[m]> it is better than the alternatives
+19:31:14 <RiotElement[m]> <cn3m[m] "the network permission is not fu"> If that’s the case, is it still a good idea to use Gboard?
+19:31:17 <Metro[m]> <joshman[m] "Having vpn on a router is a limi"> Not sure I van agree, in this way I can place all my IOT behind the VPN. Damn difficult to do that individual.
+19:31:54 <cn3m[m]> <RiotElement[m] "If that’s the case, is it still "> Google is not malicious they won't try anything funky
+19:32:32 <joshman[m]> <RiotElement[m] "If that’s the case, is it still "> I do use it. Daily. Truth is I doubt it leaks data through other
+19:35:33 <joshman[m]> <Metro[m] "Not sure I van agree, in this wa"> My Android TV uses USA Netflix, my laptop is connecting through a country away from 14 eyes, my phone is in the country my banking app is from. How do you do all that with single IP address and how much data you are putting through this single basket full of eggs?
+19:37:38 <joshman[m]> If I had to use one ip Id never paid for a vpn. Host your own on a server somewhere in Belize or Panama
+19:39:32 <joshman[m]> * My Android TV is on USA Netflix, my laptop is connecting through a country away from 14 eyes, my phone is in the country my banking app is from. How do you do all that with single IP address and how much data you are putting through this single basket full of eggs?
+19:40:00 <joshman[m]> * My Android TV is on USA Netflix, my laptop is connecting through a country away from 14 eyes, my phone is in the country my banking app is from. How do you do all that with a single IP address and how much data you are putting through this single basket full of eggs?
+19:40:21 <joshman[m]> * My Android TV is on USA Netflix, my laptop is connecting through a country away from 14 eyes, my phone is in the country my banking app is from. How do you do all that with a single IP address and how much data are you putting through this single basket full of eggs?
+19:40:59 <Metro[m]> <joshman[m] "My Android TV uses USA Netflix, "> With the 2000 people on the same server with the same IP I do not really care about that... 😀
+19:43:20 <joshman[m]> <Metro[m] "With the 2000 people on the same"> Try to download a movie on a torrent tracker if you're from Germany than chances are you'll get a pretty fat ticket within few weeks
+19:44:00 <joshman[m]> * Try to download a movie on a torrent tracker if you're from Germany chances are you'll get a pretty fat ticket within few weeks
+20:02:34 <RiotElement[m]> Does anyone know how I can do this?
+20:02:34 <RiotElement[m]> “vanadium can block ads if you use DoT via private DNS like adguard”
+20:02:51 * RiotElement[m] uploaded an image: ima_db4d037.jpeg (727KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/kTQMAmkwKtQWjGgADUOpCGdt >
+20:06:40 <Metro[m]> > <@userrioter:matrix.org> Does anyone know how I can do this?
+20:06:40 <Metro[m]> > “vanadium can block ads if you use DoT via private DNS like adguard”
+20:06:40 <Metro[m]> Network and internet, private DNS.
+20:07:00 <cn3m[m]> > <@userrioter:matrix.org> Does anyone know how I can do this?
+20:07:00 <cn3m[m]> > “vanadium can block ads if you use DoT via private DNS like adguard”
+20:07:00 <cn3m[m]> check the FAQ on adblocking
+20:09:29 <LinusSexTips[m]2> for AdGaurd you should set it to `dns.adguard.com`
+20:11:01 <fll[m]> <joshman[m] "Try to download a movie on a tor"> Just set up a Freifunk router from a community that still tunnels ;)
+20:11:41 <fll[m]> And help your neighbours in the process :D
+20:17:15 <RiotElement[m]> <LinusSexTips[m]2 "for AdGaurd you should set it to"> I set it to adguard but YouTube on Vandium is still giving ads 😐
+20:17:36 <LinusSexTips[m]2> youtube is a special case
+20:17:44 <RiotElement[m]> 😭
+20:17:49 <LinusSexTips[m]2> for that you should use invidio.us
+20:18:02 <RiotElement[m]> Brave used to block YT ads until yesterday
+20:18:36 <cn3m[m]> <RiotElement[m] "Brave used to block YT ads until"> brave bad
+20:25:01 <RiotElement[m]> <LinusSexTips[m]2 "for that you should use invidio."> So that seems to be blocking ads but no full screen option and goes up to 720p.
+20:25:15 <LinusSexTips[m]2> Yes
+20:25:20 <LinusSexTips[m]2> You can use NewPipe too
+20:25:44 <RiotElement[m]> NewPipe is awesome but has ads. The Only downside 😕
+20:25:55 <LinusSexTips[m]2> Oh really?
+20:26:02 <LinusSexTips[m]2> I thought it took them out
+20:34:41 <minz3[m]> Invidio.US can play with 1080 just toggle resolution "dash" in the settings and now you can go up to full reaulution
+20:34:47 <RiotElement[m]> Is it safe/good idea to get Firefox with hardening extensions on my admin profile or should I do that in a guest profile?
+20:35:34 <RiotElement[m]> And as recommended for Windows, should I use a guest profile as a daily driver and leave Admin only for when I need it?
+20:37:54 <RiotElement[m]> * And as is recommended for Windows, should I use a guest profile as a daily driver on Graphene OS and leave Admin only for when I need it?
+20:44:52 <ghostcat[m]> <RiotElement[m] "NewPipe is awesome but has ads. "> I am using NewPipe and have not encounter a single ad. Don't really have any system ad blocker turn on when I use NewPipe.
+20:50:38 <jknsec[m]> Yeah I've never had ads
+20:53:08 <RiotElement[m]> I’m not seeing any now. Maybe I mistook it for using Vanadium
+21:15:02 <geritol[m]> <RiotElement[m] "Is it safe/good idea to get Fire"> Don't use Firefox for anything
+21:15:34 <RiotElement[m]> <geritol[m] "Don't use Firefox for anything"> Why not?
+21:15:58 <RiotElement[m]> And not even for PC browsing?
+21:16:30 <ghostcat[m]> RiotElement: It is advisable not to due to browser fingerprinting.
+21:16:51 <ghostcat[m]> What makes you unique is the extensions you use.
+21:17:14 <ghostcat[m]> * RiotElement: It is not advisable to due to browser fingerprinting.
+21:17:28 <ghostcat[m]> * RiotElement: It is not advisable due to browser fingerprinting.
+21:19:06 * geritol[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/YlEBYDsLIuGTeZBQQkLPFTPW >
+21:51:50 <pikey[m]> Sorry and thanks for replies. Which vpn is not relevant. I have used a ton of them. Same connection issues whichever I use. Proton calyx mullvad pia air ... All same problems.
+21:55:49 <pikey[m]> I now hear my relative who used graohene for several months but went back to iPhone recently had same issues which he only noticed by signal messages failing to send. That's the main problem i have too. Signal msgs seem to cause the issue or emails but only sending. Receiving seems fine as does browsing until either an email or signal msg gets 'stuck'. Then its like every app gets stuck in the pipe behind the stuck
+21:55:49 <pikey[m]> outgoing email/SIG msg
+21:56:12 <pikey[m]> Nobody else ever seen signal messages spinning and failing to send?
+22:05:38 <sushiman[m]> <RiotElement[m] "NewPipe is awesome but has ads. "> ?
+22:08:10 <pikey[m]> I have never seen ads in newpipe either
+22:10:52 <rover1[m]> get from fdroid or github
+22:34:07 <larncat[m]> pikey yes, when connected thru a VPN with SMS-over-WiFi on Verizon, signal may not send until momentarily disconnecting VPN
+22:34:48 <larncat[m]> Otherwise, Signal works well for me with a good data connection.
+22:35:46 <btcboss> hello
+22:36:17 <btcboss> Im newbie and Im having an issue installing the os in my phone
+22:36:19 <btcboss> + $version=fastboot --version; try { $verNum = $version[0].substring(17 ...
+22:36:56 <btcboss> i could unlock it but when I try to execute flash-all.bat appears that error
+22:38:09 <btcboss> im using last version of platform tools
+22:38:26 <btcboss> 30.0.3
+22:39:07 <btcboss> someone could help me please?
+22:49:23 <overheadscallop[> what os are you using on your pc
+22:49:48 <overheadscallop[> and did you follow any guide besides the official one
+22:51:17 <pikey[m]> <larncat[m] "pikey yes, when connected thru a"> Thanks but I don't understand what "sms-over-wifi" means. I don't use WiFi at all. Only LTE.
+22:55:21 <btcboss> windows 10 I follow all the steps correctly
+22:56:07 <overheadscallop[> What's the output of `fastboot --version` in powershell?
+22:56:40 <larncat[m]> pikey sorry, my sharing wasn't directly related to your query.
+22:56:52 <btcboss> fastboot version 30.0.3-6597393
+22:58:23 <overheadscallop[> does it state where it's installed too?
+22:58:56 <overheadscallop[> If that's the version and in your path I'm not sure why the flash-all script is failing
+22:59:04 <overheadscallop[> is there a specific error when you run it
+22:59:15 <btcboss> how i see if its in my path?
+22:59:19 <btcboss> im not sure
+23:00:02 <btcboss> $env:Path = "$pwd\platform-tools;$env:Path" this is not working
+23:00:05 <overheadscallop[> `echo $path` I think
+23:00:33 <btcboss> $path say that
+23:00:53 <overheadscallop[> I don't think it's a good idea to run`$env:Path = "$pwd\platform-tools;$env:Path"` more than once
+23:01:22 <overheadscallop[> so platform tools is in your path already, ok
+23:01:39 <overheadscallop[> What's the specific error when you run the `flash-all.bat` script?
+23:01:46 <btcboss> wait
+23:03:10 <btcboss> + CategoryInfo: ObjectNotFound: (fastboot: String) [], CommandNotFoundException
+23:03:33 <overheadscallop[> yeah, running the command to change the path more than once might've broken something
+23:03:43 <overheadscallop[> try closing your current powershell and opening a new one
+23:03:58 <overheadscallop[> then add the platform tools folder back to the path
+23:04:16 <overheadscallop[> or reboot
+23:04:51 <btcboss> ok wait please
+23:04:51 <overheadscallop[> actually I think to reset the environment it would be better to log off or reboot the pc
+23:05:19 <btcboss> thanks I will try and come back now

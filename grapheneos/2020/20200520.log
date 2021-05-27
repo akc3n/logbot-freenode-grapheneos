@@ -1,0 +1,1926 @@
+00:03:13 <aeonsolution[m]> strcat: is there anything I can try testing out in the development branch to help out with? i checked the issues and didn't see anything new?
+00:03:40 <aeonsolution[m]>  * strcat: is there anything I can try testing out in the development branch to help out with? i checked the Github issues page and didn't see anything new.
+00:05:18 <aeonsolution[m]> should I just try syncing again with the changes and troubleshooting from there?
+01:35:18 <renlord> wow, my ovh vps just went kaput
+01:35:20 <renlord> for a good 6 hours
+01:35:36 <renlord> no outage notice, nothing
+01:39:46 <aeonsolution[m]> thats horrible
+01:40:01 <aeonsolution[m]> sorry #
+01:40:36 <aeonsolution[m]>  * sorry renlord
+01:42:26 <JTL> renlord: Which location?
+01:42:39 <renlord> SGP
+01:43:00 <JTL> That's a more recent location
+01:43:17 <JTL> and knowing how OVH works, that doesn't surprise me
+01:43:46 <JTL> I seem to recall hearing of similar issues when OVH's Quebec location was newer
+01:45:51 <renlord> cant even do a soft reboot in the panel
+01:46:05 <renlord> and there's this banner sayting my vps is being upgraded when i didnt even ask for an upgrade
+01:46:20 <renlord> and they didnt even announce maintenance or anything
+01:46:22 <renlord> ffs
+01:53:53 <strcat[m]> aeonsolution: it's thoroughly broken
+01:53:56 <strcat[m]> and yes I need help
+01:54:13 <strcat[m]> always do
+01:56:37 <Caleb> lots of people
+01:56:39 <Caleb> nice
+01:56:51 <renlord> how do i get a arch user cloak?
+01:56:59 <Caleb> ask the right people
+01:57:11 <Caleb> not sure they give them out anymore though but i could be wrong
+02:00:05 <aeonsolution[m]> strcat: got it, I'm "Extracting vendor files for Pixel devices" step
+02:01:11 <renlord> aeonsolution[m]: there's like 74 pending issues
+02:03:36 <aeonsolution[m]> Sorry, I wasn't being clear renlord. I understood the message as something broke when the changes were pulled into android-prepare-vendor
+02:04:08 <aeonsolution[m]> so i looked for new issues on the os-issue tracker or android-prepare-vendor repos and didn't see any
+02:04:10 <strcat[m]> no
+02:04:12 <strcat[m]> something broke in general
+02:04:15 <strcat[m]> the cause is not known
+02:04:28 <strcat[m]> there are already problems even if something hadn't broke recently
+02:04:40 <strcat[m]> I said I would be rolling back recent changes since the past release
+02:05:41 <aeonsolution[m]> noted, thank you for clarifying
+02:18:18 <strcat[m]> if there were other people working on the project someone would have noticed the dev branch wasn't working for a while
+02:20:45 <aeonsolution[m]> i was able to build 10 for the pixel 3a over the weekend, I can't build it now
+02:20:53 <strcat[m]> it still builds fine
+02:21:04 <strcat[m]> and maybe you built it but did you TEST it?
+02:22:25 <aeonsolution[m]> i didn't do the CTS tests, I started trying to rebuild the dev branch today
+02:22:36 <strcat> did you flash it and use it including connecting to a network?
+02:22:48 <strcat> aeonsolution[m]: it still builds fine
+02:22:56 <aeonsolution[m]> i did flash it, but i didn't connect to a network
+02:22:57 <strcat> there hasn't been any issue like that - just means you're doing something wrong building it
+02:23:30 <strcat> instructions are the same, code is the same
+02:23:37 <strcat> if it doesn't build now it's you doing something wrong
+02:24:04 <strcat> if there's an error, there's an error message
+02:25:24 <renlord> TheJollyRoger: ping
+02:25:47 <strcat> valldrac: I think your VPN lockdown change is broken when there isn't a VPN
+02:26:04 * TheJollyRoger zooms in.
+02:26:07 <aeonsolution[m]> let me restart then; it doesn't error out, this just doesn't work now: `mv vendor/android-prepare-vendor/sargo/QQ2A.200501.001.B2/vendor/google_devices/* vendor/google_devices/`
+02:26:21 <strcat> I don't know what you mean by doesn't work
+02:26:23 <TheJollyRoger> renlord: ahoy! Sorry about that. I've been away from the PC a lot today >_<. What can I do for you...?
+02:26:26 <strcat> if there's an error there's an error message
+02:26:34 <TheJollyRoger> I haven't had much luck with Protobuf yet unfortunately, still fighting with my computer.
+02:26:38 <aeonsolution[m]> mv: cannot stat 'vendor/android-prepare-vendor/sargo/QQ2A.200501.001.B2/vendor/google_devices/*': No such file or directory
+02:26:50 <strcat> ok so you did something wrong there's no directory there
+02:27:06 <TheJollyRoger> (cue that gif of Chris Benoit jumping off the top of the cage to try to headbutt Kurt Angle and instead crashing onto his face)
+02:27:23 <strcat> the build instructions work and they're the same as before
+02:27:30 <strcat> you're just doing something wrong now - do what it says and it'll work
+02:27:45 <aeonsolution[m]> kk
+02:28:15 <strcat> you shouldn't need to run android-prepare-vendor again if you already had the vendor files for the build id but it WILL WORK if you do it right
+02:29:31 <TheJollyRoger> Got it. I'm just missing some dependencies, it seems. Think Python's being picky about google.protobuf and I'm not sure where that's hitting an error so I'm going to try it on a different OS.
+02:30:45 <JTL> TheJollyRoger: I should be working on a public "container" setup or something for building GrapheneOS within the next 10,000 days
+02:31:01 * TheJollyRoger starts playing 10,000 days on full volume!
+02:31:06 <JTL> :D
+02:31:08 <TheJollyRoger> ^_^
+02:31:09 <strcat> it's not really that many dependencies
+02:31:23 <TheJollyRoger> Right now I'm thinking if I can build it in a KVM virtual machine, what if I posted the QEMU image somewhere?
+02:31:26 <strcat> if people can't get it to build I don't expect them to be able to help
+02:31:35 <strcat> building it is the easy part
+02:31:35 <TheJollyRoger> Sorry. I'm trying, I'm trying >_<.
+02:31:44 <renlord> is the protobuf issue related to removing python2 as a dependency?
+02:31:47 <aeonsolution[m]> TheJollyRoger: did you switch to Manjaro
+02:31:49 <renlord> i can help look into that
+02:32:30 <TheJollyRoger> aeonsolution[m]: sorry, not yet. I've been out all day >_< and getting back to work on it now. I tried a few other combinations with Fedora but no success yet, so I'm going to move the VM image.
+02:32:37 <renlord> strcat: do we track aosp_alliance avp now as upstream?
+02:32:41 <strcat> renlord: yes
+02:32:49 <renlord> ok sweet
+02:33:04 <renlord> i guess the only missing bit is finding a FT maintainer for the pixel4 kernel?
+02:33:16 <renlord> for supporting pixel4?
+02:33:27 <strcat> more than the kernel
+02:34:09 <strcat> window of opportunity for Pixel 4 / 4 XL / 4a support is closing though
+02:34:20 <renlord> oh? but cdesai and danv now use sources available in the aosp tree now for things that already exist in the aosp tree though
+02:34:33 <strcat> can't add new devices so close to Android 11
+02:34:36 <strcat> renlord: not all things
+02:34:40 <strcat> just some
+02:34:54 <TheJollyRoger> renlord: I'm uh... I'm not sure what it is. I've got the error message here: https://jollyrogers.ca/public/protobuf.txt . I later tried uninstalling `google`, `google-cloud`, and `protobuf` and then installing them system wide as root. I cleaned out the tmp directory and that fixed the out of space error.
+02:35:09 <strcat> you don't need anything called 'google' or 'google-cloud'
+02:35:31 <strcat> ImportError: No module named google.protobuf
+02:35:33 <renlord> the google namespace exists when you install protobuf
+02:35:33 <strcat> there's the error
+02:35:54 <strcat> you don't have protobuf for the python being used to run android-prepare-vendor
+02:36:07 <renlord> supposedly, but not since the latest debian package
+02:36:49 <strcat> TheJollyRoger: the main namespace of a python package != the package name
+02:36:52 <TheJollyRoger> OH. Oh wait so... so it's using the wrong interpreter, not finding protobuf, and then erroring out? Like using 3.7 when I have 3.8?
+02:36:57 <strcat> TheJollyRoger: and you have the wrong one that's why it doesn't work
+02:37:08 <strcat> TheJollyRoger: android-prepare-vendor uses python2
+02:38:19 <renlord> whoops, maybe i jumped ahead of myself
+02:38:23 <TheJollyRoger> I... oh. Th-th-that... that explains a lot...
+02:38:27 <renlord> i thought you're trying to remove python2
+02:38:40 * TheJollyRoger smacks himself in the face.
+02:38:48 <renlord> py2 should just go away
+02:39:08 <strcat> it is
+02:39:09 <strcat> it's dead
+02:39:24 <strcat> projects using it need to move instead of using a dead project without security updates
+02:39:30 <JTL> Agreed
+02:39:41 <JTL> The writings been on the wall for a *long time*
+02:39:58 <renlord> there is python3-protobuf
+02:40:00 <strcat> AOSP has moved already just not retroactively for existing releases
+02:40:09 <strcat> renlord: yes the issue is android-prepare-vendor
+02:40:11 <strcat> not that
+02:40:17 <renlord> should probably look into avp to see if can just patch it
+02:43:56 <TheJollyRoger> So now all I gotta figure out is to find protobuf for python2 and install it... let's see..
+02:45:01 <strcat> just install a distro package for it
+02:45:04 <strcat> it's a common package
+02:45:10 <renlord> python2-protobuf
+02:45:15 <renlord> on ubuntu
+02:45:33 <strcat> there are not that many build dependencies
+02:45:39 <strcat> fewer than most small projects
+02:46:02 <renlord> fewer than a typical rust project lulz
+02:46:08 * TheJollyRoger redfaces.
+02:46:41 <strcat> android-prepare-vendor itself has some prebuilts to make it easier
+02:46:50 <renlord> strcat: did you have an opinion about cargo when you were a rust contributor?
+02:47:22 <strcat> wasn't a fan of it or the people who made it
+02:47:35 <strcat> pretty hard-wired into the existence of it now
+02:47:43 <renlord> i thought so
+02:49:04 <TheJollyRoger> Hmm. Looks like we might have to rule out Fedora 32 for building until AOSP fully depreciates python2. Fortunately, for the one month I have left I think I can just spin up 30...
+02:49:27 <aeonsolution[m]> yeah
+02:49:34 <strcat> TheJollyRoger: this isn't a dependency of AOSP on python2
+02:49:41 <strcat> android-prepare-vendor isn't AOSP
+02:50:06 <TheJollyRoger> Oh.
+02:50:28 <aeonsolution[m]> i forgot to turn on my swap lol
+02:50:33 <aeonsolution[m]> nice
+02:50:40 <TheJollyRoger> XP Oops
+03:08:19 <TheJollyRoger> I'm just backing up the VM image and then switching it over to Manjaro.
+03:09:35 <aeonsolution[m]> nice, let me know if you need anything
+03:10:20 <TheJollyRoger> Thanks! I'll use your package list, hopefully I should be able to get everything set here. I think if this goes well I want to publish the VM image somewhere.
+03:17:47 <renlord> manjaro is really difficult to use
+03:19:03 <TheJollyRoger> Well, heh, looks like I'll be getting this headfirst XP.
+03:33:11 <BrokenCog> how so?
+04:01:16 <TheJollyRoger> BrokenCog: I've never used Arch or any sort of Arch-Like system before. Hopefully it shouldn't make too much difference in the end though.
+04:02:48 <BrokenCog> I was wondeirng why renlord  said difficult to use ... I think you'll be fine.
+04:03:30 <TheJollyRoger> Whew.
+04:04:44 <renlord> its way harder than archlinux
+04:04:44 <renlord> and probably linux from scratch
+04:04:46 <renlord> i dont even know how to use it
+04:05:09 * TheJollyRoger goes bug-eyed.
+04:05:19 <renlord> the community also consistently provides the wrong advice and insecure methods to solving problems
+04:05:42 <TheJollyRoger> Ok like... I had to read a little bit about LFS to understand the theory of what I was doing when I set up my system because we didn't have everything available at the time but like...
+04:05:45 <TheJollyRoger> that was like...
+04:05:46 <aeonsolution[m]> its arch with an installer? he's just using it as a vm not his main os
+04:05:50 * TheJollyRoger gestures yanking out his own teeth.
+04:06:01 <TheJollyRoger> If it's gonna be harder than THAT aaaaaaa
+04:06:01 <renlord> archlinux is so easy, you can install without a fkin installer
+04:06:02 <JTL> Didn't they just tell people to roll back the clock when a certificate expired?
+04:06:05 <JTL> </snark>
+04:06:14 <renlord> i dont even know how to use the debian/ubuntu installer
+04:06:16 <aeonsolution[m]> do you have a script you can share?
+04:06:32 <JTL> renlord: I still remember the time I installed Gentoo on an old Pentium M laptop about 10 years ago
+04:06:37 <JTL> Forgot to compile in the IDE driver
+04:06:39 <renlord> aeonsolution[m]: what script, its just arch-chroot, pacman -S base done.
+04:06:41 <renlord> lol
+04:06:45 <TheJollyRoger> ...oh good gravy
+04:07:17 <renlord> recovery is so easy with archlinux also
+04:07:18 <aeonsolution[m]> is arch-chroot a package?
+04:07:26 <aeonsolution[m]> let me check this out
+04:07:32 <TheJollyRoger> OK whew. As long as I can get ssh into the VM then I'm fine.
+04:07:35 <TheJollyRoger> Should be able to take it from here.
+04:07:36 <renlord> should come with the bootable usb
+04:07:40 <renlord> but you can install it also
+04:07:47 <renlord> arch-install-tools or something
+04:08:21 <TheJollyRoger> I left the keymap as "US" so I don't want to bother using it much more than I can, typing in QWERTY feels like walking around with your pants on backwards...
+04:08:27 <renlord> when asking for help in manjaro, it always involves steps that require you to bend over backwards
+04:08:33 <TheJollyRoger> Oh good gravy.
+04:08:35 <renlord> and does not even solve the underlying issue at the first place
+04:09:07 <JTL> renlord: Sounds like your describing Debian/Ubuntu people
+04:09:26 <renlord> i remember someone telling me one scenario -- cert expiration, they ask you to rollback your OS clock
+04:09:26 <TheJollyRoger> sadtrombone.com
+04:09:28 <renlord> wtf
+04:09:35 <JTL> renlord: Yes that's right
+04:09:40 <JTL> (as in the event)
+04:09:52 <BrokenCog> does anyone happen to recognize this error:
+04:09:53 <BrokenCog> FAILED: ninja: 'external/vanadium/prebuilt/arm/TrichromeChrome.apk', needed by 'out/target/product/generic/obj/APPS/TrichromeChrome_intermediates/package.apk', missing and no known rule to make it
+04:10:13 <renlord> BrokenCog: the prebuilt should be included
+04:10:21 <BrokenCog> via repo sync?
+04:10:42 <BrokenCog> when "m target-files-package
+04:10:49 <BrokenCog> starts I get this message:
+04:10:52 <BrokenCog> external/vanadium/Android.mk was modified, regenerating...
+04:11:15 <BrokenCog> and then that error at the very end.
+04:12:59 <renlord> i think so
+04:13:41 <renlord> https://github.com/GrapheneOS/platform_external_vanadium/tree/10/prebuilt/arm64
+04:13:44 <renlord> yes
+04:13:46 <renlord> they are included
+04:17:12 <aeonsolution[m]> renlord:  how long does it take you to setup arch linux from scratch?
+04:17:41 <BrokenCog> strange that repo sync didn't pick it up.
+04:17:44 <renlord> a working copy?
+04:17:45 <renlord> probably 5 mins?
+04:18:00 <renlord> then clone my dotfiles, pacman -Syu pkglist.txt done
+04:18:09 <renlord> probably all up and running by 30 mins
+04:19:05 <aeonsolution[m]> you know all the steps to partition from memory like that?
+04:19:14 <TheJollyRoger> Heh, "Arch Linux From Scratch" XP.
+04:19:33 <TheJollyRoger> I struggle to set up a Stage 2 :P.
+04:19:37 <TheJollyRoger> Er, Stage 3.
+04:19:53 <strcat[m]> btw nytimes is officially dropping third party advertising / tracking... since they are moving to first party advertising / tracking and explicitly selling the user data they gather, lol
+04:20:18 <BrokenCog> you don't get ads if you have a subscription.
+04:20:25 <TheJollyRoger> Ha, well I guess that makes sense...
+04:20:43 <TheJollyRoger> >_<.
+04:21:07 <TheJollyRoger> I'm just imagining trying to reproduce Arch using LFS and I'm like "oooooh baby, that's for folks braver than I :P"
+04:21:11 <JTL> strcat[m]: heh I saw that
+04:21:17 <strcat[m]> BrokenCog: which just makes it even easier for them to track you
+04:21:25 <strcat[m]> not seeing ads != not being tracked
+04:21:50 <strcat[m]> especially since the nytimes does first party data collection / profile building and then sells your data (so they are worse than facebook)
+04:21:51 <BrokenCog> it's a different type of tracking, true.
+04:22:00 <strcat[m]> not a different type of tracking
+04:22:04 <strcat[m]> it's more thorough and integrated
+04:22:07 <strcat[m]> sure
+04:24:36 <BrokenCog> the type of data valuable for resale is predicated on the data being useful for marketing/profit.  If ad's aren't being placed, then the commercial benefit of tracking a person falls to zero.  as long as we like free services (aka: services paid by ad revenue) then we'll have our marketing relevant data tracked and sold.
+04:25:16 <BrokenCog> this is part and parcel of a Consumerist based economy, but it crosses over into security, privacy, politics, etc.
+04:27:34 <strcat[m]> the data is definitely valuable without ads and blocking the ads doesn't mean they don't record and sell it
+04:27:42 <renlord> aeonsolution[m]: disk partitioning?
+04:28:06 <strcat[m]> not sure how you can claim that the commercial benefit of tracking people is zero without advertising
+04:28:09 <aeonsolution[m]> <renlord "aeonsolution: disk partitioning?"> yeah
+04:28:20 <renlord> ya, just use fdisk?
+04:28:53 <renlord> then mkfs.(type) partition?
+04:31:45 <aeonsolution[m]> i know the steps, im just want to point out that it may not be realistic to tell people to do that
+04:32:09 <BrokenCog> renlord: the apk is present:  ./grapheneos-10/external/vanadium/prebuilt/arm64/TrichromeChrome.apk
+04:32:19 <aeonsolution[m]> its an unnecessary barrier to development for some
+04:32:27 <renlord> BrokenCog: did you set to the correct device?
+04:32:38 <renlord> an arm64 device?
+04:32:40 <renlord> in choosecombo
+04:34:02 <BrokenCog> so, choosecombo: TARGET_ARCH=arm but sync only pulled the 64bits.  okay, that explains the missing file.  need to figure out what happened with sync.
+04:34:13 <BrokenCog> thanks.
+04:34:14 <renlord> we dont ship arm prebuilts
+04:34:16 <renlord> sorry
+04:34:20 <renlord> only arm64
+04:34:43 <renlord> arm64 and x86_64
+04:35:00 <renlord> if you want 32bits, you have to build your own
+04:35:05 <renlord> then copy into that directory
+04:35:05 <BrokenCog> wouldn't expect them.  what was the last Pixel 32bit?
+04:35:34 <renlord> did pixel gen 1 use armv7?
+04:35:55 <BrokenCog> don't know.  never messed with pixel until this one.
+04:35:59 <BrokenCog> 3a
+04:36:25 <renlord> 3a supports 64bit, why do you even bother with arm?
+04:36:29 <renlord> just use arm64
+04:36:47 <renlord> choosecombo release aosp_sargo user
+04:37:05 <renlord> close your shell and start again
+04:37:13 <renlord> $ source script/envsetup.sh
+04:37:23 <renlord> $ choosecombo release aosp_sargo user
+04:38:09 <BrokenCog> I wasn't choosing arm.  tha'ts what I need to figure out.  How did choosecombo get something different.
+04:38:27 <BrokenCog> ahhh.. mistype.  Not figure out what happened with sync.  what happened with choosecombo.
+04:38:47 <strcat[m]> there was never a 32-bit Pixel
+04:38:55 <BrokenCog> well, there you go.
+04:39:14 <strcat[m]> Nexus 5X and 6P were 64-bit, as was the Nexus 9 from a year before those
+04:39:21 <strcat[m]> Nexus 6 was the last 32-bit Nexus phone
+04:39:39 <strcat[m]> GrapheneOS never supported the Nexus 6 officially
+04:39:43 <strcat[m]> so the Nexus 5 was the last 32-bit device for it
+04:39:50 <strcat[m]> which was also the initial device
+04:40:40 <strcat[m]> BrokenCog: why are you building for 32-bit arm is the real question
+04:40:47 <strcat[m]> we have arm64 and x86_64 prebuilts for Vanadium
+04:41:05 <strcat[m]> you can build it for 32-bit but there just isn't a good reason to do it
+04:41:08 <BrokenCog> I never claimed to be making 32bit nor asking for.
+04:41:19 <BrokenCog> choosecombo claimed it.  not me.
+04:42:07 <strcat> Authentication-Results: mail.grapheneos.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+04:42:13 <strcat> renlord: opendmarc passes through mails that fail
+04:42:14 <TheJollyRoger> It might take some time for rsync to copy everything back to the VM... really glad I don't have to completely set the whole thing back up again from scratch.
+04:42:16 <strcat> even though it's set to reject
+04:42:18 <strcat> wtf
+04:42:52 <strcat> I don't really recommend using a VM just more things that can go wrong
+04:43:07 <strcat> build with a normal setup first
+04:43:26 <strcat> install / build docs list officially supported distros where it's known to work properly
+04:43:34 <strcat> and the instructions are pretty painless, I regularly test them
+04:45:42 <renlord> yeah, opendmarc doesnt work very well
+04:45:56 <renlord> even opendkim exemptdomains dont work well
+04:46:09 <renlord> i exempted the linuxfoundation mailing lists but its still rejecting them
+04:46:26 <strcat> renlord: remember it's for FROM addresses
+04:46:30 <strcat> it's not for mail servers
+04:46:34 <strcat> it doesn't exempt their server
+04:46:50 <strcat> so you'd need to whitelist every address of people using broken mailing lists
+04:46:58 <renlord> the FROM address is the mailing list address
+04:47:02 <strcat> it's really up to them to NOT use broken mailing lists forging emails if they do
+04:47:08 <strcat> renlord: and they don't do dkim properly?
+04:47:09 <renlord> from *@lists.linuxfoundation.org
+04:47:14 <renlord> i suppose not
+04:47:16 <renlord> lol
+04:47:27 <renlord> i dont keep bounced emails
+04:47:51 <TheJollyRoger> strcat: okay :(. Got it >_<.
+04:48:07 * TheJollyRoger goes to get another hard drive...
+04:48:23 <strcat> why can't you just build on whatever your normal OS is
+04:49:43 <BrokenCog> because if your host machine is involved with X number of projects, with conflicting library/versions/firmware/configuration overlaps, it becomes impossible.
+04:50:04 <strcat> there are hardly any build dependencies on the host
+04:50:08 <TheJollyRoger> Crap. Well, I'll go and try to find python2-protobuf for this thing.
+04:50:13 <BrokenCog> hardly.  but a few.
+04:50:14 <TheJollyRoger> THat's the only thing that this thing is choking on so far.
+04:50:27 <strcat> AOSP builds in a sandbox with namespaces and doesn't leak that much from the host
+04:50:33 <BrokenCog> TheJollyRoger: what distro?
+04:50:51 <TheJollyRoger> If not though, I've got one more 1TB SSD left, and I can just throw Debian Busted-- uh, sorry, I mean Debian Buster onto this thing.
+04:50:54 <TheJollyRoger> Gentoo. T_T
+04:50:59 <strcat> and you can build in your own container too
+04:51:05 <strcat> there is no good reason to make things so complicated
+04:51:15 <strcat> stop making things overcomplicated as step one
+04:51:20 <strcat> follow the instructions as written
+04:51:23 <TheJollyRoger> Okay!
+04:51:30 <strcat> there was a time when GrapheneOS releases were not available, just sources
+04:51:43 <strcat> and many people including many non-programmers built it successfully via instructions inferior to what's there now
+04:51:55 <strcat> the instructions are far better now and there are *far fewer* build dependencies
+04:53:24 <renlord> i just use a container now
+04:53:32 <renlord> so i dont need all the extra baggage on my host OS
+04:53:50 <renlord> not that its alot to begin with
+04:54:06 <strcat> just make a fresh arch container (pacstrap -c build base)
+04:54:31 <strcat> only setup I did is enabling/generating en_US.UTF-8 locale and making a grapheneos user
+04:54:44 <strcat> step one installed repo, python3, git to init/sync
+04:55:17 <strcat> there it goes
+04:55:44 <strcat> can literally copy-paste the 4 sync commands
+04:55:55 <strcat> I have fiber so it goes pretty fast
+04:59:00 <renlord> i just use the debian buster image
+05:01:02 <strcat> renlord: I just install arch-install-scripts and use pacstrap -c dir base
+05:01:21 <strcat> renlord: it uses your existing package cache and mirrorlist
+05:01:43 <strcat> renlord: then, systemd-nspawn -D dir, do the setup as root
+05:01:49 <strcat> then switch to the non-root user
+05:01:59 <renlord> but your host package cache shouldnt have the build dependencies at the first place?
+05:02:22 <strcat> I mean it uses your host package cache for pacstrap
+05:02:33 <renlord> i see you use lxc directly
+05:02:35 <renlord> i still use docker
+05:02:38 <strcat> why does it matter if not everything is there
+05:02:43 <strcat> renlord: systemd-nspawn isn't lxc
+05:03:03 <strcat> could use something else but that works directly with an OS tree
+05:03:05 <strcat> nothing special
+05:03:22 <strcat> could also use debootstrap if you wanted debian but this is faster and I don't have to deal with debian
+05:03:40 <renlord> what's the size?
+05:04:35 <strcat> 600M for base but you don't really need all of base
+05:04:36 <DannyWorkOrderPr> <renlord "i just use a container now"> Is your container's creation script anywhere?
+05:04:38 <strcat> don't need linux, etc.
+05:05:51 <renlord> DannyWorkOrderPr: no its in my local
+05:06:28 <strcat> pacstrap -c build-tree base python3 git gcc binutils bc diffutils freetype2 ttf-dejavu m4 rsync unzip zip signify
+05:06:37 <strcat> and install ncurses5-compat-libs
+05:07:30 <strcat> and the lib for android-prepare-vendor
+05:07:36 <strcat> it's pretty straightforward
+05:07:39 <DannyWorkOrderPr> <renlord "Danny@WorkOrderPro: no its in my"> What I mean is, would you be willing to share a script to make your Docker environment, a la DockerHub or whatever hotness is these days?
+05:07:57 <strcat> we could rebuild the renderscript clang to avoid the ncurses5 dep
+05:08:25 <strcat> you don't need some fancy environment
+05:08:29 <strcat> the build environment is not complicated
+05:08:32 <strcat> look at what I just posted
+05:08:36 <renlord> DannyWorkOrderPr: i can probably submit a PR for it, but its quite basic
+05:09:09 <TheJollyRoger> Okay!
+05:09:29 <renlord> but just use strcat's systemd-nspawn approac
+05:09:50 <strcat> either make an arch (pacstrap) or debian (debootstrap) container and systemd-nspawn
+05:09:56 <strcat> if you really want to build in a container
+05:10:00 <strcat> you need a dozen packages, that's it
+05:10:46 <strcat> if you want to build how I build use pacstrap
+05:11:03 <strcat> since people always want to do that for some reason even though the build requirements are really minimal
+05:11:59 <strcat> alright it finished syncing a while ago
+05:12:35 <strcat> building bonito kernel
+05:23:22 <renlord> til, there's a slub and slab allocator
+05:23:34 <DannyWorkOrderPr> <strcat "if you really want to build in a"> I'd really like to be able to script setting up the environment, one way or another (Docker popular for this) so I could switch to new hardware regularly with minimal friction
+05:23:37 <renlord> always thought they referred to different type of data structures
+05:24:10 <renlord> DannyWorkOrderPr: script/envsetup.sh does setup the environment
+05:24:15 <renlord> and choosecombo too
+05:25:04 <DannyWorkOrderPr> <renlord "Danny@WorkOrderPro: script/envse"> Dope, thanks. I need to take a closer look at the instructions. Only page I haven't read every single bit of, yet.
+05:25:12 <renlord> is openprivacy.ca a credible research group?
+05:25:14 <DannyWorkOrderPr> (on GrapheneOS.org)
+05:25:32 <JTL> renlord: Based in Western Canada
+05:25:41 <aeonsolution[m]> i figured out the issue, i didnt lower case the build id in the mv command
+05:25:44 <aeonsolution[m]> im building now
+05:26:07 <JTL> renlord: What exactly are you concerned with?
+05:26:34 <renlord> just curious
+05:26:46 <aeonsolution[m]> i want to say that the envsetup script, would lowercase the build_id before
+05:36:46 <strcat> no
+05:37:04 <strcat> it's android-prepare-vendor that lowercases it
+05:37:06 <strcat> for the output
+05:37:11 <strcat> but you can just autocomplete it anyway
+05:37:38 <aeonsolution[m]> right
+05:37:41 <aeonsolution[m]> thank you
+07:36:43 * mrxx_0[m] uploaded an image: IMG_20200519_213500_669.jpg (8KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/epORphoDEShosTSzjnrnSDQx >
+07:36:51 <mrxx_0[m]> Little wallpaper :)
+07:37:15 <mrxx_0[m]> (From Techlore video)
+07:37:57 <cyredanthem[m]> Techlore banned me I think. I didn't even say anything probably since I'm in the pro security gang
+07:38:35 <mrxx_0[m]> <cyredanthem[m] "Techlore banned me I think. I di"> Wut ? From his irc ? Because he has a telegram channel too
+07:39:53 <cyredanthem[m]> The matrix group
+07:39:56 <cyredanthem[m]> I dunno
+07:40:54 <blacklight447[m]> Update so far: if tried to reach out to purism two days ago regarding severe security issues with their librem.one service
+07:41:15 <JTL> blacklight447[m]: What now?
+07:41:22 <blacklight447[m]> So far, i have yet to get any response whatsoever
+07:41:40 <JTL> Can't say I'm too surprised since it seems Purism scared off the actually competent people from working for them
+07:42:09 <blacklight447[m]> <JTL "blacklight447: What now?"> Their email server fails minimum security requirements
+07:42:43 <JTL> Right
+07:42:45 <blacklight447[m]> They dont support dkim and dmarc, making it super easy to spoof
+07:42:56 <JTL> Unsurprising really
+07:43:06 <strcat> JTL: I noticed they don't have authenticated encryption for TLS (no DANE or even MTA-STS), DNSSEC, DKIM/DMARC, etc
+07:43:22 <JTL> That doesn't surprise me :|
+07:43:27 <strcat> they call crappy opt-in, optional GPG integration 'bleeding edge' encryption lol
+07:43:31 <blacklight447[m]> They don't have dnssec, dane or mta sts, making it damn easy to mitm and force them to send all mails via unencrypted smtp
+07:43:37 <strcat> GPG is a joke and they don't even do a good job of it
+07:43:43 <JTL> I've noticed
+07:43:45 <strcat> and it barely covers any emails in practice
+07:43:54 <blacklight447[m]> Their starttls policy has some weird choices
+07:44:09 <strcat> it has some outdated SSL3 protocol enabled
+07:44:10 <strcat> for TLS1.2
+07:44:12 <strcat> weird stuff
+07:44:12 <blacklight447[m]> Like who the hell uses/allows TLS_DH_ANON
+07:44:23 <JTL> Not me
+07:44:26 <strcat> blacklight447[m]: dunno never seen a setup like that
+07:44:29 <strcat> it's pretty weird
+07:44:47 <JTL> I guess thats what you get when you just slap Debian on a server and follow random guides from the internet? :P
+07:44:54 <mrxx_0[m]> strcat how did you start in security and android ?
+07:45:00 <strcat> bare minimum is MTA-STS + DKIM + DMARC quarantine + SPF + inbound DMARC enforcement
+07:45:18 <strcat> making it good requires more work including DANE - both inbound and outbound, and other things
+07:45:40 <blacklight447[m]> Lmao, the only thing they did correctly is configuring spf
+07:45:41 <strcat> and ofc keeping things properly is part of that baseline bare minimum
+07:45:49 <strcat> blacklight447[m]: SPF without DNSSEC is not correct
+07:46:07 <blacklight447[m]> But as they dont do dnssec, they can be completely subverted
+07:46:08 <strcat> and you have to put an SPF record for every A / AAAA / MX record
+07:46:18 <strcat> every subdomain needs an SPF record
+07:46:28 <strcat> it doesn't apply to subdomains
+07:46:33 <blacklight447[m]> Right
+07:46:49 <strcat> lets say you have bar.com with an SPF record at the top level
+07:46:54 <blacklight447[m]> Heh, didnt even notice that one
+07:46:59 <strcat> but you have a.bar.com, b.bar.com, c.b.bar.com
+07:47:08 <strcat> well, someone can send fake emails from all 3 of those bypassing SPF
+07:47:13 <strcat> since SPF only applies to top level
+07:47:27 <strcat> and without DMARC, SPF is basically useless anyway
+07:47:40 <strcat> it's not enforced in practice even with a hard fail policy
+07:47:45 <blacklight447[m]> I see
+07:47:55 <strcat> and if it's not a hard fail policy *and* no DMARC... it's even more useless
+07:48:11 <strcat> soft fail doesn't matter if you use DMARC since it's DMARC doing any enforcement
+07:48:27 <blacklight447[m]> But yeah, im just gonna try and reach out to them via some other channels
+07:48:36 <strcat> but I think it should be hard fail just so SPF alone provides basic protection - but it's annoying cause you have to add a record for each A / AAAA / MX record
+07:48:42 <strcat> every single subdomain needs an SPF record
+07:48:50 <blacklight447[m]> If i don't get any response, an article on privacytools is going up exposing their wrong doing
+07:48:56 <strcat> if you have  CNAME record, that DELEGATES to where it points which is problematic
+07:49:05 <strcat> the place it points needs an SPF record
+07:49:15 <blacklight447[m]> They claim security, therefore atrracting folks with high security models to their service
+07:49:24 <strcat> blacklight447[m]: I mean as far as I'm concerned that's their overall approach to EVERYTHING
+07:49:27 <strcat> they are scammers imo
+07:49:38 <JTL> Good luck getting "random vendor" to proeprly setup SPF record for their CNAME
+07:49:40 <blacklight447[m]> But as they lack these minimum security requirements, they are truly endangering people
+07:49:41 <strcat> they never gave a shit about issues I reported to them
+07:49:52 <strcat> JTL: yeah best to not point CNAMES at anything to avoid delegating
+07:49:57 <blacklight447[m]> I wonder if they realise the magnitude and impact of their terrible decisions
+07:50:09 <strcat> JTL: so for example bing webmaster tools for some reason uses a CNAME record to verify
+07:50:13 <strcat> instead of a TXT record
+07:50:14 <strcat> it's dumb
+07:50:25 <JTL> strcat: Like I've mentioned, the actual competent people left or were fired over a year ago so I'd expeect nothing from them
+07:50:30 <strcat> instead of making _bing-webmaster-tools.site.com TXT record
+07:50:31 <JTL> strcat: that is so dumb
+07:50:33 <strcat> they have you make
+07:50:49 <strcat> adsgjsdalgjls9482yt894ygpwernjserjioghr23490.site.com CNAME pointing to verify.bing.com
+07:50:51 <strcat> makes NO SENSE
+07:51:15 <blacklight447[m]> <strcat "JTL: so for example bing webmast"> But... Then you completely fall outside of the spf standard right?
+07:51:32 <blacklight447[m]> As far as i know, it needs to be a txt
+07:51:41 <strcat> blacklight447[m]: this is not tied to email
+07:51:50 <strcat> just how they verify ownership of a domain for bing webmaster tools
+07:51:57 <strcat> blacklight447[m]: the issue is that if you have a CNAME pointing elsewhere
+07:52:00 <strcat> it *delegates* SPF to them
+07:52:16 <strcat> blacklight447[m]: so there will be a lookup of where it points
+07:52:24 <strcat> to see if they have a TXT record
+07:52:27 <strcat> for spf
+07:52:34 <strcat> blacklight447[m]: which bing does not have on that subdomain
+07:52:41 <blacklight447[m]> Aaah
+07:52:47 <strcat> blacklight447[m]: and even if it did I don't want to delegate trust to them like that
+07:52:59 <JTL> fair
+07:53:01 <strcat> blacklight447[m]: also by default with normal DMARC
+07:53:07 <strcat> blacklight447[m]: it uses relaxed SPF and DKIM enforcement
+07:53:10 <strcat> if you don't opt-in to strict
+07:53:26 <strcat> with strict they can only send mail as adsgjsdalgjls9482yt894ygpwernjserjioghr23490.site.com
+07:53:40 <strcat> blacklight447[m]: i.e. despite having DMARC bing can send email as you since you pointed a CNAME at them
+07:53:46 <strcat> but without STRICT policy for DMARC
+07:53:55 <strcat> they can also send email as site.com at least for SPF
+07:55:35 <strcat> ;; ANSWER SECTION:
+07:55:36 <strcat> _dmarc.grapheneos.org. 3600 IN TXT "v=DMARC1; p=reject; adkim=s; aspf=s; pct=100; rua=mailto:dmarc⊙go; ruf=mailto:dmarc⊙go"
+07:55:47 <strcat> blacklight447[m]: adkim=s; aspf=s makes it strict
+07:56:02 <strcat> blacklight447[m]: anyways important to understand how *fucked* email is
+07:56:32 <strcat> blacklight447[m]: running an email server securely requires a fair bit of knowledge / setup
+07:56:39 <strcat> postfix is the best way
+07:57:26 <renlord> mail provider can almost never do strict enformcenent for dkim
+07:57:34 <renlord> their users will miss out on too many emails
+07:57:41 <renlord> for inbound especially.
+07:57:44 <blacklight447[m]> <strcat "blacklight447: running an email "> Fun fact, im a guy barely out of college, but im giving you a fair bet that if i were to run an email service, it would have been done way more properly then purism has done now
+07:57:48 <strcat> renlord: DMARC deals with that
+07:57:53 <strcat> if they say reject you should reject
+07:57:58 <strcat> renlord: opendmarc doesn't work properly tho
+07:58:00 <strcat> I need to figure that out
+07:58:03 <renlord> ya, but people say reject when they dont mean to
+07:58:05 <renlord> lol
+07:58:06 <blacklight447[m]> Its like they threw up a digital ocean droplet and bought the librem.one domain
+07:58:12 <renlord> broken dmarc policies everywhere
+07:58:21 <JTL> blacklight447[m]: pretty much
+07:58:28 <strcat> blacklight447[m]: and put some insecure mail server + put SPF record for top level domain
+07:58:34 <strcat> no inbound SPF/DKIM/DMARC enforcement
+07:58:38 <strcat> no DKIM/DMARC for their mails
+07:58:40 <renlord> and opendkim ignores dmarc no? if there's a invalidated dkim signature, it'll just reject
+07:58:41 <strcat> improper TLS setup
+07:58:42 <blacklight447[m]> And never dealt with any proper configuration, and called it a day
+07:58:43 <renlord> lol
+07:58:48 <strcat> no TLS authentication (no MTA-STS, no DANE)
+07:58:50 <strcat> no DNSSEC
+07:58:57 <strcat> I bet it has more issues than this
+07:59:00 <strcat> this is just the surface of it
+07:59:11 <blacklight447[m]> "We did it guys, we now have a secure email service"! (Just only pray and hope nobody actually tries to audit us)
+07:59:37 <renlord> secure email is tough to pull off, because your neighbour MTAs might not even co-operate with you
+07:59:51 <renlord> decentralized network yo
+07:59:56 <cyredanthem[m]> Email is stupid and should never be used
+07:59:56 <blacklight447[m]> Do you think they even update their server properly?
+08:00:01 <strcat> renlord: you don't need to enable reject for opendkim if DMARC is properly implemented
+08:00:03 <strcat> cause basically
+08:00:10 <cyredanthem[m]> I'm tempted to go Gmail I trust them most to not fuck up security
+08:00:12 <strcat> the DMARC implementation is supposed to reject if the policy is reject
+08:00:20 <blacklight447[m]> <renlord "secure email is tough to pull of"> Yeah, email is as secure as the weakest link in the chain
+08:00:25 <renlord> strcat: does your opendmarc work to expectation?
+08:00:29 <strcat> renlord: DMARC adds alignment checks + enforcement for SPF and DKIM
+08:00:36 <strcat> renlord: kinda
+08:00:39 <strcat> it fails when it should
+08:00:41 <strcat> passes when it should
+08:00:43 <strcat> but...
+08:00:48 <renlord> havent had a fail case so far
+08:00:50 <strcat> it does not reject emails it's like it ignores my configuration
+08:00:50 <renlord> for dmarc
+08:01:02 <strcat> renlord: if DKIM fails, DMARC will fail if there is a DMARC policy, etc.
+08:01:05 <strcat> same for SPF
+08:02:35 <strcat> renlord: btw DMARC needs *either* SPF or DKIM
+08:02:47 <strcat> I dunno if there's a way to make it force both
+08:03:03 <renlord> shouldnt it be both?
+08:03:15 <strcat> renlord: I think it requires that EITHER is valid
+08:03:19 <strcat> and aligned to the FROM address
+08:03:33 <blacklight447[m]> If one party fucks up, all is fucked up
+08:03:34 <blacklight447[m]> Question: if two mail servers sending email to eachother both have dane and starttls, and spf configured, would dkim still be of much use?
+08:03:45 <strcat> blacklight447[m]: well DMARC is mandatory
+08:03:59 <strcat> you need DMARC + SPF or DMARC + DKIM
+08:04:04 <blacklight447[m]> I mean if mail is sended over tls anyway, any alterations will turn to email into jibberish right?
+08:04:17 <strcat> blacklight447[m]: but someone else can send mail *as you*
+08:04:32 <strcat> blacklight447[m]: DANE and MTA-STS are enforced by the MTA sending mail
+08:04:38 <strcat> blacklight447[m]: the server never validates the client with TLS
+08:04:41 <blacklight447[m]> I see
+08:04:41 <cyredanthem[m]> Email is so very dumb
+08:04:42 <blacklight447[m]> Good point
+08:04:42 <strcat> there is no client cert
+08:04:54 <strcat> DANE / MTA-STS don't let the server receiving mail check client
+08:05:12 <strcat> the only check for the client is SPF / DKIM
+08:05:23 <strcat> and someone could fake a connection from you and bypass SPF
+08:05:26 <blacklight447[m]> I was only considering the "proving the email has been altered in transit" part of dkim here
+08:05:28 <strcat> email is FUCKED
+08:05:48 <strcat> blacklight447[m]: I've been thinking that it may make sense to only use DKIM + DMARC instead of SPF + DKIM + DMARC
+08:05:54 <blacklight447[m]> <cyredanthem[m] "Email is so very dumb"> What did you expact, its a protocal from the 80s
+08:06:05 <strcat> blacklight447[m]: but some places may enforce SPF but not DMARC
+08:06:07 <strcat> so...
+08:06:09 <strcat> that would be bad
+08:06:11 <blacklight447[m]> Its like trying to make sms secure, its almost impossible
+08:06:21 <strcat> blacklight447[m]: but afaik DMARC enforces having EITHER valid SPF or DKIM
+08:06:25 <strcat> and SPF is not very secure
+08:06:46 <cyredanthem[m]> School supplied email. Gmail for anything government based. Outlook for anything work related. Fuck off if you aren't one of them
+08:08:07 <blacklight447[m]> <strcat "blacklight447: but some places m"> So, basically, its just like with choosing to support dane or mta sts
+08:08:09 <blacklight447[m]> Dkim with dmarc is fine
+08:08:27 <blacklight447[m]> But as some folks may not support dkim, we better support spf as well
+08:08:33 <renlord> ok i changed it around again
+08:08:40 <renlord> i'll let dmarc do the rejecting
+08:08:46 <strcat> blacklight447[m]: DANE / MTA-STS is authenticated encryption - avoids leaking message or tampering with it along the way
+08:08:48 <blacklight447[m]> Similarly, dane is better, but some folks only do mta sts, so we may better support that as well
+08:08:52 <renlord> the testing flag does not even work properly in opendkim
+08:08:58 <renlord> it just behaves like reject
+08:09:17 <strcat> blacklight447[m]: DKIM is authentication for the message but without a way to mandate it so someone could send a non-DKIM signed message which would at best be a spam signal for a spam filter
+08:09:18 <strcat> AT BEST
+08:09:34 <strcat> blacklight447[m]: SPF in hard fail validates it APPEARS to come from a certain IP address
+08:09:35 <blacklight447[m]> <renlord "it just behaves like reject"> Its a but buggy in my experience as well
+08:09:38 <strcat> but that's not secure vs MITM
+08:09:52 <strcat> DMARC enforces that either SPF or DKIM matches the domain and is valid
+08:10:09 <strcat> I want a way to force both but I don't think that is supported
+08:11:05 <blacklight447[m]> Makes you wonder why though
+08:11:06 <renlord> strcat: if you want both, you can always tell dkim to reject bad signatures
+08:11:15 <blacklight447[m]> Seems like such a straight forward thing to support
+08:11:16 <strcat> renlord: DKIM is not mandatory
+08:11:34 <renlord> sure, then emails without dkim will fallback to spf checks only using dmarc
+08:11:48 <strcat> renlord: I have SPF enforcement (rejects hard fail, tempfails failure to get policy, etc.)
+08:11:49 <renlord> note: only rejecting bad dkim signatures
+08:11:51 <strcat> and DKIM enforcement
+08:11:53 <strcat> and DMARC enforcement
+08:12:00 <blacklight447[m]> Then again, even if you find a way to set your dmarc policy to require both, you need other MTA s recieving it to actually listen to it
+08:12:04 <strcat> but DKIM is not mandatory - there isn't a record saying 'must be dkim signed'
+08:12:17 <strcat> and DMARC allows either SPF or DKIM - doesn't force both
+08:12:31 <strcat> so I am concerned that someone able to MITM can send spoofed mails with 'valid' SPF
+08:12:35 <strcat> hmm
+08:12:38 <renlord> strcat: do you mean you only want to receive dkim-signed emails?
+08:12:47 <strcat> renlord: no I want to prevent people sending spoofed mails
+08:12:50 <strcat> via MITM
+08:13:08 <strcat> renlord: if they can pretend the message came from the IP of mail.grapheneos.org it will pass SPF
+08:13:18 <strcat> renlord: and they can just not DKIM sign it
+08:13:22 <strcat> and afaik that will pass DMARC
+08:13:32 <blacklight447[m]> <strcat "but DKIM is not mandatory - ther"> So your dkim record cannot state that its mandatory, do i understand that right?
+08:13:43 <strcat> blacklight447[m]: yes because there is not really  "a DKIM record"
+08:13:50 <renlord> how do you do that? dont you need to do the HELO/OLEH Challenge response with a SMTP server?
+08:13:51 <strcat> blacklight447[m]: the signed emails refer to a record
+08:13:58 <strcat> blacklight447[m]: if they aren't signed, there is nothing to refer to
+08:14:09 <renlord> then when they do the PTR checks and what not, the ip spoofer will fail
+08:14:19 <blacklight447[m]> Ah, right, forgot about that
+08:14:29 <strcat> renlord: is that TLS authenticated via MTA-STS / DANE?
+08:14:34 <strcat> I guess so
+08:14:44 <blacklight447[m]> Wonder why they implemented it that way
+08:14:50 <renlord> yes, if they talk with smtps
+08:15:00 <strcat> yeah that makes sense
+08:15:00 <renlord> if not, helo/oleh into starttls
+08:15:05 <renlord> still interactive
+08:15:30 <blacklight447[m]> Why didnt they just implement it that if the mta recieves an email, it just checks that @domain s dns records for dkim or spf
+08:16:00 <strcat> blacklight447[m]: b/c people have super complex email setups
+08:16:18 <blacklight447[m]> Doesnt that make more sense then relying on what headers are in the email to see what to look up?
+08:16:24 <strcat> blacklight447[m]: basically with SPF enforcement -> receive email -> check subdomain for SPF policy -> enforce if hard fail (or maybe mark it if soft fail)
+08:16:35 <strcat> blacklight447[m]: DKIM is an OPTION to sign emails
+08:16:39 <strcat> blacklight447[m]: if the email is signed
+08:16:40 <renlord> blacklight447[m]: i can strip your headers along the way
+08:16:42 <strcat> it refers to where to get the key
+08:16:43 <renlord> lol
+08:16:48 <blacklight447[m]> Great, just what we need, more complexity...
+08:16:58 <strcat> blacklight447[m]: it's possible to have multiple DKIM signatures
+08:17:03 <strcat> or relays might replace / remove it
+08:17:06 <strcat> as they change the email and so on
+08:17:08 <blacklight447[m]> When learning about these email security measures, i was so hopefull
+08:17:12 <strcat> it's complicated
+08:17:25 <strcat> blacklight447[m]: but yeah need DANE / MTA-STS + SPF + DKIM + DMARC to prevent spoofing I guess
+08:17:32 <blacklight447[m]> But my hopes are getting lower by the day
+08:17:38 <strcat> having just SPF + DKIM + DMARC does not prevent spoofing by a MITM attacker
+08:17:41 <strcat> need DANE / MTA-STS too
+08:17:43 <renlord> strcat: i havent been getting mta-sts reports
+08:17:49 <strcat> and then you need all of this for the other way around
+08:17:53 <renlord> does that mean people are not using it to contact me using smpts?
+08:17:53 <strcat> renlord: send yourself an email from gmail
+08:17:56 <strcat> renlord: only google sends them
+08:18:05 <renlord> i receive many mail from gmail.com
+08:18:14 <renlord> but i dont get any reports
+08:18:15 <strcat> renlord: you should get mta-sts reports if you set up tls reporting then
+08:18:22 <renlord> i do have tls reporting!
+08:18:22 <strcat> I get reports
+08:18:32 <strcat> renlord: double check that you can receive that that address
+08:18:40 <strcat> renlord: check with https://aykevl.nl/apps/mta-sts/
+08:18:45 <strcat> that your policy works
+08:18:50 <renlord> ya i passed 100% all these tests
+08:18:53 <strcat> put grapheneos.org there
+08:18:57 <strcat> Policy: v=TLSRPTv1; rua=mailto:tls-rpt⊙go
+08:19:00 <strcat> I get mails there
+08:19:08 <blacklight447[m]> Fun how, even if we configure everything right, if you were to send an email to librem.one, moest of your efforts go into the trash :D
+08:19:22 <strcat> blacklight447[m]: yep no authenticated TLS
+08:19:24 <strcat> blacklight447[m]: but also
+08:19:28 <renlord>  v=TLSRPTv1; rua=mailto:email-security⊙rc
+08:19:32 <strcat> blacklight447[m]: if people spoof @grapheneos.org they can send mail there and they won't reject it
+08:19:33 <renlord> dont get any :(
+08:19:47 <strcat> root@mail:/home/tls-rpt# ls Maildir/new/
+08:19:49 <strcat> 1589624383.V801I40b92M915367.mail  1589710599.V801I40febM508375.mail  1589796300.V801I400d2M864633.mail  1589884659.V801I400ddM819529.mail
+08:19:51 <strcat> 1589624588.V801I40b94M115647.mail  1589710602.V801I40fedM971138.mail  1589884022.V801I400dcM451188.mail
+08:20:39 <strcat> I don't have mutt set up to check tls-rpt@ and dmarc@
+08:20:46 <strcat> I split them into separate users
+08:20:56 <blacklight447[m]> Btw, i though smtps was just used to start a secure connection to your mta from your mua, and then starttls is used to make a secure connection  for smtp to send the email to from your mta to another
+08:21:02 <renlord> i have virtual that routes them all to my main
+08:21:05 <strcat> security@ contact@ root@ postmaster@ etc. all go to daniel.micay@
+08:21:11 <strcat> renlord: well I have aliases for those
+08:21:15 <strcat> I just use /etc/aliases lol
+08:21:20 <blacklight447[m]> Is this not how this works?
+08:21:22 <strcat> I don't have virtual mails and I just use maildir
+08:21:38 <strcat> another option is just letting dovecot store mails itself
+08:21:48 <strcat> by using deliver to dovecot and using the dovecot db
+08:21:58 <strcat> probably more efficient than maildir but I like not being tied to dovecot
+08:22:03 <renlord> virtual storing using maildir format
+08:22:25 <renlord> dovecot is quite complicated
+08:22:36 <strcat> renlord: where does virtual store stuff
+08:22:41 <renlord> vmail
+08:22:47 <strcat> where is that?
+08:22:54 <renlord> /home/vmail on disk?
+08:22:57 <strcat> ah
+08:23:03 <strcat> I guess I could set up virtual but meh
+08:23:06 <renlord> so yeah, maildir format
+08:23:19 <strcat> renlord: well I alias everything to daniel.micay@ and that's a user
+08:23:26 <strcat> so it mostly goes into /home/daniel.micay
+08:23:26 <renlord> then i used imap sync to push my current folder layout into my mail host
+08:23:48 <renlord> so the setup now is very compatible with my old mail provider
+08:23:54 <strcat> root: daniel.micay
+08:23:56 <strcat> contact: root
+08:23:58 <strcat> caa: root
+08:24:00 <strcat> renlord: at the top of /etc/aliases
+08:24:04 <strcat> and I run 'newaliases' to update /etc/aliases.db
+08:24:23 <strcat> renlord: and it already has the standard ones like abuse, noc, security, postmaster, hostmaster, webmaster, www
+08:24:28 <renlord> dont like to use aliases since i need to create users for each
+08:24:34 <renlord> virtual is easier
+08:24:40 <strcat> renlord: you don't need users for each
+08:24:43 <strcat> aliases work without users
+08:25:23 <renlord> my mail host also supports 2 different domains
+08:25:32 <renlord> so virtual actually fits better for me
+08:25:38 <strcat> renlord: /etc/aliases is a mapping from address@ (on every host) -> username
+08:25:41 <blacklight447[m]> Lmao see this dude
+08:25:52 <blacklight447[m]> I called him out on his purism librem recommendation, naming their lack of microcode updates a security risk
+08:25:53 <renlord> if you do a look up on me my MX provider is actually katmail.xyz lol
+08:26:09 <strcat> so since I have contact@ there, it maps contact⊙aa, contact⊙go, contact⊙sa, contact⊙mgo -> daniel.micay user
+08:26:14 * blacklight447[m] uploaded an image: Screenshot_20200520-102423.png (299KB) < https://matrix.org/_matrix/media/r0/download/privacytools.io/LFmXIGiSVsVmOtYFLeklJSDy >
+08:26:36 <blacklight447[m]> Apperently his "proffesional opinion" is that because microcode updates are a responsive measure, they dont matter
+08:26:50 <renlord> the nightmare ovh this morning made me consider setting up a 2nd fallback mail hos
+08:27:01 <renlord> fkin hell, all of the sudden cant even boot into rescue/soft reboot the vps
+08:27:11 <renlord> out for a good 6 hours
+08:27:16 <strcat> blacklight447[m]: microcode updates fix various vulnerabilities
+08:27:20 <strcat> not just spectre issues
+08:27:32 <strcat> not having microcode code == bunch of serious vulnerabilities unpatched
+08:27:37 <strcat> and the microcode is there either way
+08:27:42 <blacklight447[m]> Then why install any security updates at all, those are responsive as well, the argument doesn't add up at all
+08:28:05 <renlord> unless librem plan to design their own SoC, i dont think their marketing is honest at all
+08:28:05 <cyredanthem[m]> Blacklight please fix ptio it's broken
+08:28:11 <strcat> lets say there WAS a microcode backdoor - a microcode might be able to fix it if it doesn't stop updating microcode
+08:28:35 <strcat> renlord: their laptops don't have open source schematics, boards, etc.
+08:28:41 <strcat> it's not just the components that are closed source
+08:28:49 <strcat> CPU, GPU, Wi-Fi, motherboard, etc. all closed source
+08:28:51 <strcat> not just that
+08:28:52 <blacklight447[m]> <cyredanthem[m] "Blacklight please fix ptio it's "> Im gonna need a few more details, lol
+08:28:56 <strcat> even the case itself, etc. are closed source
+08:28:59 <strcat> there is nothing open about it
+08:29:00 <renlord> lol
+08:29:18 <renlord> the least they can do is let me 3d print the fkin case
+08:29:25 <renlord> on thingverse or someshit
+08:29:26 <strcat> 96boards boards are at least open source boards
+08:29:29 <strcat> not components ON the boards
+08:29:39 <strcat> and btw that's enough for something to quality as 'open hardware' per that stupid org
+08:29:41 <strcat> it's dumb
+08:30:02 <blacklight447[m]> <renlord "unless librem plan to design the"> Fun fact, they could have chosen to go with RISC-v and design their own soc, its a free isa and is designed to be easily scaled down to small devices
+08:30:04 <renlord> the kirin960 SoC is not open source is it?
+08:30:10 <strcat> it's not open
+08:30:15 <strcat> no ARM SoC is open
+08:30:15 <cyredanthem[m]> > > <@cyredanthem:synapse.travnewmatic.com> Blacklight please fix ptio it's broken
+08:30:15 <cyredanthem[m]> > Im gonna need a few more details, lol
+08:30:15 <cyredanthem[m]> Bromite should be at the top of mobile. Lineage should have a warning due to misleading practices. Chromium should be recommended with a few privacy tweaks. Safari should be recommended. Replicant should be removed
+08:30:17 <blacklight447[m]> Yet they went the easy way choose an arm platform from nxp
+08:30:25 <renlord> well yeah exactly
+08:30:36 <strcat> blacklight447[m]: a super low quality / insecure one compared to status quo
+08:31:14 <cyredanthem[m]> Lineage should be worth mentioning not recommended
+08:31:56 <blacklight447[m]> <cyredanthem[m] "Lineage should be worth mentioni"> Ive tried bringing that up to the team but couldn't convince them to remove it
+08:31:57 <cyredanthem[m]> CalyxOS should be recommended due to Pixel 4 support being on the way which gives it a use case where it can be usable when GrapheneOS is not
+08:32:16 <cyredanthem[m]> Gotcha well thanks for trying
+08:32:33 <strcat> cyredanthem[m]: 'on the way' is the same status as GrapheneOS support for it
+08:32:53 <renlord> calyx, rattlesnake and graphene are all tracking the work in aosp_alliance
+08:32:56 <strcat> and the intention is that people purchase a device for GrapheneOS anyway
+08:33:33 <cyredanthem[m]> I don't think a group that actively lies about security patches should be on a privacy website at all
+08:33:36 <blacklight447[m]> Im firdt gonna try and add a warninf label
+08:33:36 <cyredanthem[m]> That's a start
+08:33:37 <cyredanthem[m]> Glad to hear it
+08:33:46 <cyredanthem[m]> Any chance of a Chromium based option on desktop? blacklight447
+08:33:48 <cyredanthem[m]> > cyredanthem: 'on the way' is the same status as GrapheneOS support for it
+08:33:48 <cyredanthem[m]> I thought they were going to try to get it out this week?
+08:33:49 <strcat> blacklight447[m]: also disabling multi-threading is not good enough lol
+08:33:58 <strcat> clueless person
+08:34:10 <strcat> how do they expect to disabling multi-threading
+08:34:16 <strcat> i.e. run an OS with 1 thread?
+08:34:18 <strcat> makes no sense
+08:34:18 <cyredanthem[m]> I purchased one for GrapheneOS no regrets
+08:34:30 <strcat> they are going to use a cooperatively scheduled OS in a single process in 2020?
+08:34:38 <cyredanthem[m]> > calyx, rattlesnake and graphene are all tracking the work in aosp_alliance
+08:34:38 <cyredanthem[m]> What's that?
+08:34:45 <strcat> I think they mean disabling multicore/HT but that is not at all good enough
+08:35:17 <renlord> do a tlb/cache flush every context switch
+08:35:20 <renlord> lol
+08:35:26 <blacklight447[m]> <strcat "clueless person"> You d be surprised how many folks see them selves as security experts these days
+08:35:50 <strcat> bunch of ignorant / dishonest people everywhere, yeah
+08:35:57 <strcat> on tons of topics
+08:35:58 <strcat> not just this
+08:36:10 <blacklight447[m]> Im at the ptio team, ive studied security and networking and are working with it daily, yet i don't even consider myself an expert yet
+08:36:14 <strcat> internet is just making people more ignorant / clueless
+08:36:29 <strcat> access to more information does not make people more informed cause they just pick and choose information aligning with their bias / beliefs
+08:36:32 <strcat> and make themselves more and more clueless
+08:36:46 <renlord> there are people out there who think that if they can read an abstract of a security paper and understand what is being written, they qualify as a security expert
+08:36:46 <strcat> pretty much destroying our fragile societies lol
+08:36:50 <blacklight447[m]> There is just so much shit out there
+08:36:55 <blacklight447[m]> Im surprised the internet even works as it does currently
+08:37:12 <strcat> apparently the internet will be what kills human civilization through misinformation
+08:37:27 <cyredanthem[m]> I'm a pentester and a cyber security grad who has read every Reddit post strcat has ever made and I don't consider myself more than a novice. My knowledge is shallow
+08:38:11 <cyredanthem[m]> I can't imagine what an expert sees
+08:38:12 <cyredanthem[m]> I can't stand Reddit
+08:38:52 <blacklight447[m]> <strcat "access to more information does "> You can thank search engines for that, giving people "relevent" results
+08:39:05 <blacklight447[m]> I would consider myself a novice as well
+08:39:22 <cyredanthem[m]> Is Firefox secure? Germany says it's the most secure! Done. Is Ubuntu secure? UK says it's the most secure! Done.
+08:39:30 <cyredanthem[m]> Now I'm officially a dumbass
+08:39:51 <cyredanthem[m]> Thanks Google
+08:40:28 <cyredanthem[m]> > I would consider myself a novice as well
+08:40:28 <cyredanthem[m]> I used to work on Lineage. *now that's scary*
+08:41:14 <blacklight447[m]> Purism is the most secure as they "designed their systems, chip by chip, to respect your privacy and security"
+08:42:10 <cyredanthem[m]> Firefox is private since we ship ads, have telemetry you can't turn off, we have useless privacy features, and we have terrible security
+08:47:08 <blacklight447[m]> Well, one point for firefix: i can configure it to not save anything
+08:47:54 <strcat> blacklight447[m]: don't understand how purism gets away with so much blatant lying
+08:47:56 <strcat> constantly lying
+08:48:03 <strcat> people WANT to be lied to, I think
+08:49:00 <strcat> purism's laptops are LESS open source than a chromebook lol
+08:49:09 <strcat> and vastly less secure
+08:55:25 <cyredanthem[m]> > Well, one point for firefix: i can configure it to not save anything
+08:55:25 <cyredanthem[m]> Brave, Edge, or make your profile read only
+08:55:28 <blacklight447[m]> <strcat "blacklight447: don't understand "> Because most folks do not know anything about security
+08:55:29 <blacklight447[m]>  Thats the point
+08:55:46 <blacklight447[m]> They cash in on people who are unable to verify their claims
+08:55:49 <cyredanthem[m]> > purism's laptops are LESS open source than a chromebook lol
+08:55:50 <cyredanthem[m]> I just can't get over the forced Google account
+08:56:11 <cyredanthem[m]> I cant even make one when I tried to use a ChromiumOS rom
+08:56:18 <cyredanthem[m]> I rather use Linux
+08:56:33 <cyredanthem[m]> Desktop*
+08:56:33 * blacklight447[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/LDzXuGGqqTIELIHNewmXkgPr >
+08:56:42 <strcat> cyredanthem[m]: I'm talking about Chromebooks as hardware
+08:56:49 <strcat> you aren't forced to use ChromeOS on them
+08:56:53 <cyredanthem[m]> Bromite has always on incognito
+08:56:55 <cyredanthem[m]> > cyredanthem: I'm talking about Chromebooks as hardware
+08:56:55 <cyredanthem[m]> My bad sorry
+08:57:13 <cyredanthem[m]> That's a good point
+08:57:55 <cyredanthem[m]> An Intel is safer than an arm one right? I see a bunch of random companies making the ARM chips and I have no idea how trustworthy they are compared to Intel which at least is pretty good about patching
+08:58:13 <cyredanthem[m]> Purely Chromebook hardware I mean
+08:58:38 <cyredanthem[m]> I see ARM Chromebooks recommended and I feel like I wouldn't risk it unless it was Qualcomm
+08:59:38 <strcat> yandex is the worst search engine btw
+08:59:51 <strcat> my webmaster account with them expired and it seems like that wiped all knowledge it had of the site
+08:59:53 <strcat> good stuff
+09:00:03 <TheJollyRoger> Oh good effing gravy.
+09:03:58 <cn3m[m]> <cyredanthem[m] "An Intel is safer than an arm on"> that's a very good question. Hard to access how well a hardware maker audits and patches when they are small
+09:07:17 <TheJollyRoger> blacklight447[m]: "firefix" XD.
+09:07:19 <TheJollyRoger> That's glorious.
+09:07:22 <TheJollyRoger> I love it.
+09:07:38 <TheJollyRoger> I'm going to use that along with "Fireflops"
+09:07:43 <TheJollyRoger> "Firefix!"
+09:08:33 <cn3m[m]> Fireflops I do like they
+09:08:38 <cn3m[m]> that*
+09:08:51 <TheJollyRoger> Hehehehe
+09:11:24 <blacklight447[m]> <TheJollyRoger "blacklight447: "firefix" XD."> Finally someone caught it
+09:11:40 <cn3m[m]> I miss Firefox
+09:12:06 <blacklight447[m]> They can Fix the dumpster Fire of a browser: firefix
+09:12:30 <blacklight447[m]> <cn3m[m] "I miss Firefox"> Same
+09:12:35 <blacklight447[m]> Improves though
+09:12:57 <blacklight447[m]> If they fix their sandboxing on all platforms, and implement tab isolation, it will already be a lot better
+09:13:24 <blacklight447[m]> Sadly they are still stuck in 2012, browser security wise
+09:18:16 <cn3m[m]> they are stuck older than that
+09:18:58 <TheJollyRoger> Ahahaha X3.
+09:19:07 <cn3m[m]> They have so much work to do though. over a thousand win32k lockdown rules to add. They need to rework the x server and tighten seccomp rules. They need to get anything remotely like a sandbox on Android
+09:19:36 <cn3m[m]> then they need to add security hardening for anti exploit
+09:21:11 <cn3m[m]> they probably are a good 10 years off from catching up at this pace
+09:25:04 <cn3m[m]> Microsoft is right Firefox should be based on Chromium. They could stick to research
+09:26:53 <blacklight447[m]> The thing is though, do we want a single web render engine
+09:27:15 <blacklight447[m]> If gecko dies, then all thats really left is safari
+09:41:21 <cn3m[m]> gecko is 4% and is slow and broken
+09:41:25 <cn3m[m]> it's effectively dead
+09:43:16 <blacklight447[m]> Something being small doesnt mean insignificant
+09:43:37 <blacklight447[m]> 4% on global scale is stilll tens of millions of people
+09:51:58 <renlord> i thought they gave up on firefox
+09:52:05 <renlord> and they are focusing their efforts on servo?
+09:52:20 <renlord> https://servo.org/
+09:56:40 <blacklight447[m]> Iirc, servo is their expirement where they can build a new engine in rust
+09:57:01 <blacklight447[m]> Then once something from it works, the plug it into gecko
+09:57:25 <hapssmak[m]> strcat: No, people don't want to be lied to. But for most non security experts, it's really hard where to search for information. If I search around the internet for a few hours how to increase my privacy and security, I end up with Linux, Firefox, an iPhone and Purism.
+09:59:59 <yekip[m]> Bitwarden for graphene - they only offer Google Play which I don't use. Can't find an APK on their site. Is it safe to download from APKPure?
+10:02:17 <yekip[m]>  * Bitwarden for graphene - they only offer Google Play which I don't use. Can't find an APK on their site. Is it safe to download from APKPure? (can't find on fdroid either which I found a bit strange)
+10:04:28 <dallemon[m]> yekip: bitwarden has their own fdroid compatible repo
+10:05:17 <yekip[m]> sorry, not sure what that means.
+10:05:22 <yekip[m]> where do i go to download bitwarden android app on graphene?
+10:05:27 <dallemon[m]> https://github.com/bitwarden/mobile
+10:06:09 <dallemon[m]> https://mobileapp.bitwarden.com/fdroid/
+10:06:42 <yekip[m]> thanks. never really understood github either but i see it says "get it on fdroid". weird that it didn't come up in search on fdroid app
+10:07:01 <dallemon[m]> yekip: do you have fdroid or auroradroid installed?
+10:07:28 <yekip[m]> i have fdroid installed
+10:08:04 <dallemon[m]> Because it's not in fdroids own repository of apps
+10:08:39 <yekip[m]> ok i guess i dont really understand what this repository stuff means, or is.
+10:08:40 <yekip[m]> i see that last link thanks
+10:08:46 <dallemon[m]> Bitwarden has their own repository that you need to add to fdroid
+10:09:07 <yekip[m]> qr codes. never used those either
+10:09:08 <yekip[m]> can i do that via fdroid app? do i have  to turn camera on or something?
+10:09:45 <yekip[m]> <dallemon[m] "Bitwarden has their own reposito"> so thats like a sub-area of fdroid owned by bitwarden/
+10:09:46 <yekip[m]> > <@dallemon:matrix.org> Bitwarden has their own repository that you need to add to fdroid
+10:09:46 <yekip[m]>  * so thats like a sub-area of fdroid owned by bitwarden?
+10:11:17 <yekip[m]> i can see in FDroid settings, i can add a repo using url and fingerprint. not sure how to do QR. will have to open this page on phone (not on phone here) to copy paste the info. should get it working i think, thanks
+10:11:46 <yekip[m]> really must install riot on graphene, that's next!
+10:15:17 <yekip[m]> installing. thanks  dallemon
+10:15:38 <yekip[m]> (it says my bitwarden repo in fdroid is "unverified". i inserted the fingerprint)
+10:19:10 <dallemon[m]> Sync repos. Maybe force close fdroid and open again
+10:19:33 <yekip[m]> trying that. thanks
+10:20:56 <user48> what is this place? I'm looking for help installing GrapheneOS
+10:21:58 <yekip[m]> you're in the right place
+10:22:01 <yekip[m]> see top: "Official IRC / Matrix channel for GrapheneOS"
+10:22:58 <yekip[m]> have you seen the help info put on github? i don't have the link but may be able to find it if you haven't seen it
+10:23:01 <yekip[m]> installation help/script by JollyRoger in here
+10:23:24 <yekip[m]> (named Peter Easton on github, iirc)
+10:24:49 <user48> what github page?
+10:26:57 <user48> is it this one? https://github.com/Peter-Easton/GrapheneOS-Knowledge
+10:27:32 <yekip[m]> thats the ticket
+10:29:27 <user48> I'm looking for help running the flash.bat file (it gives errors each time), where could that be?
+10:30:15 <renlord> speak of the devil, google sent me my MTA STS report
+10:30:17 <renlord> lol
+10:37:01 <nscnt> user48: First thing: I hope you follow https://grapheneos.org/install
+10:37:29 <nscnt> user48: If you provide us some more information, we could give you better support for your issue.
+10:38:34 <renlord> https://arxiv.org/pdf/2003.04868.pdf
+10:38:43 <renlord> This PIN Can Be Easily Guessed: Analyzing the Security of Smartphone Unlock PINs
+10:41:12 <blacklight447[m]> <yekip[m] "Bitwarden for graphene - they on"> I believe they also distribute it via github
+10:41:34 <blacklight447[m]> Anyway, you can also download it from the playstore with the aurora app
+10:45:27 <user48> oh, figured it out, booted and set it up, now i just gotta figure out how android works (never used it before)
+10:46:35 <blacklight447[m]> The first thing you want to do is probbaly install fdroid
+10:47:00 <blacklight447[m]> Its an appstore with only foss apps
+10:47:25 <nscnt> user48: That's good to hear. Here are a lot of members willing to help if you have questions.
+10:47:42 <blacklight447[m]> What apps do you usually use?
+10:47:43 <blacklight447[m]> (Do you use stuff like spotify or signal?)
+10:50:22 <mxnorvak[m]> Is ungoogled chromium a good option for desktop browsing?
+10:50:41 <user48> how does the default browser work?
+10:57:36 <nscnt> user48: What exactly? You can use it just like any other browser. If you want more information about it, you could take a look at https://grapheneos.org/usage#web-browsing
+11:02:51 <user48> yeah that was a dumb question, what should I use for music, I currently use iTunes (not apple music) since I'd never needed to move away, I've wanted to find an alternative that syncs with various platforms
+11:11:03 <user48> how much should I research each app before I install it (through f-droid)?  Would the OS warn me if it tried to do anything that could compromise security?
+11:11:15 <nscnt> user48: I'm not familiar with iTunes. There are of course music players, but I don't have a recommendation as I'm using Spotify myself. If you want to sync files, I recommend Syncthing. It syncs files directly from device to device.
+11:11:57 <user48> yeah I was planning on doing that (syncthing)
+11:14:32 <nscnt> user48: Pay attention whether the app your planning to get through F-Droid is maintained and not "Updated 2 years ago" or something. Keep your apps up to date. It's just common sense. If an app doesn't really need permission X, deny it.
+11:14:43 <nscnt> *you're planning
+11:14:50 <fll[m]> mxnorvak: what would "ungoogled chromium" be?
+11:16:22 <fll[m]> You mean ungoogled chrome = chromium?
+11:16:43 <nscnt> user48: But no, the OS doesn't warn you if it could do something that would compromise security.
+11:18:18 <nscnt> user48: GrapheneOS provides Auditor, though. It checks your device integrity. https://attestation.app/about
+11:19:09 <user48> hmm, for example the app 'Noice: Ad-free indefinite background noises' in permissions requests 'view network connections', could that compromise security and would there be a way to prevent in having those permissions and hope it works anyway?
+11:19:55 <cx2[m]> Ive made a few Grapheneos handsets, about to make another strictly for CTS. Has anyone been successful with the instructions at grapheneos.org/install on Fedora 32? Going to give it a shot as it’s my distro of choice...just wanted to get any insight from guys that have done in this environment perform
+11:21:28 <user48> but the Auditor app is on the play store lol
+11:24:13 <fll[m]> cx2: yea, successfully installed graphene with fedora but with downloaded fastboot, not the one from repos. Only adding to $PATH needed, no udev rules necessary
+11:25:19 <cx2[m]> Ok.... did you rm android-tools? It’s I’m getting version 20180828*
+11:26:17 <user48> recommendations for which android keepass variant is the best?
+11:26:37 <nscnt> user48: Auditor is shipped with a GrapheneOS install.
+11:26:56 <user48> ahhh...
+11:27:43 <cx2[m]> user48: keepassdx is pretty great and probably has the most active development
+11:28:34 <nscnt> user48: You're able to deny the Network permission on GrapheneOS, but if the app needs an internet connection to work, it won't run.
+11:29:03 <fll[m]> Hmmm...can't remember if I did rm. Might ve been that adding to $PATH just made it use the downloaded version
+11:29:45 <fll[m]> Adding requires a relog though iirc
+11:30:40 <user48> nscnt: thx
+11:31:12 <fll[m]> Also: if I removed I probably did dnf remove instead of RM ;)
+11:31:56 <cx2[m]> <fll[m] "Hmmm...can't remember if I did r"> Got it. I’ll see what happens. I remember some time back Linux (don’t remember the distro) was complaining about the repo version
+11:34:22 <cx2[m]> <fll[m] "Also: if I removed I probably di"> Haha... got me! I am switching back from a machine running SIlverblue (no dnf), and macOS
+11:35:18 <cx2[m]> Well that’s not true.... dnf if inside of a toolbox
+11:35:26 <cx2[m]> But you get the idea
+11:38:29 <fll[m]> :D
+11:39:20 <mxnorvak[m]> <fll[m] "You mean ungoogled chrome = chro"> https://github.com/Eloston/ungoogled-chromium/blob/master/README.md
+11:39:33 <mxnorvak[m]> This
+11:40:47 <user48> what's the best practices for playing around with android themes?
+11:43:03 <fll[m]> mxnorvak: ah thx. Didn't know that was a thing. I'll check that out later
+11:49:28 <mxnorvak[m]> Yeah its great that its degoogled and it's based on chromium but idk if the developer applied the necessary patches and security updates that the regular chrome browser gets
+11:50:03 <mxnorvak[m]> Was wondering if anyone knows about it or has used it
+11:54:13 <user48> can you connect usbs to pixels?
+11:54:57 <user48> i saw on a website that it works if the storage type is fat32 which seems weird...
+12:00:21 <yekip[m]> <blacklight447[m] "Anyway, you can also download it"> thanks BL. heard of aurora but not tried it yet.
+12:04:12 <yekip[m]> <user48 "yeah that was a dumb question, w"> have you heard of quod libret? not sure if they have a version for android but i am about to find out as I am looking for a non apple player for mac OS. I use Vinyl player on graphene. also SimpleCamera, Open Camera, and Simple Gallery is nice. Transistor - I use for internet radio, lovely simple app turns phone into radio which works in standy  nicely.Signal, Omni Notes,
+12:04:12 <yekip[m]> DuckDuckGo browser, Scrambled Exif. Thats about all the apps I have right now, in case any are useful to look at. All are good for privacy (according to my own research, always do your own though!)
+12:05:19 <fll[m]> If you're looking for NTFS support, that might have prohibitive licensing. At least most Linux distros don't offer it via their main repos...
+12:05:30 <yekip[m]> <user48 "can you connect usbs to pixels?"> afaik you can, but I haven't tried yet myself. I could be wrong, but I think someone told me you can. I think JollyRoger said you can take a backup to USB Stick that way. I _think_
+12:13:50 <fll[m]> A very quick (unthorough) search suggests that NTFS is not available on Android. Would require root + installation of support. I guess besides fat32 ext4 should work too?
+12:28:49 <brenneke[m]> Can anyone please suggest a good office suite app that works with GrapheneOS? Still struggling with finding something suitable, was using WPS but seems it is unhappy when too many permissions restricted.
+12:34:33 <yekip[m]> I would have to suggest a desktop computer :D
+12:34:58 <yekip[m]> sorry! email on my phone is modern enough for me, can't imagine trying to write a spreadsheet!
+12:35:08 <yekip[m]>  * sorry! email on my phone is modern enough for me, can't imagine trying to write a spreadsheet with my thumbs!
+12:35:09 <yekip[m]>  * sorry! email on my phone is modern enough for me, can't imagine trying to write a spreadsheet with my thumbs!
+12:36:06 <yekip[m]> i wanted to give Eddie (AirVPN) a go on graphene. https://airvpn.org/android/ - Their app is pretty good I think (security wise). Is there any advantage to choosing app over openVPN, or vice versa?
+12:47:15 <brenneke[m]> <yekip[m] " * sorry! email on my phone is m"> Agree but nice to at least have an app that will read and edit a docx for example when away from desktop.
+12:48:04 <bseeinu[m]> Mullvad much more stable than Eddie
+12:48:11 <bseeinu[m]> On graphene
+12:57:15 <yekip[m]> Thanks, I don't want Mullvad, PIA was excellent in t erms of app performance, widget too and way faster connections. I got Eddie installed and it's horrible. Constant alerts. No idea what encryption algorithm to use either. But worst of all, speed test gives me 0.5mbps. Not sure what's wrong, could be bad signal although I ws getting 5-10mbps without VPN turned on. And Air servers are very fast usually. weird. i may dump
+12:57:15 <yekip[m]> it and go back to PIA
+12:58:49 <bseeinu[m]> :) OK, curious why no mullvad
+13:00:26 <yekip[m]> mainly price. i am very confident in it's performance and privacy etc. just price really
+13:00:50 <yekip[m]> i already have 3 subs to VPNs, dont need another one especially at a fiver a month. times are hard ya know :D
+13:01:16 <yekip[m]> big respect for mullvad all the same
+13:02:54 <lvkm[m]> user48: you can connect an usb stick with the otg adapter (one comes in the box). exfat is also supported if you need it for files bigger than 4gb.
+13:02:54 <lvkm[m]> if you want some cunstomisation get xscreensaver from fdroid for some tweakable live wallpapers. uses surprisingly little battery.
+13:03:38 <lvkm[m]> * user48: you can plug in a usb stick with the otg adapter (one comes in the box). exfat is also supported if you need it for files bigger than 4gb.
+13:03:38 <lvkm[m]> if you want some cunstomisation get xscreensaver from fdroid for some tweakable live wallpapers. uses surprisingly little battery.
+13:04:08 <lvkm[m]> * user48: you can plug in a usb stick with the otg adapter (one comes in the box). exfat is also supported if you need it for files bigger than 4gb.
+13:04:08 <lvkm[m]> if you want some customization get xscreensaver from fdroid for some tweakable live wallpapers. uses surprisingly little battery.
+13:08:17 <yekip[m]> I notice PIA (and others) have a builit in kill switch.  I always use that, but is there any point as I see Graphene settings offer the options in there, always on and block traffic outside VPN. I have both turned on, so shall i bother with the VPN app's own kill switch or is that 'over kill'. tee hee
+13:40:29 <yekip[m]> Does anyone have a view on allowing BitWarden to have access to autofill password fields?
+14:03:15 <flabbergasted> It's a matter of trust. Do you trust Bitwarden? I do.
+14:16:25 <bseeinu[m]> I do have it on too
+14:45:18 <dazinism> user48: have a look at https://hub.libranet.de/wiki/graphene-os/wiki/Apps
+14:47:13 <dazinism> bseeinu: Collabora office is the only functional on device office suite I've found. Its a split apk so had to mess about a bit to install
+14:47:30 <dazinism> Possibly Aurora store handles split apks now?
+14:48:39 <dazinism> Using nextcloud via web browser with only office used to work on mobile, but they recently broke it!
+14:50:29 <dazinism> I used https://f-droid.org/app/com.aefyr.sai.fdroid to install the split apk
+14:51:27 <dazinism> cryptopad.fr stuff kinda works ok on device.
+14:53:03 <dazinism> *on mobile devices
+14:53:58 <dazinism> I've never tried any commercial/proprietary office suites on mobile
+14:54:40 <dazinism> Actually scratch commercial, blatantly all the things I just mentioned are....
+14:56:10 <cx2[m]> fll: did you have permissions problems on fedora? I can see the handset, but “no permissions”
+14:57:31 <dazinism> cx2: have you set up the path?
+14:57:41 <fll[m]> cx2: hmm...can't remember tbh. You did try sudo I guess?
+14:57:42 <cx2[m]> Yes
+14:58:43 <dazinism> adb? Given permission on device?
+14:59:43 <cx2[m]> dazinism: path set for platform tools adb devices lists the hand self, with “no permissions”
+15:00:06 <cx2[m]> Nvm... FINALLY it decided to pop up on the handset
+15:00:28 <fll[m]> fastboot --version shows the new one now?
+15:00:37 <fll[m]> Ah ok
+15:04:15 <yekip[m]> <flabbergasted "It's a matter of trust. Do you t"> thanks
+15:05:04 <cx2[m]> So that was a lie...
+15:05:44 <cx2[m]> $PATH is correct... fastboot version is also correct. Still getting “no permissions”
+15:18:02 <DannyWorkOrderPr> <yekip[m] "ok i guess i dont really underst"> You should probably learn these! Sent you an invite to that room because there's a lot of questions being asked in there similar to yours (some of which are mildly OT for this room =] )
+15:30:50 <yekip[m]> <DannyWorkOrderPr "You should probably learn these!"> OT?
+15:30:56 <yekip[m]> Ah, I had a load of spam invites so i rejected all quickly but thought i saw a username i recognised! feel free to send again, in fact please do :)
+15:42:03 <DannyWorkOrderPr> yekip: Sent!
+15:53:24 <yekip[m]> thanks. will accept and jump in later, just off out here.
+15:54:59 <cx2[m]> fll: so it seems there are two versions of fastboot installed. Will sees my device just fine, but I believe it’s out of date. The other is definitely updated to 30.XX, with it in my $PATH it still says “no permission”
+16:00:54 <dazinism> I'd try and get rid of the old one
+16:01:56 <mxnorvak[m]> Why doesn't Google just announce pixel 4a, leaks used to be blurry pics, now it seem like every other day there is a whole new 10 min video showing a feature of pixel 4a in depth
+16:02:38 <dazinism> cx2: guess worth trying different leads / usb ports alsp
+16:04:27 <cx2[m]> dazinism: did that, current version still doesn’t have permission
+16:05:23 <cx2[m]> Platform-tools is living in /home/....$PATH is set.... still, no permissions
+16:06:05 <DannyWorkOrderPr> Here we fuckin go again, with the discrediting Graphene.
+16:06:05 <DannyWorkOrderPr> Feel free to state your experience and understanding of the GrapheneOS project and its lead dev here: https://matrix.to/#/!GibBpYxFGNraRsZOyl:matrix.org/$ycPfbLuUaxfaqrRVmzZD-mPgXXHsjk5LGopylkebtBU
+16:06:31 <strcat> DannyWorkOrderPr: in which channel
+16:06:56 <DannyWorkOrderPr> Techlore, mods no less.
+16:07:36 <cx2[m]> That’s because techlore is a bitch
+16:07:58 <strcat> DannyWorkOrderPr: what are they doing
+16:08:11 <DannyWorkOrderPr> Fuckin cocksuckers are insufferable.
+16:08:28 <strcat> I thought that community supported the project?
+16:08:31 <cx2[m]> He’s called up out a while back when the channel was trashing grapheneos, he said “I supportED the device, not the developer...blah blah crybaby shit”
+16:08:59 <strcat> I don't understand
+16:10:12 <DannyWorkOrderPr> He needs to reign in his mods before he loses mindshare in that room.
+16:10:44 <strcat> what exactly is happening? why are people attacking myself and the project there?
+16:10:46 <strcat> don't understand
+16:10:51 <strcat> never had any conflict with them afaik
+16:10:56 <cx2[m]> <strcat "I thought that community support"> Thought so too until techlore actual chimed in and was whining because apparently he asked you about the video he made re: GrapheneOS install / review. And he didn’t receive the response he wanted.
+16:11:38 <cx2[m]> Like I said, on the topic of GrapheneOS, techlore himself has whined about it. I’m sure he encourages his mods to do the same.
+16:12:06 <strcat> I don't understand
+16:12:13 <strcat> never did anything to them
+16:13:29 <strcat> James apparently contacted him
+16:13:33 <strcat> wonder if that has anything to do with it
+16:14:05 * DannyWorkOrderPr uploaded an image: Screenshot_20200520-120954_Riot.im.png (432KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/JyusxQMjiUTdenXyqtQuOkUi >
+16:14:21 <cx2[m]> Techlore stated that he asked you if there was a certain way you wanted the video done, or anything that you wanted added. He said he didn’t receive a good response. Also stated that he believes that the project management is toxic
+16:14:53 <strcat> I didn't want people relying on a video that is frozen in time
+16:15:09 <strcat> and you see the results of people relying on some old fastboot version on Windows
+16:15:23 <strcat> I need to merge the changes to flash-all.bat but they weren't submitted as a pull request
+16:15:28 <strcat> so I lost track of that
+16:15:33 <strcat> maybe JTL knows?
+16:15:41 <strcat> I think it was JTL  and someone else working on it?
+16:15:43 <strcat> can't remember
+16:17:34 <flabbergasted> @strcat This might be a stupid question, and completely unrelated to GOS, but when I plug in the charger, it takes a couple of seconds before it starts to charge, and then it vibrabes another time a little later indicating charging is in process. Is this related to GOS/hardware or AOSP? Pixel 3a XL
+16:17:47 <strcat> don't know
+16:18:02 * DannyWorkOrderPr uploaded an image: Screenshot_20200520-121001_Riot.im.png (404KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/eCdaVLiYKSKyaIjesLeXWNyY >
+16:18:04 <DannyWorkOrderPr> strcat: I don't use this term lightly. In fact, first time. But this is pure FUD.
+16:18:08 <DannyWorkOrderPr> strcat: the mods there are privacy > security.
+16:18:11 <DannyWorkOrderPr> strcat: I linked you to the discussion above. And will be posting more screenshots here.
+16:18:16 <cx2[m]> Well regarding a video, I dont’ disagree to a point. As long as it explicitly states that “this video is current as of today, this will likely not work with future releases, etc.”
+16:18:16 <cx2[m]> Where I take issue is just with him being annoying and whining
+16:19:02 <strcat> DannyWorkOrderPr: I'd guess James is involved in this
+16:19:02 <DannyWorkOrderPr> But they're already retracting messages due to being called onto the carpet.
+16:19:03 <flabbergasted> I left Techlore after 10 seconds after I joined it. It's a bunch of bull.
+16:19:25 <strcat> DannyWorkOrderPr: techlore said at one point James contacted him and this is what James likes to do
+16:19:57 <strcat> and it's such BS to say I don't accept help from others - I just didn't want to have that kind of installation video
+16:20:22 * DannyWorkOrderPr uploaded an image: Screenshot_20200520-121227_Riot.im.png (336KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/jmOigDqgLtbxgWUsdrYZmyzh >
+16:20:34 <strcat> and I have not had the time / energy to do interviews or things like that largely due to what James is doing
+16:20:44 <limitless0[m]> He removed the post i think
+16:21:20 <strcat> it's not at all true that I "don't accept help"
+16:21:23 <strcat> doesn't make any sense
+16:21:29 <strcat> why are these people spreading BS and attacking me
+16:21:32 <strcat> never did anything to them
+16:21:47 <flabbergasted> Should just remove the matrix channel and stick to irc. Since Techlore is pretty high up in suggestions in matrix in that category.
+16:23:09 * DannyWorkOrderPr uploaded an image: Screenshot_20200520-121251_Riot.im.png (418KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/yMYEMcBaGCjvnbxjwbgCwNhd >
+16:23:11 <strcat> I just don't understand this
+16:23:16 * DannyWorkOrderPr uploaded an image: Screenshot_20200520-121256_Riot.im.png (397KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/zvYlOBYrEUizVoYzQbiDOdxS >
+16:23:23 * DannyWorkOrderPr uploaded an image: Screenshot_20200520-121245_Riot.im.png (375KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/sJqtmxiJDsfJrDVTBtUvDJqO >
+16:24:13 * DannyWorkOrderPr uploaded an image: Screenshot_20200520-121303_Riot.im.png (432KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/JyJYvtjtpAiZyWbtLQiHZYTl >
+16:24:53 <strcat> he told me at one point James contacted him and I think that explains a lot
+16:24:59 <strcat> you can see what happened with the Samourai Wallet community
+16:25:04 <strcat> and he has caused the same problems elsewhere
+16:25:10 <strcat> people are so easily manipulated
+16:25:13 * DannyWorkOrderPr uploaded an image: Screenshot_20200520-121235_Riot.im.png (369KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/ykEBEvyPPQeVIduuoiWHxEMB >
+16:26:19 <DannyWorkOrderPr> <strcat "never did anything to them"> It's not about you, Daniel. It usually never is. It's about control over a topic - how people should protect themselves in tech. And the "nice, privacy" crowd don't like when actual security enters the ring and boxes their ears.
+16:26:23 <DannyWorkOrderPr> Surely my messages will eventually go through, ( Matrix.org homeserver sucks today), but, strcat, It's not about you, Daniel. It usually never is. It's about control over a topic - how people should protect themselves in tech. And the "nice, privacy" crowd don't like when actual security enters the ring and boxes their ears.
+16:27:21 <DannyWorkOrderPr> <flabbergasted "Should just remove the matrix ch"> That's exactly why the Matrix channel *shouldn't* be removed!
+16:27:49 <strcat[m]> no plans to remove the Matrix channel
+16:27:49 <strcat[m]> but it is really slow
+16:27:53 <strcat[m]> and unreliable
+16:27:58 <joshman[m]> Do you guys know any advantages on using LTE Mode only?
+16:28:16 <strcat[m]> https://grapheneos.org/usage#lte-only-mode
+16:28:29 <limitless0[m]> Is it better to use irc on mobile? I have never used irc before
+16:28:32 <limitless0[m]> For this channel
+16:28:56 <flabbergasted> Unless your carrier supports VoLTE you should not use LTE only.
+16:28:57 <joshman[m]> * Do you guys know any advantages on using LTE Mode only? Like maybe better battery life or maybe some security advantages?
+16:29:19 <DannyWorkOrderPr> <strcat[m] "and unreliable"> Matrix.org is unreliable. Wonder how bad the hit to the userbase would be if this room moved to another homeserver.
+16:29:52 <joshman[m]> <flabbergasted "Unless your carrier supports VoL"> My carrier does not support. Why shouldn't I use it?
+16:30:27 <flabbergasted> If you rely on regular calls and texts you shouldn't use it.
+16:31:47 <joshman[m]> Regular calls and texts are far in the 90s for me
+16:32:07 <flabbergasted> For you maybe, but not for the gen pop.
+16:32:25 <strcat[m]> Danny@WorkOrderPro: well does it have to move
+16:32:37 <strcat[m]> or could there just be a new room that would see the other matrix users via irc bridge?
+16:32:58 <strcat[m]> if there was another server bridged to it would the matrix users here just see them as irc users
+16:33:02 <strcat[m]> which seems fine
+16:33:27 <DannyWorkOrderPr> Yeah, I mean, if you just made a new room with a tchncs.de matrix account, it'd be on that homeserver, for example
+16:33:27 <strcat[m]> this bridge system is also annoying because I don't fully control this room, the irc service does
+16:33:49 <strcat[m]> really annoying
+16:33:53 <strcat[m]> and it kicks 'inactive' users
+16:33:58 <DannyWorkOrderPr> tchncs.de (for example)**
+16:33:58 <strcat[m]> which sucks
+16:34:16 <strcat[m]> Danny@WorkOrderPro: I don't understand why that techlore community is being nasty
+16:34:26 <strcat[m]> also GrapheneOS does a lot of work on privacy not just security enhancements
+16:34:37 <strcat[m]> the privacy also depends on the security
+16:34:56 <strcat[m]> so security enhancements reinforce privacy
+16:35:09 <strcat[m]> but we do a lot of work on privacy improvements
+16:35:12 <benpa[m]> FYI rooms are not tied to a particular homeserver
+16:35:38 <benpa[m]> this room is already "on" matrix.org and tchncs.de
+16:35:40 <strcat[m]> and have landed a lot of stuff upstream in that area
+16:35:51 <strcat[m]> benpa: but this one is tied to the irc service
+16:35:52 <benpa[m]> federation means that the content of this room is seen by both servers
+16:35:56 <strcat[m]> benpa: the irc service thing owns it not me
+16:36:15 <strcat[m]> and the main lag issue is with the irc service thing I think
+16:36:30 <strcat[m]> I also don't like how aggressively it kicks people
+16:36:34 <DannyWorkOrderPr> <strcat[m] "the privacy also depends on the "> We've told them 200 times. They're willfully ignorant.
+16:36:43 <strcat[m]> it kicked people that were pretty core community members and just inactive for a few months
+16:38:20 <strcat[m]> Danny@WorkOrderPro: do they understand we do a lot of work on privacy and work to fill in gaps from not having Play Services
+16:38:23 <DannyWorkOrderPr> benpa: So what's the fix, ask everyone to move their accounts to another Homeserver?
+16:38:53 <strcat[m]> Danny@WorkOrderPro: sandbox improvements restricting what apps can do, permission system improvements (features like Network and Sensors permissions), MAC randomization improvements, all kinds of other things
+16:39:00 <strcat[m]> tons of stuff we've landed upstream
+16:39:00 <benpa[m]> <DannyWorkOrderPr "benpa: So what's the fix, ask ev"> that's one benefit of Matrix - messages are shared (per room between servers)
+16:39:12 <benpa[m]> it sounds like the big problem you're having is that the Freenode bridge is laggy
+16:39:18 <strcat[m]> benpa: I think the main issue is the irc service thing since I don't actually own this room
+16:39:45 <strcat[m]> benpa: since matrix.org server has rooms for irc channels we used the existing room thinking it was the best approach to avoid people split across multiple rooms bridged to the same irc channel
+16:39:48 <DannyWorkOrderPr> benpa At this stage, the lack of performance of Matrix.org is a detriment to the mindshare of Matrix, as evidenced by this community.
+16:39:51 <DannyWorkOrderPr> <strcat[m] "Danny@WorkOrderPro: I don't unde"> strcat, It's not about you, Daniel. It usually never is. It's about control over a topic - how people should protect themselves in tech. And the "nice, privacy" crowd (Techlore mods, Mozilla, etc) don't like when actual security enters the ring and boxes their ears.
+16:39:56 <strcat[m]> I'm not sure it was the best approach since this way we're stuck with the irc service
+16:40:11 <benpa[m]> <DannyWorkOrderPr "benpa At this stage, the lack of"> we are aware of that
+16:40:15 <strcat[m]> can't replace it with another and it won't give me full control of this room
+16:40:20 <strcat[m]> even though I own the irc channel
+16:40:23 <strcat[m]> ideally I could get admin in this room
+16:40:35 <benpa[m]> ok, let's see if we can solve that wrt adminship
+16:40:58 <strcat[m]> I have founder access for the irc channel although I don't think freenode will actually give you an 'sop' status in the channel
+16:41:00 <strcat[m]> it just works via chanserv
+16:41:11 <strcat[m]> I think think &user exists on freenode or oftc
+16:41:12 <benpa[m]> I hadn't realised you were having these problems - just happened to look in here by chance...
+16:41:48 <strcat[m]> lol I'm always having problems with everything
+16:41:50 <strcat[m]> I am used to it
+16:41:51 <strcat[m]> not specific to matrix
+16:42:16 <DannyWorkOrderPr> <benpa[m] "I hadn't realised you were havin"> We'd really appreciate any insight you can give from the Matrix side, this community needs to continue to spread its wings!!
+16:42:54 <bseeinu[m]> No help with reboot, open camera, clearing caches etc
+16:42:56 <bseeinu[m]> Wth??
+16:42:58 <bseeinu[m]> Blueline
+16:43:01 * bseeinu[m] uploaded an image: Screenshot_20200520-114128.png (30KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/FqtSqTZBIEUtGGvJNFxPrsVV >
+16:43:07 <bseeinu[m]> Doesn't work in any app, rear camera
+16:43:31 <strcat[m]> bseeinu: try turning it off instead of a reboot
+16:43:55 <benpa[m]> <DannyWorkOrderPr "We'd really appreciate any insig"> basically bridging Matrix and Freenode is an ongoing, endless struggle
+16:43:57 <benpa[m]> https://matrix.org/faq/#why-dont-you-use-separate-homeserver-instances-to-improve-bridging-performance
+16:44:07 <benpa[m]> ^ gives a little context
+16:44:52 <strcat[m]> benpa: so basically it'd be nice if there was some way to show the bot I own the channel and get owner privs
+16:45:07 <benpa[m]> yeah I'm working on that now
+16:45:15 <strcat[m]> the way it does privs is a little bit weird since if it ever sees you get +o it gives you persistent +o here
+16:45:20 <strcat[m]> mod, w/e
+16:45:40 <strcat[m]> so the way I gave myself privs is I did +o on my matrix username in the channel
+16:46:09 <strcat[m]> but I could register my matrix username and identify as it
+16:46:42 <strcat[m]> you can group nicknames on freenode so it'd have founder status
+16:46:48 <strcat[m]> so if the bot could check with NickServ that would probably be enough
+16:46:57 <strcat[m]> and maybe that's also a better way to handle giving mod status really
+16:47:04 <strcat[m]> NickServ/ChanServ
+16:47:14 <strcat[m]> vs just seeing who has +o atm
+16:47:23 <bseeinu[m]> <strcat[m] "bseeinu: try turning it off inst"> Same thing. Framerate drops to crazy low when opening any camera apps. Only 1 of 2 selfie cams works, only with open camera
+16:47:52 <strcat> it's normal that only 1 front camera is supported by most apps
+16:47:56 <madaidan[m]> <strcat[m] "Danny@WorkOrderPro: I don't unde"> The Techlore community has went seriously downhill. I'm even being personally slandered by them now.
+16:48:00 <strcat> bseeinu[m]: don't know why that's happening
+16:48:11 <strcat> madaidan[m]: yeah I just don't understand why this stuff happens
+16:48:21 <strcat> upsetting for me
+16:49:27 <bseeinu[m]> Open camera could switch between both front cameras
+16:49:34 <bseeinu[m]> Ugh dude
+16:49:42 <bseeinu[m]> No camera app can access it
+16:50:04 <strcat> on which device, Pixel 3?
+16:50:43 <bseeinu[m]> I'll just have no camera on a new pixel 3 for now I guess
+16:50:45 <bseeinu[m]> Whyyyy
+16:50:49 <cx2[m]> <cx2[m] "Ive made a few Grapheneos handse"> Guys, just rolling this forward to see if I can get an assist please
+16:50:54 <madaidan[m]> <strcat "madaidan.: yeah I just don't und"> The mods and members there are really incompetent
+16:50:55 <DannyWorkOrderPr> <strcat "upsetting for me"> Not my intention, just wanted to mobilize the community
+16:51:08 <DannyWorkOrderPr> <bseeinu[m] "No camera app can access it "> I've had the camera module cable come off the board and permanently cause this error.
+16:51:08 <madaidan[m]> I was countering bullshit there all the time until I was eventually banned for nothing
+16:51:41 <madaidan[m]> And I'm still being harassed by them
+16:51:52 <bseeinu[m]> <DannyWorkOrderPr "I've had the camera module cable"> Jesus, I bumped it lightly this morning
+16:52:08 <bseeinu[m]> Like 1/100th of what happened to my iPhone
+16:52:08 <DannyWorkOrderPr> Might have also just fucked the module itself, cable could be fine, haha
+16:52:12 <DannyWorkOrderPr> Had that happen, too
+16:52:23 <DannyWorkOrderPr> Camera sensors are finnicky
+16:52:24 <bseeinu[m]> Do I need to open the frigging phone
+16:52:37 <bseeinu[m]> For one small bump with case?
+16:52:40 <cx2[m]> Adb devices “no permission”
+16:53:06 <bseeinu[m]> Didn't realize pixel 3 could have this much industrial design garbage
+16:53:16 <DannyWorkOrderPr> <bseeinu[m] "Do I need to open the frigging p"> Do you want to ensure the camera will work? haha
+16:53:20 <bseeinu[m]> Have you ever fixed it? Danny@WorkOrderPro
+16:53:57 <DannyWorkOrderPr> Luckily, the one of mine I cared about started working again on its own, the one that was damaged by a crushing issue lol
+16:54:55 <DannyWorkOrderPr> Unofficial advice, knock it around again! 😂
+16:54:57 <bseeinu[m]> I hate this so much
+16:56:04 * bseeinu[m] uploaded an image: Screenshot_20200520-115534.png (72KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/ZRWdMUDzTkfIgvZkSrXjDoRy >
+16:56:29 <strcat> it's different than problems other people have
+16:56:33 <strcat> so 99% chance it's a hardware issue
+16:56:47 <bseeinu[m]> Yeah so
+16:56:48 <strcat> you could factory reset to make it a 99.99% chance but you probably have data you don't want to lose
+16:56:49 <bseeinu[m]> Hear this
+16:57:01 <bseeinu[m]> I slabbed the phone on the table
+16:57:05 <bseeinu[m]> It works again
+16:57:22 <bseeinu[m]> This is some high level garbage QA and design
+16:57:47 <strcat> well I don't think they have any real QA issues
+16:57:53 <strcat> but some devices have issues like any other product
+16:57:54 <bseeinu[m]> Thanks for the butchering advice Danny@WorkOrderPro . apparently I need to slap my phone or be very gentle
+16:57:58 <strcat> don't think it's more than usual
+16:58:04 <bseeinu[m]> Then it's ID
+16:58:19 <bseeinu[m]> iphones since 2007
+16:58:36 <bseeinu[m]> Never has anything similar ever happened
+16:58:44 <bseeinu[m]> I guess I had exhausted my luck :)
+16:58:52 <DannyWorkOrderPr> <bseeinu[m] "Thanks for the butchering advice"> maybe it just has an attitude, mate 😂😂😂 Nah, you likely have a lose cable.
+16:59:10 <strcat> bseeinu[m]: maybe was shipped extremely roughly but I doubt that's the issue
+16:59:20 <strcat> since I wouldn't expect that to happen if nothing was wrong in the first place
+17:00:33 <bseeinu[m]> Thx for the help. Next releases I look forward Bluetooth audio and no dramatic SERIOUS CAMERA ERROR HELP HELP from open cam :)
+17:01:00 <strcat> next release fixes the upstream bluetooth audio bug
+17:01:31 <madaidan[m]> Danny@WorkOrderPro: btw I've heard the same mental health shit from another person. I wonder if they're linked.
+17:01:47 <strcat> it means they have been talking to James
+17:02:02 <strcat> https://github.com/GrapheneOS/platform_frameworks_av/commit/1618789e3f5e0b844916524da2229a3e08ceabfa
+17:03:04 <DannyWorkOrderPr> <madaidan[m] "Danny@WorkOrderPro: btw I've hea"> madaidan. I wouldn't waste time looking for the conspiracy, albeit likely to be one - it's just as likely that people are parroting shit (I just called one of them Polly recently, lol). They tend to do that.
+17:03:04 <madaidan[m]> It was just a few days ago too
+17:03:06 <madaidan[m]> Something might've happened recently (*cough* James cough*)
+17:03:56 <madaidan[m]> <DannyWorkOrderPr "madaidan. I wouldn't waste time "> It was a different person in a different room that Valynor isn't in.
+17:04:29 <DannyWorkOrderPr> Oh, I've got you
+17:04:55 <strcat> madaidan[m]: James is actively attacking me across the board and reaching out to lots of people
+17:04:59 <strcat> so it's to be expected
+17:05:00 <strcat> this is what he does
+17:05:19 <strcat> need him to be stopped somehow
+17:11:08 <madaidan[m]> Is James active on matrix (that you know of)?
+17:11:16 <madaidan[m]> I've never seen him here
+17:11:52 <DannyWorkOrderPr> madaidan. You don't think he'd be here under his own name, do you?
+17:13:55 <madaidan[m]> <DannyWorkOrderPr "madaidan. You don't think he'd b"> He is on other platforms
+17:17:43 <DannyWorkOrderPr> On reddit? Or chatrooms?
+17:18:06 <blacklight447[m]> <madaidan[m] "Is James active on matrix (that "> Hes 100% lurking in this chat
+17:19:14 * cx2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/kQhQfSuEgFdhstvmJDuzLssj >
+17:19:18 <DannyWorkOrderPr> IRC?
+17:19:38 <madaidan[m]> <blacklight447[m] "Hes 100% lurking in this chat"> He can just use the log bot or view.matrix.org. Doesn't need an account.
+17:19:42 <DannyWorkOrderPr> Anyway, not a good topic to persist here
+17:19:56 <blacklight447[m]> Both
+17:20:09 <madaidan[m]> <DannyWorkOrderPr "On reddit? Or chatrooms?"> A bunch of stuff. Reddit, Telegram, emails etc.
+17:20:20 <blacklight447[m]> The dude is a maniac
+17:24:52 * DannyWorkOrderPr sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/CNugRCJiIoyHhgqzWUlnJVuF >
+17:27:10 <cx2[m]> Yes. “Older fastboot” in that I was able to list my device without issue.
+17:27:10 <cx2[m]> Installed platform tools with fastboot 30.XX and now I am getting “no permissions”
+17:27:39 <cx2[m]> I am also not being prompted by the handset to “trust this device” either.
+17:28:59 <fll[m]> Maybe wrong chmod on the the platform tools?
+17:30:53 <cx2[m]> Already `chmod -R 755 platform-tools1
+17:36:30 <cx2[m]> * Already `chmod -R 755 platform-tools`
+17:37:45 <cx2[m]> Again, worked fine with the older fastboot.... but i didnt’ want to continue with the older version since i figured it would cause issues down the road
+17:40:50 <strcat[m]> remove it
+17:41:08 <strcat[m]> start over
+17:41:16 <strcat[m]> don't chmod or change anything
+17:41:20 <strcat[m]> follow instructions to the letter
+18:01:38 <cx2[m]> Fastboot version prints correctly with the up-to-date version.
+18:01:38 <cx2[m]> This tells me that my $PATH is correct
+18:01:38 <cx2[m]> When querying the device `adb devices` it prints `xxxmydevice.           no permissions;...`
+18:02:03 <strcat> did you remove it and start over
+18:05:02 <BrokenCog> cx2[m]: did you try invoking fastboot with sudo?  It would point you in the correct direction to figure out the problem.
+18:05:35 <cx2[m]> Yes. I have started over a few times now.
+18:05:36 <cx2[m]> Of note, I am on fedora, with android-tools, I was able to successfully query the handset. But did not proceed further due to the instructions stating that it’s out of date and broken on Ubuntu and Debian (Fedora wasn’t covered, but given that the android-tools version was from 2018, I figured it applied here as well. ) Therefore I removed android-tools, and instead opted for platform-tools.
+18:05:36 <cx2[m]> But, as noted, adb in platform tools prints “no permissions”
+18:05:40 <BrokenCog> also, what is output of 'which fastboot'
+18:06:41 <cx2[m]> `~/platform-tools/fastboot`
+18:06:44 <BrokenCog> $ fastboot devices
+18:06:45 <BrokenCog> no permissions  fastboot
+18:06:49 <BrokenCog> is that the error?
+18:07:13 <BrokenCog> and, did you try 'sudo fastboot' ?
+18:07:14 <cx2[m]> That’s the printout of “which fastboot”
+18:07:38 <BrokenCog> yes, I understood that.  Is the message from "fastboot devices" looking like:
+18:07:40 <cx2[m]> Command not found when “sudo fastboot”
+18:07:41 <BrokenCog> no permissions  fastboot
+18:07:50 <nickcalyx[m]> BrokenCog:
+18:08:00 <BrokenCog> cx2[m]: yeah, you need to 'sudo $(which fastboot)' ...
+18:08:08 <BrokenCog> because your PATh isn't in root's
+18:09:48 <cx2[m]> I think that’s definitely my issue, so the question would be how to correctly set my path. I copy and pasted from the documentation, which at least gets me into platform tools
+18:10:11 <BrokenCog> it's not a path issue.  did you run the command as sudo?  and what was hte result?
+18:10:37 <strcat> btw you shouldn't generally use the `which` command
+18:11:28 <cx2[m]> $(which fastboot) prints `fastboot: usage: no command`
+18:11:54 <BrokenCog> cx2[m]: yes, you need to put the options after it ... 'sudo $(which fastboot) devices' for intsance
+18:12:03 <BrokenCog> cx2[m]: yes, you need to put the options after it ... 'sudo $(which fastboot) -l devices' for intsance
+18:12:54 <BrokenCog> strcat: he needs which here because root doesn't have his user's ~/android-tools stored in roots $PATH.  once he figures out the permissions issue, he won't need sudo, and thus won't need to use which.
+18:13:11 <strcat> yeah but you shouldn't use which
+18:13:16 <strcat> it's an obsolete / bad command
+18:13:30 <cx2[m]> Learning is occurring... haha
+18:13:30 <cx2[m]> Ok... does not print anything.
+18:13:50 <strcat> BrokenCog: which doesn't match how the shell looks up commands
+18:13:52 <BrokenCog> but the device is connected?  and, developer options USB Debugging is enabled?
+18:14:04 <cx2[m]> Yes.
+18:14:05 <BrokenCog> strcat: it's close enough in this case.
+18:14:23 <BrokenCog> cx2[m]: does 'adb devices' show the device?
+18:15:26 <cx2[m]> `adb devices` proves this.
+18:15:26 <cx2[m]> The problem is, it also prints `mydevice           No permissions;`
+18:15:50 <strcat> fastboot is not adb
+18:15:54 <strcat> the install instructions don't use adb
+18:16:01 <strcat> fastboot does not connect to a device booted into the OS
+18:16:20 <strcat> you're making things way more complicated than they need to be by doing stuff not in the instructions
+18:18:42 <BrokenCog> cx2[m]: is your device at the bootloader screen?
+18:22:52 <madaidan[m]> There's `type` instead of `which`
+18:23:09 <cx2[m]> Ok...swapped cables and ports.
+18:23:09 <cx2[m]> Sudo `$(which fastboot) -l devices` prints `myxxdevicexx.   Fastboot usb:1-3`
+18:23:30 <BrokenCog> cx2[m]: and as non-root user?
+18:23:49 <cx2[m]> `no permissions`
+18:24:13 <cx2[m]> I’m sorry.... `fastboot devices` prints `no permissions`
+18:24:55 <cx2[m]> And yes I’m at the boot loader screen
+18:24:57 <cx2[m]> I don’t think i answered that before
+18:24:58 <BrokenCog> as non-root.  I suspect it's a udev issue, try this fix:  https://stackoverflow.com/questions/27017453/fastboot-and-adb-not-working-with-sudo
+18:25:23 <BrokenCog> cx2[m]: when you talked about fastboot, it was probably assumed.
+18:26:02 <strcat> cx2[m]: your distro is making things way more complicated than they need to be, just do it again from the start as root
+18:26:18 <BrokenCog> or fix udev permissions.
+18:26:27 <strcat> you don't gain anything not doing it as root when you are freely transitioning to root with sudo anyway
+18:26:32 <strcat> might as well just be doing it as root
+18:26:38 <strcat> no advantage to overcomplicating it
+18:26:40 <strcat> not security
+18:26:45 <cx2[m]> <BrokenCog "cx2: when you talked about fastb"> Ok, i just wanted to make sure I was answering you correctly
+18:26:48 <BrokenCog> if he fixes the udev permissions, he won't be doing it as root.
+18:26:57 <strcat> don't overcomplicate it
+18:27:02 <strcat> this could all be done in 5 minutes
+18:27:06 <strcat> instead of making it way harder than it has to be
+18:27:15 <strcat> the instructions don't use adb, only fastboot
+18:27:28 <strcat> if you're on a distribution that does not permit accessing usb devices as non-root just do it as root
+18:27:32 <strcat> start over again and do it as root
+18:27:41 <strcat> don't make things overcomplicated, this process takes 5 mins
+18:27:59 <strcat> start at https://grapheneos.org/install#obtaining-fastboot and do it as root
+18:28:07 <cx2[m]> strcat: macOS was a breeze.... I am ok with the distro “making it difficult” Again. This device is purely going to be used purely for CTS. So if that means I can ALSO hang a note about “Fedora being difficult, and here’s the workaround” then I want to do that as well
+18:28:40 <BrokenCog> cx2[m]: try that udev perm's adjustment in the link, it should then work as a non-root user.
+18:28:41 <strcat> cx2[m]: the problem is udev doesn't include rules for lots of things by default
+18:28:57 <strcat> you aren't allowed to access random kinds of devices as non-root on a traditional linux distro
+18:29:01 <strcat> even though it doesn't make much sense
+18:30:06 <BrokenCog> that's the nature of udev/usb/world-full-of-manufacturers miking with various security intrepretations.
+18:30:31 <strcat> if you EVER run sudo from your user account
+18:30:39 <strcat> or enter your password ever
+18:30:48 <strcat> and have sudo enabled with unrestricted use
+18:30:52 <strcat> your account is equivalent to root
+18:31:39 <madaidan[m]> Yeah, someone can trivially intercept/keylog the password.
+18:32:13 <strcat> or make your commands do something else
+18:32:15 <strcat> when you enter them
+18:32:29 <strcat> if you use sudo to run things as root then your account is basically root
+18:32:33 <strcat> what's the distinction?
+18:32:54 <strcat> and I'm sure all the important data is in your user account
+18:33:01 <strcat> it is not a security model that makes any sense
+18:33:29 <cx2[m]> Ok. The goal here isn’t to ultimately add to my collection of devices. The goal is to troubleshoot, correctly, “installing GrapheneOS for Fedora users”
+18:34:12 <cx2[m]> Since it’s not in the documentation, I can hopefully add it to the unofficial
+18:34:39 <strcat> run
+18:34:40 <strcat> sudo -i
+18:34:47 <strcat> do the entire process from https://grapheneos.org/install#obtaining-fastboot
+18:34:54 <BrokenCog> did the udev perms work? you'll probably need to reboot for them to take affect.
+18:35:19 <cx2[m]> So what is the ROOT problem then? What I’m trying to get to the bottom of, is why Fastboot will not run on fedora without root
+18:35:19 <BrokenCog> restarting udev is fraught with Usually and Frequently leading to Doesn't.
+18:35:37 <strcat> cx2[m]: because linux distros don't let you access usb devices without root
+18:35:38 <BrokenCog> it doesn't need root, it needs udev to have non-root permissions to the USB device.
+18:35:41 <BrokenCog> read that link.
+18:35:53 * madaidan[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/noHvIrDbqcvTUSmMBcssMhSZ >
+18:35:53 <strcat> cx2[m]: they have special cases for certain kinds of things like usb flash drives
+18:36:02 <strcat> cx2[m]: they don't include a standard special case for things they don't know about
+18:36:07 <BrokenCog> Google's AOSP has a udev rule to add for their devices to solve this.
+18:36:09 <strcat> so if you plug in a serial debug cable or anything else
+18:36:10 <madaidan[m]> It's incredibly easy
+18:36:13 <strcat> it's totally useless
+18:36:15 <strcat> without root
+18:36:20 <flabbergasted> Yeah Leaseweb can't be compared to Novoserve in my experience.
+18:36:25 <flabbergasted> wrong channel
+18:36:26 <strcat> so just use root and don't bother setting up udev rules
+18:36:31 <strcat> far more likely you screw up stuff with udev rules
+18:36:31 <cx2[m]> strcat: but I can access it just fine with android-tools. It’s platform-tools that are causing issues
+18:36:33 <BrokenCog> LOL.
+18:36:43 <strcat> cx2[m]: don't know what you mean by that
+18:37:04 <strcat> what is 'android-tools'
+18:37:33 <strcat> guessing some messed up fedora package with nonsense like setuid / setgid binaries]
+18:38:19 <strcat> anyway just do it as root that's what your distribution needs
+18:38:28 <strcat> fussing around with udev rules is pointless
+18:38:42 <strcat> if you do stuff via sudo from your user account, it is basically the root account anyway
+18:38:53 <cx2[m]> <strcat "cx2: don't know what you mean by"> When downloading android-tools (which is old so I `dnf remove` it) it initially worked without root. Again, i realized it was old, and accoriding to the instructions, went with downloading platform-tools..... which is not working
+18:38:53 <strcat> just run `sudo -i` and do everything in that shell instead
+18:39:05 <strcat> cx2[m]: I don't know what android-tools is
+18:39:16 <strcat> cx2[m]: that's not an AOSP / Android thing
+18:39:24 <strcat> that's some non-standard fedora thing
+18:39:33 <strcat> cx2[m]: perhaps android-tools includes udev rules for fastboot with some devices
+18:39:34 <cx2[m]> What is android tools?? It’s in your documentation
+18:39:34 <cx2[m]> “Arch Linux: android-tools provides fastboot...”
+18:39:41 <strcat> cx2[m]: that's an arch linux package
+18:39:56 <strcat> a fedora package called android-tools is not the same thing
+18:40:05 <strcat> android-tools is an arch linux package made by the maintainer of the package
+18:40:15 <strcat> he wrote a new build system for fastboot, adb, etc. and packages it his way
+18:40:21 <strcat> includes a random assortment of tools he chose
+18:40:27 <strcat> that is arch linux specific
+18:40:34 <cx2[m]> well that’s where I made the mistake. Either way, I removed it.... even though fastboot was working just fine.
+18:40:38 <strcat> it is an arch linux project not an AOSP / Android project
+18:41:14 <strcat> the whole thing seems based on a misunderstanding of AOSP
+18:41:18 <strcat> by these distros
+18:41:35 <strcat> they don't understand the versioning system of platform-tools (fastboot, adb, etc.) somehow and invented their own
+18:41:42 <strcat> they don't understand how to sync the sources
+18:41:47 <strcat> they don't know how to use the build system
+18:42:03 <strcat> and they made their own downstream packages with their own versioning schemes, etc.
+18:42:11 <strcat> so for example
+18:42:13 <strcat> https://git.archlinux.org/svntogit/community.git/tree/trunk/generate_build.rb?h=packages/android-tools
+18:42:19 <strcat> # Android has a huge and monolithic build system that does not allow to build
+18:42:21 <strcat> # components separately.
+18:42:28 <strcat> but you can run `m adb fastboot` to build just those...
+18:42:48 <strcat> and there are build targets for the SDK repository packages like platform-tools
+18:42:52 <strcat> so you can build platform-tools as a whole
+18:42:59 <strcat> and have a zip produced with the standard platform-tools
+18:45:25 <strcat> cx2[m]: anyway you don't have udev rules for this kind of device so you need to do stuff as root
+18:45:41 <strcat> cx2[m]: you're overcomplicating it by doing some stuff as non-root and some as root, etc.
+18:45:55 <strcat> cx2[m]: either obtain set up proper udev rules or use root
+18:46:31 <strcat> and listen to my warning that fussing around with udev rules is not actually accomplishing anything and is overcomplicating it
+18:46:41 <strcat> gives you another thing that could go wrong and you need to maintain that
+18:46:59 <strcat> get your distro to provide less bad packages
+18:47:21 <cx2[m]> So with `sudo -i` —-> `fastboot —version` prints `bash: fastboot: command not found...`
+18:47:21 <cx2[m]> Then `Install package ‘android-tools’ to provide command ‘fastboot’`
+18:47:26 <strcat> what arch linux does is still super messed up just far less than fedora, debian, etc. which all have differently fucked up stuff
+18:47:47 <strcat> cx2[m]: I said you need to start from https://grapheneos.org/install#obtaining-fastboot
+18:47:56 <strcat> sudo -i gives you a root shell
+18:48:03 <strcat> you are starting over as root
+18:48:24 <strcat> cx2[m]: you have a lot of different options but you're choosing to stay stuck overcomplicating things
+18:48:30 <strcat> self-inflicted issues
+18:49:13 <strcat> either do everything as root or do what is required to make it work as non-root
+18:49:37 <strcat> otherwise you will encounter the issues you have encountered mixing a non-root environment with a DIFFERENT root environment
+18:50:02 <strcat> you can't set up fastboot for one user and then run it in a different user's environment
+18:51:47 <strcat> linux distros overcomplicate this
+18:52:02 <strcat> it would be really easy to not use the CLI at all if they just had proper packages
+18:52:17 <strcat> could ship an unlock and lock script
+18:52:28 <strcat> double click unlock, double click flash-all, double click lock
+18:52:41 <strcat> but no they decide to make everything super fucked up / complicated
+18:53:35 <strcat> I could just tell people the only supported OSes are Windows, macOS and Arch Linux and explicitly check for and reject other distros until they fix their packages
+18:53:36 <cx2[m]> strcat: heres the deal... You’re original comment, was “follow the instructions to the letter”
+18:53:36 <cx2[m]> No where in those instructions does it say anything about `sudo -I` etc. In fact, following those instructions *does not* work on Fedora apparently.
+18:53:36 <cx2[m]> Things like “self-inflicted issues” are not useful. Especially when I have stated multiple times that I am creating this handset PURELY to help out however i can. If that means it’s only CTS then so be it. If that **ALSO** means I can help provide a workaround to getting GrapheneOS up and running on Fedora, then even better.
+18:53:49 <strcat> cx2[m]: your distro doesn't have a working non-root user
+18:53:54 <strcat> use root for everything
+18:54:27 <strcat> or spend your time working around / fixing the distro including setting up custom udev rules
+18:54:36 <strcat> which is a super messed up thing to need
+18:54:43 <strcat> the way this works is just broken
+18:55:06 <strcat> List of distribution packages:
+18:55:08 <strcat> Arch Linux: android-tools provides fastboot and other useful tools not required for installation such as adb. android-udev provides udev rules allowing fastboot and adb to work in local sessions without root.
+18:55:14 <strcat> cx2[m]: the answer to your problems is there
+18:55:44 <strcat> and don't ask me why extra udev rules are required - I can't justify how fucked up it is
+18:56:07 <strcat> that udev rules are required to use a hardware bitcoin wallet, serial debug cable and all kinds of other devices not fitting existing rules
+18:56:10 <strcat> it doesn't make any sense
+18:57:35 <cx2[m]> <strcat "cx2: the answer to your problems"> You’re still getting this wrong. This is not “my” answer. I already have a grip of phones that I can’t use. This answer is for the community. For people that are, in this case, on Fedora.
+18:57:56 <cx2[m]> * > <@freenode_strcat:matrix.org> cx2: the answer to your problems is there
+18:57:56 <cx2[m]> You’re still getting this wrong. This is not “my” answer. I already have a grip of phones that I don’t use running GrapheneOS. This answer is for the community. For people that are, in this case, on Fedora.
+18:57:56 <cx2[m]> I am fortunate in that I have the means to procure multiple machines and handsets to support in this way, since I am clearly not a programmer.
+18:58:41 <strcat> report a bug to your distribution about their broken packaging and OS
+18:58:45 <strcat> multiple bugs
+18:58:57 <strcat> 1) they should allow local users to use USB devices without special rules or packages
+18:59:29 <strcat> 2) they shouldn't have totally broken android SDK packages, if they aren't going to properly build / package things they shouldn't have packages for them
+18:59:49 <strcat> they should use the upstream versioning and upstream build system
+18:59:52 <strcat> and stop making broken crap
+19:00:10 <strcat> or call it fedora-android-tools to make it clear it isn't some upstream / AOSP / Android thing it's their own fork
+19:01:28 <strcat> if people pulled that shit with my project I would be telling them they have to stop naming it after my project based on trademark law like firefox did with debian for a long time
+19:01:36 <madaidan[m]> <strcat "and stop making broken crap"> I don't think that's possible. Linux distros *are* broken crap.
+19:01:58 <strcat> what justification do they have to write their own broken build system for this
+19:02:13 <strcat> they don't understand the software or what they're doing
+19:02:34 <strcat> and why is root needed to access USB devices unless you make a bunch of custom udev rules for each type of USB device other than basic things like flash drives
+19:02:36 <cn3m[m]> no real alternative sadly @madaidan.:matrix.org
+19:02:37 <strcat> why is it so fucked
+19:03:02 <strcat> my answer is just do everything as root since your user account is already effective root anyway
+19:03:47 <strcat> what difference would it make if you just logged in as root compared to a user account with full root access
+19:03:53 <strcat> it's just like UAC on windows but worse
+19:04:09 <strcat> UAC is less bad than this kind of sudo use
+19:04:47 <strcat> I wonder if the windows subsystem for linux thing has working usb devices
+19:05:39 <madaidan[m]> <cn3m[m] "no real alternative sadly @madai"> TempleOS
+19:06:15 <cn3m[m]> wsl2 should iirc
+19:06:26 <strcat> but wsl2 is just a vm
+19:06:30 <strcat> so it has all the problems of the distro
+19:06:37 <cn3m[m]> true
+19:08:09 <anupritaisno1[m]> Everything is okay there
+19:08:21 <anupritaisno1[m]> <strcat "2) they shouldn't have totally b"> Just use arch Linux
+19:08:45 <madaidan[m]> Imagine how advanced the world would be if everyone were strcat clones
+19:08:58 <anupritaisno1[m]> No
+19:09:39 <madaidan[m]> Yes
+19:10:32 <dazinism> <madaidan[m] "Danny@WorkOrderPro: btw I've hea"> I know what it probably is.. its the Milkman
+19:10:54 <BrokenCog> what is the [m] indicate on user nicks?
+19:11:50 <dazinism> They dont like Daniel and they are vicious, I've seen folks on Techlore quoting from MMJDs vicious attacks
+19:12:02 <madaidan[m]> <dazinism "I know what it probably is.. its"> I hate that guy
+19:12:12 <dazinism> BrokenCog: people bridged from matrix
+19:12:17 <BrokenCog> ahh.
+19:13:02 <cn3m[m]> <madaidan[m] "Imagine how advanced the world w"> I dream of this
+19:13:23 <madaidan[m]> <dazinism "They dont like Daniel and they a"> One of the Techlore mods is also a mod of MMJD's cybersecurity overview room.
+19:13:26 <anupritaisno1[m]> Imagine if everyone was Daniel
+19:13:43 <anupritaisno1[m]> Linux would be hardened
+19:13:45 <madaidan[m]> <BrokenCog "what is the [m] indicate on user"> Matrix users
+19:14:16 <anupritaisno1[m]> You wouldn't be able to hack into your friend's PC and steal their porn /s
+19:14:20 <madaidan[m]> <anupritaisno1[m] "Imagine if everyone was Daniel"> It would be paradise
+19:15:14 <dazinism> Not against Daniel but I know MMJD holds endless grudges and likes to have totally unbelievable exaggerated extended rants where he makes stuff up character assassinating people
+19:15:33 <anupritaisno1[m]> <madaidan[m] "It would be paradise"> *trouble in paradise
+19:15:49 <madaidan[m]> <dazinism "Not against Daniel but I know MM"> **X** e
+19:16:00 <dazinism> He banned me from all his rooms ages ago because I called him out on one of his  untrue character assassinations
+19:16:04 <dazinism> I wasnt sad to not have to read his shit anymore
+19:16:32 <anupritaisno1[m]> Well it's matrix
+19:16:38 <anupritaisno1[m]> Destroy him with 10k alts
+19:16:45 <dazinism> lol
+19:16:50 <strcat> dazinism: this stuff is causing immense harm
+19:16:58 <strcat> james primarily but also people like that milkman guy
+19:17:24 <anupritaisno1[m]> I mean what's stopping you?
+19:17:30 <madaidan[m]> <anupritaisno1[m] "Destroy him with 10k alts"> Internet vigilante brigaders
+19:17:53 <anupritaisno1[m]> <madaidan[m] "Internet vigilante brigaders"> No
+19:17:55 <anupritaisno1[m]> Just for laughs
+19:18:13 <mxnorvak[m]> https://signal.org/blog/signal-pins/
+19:18:50 <mxnorvak[m]> Finally
+19:18:58 <anupritaisno1[m]> <strcat "james primarily but also people "> BTW what's going on
+19:19:01 <anupritaisno1[m]> Like you were expecting a unique person but it was just me, dazinism
+19:19:03 * madaidan[m] uploaded an image: image(4).png (38KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/uXAAiPefFcFUoDIXYGvQyZEl >
+19:19:10 <cx2[m]> When using `curl`, how do I know that I am downloading the Beta Channel? The address is the exact same unless i am way off
+19:19:44 <strcat> cx2[m]: https://releases.grapheneos.org/sargo-beta
+19:19:46 <strcat> cx2[m]: https://releases.grapheneos.org/sargo-stable
+19:19:57 <strcat> the URL for a given release is the same
+19:20:06 <strcat> the channels refer to releases
+19:20:09 <dazinism> strcat: that stuff sounds like exactly the kind of thing milkman would say. And he's always happy to bring up his grudges and expand on the fantasies of his character assassinations.
+19:20:19 <strcat> it's also what james does
+19:20:57 <strcat> and btw milkman literally destroyed the old matrix channel
+19:21:13 <strcat> because he was pissed I wanted control of it even though he claimed he MADE IT FOR ME
+19:21:20 <strcat> he claimed he was just running it for me
+19:21:26 <strcat> and would turn over control if I ever wanted it
+19:21:28 <strcat> and then when I did
+19:21:33 <strcat> he threw a fit and blew it up
+19:21:34 <anupritaisno1[m]> BTW Daniel
+19:21:55 <anupritaisno1[m]> How are streaming updates verified?
+19:22:08 <strcat> anupritaisno1[m]: by update_engine
+19:22:10 <cn3m[m]> can we have a group for sharing misinformation sources and countering them?
+19:22:17 <strcat> anupritaisno1[m]: same as regular updates
+19:22:21 <cn3m[m]> I would participate, but I never see such things
+19:22:31 <anupritaisno1[m]> Maybe you could just ignore him if that's possible
+19:22:49 <strcat> can't ignore people that are actively spreading misinformation and turning people against the project
+19:23:00 <strcat> running character assassination campaigns specifically targeted at me
+19:23:11 <strcat> it's aggressive harassment
+19:23:18 <anupritaisno1[m]> I was trying to add it to my client and madaidan brought up the concern
+19:23:21 <anupritaisno1[m]> <strcat "because he was pissed I wanted c"> BTW how great is the damage he does?
+19:23:32 <strcat> both of them cause substantial damage
+19:23:43 <strcat> I would say they succeed in wiping out half of the time and energy I have for the project
+19:23:50 <strcat> so 50% of the resources of the only full time dev
+19:23:57 <anupritaisno1[m]> <strcat "anupritaisno1: by update_engine"> But before install or after install?
+19:23:58 <strcat> and they have caused so many people to be pushed away from the project
+19:24:04 <strcat> anupritaisno1[m]: define install
+19:24:16 <madaidan[m]> His group has 3k+ members
+19:24:32 <anupritaisno1[m]> <madaidan[m] "His group has 3k+ members"> Oh boy
+19:24:54 <aeonsolution[m]> <cn3m[m] "can we have a group for sharing "> an enforcable code of conduct would help to alleviate this pressure on project and trying to deplatform the people causing harm
+19:24:56 <strcat> anupritaisno1[m]: streaming updates require leaving out the payload.bin from the update package it downloads
+19:25:00 <strcat> instead it's just metadata
+19:25:04 <strcat> and then it passes it to update_engine
+19:25:08 <strcat> I didn't finish implementing it
+19:25:32 <aeonsolution[m]> getting moderators would also help a lot too
+19:25:36 <strcat> matrix is federated
+19:25:37 <anupritaisno1[m]> <strcat "anupritaisno1: define install"> Writing to the partitions?
+19:25:41 <anupritaisno1[m]> <strcat "both of them cause substantial d"> Any way we can help?
+19:25:49 <strcat> I already got some of his channel aliases removed from matrix.org but not all
+19:26:05 <aeonsolution[m]> right now its only jolly and strcat that do the moderating, i believe
+19:26:09 <anupritaisno1[m]> But tbh madaidan you can only go so far
+19:26:09 <strcat> clearly I need to take much more extreme measures
+19:26:26 <aeonsolution[m]> and it takes too much time from them to deal with the trolls and misinformation
+19:26:36 <madaidan[m]> <anupritaisno1[m] "Any way we can help?"> Debunk the bullshit people spread
+19:26:42 <anupritaisno1[m]> Bullshit spread like wildfire
+19:26:48 <anupritaisno1[m]> <madaidan[m] "Debunk the bullshit people sprea"> Think I already do that
+19:26:50 <strcat> aeonsolution[m]: the problem is not really this channel
+19:26:53 <aeonsolution[m]> <anupritaisno1[m] "Bullshit spread like wildfire"> basically
+19:27:05 <strcat> it's people spreading misinformation elsewhere specifically 2 people with huge spiteful grudges
+19:27:20 <strcat> and other people they have converted to their side to help spread character assassination nonsense
+19:27:27 <strcat> and misinformation / fraudulent claims
+19:27:30 <cn3m[m]> how do we find this bullshit?
+19:27:33 <strcat> people just repeat this unsourced info
+19:27:43 <strcat> cn3m[m]: by actively joining tons of communities and watching for it
+19:27:52 <strcat> cn3m[m]: we know it is happening in certain communities already
+19:27:53 <dazinism> Was really sad to see Millman build his empire of BS and vicious authoritarianism on matrix. I watched him join matrix and squat/make loads of matrix.org rooms for loads of popular OS projects and tech subjects.
+19:28:16 <strcat> James has been in the Samourai Wallet community for 2+ years and has used it as a platform to spread fraudulent claims and character assassination about me
+19:28:30 <strcat> misinformation about me, GrapheneOS, etc. designed to scam people out of money through the business he hijacked
+19:28:57 <cn3m[m]> does anyone have a list? I am very active on /r/privacytoolsio and I have had nothing but support for GrapheneOS
+19:29:26 <strcat> cn3m[m]: samourai wallet community is the main one we are aware of where James is very active there engaging in his own brand of information warfare on the project
+19:29:41 <strcat> spreading misinformation, giving people gifts, flattering them
+19:29:43 <cn3m[m]> Ah I'll check that out thanks
+19:29:45 <madaidan[m]> Samourai bans anyone debunking that shit :(
+19:29:58 <strcat> cn3m[m]: they have 2 telegram channels where he's very active spreading misinformation
+19:30:19 <strcat> and the people in that community are supporting him and helping him harm GrapheneOS and myself
+19:30:26 <strcat> and actively participating
+19:30:50 <anupritaisno1[m]> strcat would you like if I try to implement streaming OTAs in the updater?
+19:31:05 <cn3m[m]> thanks strcat
+19:31:05 <strcat> cn3m[m]: and then there is this techlore community which originally seemed to support the project, but he got upset and now apparently they are doing spiteful things like spreading misinformation
+19:31:09 <strcat> don't quite understand what happened with that
+19:31:23 <strcat> anupritaisno1[m]: also need a script to generate the update packages for them
+19:31:27 <strcat> anupritaisno1[m]: you can try working on it
+19:31:52 <strcat> anupritaisno1[m]: I have initial support for it already - it downloads the entire existing update zip (including payload) and then does a streaming update
+19:31:55 <strcat> so it downloads payload 2x
+19:32:06 <strcat> anupritaisno1[m]: so what it needs is a separate slim update package without the payload.bin included
+19:32:11 <strcat> anupritaisno1[m]: also haven't tested it for a long time
+19:32:20 <strcat> anupritaisno1[m]: cdesai ran into some problems with CAs with it
+19:32:23 <strcat> didn't work with Let's Encrypt
+19:32:26 <strcat> don't know what that was about
+19:32:38 <anupritaisno1[m]> They can switch sides in the blink of an eye where the cash is
+19:33:07 <anupritaisno1[m]> BTW I have some code and a metadata generator
+19:33:30 <anupritaisno1[m]> Though it's not the best code I can send some of it to you privately
+19:33:34 <anupritaisno1[m]> Techlore is just a YouTuber
+19:33:36 <strcat> maybe issue is it doesn't trust cross-signed CAs
+19:33:54 <anupritaisno1[m]> <strcat "anupritaisno1: also need a scrip"> I already have some very broken code
+19:34:02 <cn3m[m]> Techlore banned madaidan and cyredanthem which are strongly in our camp
+19:34:03 <strcat> anupritaisno1[m]: Updater has support for it
+19:34:11 <strcat> cn3m[m]: techlore did or his mods did?
+19:35:05 <madaidan[m]> <strcat "cn3m: they have 2 telegram chann"> https://t.me/samouraiwallet and https://t.me/samouraifunny
+19:35:30 <anupritaisno1[m]> <strcat "maybe issue is it doesn't trust "> What about self-signed?
+19:35:38 <anupritaisno1[m]> Madaidan was an admin
+19:35:45 <strcat> anupritaisno1[m]: it needs to be a valid Web PKI cert
+19:35:55 <strcat> I just think there is some stricter check maybe it doesn't trust cross-signed CAs
+19:35:59 <anupritaisno1[m]> On telegram only the admin who promotes you and the owner can ban you
+19:35:59 <cn3m[m]> not entirely sure
+19:36:01 <strcat> which Let's Encrypt still is with the default cert chain
+19:36:07 <madaidan[m]> <strcat "cn3m: techlore did or his mods d"> Techlore himself wanted me gone from his entire community
+19:36:12 <cn3m[m]> not entirely sure
+19:36:21 <cyredanthem[m]> Hey he banned me I think since he was the only mod on
+19:36:24 <cyredanthem[m]> I hadn't talked in a while
+19:36:35 <madaidan[m]> <anupritaisno1[m] "Madaidan was an admin"> I got demoted a while before that for more bullshit reasons
+19:37:18 <cdesai> anupritaisno1[m]: strcat by default update engine only trusts certs_google instead of all certs, so you need a cert with a common root with Google which lets encrypt doesn't have anymore
+19:37:26 <cdesai> But it's a one line change
+19:37:43 <cdesai> grep -r cacerts_google system/update_engine
+19:38:14 * anupritaisno1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/pqARswooqNOmyVpCNOQVuCqK >
+19:38:23 <anupritaisno1[m]> Yeah got it
+19:38:35 <strcat> DannyWorkOrderPr: which channel is this happening in btw
+19:38:38 <dazinism> <madaidan[m] "Samourai bans anyone debunking t"> Milkman bans anyone who questions him. Is anyone in his big cybersecurity room? (actually it someone called fractal who is admin, but gave him all power over that room)
+19:38:53 <anupritaisno1[m]> strcat that is what I'm doing
+19:39:08 <anupritaisno1[m]> Just generate all metadata beforehand and then parse in the app
+19:39:18 <anupritaisno1[m]> But I'm not shipping this yet
+19:39:38 <anupritaisno1[m]> Notice how I don't close any input stream, causing memory leaks
+19:39:38 <anupritaisno1[m]> Also I am lost at how to validate the output
+19:39:52 <madaidan[m]> <dazinism "Milkman bans anyone who question"> I'm in it.
+19:40:59 <strcat> cyredanthem[m]: where were you banned from?
+19:42:09 <strcat> anupritaisno1[m]: https://github.com/GrapheneOS/platform_packages_apps_Updater/blob/10/src/app/seamlessupdate/client/Service.java#L96
+19:42:17 <strcat> this is the existing code for streaming updates
+19:42:27 <strcat> anupritaisno1[m]: it already works if you fix the CA issue
+19:42:34 <anupritaisno1[m]> BTW sorry about that spam
+19:42:37 <anupritaisno1[m]> Will use github gist next time
+19:42:39 <strcat> anupritaisno1[m]: but 'works' means it downloads the payload 2x since the payload is in the zip file
+19:42:55 <strcat> so this needs to have a new name for the streaming update zip
+19:43:01 <strcat> and need that to get generated
+19:43:13 <strcat> it can get the payload from the old style zip
+19:43:13 <anupritaisno1[m]> I have very similar behavior on the lineageos client that I was working on
+19:43:16 <strcat> that's fine - it works already
+19:43:30 <strcat> anupritaisno1[m]: they used an early revision of my code
+19:43:32 <strcat> btw
+19:43:35 <anupritaisno1[m]> But now I have the impression that lineage's is beyond repair
+19:43:36 <strcat> ~50 lines of it
+19:43:37 <anupritaisno1[m]> <strcat "anupritaisno1: but 'works' means"> Yeah that's what I mean to fix
+19:43:55 <strcat>             Log.d(TAG, "streaming update test");
+19:43:57 <strcat>             final SharedPreferences preferences = Settings.getPreferences(this);
+19:43:59 <strcat>             final String downloadFile = preferences.getString(PREFERENCE_DOWNLOAD_FILE, null);
+19:44:01 <strcat>             engine.applyPayload(getString(R.string.url) + downloadFile, payloadOffset, 0, headerKeyValuePairs);
+19:44:02 <anupritaisno1[m]> Basically lineage treats A/B updates like A-only until the application part
+19:44:03 <strcat> anupritaisno1[m]: this part is correct already
+19:44:05 <strcat> anupritaisno1[m]: it makes sense for that to use the old style zip
+19:44:17 <cdesai> Does that recovery update sample handle streaming?
+19:44:47 <strcat> cdesai: well Updater has streaming update support already it's just hidden behind a property + not useful due to not dling a lightweight metadata zip
+19:45:13 <strcat> basically all that's needed is fixing the CA issue + downloading a lightweight metadata zip and it'll work
+19:45:16 <anupritaisno1[m]> Yes but that also means they trigger recoverysystem..verifypackage() for A/B which is an unnecessary check
+19:45:17 <strcat> and then later remove the property check
+19:45:34 <strcat> anupritaisno1[m]: it is not entirely unnecessary
+19:45:34 <cdesai> Yeah it does work well, especially with deltas where the download penalty isn't that high
+19:45:51 <dazinism> If anyone has been in their for a while, bet if you do a search for GrapheneOS you'll find some vicious Milkman rants against GrapheneOS / Daniel
+19:46:28 <strcat> dazinism: someone actually handed control of something to milkman?
+19:46:34 <anupritaisno1[m]> <strcat "basically all that's needed is f"> I'll try this approach out, thanks
+19:46:47 <strcat> anupritaisno1[m]: if you are already using Updater just fix the CA issue cdesai  mentioned
+19:46:50 <anupritaisno1[m]> So strcat I use that java to generate my metadata and then ship it into a signed metadata zip the updater can verify?
+19:46:54 <strcat> and try setting sys.update.streaming_test to true
+19:47:15 <strcat> anupritaisno1[m]: this is the Updater code
+19:47:19 <strcat> I am not sure what you mean
+19:47:36 <anupritaisno1[m]> No but I plan to soon
+19:47:57 <strcat> anupritaisno1[m]: first use Updater using the standard generate_metadata.py + this Updater client app
+19:48:03 <strcat> it doesn't require anything more than a static web server
+19:48:11 <dazinism> Need to have been in the room to search
+19:48:13 <anupritaisno1[m]> I meant signing a metadata zip with the releasekey and letting updater verify it
+19:48:13 <anupritaisno1[m]> Then extracting that zip to get the metadata
+19:48:34 <strcat> anupritaisno1[m]: the standard zip is already the right thing other than including payload.bin
+19:48:38 <strcat> just need to omit payload.bin
+19:48:44 <strcat> generate a 2nd update zip with no payload.bin
+19:48:56 <strcat> anupritaisno1[m]: the script to do this is the ota_from_target_files script
+19:49:03 <strcat> it needs to generate a 2nd zip with no payload.bin
+19:49:06 <strcat> it's pretty simple
+19:49:10 <anupritaisno1[m]> <strcat "generate a 2nd update zip with n"> Yes exactly what I meant
+19:49:17 <strcat> and then when doing a streaming update, this code needs to use the lightweight zip
+19:49:19 <strcat> instead of the full zip
+19:49:25 <strcat> for the initial download
+19:49:47 <strcat> https://github.com/GrapheneOS/platform_packages_apps_Updater/blob/10/src/app/seamlessupdate/client/Service.java#L256
+19:49:52 <madaidan[m]> <strcat "cyredanthem: where were you bann"> He was banned from the Techlore room
+19:49:56 <strcat> anupritaisno1[m]: it needs to check if it's in streaming mode here
+19:49:57 <anupritaisno1[m]> <strcat "and then when doing a streaming "> I will try to implement this
+19:49:59 <dazinism> <strcat "dazinism: someone actually hande"> The bit I had trouble parsing is when I asked them why they left it with Milkman they said that lots of people speak highly of him and like his mod style?!?
+19:50:10 <strcat> anupritaisno1[m]: and if it's in streaming mode
+19:50:15 <strcat> anupritaisno1[m]: dl the lightweight zip instead
+19:50:25 <strcat> https://github.com/GrapheneOS/platform_packages_apps_Updater/blob/10/src/app/seamlessupdate/client/Service.java#L100
+19:50:27 <strcat> this is already right
+19:50:39 <strcat> anupritaisno1[m]: so basically existing zip is signed zip with metadata + payload.bin
+19:50:48 <anupritaisno1[m]> Yeah got it
+19:50:50 <anupritaisno1[m]> Thanks
+19:50:57 <strcat> anupritaisno1[m]: payload.bin is stored uncompressed in the zip and it can be downloaded using the offset like this
+19:51:08 <strcat> anupritaisno1[m]: so no need to have a separate payload.bin
+19:51:38 <strcat> cdesai: do you have a link to the update_engine CA issue
+19:51:40 <anupritaisno1[m]> Already read the docs and see the java code up
+19:51:48 <anupritaisno1[m]> It is already calculating a zip offset
+19:52:23 <aeonsolution[m]> hey strcat is there a place in android-prepare-vendor I can help contribute with, how far back did you revert? Do you have a commit I can start from to work on my side.
+19:52:41 <anupritaisno1[m]> <aeonsolution[m] "hey strcat is there a place in a"> Yes
+19:52:42 <cdesai> strcat: just change cacerts_google to cacerts in update_engine, it's a constant.
+19:52:51 <anupritaisno1[m]> Figure out what's wrong with dexopt for vendor apps
+19:52:57 <cdesai> I didn't change it yet because I wasn't sure if we'd want to limit it to a subset too
+19:53:17 <aeonsolution[m]> let me look, thanks anupritaisno1:
+19:54:14 <anupritaisno1[m]> <anupritaisno1[m] "Figure out what's wrong with dex"> Also strcat I reproduced this issue on a oneplus 3
+19:54:39 <aeonsolution[m]>  * let me look, thanks anupritaisno1
+19:54:49 <cdesai> aeonsolution[m]: you can also check #AOSPAlliance logs, I was talking with renlord about how to remove what's in aosp already from vendor
+19:54:54 <anupritaisno1[m]> Dexpreopting lineage parts with speed caused system UI to repeatedly crash on a oneplus 3
+19:54:57 <strcat> anupritaisno1[m]: the one with android-prepare-vendor needing LOCAL_PREOPT := false?
+19:55:11 <anupritaisno1[m]> Looking at logs exactly the same issue you had with the vendor apps
+19:55:16 <anupritaisno1[m]> I couldn't fix it btw
+19:55:23 <anupritaisno1[m]> I just disabled dexpreopt for that component as it seems lineage had disabled it until android 7 came out
+19:55:27 <anupritaisno1[m]> And idk why it doesn't crash on anything newer than that
+19:55:31 <anupritaisno1[m]> Yep
+19:55:50 <anupritaisno1[m]> It happened in 2 places on 2 legacy devices
+19:55:59 <anupritaisno1[m]> But nothing on current gen ones
+19:56:22 <anupritaisno1[m]> On the oneplus 2 same component when dexopted broke a small tri state slider that's standard on all oneplus phones
+19:56:30 <strcat> I don't know if it's still an issue
+19:56:31 <aeonsolution[m]> thanks
+19:56:35 <strcat> I think aeonsolution[m] ran into it
+19:56:43 <strcat> because atm in the dev branch
+19:56:44 <anupritaisno1[m]> But since the issue was only apparent on the oneplus 3 crashing
+19:56:48 <strcat> I didn't reapply the LOCAL_PREOPT := false change
+19:57:03 <anupritaisno1[m]> I never noticed it happen on the oneplus 2 until I had fixed it on the oneplus 3
+19:57:06 <strcat> when I switched to the aosp alliance android-prepare-vendor I forgot to add it back
+19:57:11 <strcat> and it seemed to work fine without it now
+19:57:12 <aeonsolution[m]> <cdesai "aeonsolution: you can also check"> let me check that out and with dexopt like anupritaisno1 mentioned
+19:57:15 <strcat> lemme try a factory reset
+19:57:34 <anupritaisno1[m]> Well if anything
+19:57:41 <anupritaisno1[m]> Wiping dalvik seems to alleviate the issue
+19:57:42 <anupritaisno1[m]> But
+19:57:54 <strcat> ah yeah
+19:57:57 <strcat> factory reset caused it
+19:57:59 <strcat> makes sense
+19:58:00 <anupritaisno1[m]> Not a solution
+19:58:20 <strcat> I'll add back my workaround
+19:58:26 <strcat> it's a serious issue and needs to be resolved ASAP
+19:58:47 <anupritaisno1[m]> The issue can come back to the oneplus 3, just a matter of time before it does
+19:59:21 <anupritaisno1[m]> Yeah
+20:00:26 <anupritaisno1[m]> Let me know if you do
+20:00:35 <anupritaisno1[m]> I couldn't figure it out at all
+20:00:36 <cdesai> Lineage has better handling of vendor these days
+20:00:47 <cdesai> The extraction scripts are in vendor/lineage
+20:00:56 <anupritaisno1[m]> Also something more strange
+20:01:34 * anupritaisno1[m] uploaded an image: Screenshot_20200521-013109_Solid_Explorer.png (64KB) < https://matrix.org/_matrix/media/r0/download/m.apex.to/zJbhkkFQdAYWWgSkCbEwketf >
+20:01:35 <anupritaisno1[m]> You see that?
+20:01:45 <anupritaisno1[m]> strcat wonder where the odex go?
+20:02:10 * anupritaisno1[m] uploaded an image: Screenshot_20200521-013150_Solid_Explorer.png (54KB) < https://matrix.org/_matrix/media/r0/download/m.apex.to/CGlHrecWPraosedbbvSdKWTG >
+20:02:20 <anupritaisno1[m]> Wow what the hell happened there
+20:02:33 <anupritaisno1[m]> This seems to be some kind of an issue that only happens on the product partition
+20:02:39 <anupritaisno1[m]> I don't see this happen on system or vendor
+20:03:36 <strcat> anupritaisno1[m]: nah not tied to that
+20:03:44 <strcat> it just happens that on your device qcril stuff is there
+20:03:51 <strcat> on Pixel 3a it's on system
+20:04:03 <strcat> on Pixel 4 I think it moved
+20:04:22 <anupritaisno1[m]> Let's hope google fixes that on R
+20:04:42 <anupritaisno1[m]> Also strcat what if we set dexopt to nostripping instead?
+20:04:59 <anupritaisno1[m]> Sm8150, same CPU as p4
+20:05:06 <strcat> anupritaisno1[m]: might work around it by having it fall back to another method
+20:05:08 <strcat> but it's not a fix
+20:05:15 <strcat> and it's only for these prebuilt vendor files
+20:05:18 <strcat> I don't know what the problem is
+20:05:22 <strcat> it's a serious issue that needs to be fixed
+20:05:27 <anupritaisno1[m]> Try the nostripping maybe?
+20:05:31 <strcat> among others
+20:05:35 <strcat> anupritaisno1[m]: that would be a workaround not a fix
+20:05:49 <strcat> I'd rather not dexpreopt these if it's broken
+20:05:58 <strcat> added back my workaround to the new android-prepare-vendor
+20:06:05 <aeonsolution[m]> I can test any changes for the Pixel 3a, just let me know. I'm still looking around trying to figure out the dex stuff
+20:06:21 <anupritaisno1[m]> <strcat "it's a serious issue that needs "> You've said that thrice now we get it
+20:07:04 <strcat> aeonsolution[m]: I worked around it already
+20:07:06 * cx2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/RVYKoGMXTivIjStoNNLDZPOF >
+20:07:09 <strcat> aeonsolution[m]: it's NOT fixed - just worked around again
+20:07:23 <strcat> cx2[m]: that's normal/expected
+20:07:48 <strcat> fastboot checks for stuff to flash that isn't there for that kind of device
+20:08:09 * anupritaisno1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/KxrgUFGsgTspBxFVgXJNtASS >
+20:09:15 <anupritaisno1[m]> Assume attacker somehow manages to compromise the recovery
+20:09:33 <strcat[m]> it's not a major issue at all
+20:09:45 <cx2[m]> GOT IT! Ok great then up and running.
+20:09:45 <cx2[m]> Now, can I reflash my other handsets to the beta channel so that while I am sitting in COVID-19 hell, i can run CTS on all of them
+20:09:49 <anupritaisno1[m]> <strcat "fastboot checks for stuff to fla"> BTW how much of a risk is fastbootd?
+20:09:52 <strcat[m]> anupritaisno1:  if they 'somehow manage to compromise the recovery' it's not relevant anymore
+20:10:23 <strcat[m]> it's some extra recovery attack surface and hardly any at that
+20:10:37 <strcat[m]> it's not a substantial difference from how it was before
+20:10:38 <strcat[m]> recovery is less privileged than the bootloader fastboot mode
+20:10:48 <strcat[m]> it reduces the privileges from what they were before
+20:10:53 <strcat[m]> recovery can't flash the AVB key or unlock
+20:10:54 <anupritaisno1[m]> Alright I guess
+20:10:58 <anupritaisno1[m]> So secure boot still protects?
+20:11:19 <strcat[m]> yes recovery can't unlock, it's better that this code is in recovery than fastboot mode in terms of attack surface
+20:11:34 <strcat[m]> recovery can't flash avb key / unlock since it's just root
+20:11:51 <strcat[m]> also you can't flash images when locked anyway
+20:12:01 <strcat[m]> so it barely adds attack surface
+20:12:09 <anupritaisno1[m]> But it can flash
+20:12:21 <anupritaisno1[m]> I just have concern about the
+20:12:40 <strcat[m]> anupritaisno1: it doesn't allow flashing when locked and the attack surface is better in recovery than fastboot mode
+20:12:42 <anupritaisno1[m]> Firmware partitions that are just FAT and never avb checked
+20:12:48 <strcat[m]> because fastboot mode has much more privileges than root
+20:12:51 <anupritaisno1[m]> Or is that a completely meaningless concern?
+20:12:58 <strcat[m]> anupritaisno1: which partitions?
+20:13:05 <strcat[m]> firmware is supposed to be verified by verified boot
+20:13:22 <strcat[m]> there is a /persist partition with some data but the worst that can happen is basically bricking the device / functionality it has
+20:13:30 <anupritaisno1[m]> <strcat[m] "anupritaisno1: it doesn't allow "> During development I use builds that allow flashing for now even when locked
+20:13:31 <strcat[m]> like wiping the encrypted TEE attestation keys that are there
+20:14:05 <strcat[m]> anupritaisno1: I am talking about production - flashing is not allowed when locked, only sideloading a signed OTA update
+20:14:28 <strcat[m]> and verified boot (at least on devices properly implementing it) verifies the OS via the AVB key that's flashed onto the device
+20:14:31 <strcat[m]> and does rollback protection
+20:14:41 <anupritaisno1[m]> <strcat[m] "like wiping the encrypted TEE at"> Pixel stores those there?
+20:14:45 <strcat[m]> that's a separate thing from the keymaster integration for verified boot state / OS version
+20:14:56 <strcat[m]> anupritaisno1: yes they are encrypted with a key only available to TEE
+20:14:58 <anupritaisno1[m]> <strcat[m] "and verified boot (at least on d"> Yeah that too is a big problem
+20:14:59 <strcat[m]> and stored in /persist
+20:15:14 <strcat[m]> that's for the TEE attestation - StrongBox has those attestation keys internally
+20:15:37 <strcat[m]> the TEE doesn't have internal storage, instead it has provisioned keys in /persist that are encrypted and then the data it stores via the OS in userdata
+20:15:39 <anupritaisno1[m]> What about Qualcomm's fancy wrappedkey FBE?
+20:15:45 <strcat[m]> it encrypts the data and then stores it in the OS
+20:15:58 <strcat[m]> anupritaisno1: what about it?
+20:16:11 <anupritaisno1[m]> <strcat[m] "anupritaisno1: what about it?"> Is it any different?
+20:16:22 <strcat[m]> that's a different thing
+20:16:27 <strcat[m]> unrelated to verified boot
+20:16:37 <anupritaisno1[m]> Okay so it still goes to persist?
+20:16:45 <strcat[m]> uh I'm confused now
+20:16:52 <strcat[m]> I never said anything is stored in persist at runtime
+20:16:57 <strcat[m]> what keys do you think I'm talking about
+20:17:10 <strcat[m]> I think you misunderstand what I said - I didn't say what you think I did
+20:17:18 <anupritaisno1[m]> So pixel doesn't have a couple of vfat partitions for modem and bt-firmware unlike most others?
+20:17:20 <anupritaisno1[m]> <strcat[m] "what keys do you think I'm talki"> Encryption keys?
+20:17:23 <strcat[m]> encryption keys are never stored unencrypted and they have nothing to do with /persist
+20:17:28 <strcat[m]> I never said anything about encryption keys
+20:17:32 <strcat[m]> that's a different topic
+20:17:33 <anupritaisno1[m]> On okay
+20:17:46 <anupritaisno1[m]> Sorry got you
+20:17:54 <strcat[m]> I said that the TEE attestation keys (NOT encryption keys or anything to do with disk encryption) are provisioned into /persist
+20:18:02 <strcat[m]> and they are encrypted with a key only available to the TEE
+20:18:05 <strcat[m]> the TEE hardware-bound key
+20:18:16 <strcat[m]> in fact the TEE firmware can't access that key
+20:18:21 <strcat[m]> it's only available to the hardware
+20:18:31 <strcat[m]> the TEE can only use the key
+20:18:40 <strcat[m]> so the way the TEE gets the attestation keys is it decrypts them from /persist
+20:18:41 <anupritaisno1[m]> Ah makes sense
+20:18:49 <anupritaisno1[m]> Also what about the vfat partitions?
+20:18:54 <strcat[m]> anupritaisno1: the TEE-based keystore stores the keys in the OS via an OS daemon
+20:18:58 <strcat[m]> it encrypts the data
+20:19:01 <strcat[m]> then stores it in the OS
+20:19:04 <strcat[m]> that's how the TEE stores data
+20:19:14 <anupritaisno1[m]> Okay interesting
+20:19:17 <strcat[m]> the newer StrongBox keystore is an HSM with internal secure storage
+20:19:28 <strcat[m]> it works differently and provides a higher level of security / isolation from the OS
+20:19:36 <strcat[m]> it is a separate SoC with secure storage + secure timer
+20:19:43 <strcat[m]> tamper resistant / evident
+20:19:53 <strcat[m]> i.e. the Titan M
+20:19:59 <strcat[m]> which provides the StrongBox keystore on Pixels
+20:20:12 <strcat[m]> Samsung's new generation Qualcomm phones use the Qualcomm SPU to provide StrongBox keystore
+20:20:30 <strcat[m]> it's similar but probably doesn't have insider attack protection like the Pixel's Titan M - dunno
+20:20:36 <anupritaisno1[m]> Wonder when this will be mainstream
+20:20:48 <strcat[m]> anupritaisno1: dunno which vfat partitions you mean
+20:20:49 <strcat[m]> but in general
+20:21:01 <strcat[m]> firmware is all supposed to be verified other than some small state partitions for provisioned state
+20:21:06 <strcat[m]> and those are not supposed to be trusted
+20:21:26 <anupritaisno1[m]> <strcat[m] "anupritaisno1: dunno which vfat "> Most Qualcomm devices have 3 partitions that are never avb backed
+20:21:32 <strcat[m]> and they should generally be made read-only after provisioning the device
+20:21:41 <strcat[m]> anupritaisno1: AVB is for verifying the OS not firmware
+20:21:45 <anupritaisno1[m]> A modem firmware partition, a bt-firmware partition and a dsp partition
+20:21:50 <strcat[m]> anupritaisno1: Qualcomm Secure Boot verifies firmware
+20:22:00 <strcat[m]> anupritaisno1: there are more partitions than those
+20:22:08 <strcat[m]> there are a dozen firmware partitions
+20:22:22 <strcat[m]> anupritaisno1: AVB is how the final boot stage before the OS verifies the OS and then how the OS verifies itself
+20:22:23 <anupritaisno1[m]> Yeah but pixel 4 doesn't flash any from what I see?
+20:22:32 <strcat[m]> anupritaisno1: don't know what you mean by that
+20:22:48 <anupritaisno1[m]> <strcat[m] "anupritaisno1: don't know what y"> Those files are not in the factory images from what I see
+20:22:56 <strcat[m]> anupritaisno1: Qualcomm Secure Boot is what verifies earlier boot stages
+20:23:06 <anupritaisno1[m]> Okay
+20:23:07 <strcat[m]> that is how the firmware partitions are verified
+20:23:15 <strcat[m]> then AVB verifies the OS
+20:23:33 <strcat[m]> anupritaisno1: Pixel factory images generally have all these partitions bundled into a bootloader.img and radio.img
+20:23:55 <strcat[m]> those are not partitions
+20:24:02 <strcat[m]> you can extract them
+20:24:16 <strcat[m]> they are just an archive format for bundling a bunch of signed images
+20:24:28 <strcat[m]> rather than having 12 different loose firmware images
+20:24:33 <strcat[m]> since the version is supposed to match across them and it'd be a bad idea to flash them individually
+20:24:42 <strcat[m]> so they are flashed together
+20:25:05 <strcat[m]> now that there are A/B updates it's less serious but it would have been super easy to brick devices without having them bundled into bootloader.img
+20:25:19 <strcat[m]> cause you could brick it by flashing just some of those images
+20:25:25 <strcat[m]> A/B updates largely alleviates this
+20:26:00 <anupritaisno1[m]> BTW how fast is Qualcomm secure boot exactly?
+20:26:16 <anupritaisno1[m]> On my device the modem partition seems to be 200mb in size
+20:29:58 <anupritaisno1[m]> <strcat[m] "anupritaisno1: Pixel factory ima"> Ah that clears it
+20:30:23 <anupritaisno1[m]> Thanks
+20:30:26 <anupritaisno1[m]> BTW does graphene currently flash these partitions through the A/B updater?
+20:30:33 <strcat[m]> anupritaisno1: well I don't think it blocks booting other stuff
+20:30:38 <strcat[m]> it doesn't really matter how long it takes to bring up the modem
+20:30:42 <strcat[m]> the modem partition is not just the cellular implementation, it's also Wi-Fi, etc.
+20:30:43 <strcat[m]> each thing runs in a sandbox on it
+20:34:07 <strcat[m]> anupritaisno1: yes this is part of the regular updates
+20:34:11 <strcat[m]> anupritaisno1: they have A/B partitions
+20:34:15 <strcat[m]> the regular update system deals with it
+20:34:57 <anupritaisno1[m]> Can non-AB partitions be updated?
+20:35:28 <strcat[m]> abl.img  aop.img  bootloader.img  cmnlib64.img  cmnlib.img  devcfg.img  hyp.img  keymaster.img  modem.img  qupfw.img  radio.img  tz.img  xbl_config.img  xbl.img
+20:35:31 <strcat[m]> anupritaisno1: these are A/B partitions
+20:35:37 <anupritaisno1[m]> While the system is running
+20:35:49 <strcat[m]> everything is an A/B partition
+20:35:49 <anupritaisno1[m]> Yeah
+20:35:57 <strcat[m]> firmware and OS are A/B partitions
+20:35:58 <anupritaisno1[m]> I'm trying to figure this out for my device and
+20:36:15 <anupritaisno1[m]> There's a partition my manufacturer flashes
+20:36:44 <anupritaisno1[m]> That is not an A/B partition
+20:36:54 <anupritaisno1[m]> I don't know how stock flashes it
+20:36:54 <strcat[m]> if there is a non-A/B firmware partition, I assume it can be updated while the OS is running, but it's not really supposed to be that way
+20:37:25 <anupritaisno1[m]> But it's not an A/B partition and it somehow gets flashed by the updater is all I know
+20:37:45 <strcat[m]> look at gpt-utils
+20:37:46 <strcat[m]> qualcomm thing
+20:37:58 <anupritaisno1[m]> Static_nvbk is the name
+20:38:11 <strcat[m]> https://android.googlesource.com/device/google/coral/+/refs/tags/android-10.0.0_r36/gpt-utils/
+20:38:28 <strcat[m]> https://android.googlesource.com/device/google/coral/+/refs/tags/android-10.0.0_r36/gpt-utils/gpt-utils.h#40
+20:38:46 * strcat[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/SIUckcVsjYBgsgcDPQBMwFqu >
+20:39:31 <anupritaisno1[m]> Qupfw is non A/B here
+20:39:37 <anupritaisno1[m]> And is never flashed by the updater
+20:39:55 <anupritaisno1[m]> Idk what uefisecapp is
+20:41:32 <anupritaisno1[m]> strcat (@strcat:matrix.org): thanks for being patient and answering all questions I had
+20:41:41 <anupritaisno1[m]> Really appreciate the effort
+20:42:25 <aeonsolution[m]> i ran `adb shell dumpsys` and saw this for qcrilmsg:
+20:42:25 <aeonsolution[m]> Message 21: { when=+4s138ms what=12 obj=ProcessRecord{1674aaf 0:com.qualcomm.qcrilmsgtunnel/1001} target=com.android.server.am.ActivityManagerService$MainHandler }
+20:43:09 <anupritaisno1[m]> > <@aeonsolution:matrix.org> i ran `adb shell dumpsys` and saw this for qcrilmsg:
+20:43:09 <anupritaisno1[m]> > Message 21: { when=+4s138ms what=12 obj=ProcessRecord{1674aaf 0:com.qualcomm.qcrilmsgtunnel/1001} target=com.android.server.am.ActivityManagerService$MainHandler }
+20:43:09 <anupritaisno1[m]> Ignore that's just some verbose logging
+20:43:20 <anupritaisno1[m]> Also that screenshot is not from a pixel
+20:43:27 <anupritaisno1[m]> So don't try to look for it on a pixel
+20:43:49 <aeonsolution[m]> kk
+21:46:19 <anupritaisno1[m]> strcat can you upgrade the chromium base to 83?
+21:46:20 <anupritaisno1[m]> 83 fixes the weird browser crash issue I had
+21:47:47 <cn3m[m]> funny I get crashes in 83 on Bromite, but not Vanadium 81
+21:48:22 <strcat> anupritaisno1[m]: we track the stable releases
+21:48:33 <strcat> looks like 83 is now stable
+21:48:45 <strcat> people are welcome to help migrate
+21:48:47 <strcat> it's a lot of work
+21:50:05 * anupritaisno1[m] uploaded an image: Screenshot_20200521-031339_Browser.png (487KB) < https://matrix.org/_matrix/media/r0/download/m.apex.to/hFQmcEcHkScaxheggupHvgmr >
+21:50:18 <anupritaisno1[m]> On bromite with 83 base the page is usable
+21:50:23 * anupritaisno1[m] uploaded an image: Screenshot_20200521-031408_Browser.png (322KB) < https://matrix.org/_matrix/media/r0/download/m.apex.to/RjRMQMCflgzwmZQZiewTbuSj >
+21:50:26 <anupritaisno1[m]> On vanadium, the latest 81 the browser freezes
+21:50:37 <strcat> we migrate to each new stable release
+21:50:40 <strcat> you're welcome to help
+21:50:53 <strcat> I don't have time to do everything myself
+21:51:06 <strcat> unfortunately I've been doing most of the Vanadium ports by myself
+21:53:12 <aeonsolution[m]> anupritaisno1: I can help you out!
+21:59:16 <anupritaisno1[m]> Will see what I can do strcat
+21:59:38 <anupritaisno1[m]> I don't have enough resources to do a full chromium build at least right now
+22:36:36 <aeonsolution[m]> i can build chromium i think, let me check. is it more than building vanadium?
+22:40:10 <strcat> need to sync the new code, rebase onto it
+22:40:13 <strcat> build and make sure it works
+22:40:14 <strcat> fix any problems
+22:40:18 <strcat> it's a LOT of work to do regularly
+22:43:28 <aeonsolution[m]> maybe i can just focus on learning to do that for vanadium, and for the 10 branch, i can just build the os and test if it works for the pixel 3a?
+22:43:41 <aeonsolution[m]> does that sound good to you?
+22:44:12 <aeonsolution[m]>  * maybe i can just focus on learning to do that for vanadium, and for the 10 branch, i can just build the os and test if the commited changes work for the pixel 3a?
+23:26:02 <madaidan[m]> Does linux-hardened's ASLR improvements make it as good as PaX's ASLR? I've seen strcat's comparison and it looks like it basically is but I want to be sure.

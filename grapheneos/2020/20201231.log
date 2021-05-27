@@ -1,0 +1,643 @@
+00:00:43 <textmate> Is it possible to have a different password for encryption than the one you use for logging in?
+00:00:50 <textmate> I feel like this is a serious issue
+00:01:34 <textmate> on my laptop I will always use an easy password for logging in, and when entering territory controlled by OPFOR I turn it off to be sure, with my phone this is not the case.
+00:05:37 <louipc> you can use a second profile
+00:05:52 <textmate> wym
+00:05:53 <textmate> ohhh
+00:06:04 <textmate> And then that would have a different password
+00:06:08 <textmate> thats pretty smart ngl
+00:06:26 <louipc> yes you can have multiple profiles
+00:06:38 <textmate> profiles or users
+00:06:45 <louipc> yea
+00:06:49 <textmate> users you mean?
+00:07:19 <louipc> both
+00:07:34 <textmate> whats the difference
+00:08:01 <louipc> https://hub.libranet.de/wiki/and-priv-sec/wiki/user-profiles
+00:08:15 <textmate> ok
+00:09:58 <textmate> Is there maybe some like, widget I can use to switch to a user?
+00:10:30 <louipc> you slide down the top tray
+00:10:41 <louipc> all the way
+00:11:06 <textmate> I know
+00:11:09 <textmate> a widget would be cool though
+00:11:40 <textmate> because
+00:11:47 <textmate> if I will use a different account as my main
+00:11:57 <textmate> I might sometimes forget that I need to switch
+00:15:00 <strcat[m]> set it up so they have a different background etc. then
+00:15:10 <textmate> HM yeah
+01:12:48 <narcoli[m]> hey guys I installed a new os ubuntu
+01:13:12 <narcoli[m]> I follow the steps but I get "waiting for any device"
+01:13:31 <narcoli[m]> I dl the sdk up to date fastboot
+01:14:09 <narcoli[m]> what should I do to fix the "waiting for any device "problem thank you
+01:14:21 <TheJollyRoger> Hi narcoli[m].
+01:14:42 <TheJollyRoger> It's likely what's going on is you need to allow it through your udev rules. Give me a second and let me pull up my notes for you.
+01:14:55 <narcoli[m]> my fastboot version is 30.0.5-6877874
+01:15:14 <narcoli[m]> ok thanks TheJollyRoger
+01:15:55 <TheJollyRoger> Great! Ok, so, udev! There are two ways we can go about this: the "sledgehammer" way is to simply run fastboot as root. This is convenient but... I don't like this, so we're going to allow udev through:
+01:16:08 <TheJollyRoger> I want you to run:
+01:16:10 <narcoli[m]> ok
+01:17:13 <TheJollyRoger> cd ~ && wget https://raw.githubusercontent.com/M0Rf30/android-udev-rules/master/51-android.rules && sudo mv 51-android.rules /etc/udev/rules.d/51-android.rules && sudo udevadm control --reload-rules
+01:17:43 <narcoli[m]> i copy the whole line correct?
+01:17:48 <TheJollyRoger> Entire line.
+01:18:17 <narcoli[m]> ok one second Im running ubuntu on laptop bear with me]
+01:18:20 <TheJollyRoger> Sure.
+01:19:39 <TheJollyRoger> Note that this won't produce any output.
+01:19:45 <TheJollyRoger> (or it will produce very little)
+01:20:19 <TheJollyRoger> You may need to reboot afterwards, though.
+01:20:36 <anupritaisno1[m]> TheJollyRoger: CTS results
+01:20:47 <TheJollyRoger> anupritaisno1[m]: sorry, it's not done yet.
+01:20:58 <anupritaisno1[m]> Need an update on those ASAP
+01:21:13 <anupritaisno1[m]> TheJollyRoger: I know just how much is done rn
+01:21:37 <louipc> what you cts-ing
+01:21:39 <TheJollyRoger> 145h:38:19  [XXXXXXXXXXXXX]  running cts on build(s) 'DeviceBuildInfo{bid=6965179, serial=XXXXXXXXXX}'
+01:21:50 <ghost_matrix[m]> narcoli can't wait till this all works for you!
+01:21:50 <ghost_matrix[m]> And you running graphene OS
+01:22:32 <TheJollyRoger> louipc: I ran cts "everything"
+01:22:38 <narcoli[m]> 51-android.rules 100% 22.43k --.-KB/s in 0.006s
+01:22:50 <narcoli[m]> > <@ghost_matrix:matrix.org> narcoli can't wait till this all works for you!
+01:22:50 <narcoli[m]> > And you running graphene OS
+01:22:50 <narcoli[m]> me too
+01:23:10 <TheJollyRoger> narcoli[m]: ok, excellent. You may need to reboot the laptop though, but give it a try now.
+01:23:11 <narcoli[m]> <narcoli[m] "51-android.rules 100% 22.43k --."> this was the last line TheJollyRoger
+01:23:15 <louipc> nice
+01:23:35 <narcoli[m]> <TheJollyRoger "narcoli: ok, excellent. You may "> ok rebooting now
+01:25:42 <TheJollyRoger> anupritaisno1[m] there a way I can send the logs of what I have to you right now?
+01:27:17 <narcoli[m]> so the command I usually type that gives me the "waiting for any device" is:
+01:27:27 <narcoli[m]> sudo fastboot flash unlock
+01:27:37 <TheJollyRoger> Yep?
+01:28:18 <narcoli[m]> 1 sec almost there
+01:29:39 <narcoli[m]> same thing\
+01:29:49 <TheJollyRoger> Oh you were running it as root?
+01:29:53 <narcoli[m]> still says "waiting for any device"
+01:29:54 <TheJollyRoger> Hang on a moment.
+01:29:58 <TheJollyRoger> Is your phone plugged in and on fastboot?
+01:30:05 <narcoli[m]> yes
+01:30:15 <narcoli[m]> device state: locked
+01:31:13 <TheJollyRoger> If it's running as root and fastboot is still not seeing it, that's not a udev permission issue then...
+01:31:28 <narcoli[m]> im not on root
+01:31:37 <narcoli[m]> just regular command line
+01:31:40 <TheJollyRoger> if you're running it with "sudo" you're running it as root.
+01:31:49 <narcoli[m]> ok
+01:33:15 <narcoli[m]> what do I do in this case?
+01:34:25 <TheJollyRoger> I'm going to have to defer to someone more knowledgeable than I; check that the cables are plugged in and snug, the phone should be on fastboot, if this is happening still, I'm not quite sure what's going on.
+01:35:35 <narcoli[m]> alright thanks for your help im going to try and get different cables maybe try that\
+01:35:43 <TheJollyRoger> Good luck man!
+01:35:51 <narcoli[m]> thank you!
+01:51:15 <narcoli[m]> I unlocked it
+01:51:27 <narcoli[m]> changed charger
+01:52:53 <ghost_matrix[m]> Wooooo!!!!! narcoli
+01:53:07 <ghost_matrix[m]> Your USB probs didn't support data transfer
+01:53:17 <narcoli[m]> YES SO HAPPY
+01:53:40 <TheJollyRoger> narcoli[m]: ha, well there's one step down!
+01:53:46 <narcoli[m]> I want to make sure I dont mess up the installation
+01:54:04 <narcoli[m]> just dled 4A sunfish and extracted
+01:54:09 <TheJollyRoger> Sure. You're past the hardest parts though. The rest is just making sure you get the right zip file for the right device.
+01:54:12 <TheJollyRoger> Great.
+01:54:15 <TheJollyRoger> You're on the home stretch now.
+01:54:53 <TheJollyRoger> Before you hit the almighty ./flash-all command, make sure that phone is placed flat on your desk and the cable plugged into it nice and tight so it won't fall out.
+01:55:08 <TheJollyRoger> Once you start it, don't disturb the phone until it's done.
+01:55:10 <narcoli[m]> its good flat ready to go
+01:55:26 <narcoli[m]> what is the command I put in after extracting
+01:56:15 <TheJollyRoger> it should be under the heading "flashing factory images". You'll need to cd into the directory you just unpacked, and then run "./flash-all.sh"
+01:56:36 <TheJollyRoger> Once again, once you start it don't disturb the device* until it's done.
+01:56:45 <ghost_matrix[m]> Lift off!
+01:57:11 <narcoli[m]> right now all I did was get the zip and extracted it into my downloads folder
+01:58:06 <TheJollyRoger> yep, "cd sunfish-factory-2020...". Type in "ls" and you should see some files, "flash-all.sh" should be one of them.
+01:58:17 <narcoli[m]> "You'll need to cd into the directory" what is this exactly?
+01:58:43 <ghost_matrix[m]> Go a level down into the directory
+01:58:47 <TheJollyRoger> cd stands for "change directory." Basically, it changes your working directory from one direcotry to another.
+01:59:08 <narcoli[m]> so the command I type in is cd ls?
+01:59:20 <TheJollyRoger> Just type in this:
+01:59:46 <TheJollyRoger> cd sunfish-factory-2020.12.12.03
+01:59:53 <TheJollyRoger> it will produce no output but it may change your prompt.
+02:00:34 <TheJollyRoger> then type in "ls flash-all.sh" hit return, and see if you see something called "flash-all.sh" If you see it, we move onto the second-last step, which is to type "./flash-all.sh" and hit return.
+02:00:53 <TheJollyRoger> Don't unplug the phone after it's done because there is one last step prior to booting.
+02:01:22 <narcoli[m]> bash: cd: sunfish-factory-2020.12.03: no such file or directory
+02:01:48 <TheJollyRoger> narcoli[m]: Yep, you're missing one "12"
+02:02:04 <narcoli[m]> oh my mistake 1 sec
+02:03:31 <encryptocat> Hi, anyone knows what the difference betweern ending seission from second profile when pressing button om lock screen en pressing power button and than select end session?
+02:03:36 <narcoli[m]> same thing
+02:04:07 <narcoli[m]> bash: cd: sunfish-factory-2020.12.12.03: no such file or directory
+02:04:33 <narcoli[m]> but I see it in my downloads folder
+02:04:36 <TheJollyRoger> narcoli[m]: what cd is telling you then, is that you haven't downloaded and extracted the zip to that location.
+02:04:45 <TheJollyRoger> ok, so,
+02:04:51 <TheJollyRoger> We can move to that location using cd.
+02:05:01 <TheJollyRoger> "cd .." will move you up one level.
+02:05:29 <encryptocat> When i switch with power button and then select end session itntakes much longer to switch, screen goes black also for 30 seconds, but when i switch by selecting end session on lock screen it switches immediatly? Whats the difference?
+02:05:45 <TheJollyRoger> I presume you have a directory called "Downloads" in your home diroctery. Try "cd ~/Downloads"
+02:06:02 <narcoli[m]> yes its in there
+02:06:09 <TheJollyRoger> Or better yet, try "cd ~/Downloads/sunfish-factory-2020.12.12.03"
+02:06:22 <narcoli[m]> ok 1 sec
+02:06:46 <TheJollyRoger> narcoli[m]: it looks like you downloaded it outside of the commandline probably using a browser, and saved it to a different location.
+02:07:02 <narcoli[m]> yes off the graphene site
+02:07:08 <narcoli[m]> and into download file
+02:09:32 <narcoli[m]> I might be doing something wrong
+02:09:37 <narcoli[m]> do I have to be in sudo?
+02:09:38 <TheJollyRoger> narcoli[m]: the commands on the installation page are actually designed to be run subsequently, they produce an exact output for those given inputs. Ad-libbing, such as downloading without the use of curl will mess with the order.
+02:09:42 <TheJollyRoger> No.
+02:09:53 <TheJollyRoger> Hang on a moment.
+02:10:40 <TheJollyRoger> I can walk you through this since I have the rest of the procedure memorized, but remember, I'm not sitting next to you, and I will be flying blind.
+02:10:44 <narcoli[m]> cd~/Downloads is giving me the bash: cd~/downloads: no such file or directory
+02:10:49 <TheJollyRoger> So if you deviate from my instructions, I can't help you.
+02:11:00 <TheJollyRoger> Yep, you've typed it in lowercase and you're missing the spaces.
+02:11:18 <TheJollyRoger> Unix and Linux is cAsE sEnSiTiVe.
+02:11:27 <narcoli[m]> got it
+02:11:31 <narcoli[m]> 1 sec again
+02:11:44 <TheJollyRoger> cd ~/Downloads/sunfish-factory-2020.12.12.03
+02:12:10 <narcoli[m]> ok im in downloads now
+02:12:12 <TheJollyRoger> That's the exact command. Nothing more, nothing less. If you've already extracted it into your Downloads folder, then it should be there, provided you did what you say you did.
+02:12:21 <TheJollyRoger> post me the output of:
+02:12:26 <TheJollyRoger> pwd && ls flash-all.sh
+02:13:02 <narcoli[m]> Right now I put in the command cd ~/Downloads
+02:13:24 <narcoli[m]> is says ~/Downloads$
+02:13:35 <TheJollyRoger> I'll start numbering steps:
+02:14:04 <narcoli[m]> ok
+02:14:06 <TheJollyRoger> Starting at 11: post me the output of "pwd && ls"
+02:15:25 <narcoli[m]> one sec im closing terminal and starting 2 messages up
+02:15:56 <TheJollyRoger> Hey dude, I'm sorry but I really can't help you if you adlib or deviate from my instructions.
+02:16:11 <TheJollyRoger> Remember, I'm flying blind.
+02:16:45 <TheJollyRoger> So if you adlib, or go on things your own way, you're essentially making it nearly impossible for me to help you out.
+02:16:47 <narcoli[m]> understood
+02:17:05 <narcoli[m]> right now my cmd line says this
+02:17:34 <narcoli[m]> `/downloads/sunfish-factory-2020.12.12.03$
+02:17:44 <narcoli[m]> thats what im in right now
+02:17:59 <the5000[m]> Hello
+02:18:01 <TheJollyRoger> Ok, great. Step twelve:
+02:18:11 <TheJollyRoger> ls flash-all.sh
+02:18:33 <TheJollyRoger> If it replies "flash-all.sh" then you're ready for step thirteen.
+02:18:44 <narcoli[m]> it did
+02:18:53 <TheJollyRoger> Last step.
+02:18:56 <TheJollyRoger> ./flash-all.sh
+02:19:00 <TheJollyRoger> And hold on tight!
+02:19:58 <narcoli[m]> ok its working!
+02:20:33 <TheJollyRoger> This may take a couple minutes. It'll let you know when it's finished. Don't disturb it until it tells you that it's done.
+02:20:40 <narcoli[m]> ok
+02:20:50 <TheJollyRoger> Keep the phone plugged in. Don't unplug it, because there's a crucial last step we must do.
+02:21:03 <narcoli[m]> alright
+02:22:37 <narcoli[m]> finished
+02:22:44 <TheJollyRoger> Ok. Last step:
+02:22:49 <TheJollyRoger> fastboot flashing lock
+02:22:52 <TheJollyRoger> Enter that and hit return.
+02:22:59 <TheJollyRoger> Once you do, you'll need to confirm it on your phone.
+02:23:42 <narcoli[m]> do I get out of ~/downloads/sunfish-factory-2020.12.12.03$
+02:23:53 <narcoli[m]> before writing that in
+02:24:02 <TheJollyRoger> Nope, not at all.
+02:24:08 <narcoli[m]> ok 1 sec
+02:24:40 <TheJollyRoger> (also, again, don't ad lib. If you had ad libbed on any of the earlier steps, it would have thrown us both off.)
+02:24:52 <TheJollyRoger> *If you had done that on any of the earlier steps
+02:25:21 <TheJollyRoger> I know it seems like you're saving me work, but ad-libbing on support like this when commands and procedures are to be followed exactly always ends up causing more.
+02:25:38 <narcoli[m]> what is ad libbing mean? not writing the commands correctly?
+02:25:55 <TheJollyRoger> "ad-libbing" in this context, means taking liberties or improvising.
+02:26:16 <TheJollyRoger> (in music, "ad lib" essentially means to freely improvise)
+02:26:58 <narcoli[m]> <TheJollyRoger ""ad-libbing" in this context, me"> got it my mistake
+02:27:10 <narcoli[m]> i had a guide I just a really hard time following it
+02:27:34 <narcoli[m]> but now I know how to install it and I thank you for your patience
+02:27:40 <TheJollyRoger> Anytime!
+02:27:44 <TheJollyRoger> So, is the bootloader locked?
+02:28:06 <narcoli[m]> <TheJollyRoger "So, is the bootloader locked?"> yup
+02:28:10 <TheJollyRoger> The next time you reboot the screen, you should see a warning screen that says something like "Your phone is loading a different operating system."
+02:28:23 <narcoli[m]> <TheJollyRoger "The next time you reboot the scr"> yes I got that
+02:28:58 <TheJollyRoger> Great! That's normal and expected, it lets you know that the verified boot is on and enforcing, but you're not loading the Google operating system.
+02:29:30 <TheJollyRoger> It's only if that screen turns orange though that you have to worry.
+02:29:50 <organicpumpkin[m> Hey! Does being on the Beta Channel and actively participating in submitting any bugs that come up actually help?
+02:29:50 <organicpumpkin[m> If so, a follow up question - is the beta channel usable as your only daily driver in your experience?
+02:30:01 <TheJollyRoger> Hi organicpumpkin[m indeed it does!
+02:30:34 <narcoli[m]> <TheJollyRoger "It's only if that screen turns o"> everything worked fine you were a great help
+02:30:45 <TheJollyRoger> narcoli[m]: glad to hear! Welcome aboard the ship!
+02:31:00 <TheJollyRoger> Don't forget to donate to help this project!
+02:31:16 <narcoli[m]> thanks 😄
+02:31:39 <narcoli[m]> <TheJollyRoger "Don't forget to donate to help t"> I wont you guys take btc?
+02:31:46 <TheJollyRoger> Ye be welcome!
+02:32:02 <organicpumpkin[m> <TheJollyRoger "Hi OrganicPumpkin indeed it does"> Thank you. Any thoughts on Beta's usability as a daily driver?
+02:32:09 <TheJollyRoger> GrapheneOS does take bitcoin! https://grapheneos.org/donate and also Monero.
+02:32:31 <the5000[m]> Can you still get Android updates on graphene?
+02:32:31 <narcoli[m]> good! I like this
+02:33:06 <TheJollyRoger> organicpumpkin[m: it works fine, in my experience, although occasionally there *may* be glitches, so make sure you back up. Use Seedvault to back up your system and apps and configuration,
+02:33:19 <organicpumpkin[m> <the5000[m] "Can you still get Android update"> As in the operating system updates? Yes, for the supported devices.
+02:33:38 <TheJollyRoger> and back up things like your Signal database file, and such, JUST in case there's an update that is problematic.
+02:34:03 <the5000[m]> I'm on Android 11 right now it says update to the latest firmware
+02:34:05 <TheJollyRoger> the5000[m]: GrapheneOS was the first non-Google OS to port to Android 11.
+02:34:20 <TheJollyRoger> the5000[m]: you're on the factory (Google) operating system?
+02:34:25 <organicpumpkin[m> <TheJollyRoger "OrganicPumpkin: it works fine, i"> Hmmm, but does seedvault work to backup secondary user profiles? (Which I intend to use as my main one)
+02:34:37 <TheJollyRoger> organicpumpkin[m: ah, haven't tried that yet.
+02:34:38 <the5000[m]> Yes
+02:34:47 <the5000[m]> I'm trying to get graphene but I don't know how to use powershell
+02:35:16 <the5000[m]> I'm on a pixel 3
+02:35:21 <TheJollyRoger> the5000[m]: Ok. The reason why we suggest you update to the latest revision of the google operating system is because the Google operating system includes updates to the firmware and bootloader that GrapheneOS assumes you will have. So what I'd probably suggest you do is connect the phone to WiFi and let it update.
+02:36:10 <TheJollyRoger> The important part is the bootloader. There is a safety check in place to ensure that the bootloader is up to date, but you'll save yourself a lot more trouble if you just let the phone update to the latest revision.
+02:36:31 <the5000[m]> I'm already updated to the latest
+02:36:35 <TheJollyRoger> the5000[m]: using PowerShell is very similar to using a UNIX command shell.
+02:36:51 <the5000[m]> I never used Unix command shell
+02:37:01 <organicpumpkin[m> <TheJollyRoger "The important part is the bootlo"> Can you update to the latest version without signing into the google account?
+02:38:05 <TheJollyRoger> organicpumpkin[m: yes. Or if you want you can simply download the OTA and sideload it, if you really for some reason want to do that.
+02:39:19 <TheJollyRoger> One reason for this is if you have a *lot* of devices you want to all update at the same time and just want to crank them out as if they were on an assembly line.
+02:39:47 <TheJollyRoger> Or if it would make you feel better about keeping the device offline until you update it.
+02:40:10 <TheJollyRoger> correction: or if it would make you feel better about keeping the device offline until you install GrapheneOS on it.
+02:41:02 <encryptocat> When i switch with power button and then select end session itntakes much longer to switch, screen goes black also for 30 seconds, but when i switch by selecting end session on lock screen it switches immediatly? Whats the difference?
+02:41:18 <organicpumpkin[m> <TheJollyRoger "correction: or if it would make "> That was the idea. But if I can do it without signing in to a google account from within, that is what I will do.
+02:41:24 <encryptocat> Anyone knows this?
+02:41:41 <TheJollyRoger> Hello encryptocat, give me a bit and I'll try to get back to you.
+02:41:51 <encryptocat> Ok thanx
+02:42:20 <TheJollyRoger> organicpumpkin[m: yep, you can simply download the OTA and sideload it via recovery while the bootloader on the phone is locked.
+02:44:16 <TheJollyRoger> Okay, encryptocat, I got a test user profile set up, let me see if I observe the same behaviour.
+02:46:33 <TheJollyRoger> encryptocat: Funny, I'm observing something similar with switching profiles via End Session as well, where it returns me to a blank screen and then I have to jump out of it by hitting "back" a bit.
+02:46:47 <encryptocat> Okey, from what i understand is that the only way to put your data at rest (encrypted again) is to end session from second profile. Because ending session in my google pixel 4 is different, holding power button and than select "end session" takes longer en freezes my phone for a bit, while ending session from lockscreen is smooth.
+02:47:00 <TheJollyRoger> I'll try and see if this happens on the Pixel 4.
+02:47:20 <encryptocat> Yeah strange, i just wanted to be sure that both ways really put my data at rest and encrypted
+02:47:39 <TheJollyRoger> Odd, after I do it the second time, it doesn't reproduce this behaviour.
+02:47:49 <TheJollyRoger> I'll try it a few more times.
+02:48:44 <TheJollyRoger> encryptocat: it should. No clue why it took longer the first time.
+02:49:16 <TheJollyRoger> Hmm. It seems to be working for me after that one little bit of lag.
+02:49:29 <TheJollyRoger> When my P4 is off the testing rack I'll see if I can reproduce this behaviour with that.
+02:49:33 <encryptocat> My screen goes black, cant see my background every time i switch with power button, it takes 30 to 40 seconds till everything appears normal
+02:49:46 <TheJollyRoger> Ok, *that* I'm definitely not seeing.
+02:50:00 <TheJollyRoger> What device are you on? P4a, P4, P3, P3a?
+02:50:05 <TheJollyRoger> (XL?)
+02:50:08 <encryptocat> Ending session from lockscreen is smooth every time
+02:50:15 <encryptocat> Pixel 4
+02:50:52 <encryptocat> I have a pixel 4a also ready, going to see if there is the same
+02:50:54 <encryptocat> 1 moment
+02:52:02 <TheJollyRoger> Okay!
+02:53:21 <encryptocat> Okey my pixel4a is running smooth
+02:53:27 <encryptocat> Both ways
+02:53:32 <TheJollyRoger> huh. Baffling!
+02:53:48 <encryptocat> But on my pixel 4a i have the admin profile empty and use the second
+02:53:57 <encryptocat> And the pixel 4 is the other way around
+02:54:24 <TheJollyRoger> Woah.
+02:54:24 <encryptocat> But still strange that it only happens when switching with power button
+02:54:30 <TheJollyRoger> Yeah. That's really odd.
+02:55:10 <TheJollyRoger> I'll make a note of this, and see if anyone else can reproduce this behaviour and I'll try to see if I can find the same thing on my 4.
+02:55:15 <TheJollyRoger> (I'm on a 3)
+02:55:25 <encryptocat> Oke thanxx
+02:55:38 <encryptocat> So switching with power button or lock screen is the same
+02:55:48 <encryptocat> It will logout and put data at rest
+02:55:50 <TheJollyRoger> Yeah. If I can figure out how to reproduce it I'll open an issue on the bug tracker.
+02:56:15 <TheJollyRoger> Yeah. If the profile's logged out the encryption keys are ejected from memory and the files are set at rest.
+02:56:24 <TheJollyRoger> *and its profiles are set at rest.
+02:57:19 <encryptocat> Oke thanks for the help
+02:57:34 <encryptocat> Loving these secondary profiles, it s a cool feature
+02:58:13 <TheJollyRoger> It's an awesome feature alright!
+02:58:36 <TheJollyRoger> Separate contextual identities, run multiple instances of the apps...
+03:06:50 <stargazer67> Hi
+03:06:59 <louipc> hello
+03:07:49 <TheJollyRoger> Ahoy!
+03:24:42 <auto_warmbeer[m]> ok i got a pixel 4 xl
+03:24:49 <auto_warmbeer[m]> i loaded the latest coral image
+03:25:05 <auto_warmbeer[m]> had to load some usb driver in windows for the tools to work
+03:25:26 <auto_warmbeer[m]> i'm only using windows cuz my workstation runs openbsd which isn't supported by the tools
+03:25:41 <auto_warmbeer[m]> ok so...
+03:25:49 <auto_warmbeer[m]> how do you load apps if there is no app store thing?
+03:26:10 <louipc> download from their website
+03:26:11 <whatisthematrix[> <auto_warmbeer[m] "how do you load apps if there is"> Download the fdroid apk and then you can get apps
+03:26:29 <TheJollyRoger> Hi auto_warmbeer[m], you can simply sideload apps, if you can find .apks for them.
+03:27:46 <TheJollyRoger> Remember that .apk files are signed and verified, and subsequent versions of the same app *must be signed* with the same private key and validated to its corresponding digital certificate used to install the previous version or the one that was pinned on first install.
+03:28:22 <somenerd[m]> A TOFU (trust on first use) model
+03:28:26 <TheJollyRoger> If you install the same app across multiple profiles or multiple users, it too must be the same version all across each one.
+03:28:34 <TheJollyRoger> Yep! Trust On First Use indeed!
+03:28:45 <somenerd[m]> for example, take newpipe
+03:29:00 <auto_warmbeer[m]> so if I want to run the uhh, bluedriver app, or gaia gps, and i can't find apk, no bueno right?
+03:29:12 <somenerd[m]> f-droid has aurora store
+03:29:22 <somenerd[m]> which can install google play apps
+03:29:32 <TheJollyRoger> auto_warmbeer[m]: yes, that's correct. Note that there's one caveat:
+03:30:08 <Salmonoid> Hello
+03:30:16 <TheJollyRoger> Apps that have a hard coded dependency on Google Play Services, and whose authors have not written them to function without google will often crash, or complain "this phone is missing Play Services, we can't run!"
+03:30:19 <TheJollyRoger> Ahoy Salmonoid!
+03:30:25 <somenerd[m]> hello
+03:30:30 <auto_warmbeer[m]> i found this by following thegrugq on twitter, didn't realize there was a security oriented AOSP derivative that impressively has fed back to AOSP over years
+03:31:03 <auto_warmbeer[m]> ok so apps that depend on the google play API may break
+03:31:10 <auto_warmbeer[m]> this is great info thank you guys
+03:31:45 <auto_warmbeer[m]> i use very few apps in general
+03:32:01 <auto_warmbeer[m]> most are poorly written, very unimpressive, full of ads, etc
+03:32:32 <TheJollyRoger> auto_warmbeer[m]: yup, you got it! GrapheneOS considers Play Services to be invasive, so it's not included in the operating system.
+03:32:32 <auto_warmbeer[m]> but i was hoping there was a decent GPS app that would save maps and stuff locally that i could run under grapheneOS
+03:32:52 <TheJollyRoger> Well... there's OpenStreet Map? But I haven't used it much at all and can't offer much feedback on it.
+03:32:58 <somenerd[m]> > auto_warmbeer: yup, you got it! GrapheneOS considers Play Services to be invasive, so it's not included in the operating system.
+03:32:59 <somenerd[m]> as well as attack surface
+03:33:00 <Urija[m]> There are no ads in F-Droid Apps.
+03:33:47 <TheJollyRoger> GPS functionality and the sensors work fully on GrapheneOS, but some apps choose to instead rely on location via Play Services, rather than on the phone, since I think it's programmatically less work for them to do so.
+03:33:59 <auto_warmbeer[m]> the google play store is honestly the biggest pile of shit :)
+03:34:43 <TheJollyRoger> Note that without Play Services, you *need* to let the GPS calibrate before you can use it. The best way to do this is to go outside to a large, open space and take the phone for a walk so it can acquire the satellites.
+03:35:14 <auto_warmbeer[m]> Ok
+03:36:40 <auto_warmbeer[m]> So Google enhances GPS results through their play API with some central database and wifi scan results and whatever other heuristics I take it?
+03:37:14 <TheJollyRoger> I'm not sure how it works, actually, someone more knowledgeable than I would need to chime in on it.
+03:38:22 <Urija[m]> <TheJollyRoger "Note that without Play Services,"> Will that calibration hold or is it necessery whenever I reopen GPS-using Apps after not using GPS for a bit? It always seemed accurate enough to me, so I'm slightly confused by that advice...
+03:38:29 <ayaen_t[m]> <auto_warmbeer[m] "the google play store is honestl"> not entirely googles fault if all people do is drop shit over there ,,,,
+03:38:52 <auto_warmbeer[m]> not entirely, but they allow way to much trash
+03:39:10 <ayaen_t[m]> yeah thats the pat where theu come in
+03:39:20 <TheJollyRoger> Urija[m]: It'll hold, once it's calibrated you should be good.
+03:39:25 <ayaen_t[m]> but anywasys its wayy to offtopic
+03:39:32 <Salmonoid> LTE only mode is " the tits "
+03:39:39 <auto_warmbeer[m]> why?
+03:39:57 <auto_warmbeer[m]> the reduced attack surface is the main reason from the grapheneos.org pages
+03:40:04 <Salmonoid> Yes exactly
+03:40:29 <Salmonoid> Most IMSI catchers use protocol downgrade attacks
+03:40:37 <auto_warmbeer[m]> i see
+03:40:49 <somenerd[m]> no it's removal of legacy code
+03:40:52 <Salmonoid> Jam LTE, 3g
+03:41:00 <somenerd[m]> strcat has said this multiple times
+03:41:06 <Salmonoid> The force phone onto fed 2g basestation
+03:41:14 <TheJollyRoger> Adam####, stop it.
+03:41:48 <somenerd[m]> @auto
+03:42:06 <somenerd[m]> it's for removal of legacy code
+03:42:16 <somenerd[m]> not to make the network trusted
+03:43:13 <Salmonoid> I understand completely
+03:43:23 <somenerd[m]> https://freenode.logbot.info/grapheneos/20201223#c6261044
+03:43:46 <TheJollyRoger> The cellphone network is security-agnostic. The best thing to do if Stingrays and IMSI catchers are on your threat model, is to simply use (and have your contacts use) an encrypted messaging app like Signal which has that threat model.
+03:44:19 <TheJollyRoger> Signal is on AWS, and since a majority of smartphone backends are hosted on AWS, this provides a lot of cover traffic.
+03:44:25 <Salmonoid> Yea and LTE only
+03:44:38 <Salmonoid> Amazon works with fedz though
+03:45:03 <TheJollyRoger> That's why Signal uses end to end encryption and runs their server backend within SGX.
+03:45:12 <auto_warmbeer[m]> everybody gets paid, ya
+03:45:13 <Salmonoid> Sgx?
+03:45:25 <somenerd[m]> LTE only mode is not to make the network trusted
+03:45:38 <somenerd[m]> it's in the faq
+03:45:43 <TheJollyRoger> Software Guard Extensions - TLDR it allows Signal's server software to remain encrypted in the host memory.
+03:45:54 <auto_warmbeer[m]> i am trying to turn off keyboard haptic feedback but even though there is an option that claims to cover that, it doesn't
+03:45:54 <somenerd[m]> https://grapheneos.org/usage#lte-only-mode
+03:45:56 <TheJollyRoger> *it allows data processed by Signal's server software
+03:45:57 <Salmonoid> How is that possible
+03:46:09 <Salmonoid> That's homomorphic encryption ??
+03:46:16 <somenerd[m]> >The intention of the LTE-only feature is only hardening against remote exploitation by disabling an enormous amount of legacy code.
+03:46:22 <Salmonoid> Encrypted data can work just like unencrypted data?
+03:46:43 <Salmonoid> What exploits are prevented for example?
+03:46:46 <TheJollyRoger> not quite. It's possible because Intel has implemented Software Guard Extensions as an anti-piracy measure.
+03:46:56 <TheJollyRoger> Signal repurposed this.
+03:47:00 <Salmonoid> Have unread about monomorphic encryption
+03:47:08 <Salmonoid> Homo
+03:47:14 <somenerd[m]> this convo is getting a bit offtopic
+03:47:20 <somenerd[m]> #grapheneos-offtopic:matrix.org ?
+03:47:28 <Salmonoid> Yes
+03:47:57 <TheJollyRoger> SGX is managed outside of the host. It's not Homomorphic Encryption, just something that the CPU vendor has implemented as an antipiracy measure that Signal's repurposed as a security feature.
+03:59:18 <Xeon1716638> Hi
+03:59:30 <ayaen_t[m]> hallo.
+03:59:41 <somenerd[m]> hello
+04:00:13 <TheJollyRoger> Yes, Salmonoid/Xeon1716638?
+04:00:31 <Xeon1716638> It is I
+04:02:21 <strcat[m]> strongly recommend reading https://grapheneos.org/faq#encryption about disk encryption
+04:03:33 <strcat[m]> and https://grapheneos.org/usage#lte-only-mode, https://grapheneos.org/faq#baseband-isolation, https://grapheneos.org/faq#cellular-tracking about those topics
+04:03:54 <strcat[m]> LTE only mode does NOT make the cellular network secure or trustworthy
+04:04:04 <Xeon1716638> Yeah I know
+04:04:21 <Xeon1716638> But it improves resilience to IMSI catcher
+04:04:34 <strcat[m]> no
+04:05:26 * DannyWorkOrderPr *yells from back* "Gittum"
+04:05:29 <strcat[m]> LTE is not a secure protocol
+04:05:37 <Xeon1716638> Yes, the majority of IMSI catchers work by jamming LTE, 4g, and 3g and forcing phones onto 2g fed base stations
+04:06:04 <Xeon1716638> Are full LTE MITM IMSI catchers in existence now and or possible?
+04:06:08 <strcat[m]> LTE is not a secure protocol and media coverage of security issues is not accurate
+04:06:45 <Xeon1716638> Alright so what's the status of LTE IMSI catchers?
+04:06:57 <strcat[m]> LTE security has been publicly broken
+04:07:00 <strcat[m]> it's not a secure protocol
+04:07:01 <strcat[m]> that's the status
+04:07:10 <Xeon1716638> OK so, what attacks are possible
+04:07:29 <Xeon1716638> Full MITM, just seeing the IMSI, just radio direction finding, etc
+04:07:35 <Xeon1716638> I'm just trying to learn
+04:09:04 <strcat[m]> we make it clear in https://grapheneos.org/usage#lte-only-mode why the feature exists
+04:09:16 <Xeon1716638> Thanks
+04:09:54 <strcat[m]> LTE doesn't provide secure authentication and even if it did, the network infrastructure is inherently insecure
+04:10:00 <strcat[m]> shouldn't be trusting networks
+04:10:04 <strcat[m]> and that is not why the feature exists
+04:12:04 <Xeon1716638> So are full MITM interceptions possible on LTE?
+04:12:15 <Xeon1716638> From phone to stingray to tower?
+04:12:34 <TheJollyRoger> Not if you use TLS.
+04:12:41 <TheJollyRoger> So use TLs.
+04:12:45 <TheJollyRoger> Use apps that support TLS.
+04:12:48 <Xeon1716638> Yeah I use vpns
+04:12:57 <Xeon1716638> Thanks :-)
+04:13:21 <TheJollyRoger> Xeon1716638/Salmonoid/Adam177whatever, I think I tell you this every time you stop by under a new alias.
+04:14:01 <Xeon1716638> Yeah I'm just trying to learn beyond what I've read
+04:19:54 <strcat[m]> don't use legacy calls and texts beyond bare minimum you can't avoid
+04:20:24 <strcat[m]> that's all you really need to do
+04:20:58 <strcat[m]> LTE only mode substantially reduces the attack surface of the OS and firmware, making it harder to exploit
+04:21:16 <strcat[m]> that's why it exists
+04:21:54 <strcat[m]> VoLTE calls and SMS over LTE are not secure
+04:22:22 <Xeon1716638> Beautiful, an expert in his field :)
+04:22:44 <strcat[m]> yes but you won't listen and you'll be back under a new nick
+04:22:52 <strcat[m]> to go through the same thing again
+04:22:54 <Xeon1716638> I'm listening
+04:28:44 <Xeon1716638> How does LTE mode reduce firmware attack surface
+04:29:10 <Xeon1716638> Is the 3G firmware, protocol itself allow remote exploitation to then implant malware onto a phone?
+04:29:46 <Xeon1716638> Also, I highly reccomend the TV series Person of Interest
+04:30:03 <louipc> https://grapheneos.org/usage#lte-only-mode
+04:35:36 <disjunction[m]> This is what is says on the website: "The intention of the LTE-only feature is only hardening against remote exploitation by disabling an enormous amount of legacy code."
+04:41:15 <whatisthematrix[> <strcat[m] "LTE only mode substantially redu"> Does one have longer battery in LTE mode?/What are the cons to LTE only mode? Less network range?
+04:44:19 <TheJollyRoger> whatisthematrix[: the lower frequency bands tend to work better in areas where cell towers are in shorter supply. Higher frequencies allow for more bandwidth and faster speeds, but the drawback is, they have significantly shorter range and can be more easily interfered with; this is why 5G has sometimes been reported to suddenly drop out if you go into a large building.
+04:44:23 <Urija[m]> Not all areas have LTE coverage. In some areas you might get an older connection type, but no LTE. So LTE-only-mode basically reduces the area where you get connection.
+04:45:01 <strcat[m]> it also requires that you have support for VoLTE in order to make traditional unencrypted calls
+04:45:15 <strcat[m]>  * it also requires that you have support for VoLTE in order to make traditional insecure calls
+04:47:39 <whatisthematrix[> Are certain bands more secure than others?
+04:48:02 <strcat[m]> LTE is insecure
+04:48:21 <strcat[m]> read https://grapheneos.org/usage#lte-only-mode
+04:49:03 <strcat[m]> LTE only mode is attack surface reduction, that's it
+04:49:27 <TheJollyRoger> whatisthematrix[: no, the cellphone network is largely security agnostic. If you need/want security, that's what TLS/SSL is for.
+04:49:51 <strcat[m]> cellular networks don't provide any meaningful authentication or encryption
+04:50:03 <strcat[m]> LTE only mode reduces attack surface by disabling the code handling 2G/3G in the firmware and OS
+04:50:24 <strcat[m]> so there's substantially less code to exploit - and in particular, the legacy code that's poorly maintained and not as hardened or well written is disabled
+04:50:41 <strcat[m]> it does NOT make the cellular network secure
+04:50:49 <strcat[m]> don't know how to make this any clearer
+04:51:17 <strcat[m]> and even a secure protocol (which LTE isn't) would not make it secure
+04:51:41 <strcat[m]> we explain that it's important to avoid traditional calls / texts, and that includes VoLTE
+05:23:30 <anupritaisno1[m]> TheJollyRoger: anti piracy = sgx? Wtf
+05:23:54 <anupritaisno1[m]> SGX is just a way to have the cpu encrypt a part of memory
+05:24:04 <anupritaisno1[m]> Nothing to do with anti piracy
+05:27:04 <strcat[m]> https://twitter.com/GrapheneOS/status/1344508403960438784
+05:27:07 <TheJollyRoger> anupritaisno1[m]: if I recall right though, wasn't SGX originally marketed as an antipiracy feature?
+05:27:11 <strcat[m]> help spread this thread
+05:27:36 <strcat[m]> going to make another one about something else tied to this tomorrow
+05:34:40 <louipc> twitter butchered that url you posted
+05:35:07 <louipc> You can see this from the network graphs like http://github.com/GrapheneOS/pla….
+05:39:30 <anupritaisno1[m]> strcat: I can rt rn
+06:52:30 <disjunction[m]> This behaviour by Copperhead is utterly disgraceful. They should be ashamed!
+07:28:17 * darkharbingeroft uploaded an image: Screenshot_20201231-152329.png (250KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/xZGvJLlZLIzluejYuSUrkZtB/Screenshot_20201231-152329.png >
+07:28:31 <darkharbingeroft> How?
+07:42:52 <Liakdeuser[m]> Tf
+07:43:32 <Liakdeuser[m]> Time to drop /s
+07:47:24 <louipc> what
+07:54:45 <eagle> i don't understand
+07:55:07 <Liakdeuser[m]> Oh, wait, this wasn't on-topic, but on tangential note, Auditor would have detected device management app
+07:55:24 <Liakdeuser[m]> Can be easily uninstalled by rebooting to safe mode tho
+07:55:33 <Liakdeuser[m]> (The device management app)
+07:55:47 <Liakdeuser[m]> Plus, they don't usually work at secondary users
+07:57:18 <Liakdeuser[m]> Unsure if adb can do something with making MDM apps possible in secondary users
+08:12:59 <Urija[m]> <darkharbingeroft "Screenshot_20201231-152329.png"> I searched for the article:
+08:19:33 <Urija[m]> Seems like the students will get dedicated devices from school, with the device management app part being relevent for those who want to use their own devices.
+08:19:33 <Urija[m]> But my english is to bad for understanding the part of who would pay for the official new devices.
+08:20:21 <Urija[m]> Something with "funds in their Edusave accounts"...
+08:21:59 <louipc> kindof offtopic
+08:22:18 <Liakdeuser[m]> Prefer to move it here: #grapheneos-offtopic:matrix.org
+08:27:44 <Asmodaeus> Hi guys, is it possible to use something like https://github.com/vmonaco/kloak with grapheneos?
+08:35:38 <T34> Hi
+08:36:59 <somenerd[m]> hello
+08:37:21 <T34> I am trying to flash grapheneos to a pixel 4xl, but when i double click the flash all. bat it dies nothing
+08:37:59 <T34> Dies needs to be does
+08:38:35 <simpletech[m]> Did you follow https://grapheneos.org/install ?
+08:38:42 <ayaen_t[m]> T34:  you have to open powershell and execute the command there
+08:39:49 <T34> If i run the command in powershell it does nothing
+08:40:12 <T34> Maybe i run the wrong command?
+08:40:22 <simpletech[m]> Are you in fastboot mode?
+08:40:33 <T34> Yes
+08:41:10 <T34> If i do fastboot devices i see the device
+08:41:58 <simpletech[m]> Double-check if you got the adb tools inside your folder, and that you enabled OEM unlocking
+08:42:56 <T34> Check
+08:44:03 <simpletech[m]> <T34 "Maybe i run the wrong command?"> What did you run where? You run Windows, right? Or Linux?
+08:44:26 <simpletech[m]> Hmmm
+08:45:11 <T34> Windows
+08:46:12 <T34> ./flash-all.bat this command in powershell
+08:48:40 <simpletech[m]> are you in the ../sunfish-factory-2020.12.12.03/ directory ?
+08:50:08 <simpletech[m]> I don't know any further? No verbose output? Nothing?🤔
+08:50:20 <T34> No, coral-factory-2020.12.12.03
+08:51:08 <Liakdeuser[m]> <T34 "No, coral-factory-2020.12.12.03"> What phone are you flashing?
+08:51:28 <T34> Google pixel 4 xl
+08:51:38 <simpletech[m]> Sorry, coral, of cause
+08:51:48 <simpletech[m]> I've got a 4a, that's why. You're right
+08:52:14 <disjunction[m]> The Pixel 4a is sunfish, the Pixel 4 is coral, and the Pixel 4XL is flame.
+08:52:17 <simpletech[m]>  * Sorry, coral, of course
+08:52:40 <simpletech[m]> Other way around. 4xl coral, 4 flame
+08:53:14 <T34> Is the command i use correct? For flashing the flas all file?
+08:54:11 <simpletech[m]> `./flash-all.bat` yea...
+08:55:58 <T34> It now says, fastboot too old
+08:56:21 <simpletech[m]> ...
+08:56:36 <simpletech[m]> https://grapheneos.org/install#obtaining-fastboot
+08:56:49 <simpletech[m]> > 29.0.6
+08:56:59 <T34> I have fastboot version r30. 0.5
+08:57:12 <simpletech[m]> Hmmmmmmm.
+08:57:36 <simpletech[m]> I am at my wit's end.
+08:58:01 <somenerd[m]> it's too new? unsupported ig
+08:59:04 <simpletech[m]> unlikely, this release was two months ago
+08:59:37 <T34> Fastboot too new you mean?
+09:01:21 <disjunction[m]> 30.0.5 is the latest version, it shouldn't be too old
+09:01:42 <T34> Wait a minute
+09:01:53 <T34> I read it wrong
+09:03:05 <T34> It says fastboot.exe unknown option - -version
+09:03:36 <T34> And then platform tools 30.0.5
+09:10:56 <T34> I dont know any other options at the moment
+09:11:46 <T34> I will try another pc for flashing
+09:24:37 <sb13x[m]> simpletech: are you using Powershell?
+09:26:47 <luca-simpletech> No, I'm running Linux
+09:27:33 <luca-simpletech> so, bash.
+09:28:07 <luca-simpletech> But the instruction for the installation is essentially the same :)
+09:35:36 <rheaalleen[m]> 👋
+09:36:56 <ayaen_t[m]> hallo.
+10:27:07 <somenerd[m]> hello
+11:19:58 <lovestory[m]> Hello all, is there a list somewhere on the site which shows the system apps included with grapheneos? Id like to check that nothing else has installed
+11:25:34 <ayaen_t[m]> theOne:  they are
+11:25:34 <ayaen_t[m]> Auditor, Clock,Contacts,Files,Gallery,Messaging,PFFViewer, Phone,Settings,Vanadium,Calculator,Calendar,Camera
+11:38:23 <ayaen_t[m]> theOne: you can use the auditor app as detailed in the official instructions to male sure you are using a genuine grapheneOS image if thats what concerns you.
+11:38:32 <ayaen_t[m]> theOne: you can use the auditor app as detailed in the official instructions to make sure you are using a genuine grapheneOS image if thats what concerns you.
+11:40:09 <rickza[m]> Good day all, if i may ask, what could possibly be blocking my phone from receiving calls at times ? I am using the Pixel 3a however i am getting complaints that my number is mostly unreachable but i do have signal at these times, could it possibly be the phone services that are battery optimized ?
+11:46:48 <ayaen_t[m]> may be ita got to do something with your carrier
+11:53:10 <rickza[m]> I take it theres no settings i can change then ?
+12:04:03 <nscnt> rickza[m]: What's your carrier?
+12:05:50 <rickza[m]> VodacomSA
+12:09:29 <rickza[m]> anyway to disable 4g calling ?
+12:10:49 <wayne_kerr[m]> setting up 4a-  need opinions:  Bromite vs. Vanadium?  I like the ad blocking in Bromite, but hear Vanadium is more secure. Go with one? Both?  Also want to manage attack surface if possible.
+12:11:20 <Thatcher[m]> Vanadium all the way
+12:11:43 <somenerd[m]> both for compartmentalization
+12:11:44 <Liakdeuser[m]> <wayne_kerr[m] "setting up 4a-  need opinions:  "> Could be one in a user, another in another user profile, but I'd prefer Vanadium as it blends with other Chrome-Pixel users
+12:11:54 <nscnt> offtopic
+12:12:33 <Liakdeuser[m]> Yeah, just a quick answer, offtopic for details btw
+12:12:38 <somenerd[m]>  * both for compartmentalization (but really depends)
+12:12:47 <wayne_kerr[m]> quick answer
+12:21:35 <Liakdeuser[m]> <wayne_kerr[m] "setting up 4a-  need opinions:  "> Also: https://grapheneos.org/usage#web-browsing
+12:27:11 <nicknower[m]> Hi, so I'm thinking of switching to grapheneos. What's the best device to get for it and least likely to run into support issues in the future?
+12:27:22 <uhzykydori[m]> yeah i also recommend using Vanadium, use what's installed by default
+12:27:42 <ayaen_t[m]> nicknower: 4 4xl 4a
+12:28:13 <nscnt> nicknower[m]: https://grapheneos.org/faq#recommended-devices
+12:28:20 <ayaen_t[m]> uhzykydori: samsung users plug your ears and run far away ! lol
+12:29:32 <nicknower[m]> Alright thx
+12:38:46 <ayaen_t[m]> <ayaen_t[m] "uhzykydori: samsung users plug y"> btw i meant this for you saying use default browser
+12:38:56 <ayaen_t[m]> and samsunnnnnnng
+12:39:24 <Liakdeuser[m]> <uhzykydori[m] "yeah i also recommend using Vana"> Only applies at GrapheneOS
+12:41:18 <ayaen_t[m]> yes
+14:28:23 <helpidentify[m]> Happy New Year...
+14:28:26 * helpidentify[m] uploaded an image: IMG-20201230-WA0001.jpg (17KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/FXPNHjSiqAauppefxYRIKxDj/IMG-20201230-WA0001.jpg >
+14:42:36 <DannyWorkOrderPr> Well, that just looks like a honeypot....
+14:52:50 <somenerd[m]> wdym?
+14:56:01 <somenerd[m]> nvm lmaoooooooo
+14:56:29 <Liakdeuser[m]> Lol
+14:56:35 <somenerd[m]> noticed the .jpg
+15:11:49 * uhzykydori[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/mclJbUoKvZhnzZiYYeAGVsjw/message.txt >
+15:12:13 * uhzykydori[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/kHepugAIAaIadNdbaUBKQrbA/message.txt >
+16:18:35 <narcoli[m]> I just downloaded fdroid loving graphene so far
+16:19:03 <narcoli[m]> is there a way to verify these are from the legit developers and not a backdoor exit scam?
+16:19:41 <pumpkineater69[m> You can verify the f-droid apk.
+16:20:31 <narcoli[m]> alright thanks
+16:23:15 <rheaalleen[m]> If you downloaded from the page and it shows with https you are perfectly, verfiy is nice but in most cases for peace of mind
+16:23:51 <narcoli[m]> yeah im a little new to this I want to learn how to verify
+16:24:32 <rheaalleen[m]> Always good to know/do
+16:26:06 <Kurai> narcoli[m]: https://hub.libranet.de/wiki/and-priv-sec/wiki/apps#Verifying_apk_files_and_apps
+16:26:45 <narcoli[m]> <Kurai "narcoli: https://hub.libranet.de"> thanks will check this out
+16:39:59 <pixel5user> can i user grapheneos on google pixel 5?
+16:40:25 <pixel5user> If anyone could help it would be appreciated
+16:40:46 <dakotah[m]> I don't think it is supported. Don't see it on the site
+16:41:17 <narcoli[m]> https://grapheneos.org/releases
+16:41:25 <narcoli[m]> pixel5 is not listed
+16:42:05 <pixel5user> oh no, do you think that will change? as all other models are supported
+16:47:47 <rheaalleen[m]> Its fresh on the market, maybe in the future
+16:47:57 <rheaalleen[m]> Also its the highest end modwl
+16:51:26 <uhzykydori[m]> <narcoli[m] "is there a way to verify these a"> Offtopic but you can also verify with VirusTotal or ApkScan
+16:55:12 <uhzykydori[m]> <pixel5user "If anyone could help it would be"> Actually you can help getting faster by building graphene for it
+16:55:22 <ayaen_t[m]> pixel5user: still looking for someone who wants to maintain pixel 5 you see its a three year job or bowever long the device gets updates
+16:56:09 <ayaen_t[m]> <uhzykydori[m] "Actually you can help getting fa"> if someones up for it ...please dont hide your superpowers!
+16:58:04 <uhzykydori[m]> If I had the money to buy it I probably could
+16:58:12 <uhzykydori[m]> but I only have sargo and sunfish
+16:59:01 <narcoli[m]> <uhzykydori[m] "Offtopic but you can also verify"> gotcha thanks
+17:00:34 <pixel5user> someone musy have superpowers to give me a custom os i can use on the pixel 5
+17:03:50 <chris42> @pixel5user You can build AOSP for the Pixel 5 without problems.
+17:04:25 <ayaen_t[m]> pixel5user: i feel sad for your situation but you know what try building aosp or stick to the stock if you care about security
+17:05:05 <chris42> Some people are working on the Pixel 5, however so far only for the vendor blob. I understood, that kernel work etc. in Graphene is not on the priority list, as there are other more pressing issues
+17:05:43 <Kvuj[m]> odd, I would have imagined an official port of LineageOS for it but no.
+17:12:58 <pixel5user> Chris42, what is an AOSP?
+17:13:41 <Urija[m]> Android Open Source Project
+17:14:20 <pixel5user> oh sorry, where would i begin with that, Im out my depth here
+17:14:31 <chris42> Android Open Source Project... it is the "original" or "base" Android... if you don't know that, you probably should expect a steep learning curve if you try to compile ;-D
+17:14:35 <Urija[m]> The basic Android all other ROMs and the standard Google Android are based on.
+17:17:56 <pixel5user> Chris42 you said some are working on the pixel 5, who is that?
+17:17:59 <chris42> If you have never build any Android, you should probably try reading up on the android guide (https://source.android.com/setup)... getting your build environment ready, trying a few builds etc.
+17:18:08 <pixel5user> i would like to follow their progress
+17:19:33 <chris42> however if you just want to use a ROM, probably better to look around on XDA. I have seen a few people publishing ROMS.
+17:21:16 <Liakdeuser[m]> Not really recommending that though
+17:21:27 <chris42> Some people are working on creating a proper vendor preparation. There is a PR in AOSPAlliance on github and Flex1911 on github did similar work.
+17:21:45 <Liakdeuser[m]> Kinda drifting away though, unsure if they need a maintainer for that
+17:21:59 <Liakdeuser[m]> So far never heard of Pixel 5/4a 5G maintainer for GrapheneOS
+17:22:26 <Liakdeuser[m]> * Kinda drifting away though (on your message about custom ROMs)
+17:22:26 <Liakdeuser[m]> ...unsure if they need a maintainer for that
+17:22:47 <chris42> @Liakdeuser Yes, as said before so far only vendor blob work... There is no maintainer in graphene currently
+17:26:24 <pixel5user> Liakdeuser & Chris42 thanks for your information guys, i suppose i will have to be patient. if you know any other sites i can poke around in i would be greatful
+17:28:49 <chris42> @pixel5user probably good to watch the LineageOS news sites as well. They started to pick up more google phones. However until they do the Pixel 5, it will take quite a while...
+17:31:05 <pixel5user> what is a maintainer?
+17:32:25 <somenerd[m]> They build GrapheneOS for the phone they maintan
+17:33:32 <Liakdeuser[m]> A developer that build, maintain the OS and solves issues and figures out solution to provide a production-ready OS support as long as the device is supported upstream
+17:34:25 <Liakdeuser[m]> https://freenode.logbot.info/?q=maintainer&ch=grapheneos&n=strcat%5Bm%5D
+19:56:37 <rheaalleen[m]> I embedd covers of songs in the mp3 when using YouTube-dl however every cover (from epubs too) ends up in the images root folder, any way I can prevent this?
+20:21:27 <Iwillpay> Can I make a cash donation that will help get GrapheneOs supported on the Pixel 5
+20:22:30 <ayaen_t[m]> Iwillpay:  im sure donations are appreciated but
+20:23:40 <ayaen_t[m]> the thing is we need a maintainer whod put in the time to not just build grapheneos for the pixel 5 but also you know sticks around to hear about bugs and goes to work on em
+20:24:57 <ayaen_t[m]> i mean such a person will have to go up and down the source code to resolve bugs
+20:25:23 <ayaen_t[m]> you see the perrson maintains that device till end of support
+20:25:28 <Iwillpay> I understand, where can I find these wonderful people?
+20:25:45 <ayaen_t[m]> they have to show up
+20:27:03 <ayaen_t[m]> if you know someone who has the mindset and willing to put in the work and make him buy a pixel 5 that would be better than donation but ofcourse donations are greatly appreciated too
+20:27:47 <Iwillpay> I will buy anyone willing to put in the work a pixel 5 and big fat wet kiss
+20:29:02 <anupritaisno1[m]> Iwillpay: pixel 5 is ready already
+20:29:19 <anupritaisno1[m]> There are other issues in the OS we need to solve first
+20:30:00 <ayaen_t[m]> like ?
+20:30:08 <Iwillpay> anupritaisno1 - really?
+20:30:17 <lodtank> just a stupid question: is there something like siri & co for graphene? like hosting the suitable software on your own server?
+20:34:51 <Iwillpay> anupritaisno1 - Are you saying I can put GrapheneOs on the pixel 5? Where can I support you beautiful people.
+20:38:05 <grapheneos_user_> <Iwillpay "anupritaisno1 - Are you saying I"> Your username goes well with your intentions ;)
+20:39:51 <Iwillpay> I will do more than that
+21:51:59 <ruddo[m]> <Iwillpay "I will do more than that"> Name a contribution below US$10000, I will match it.
+21:52:34 <ruddo[m]> Conditional on there being more than just P5 support.  There needs to be a structural improvement of the project.
+21:59:37 <louipc> ruddo[m]: do you have any suggestions?
+22:01:11 <louipc> I think we need to grow the community, but I'm unsure how to do that.
+23:15:14 <fo98[m]> I just installed Ubuntu and trying to learn the terminal, I'm following the Install | GrapheneOS instructions and the terminal says I should write "sudo apt-get install" but the instructions don't specify that. When I try what the terminal suggests it's not working too.
+23:29:21 <fo98[m]> In the standalone platform-tools section, it seems like it's devided in 3 sections, do I have to copy everything or just one at a time? Also, I don't know what is <package-name> in terminal, should I paste what I'm trying to download in there, between < and >?
+23:30:34 <XenoProteins12> Hello
+23:30:54 <XenoProteins12> So I have a Question
+23:31:27 <XenoProteins12> I read that the NSA can locate phones, even while off, how do you guys theorize the NSA can locate phones while off?
+23:31:40 <XenoProteins12> Baseband vuln? Firmware exploit while phone is off, fake off state etc?
+23:31:56 <XenoProteins12> Firmware exploit while phone is on, leading to a fake off state*
+23:33:38 <louipc> hi. That discussion is best had elsewhere, but as far as I know it's like a fake off, low power state
+23:34:07 <XenoProteins12> So how does the phone get infected in the first place?
+23:35:54 <louipc> maybe someone knows in #grapheneos-offtopic, or elsewhere
+23:59:27 <Essjay[m]> <fo98[m] "In the standalone platform-tools"> Do it one at a time
+23:59:53 <Essjay[m]> And I recommend the stand alone tools personally

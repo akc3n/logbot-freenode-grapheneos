@@ -1,0 +1,660 @@
+00:33:52 <bseeinu[m]> Does anyone use/know a solution to set battery Charging limit, to extend the battery lifespan?
+00:34:03 <strcat> does it automatically by itself
+00:34:11 <strcat> and throttles charging as it approaches 100%
+00:34:13 <strcat> to a super slow rate
+00:34:25 <JTL> What's the point of limiting the charging manually?
+00:34:35 <bseeinu[m]> Fantastic, thanks
+00:34:43 <bseeinu[m]> None since it already does
+00:34:50 <JTL> ah right
+00:34:56 <strcat> you'll notice going 20%-80% is super fast
+00:35:02 <strcat> and then it gets slower as it approaches '100%'
+00:35:10 <strcat> and '100%' doesn't mean 'max rated capacity of battery' really anyway
+00:35:18 <bseeinu[m]> Well, possibly limiting to 90% maybe it would? Sony's android Walkman devices offer that option
+00:35:27 <lg[m]> <aeonsolution[m] "Is there a way to confirm thats "> If you are on Ubuntu, you can keep something like activity monitor open while compiling to see what is happening with your resources.
+00:41:07 <bseeinu[m]> They have a toggle called "Battery care" that limits charging to 90%.
+00:42:20 <bseeinu[m]> Which apparently is also on some Xperia phones
+00:55:30 <brenneke[m]> <strcat "and throttles charging as it app"> Is that a GrapheneOS feature or Android?
+00:56:39 <strcat> device-specific
+01:17:43 <aeonsolution[m]> Hey lg, on Manjaro I used GParted to watch the memory run out. Thank you for pointing me in the right direction yesterday!
+01:18:02 <aeonsolution[m]> Very appreciated.
+01:20:36 <strcat[m]> gparted is storage though
+01:21:05 <aeonsolution[m]> I kept refreshing and watching the unused swap go down until it ran out
+01:21:30 <aeonsolution[m]> not the most efficient way to check
+01:22:01 <aeonsolution[m]> but i confirmed that's what was the issue
+01:22:17 <strcat[m]> in a terminal, run `watch free -m`
+01:23:02 <aeonsolution[m]> Will do
+01:23:54 <strcat[m]> or `watch cat /proc/meminfo` if you really want an information overload
+01:33:25 <brenneke[m]> <strcat "device-specific"> Is this the case for Pixel 2 XL then also?
+01:37:15 <anupritaisno1[m]> bseeinu: said feature is pretty stupid
+01:38:07 <strcat[m]> brenneke: yes
+01:38:10 <strcat[m]> it might be more aggressive on newer devices
+01:38:22 <anupritaisno1[m]> And implementing it properly means changing significant parts of android
+01:38:26 <anupritaisno1[m]> Remember that android sets off most maintenance operations only at 100%
+01:38:44 <anupritaisno1[m]> You'd not only have to add a limit you'd need to also modify code to make sure maintenance isn't skipped
+01:39:27 <anupritaisno1[m]> Otherwise stuff like f2fs gc will cause issues
+01:39:46 <anupritaisno1[m]> It is way simpler to just let your phone charge to 100%
+01:41:21 <anupritaisno1[m]> (Not to add the claims that charging to 90% extend battery life seem unfounded)
+01:41:41 <anupritaisno1[m]> strcat (@freenode_strcat:matrix.org): btw what's wrong with unlp
+01:51:42 <strcat> anupritaisno1[m]: doesn't meet our privacy/security expectations and is way too bloated
+01:52:13 <strcat> we want a simple, minimal implementation that's not arbitrarily extensible with third party apps, etc.
+01:52:27 <strcat> and without assorted security issues that I identified in that
+01:52:28 <anupritaisno1[m]> Oh
+01:52:32 <strcat> just not going to bundle it
+01:52:43 <strcat> and geocoding should be a separate app
+01:52:46 <anupritaisno1[m]> What kind?
+01:52:55 <strcat> and any remote services should be optional / off-by-default
+01:53:02 <strcat> but I'd rather just use local databases
+01:53:08 <strcat> including for geocoding
+04:23:42 <miniblue[m]> GrapheneOS is not flashy enough for me. Where are the security sliders? Where's the branding? Has strcat ever said "privacy, redefined" or "we take the privacy of our customers very seriously"? No? Didn't think so. Ever heard of Firefox? Now that's the shit, everyone. Firefox has everything. I mean, toggles! Sliders! Get your shit together people.
+04:24:38 <rgeturk[m]> lol
+04:24:42 <strcat[m]> a long time ago there was actually a security slider but I wrote a new hardened_malloc where all those security features and more could just be enabled by default with better performance
+04:28:17 <aeonsolution[m]> Hey strcat, I finished building the kernel and setting up the OS environment. I'm lost on what to do next.
+04:28:45 <strcat[m]> aeonsolution: https://grapheneos.org/build#extracting-vendor-files-for-pixel-devices
+04:28:54 <miniblue[m]> See? There you go.
+04:29:09 <aeonsolution[m]> Thanks strcat!
+04:29:11 <miniblue[m]> :P
+04:31:00 <anupritaisno1[m]> miniblue: Firefox also has a really shit sandbox
+04:31:01 <anupritaisno1[m]> Should grapheneos do that too?
+04:31:02 <anupritaisno1[m]> aeonsolution: what you need help with?
+04:31:20 <aeonsolution[m]> Hey if there is someone that uses the Pixel 3a and has done some of this already, I'd love to collaborate with you!
+04:31:30 <aeonsolution[m]> <anupritaisno1[m] "aeonsolution: what you need help"> Hey!
+04:31:42 <anupritaisno1[m]> aeonsolution: just tell me what you need help with
+04:32:21 <aeonsolution[m]> I'm trying to figure out the workflow. Right now, I'm building graphene-10 for testing
+04:32:55 <anupritaisno1[m]> So where exactly do you need help
+04:34:08 <miniblue[m]> anupritaisno1: ?
+04:34:08 <aeonsolution[m]> strcat pointed me to the next step so I think I'm good right now unless I get stuck and wanted to signal to people that have worked on this that'd I would like to get to know them and work on this
+04:34:45 <miniblue[m]> What is this... sandbox you speak of?
+04:34:45 <aeonsolution[m]> anupritaisno1: I appreciate the help!
+04:38:17 <anupritaisno1[m]> <aeonsolution[m] "anupritaisno1: I appreciate the "> If you need a reference for building the kernel
+04:38:50 <anupritaisno1[m]> aeonsolution: what kernel version is yours on?
+04:40:07 <miniblue[m]> Daniel made me switch to Ungoogled Chromium awhile back on desktop out of fear. While I don't like the stranglehold that Google has on the market it's definitely more secure then Firefox and, at this point, a lot less bloated.
+04:40:25 <miniblue[m]> Mozilla is a shitty company at this point.
+04:40:28 <aeonsolution[m]> <anupritaisno1[m] "aeonsolution: what kernel versio"> anupritaisno1: is there an easy way to check, I'm just following the instructions; I still haven't got all the information loaded in my head yet
+04:40:55 <anupritaisno1[m]> Another example https://github.com/GlassROM-devices/android_kernel_oneplus_sm8150/blob/lineage-17.1/build_kirisakura.sh
+04:40:55 <anupritaisno1[m]> Note that you can use all llvm tools except for the assembler
+04:40:57 <anupritaisno1[m]> aeonsolution: yes
+04:41:22 <anupritaisno1[m]> Open the top level makefile of your kernel
+04:41:39 <anupritaisno1[m]> Your kernel version is version.sublevel.patchlevel
+04:42:19 * anupritaisno1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/TlATwZWEjeZTxxMuGfZIViSb >
+04:42:30 <anupritaisno1[m]> So the kernel version is 4.14.177
+04:42:57 <aeonsolution[m]> 4.9.200
+04:43:17 <aeonsolution[m]> Thanks, I found it!
+04:43:35 * anupritaisno1[m] uploaded an image: Screenshot_20200503-101318_Settings.png (164KB) < https://matrix.org/_matrix/media/r0/download/m.apex.to/XUMkabsRojwKOidvqhMpGZND >
+04:43:38 <anupritaisno1[m]> If you're lazy look at about phone
+04:43:43 <anupritaisno1[m]> Hmm 4.9
+04:44:02 <anupritaisno1[m]> Might have to see if there's a hardened patch for 4.9
+05:02:51 <JTL> > 21:24 <strcat[m]> a long time ago there was actually a security slider but I wrote a new hardened_malloc where all those security features and more could just be enabled by default with better performance
+05:02:53 <JTL> Security slider in the context of malloc implementation, or other things as well?
+05:03:20 <strcat[m]> it only impacted malloc but it was generic
+05:03:25 <strcat[m]> performance vs. security slider
+05:03:30 <JTL> right
+05:03:37 <JTL> Assumed as much
+05:15:06 <anupritaisno1[m]> strcat (@strcat:matrix.org): I think
+05:15:07 <anupritaisno1[m]> It can be reimplemented
+05:15:26 <anupritaisno1[m]> Why not use it to configure kernel lockdown mode?
+05:16:00 <strcat[m]> what does that have to do with it?
+05:16:13 <strcat[m]> anupritaisno1: we don't need that, SELinux provides everything and more
+05:16:22 <strcat[m]> and I don't know what a slider has to do with it
+05:18:55 <anupritaisno1[m]> Just a shot in the dark
+05:45:20 <AnotherHacker> I have a stupid question, because this is a security OS, there was discussion yesterday about which apps have clipboard access in Android 10, particularly that they need to to be active and focused.
+05:46:22 <AnotherHacker> >cdesai>foreground services need to have a notification, so you'll be able to see those too, unless you've hidden the notification
+05:47:54 <AnotherHacker> So would running a "live backdrop" like 4D backdrop, which needs to run an active service to work, be a very very bad idea for security and privacy
+05:53:31 <TheJollyRoger> Whew. Hey guys, I'm trying to fetch --nohooks android at this moment to fetch the Chromium sources and finding that fetch seems to be hanging. Do I need to force it to use Python3?
+05:55:22 <JTL> uh TheJollyRoger
+05:55:25 <JTL> Let me check my setup later
+05:55:58 <JTL> TheJollyRoger: If i remmber right it did appear to be stuck for quite awhile, but it seemed to be doing something judging by CPU usage
+05:56:09 <TheJollyRoger> Oh!
+05:56:11 <TheJollyRoger> OKay!
+05:56:15 <TheJollyRoger> Whew.
+05:56:27 <TheJollyRoger> Right now I'm uh... tormenting my poor connection and my poor ryzen box.
+05:56:43 <JTL> Still faster then my systems
+05:56:55 <JTL> (well my connection is better then yours, but I'll get a new workstation eventaully(tm))
+05:57:16 <TheJollyRoger> Right now my ryzen is looking at my T2 and going "WHY THE HELL AREN'T YOU DOING ANY WORK" and my T2 is going "Why the hell are you getting all MY work?!"
+05:57:21 <TheJollyRoger> X3.
+05:57:28 <JTL> Ahahaha
+05:58:35 <TheJollyRoger> It's a very bizarre day when I'm using the T2 for playing Xonotic and the Ryzen for... building
+05:59:36 <JTL> :D
+06:18:59 <TheJollyRoger> `top` is showing something like twenty instances of curl and git.
+06:19:36 <JTL> Sounds like it's working
+06:20:18 <TheJollyRoger> Hehehe well... I'm also running repo sync for the GrapheneOS manifest... I'm redownloading the source (or tryingto) and I'm going to try to see if I can follow aeonsolution[m] in getting it built again!
+06:47:27 <JTL> TheJollyRoger: You know where to find me
+06:47:55 <JTL> Starting a Vanadium build before I sleep, than AOSP when I wake up
+06:49:21 <TheJollyRoger> Okay! Thanks man, I'm downloading the source now.
+06:54:12 <AnotherHacker>  Approx what is the build time for Vandium and GrapheneOS ?
+06:56:15 <JTL> 6 hours to build GrapheneOS on Skylake era quad core Xeon based server
+06:56:26 <JTL> Also about that much for Vanadium I think
+06:56:40 <JTL> Hopefully I'll get a better workstation/server in the near future
+06:59:25 <TheJollyRoger> Hi AnotherHacker, not counting the time it takes to download the source code, it takes me around 2-1/2 hours to build the operating system and kernel on a Ryzen 2600X with 32GB of RAM and 3-1/2 hours to build Vanadium.
+07:00:04 <JTL> Yes, Vanadium was longer for me too
+07:00:14 <TheJollyRoger> Downloading the source code is the bigger probelm for me, since I have to write the TCP request on a parchment paper, wait until the crew empty one of the rum barrels, then put the TCP request in a barrel and put that over the side of the ship.
+07:00:33 <JTL> At least you don't live in Australia
+07:00:50 <JTL> It's that plus a kangaroo by ship
+07:00:59 <TheJollyRoger> Then I have to wait until it washes up on the shore of Mexico, where someone will hopefully recognize its significance, and then transcribe the request...
+07:01:02 <TheJollyRoger> OH GOOD GRAVY
+07:01:28 <TheJollyRoger> Yes IP over Message in a Bottle is definitely faster than IP over Kangaroo!
+07:04:35 <zoraver[m]> Offtopic, but Lineage's infrastructure was compromised earlier today
+07:04:53 <TheJollyRoger> Hey zoraver[m] woah. What happened...?
+07:05:08 <JTL> zoraver[m]: I wouldn't say offotpic, as it relates to Android and security
+07:05:17 <JTL> I'm sure TheJollyRoger could agree with that reasoning in a way
+07:05:18 <TheJollyRoger> Yeah I'd say so too!
+07:05:37 <AnotherHacker> 🤣
+07:05:51 <zoraver[m]> https://status.lineageos.org/
+07:06:55 <JTL> Oops, they didn't patch saltstack
+07:07:03 <JTL> Oops
+07:07:21 <TheJollyRoger> Well at least no signing keys were compromised.
+07:07:35 <JTL> They say
+07:07:50 <TheJollyRoger> Yeah... we hope...
+07:08:06 <TheJollyRoger> Cripes man. Now I want to include complimentary smartcards in every debugging cable I send.
+07:08:21 <TheJollyRoger> Oh yeah.
+07:08:35 <JTL> https://www.zdnet.com/article/saltstack-salt-critical-bugs-allow-data-center-cloud-server-hijacking-as-root/
+07:09:06 <JTL> > By April 23, the developers alerted community members (.PDF) to an incoming patch and urged users to make sure their Salt masters were not exposed to the Internet. Fixes for the critical flaws, published in software versions 2019.2.4 and 3000.2, were released on April 29.
+07:09:11 <JTL> Should've listened to the warning :|
+07:09:21 <JTL> I heard about this earlier
+07:10:03 <TheJollyRoger> Oh wow. I did not even hear about this.
+07:15:41 <JTL> https://labs.f-secure.com/advisories/saltstack-authorization-bypass
+07:21:02 <TheJollyRoger> Holy shit.
+07:21:43 <JTL> What's funny is they changed their Python crypto libraries before annoucing this and someone was speculating that was related, but that's not mentioned in the article
+07:21:57 <JTL> Doesn't seem to be, but I'll look through the commits later
+07:24:11 <TheJollyRoger> Hmm. Only a few days ago.
+07:24:35 <TheJollyRoger> How much time does it take to backport a security fix, I wonder?
+07:24:50 <TheJollyRoger> I'm asking this as a rhetorical question because I'm now thinking about Debian.
+07:25:49 <JTL> I haven't looked into Debian and saltstack lol
+07:26:01 <JTL> The answer there is "A round tuit"
+07:27:39 * TheJollyRoger now imagines the Debian developers bailing out the ship while they're up to their necks.
+07:27:55 <TheJollyRoger> And like, their buckets are not even getting above the surface of the water.
+07:30:02 * TheJollyRoger starts drowning his sorrows
+07:32:22 <zoraver[m]> If I am reading the Debian changelog correctly, salt hasn't been updated in stable for a bit less than a year
+07:32:30 <JTL> Jesus fuck
+07:32:48 <zoraver[m]> https://packages.debian.org/source/buster/salt
+07:32:56 <zoraver[m]> https://metadata.ftp-master.debian.org/changelogs//main/s/salt/salt_2018.3.4+dfsg1-6_changelog
+07:33:12 * TheJollyRoger suddenly turns green, has his cheeks bulge, and he runs for the railing.
+07:35:08 <TheJollyRoger> My chatting VM is running Bullseye because I just needed something that worked and worked fast... I'm gonna try to get void to run again in a bit. Cripes. Aaargh seems like I can barely stay on top of things for my own systems at times.
+07:35:23 <TheJollyRoger> I relapsed :(
+07:35:29 <TheJollyRoger> Relapsed into Debianism :(
+07:35:38 <TheJollyRoger> Which goes hand in hand with alcoholism.
+07:36:02 <zoraver[m]> It looks like it is fixed on Bullseye
+07:36:16 <TheJollyRoger> OH THANK GOODNESS
+07:38:24 <TheJollyRoger> Well... I have to go drink myself into unconsciousne-- I mean catch some sleep.
+07:39:01 <TheJollyRoger> Night, shipmates!
+07:39:09 <zoraver[m]> Goodnight!
+07:39:22 <JTL> Sleep well
+10:23:40 <hitchhooker[m]> LineageOS servers hacked due auth pass and directory traversal vulnerability in Salt 🌊
+10:27:50 <yekip[m]> good old Lineage!
+10:32:01 <hitchhooker[m]> its quite pointless to sell privacy without security
+10:36:26 <mxnorvak[m]> What does this mean for the users ?
+10:37:17 <yekip[m]> you're all gonna die
+10:37:38 <mxnorvak[m]> Hehe xD
+10:37:55 <yekip[m]> i suspect it means more graphene users :D
+11:12:11 <anupritaisno1[m]> <hitchhooker[m] "LineageOS servers hacked due aut"> Yeah apparently it's just a crypto miner
+11:12:26 <anupritaisno1[m]> <mxnorvak[m] "What does this mean for the user"> Nothing
+11:55:46 <mxnorvak[m]> Is ungoogled chromium reliable?
+11:56:13 <mxnorvak[m]> <anupritaisno1[m] "Nothing"> Great
+12:00:31 <Cyrinux[m]> Hi folks, do you know a way to got several profile like "work" ?
+12:01:19 <Cyrinux[m]>  * Hi folks, do you know a way to got several profile like "work" ? I mean, a true profile is complicated to use, if i want only to jail an IM for example
+12:05:13 <seaclown> Settings - system - advanced - multiple users
+12:23:06 <mischling[m]> or get shelter from fdroid and activate the work profile side by side without needing to switch
+12:30:14 <Cyrinux[m]> with multiple user we need to switch user, and configure the full profile, its slow, ok, very splitted, but i search a mix of this
+12:30:15 <Cyrinux[m]> i understand this doesnt exists sadly
+12:38:15 <seaclown> Try shelter as mischling suggested
+12:48:35 <Cyrinux[m]> I already use shelter since the begining, this doesnt reply to my question ;)
+12:48:41 <Cyrinux[m]>  * I already use shelter since the begining, this doesnt reply to my question / needs;)
+12:48:43 <Cyrinux[m]>  * I already use shelter since the begining, this doesnt reply to my question / needs ;)
+12:54:45 <mischling[m]> as far as i know only one work profile is possible due to android limitation also there are some security concerns regarding shelter having complete access to the apps in the work profile. someone correct me if I'm wrong
+14:37:52 <aeonsolution[m]>  hey everyone, I'm trying to run the following command:
+14:37:52 <aeonsolution[m]> vendor/android-prepare-vendor/execute-all.sh -d DEVICE -b BUILD_ID -o vendor/android-prepare-vendor
+14:37:52 <aeonsolution[m]> I don't know what is supposed to go under DEVICE bit I do know where to get the BUILD_ID. Thanks in advance.
+14:43:43 <dazinism> Cyrinux: I've seen a demo implementation of multiple work profiles
+14:46:35 <dazinism> Cyrinux: https://nitter.net/phhusson/status/1249459922380693512#m
+14:47:26 <dazinism> Due to the fact that the device manager app owns work profiles rather than the user, I'm pretty sure this will never make it into Graphene
+14:49:57 <dazinism> Have heard Daniel say that feature so user profiles could have shared homescreen etc. like work profiles would be accepted
+14:51:43 <dazinism> I was just trying to get a work profile working in a second user account with shelter and it didnt work
+14:52:09 <dazinism> Heard Daniel say its possible. Anyone managed to get this to work?
+14:54:13 <fll[m]> > as far as i know only one work profile is possible due to android limitation also there are some security concerns regarding shelter having complete access to the apps in the work profile. someone correct me if I'm wrong
+14:54:13 <fll[m]> One work profile per user
+14:55:27 <dazinism> fll: you got that to work on second user? Just tried via shelter and it failed
+14:55:42 <dazinism> Guess try via adb next...
+15:03:36 <mischling[m]> i wouldn't mess with the phone too much as to not compromise the security. i also keep the installed apps at a bare minimum
+15:04:17 <mischling[m]> same about the granted permissions
+15:07:36 * aeonsolution[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/YNoQrmJKexChCGVnHjdIbusY >
+15:08:02 <aeonsolution[m]> for the DEVICE option
+15:16:27 <mmcblk0[m]> https://t.me/googlecameraport
+15:21:11 <aeonsolution[m]> Good morning anupritaisno1! Can you help me with this?
+15:49:32 <cx2[m]> Am I able to run CTS in a VM?
+15:50:58 <nscnt> cx2[m]: https://source.android.com/compatibility/cts
+15:51:47 <nscnt> "The CTS runs on a desktop machine and executes test cases directly on attached devices or an emulator."
+15:52:50 <aeonsolution[m]> nscnt: Thank you, I was wondering about that too!
+15:52:57 <cx2[m]> Too easy... Thanks! I hadn't made it that far yet.... I am just now about to set up a second machine.
+15:52:57 <cx2[m]> Fedora is the way to go, yeah?
+15:53:21 <fll[m]> dazinism: I never tried before, but yea I can't make it work rn either
+15:53:46 <cx2[m]> I have this windows gaming PC just sitting around begging to have a new operating system installed.... figured I'd kill two birds with one stone
+15:54:10 <aeonsolution[m]> cx2: It's whatever you feel comfortable using. Everyone has their preference.
+15:54:15 <nscnt> cx2[m]: Oh, hehe! I tried to install Arch Linux yesterday. I got it up and running but noticed... I don't want it. I'm back on a fresh Fedora install. I'll stay here for the foreseeable future.
+15:54:48 <cx2[m]> Fedora it is.
+15:56:05 <nscnt> cx2[m]: I have another hard disk with un-activated Windows to play some games. I boot from it if I want to play games.
+15:57:03 <cx2[m]> The thing is, I don't really game and it's a relatively decent computer. Especially to just be sitting  around collecting dust.
+15:58:18 <nscnt> cx2[m]: What are you using at the moment?
+15:58:35 <nscnt> Or are you on it right now?
+15:59:20 <cx2[m]> A few month old macbook pro 16in
+16:00:07 <cx2[m]> I have a few computers, a few phones, and plenty of time on my hands to help out...
+16:00:18 <cx2[m]> I would just need some direction haha.
+16:01:45 <nscnt> Re: CTS on an emulator. I wanted to say 'no', but I re-read. Still, I'm not sure how helpful CTS would be on an emulator. I don't have any experience with it.
+16:01:50 <Zenithium[m]> nscnt: Why didn't you want Arch? :D
+16:02:01 <nscnt> Zenithium[m]: ;(
+16:03:15 <nscnt> Zenithium[m]: I think I don't actually want to do it all myself, even though I thought I would.
+16:03:25 * cx2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/RkGXbNWWEEEXygejzHNdfoKk >
+16:04:02 <nscnt> Zenithium[m]: Maybe wrong time as well. I need a ready-to-work setup right now.
+16:05:17 * aeonsolution[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/FcuycnhAcVzQYyXXFxRyKHfR >
+16:07:10 <cx2[m]> With regard to attempting to help here, which would be the right choice... Promise I will quit asking. haha
+16:07:10 <cx2[m]> Manjaro or Fedora?
+16:07:26 <aeonsolution[m]> there is no right choice I'm afraid
+16:07:28 <nscnt> cx2[m]: If you want to help here, no doubt Fedora.
+16:07:40 <cx2[m]> Done
+16:08:12 <nscnt> The learning curve would be too much, in my opinion.
+16:08:19 <nscnt> (If choosing Arch)
+16:08:42 <nscnt> Don't know if Manjaro is "easier"
+16:08:51 <cx2[m]> Any tips on "hardening" for Fedora? Prefer a link to point to so that I'm not hijacking the room
+16:09:17 <cx2[m]> <nscnt "The learning curve would be too "> Agreed.... The first step: Know oneself and seek self improvement.
+16:09:57 <nscnt> cx2[m]: I don't do "hardening", idk about it.
+16:09:58 <Zenithium[m]> <nscnt "Don't know if Manjaro is "easier"> There's nothing "hard" about Manjaro, it's fully set up out-of-the-box
+16:10:46 <aeonsolution[m]> <nscnt "Don't know if Manjaro is "easier"> The installer is similar to Fedora. Everything gets setup for you \o/ but for sure does not have as much support as Fedora
+16:10:46 <nscnt> Zenithium[m]: Right, I forgot.
+16:11:27 <aeonsolution[m]> but everything for Arch applies to Manjaro as far as I've seen
+16:11:31 <aeonsolution[m]> so pros and cons
+16:12:01 <cx2[m]> thanks for the help folks. Much appreciated. Fedora it is, will have it up in running here in a bit.
+16:12:17 <cx2[m]> Think I should just swap out macOS for Fedora??
+16:12:51 <aeonsolution[m]> thats up to you, a lot of software development is good in macOS if you have the specs for it
+16:12:52 <nscnt> cx2[m]: What do you mean?
+16:12:56 * cx2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/MAnIUDsdMtutOebIDqWypbSM >
+16:13:29 <nscnt> You meant installing Fedora on your Mac? lol
+16:13:43 <cx2[m]> I have a few older macbooks..... replaced the OS on those with an Ubuntu flavored Distro..... works perfect.
+16:14:36 <nickcalyx[m]> The macbook 2,1 can be flashed with coreboot
+16:14:52 <cx2[m]> But the Linux REALLY hates the retina display.... .only a handful of distros supported it, at least from what I could tell. And especially on this new machine.... Ubuntu is one of the few that I would have expected to have no issues.... and at least in VM, it was trash.
+16:16:20 <DannyWorkOrderPr> > But the Linux REALLY hates the retina display.... .only a handful of distros supported it
+16:16:20 <DannyWorkOrderPr> Did Apple release Linux drivers for it? If not, you should be thankful someone did the reverse engineering work to support the closed source shit at all.
+16:18:40 <cx2[m]> Danny@WorkOrderPro: I really wouldn't know. I would almost be certain that this machine would poor display with linux.... but my 2017 Worked with at least : Mint, Ubuntu, and Parrot
+16:20:23 <cx2[m]> No matter the case, it's a windows machine that will be getting the Fedora makeover here in a second.
+16:33:54 <brenneke[m]> <anupritaisno1[m] "Remember that android sets off m"> Is this true, the lesser of two evils is really to allow phone to charge to 100 percent?
+16:39:26 <strcat> DannyWorkOrderPr: it doesn't need special drivers
+16:39:33 <strcat> it's just a HiDPI screen
+16:39:49 <strcat> Apple took a really cheesy approach to HiDPI enabled by their control over hardware
+16:44:15 <DannyWorkOrderPr> <strcat "Apple took a really cheesy appro"> I was gonna say, they must have done somethin "special" to where it's not recognized as a normal display
+16:45:02 <strcat> DannyWorkOrderPr: it is treated as a normal display
+16:45:21 <strcat> I use 27 inch 4k monitors which are 161 dpi
+16:45:56 <strcat> it's a lot more than 96 dpi even though it's not retina
+16:46:23 <strcat> and my laptop is an XPS 13 with a 4k screen
+16:46:30 <strcat> which is definitely very high DPI
+16:46:53 <strcat> and yes lots of windows and linux applications struggle to look good on it
+16:47:25 <strcat> chromium works fine, gtk3 and qt5 apps work fine
+16:47:32 <strcat> unless they screw it up
+16:47:48 <strcat> the only gtk2 application I have is gimp and I use krita anyway
+16:48:01 <strcat> gimp is so fucking terrible and I'd rather just remove it once krita can do a few more things
+16:48:57 <strcat> the problem with gimp is it was made by reptilian aliens, not humans, so the UX is not designed for usage by humans
+16:49:00 <strcat> similar to Git
+16:49:49 <cdesai> lol
+16:49:52 <madaidan[m]> Krita is so good
+16:51:48 <strcat> yeah removing gimp and seeing if I can get by with just krita again
+16:52:10 <strcat> goodbye gtk2 and.... luajit
+16:52:11 <Zenithium[m]> I don't see much benefit to a 4K 13" screen, it just drains the battery unnecessarily
+16:52:14 <Zenithium[m]> The XPS 13 is pretty nice though
+16:52:25 <Zenithium[m]> strcat: Did you get the developer edition?
+16:52:43 <strcat> Zenithium[m]: no because at the time it was behind by a year
+16:52:51 <strcat> but I did get it on sale
+16:54:24 <strcat>  /home/strcat/projects/openbsd-ports/books/grokking-the-gimp
+16:54:35 <strcat> I literally have a book about gimp wasting space
+16:54:40 <cx2[m]> <strcat "and yes lots of windows and linu"> just for knowledge sake, can you tell me the reasoning behind this? I have found myself a few times spending far too long trying to tweak Virtual Box, or a full install, only to find out that really the OS just has a hard time looking good on that display.
+16:54:41 <strcat> was just deleting all the config files it left in ~
+16:55:30 <strcat> cx2[m]: lack of high dpi support?
+16:55:45 <strcat> so, traditionally, everything used hard-wired pixel amounts, fixed-size fonts and bitmap graphics
+16:56:01 <strcat> everything would ideally be all vector design
+16:56:05 <strcat> no pixel widths
+16:56:41 <strcat> if there are units for lengths they should scale equally with everything else
+16:57:02 <strcat> nowadays fixed size fonts are dead, essentially, and they look terrible on modern screens too
+16:57:34 <cx2[m]> So it ISN'T a driver issue....just a general high dpi issue. Got it.
+16:57:34 <cx2[m]> Good thing this windows machine is not one of those..... I don't think. Some giant MSI something or another..... bout to get Fedora jammed in side
+16:57:50 <strcat> cx2[m]: apple approached high dpi support by making the screen 2x or 4x denser, etc.
+16:58:00 <strcat> and then all legacy stuff can be rendered 2x or 4x bigger
+16:58:03 <strcat> with no loss from scaling
+16:58:19 <strcat> since 1 pixel just becomes 4 or 16
+16:58:34 <strcat> and also they're good at forcing the whole ecosystem to update
+16:58:45 <strcat> all their own hardware is high dpi
+16:58:56 <strcat> for laptops
+16:59:34 <strcat> and imacs now too I guess
+16:59:40 <strcat> not quite as much
+16:59:59 <strcat> cx2[m]: anyway on linux and windows there is no set of things you have to support
+17:00:05 <strcat> the dpi is arbitrary
+17:00:10 <strcat> and most devs don't have high dpi screens
+17:00:34 <strcat> cx2[m]: also gtk2, X11, etc. don't have working high dpi support
+17:00:38 <strcat> they just can't handle it right
+17:00:43 <strcat> X11 can't handle screens with different DPIs
+17:01:08 <strcat> cx2[m]: on android this all works fine since it was designed for it from the start, it has multi-monitor support with proper high dpi support etc
+17:01:27 <strcat> see chromeos which uses an android container with android's free form window management turned on
+17:01:38 <cx2[m]> <strcat "and most devs don't have high dp"> assuming because a large amount of work is done in bash?
+17:02:18 <cx2[m]> <strcat "cx2: also gtk2, X11, etc. don't "> Oh good.... so my Gimp Download on this macbook pro 16" was not a great choice haha.
+17:02:24 <cx2[m]> seemed to work ok the other day?
+17:03:13 <cx2[m]> more of an on topic question.. So once I finish this fedora setup, I am going begin some CTS runs based off of TJR's guide.
+17:03:13 <cx2[m]> I have a few handsets...... 3, 3a, 3XL, is it useful to the devs to just keep running and reporting?
+17:03:22 <strcat[m]> cx2: gimp has tried to work around it, poorly
+17:03:26 <strcat[m]> it doesn't work well though
+17:03:59 <strcat[m]> the way it works on android is they defined a bunch of densities from the start, so all devices built to run it need to use one of those
+17:04:07 <strcat[m]> and it can use those to support arbitrary hardware
+17:04:17 <strcat[m]> a bit like apple's way but more flexible since it has more variants
+17:04:28 <strcat[m]> and it encourages using vector graphics
+17:05:32 <strcat[m]> the non-legacy launcher icon format is vector only afaik
+17:08:55 <cx2[m]> Well, I'm realllly trying to stay away from having to snag another photoshop copy. Creative Cloud is such a fucking waste for folks like me that do a fiar amount of photo editing, but as a hobby, and not professionally
+17:10:33 <strcat> just use krita?
+17:10:57 <strcat> sucks a lot less than gimp as long as it supports what you're doing which it probably does
+17:11:37 <strcat> gimp is just ALIEN
+17:13:06 <nscnt> GIMP is fine in imo
+17:15:57 <madaidan[m]> <nscnt "GIMP is fine in imo"> Ding dong your opinion is wrong
+17:16:06 <nscnt> ;(
+17:17:27 <strcat> if you introduce anyone to both krita and gimp at the same time
+17:17:42 <strcat> any human is going to pick krita and won't understand gimp's way of doing things
+17:18:00 <strcat> it takes ages of dealing with it to have your mind broken and reshaped into a gimped one
+17:18:40 <madaidan[m]> <strcat "any human is going to pick krita"> Except masochists
+17:18:44 <cx2[m]> hahaha..... point taken... i'll give Krita a shot. Does it have Wacom Tablet support?
+17:18:46 <strcat> of course if you're the right species of reptilian alien gimp is designed for then maybe it works well from the start
+17:18:49 <strcat> cx2[m]: tes
+17:19:07 <strcat> cx2[m]: it's a digital painting app first, really, editing second, but it's way easier to use for editing than gimp anyway
+17:20:01 <strcat> if you want a bunch of silly filters install gmic's krita plugin
+17:20:04 <strcat> since it doesn't come with that many
+17:20:18 <cx2[m]> Ill give it a whirl.... do you still get things like the pen tool / paths?
+17:20:21 <cx2[m]> Eh,....you dont' need to answer, i'll figure it out
+17:20:40 <strcat> cx2[m]: yes you can draw paths / curves
+17:20:42 <strcat> it's better at that
+17:20:55 <strcat> the ONLY thing it wasn't good at was fonts but I think that's resolved and it's probably better at that too now
+17:21:05 <cx2[m]> awesome! added to the list.
+17:21:11 <strcat> cx2[m]: https://docs.krita.org/en/reference_manual/tools.html
+17:21:29 <strcat> cx2[m]: it has far better wacom support
+17:21:34 <strcat> and paint brush support
+17:22:14 <strcat> cx2[m]: krita's focus is digital painting and it's extremely good at that
+17:22:27 <strcat> so brushes, tablet support, etc. is all far better than gimp, night and day
+17:22:38 <strcat> but in general it's better at editing, etc. too as long as it has what you want and it probably does
+17:22:44 <strcat> way more intuitive and sane
+17:22:52 <strcat> gimp is a waste of time struggling with the stupidity of how it's designed
+17:23:09 <cx2[m]> Custom brushes as well? It's starting to sound like Krita is to Gimp as Gimp is to PS
+17:23:20 <strcat> cx2[m]: yes it has really good paint brushes
+17:24:03 <strcat> cx2[m]: glance at a video of someone using it
+17:24:13 <cx2[m]> yeah i'm definitely going to snag it up and give it a shot.
+17:24:23 <cx2[m]> already on it.
+17:24:39 <strcat> cx2[m]: https://docs.krita.org/en/reference_manual/brushes/brush_settings/tablet_sensors.html
+17:24:49 <strcat> it's designed for painting with a stylus that has pressure and angle sensors
+17:24:54 <Zenithium[m]> My impression was always that GIMP is better for photo editing and Krita is better for drawing
+17:24:55 <strcat> it's the core functionality
+17:25:03 <strcat> Zenithium[m]: well in theory gimp is for editing, krita is not
+17:25:07 <strcat> but I'd far rather use krita for editing
+17:25:17 <strcat> because it actually makes sense and I don't have to waste time trying to make it do what I want
+17:25:20 <strcat> or figuring out how to do something
+17:25:27 <strcat> it's obvious and intuitive and the tools each have a better UI
+17:25:45 <strcat> I see no reason to use gimp aside from something that's missing in krita and chances are you won't be missing anything
+17:25:45 <nscnt> They are two (different) tools, nothing else.
+17:26:07 <strcat> but krita does do editing (quite well, better than gimp imo) and gimp does do painting (horribly)
+17:26:20 <cx2[m]> Yeah back to my original point, I wish photoshop was more accessible.... just couldn't bring myself to continue use when it went to creative cloud.
+17:33:24 <nscnt> Good thing that there are other tools on the market. Photoshop isn't excessively good, it's just widely used and people are used to it.
+17:40:05 <strcat> https://docs.krita.org/en/reference_manual/tools/magnetic_select.html#magnetic-selection-tool works really well for example
+17:40:26 <strcat> it USED to be that krita wasn't a great photo editor but it definitely is one now
+17:49:38 <strcat> is anyone on macOS? can you type tar --version?
+17:49:55 <strcat> I want to know if they use bsdtar as tar
+17:50:19 <strcat> going to stop telling people to use the unzip command because it hasn't been updated since 2009 and bsdtar (libarchive) can unzip
+17:50:28 <strcat> and windows 10 has bsdtar (as 'tar')
+17:53:54 <nscnt> strcat: Yes, bsdtar on latest macOS.
+17:55:32 <strcat> nscnt: as 'tar' command?
+17:55:35 <strcat> or as a 'bsdtar' command
+17:55:38 <strcat> or both
+17:55:38 <cx2[m]> `bsdtar 3.3.2 - libarchive 3.3.2 zlib/1.2.11 liblzma/5.0.5 bz2lib/1.0.6`
+17:55:38 <nscnt> strcat: tar
+17:55:41 <strcat> kk
+17:55:55 <strcat> so the annoyance here is linux distros
+17:56:02 <strcat> using shitty gnu tar as tar
+17:56:25 <strcat> so I think I will tell people to use tar and then special case distros using GNU tar
+17:58:10 <cx2[m]> strcat: Asked earlier.... I have a few of each: 3, 3a, 3aXL......what is a useful frequency for CTS?
+17:58:21 <strcat> don't know what you mean
+17:59:00 <cx2[m]> strcat: and would you care to even see anything from Pixel 2s.... I have one of those available as well.
+17:59:03 <strcat> if you want to run the CTS and keep track of results it involves more than just running it and posting the results
+17:59:21 <strcat> you need to learn how to run the CTS and handle the results
+17:59:58 <strcat> talk to TheJollyRoger
+18:00:47 <zxwayland> oh its you daniel
+18:01:00 <cx2[m]> Done and done. That's what I wasn't unclear of.... talked with TheJollyRoger about it. But I came away not knowing what would be useful.... is it once per update, once per week, etc.
+18:02:30 <fujita_[m]> Noob question: this question is base on reading the  description of these 2 apps which seems similar (haven't fully under stand how "work profile" on shelter works)
+18:02:30 <fujita_[m]> Hi guys, I was just wonder what's the difference between using shelter for apps like WhatsApp & Instagram compared to using webapps  for pwa
+18:04:06 <strcat> too broad / vague of a question
+18:04:28 <strcat> PWAs are just an alternate UI for web pages, they run in the browser
+18:04:48 <strcat> need to be more specific with the question
+18:12:33 <strcat[m]> https://www.libarchive.org/
+18:12:40 <strcat[m]> so this is tar on freebsd, windows, macos
+18:13:17 <strcat[m]> curious if any linux distributions use it instead of gnu tar
+18:15:00 <nscnt> but muh gnu
+18:15:43 <strcat[m]> it's nice having a unified syntax for handling zip, rar, etc. via the tar command
+18:15:50 <strcat[m]> I can't stand commands like unrar / unzip
+18:16:36 <fujita_[m]> Currently, I need WhatsApp Instagram to keep in touch with friends and families.
+18:16:36 <fujita_[m]>  
+18:16:36 <fujita_[m]> I was wondering what is the difference with Webapp which from what I understand uses pwa and "run in its own sandbox" and using shelter which runs the app inside the isolated profile
+18:17:46 <nscnt> Right click, 'Extract here'
+18:18:11 <nscnt> :D
+18:18:27 <strcat[m]> PWAs are just web pages with a fancy UI that makes them look like an app
+18:18:45 <strcat[m]> nscnt: I always look at what they are going to extract first...
+18:18:57 <strcat[m]> I don't want to end up with 1000 files mixed in with other things
+18:19:17 <strcat[m]> tar tf foo.rar; tar xf foo.rar
+18:19:22 <strcat[m]> alias tar=bsdtar ofc
+18:19:44 <nscnt> wowow you computer nerd?
+18:19:55 <nscnt> jk
+18:22:04 <nscnt> I honestly don't use the terminal for such stuff. And it's really annoying that some compressions get immediately extracted
+18:22:16 <madaidan[m]> <nscnt "wowow you computer nerd?"> Everyone here probably is
+18:22:16 <nscnt> ... when double clicking on it
+18:22:23 <strcat> I don't have a file manager
+18:22:40 <nscnt> Yea, I'm lazy
+18:22:47 <strcat> I'm too lazy to use a file manager...
+18:22:51 <strcat> too much effort / trouble
+18:23:21 <nscnt> Do you use lf or something?
+18:23:43 <strcat> dunno what you mean
+18:23:43 <nscnt> Or just "nothing"
+18:23:56 <madaidan[m]> `ls` is the only file manager I need
+18:24:34 <nscnt> I actually meant lf btw
+18:24:39 <nscnt> no typo
+18:24:58 <nscnt> https://github.com/gokcehan/lf
+18:25:09 <strcat> I use zsh with ls, cd, rm, mv, rename, etc.
+18:25:13 <strcat> nscnt: I don't want a file manager
+18:25:26 <strcat> if I was going to use a file manager I wouldn't want a console UI
+18:26:58 <nscnt> I understand
+18:27:44 <strcat> for browsing images I use sxiv -t
+18:28:21 <strcat> https://github.com/muennich/sxiv unfortunately doesn't do svg
+18:29:28 <nscnt> I use it, too
+18:31:23 <nscnt> But by clicking on it lol
+18:38:50 <strcat[m]> nscnt: you can click on them in that...
+18:40:32 <nscnt> mh? I meant I use the file manager and click on the picture to open it with sxiv
+18:41:52 <nscnt> ah wait. I probably didn't undertand the thumbnail mode
+18:48:54 <nscnt> I never used thumbnail mode. It's nice, but is there a way to open all pics of a directory?
+18:49:32 <nscnt> well * works with error messages for everything else lol
+18:53:36 <strcat> nscnt: if you pass it a directory it opens everything in it
+18:53:46 <strcat> -r for recursive
+18:54:24 <strcat> sxiv -tr images
+18:56:45 <yzernik> has anyone figured out a way to forward SMS from Google Fi to a grapheneos phone?
+19:03:05 <cx2[m]> Sooo attempting to install Fedora and ran into a snag..... This machine has two hard drives. Would I install it on the SSD as the other drive is presumably for storage only?
+19:03:57 <nscnt> cx2[m]: Probably.
+19:05:04 <cx2[m]> that's what I figured too.... fuck it. The computer is just sitting around doing nothing anyway.... what's the worst that could happen?
+19:05:48 <nscnt> strcat: Oh, you can open a directory. I thought one would need to specify the images. It shows I don't use it much from the terminal
+19:06:10 <cx2[m]> Nevermind.... I can select both
+19:06:58 <nscnt> cx2[m]: You can free up space for both hard disks, but installing?
+19:08:21 <cx2[m]> I can select both disk..... looks like I need to do some digging.... it somes someone has partitioned the shit out of this computer.... weird
+19:08:58 <nscnt> cx2[m]: Choose your SSD and select free up space. Click 'free all' or smth when the dialog pops up.
+19:09:55 <cx2[m]> I just went in an deleted the partitions.... Fedora is now automatically partitioning/using both
+19:10:17 <nscnt> I've never tried that
+19:10:47 <cx2[m]> actually worked out really well. I completely forgot this thing had drives.
+19:16:35 <yekip[m]> is there any way to connect a pixel to ethernet rather than wifi?
+19:17:11 <M0xC0ncord[m]> <yekip[m] "is there any way to connect a pi"> USB-C to RJ-45 adapter?
+19:17:31 <yekip[m]> they exist?
+19:17:47 <yekip[m]> cool if so. will have a look thx
+19:18:00 <nickcalyx[m]> Snowden swears by them
+19:18:02 <M0xC0ncord[m]> <yekip[m] "they exist? "> Yes they're a thing
+19:18:03 <M0xC0ncord[m]> No idea if it works on GrapheneOS though
+19:18:51 <yekip[m]> nice, thanks. anyone in here tried one?
+19:19:11 <yekip[m]> i would assumesome settings need doing, not just plug n play
+19:40:14 <tentbot[m]> <yekip[m] "nice, thanks. anyone in here tri"> Just tested it for you and my adapter was plug and play
+19:42:23 <miniblue[m]> Lineage's servers getting hacked because of a Salt vulnerability still cracks me up.
+19:43:46 <yekip[m]> <tentbot[m] "Just tested it for you and my ad"> wow. Thank you
+19:43:46 <yekip[m]> so i just need a USB-C to Ethernet. and if you plug it in, you're just connected like with a laptop?
+19:44:15 <yekip[m]> <miniblue[m] "Lineage's servers getting hacked"> It's a bit more funny for graphene users I suspect :D
+19:44:43 <mxnorvak[m]> <nickcalyx[m] "Snowden swears by them"> How reliable of a story teller and security adviser do u find him to be? Not on this subject ,in general
+19:44:56 <miniblue[m]> Ya. I mean obvious my it sucks to get hacked but I mean come on.
+19:45:09 <miniblue[m]> *obviously
+19:48:48 <miniblue[m]> I mean I like Snowden but I don't know how reliable of a security advisor he is. He's living in Russia and is an enemy of the state, basically, so it's unlikely that he's on the bleeding edge of cyber security, so to speak. I mean he's probably more qualified than the average person but he's just that, a person. He's not a god, nor should he be considered the unadulterated source of truth or reliable information.
+19:49:10 <tentbot[m]> <yekip[m] "so i just need a USB-C to Ethern"> Simple as that
+19:49:34 <miniblue[m]> Even if he's right, vary your sources and all that.
+19:51:47 <mxnorvak[m]> <miniblue[m] "Even if he's right, vary your so"> You know it's really hard to find someone who knows what he's talking about,specially if you know less than em and cant validate the information they're spreading
+20:13:41 <minoas[m]> is there a way to share file between default and work profile. there is a "switch to work profile" option in the share menu but no option to save the file to memory
+20:14:04 <minoas[m]> * is there a way to share file between default and work profile? there is a "switch to work profile" option in the share menu but no option to save the file to memory
+20:14:18 <minoas[m]> * is there a way to share a file between default and work profile? there is a "switch to work profile" option in the share menu but no option to save the file to memory
+20:28:24 <nickcalyx[m]> <mxnorvak[m] "How reliable of a story teller a"> I'm not saying he's the end-all be all of security opinions.. mainly just saying I know they work because he uses them
+20:29:22 <nickcalyx[m]> they being usb->ethernet adapters for android
+20:29:58 <nickcalyx[m]> as to whether he's an "enemy of the state" well.. that's just your opinion :)
+20:30:50 <mxnorvak[m]> <nickcalyx[m] "as to whether he's an "enemy of "> Agreed
+20:31:19 <mxnorvak[m]> <nickcalyx[m] "I'm not saying he's the end-all "> Yeah i know ,i was just asking for your opinion on him in general
+20:33:37 <nickcalyx[m]> ok, well personally I think he's a patriot and he did the right thing blowing the whistle.  I think he tried to run it up the chain of command and was ignored and the chain of command was breaking the law and the constitution and he should have gone to the media
+20:34:30 <nickcalyx[m]> I know other former NSA people who just left over it, retired early, which is another way to handle it.. and its up to each person
+20:56:39 <mxnorvak[m]> Yea,i think its important how you view what he did because it directly effects what you consider to be a threat and what you consider normal and ok and in the world of technology and specially for those who are in the security and privacy sector ,their work kinda represents their standards and stance and well its not all 1s and 0s ,it has many gray areas but its still important to be on the good side
+21:13:36 <mxnorvak[m]> <miniblue[m] "Even if he's right, vary your so"> Btw im asking for your guys opinions on his technical advises as the "other sources" of confirmation
+21:24:27 <dazinism> >is there a way to share a file between default and work profile? there is a "switch to work profile" option in the share menu but no option to save the file to memory
+21:25:04 <dazinism> minoas: you need an app in the other profile that can receive a shared file.
+21:26:02 <dazinism> All the apps listed under https://hub.libranet.de/wiki/and-priv-sec/wiki/storage#Storage_providers will work
+21:27:31 <miniblue[m]> He's an enemy of the State. As in, the people in power, is what I meant. He may be a patriot but that doesn't change the fact that the people in power did not, and do not, like him all that much.
+21:29:00 <miniblue[m]> Though I might have my definitions of state fucked up. I can't remember which is nation and which is state.
+21:29:20 <aeonsolution[m]> ?
+21:29:24 <miniblue[m]> Hence nation-state
+21:30:01 <aeonsolution[m]> What point are you trying to make?
+21:30:09 <miniblue[m]> The nation I think is the population/people and this State is the government/ruling power or something?
+21:30:26 <miniblue[m]> Oh no it's just linguistic terminology
+21:30:37 <DannyWorkOrderPr> <strcat "Danny@WorkOrderPro: it is treate"> Then I'm not sure what trouble cx2 was having with it, haha
+21:31:21 <DannyWorkOrderPr> <strcat "and yes lots of windows and linu"> Ah, just caught this - that makes sense.
+21:33:10 <aeonsolution[m]> Any conversations on security brought in the spotlight are good ones to have regardless of someones level of knowledge or expertise miniblue.
+21:33:41 <miniblue[m]> Agree. Hence why Snowden was so important.
+21:35:42 <miniblue[m]> I was not arguing against anyone I was simply trying to get my terms right so I could say something like "friend of the nation, enemy of the state" and I was also coming at it from the angle of "take anyone's words with a grain of salt regardless of how credible they are".
+21:36:27 <miniblue[m]> I even try to do the same with Daniel even though he obviously knows his shit.
+21:37:05 <miniblue[m]> If that makes sense.
+21:40:16 <nickcalyx[m]> like I said, I was only using him as an example of someone using usb->ethernet :)
+21:40:46 <nickcalyx[m]> I've also used them as well, though I had to use a usbc -> usba converter and a ethernet -> usbA
+21:44:04 <cdesai> that makes me wonder if any of the usb-c docks would work. no display ports, but usb ports and ethernet and maybe charging could be useful.
+21:48:57 <aeonsolution[m]> miniblue: I see the point you're trying to make but it wasn't adding anything to the ethernet conversation. Glad you cleared it up though.
+21:50:34 <miniblue[m]> Yeah I didn't realize it was strictly a conversation about Ethernet, lol.
+21:50:58 <DannyWorkOrderPr> <cx2[m] "Yeah back to my original point, "> use an older version?
+21:53:24 <cx2[m]> Well sure, but doesn't that present security issues?
+21:53:52 <DannyWorkOrderPr> <nickcalyx[m] "ok, well personally I think he's"> Same with Binney and the other fellas. Their story needs to be told more as well. IMO, it's almost heavier-hitting than the Snowden one, for me.
+21:55:40 <DannyWorkOrderPr> <cx2[m] "Well sure, but doesn't that pres"> Would not know, haven't had heavy enough needs to ever use. Surely nothing VMs/sandboxing etc couldn't overcome?
+21:56:34 <DannyWorkOrderPr> <cdesai "that makes me wonder if any of t"> Let me know what you find out, I'd almost want to trust a random dock more than I'd trust a Linksys et al USB-A adapter, haha
+21:57:10 <cdesai> DannyWorkOrderPr: I'd trust the one in the phone box. not sure if they're available separately though.
+21:58:08 <DannyWorkOrderPr> Buying most of my gear second-hand, I'd be interested to know if anyone's found one that works/they trust in some way
+22:07:19 * cx2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/oJrgDUZzqkFeWmCJwfkJutDI >
+22:13:23 * DannyWorkOrderPr sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/huLYwANXFftzENPMRzosWGRi >
+22:13:53 <DannyWorkOrderPr> Also, sometimes it just decides not to save/import the PSK from the conf, so, if it's fucked, double-check that.
+22:14:26 <cx2[m]> Yeah I tried that....it doesn't like the config apparently.
+22:15:32 <DannyWorkOrderPr> Try importing it by hand?
+22:15:43 <cx2[m]> I've also heard there are some downsides to network manager.
+22:15:43 <cx2[m]> Don't really care at the  moment.... I'd rather Saudi...erhmm....the country in which I'm stuck's government from snooping in on me
+22:16:21 <DannyWorkOrderPr> Yeah, this'd be a good time for me to ask - anyone use anything besides Network Manager?
+22:16:46 <DannyWorkOrderPr> I...can't stand it, and it does not give me strong trust signals at all
+22:17:09 <DannyWorkOrderPr> Used to use WICD back in 'nam, lol - anything like that kicking around that anyone'd vouch for?
+22:18:10 <cx2[m]> This is one of the few places that I've had to deal with this.
+22:18:10 <cx2[m]> Its usually easy, download through a connection that's already using a VPN, copy file to machine. Install......if only fedora were that easy.
+22:18:29 <cx2[m]> I have the mullvad rpm....could you help with that?
+22:18:59 <cx2[m]> Because I can't seem to get it to install
+22:19:11 <DannyWorkOrderPr> Not a ton of experience with RPMs, but might be able to talk you through something. What's the error/result?
+22:19:41 <cx2[m]> Missing a dependency....I'll recreate it.
+22:21:08 <DannyWorkOrderPr> Know which one? Or is that your issue?
+22:21:47 <DannyWorkOrderPr> If so, check the manpage for the packagage install command; adding a -v or a similar to it so you can get more verbose logging of the command may help
+22:23:08 <cx2[m]> Haha...yeah....this is the RPM that I pulled from mullvads webpage....and I'm getting
+22:23:08 <cx2[m]> `lubnsl is needed by mullvad-vpn-2020.4.0_beta3-1.x86_64`
+22:26:17 <DannyWorkOrderPr> Sure it's not libnsl?
+22:27:19 <cx2[m]> Apparently lib....typo
+22:27:35 <DannyWorkOrderPr> Theirs? Do you have libnsl?
+22:28:37 <cx2[m]> Not that I'm aware of....but my understand was that mullvad needed to be packaged with it. And I don't know how to package it....I guest I could try installing?
+22:29:32 <DannyWorkOrderPr> Are you sure you don't just need to independently install it into Fedora with package manager?
+22:29:34 <cx2[m]> Hmmmm....installed. I'm going to feel like a dumbass when this works.
+22:29:45 <cx2[m]> Then I owe you a beer.
+22:30:00 <cx2[m]> Too bad they don't have fucking beer here
+22:30:45 <cx2[m]> That worked.
+22:31:18 <cx2[m]> But next issue....its apparently a CLI version......learning is occurring.
+22:32:34 <DannyWorkOrderPr> Can you open this?
+22:32:34 <DannyWorkOrderPr> https://us-browse.startpage.com/do/proxy?ep=4a6749655730347a635455555154347054794648645149655352777661574d37413241474758736e62556f615552342b4b48345551795a6c446738456268704565774136494342664642516f557a354d64557754454155714944774d527a5a74587955494a513077477830374c535162477a6369447930414e513550573168754c6a55654657496d446e395a4e413145587735766557636345576430476a305350584969614677514341564b61415942435159774a51777947467
+22:32:34 <DannyWorkOrderPr> 36261694d4b4732496a424330445a413858586770754b476c4f456a463044436f414e41314342466871656d6b6246325968476a304a5a564954414177364b6a455053695a6d54446f535051343d&ek=5254393250576866544642364n6p4n4150456p68&ekdata=ac8f618b95fb05c9277b040f3a7ded45
+22:33:50 <cx2[m]> Should be able to since its proxies....let's give it a whirl
+22:43:08 <cx2[m]> My dude.....thank you. That's huge.
+22:43:43 * cx2[m] uploaded an image: VectorImage_2020-05-04_014326.jpg (73KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/FQjwEqgDdHXkWSKHFthxrbOS >
+22:44:21 <DannyWorkOrderPr> Welcome to Sweden. Don't get Corona. Or raped.
+22:44:41 <DannyWorkOrderPr> And whatever other controversial jokes you can smash in, lol
+22:44:50 <cx2[m]> Their CLI is surprisingly easy to interact with
+22:44:52 <cx2[m]> Hahahaha
+22:45:05 <DannyWorkOrderPr> <cx2[m] "Too bad they don't have fucking "> Help someone else / send Graphene a fiver ;D
+22:45:13 <cx2[m]> Corona is what's keeping me here.
+22:45:19 <DannyWorkOrderPr> <cx2[m] "Their CLI is surprisingly easy t"> Most are - just need to know the syntax!
+22:45:55 <cx2[m]> Thanks a ton. And agreed. I'm stuck here thanks to corona.....so I have all of the time in the world.
+22:47:04 * cx2[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/wxoxUbxiRFMvliEMrdFtAbKW >
+22:47:07 <BrokenCog> during the build, from the #build steps the instructions show usig 'choosecombo' ... is there any reason for not using 'lunch' instead?
+22:49:31 <cx2[m]> @dannyknoll:matrix.org: Last question then I'll set of to learn on my own...now that mullvad is running, the WiFi indicator has a question mark. Still connected though. Any reason for that?
+22:51:19 <DannyWorkOrderPr> Pretty sure that's network manager saying "Not sure if we have internet (WAN vs LAN) connectivity"
+22:51:50 <DannyWorkOrderPr> Whatever it pings to check that may be too latent, or simply blocked altogether by Mullvand, intentionally or otherwise.
+22:53:37 <BrokenCog> During the "Extract Vendor Files" step for Pixel's, what is the BUILD_ID value?  where does that come from?
+22:53:57 <aeonsolution[m]> give me a second, I can help with that
+22:54:31 <BrokenCog> I'm GUESSING that "DEVICE" is aosp_bonito??
+22:54:48 <aeonsolution[m]> what device you have
+22:54:57 <aeonsolution[m]> pixel 3a is sargo
+22:55:18 <BrokenCog> 3aXL
+22:55:24 <BrokenCog> bonito
+22:55:38 <aeonsolution[m]> then for DEVICE you put bonito
+22:55:55 <aeonsolution[m]> let me remember find the other part for you give me a sec
+22:57:18 <aeonsolution[m]> QQ2A.200405.005
+22:57:34 <BrokenCog> ahhh okay, I know where to get that from the device list.  thanks.
+22:57:35 <aeonsolution[m]> let me remember where we pull that from on your source tree
+22:57:49 <aeonsolution[m]> oh nice
+22:58:56 <BrokenCog> and aosp_bonito is the DEVICE value?
+22:58:59 <BrokenCog> or just bonito?
+22:59:16 <aeonsolution[m]> no just bonito
+22:59:25 <aeonsolution[m]> aosp_bonito goes in another step
+22:59:52 <BrokenCog> okay. thanks.
+23:00:03 * BrokenCog proceeding with build!
+23:00:05 <aeonsolution[m]> in the choosecombo command
+23:00:19 <BrokenCog> right.
+23:01:05 <BrokenCog> some I"m going to use https://grapheneos.org/releases#bonito-stable for pixel3aXL,  which would be a BUILD_ID of QQ2A.200405.005.2020.04.14.23
+23:01:09 <BrokenCog> seems legit?
+23:03:10 <BrokenCog> arg.  build script error ...
+23:03:13 <aeonsolution[m]> yeah but when you pull the files theres a way to check your tree
+23:03:25 <aeonsolution[m]> whats the error
+23:03:35 <BrokenCog> https://termbin.com/h5dd
+23:04:40 <rgeturk[m]> i think the actual BUILD_ID to use is listed after running the choosecombo command
+23:04:51 <BrokenCog> oh, that makes sense.  I'll rretry.
+23:05:22 <BrokenCog> oh, it gives the BUILD_ID also!
+23:05:33 <BrokenCog> but, not the build.
+23:06:01 <BrokenCog> er, I mean not the DEVICE
+23:06:08 <JTL> > 15:53 <BrokenCog> During the "Extract Vendor Files" step for Pixel's, what is the BUILD_ID value?  where does that come from?
+23:06:09 <DannyWorkOrderPr> ^  ^ forgot to tag cx2
+23:06:10 <JTL> I think you can crosscheck it with the Google factory images page as well
+23:06:12 <JTL> https://developers.google.com/android/images
+23:06:31 <BrokenCog> DannyWorkOrderPr: what does that mean exactlY?
+23:06:56 <aeonsolution[m]> <rgeturk[m] "i think the actual BUILD_ID to u"> thats right, thank you for that
+23:07:09 <DannyWorkOrderPr> <BrokenCog "Danny@WorkOrderPro: what does th"> It means I was going back and forth with user cx2  and forgot to tag him in my last response so he sees. Sorry to interrupt, ha
+23:07:17 <rgeturk[m]> when you run `choosecombo release aosp_bonito userdebug` or whatever, it will also give the BUILD_ID there
+23:08:10 <BrokenCog> yeah, using that rather than the Version from the releases page works.
+23:08:29 <BrokenCog> the releases page has additional char's it seems inthe Version string.
+23:20:59 <aeonsolution[m]> BrokenCog: if you need help with any errors at that step you can message me and I can help you out with what I've trired with troubleshooting
+23:21:09 <BrokenCog> okay, the script gives the same error
+23:21:27 <BrokenCog> it did download stuff, but then errored at the same EULA ackonwlegement.
+23:22:44 <aeonsolution[m]> do you get this message at the end: [*] All actions completed successfully
+23:24:24 <aeonsolution[m]> can you message me the command, maybe theres something from the steps before that was not completed
+23:28:42 <BrokenCog> no, I got the same as that previous error above.
+23:30:16 <aeonsolution[m]> the build id is wrong
+23:31:07 <aeonsolution[m]> it should be up to qq2a.200405.005 not the full qq2a.200405.005.2020.04.14.23
+23:32:53 <BrokenCog> right.  giving it hte  orrect build_id the download started, it didn't with the wrong id, but afterwards the same error
+23:33:06 <aeonsolution[m]> you can confirm the build id like rgeturk suggested by using the choosecombo command; the build id is listed after running that command for future reference
+23:33:10 <BrokenCog> ./vendor/android-prepare-vendor/execute-all.sh -d bonito -b QQ2A.200405.005   -o vendor/android-prepare-vendor
+23:33:39 <BrokenCog> yeah, that's where I got the correct shorter ID
+23:34:48 <rgeturk[m]> try using lowercase in the build_id in the command
+23:35:04 <BrokenCog> one sec
+23:35:18 <rgeturk[m]> qq2a.200405.005 instead of QQ2A.200405.005
+23:35:18 <BrokenCog> LOL.  bingo
+23:35:33 <BrokenCog> now it's progressing to the next download.
+23:44:52 <strcat[m]> pretty sad that there's a growing group of the Bitcoin / Samourai Wallet community supporting a proprietary ripoff of my work by a scammer
+23:44:54 <strcat[m]> https://twitter.com/sthenc/status/1257031675915063296
+23:45:08 <strcat[m]> they're apparently pushing it to people on Telegram, don't know where exactly
+23:46:36 <BrokenCog> aeonsolution[m]: rgeturk[m]: so, build_id from lunch result and all lower case!
+23:46:39 <BrokenCog> [*] All actions completed successfully
+23:48:45 <JTL> strcat[m]: Dunno much about Samourai Wallet myself, but I saw that :/
+23:49:02 <JTL> I lost track of BTC wallets after Armory and Trezor personally
+23:51:33 <seaclown> This is from him in a telegram, "unfortunately no but we have opened up accessibility to important SW users who can test it out for themselves". He lost it in the SW channel after I recommended Graphene
+23:53:08 <madaidan[m]> <strcat[m] "they're apparently pushing it to"> https://t.me/SamouraiWallet

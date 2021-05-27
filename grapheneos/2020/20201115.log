@@ -1,0 +1,376 @@
+00:07:43 <very_sneaky> out of curiosity, is there anything that can be done from a graphene perspective to support push notifications? or is this an issue with the way the majority of apps have implemented the feature to work specifically with the gsf api?
+00:08:21 <strcat[m]> push notifications work on GrapheneOS as long as the apps provide an implementation not depending on Google's FCM being provided by the OS
+00:08:28 <anupritaisno1[m]> very_sneaky: whitelist apps in battery optimization
+00:08:40 <anupritaisno1[m]> And bug developers to support websockets
+00:08:44 <strcat[m]> apps can request battery optimization exceptions if they need them
+00:08:48 <anupritaisno1[m]> Signal does this correctly
+00:08:55 <strcat[m]> they don't need to use websockets, that's just one way to do a push connection
+00:09:00 <very_sneaky> yeah, I've noticed that some do, but a lot don't - signal being an example of one that worked correctly
+00:09:18 <strcat[m]> so for example for email, IMAP provides a IMAP IDLE for doing push
+00:09:29 <strcat[m]> email apps can keep open an IMAP connection and use IMAP IDLE to do push instead of polling
+00:09:39 <very_sneaky> is there a path to supporting apps that don't by mocking the gsf api in a non hacky way?
+00:09:45 <strcat[m]> and they can run a foreground service to keep doing it in the background
+00:10:14 <strcat[m]> very_sneaky: if an app uses FCM to send messages, there is no way to get those without using FCM, official implementation or not
+00:10:28 <strcat[m]> and we're not hard-wiring support for Google services into the OS with special privileges unavailable to regular apps
+00:10:39 <strcat[m]> that is counter to the goals and methods of GrapheneOS
+00:10:43 <very_sneaky> what's fcm?
+00:10:50 <strcat[m]> google it
+00:10:57 <very_sneaky> yeah, i appreciate that, i'm just ignorant on the topic, wondering if there is a way around google
+00:11:22 <strcat[m]> you're asking if there is a way to use Google's cloud messaging service on GrapheneOs
+00:11:29 <strcat[m]>  * you're asking if there is a way to use Google's cloud messaging service on GrapheneOS
+00:11:33 <strcat[m]> you're not asking for a way to avoid using it, you're asking how to use it
+00:12:27 <strcat[m]> also an app using FCM when available does not at all stop them from providing a different implementation when it's not available, either because the device doesn't have Play services, or Play services is disabled by the user, or the FCM service is down / unavailable such as when it's blocked (in China, for example)
+00:13:02 <strcat[m]> apps are perfectly capable of doing push for notifications or other features without FCM
+00:13:05 <strcat[m]> and many do
+00:13:29 <strcat[m]> I gave the example of how IMAP provides push via the IMAP IDLE feature
+00:13:46 <strcat[m]> an email app implementing IMAP and important standard extensions will support that
+00:14:04 <strcat[m]> most email servers do not support sending notifications via FCM... but do support IMAP IDLE
+00:14:20 <very_sneaky> sure, so the issue at the moment is predominantly that because play services are so ubiquitous on android phones, there isn't _wide_ adoption of alternative methods for push notifications
+00:14:33 <strcat[m]> so if an email app doesn't support it, that's a pretty glaring flaw whether or not Play services is available
+00:14:34 <very_sneaky> with some notable exceptions
+00:15:47 <strcat[m]> very_sneaky: a lot of developers don't bother with support for not having Play services, whether because it's not integrated into the OS, is disabled, or the Google services are not available
+00:15:48 <strcat[m]> as mentioned above
+00:16:11 <strcat[m]> it's the responsibility of app developers to do this, there is no way of getting push notifications without FCM if they chose to ONLY do it via FCM
+00:16:43 <strcat[m]> microG is not an alternative to FCM, rather it provides an incomplete implementation of a subset of Play services APIs including a partial implementation of FCM
+00:16:47 <strcat[m]> it uses the Google services
+00:17:08 <strcat[m]> it is not a way to avoid Google services, rather it's a very incomplete implementation of Play services
+00:17:22 <strcat[m]> and like Play services is only designed to be built into the OS
+00:17:25 <anupritaisno1[m]> It is quite insecure too
+00:17:29 <strcat[m]> with a bunch of whitelisting and special privileges granted
+00:17:56 <strcat[m]> very_sneaky: ultimately, you'll have to get the developers to implement support for not depending on Google services
+00:18:16 <strcat[m]> very_sneaky: the main issue is that users do not push developers to do this
+00:18:40 <very_sneaky> yeah gotcha. and I assume the issue with FCM is that it _is_ a google service, i.e. it uses google cloud infrastructure for support, rather than being a protocol who's implementation is infrastructure independent?
+00:18:46 <strcat[m]> very_sneaky: there are a lot of people without Play services on their phones, but they don't push developers to support it, or they take an approach like using a broken and incomplete reimplementation using the same Google services (microG)
+00:19:05 <strcat[m]> very_sneaky: FCM inherently uses Google's FCM servers
+00:19:08 <anupritaisno1[m]> Microg doesn't have TLS pinning and doesn't verify apps that interface with it. Accepting input from untrusted external plugin providers on an app holding almost a supercookie to your google account is also a very terrible idea
+00:19:10 <rayromano[m]> <louipc "rayromano: aurora store version "> Thank you very much for the response! I will check that out!
+00:19:16 <strcat[m]> very_sneaky: it would be possible to implement a push protocol that was server agnostic
+00:19:18 <strcat[m]> FCM is not that
+00:19:23 <strcat[m]> FCM means using Google's FCM servers
+00:19:34 <very_sneaky> okay, cool. the issues are a bit clearer for me now
+00:19:34 <strcat[m]> it implies that the app's server sends messages to Google's servers
+00:19:40 <strcat[m]> and Google delivers them to the device
+00:19:53 <strcat[m]> using hard-wired support in the base OS with special integration / whitelisting
+00:20:11 <strcat[m]> there is no alternative way to use FCM that avoids using their FCM servers, the app is sending the messages to Google
+00:20:13 <strcat[m]> not to you
+00:20:20 <strcat[m]>  * there is no alternative way to use FCM that avoids using their FCM servers, the app server is sending the messages to Google
+00:20:25 <very_sneaky> yep cool, that confirms my read of it
+00:20:47 <strcat[m]> very_sneaky: it would have been entirely possible for this to be an open protocol that's server agnostic
+00:20:51 <strcat[m]> very easy to design it that way
+00:20:54 <strcat[m]> it's just not what FCM is
+00:21:00 <very_sneaky> i wonder if something like that does exist
+00:21:53 <strcat[m]> very_sneaky: it was starting to exist but the emerging push ecosystem got wiped out by Apple and Google providing their own and giving them special privileges unavailable to others, particularly on iOS, where there is no way to do it another way
+00:22:23 <strcat[m]> on Android you can do it another way, but you have to show a foreground service and ask for a battery optimization to match what FCM does - FCM just has an implicit ability to do that as part of being hard-wired into the OS
+00:22:54 <strcat[m]> it has a battery optimization exception via the sysconfig configuration and has a similar whitelist to allow it to run in the background without a foreground service
+00:23:00 <very_sneaky> interesting. so if such a protocol was developed, it might eb able to be hardwired in to, say, graphene in the same way?
+00:23:18 <strcat[m]> sure, but it doesn't have to be hard-wired
+00:23:21 <strcat[m]> it can work without that
+00:23:39 <strcat[m]> just requires you to accept the dialog it shows asking for a battery optimization exception + live with the fact that it shows a foreground service is running
+00:23:59 <strcat[m]> very_sneaky: it would be entirely possible to implement this with a single app + server providing push for multiple apps via an open protocol
+00:24:31 <strcat[m]> very_sneaky: best way to do it is probably with a library that provides push notifications with the app's server, and can *optionally* use a central service
+00:24:35 <very_sneaky> i guess i'm just thinking that perhaps that's part of the issue with adoption of alternate methods by app developers
+00:24:45 <anupritaisno1[m]> <strcat[m] "just requires you to accept the "> Actually no
+00:24:47 <strcat[m]> this is what would be evolved if APNS and FCM had not been done the way they were
+00:24:51 <very_sneaky> no standardised, service agnostic way of doing it
+00:25:10 <anupritaisno1[m]> You have to either accept the battery optimization exemption or have a foreground notification
+00:25:24 <strcat[m]> anupritaisno1: no, that's not accurate
+00:25:30 <anupritaisno1[m]> Foreground notification is redundant with battery optimization
+00:25:35 <strcat[m]> it's not
+00:25:56 <anupritaisno1[m]> <strcat[m] "anupritaisno1: no, that's not ac"> Isn't that what allows gms to not show a notification?
+00:26:02 <strcat[m]> no
+00:26:15 <anupritaisno1[m]> Hmmm
+00:26:20 <strcat[m]> they are orthogonal things
+00:26:22 <strcat[m]> they don't really overlap
+00:26:43 <anupritaisno1[m]> Pretty sure I read that battery optimization exemption is basically a permission to allow starting in background
+00:26:46 <strcat[m]> the main thing done by the battery optimization exception is simply allowing network access during doze, etc.
+00:26:49 <strcat[m]> anupritaisno1: you're wrong
+00:26:54 <anupritaisno1[m]> K
+00:27:09 <strcat[m]> battery optimization exception hardly does anything other than allowing network access during doze, etc.
+00:27:16 <strcat[m]> it does do some minor other things
+00:27:23 <strcat[m]> such as allowing more precise alarms
+00:27:28 <strcat[m]> that's why DeskClock needed it
+00:27:59 <strcat[m]> it does not override any restrictions on running code in the background
+00:29:28 <strcat[m]> a foreground service is needed if you want to keep a process running, in general
+00:30:08 <strcat[m]> Play services has multiple privileged permissions, a battery optimization exception, is whitelisted as a provider for various things and has other exceptions
+00:34:21 <strcat[m]> it is not simply a regular app
+00:34:32 <strcat[m]> and cannot function as one
+01:13:23 <anupritaisno1[m]> Testers are needed to test certain carrier related changes. If you are on any of the supported non legacy devices please pm me. You also need to have a carrier that has either volte or WiFi calling and the fact that it is not working on grapheneos. You'll be given an unofficial build to test if it works. Remember that this means your device will be wiped during testing
+01:16:34 <anupritaisno1[m]> There are people who are spreading misinformation about grapheneos. Anybody who can volunteer to help us against those trying to spread libel about the project can pm me. Please actually mention why you have pm'd me, don't just leave it on blank
+01:16:34 <anupritaisno1[m]> Another thing I have noticed is that people pm me and then leave the chat before I have even joined. Remember that as a developer I have other things I must do such as fixing bugs. Please be patient after you start a pm with me. I will eventually get to you
+01:18:49 * anupritaisno1[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/SFRzTjtPsPLHNjskYgQEFmmX/message.txt >
+01:19:24 <anupritaisno1[m]> We need more knowledgeable people, we don't want a mob doing stupid shit and giving james more power
+01:21:47 <Linus[m]1> > We need more knowledgeable people
+01:21:49 <Linus[m]1> What happened to cn3m
+01:21:58 <Linus[m]1> I havent seen him around in quite awhile
+01:22:07 <anupritaisno1[m]> <Linus[m]1 "What happened to cn3m"> He has a life too ya know
+01:22:12 <Linus[m]1> Oh
+01:22:17 <Linus[m]1> too bad
+01:23:22 <Linus[m]1> He was quite informative when I was first considering buying a pixel to use for graphene
+03:01:19 <renlord[m]> no help from the media, always conflating play services with android
+03:01:33 <renlord[m]> now everyone thinks all android phones have google play services.
+03:01:48 <renlord[m]> and when shit hits the fan w.r.t play services, they blame android
+03:02:05 <renlord[m]> good job, googley.
+03:04:39 <Dylanger[m]> <anupritaisno1[m] "> <@anupritaisno1:m.apex.to> The"> I don't want to get involved, Graphene is a great project and I hope it successes, I think it will
+03:06:26 <renlord> the fact that it continues to exist and has a userbase, isnt it a success already?
+03:06:28 <renlord> @_@
+03:06:38 <renlord> haters gonna hate all the time, what do
+03:07:10 <renlord> MS Windows is also successful and there are so many anti-fans ;)
+04:18:09 <Dylanger[m]> > <@anupritaisno1:m.apex.to> Dylanger can you help us with this?
+04:18:09 <Dylanger[m]>  * I don't want to get involved, Graphene is a great project and I hope it succeeds, I think it will
+05:41:16 <louipcm> yea and that goes with any success
+06:50:09 <svenskuser[m]> Where is the misinformation being posted? How serious is it?
+06:52:12 <louipcm> reddit, twitter, hackernews, wikipedia, telegram
+07:01:14 <somenerd[m]> > What happened to cn3m
+07:01:14 <somenerd[m]> I think cn3m took a break
+07:36:03 <anupritaisno1[m]> svenskuser: as louipcm said it's quite serious
+09:50:01 <r0tt0r[m]> would it be of use to collect media covering graphene review?
+10:25:18 <wigle> does anyone know if access point info is hidden from installed apps? Things like AP names can be used to pinpoint a user’s location: https://wigle.net
+10:28:19 <wigle> nvm it is hidden by default in android 10
+10:29:38 <somenerd[m]> the level of misinformation is staggering
+11:02:23 <thedon1[m]> Hello i have made a fresh ibstall on pixel 3a and when the phone boots it gives me a warning message about a different os. Is there anyway to remove it also like the google picture what appears on bootup boot loadee is unlocked..
+11:34:48 <danielkl[m]> Hi. I would like to switch from Android 11(Pixel 3) to GraphenenOS. But my Banking APP(Fidor Bank) will not be available in my opinion. And without that APP I will no  longer have access to my banking account. Is there any possiblity to install that APP on GrapheneOS?THX for your help.
+11:37:12 <Johnny21A> the biggest problem with banking apps, is that they probably depend on google play services(and safetynet) which are not available in grapheneOs AFAIK
+11:38:45 <certainindividua> I switched banks since choosing graphene and let the bank know its because of GS
+11:39:16 <Johnny21A> Is it me, or is https://grapheneos.org/ down?
+11:39:17 <certainindividua> New bank has greener investments anyway
+11:39:44 <certainindividua> <Johnny21A "Is it me, or is https://graphene"> Still up for me
+11:40:29 <Johnny21A> yeah nevermind it is me, firefox update in the background and does not load a new page untill restart. I should learn to read
+12:19:47 <nscnt> thedon1[m]: The warning message and the Google logo is expected and it can't be changed/removed at all. Please lock the bootloader to ensure security of your device.
+12:21:16 <thedon1[m]> Okay i got it locked
+12:22:13 <nscnt> Ah, just saw you've got an answer already @ offtopic ^^
+12:48:45 <mastercakex[m]> Browsing some websites freezes vanadium and whole system
+12:48:46 <mastercakex[m]> How can I dig deeper into what caused it ?
+12:52:29 <clox[m]> Hi guys,  what is the best for secure lock your screen? PIN, PASSWORD or PATTERN? Wich one is more difficult to crack your device?
+12:52:54 <mastercakex[m]> Password of course
+12:53:05 <mastercakex[m]> Alphanumeric
+12:55:25 <nscnt> clox[m]: Strong password (>= 8 digits) with e.g. fingerprint for convenience. You can enable "Lockdown" if you want to disable fingerprint in a situation (or restart your device)
+12:57:16 <nscnt> Haven't you ever watched over your buddies shoulder and "accidentally" saw his pin/pattern? That's one advantage why to use fingerprint in public
+12:58:13 <clox[m]> <nscnt "clox: Strong password (>= 8 digi"> Thanks, nscnt.
+12:58:46 <clox[m]> I normally use pin but you are right that password is the best
+13:01:08 <mastercakex[m]> Each day I discover grapheneOS becoming more difficult as for a daily driver and pixels absence of wifi6 is such a bummer. It just feels ages behind apple since apple launched SE. So sad to admit apples victory
+13:02:34 <renlord> mastercakex[m]: your isp supports wifi6 speeds already?
+13:06:11 <mastercakex[m]> renlord it does 1Gbs but speed is not a single factor WiFi 6 is needed for
+13:06:37 <renlord> besides wpa3 and better bandwidth, anything else?
+13:07:48 <renlord> actually quite a bit
+13:07:50 <mastercakex[m]> If you reside in a 50story building it becomes almost mandatory to have AX router
+13:08:05 <renlord> i suppose next-gen pixels should have wifi6
+13:08:25 <renlord> i reside in a 60+ storey building and im on ac
+13:08:31 <renlord> no issue
+13:09:11 <mastercakex[m]> Google is supposedly giving up on pixels. They are far even from midrange iphones let alone flagships
+13:09:40 <mastercakex[m]> What's your isp bandwidth?
+13:10:20 <mastercakex[m]> I'm on 500mbit contract and I really feel the need of a better router and wifi6 receiver
+13:22:54 <renlord> 100mbps
+13:23:18 <renlord> i cant even max out bandwidth on a cat5 cable
+13:23:20 <renlord> lol
+13:26:46 <anupritaisno1[m]> mastercakex: they aren't
+13:27:21 <anupritaisno1[m]> Google isn't discontinuing pixels
+13:27:51 <somenerd[m]> > Google is supposedly giving up on pixels. They are far even from midrange iphones let alone flagships
+13:27:51 <somenerd[m]> source?
+13:34:48 <anupritaisno1[m]> Btw guys just a reminder, grapheneos needs help because there are people spreading misinformation and defaming the project publicly. We have a group of volunteers working to make sure misinformation doesn't spread and we need more people to help. Please pm me if you want to help grapheneos
+13:35:33 <somenerd[m]> ok sure, but first I have to get informed
+13:35:37 <somenerd[m]> lol
+13:35:54 <somenerd[m]> ok
+13:57:36 <Partyush[m]1> <anupritaisno1[m] "Btw guys just a reminder, graphe"> I already massaged you can you please explain it a bit more who is doing all this shady stuff.
+13:58:42 <somenerd[m]> the former CopperheadOS was a project made by strcat and a business partner
+13:59:00 <somenerd[m]> they split after an issue (not sure what it was)
+13:59:42 <somenerd[m]> the former partner made a proprietary OS (also called CopperheadOS) and is attacking the GrapheneOS project
+13:59:58 <somenerd[m]> if people know this story better than me, please correct me
+14:01:07 <dazinism> Theres a whole load of info here
+14:01:11 <dazinism> https://github.com/Peter-Easton/GrapheneOS-Knowledge/tree/master/Twitter%20and%20Reddit
+14:09:24 <strcat[m]> somenerd: no, it was made by me
+14:09:36 <strcat[m]> before I had a business partner
+14:10:36 <somenerd[m]> oh thanks for correcting! I'll take note of that
+14:13:08 <somenerd[m]> > the level of misinformation is staggering
+14:13:08 <somenerd[m]> ironic that I say this though....
+14:39:02 <cojavim[m]> hello! quick question: is Exposure notification API part of Graphene OS? so can user use COVID tracking apps?
+15:10:14 <dazinism> cojavim: no its not its part of Google Play Services. Theres also a working implementation in microG.
+15:11:09 <cojavim[m]> <dazinism "cojavim: no its not its part of "> thank you for quick reply
+17:16:33 <atasuke[m]> Do any of you use an IDE or do you know a way to browse sources efficiently ?
+17:48:49 <gankouskhan[m]> [atasuke](https://matrix.to/#/@atasuke:matrix.org): when you say use an IDE on what platform?
+17:49:38 <atasuke[m]> Linux
+17:54:06 <ruddo[m]> VScode is amazing.
+17:54:19 <ruddo[m]> Entirely unironically.
+17:54:20 <ruddo[m]> Even on Linux.
+18:03:42 <golli[m]1> So what's the difference for the Pixel 5 boot image format and the one used in previous Pixel models?
+18:23:55 <malicoye[m]> Watching movies on grapheneOS via vanadium on fmovies.to is broken. Phone gets nasty hot following vanadium crash
+18:24:45 <malicoye[m]> There are multiple other websites with such behavior. Anyone experienced?
+18:49:17 <tom_co[m]> Guys, I flashed grapheneOS on my Pixel 3 XL and my location services doesn't work. When I open any maps it says looking for position and never finds it. I downloaded GPS status app and there are some tests for sensors and it looks like everything is okay. Is there anything I can do to know if it is hardware of software fault?
+18:51:20 <louipc> how does it not work?
+18:53:27 <louipc> tom_co[m]: you gave app permission?
+18:54:08 <tom_co[m]> It just says looking for a location, getting position. Yes I did gave permissions to the apps and also tried a few different ones.
+19:06:57 <TheJollyRoger> tom_co[m]: have you given it enough time (and enough reception) for it to calibrate?
+19:10:11 <tom_co[m]> TheJollyRoger:  Yes, it was a few hours that I had my maps opened and also this GPS app and it didn't find my location.
+19:10:31 <TheJollyRoger> Outdoors, with an unobstructed view to the sky?
+19:10:51 <TheJollyRoger> (Preferably in an area without a lot of tall buildings)
+19:11:13 <tom_co[m]> TheJollyRoger: Yes outside, I had my other phone with me and it had no problem to get a location in a few seconds. Not sure what might be an issue.
+19:11:29 <TheJollyRoger> Hmm, not sure either.
+19:11:38 <tom_co[m]> <TheJollyRoger "(Preferably in an area without a"> I live near the bit city
+19:12:12 <tom_co[m]> <TheJollyRoger "Hmm, not sure either."> I'm just not sure if it is hardware issue or it might be just a software bug
+19:12:20 <TheJollyRoger> Very strange. I know that I had some difficulty getting the GPS to work but after a while oddly enough the problem seemed to sort itself out.
+19:13:32 <TheJollyRoger> With respect to it being a bug, not sure - each installation of GrapheneOS is identical down to the very last bit (thanks to Android Verified Boot), so if it can't be reproduced on this end that may rule out a software bug.
+19:13:56 <TheJollyRoger> What solved it for me was visiting a park and walking around in the area for a bit.
+19:14:20 <louipc> tom_co[m]: other phone is same with grapheneos or?
+19:14:32 <TheJollyRoger> Huh. I dunno.
+19:14:46 <TheJollyRoger> Stick around, someone else may pipe up though, don't lose hope!
+19:15:40 <tom_co[m]> <TheJollyRoger "Stick around, someone else may p"> It's not a big deal, it's not my main phone. I just wanted to know what might be an issue or if somebody else encountered it as well.
+19:15:56 <tom_co[m]> <louipc "tom_co: other phone is same with"> No, the other phone was iPhone
+19:16:07 <TheJollyRoger> Hey right on, right on.
+19:16:25 <louipc> ok lol cant compare them
+19:16:50 <tom_co[m]> <louipc "ok lol cant compare them"> Yeah I know but still it's a GPS signal no?
+19:17:02 <louipc> not necessarily
+19:18:08 <tom_co[m]> <louipc "not necessarily"> Should I try to do a clean install again?
+19:18:17 <louipc> but you said a gps app on graphene works right, so.. it would appear the map app has a problem
+19:18:29 <louipc> what apps did you try
+19:18:57 <TheJollyRoger> tom_co[m]: I don't think it's time to try the nuclear option just yet; rebooting your phone will revert any changes to your system image to factory-fresh condition without zapping your userdata, assuming your bootloader is locked.
+19:20:07 <TheJollyRoger> oh, that's a good point louipc; some apps may be dependent on Google Software Framework, which GrapheneOS deliberately omits as part of its design goals. I should ask about this.
+19:20:28 <TheJollyRoger> Well, anyone on the IRC side, here comes the tide.
+19:20:58 <tom_co[m]> GPS sensor is okay but it doesn't work. I tried Sygic, OSM maps and this GPS app
+19:20:58 * tom_co[m] uploaded an image: Screenshot_20201115-201412.png (72KiB) < https://matrix.org/_matrix/media/r0/download/matrix.org/uMreXDqdduEsnlnpaQvoXNKp/Screenshot_20201115-201412.png >
+19:21:31 <malicoye[m]> Try Waze
+19:22:04 <louipc> tom_co[m]: oh but you can't get coordinates
+19:23:28 <tom_co[m]> <louipc "tom_co: oh but you can't get coo"> Yes, it never finds my position
+19:25:37 <tom_co[m]> I tried Waze and it says No Network & GPS, so there might be some issue with network but my internet connection works fine on the phone
+19:26:20 <TheJollyRoger> Wonder if it's dependent on Google Location Services.
+19:26:23 <louipc> oh that sounds really weird
+19:28:22 <tom_co[m]> Yeah it is weird, i don't know what to do 😀
+19:30:19 * TheJollyRoger is puzzled!
+19:43:00 <dazinism> tom_co: try GPSTest (An app for testing GPS and GNSS capabilities of a device) - https://f-droid.org/app/com.android.gpstest.osmdroid
+19:44:01 <dazinism> Think getting first lock can take some time. Also think your phone needs to download some stuff. Has it got an internet connection?
+19:45:02 <dazinism> Also if I'm not confused it needs a while to download data files from satellites first time to get things set up
+19:46:01 <dazinism> So need to be able to receive well from satellite, although it sounds like you had probably had that
+19:54:48 <tom_co[m]> <dazinism "tom_co: try GPSTest (An app for "> I will try that
+20:36:18 <pallaf> hello
+20:36:50 <pallaf> im in the process of unlocking the bootloader
+20:37:20 <pallaf> im able to run fastboot command via terminal but it gets stuck at "waiting for any device"
+20:37:45 <pallaf> I've already enabled oem unlocking under developer options and rebooted into bootloader menu
+20:38:04 <pallaf> Did I miss something here
+20:41:52 <M2v3zfgd88zdhqf4> if you are running ubuntu
+20:41:57 <M2v3zfgd88zdhqf4> try using fasboot with sudo
+20:41:59 <M2v3zfgd88zdhqf4> worked for me
+20:42:30 <mx[m]> <pallaf "hello"> also check adb devices
+20:42:41 <mx[m]> > <@freenode_pallaf:matrix.org> hello
+20:42:42 <mx[m]>  * also check adb devices
+20:43:02 <M2v3zfgd88zdhqf4> does anyone know if the camera on the pixel 4a is as good as on stock?
+20:43:32 <M2v3zfgd88zdhqf4> because with the 3a the camera was worse on graphene because some optimizations were done in the google camera app
+20:44:17 <pallaf> thx sudo fixed it
+20:44:46 <louipc> from what I heard its better because it's done in hardware now, but there's still a lack of great non-google camera apps
+20:44:46 <M2v3zfgd88zdhqf4> <pallaf "thx sudo fixed it"> youre welcome, I also have to use sudo for adb btw
+20:44:51 <mx[m]> <M2v3zfgd88zdhqf4 "because with the 3a the camera w"> I use 3a with opencamera
+20:45:00 <M2v3zfgd88zdhqf4> is it any good
+20:45:08 <M2v3zfgd88zdhqf4> <louipc "from what I heard its better bec"> ah ok thank you
+20:57:04 <pallaf> why did they remove dark theme design?
+20:57:16 <pallaf> its actually great for oled and battery life
+20:57:29 <pallaf> *black
+21:07:06 <anupritaisno1[m]> idceitherway I am not able to accept your pm, please open a new pm
+21:07:33 <anupritaisno1[m]> Do you need help with something?
+21:19:46 <zfnmxt> M2v3zfgd88zdhqf4: The GCam app on the 4a is definitely better.
+21:20:22 <zfnmxt> But you can use Gcam (for now) on the 4a. 7.4.x and https://github.com/lukaspieper/Gcam-Services-Provider works fine for me on graphene.
+21:29:52 <pallaf> i can't copy my files over to my pixel? Is there a special filesystem installed?
+21:56:58 <strcat[m]> pallaf: not clear what you mean
+21:57:29 <strcat[m]> if you're talking about transferring files to a profile's home directory via USB, you need to enable file transfer from the notification
+21:57:34 <strcat[m]> and then transfer files with MTP
+21:57:58 <strcat[m]> there is nothing different about this with GrapheneOS
+22:02:21 <r0tt0r[m]> <zfnmxt "But you can use Gcam (for now) o"> it has been brought up earlier and if you are security concerned installung debug app is not a good way to follow
+22:02:45 <r0tt0r[m]> * it has been brought up earlier and if you are security concerned installing debug app is not a good way to follow
+22:03:18 <pallaf> strcat[m]: im getting headeaches with this new os
+22:03:23 <pallaf> ive nextcloud
+22:03:25 <pallaf> tried
+22:03:31 <pallaf> its complete bs
+22:03:33 <pallaf> buggy
+22:03:35 <pallaf> af
+22:03:55 <pallaf> copying over command line terminal via simple mtpfs give me invalid argument
+22:04:22 <strcat[m]> you're doing something wrong
+22:04:33 <strcat[m]> you're not experiencing anything buggy
+22:05:11 <strcat[m]> please read what I wrote above about using MTP for file transfer
+22:05:28 <pallaf> p: cannot create regular file '/home/pallaf/mnt
+22:05:31 <pallaf> its on mtp mode
+22:05:56 <pallaf> did same as before when vanilla android was installed
+22:06:04 <strcat[m]> use a GUI for it if you don't know how to use the CLI MTP tools
+22:06:14 <strcat[m]> it works fine
+22:06:14 <pallaf> well it did work before
+22:06:18 <strcat[m]> as do apps like nextcloud
+22:06:19 <pallaf> with cli
+22:06:29 <strcat[m]> that error shows you're making a mistake
+22:06:37 <pallaf> p: cannot create regular file '/home/pallaf/mnt
+22:06:43 <pallaf> cp: cannot create regular file '/home/pallaf/mnt
+22:06:47 <strcat[m]> use a GUI for MTP if you don't know how to use the CLI tools
+22:07:14 <pallaf> its 1:1 command line arguments
+22:07:17 <pallaf> same as before
+22:07:26 <pallaf> i ve changed nothing on my computer
+22:07:27 <strcat[m]> show the command you're running then
+22:07:47 <strcat[m]> but this is not a libmtp help channel
+22:08:28 <pallaf> https://wiki.archlinux.org/index.php/Media_Transfer_Protocol
+22:08:31 <pallaf> simple-mtpfs
+22:09:07 <strcat[m]> you need to say what command you're using and the error you get from it
+22:09:13 <strcat[m]> and whether you've enabled file transfer on the device
+22:09:31 <strcat[m]> the way you're trying to seek help here is not productive and is going to be treated as trolling soon
+22:12:32 <pallaf> cp -r ~/Music/NewPipe ~/mnt/Music/
+22:12:38 <pallaf> tried it with even sudo
+22:12:45 <pallaf> sudo give me permission denied
+22:12:54 <pallaf> i feel like im being trolled by terminal
+22:13:04 <pallaf> tried even with su
+22:13:14 <pallaf> pointed to /home directory
+22:13:16 <pallaf> etc
+22:15:18 <strcat[m]> so there's no issue with MTP
+22:15:38 <strcat[m]> can you just use an MTP GUI?
+22:15:47 * spiceghost[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/RrjyEntOYXiempElBvUIApyV/message.txt >
+22:16:04 <strcat[m]> this isn't a good place to learn how to use the CLI or libmtp CLI tools
+22:16:25 <strcat[m]> if there isn't a problem with MTP and GrapheneOS (and there doesn't appear to be), it's not in the scope of the channel
+22:17:10 <strcat[m]> spiceghost: it does turn off Wi-Fi and the other radios, but they can be turned back on, while cellular can't be
+22:24:31 <spiceghost[m]> I used TheHatedOnes tut for graphene on Linux. I couldn't verify my sig file is it ok kto verify with auditor app. I kept getting error: no file directory
+22:31:36 <spiceghost[m]> <strcat[m] "spiceghost: it does turn off Wi-"> Thanks, had no idea it actually turned it off. I use it to make sure the cellular radio is off.
+22:32:04 <TheJollyRoger> Hi spiceghost[m], the auditor app will verify your installation /post install/. You'll need to have completed the install (note that locking the bootloader afterward is what completes the installation).
+22:33:13 <strcat[m]> spiceghost: our official installation guide is at https://grapheneos.org/install, unofficial installation guides aren't supported and usually have errors or omissions
+22:33:20 <strcat[m]> we can't provide support for unofficial installation guides here
+22:36:54 <spiceghost[m]> <strcat[m] "spiceghost: our official install"> Yes, I read that. I am a visual learner so I had to look up a video. However, I did use the install instruction from the site as well. Since I'm on ubuntu I used signify-openbsd but I didn't get a verified message. My message said the file was not in the directory, but it was there. I continued the installation anyway and had a successful verification with the Auditor
+22:36:54 <spiceghost[m]> app but the signify part just didn't work and I don't know why.
+22:37:49 <TheJollyRoger> The payload, the signature file, and the public key?
+22:38:11 <strcat[m]> spiceghost: you have to adjust the file names to the correct ones
+22:41:12 <spiceghost[m]> <strcat[m] "spiceghost: you have to adjust t"> The site actually had the file name for the 4a there in the example. It was a easy copy paste. I even tried it by copying the file name from the .sig file in my directory and it still didn't work. I did not burn my computer though lol
+22:42:14 <strcat[m]> you have to make sure to download both files
+22:42:19 <strcat[m]> and then run the signify command with the proper file names
+22:42:32 <strcat[m]> it has you download factory.pub, the factory images zip and the signature
+22:42:41 <strcat[m]> if you run the commands as they are written there, it works
+22:42:42 <strcat[m]> so you omitted one
+22:42:49 <strcat[m]> or you opened up a new terminal in a new directory, etc.
+22:48:59 <spiceghost[m]> <strcat[m] "if you run the commands as they "> Maybe it's because I only opened the terminal to verify. I didn't download in the terminal. I wish I had recorded myself. I should be ok trusting the auditor app, correct?
+22:49:18 <strcat[m]> if you follow the install instructions, it works
+22:49:23 <strcat[m]> you did it your own way and didn't do it correctly per the instructions
+22:49:35 <strcat[m]> you ran the signify command without the files being present, that's why it didn't work
+22:50:04 <strcat[m]> we can't provide support for unofficial installation methods
+22:50:43 <TheJollyRoger> spiceghost[m]: the Auditor app will verify the entire system image, bitwise, to the genuine verified boot keys.
+22:51:01 <spiceghost[m]> <strcat[m] "you did it your own way and didn"> Hey man I know you don't believe me but the files were there. I looked at them as I did it.  I guess I will have to recreate this and make a video. I am telling the truth. Im not saying I did nothing wrong but I had the files!
+22:51:02 <TheJollyRoger> You'll be fine.
+22:51:41 <TheJollyRoger> spiceghost, can you paste me the output of `ls -lah .` in the terminal, please?
+22:52:10 <strcat[m]> spiceghost: the files were not there, you're wrong
+22:52:29 <strcat[m]> spiceghost: as you said yourself, you didn't follow the official installation instructions
+22:52:52 <strcat[m]> you tried to run signify in a directory where those 3 files (public key, factory images zip, factory images zip signature) were not present
+22:53:03 <strcat[m]> so it didn't work, because the files weren't present
+22:53:14 <strcat[m]> it can't read your mind and get the files from a different place than where you instructed it to look
+22:53:36 <spiceghost[m]> <strcat[m] "spiceghost: as you said yourself"> No I said I followed the instructions and used a visual guide as I am a visual learner. They aren't complicated and I'm sure you get irritated with that. Don't worry I'll recreate it.
+22:53:54 <strcat[m]> spiceghost: you're wrong, I don't need to confirm that
+22:54:37 <spiceghost[m]> <strcat[m] "spiceghost: you're wrong, I don'"> Just drop it and wait
+22:54:42 <TheJollyRoger> spiceghost[m]: the use of signify is one part of multiple levels of verification. If you can't or don't use it, there are others, including auditor. If auditor passes, you'll be fine.
+22:54:50 <strcat[m]> spiceghost: no
+22:54:59 <TheJollyRoger> spiceghost[m]: he's the lead developer, mate, he knows what he's talking about.
+22:55:25 <anupritaisno1[m]> Maybe we should make an official flash video
+22:55:34 <anupritaisno1[m]> Obviously one that's broken down into parts
+22:55:58 <spiceghost[m]> <TheJollyRoger "spiceghost: he's the lead develo"> He could be Jesus reincarnated no reason to talk to someone like that. Respect aint hard I wasn't being disrespectful
+22:56:26 <anupritaisno1[m]> spiceghost: that is OT
+22:56:34 <strcat[m]> spiceghost: you're wrong and the error message you got was correct
+22:57:07 <anupritaisno1[m]> spiceghost: read our install guide please
+22:57:10 <briaruser[m]> There is no way to fix the notfication issue for apps who use google service for the notfications right? I alrdy tested microg but didnt work
+22:57:22 <anupritaisno1[m]> You are already downloading the release from our website
+22:57:45 <anupritaisno1[m]> And the chances that someone will break into our servers to replace a build is pretty slim
+22:57:46 <strcat[m]> briaruser: GrapheneOS doesn't have Play services, and Play services has to be built into the OS
+22:58:07 <anupritaisno1[m]> As long as you have downloaded it from our site with https
+22:58:17 <strcat[m]> briaruser: some apps have settings to enable their own push service instead of doing it automatically, etc.
+22:58:21 <anupritaisno1[m]> You really shouldn't have much of an issue
+22:58:28 <strcat[m]> briaruser: varies per app, please get support from the app developers, contact them about it
+22:59:08 <strcat[m]> spiceghost: https://gist.github.com/thestinger/3799b6b95e76e2a44ed505c375d9d527 the instructions expect you to download those 3 files to the same directory and then run signify in that directory with the correct paths
+22:59:16 <strcat[m]> spiceghost: you didn't do that, so you got an error
+22:59:26 <strcat[m]> I am not telling you that you didn't download the files
+22:59:41 <strcat[m]> I'm telling you that you didn't have them in the same directory together where you ran the signify command
+23:00:13 <TheJollyRoger> spiceghost[m]: please paste the output of `ls -lah .` - this will tell you.
+23:01:09 <anupritaisno1[m]> TheJollyRoger: perfect timing
+23:13:46 <briaruser[m]> <strcat[m] "briaruser: varies per app, pleas"> Tnx for the reply. Yess i will do that.

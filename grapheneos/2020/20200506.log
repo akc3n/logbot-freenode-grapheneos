@@ -1,0 +1,856 @@
+00:00:53 <demonMachina> aside from makig it a pain in the ass for devs...what are the user implications for scoped storage?
+00:41:17 <jussa> hey  im back
+00:43:29 <jussa> dann
+00:43:32 <jussa> danny
+00:44:01 <jussa> it seems impossible to get 3a or pixel 2 second hand in / shipped to fin
+01:16:42 <demonMachina> jussa have you looked into a mail forwarding service?
+01:17:13 <demonMachina> they definitely exist, I just don't know of one specifically
+01:20:10 <sea2clowns> look harder jussa, must be out there ;)
+01:24:10 <DannyWorkOrderPr> jussa: Happy to send, but guarantee it'll be cheaper to find an org that does it for a living, haha
+01:46:38 <TheJollyRoger> DannyWorkOrderPr: on the subject of HSMs - currently I am very interested in solokeys, and backed their kickstarter. Got a few of 'em and hoping that soon I'll be able to update their firmware when support for things like age/gpg/ssh comes around.
+01:47:03 <TheJollyRoger> Remembered I kinda left that hanging the other night.
+01:47:19 <TheJollyRoger> But for now, really liking Trezor much better.
+01:47:35 <TheJollyRoger> Simply because of the backup/restoration function.
+01:48:17 <jussa> theyr too rare here
+01:48:36 <jussa> ill reg
+01:48:42 <jussa> and leets talk
+01:49:49 <jussa> ups shouldnt be too xpensive
+01:50:06 <renlord> strcat: how do you check if postfix is using DANE?
+01:50:14 <jussa> if you live in la , my gf there can pay it and handle sendinf
+01:50:27 <strcat[m]> renlord: https://havedane.net/
+01:50:30 <strcat[m]> renlord: it's not on by default
+01:50:45 <jussa> or bay area
+01:50:57 <jussa> or new york
+01:51:36 <strcat> renlord: https://paste.xinu.at/xKF TLS config
+01:52:07 <renlord> how does it know to use unbound to resolve instead of systemd-resolve?
+01:52:30 <strcat> renlord: set it up so unbound is the resolver on 127.0.0.1
+01:52:37 <renlord> uh, such a stupid question, i should replace systemd-resolve with unbound
+01:52:39 <renlord> lol
+01:52:44 <strcat> and make that the resolver in /etc/resolv.conf and also stop dhclient or whatever from replacing it
+01:53:14 * renlord brain farted
+01:53:36 <strcat> renlord: https://paste.xinu.at/LEAL sample unbound config acting as a forwarding resolver (for better privacy rather than talking to the authoritative nameservers itself) with DNS-over-TLS
+01:53:42 <strcat> + provides DNSSEC by default
+01:54:08 <strcat> renlord: just need to point it at a trust anchor file which most distros set up
+01:54:18 <strcat> auto-trust-anchor-file is recommended so it keeps it updated (has to be writable)
+01:54:40 <renlord> what's the trust anchor file
+01:54:51 <strcat> renlord: dnssec root
+01:55:02 <strcat> renlord: distros mostly give you a default setup that works
+01:55:20 <strcat> you only need to point it at tls certs and set up forwarding with DNS-over-TLS
+01:55:37 <renlord> https://www.archlinux.org/packages/core/any/dnssec-anchors/ ?
+01:55:43 <renlord> at /etc/trusted-key.key?
+01:55:52 <strcat> renlord: the arch unbound package has a really fucking weird setup
+01:55:56 <strcat> the default config handles this
+01:56:16 <strcat> renlord: the arch package uses chroot by default
+01:56:19 <renlord> the arch wiki has a non-working config for postfix/dovecot also
+01:56:23 <strcat> so unbound can't actually read /etc/trusted-key.key
+01:56:31 <strcat> renlord: I can give you a working one
+01:56:37 <strcat> sec
+01:56:40 <renlord> i already got postfix/dovecot working now
+01:56:42 <strcat> ah
+01:56:49 <strcat> renlord: I'd recommend using dovecot for smtp auth too
+01:56:50 <renlord> its just DANE/DNSSEC only
+01:56:56 <renlord> ya i use SASL now
+01:56:56 <strcat> there are a bunch of little things I figured out along the way
+01:57:04 <renlord> as per your recommendation
+01:57:12 <renlord> just using a passwd-static file now
+01:57:16 <renlord> i probably use a db later on
+01:57:19 <strcat> and I have opendkim + spf-engine + opendmarc for inbound mail verification
+01:57:29 <renlord> the last remaining issue is opendmarc
+01:57:38 <renlord> what permissions exactly on the UNIX socket
+01:57:45 <renlord> 660 does not seem to work
+01:57:49 <strcat> renlord: put it in postfix grp
+01:57:53 <renlord> i did
+01:58:00 <strcat> postfix runs in a chroot
+01:58:01 <renlord> its opendmarc:postfix
+01:58:03 <strcat> put it in the postfix dir
+01:58:19 <strcat> in uhh
+01:58:43 <renlord> but /var/run/opendkim/opendkim.sock is fine though
+01:58:47 <renlord> @_@
+01:58:53 <renlord> you sure its chroot-ed?
+01:59:09 <renlord> can confirm emails are signed
+02:00:47 <strcat> renlord: btw by default opendkim doesn't include length
+02:00:49 <strcat> l=
+02:00:54 <strcat> and it allows appending stuff to your emails
+02:00:59 <renlord> wtf
+02:01:00 <strcat> I haven't addressed this yet but I found it out
+02:01:06 <strcat> renlord: email is fucking STUPID
+02:01:23 <strcat> renlord: so it allows someone to take your email
+02:01:24 <renlord> insane defaults
+02:01:25 <strcat> append stuff to it
+02:01:29 <strcat> and the signature still validates
+02:01:32 <strcat> renlord: also it allows
+02:01:34 <strcat> adding headers
+02:01:41 <strcat> other than ones it forbids
+02:01:41 <renlord> the headers i know
+02:01:48 <strcat> it double includes some headers
+02:01:50 <strcat> as signed
+02:01:56 <strcat> which makes it forbid including more
+02:02:02 <renlord> headers i probably must allow because im using a different domain to relay to my actual domain
+02:02:07 <strcat> renlord: anyway you need to do something to add l=
+02:02:18 <strcat> renlord: nah you don't need to allow it for most
+02:02:22 <renlord> does l= only count body length or the whole email?
+02:02:38 <strcat> renlord: the signed part I guess
+02:02:41 <strcat> headers can still be added
+02:02:56 <renlord> do you keep strict canonlization?
+02:02:58 <renlord> lol
+02:03:08 <renlord> what sort of funny business can happen if relaxed?
+02:03:11 <strcat> strict/strict
+02:03:36 <strcat[m]> allows inserting whitespace and shit?
+02:03:45 <renlord> but that's kinda benign isnt it?
+02:03:56 <strcat[m]> I don't consider it benign
+02:03:58 <strcat[m]> just use strict doesn't break
+02:04:04 <strcat[m]> and enable length check
+02:04:11 <strcat[m]> and maybe double sign more headers
+02:04:40 <strcat[m]> renlord: I made assorted other changes like having postfix filter out Received header for submission port
+02:04:48 <strcat[m]> renlord: so it doesn't leak my ip
+02:05:01 <renlord> ah yes, that's a goodidea
+02:05:22 <renlord> how do i do that filter
+02:09:04 <strcat[m]> renlord: sec busy for a bit
+02:09:17 <strcat[m]> can check config bit later
+02:09:27 <renlord> btw, beta update smooth
+02:09:36 <renlord> boot up took much longer than usual though
+02:30:41 <renlord> strcat[m]: i think there's a problem
+02:31:01 <renlord> with this release
+02:31:06 <strcat[m]> what problem?
+02:31:13 <renlord> requestLayout() improperly called by com.android.keyguard.AlphaOptimizedLinearLayout{
+02:31:18 <renlord> keeps getting spammed in logcat
+02:31:21 <strcat[m]> in what
+02:31:51 <renlord> com.android.systemui
+02:32:04 <renlord> 05-06 12:31:59.189  2235  2235 W View    : requestLayout() improperly called by com.android.keyguard.AlphaOptimizedLinearLayout{
+02:32:16 <renlord> every 500ms
+03:05:25 <jussa> danny contribs. graphene , or is part of th4 team?
+03:08:04 <jussa> hope he is
+03:08:12 <DannyWorkOrderPr> Just a fan who's trying to help organize the community.
+03:08:28 <jussa> ah still here
+03:08:41 <jussa> cause i was thinkin if not
+03:08:58 <jussa> then illl send out the both
+03:09:02 <DannyWorkOrderPr> Just finished brushin my teeth, and about to tuck into bed, lol - I check chats beforehand, I'm mentally ill like that.
+03:09:07 <jussa> :)
+03:09:45 <jussa> or no need if your communitymwanager
+03:09:57 <jussa> or well other for personal
+03:10:09 <jussa> and other as don , symbolic one
+03:10:52 <jussa> from the people who started it, the first device on the path . to the people carryin the flag
+03:11:02 <jussa> people / project
+03:11:45 <jussa> ill get some docs aswell from the deparment archives
+03:12:42 <jussa> who knows could be also useful for theplatformm plans to have insider documentation and the actual device than just as an ornament
+03:15:44 <jussa> well from my impression your a nice fit for community manager so hope theyll have you
+03:18:35 <jussa> im gonna bribe them to it with my ornamental n900 special dev dept box all gadgets in double basically used couple or zero times , otherwise :D well i will anyways
+03:19:07 <jussa> can u believe it i dont basically have access to buy pixl 3a in fin
+03:19:34 <sea2clowns> nope
+03:19:41 <jussa> nowhere on second hand stores
+03:19:45 <jussa> not sold new
+03:20:08 <jussa> reconditioned is way overpriced
+03:20:41 <jussa> askin the original price
+03:20:47 <jussa> pretty  much
+03:21:14 <jussa> and yeyeye someone told me bout mail redirection services
+03:22:28 <jussa> but i bet the service gets the price slongside shippin to 300 anywyas
+03:22:35 <jussa> 300e
+03:22:43 <jussa> n above
+03:22:43 <strcat[m]> renlord: they did change stuff related to it
+03:22:47 <strcat[m]> renlord: frameworks/base
+03:22:52 <strcat[m]> renlord: I think I did the thing properly tho
+03:23:50 <renlord> logcat is really noisy
+03:23:57 <renlord> its impossible to see anything else
+03:24:03 <renlord> with that spamming unless i filter it
+03:25:07 <jussa> filter away
+03:25:34 <jussa> so whos the project leader
+03:25:49 <renlord> jussa: please, use the logs
+03:25:56 <renlord> and read the landing page
+03:27:17 <jussa> but its in your brain the info able to be inserted with speed of years of muscle memory
+03:27:29 <renlord> jussa: would you like to get banned?
+03:27:29 <jussa> like asap
+03:27:38 <jussa> cant joke?
+03:28:06 <renlord> you're probably too new here to joke.
+03:28:28 <JTL> renlord: I think jussa is just a newbie who doesn't know how things work here
+03:29:03 <jussa> yeah ehh
+03:29:08 <strcat[m]> renlord: https://github.com/GrapheneOS/platform_frameworks_base/commit/6ef8eb1835c57495283a05cde66831fddcc5a2ec
+03:29:18 <jussa> such a warm community
+03:29:29 <strcat[m]> renlord: there was a conflict there
+03:29:34 <strcat[m]> renlord: so I had to deal with that
+03:29:38 <strcat[m]> so I know they changed stuff
+03:30:27 <strcat[m]> https://github.com/GrapheneOS/platform_frameworks_base/commit/576c4d816c8efe8b9bf7dc88880d8ccde3beacee
+03:32:26 <jussa> dont you think not bein so harsh on "newbies" and relaxin would improve probabilities of newbies of ability and asset to stay , on some like ridiculously small things.BUT
+03:33:56 <sea2clowns> at the same time, you need to appreciate that they're trying to have a constructive conversation
+03:33:59 <jussa> u know i can actually reflect you and finally see myself in a mirror heh, used to , now hiatus, lead 500-1000 person community from development to social aspects of community management
+03:34:54 <jussa> but there harsness had its place i guess
+03:35:14 <jussa> just though this is a liberal effort
+03:35:48 <jussa> but yeeah sorry that...general channel has people wanting to talk other topics too
+03:36:16 <jussa> or is this active development channe
+03:36:56 <jussa> quite mixed seems
+03:37:21 <jussa> out of 8 hours talkin n gettin my finger around the truth
+03:41:48 <jussa> here im throwing romantic respectful compliments n then jokin due to nonsensical harshness out of simple casual question , not out of laziness if one assumes that, assume if person speaks alonefor quite many lines the questions intent is just to evoke atleast some response and engagement in social interaction with people here, of position and newbie nobodies like myself
+03:42:32 <jussa> n asked if i want a ban
+03:46:23 <jussa> unless someone is making money just seems irrational. i worked the project 9 years n felt like myself reacting to me there but i was makin tons of money. security privacy...freedom, liberaliam
+03:47:35 <renlord> i dont think i was harsh when confronting a person who wants to waste other people's time
+03:47:36 <jussa> but as said maybe just a newbie who doesnt know how things work round here
+03:47:49 <jussa> how am i doig so
+03:48:18 <renlord> you're asking repeated questions that have been answered many times and answers that can be found in the grapheneos landing page
+03:48:36 <jussa> first time i asked that
+03:48:58 <renlord> when told to do your own homework, you suggest that we should waste our time answering your question when the questions have already been fucking answered 1000 times
+03:49:02 <jussa> didnt know was prohibited
+03:49:17 <jussa> missed my eye the info on the page
+03:49:37 <renlord> and now, you continuously proceed to defend your ignorance and refuse to the recommendations put forth to you
+03:49:54 <renlord> *refuse to accept
+03:50:03 <jussa> now i know hey
+03:50:10 <jussa> your makin it clear
+03:50:34 <renlord> OK, good that we cleared things up.
+03:50:48 <jussa> your personal values atleast , which might not collision with mine
+03:51:06 <jussa> doesnt matter tho we'r different
+03:51:12 <renlord> i dont think its a personal value of mine, but wasting other people's time is general is extremely rude
+03:51:13 <jussa> im bein honest
+03:51:32 <jussa> one question
+03:51:38 <jussa> ..
+03:51:43 <TheJollyRoger> renlord: I'll take this one.
+03:51:46 <TheJollyRoger> Yes?
+03:51:52 <sea2clowns> jussa, just trolling...
+03:52:07 <jussa> no i pointd
+03:52:15 <TheJollyRoger> Because was that passive-aggressiveness that I heard?
+03:52:15 <jussa> that i asked one question
+03:53:03 <jussa> passive agr- met with the very same
+03:53:17 <jussa> at max
+03:54:12 <jussa> lol i just asked whos the leader
+03:54:36 <TheJollyRoger> I'm pretty sure that you're just here to waste other people's time.
+03:54:46 <jussa> point me where infos at sure ty but leave out the answer
+03:55:17 <TheJollyRoger> The leader of this project is strcat.
+03:55:42 <renlord> thanks
+03:56:03 <TheJollyRoger> Sorry about my tardiness >_<.
+03:56:41 <TheJollyRoger> Yep, he's a troll, he's continuing to PM me.
+03:56:42 <renlord> q/window bare
+03:57:18 <JTL> TheJollyRoger: Ahahaha
+03:58:14 <renlord> strcat[m]: looks like many changes to keyguard
+05:23:24 <bseeinu[m]> Did I dream seeing a new stable release today?
+05:36:35 <strcat[m]> it's a new release, it's not in the stable channel yet
+05:41:35 <renlord> strcat[m]: is ipv6 working for you on ovh?
+05:41:52 <strcat[m]> renlord: yes but you have to set it up
+05:42:01 <strcat[m]> they don't have dhcp or anything for ipv6
+05:42:11 <renlord> what do you mean by setting up
+05:42:20 <renlord> i have an assigned ipv6 address
+05:42:25 <strcat> renlord: get the ipv6 ip and the ipv6 route
+05:42:28 <strcat> from the web console
+05:42:30 <strcat> and set up a static ip
+05:42:32 <strcat> that's it
+05:42:48 <renlord> oh i see
+05:42:50 <renlord> on the box itself
+05:42:56 <renlord> gotcha
+05:42:58 <strcat> yes it works externallty
+05:43:04 <strcat> it's just the OS is not set up
+05:43:10 <strcat> since it expects dhcp regardless of what you pick
+05:43:12 <strcat> or ipv6 magic
+05:43:14 <strcat> they don't do that
+05:43:16 <renlord> kek
+05:43:35 <strcat> their ipv6 works but you only get 1 ip for a vps
+05:43:42 <strcat> and it's static ip config only lol
+05:44:20 <strcat> renlord: so yeah get the ip + route and set it up
+05:44:35 <strcat> and you can set up reverse ip in their web console for ipv4 and ipv6
+05:44:38 <strcat> their web console is really bad
+05:44:50 <renlord> yeah i fixed that, had to use their backend api tool
+05:44:59 <renlord> the frontend is broken
+05:45:03 <strcat> the web console works
+05:45:07 <strcat> the UI just doesn't show it worked
+05:45:09 <renlord> no it doesnt for me
+05:45:11 <strcat> for ipv6
+05:45:19 <strcat> it says error but it works
+05:45:26 <renlord> @_@
+05:45:26 <strcat> this is ovh ui design
+05:45:36 <strcat> also the monitoring stuff
+05:45:38 <strcat> doesn't really work
+05:45:42 <strcat> it will often say the vps is down
+05:45:44 <strcat> but it's not
+05:45:44 <renlord> how the fk am i suppose to confirm that it works.
+05:45:53 <strcat> renlord: do reverse ip check
+05:46:10 <strcat> for email
+05:46:24 <strcat>     echo "test email" | s-nail -s "Test email" -r contact⊙aa check-auth⊙vpc
+05:46:32 <strcat> -r is the email to send from
+05:46:35 <strcat> so use a valid one
+05:46:41 <strcat> checks DKIM / SPF / reverse IP
+05:46:48 <strcat> or just check rev ip yourself
+05:47:15 <renlord> funny
+05:51:37 <strcat> renlord: I assume you got a VPS SSD right
+05:51:40 <strcat> renlord: for something funny
+05:51:44 <strcat> measure the drive speed with dd
+05:51:50 <strcat> it's like 10MB/s
+05:52:31 <renlord> 163MB/s
+05:52:44 <strcat> renlord: bigger file
+05:52:57 <strcat> or you got a really fast one
+05:53:01 <strcat> some of mine are really slow
+05:53:04 <strcat> time.grapheneos.org
+05:53:06 <strcat> is so slow
+05:53:31 <strcat> d if=/dev/zero bs=1M count=1024 of=test
+05:54:02 <renlord> yeah
+05:54:04 <renlord> about 100MB/s
+05:54:09 <strcat> wow a fast one
+05:54:12 <renlord> you should complain lol
+05:54:16 <strcat> time.grapheneos.org is 6MB/s
+05:54:32 <renlord> they put you on a busy rack lol
+05:54:55 <renlord> my box is in singapore
+05:54:57 <strcat> grapheneos.org gets 100 ish
+05:55:06 <strcat> renlord: mine are all at the montreal place
+05:55:30 <strcat> that jusar guy is messaging me
+05:55:39 <strcat> I don't think he's a troll just... odd
+05:55:56 <renlord> i have +i on
+05:56:02 <renlord> so i dont hear from non-registered users
+05:56:08 <strcat> he's messaging me on reddit
+05:56:16 <TheJollyRoger> Oh. Uh...
+05:56:24 <TheJollyRoger> Sorry >_<.
+05:56:37 <strcat> he's just odd
+05:56:54 <strcat> *shrug*
+05:56:59 <TheJollyRoger> Ah well.
+05:57:15 <strcat> weird way of typing
+05:57:26 <strcat> not sure if the weird spelling/grammar is on purpose
+05:58:21 <strcat> he wants to be unbanned lol
+05:58:34 <strcat> called you guys authoritarians
+05:58:41 <TheJollyRoger> Ahahahaha
+06:01:41 <TheJollyRoger> strcat, when you have a moment, could we chatter?
+06:04:54 <renlord> me -- an authoritarian?
+06:04:55 <renlord> LOL
+06:05:11 <TheJollyRoger> Heh, well...
+06:05:27 <TheJollyRoger> Normally I try to be pretty easygoing, just, argh.
+06:58:20 <zxwayland> hey just got my pixel 3a from the google store. just turned it on and updated it. do i need to enable the T-Mobile USA enable unlock device app? not sure if its a trick lol
+07:01:11 <TheJollyRoger> Hi zxwayland, I've never heard of anything like that before.
+07:01:28 <TheJollyRoger> I don't think you'll have to. Just go to settings -> about phone and start the process to install.
+07:01:34 <TheJollyRoger> If you need help, I'll walk you through it.
+07:01:47 <TheJollyRoger> (You'll have to ping me to get my attention, since I'm a tad bit busy and may not respond immediately)
+07:01:50 <zxwayland> Its supposely suppose to unlock my device. but i thought its already unlocked from google. i think it might be a trick from T-mobile, so they can carrier lock me in
+07:02:12 <TheJollyRoger> Rrgh. Sounds like. Just skip it and go to your phone's settings.
+07:02:27 <TheJollyRoger> Do you have wifi where you are?
+07:02:51 <zxwayland> yeah
+07:03:02 <zxwayland> wait a minute, i am going to take a shower
+07:03:14 <TheJollyRoger> Great. Switch your phone's wifi on, ideally you should let it update fully before you start the process.
+07:03:17 <TheJollyRoger> Okay!
+07:03:27 <zxwayland> yeah I already did that on my pixel 3a
+07:03:33 <TheJollyRoger> Great.
+07:03:38 <zxwayland> thats why it downloaded that weird t-mobile app
+07:03:51 <TheJollyRoger> Oh. Oh sheesh... yeah just ignore it.
+07:04:12 <TheJollyRoger> If you run into any trouble and you don't get back before I head off for the night, PM me and I can walk you through the process, or you can ask around here for help.
+07:04:30 <TheJollyRoger> *through the process tomorrow
+07:04:39 <zxwayland> oh ok
+07:05:58 <zxwayland> i am going to enable OEM unlocking, but first i am going to take a shower.
+07:06:06 <TheJollyRoger> Sure.
+07:13:10 <TheJollyRoger> Ahoy!
+07:28:52 <TheJollyRoger> Yo-ho!
+07:29:15 <zxwayland> hi
+07:46:40 <zxwayland> you there?
+07:52:26 <TheJollyRoger> Sorry! yes!@
+07:52:28 <TheJollyRoger> one sec
+07:53:46 <zxwayland> i unzipped fastboot
+07:54:36 <zxwayland> not sure how to unlock bootloader and 'fastboot flashing unlock'
+07:55:09 <TheJollyRoger> Sorry about that, I was just running back and forth.
+07:55:29 <TheJollyRoger> Okay! I'll give you a hand. First up, what operating system are you running (and distro, I think I recall you mentioning you run Linux, but I don't recall distro)
+07:55:35 <TheJollyRoger> ?
+07:55:52 <zxwayland> Debian buster
+07:56:02 <TheJollyRoger> Since we'll need a few sanity checks to be made first, so you don't end up bric-- okay! Got it.
+07:56:17 <zxwayland> ok
+07:56:35 <TheJollyRoger> First things first... if you've installed adb or fastboot through apt, you're going to have to uninstall it first; the version in apt will likely give you a softbrick.
+07:57:13 <TheJollyRoger> Older versions of adb are prone to do this if they don't support autodetection and this can cause your device to display a "no bootable image found" error when you turn it on.
+07:57:36 <zxwayland> i got fasbtboot from grapheneos install part
+07:57:47 <zxwayland> unzipped already
+07:57:50 <TheJollyRoger> Good man!
+07:58:22 <TheJollyRoger> Okay! So where's it saved? We can add it to your path now, you'll have to in order to run the script.
+07:58:59 <zxwayland> in my /home
+08:00:22 <TheJollyRoger> Ok, so `ls $HOME/platform-tools/fastboot` returns the fastboot executable? Just trying to get a picture.
+08:01:19 <zxwayland> yup
+08:01:25 <zxwayland> got it
+08:01:34 <TheJollyRoger> Fantastic! Ok! You're going to want to do the following:
+08:02:28 <TheJollyRoger> `export PATH=$PATH:$HOME/platform-tools/` and hit return. It won't return anything if successful.
+08:02:50 <TheJollyRoger> This will be good for /one session only/ so to ensure it happens every time, I'm going to ask you to add it to your .bashrc:
+08:03:22 <TheJollyRoger> `echo "export PATH=$PATH:$HOME/platform-tools/" >> ~/.bashrc`
+08:03:39 <TheJollyRoger> This way it'll always append the command path from this point going forward.
+08:03:48 <TheJollyRoger> The next thing we're going to need to do is fetch your udev rules.
+08:03:59 <zxwayland> ok
+08:05:34 <TheJollyRoger> whta you're going to want to do is obtain the android rules and move them to your udev rules directory by running: `wget https://raw.githubusercontent.com/M0Rf30/android-udev-rules/master/51-android.rules && sudo mv 51-android.rules /etc/udev/rules.d/51-android.rules`
+08:05:52 <TheJollyRoger> If you want, you can just wget the android rules file first, look it over, and then move it to your udev rules.
+08:07:21 <TheJollyRoger> It won't return any output.
+08:08:45 <TheJollyRoger> The next thing you're going to need to do is reload the udev rules with `sudo udevadm control --reload-rules`. I like to create and add my account to the adbusers group because I usually work remotely but you're probably not going to be doing that so don't worry about adding the group.
+08:09:17 <TheJollyRoger> next up, another quick sanity check, can you type in `fastboot --version` and see if it returns something along the lines of 30.0.0?
+08:09:42 <TheJollyRoger> As long as it says 30.0.something or 29.0.something, you're good.
+08:10:42 <zxwayland> i can't so sudo
+08:11:31 <TheJollyRoger> Hold up a moment, you can't su to root or aren't a part of the group "wheel?"
+08:11:50 <zxwayland> in debian you do
+08:11:52 <zxwayland> su -
+08:11:58 <zxwayland> than your root password
+08:14:08 <TheJollyRoger> Ah, you prefer to do it that way. No problem then, just run the commands marked with sudo as root.
+08:14:20 <TheJollyRoger> But do NOT run wget as root.
+08:14:33 <zxwayland> i logged in as root
+08:14:51 <zxwayland> # mv 51-android.rules /etc/udev/rules.d/51-android.rules
+08:14:51 <zxwayland> mv: cannot stat '51-android.rules': No such file or directory
+08:14:52 <zxwayland> root@debian:~# exit
+08:15:59 <TheJollyRoger> as root:
+08:16:21 <TheJollyRoger> Oh wait up.
+08:16:56 <TheJollyRoger> You're going to need to get those udev rules: run `wget https://raw.githubusercontent.com/M0Rf30/android-udev-rules/master/51-android.rules`
+08:17:06 <TheJollyRoger> Then move them.
+08:17:50 <zxwayland> ok i already download from wget
+08:18:10 <TheJollyRoger> Yeah. Then move 'em. When you su'd to root, did it change your working directory?
+08:18:17 <TheJollyRoger> Also -- please don't run wget as root.
+08:18:55 <zxwayland> i didn't
+08:19:24 <zxwayland> its just ~$
+08:19:32 <zxwayland> in /home
+08:20:16 <TheJollyRoger> Ok. Move that rules file to your /etc/udev/rules.d/ directory.
+08:20:23 <TheJollyRoger> You'll need to do it as root.
+08:22:42 <zxwayland> ok done
+08:22:55 <zxwayland> do i log out of root now?
+08:23:24 <TheJollyRoger> Not yet. You'll need to do `udevadm control --reload-rules` or reboot your computer, otherwise you'll need to run fastboot as root.
+08:24:04 <zxwayland> ok
+08:24:08 <zxwayland> udevadm control --reload-rules
+08:24:11 <zxwayland> as root
+08:24:15 <TheJollyRoger> Yes.
+08:24:54 <zxwayland> cool
+08:25:12 <TheJollyRoger> Next up we'll try a quick sanity check. Run `fastboot --version`
+08:25:23 <TheJollyRoger> Tell me what you get.
+08:25:40 <zxwayland> fastboot --version
+08:25:41 <zxwayland> -bash: fastboot: command not found
+08:25:51 <zxwayland> as root
+08:25:58 <TheJollyRoger> Yep, as a regular user.
+08:26:04 <zxwayland> ohh
+08:26:16 <TheJollyRoger> Sorry. As a regular user. It won't work for root because we've only aliased it for your regular account.
+08:26:19 <zxwayland> got it
+08:26:27 <zxwayland> its there
+08:26:32 <TheJollyRoger> Which version?
+08:26:35 <zxwayland> fastboot version 30.0.0-6374843
+08:26:41 <TheJollyRoger> Excellent!
+08:27:35 <TheJollyRoger> Okay. Next step's optional but recommended. Do you want to verify the payload prior to flashing, or do you just want to install GrapheneOS and use the attestation server to verify post-install?
+08:27:57 <TheJollyRoger> I recommend doing both, but signify-openbsd may or may not be depreciated on Debian Buster.
+08:27:57 <zxwayland> you mean sifnify-openbsd?
+08:28:03 <TheJollyRoger> Yes.
+08:28:26 <zxwayland> i already verifyed it earlier when i pre-downloaded it
+08:28:31 <TheJollyRoger> Ok, great.
+08:28:58 <TheJollyRoger> Unpack it, and make sure your phone's plugged into your motherboard directly by a good-quality USB-A to USB-C cable. Don't use a front port on your PC case.
+08:29:19 <zxwayland> i have a laptop lol
+08:29:22 <TheJollyRoger> fastboot will use the full capabilities of USB, so it'll require full traces.
+08:29:31 <TheJollyRoger> Ok well... ah crud. We'll have to hope for the best. Plug it in.
+08:29:36 <zxwayland> ok
+08:29:49 <TheJollyRoger> Is the phone OEM unlock set to "allow?"
+08:30:55 <zxwayland> wait what you mean unpack it? you mean the phone?
+08:31:08 <TheJollyRoger> Unpack the .zip file you verified.
+08:31:49 <TheJollyRoger> It should give you a directory, within which you should see several things including another .zip file, and some other stuff, and also very importantly, a "flash-all.sh" script. We're going to need that in a couple minutes.
+08:31:56 <zxwayland> yes, i clicked 7 times on build number, enable developer mode. enable OEM unlock on
+08:32:50 <zxwayland> you mean the upzip the crosshatch-factory-2020.05.05.02.zip ?
+08:32:55 <TheJollyRoger> Great. Ok. Switch your phone off, plug it in, and then I want you to press and hold the VOLUMEDOWN key. Keep it pressed down, then press and hold down the POWER key and wait until the phone starts to fastboot.
+08:33:05 <TheJollyRoger> This could take up to seven or eight seconds.
+08:35:56 <zxwayland> ok
+08:36:06 <zxwayland> its in the bootloader
+08:36:19 <TheJollyRoger> Great. Return to your computer and punch in `fastboot flashing unlock`
+08:36:36 <TheJollyRoger> Give it a second and then return to looking at your phone.
+08:37:01 <zxwayland> its there
+08:37:14 <TheJollyRoger> It will ask you to confirm on the screen of the device using the volume keys and power keys. It'll freeze for a couple seconds and then eventually confirm it's been unlocked and it should return you to fastboot after a bit.
+08:37:14 <zxwayland> Unlock bootloader
+08:37:20 <TheJollyRoger> Great.
+08:37:37 <zxwayland> great
+08:37:46 <zxwayland> its uplocked. its a red text
+08:37:51 <TheJollyRoger> Now comes the tricky part. You see that "flash-all.sh" script? cd to that location and execute "./flash-all.sh"
+08:38:02 <TheJollyRoger> (Make sure it's at the fastboot screen!)
+08:38:28 <TheJollyRoger> It may take a couple moments.
+08:39:01 <zxwayland> you mean in platform-tools folder?
+08:39:24 <TheJollyRoger> In where you unzipped the .zip file you downloaded and verified.
+08:39:35 <TheJollyRoger> Since I don't know where you unzipped it to.
+08:40:16 <zxwayland> do you mean
+08:40:18 <zxwayland> cd crosshatch-factory-2020.05.05.02
+08:40:36 <TheJollyRoger> Hold it!
+08:40:42 <TheJollyRoger> You mentioned you had a 3a?
+08:40:48 <zxwayland> yes
+08:41:16 <zxwayland> pixel 3a
+08:41:21 <TheJollyRoger> crosshatch is for the Pixel 3XL. You're going to need sargo-factory-2020.04.14.23.zip
+08:41:42 <zxwayland> oh crap
+08:42:13 <zxwayland> shall i do stable or beta?
+08:42:49 <TheJollyRoger> Stable. If you plan to test releases with us, you'er going to want beta. You can always go to beta at anytime you want, but if you want to change back to stable, you'll have to wait a month.
+08:43:12 <TheJollyRoger> So, use Stable.
+08:43:26 <zxwayland> what are the known bugs in beta right now?
+08:44:01 <TheJollyRoger> I don't know. It's not likely you'd encounter any, unless you were running the CTS.
+08:44:05 <TheJollyRoger> Go with stable for onw.
+08:44:08 <TheJollyRoger> *for now.
+08:44:23 <TheJollyRoger> Like I said, you can change to beta anytime you want, but if you want to go back, you need to select stable then wait for a month.
+08:44:32 <zxwayland> ok
+08:44:43 <TheJollyRoger> Delete all the crosshatch stuff.
+08:44:47 <TheJollyRoger> All of it.
+08:45:07 <zxwayland> yeah i already did
+08:45:12 <TheJollyRoger> I think there's a safety mechanism that prevents you from say, flashing the wrong bootloader onto the wrong device, but I don't like taking chances.
+08:45:25 <TheJollyRoger> Especially not with expensive cellphones.
+08:45:28 <zxwayland> lol thanks
+08:45:43 <TheJollyRoger> Great. Go and download and verify Sargo!
+08:45:58 <zxwayland> at 29%
+08:46:32 <TheJollyRoger> Excellent! I'm going to have to pass out soon, but I'll get you through the rest of the process... once you download it, you're going to need to run that flash-all script with your phone on fastboot.
+08:46:45 <zxwayland> ok thanks
+08:46:53 <TheJollyRoger> Fastboot won't stay on forever. After a couple minutes of no action, it will eventually switch itself back off.
+08:47:08 <TheJollyRoger> If that happens, just do the combo key we discussed, volume down + power on until fastboot starts.
+08:47:10 <zxwayland> oh no
+08:47:21 <zxwayland> okay thanks man
+08:47:27 <TheJollyRoger> Don't worry. It won't do that while the phone is installing.
+08:47:37 <TheJollyRoger> Just if you put it into fastboot and forget about it sitting there.
+08:48:45 <TheJollyRoger> So the next step... you're going to need to run that ./flash-all.sh script. Once it completes, it's going to pause at a screen with "fastbootd" at the top in bright yellow letters. That's a GOOD SIGN, it means the flashing succeeded.
+08:49:00 <TheJollyRoger> You're going to want to use the volume keys to select "Reboot to Bootloader."
+08:49:05 <TheJollyRoger> And confirm with the power key.
+08:49:42 <TheJollyRoger> This should return you to Fastboot, and once you get back there, you're going to reverse what you just did with `fastboot flashing lock` and confirm it the same way you did to unlock it earlier.
+08:50:37 <TheJollyRoger> When you boot, the phone will always tell you that your device is loading a different operating system, in bright yellow letters. You can skip that screen by tapping and releasing the power key twice in succession.
+08:50:42 <TheJollyRoger> If you see that screen, you did it right.
+08:51:12 <zxwayland> okay has been verifyed
+08:51:16 <TheJollyRoger> If you see an ominous "SOFTWARE INTEGRITY NOT GUARANTEED!" warning in bright orange letters, the bootloader's not locked so you'll have to go and do that step before you start using the phone.
+08:51:26 <TheJollyRoger> Ok. Unzip it someplace and run ./flash-all.sh
+08:51:50 <TheJollyRoger> After that step, welcome aboard the ship.
+08:52:27 <TheJollyRoger> You should go and turn off OEM unlocking in developer options. By default on a fresh GrapheneOS install, it will be set to "on" so just reenter the settings the same way you did and toggle it off.
+08:52:45 <zxwayland> its doing it
+08:52:50 <TheJollyRoger> Here we go!
+08:52:50 <zxwayland> its kind of blinking
+08:53:31 <zxwayland> it says fastbootd
+08:53:48 <TheJollyRoger> Great. Put your hand on the volume down key and select "Reboot to bootloader."
+08:53:51 <TheJollyRoger> POWER button to confirm.
+08:54:17 <TheJollyRoger> Once you get back to that fastboot black screen, `fastboot flashing lock` and confirm.
+08:54:35 <zxwayland> wait
+08:54:41 <TheJollyRoger> Yeah?
+08:54:43 <zxwayland> oh its done
+08:55:16 <TheJollyRoger> Great. Bootloader's locked?
+08:55:37 <zxwayland> i am in flashboot mode
+08:55:43 <zxwayland> its unlocked
+08:55:50 <TheJollyRoger> `fastboot flashing lock`
+08:56:45 <zxwayland> great its locked
+08:58:13 <TheJollyRoger> Great. Select "start" from fastboot.
+08:58:30 <TheJollyRoger> You should see the yellow "You are loading a different operating system" screen.
+08:58:45 <zxwayland> yeah
+08:58:50 <zxwayland> passed that
+08:59:02 <TheJollyRoger> If you see that screen, that's a good sign because it's there to let you know that the verified boot is enforcing as it is intended to, just it's enforcing to a different set of keys that aren't Google's.
+08:59:06 <zxwayland> i see the graphene os logo, with the next button on the bottom
+08:59:20 <TheJollyRoger> Welcome aboard the ship :).
+08:59:26 <TheJollyRoger> Take a drink of rum!
+09:00:14 <zxwayland> lol thanks
+09:00:20 <zxwayland> but i don't have rum
+09:00:27 <TheJollyRoger> ...! This must be fixed!
+09:02:29 <zxwayland> lol
+09:04:17 <TheJollyRoger> Welll, until then! For your maiden voyage, you can grab Signal at https://signal.org/android/apk . It will self-update and you won't need to do much else to it. If you'd like to have F-Droid, you can install it by visiting F-Droid in Vanadium and downloading it and installing the .apk. That's probably the most direct way to go about it.
+09:05:35 <zxwayland> cool
+09:05:42 <zxwayland> thanks for the help man
+09:05:52 <TheJollyRoger> Yarr, anytime, that be what I be here for, shipmate!
+09:06:03 <zxwayland> lol
+09:07:15 <TheJollyRoger> And... now I'd best be off. Sleep well, arr!
+09:07:21 <zxwayland> bye
+09:38:28 <dazinism> >Anyone know a good solution for encrypting individual files/photos on Graphene? For example, I don't want all apps with storage permission to see all my photos.
+09:39:31 <dazinism> tentbot: check out https://hub.libranet.de/wiki/and-priv-sec/wiki/storage
+11:23:18 <joeri_poeri[m]> would installing this shitty app I need for school on a seperate useraccount on grapheneos compromize my phone?
+11:50:51 <mrkeithogs[m]> what version of ubuntu is best to make builds on 14.04 or 16
+12:00:53 <propertype> why not use the newest version?
+12:11:19 <mrkeithogs[m]> good point
+12:12:27 <fujita_[m]> > would installing this shitty app I need for school on a seperate useraccount on grapheneos compromize my phone?
+12:12:27 <fujita_[m]> You can download shelter and copy them to a work profile
+12:20:50 <demonMachina> It's not recommended to use apps like shelter, et al. A better option is to use User Profiles.
+12:21:20 <demonMachina> In this case, you would create a profile for school only type apps.
+12:21:46 <demonMachina> switching between profiles is easy to do, and only takes a few seconds.
+12:27:37 <joshman[m]> Anyone doing Google dependent apps on a separate profile? My concern is certain TV apps or a game. Nothing security sensitive. Could give Gcam a try as well.
+12:31:45 <joshman[m]> * Anyone doing Google dependent apps on a separate profile? My concern is certain TV apps or a game. Nothing sensitive. Could give Gcam a try as well.
+12:33:15 <demonMachina> Haven't tried... but I have tried a few non-free apps such as Garmin Connect, Spotify,  and a few others....they worked, but I am really tring to limit their use so I have slimmed them down quite a bit and put them in a seperate profile.
+12:33:37 <demonMachina> spotify is just hard to get away from.... slowly building my music collecction to the point where I won't need it sooner than later.
+12:36:51 <bseeinu[m]> I went back to a dedicated music player with uncompressed FLACs
+12:37:04 <bseeinu[m]> (A Walkman) and IEM headphones
+12:37:18 <bseeinu[m]> And now to RetroMusic player on Android
+12:37:49 <bseeinu[m]> Which even works with Sonos. Took a while, but with the right meta tagging tools it's super worth it
+12:39:17 <cx2[m]> where can you find retro music plater?
+12:39:23 <cx2[m]> player
+12:41:15 <bseeinu[m]> I got it from github
+12:41:17 <bseeinu[m]> The apk
+12:41:56 <bseeinu[m]> https://github.com/h4h13/RetroMusicPlayer
+12:50:08 <bseeinu[m]> So what's an alternative IPS to Unify Security Gateway that integrates well with Unifi? This thing limits the bandwidth to 85Mbps
+12:55:35 <mezzanine[m]> Channel's down?
+12:55:59 <sea2clowns> ?
+12:56:01 <bseeinu[m]> No
+12:56:24 <mezzanine[m]> Cannot load previous posts
+12:57:05 <renlord> strcat: why dont you disable DHE altogether on postfix?
+12:57:13 <renlord> in the cipher list
+12:59:20 <sea2clowns> mezzanine - check https://freenode.logbot.info/grapheneos for logs
+13:00:17 <cx2[m]> bseeinu: so with retro you basically just have to deal with the fact that the "Buy Premium" is persistent
+13:03:34 <anupritaisno1[m]> renlord (@freenode_renlord:matrix.org): you can't
+13:03:43 <anupritaisno1[m]> You'll basically miss mail if you do so
+13:04:51 <bseeinu[m]> Does my brain filter that out?I never noticed
+13:05:26 <bseeinu[m]> Dude I totally don't see that
+13:05:30 <bseeinu[m]> Where is it
+13:06:09 <bseeinu[m]> There's one non intrusive banner in the settings
+13:06:16 <bseeinu[m]> That's all I see
+13:08:41 <cx2[m]> That's all I mean...and you can't buy it on GOS anyway.
+13:08:53 <cx2[m]> Can't even restore.
+13:09:04 <bseeinu[m]> I didn't even realize there was a paid version
+13:09:20 <bseeinu[m]> I'm sure there's plenty of valid alternatives
+13:09:30 <renlord> how do i improve security for EDH parameters?
+13:09:43 <renlord> regenerate them every hour? @_@
+13:10:45 <bseeinu[m]> AIMP, Musicolet, Phonograph
+13:11:09 <bseeinu[m]> I don't rememeber why I set on Retro
+13:51:29 <yekip[m]> I tried to use the Calendar on Graphene yesterday. Is it just me, or is there no way to add an item?! I am buggered if I can find a button to do anything except change the view :D
+13:51:50 <yekip[m]> (not a big deal if it doesn't work, wasn't firm about using it, but just thought I would ask in case it is good old user error!)
+13:54:25 <sea2clowns> hadn't used it previously but you're correct from what i see
+13:55:43 <joeri_poeri[m]> > It's not recommended to use apps like shelter, et al. A better option is to use User Profiles.
+13:55:43 <joeri_poeri[m]> thanks for the tip, I'll give that a go
+13:58:38 * yekip[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/GjuxmFaMzuGTXknemRKBZfBV >
+13:58:54 <yekip[m]> <sea2clowns "hadn't used it previously but yo"> oh, good, so that reduces the chance of user error !
+14:13:23 <dallemon[m]> <yekip[m] "I tried to use the Calendar on G"> I'm sure I saw someone mention that the calendar app is obsolete and broken, but needed for core functionality.
+14:18:40 <yekip[m]> ah that would make sense. thanks
+14:18:46 <yekip[m]> any suggested alternatives?
+14:18:56 <yekip[m]> be nice to sync one with mac OS, if that wasn't a horrible suggestion!
+14:20:07 <dallemon[m]> I don't have any personal suggestions, but I remember using Etar a while back
+14:27:17 <yekip[m]> thanks.
+14:29:19 <yekip[m]> I may just use OmniNotes which was a fantastic recommendation (as always) from the JollyRoger! Mainly for things like reminding me (with alarm) to wash my hair every month, things like that :D
+14:31:18 <fujita_[m]> Is there anyway to enable widgets on etar?
+14:32:52 <joeri_poeri[m]> > I don't have any personal suggestions, but I remember using Etar a while back
+14:32:52 <joeri_poeri[m]> etar works great, I use it all the time, I use the Simple Calendar widget to add it to my home screen with a transparant background. but if I interact with the widget I've set all the defaults to open with Etar as the app works better
+14:37:17 <yekip[m]> great thanks. so you can set recurring reminders, and get audible alerts etc?
+14:37:36 <yekip[m]> I dont necessarily need to sync it, but it would be nice if i could find a way to sync with mac os. no probs if not though
+14:39:42 <yekip[m]> I am just finally getting around to moving stuff from iphone to graphene. well, not actually moving, but finding replacements etc for various things I do need (not many really, but those that I do use are important). I don't think I have seen a list of popular apps used by graphene users. if anyone knows of such a list, please let me know. would love to see a list of all these great suggestions i sometimes catch in here
+14:45:08 <DannyWorkOrderPr> strcat: > I don't think he's a troll just... odd
+14:45:08 <DannyWorkOrderPr> +1
+14:51:06 <sea2clowns> lol DannyWorkOrderPr... if not, needs to find an outlet for verbal diarrhea
+14:52:12 <sea2clowns> yekip - you can start with looking for lists of good foss/fdroid/aurora store apps
+14:52:26 <DannyWorkOrderPr> > strcat: not sure if the weird spelling/grammar is on purpose
+14:52:26 <DannyWorkOrderPr> That's one of the first things I asked when he showed up, he implied it's to avoid fingerprinting. He may just be an older Finnish dude with shit grammar, too, aha.
+14:52:32 <sea2clowns> *aurora droid
+14:54:15 <DannyWorkOrderPr> Wants someone to send him a Pixel, claims to have previous connections to the Maemo side of Nokia, some cool limited edition hardware and documentation that he wants to send you.
+14:55:42 <DannyWorkOrderPr> Granted, it took hours of multi-line weird msgs to finally get to that, but...lmao..if he can get two other people interested in GrapheneOS, I'll try to get him to pay for sending him a Graphene Pixel.
+14:59:10 <joeri_poeri[m]> yekip you can sync your calendar with nextcloud and get if from there, you don't even need to trust anyone with your cloud, you can host it yourself!
+15:01:35 <joeri_poeri[m]> that would surely be the way forward I would recommend, people lose their phones all the time...
+15:18:27 <DannyWorkOrderPr> sea2clowns: agreed, dude needs a blog. I'd read it, just not in chat form, aha
+15:19:41 <nhscm[m]> What did Jussa want? Why does somebody need to send a Pixel 3a to him/her?
+15:22:26 <sea2clowns> couldn't find one that would ship to finland apparently, asking questions which are on the site or in the logs and was generally just rambling on.  Did not get the hint when asked to refrain
+15:22:33 * bseeinu[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/RetAKDMkYIoqnfRkDLoOFYrV >
+15:24:00 <bseeinu[m]> :D
+15:24:01 <DannyWorkOrderPr> bseeinu Also told him that, haha. He's older, it seems. From back when people had to manually make those connections...not algorithmically.
+15:24:04 <nhscm[m]> You can easily get a new Pixel 3a from one of the largest tech stores at Finland. https://www.verkkokauppa.com/product/57399/mjtrm/Google-Pixel-3a-Android-puhelin-64-Gt-valkoinen
+15:24:44 <DannyWorkOrderPr> nhscm: What's that in USD?
+15:25:52 <nhscm[m]> 429€ is $463
+15:26:31 <bseeinu[m]> I got a new one shipping from eBay for $400
+15:26:39 <bseeinu[m]> Took 2 weeks but hey
+15:26:55 <yekip[m]> <joeri_poeri[m] "yekip you can sync your calendar"> yes I have looked at it, but I am not really up to self-hosting, and NextCloud seems massive and complex,just for syncing. and it looked paid to me but maybe not for personal users
+15:27:40 <DannyWorkOrderPr> Yeah, nhscm, I can definitely send him one (with GrapheneOS on it) for cheaper/around that. Used, they're going for for ~1/4 or ⅓ of that.
+15:28:43 <DannyWorkOrderPr> Although I'm not sure why he wouldn't want to flash it himself. May be trying to save as much money as possible, rough time globally with job situations and all.
+15:29:01 <brenneke[m]> Does OEM unlocking need to be left on to be able to receive GrapheneOS updates?
+15:29:34 <DannyWorkOrderPr> brenneke Negative, and docs say to lock everything back up.
+15:38:30 <mezzanine[m]> Wondering if it will be available to install the OS on pixel 4, any insights on that?
+15:45:38 <propertype> <mezzanine[m] "Wondering if it will be availabl"> Look at https://grapheneos.org/faq#future-devices and https://grapheneos.org/faq#when-devices
+15:46:28 <nhscm[m]> > Although I'm not sure why he wouldn't want to flash it himself. May be trying to save as much money as possible, rough time globally with job situations and all.
+15:46:28 <nhscm[m]> Quickly looking around the cheapest new 3a in Finland seems to be around 380€ which is $412 and I think used ones are there as well. And being a guy that wants to avoid text fingerprinting, having another persons sending a pre-flashed GOS does not seem like something that kind of guy would do.
+15:48:50 <mezzanine[m]> <propertype "Look at https://grapheneos.org/f">  Thanks, cap
+15:56:06 <brenneke[m]> <DannyWorkOrderPr "brenneke Negative, and docs say "> Thanks.
+15:57:03 <mxnorvak[m]> Is there an alternative app for Fing?
+16:01:59 <propertype> https://alternativeto.net/software/fing/
+16:11:28 <DannyWorkOrderPr> brenneke: Friendly reminder: read the *hell* out of GrapheneOS.org. It's worth it. Don't just read the parts you think you "need", it's all pretty important and helpful.
+16:15:07 <brenneke[m]> <DannyWorkOrderPr "brenneke: Friendly reminder: rea"> Good point.
+16:58:33 <mxnorvak[m]> <propertype "https://alternativeto.net/softwa"> Thanks, there was only one android app and it missed the feature i was looking for, Fing can tell you which other devices are connected to the same wifi and gives the MAC and IP addresses of each device which i find very useful
+17:24:48 <DannyWorkOrderPr> mxnorvak: You need a command line on your phone, friend. Termux/T-UI launcher?
+17:25:15 <DannyWorkOrderPr> nmap -sn %IPaddress% does the same thing, without trusting an app you may not be capable of auditing.
+17:34:18 <mxnorvak[m]> <DannyWorkOrderPr "nmap -sn %IPaddress% does the sa"> I wasn't aware it could be done via Termux, ill give a shot, yeah not trusting the app was the reason i wanted an alternative,the app is full of Facebook and Google trackers
+17:43:08 <cx2[m]> same with Spotify  ☹︎
+17:43:21 <cx2[m]> welp.... back to TBB I go!
+17:52:48 <mxnorvak[m]> <cx2[m] "same with Spotify  ☹︎"> Not a fan of streaming music, prefer to have my music locally but yeah it sucks
+17:54:05 <cx2[m]> agreed.
+18:16:26 <mxnorvak[m]> <DannyWorkOrderPr "nmap -sn %IPaddress% does the sa"> Should be like nmap -sn %192.168.1.1% ?
+18:16:34 <mxnorvak[m]> Should it*
+18:22:38 <DannyWorkOrderPr> Read their documentation, you'll learn so much more out of it than me just throwing commands over the fence here
+18:22:57 <DannyWorkOrderPr> But, to answer your question, no %
+18:23:11 <mxnorvak[m]> Oh alright
+18:23:16 <mxnorvak[m]> Tnx :)
+18:28:28 <zxwayland> hello. i installed grapheneos last night with the help from TheJollyRoger
+18:28:46 <JTL> Nice
+18:34:36 <zaxxa[m]> > > <@cx2:matrix.org> same with Spotify  ☹︎
+18:34:37 <zaxxa[m]> > Not a fan of streaming music, prefer to have my music locally but yeah it sucks
+18:34:37 <zaxxa[m]> I download songs using newpipe and play playlists using vlc. its great because it doesnt need WiFi and runs as a background task so I use hardly any battery
+18:52:47 <brenneke[m]> My first auto-update since installing GrapheneOS successful.....life is good when you get excited by little things!
+18:54:57 <ransome[m]1> > My first auto-update since installing GrapheneOS successful.....life is good when you get excited by little things!
+18:54:57 <ransome[m]1> same here :)
+18:56:32 <ransome[m]1> everything runs so unbelievably seamless I really do hope this project will stay on for quite a while. And of course support my lovely Pixel 3a for at least 10 years ;)
+18:56:51 <dazinism> Added a wiki page all about apps. Where to get them, what to consider etc.
+18:56:57 <dazinism> https://hub.libranet.de/wiki/graphene-os/wiki/Apps#The_Play_Store
+18:57:23 <dazinism> Actually this link
+18:57:26 <dazinism> https://hub.libranet.de/wiki/graphene-os/wiki/Apps
+18:58:23 <sea2clowns> seamless update client working as we speak =)
+19:03:08 <DannyWorkOrderPr> <ransome[m]1 "everything runs so unbelievably "> Can't expect GrapheneOS to support what the phone manufacturer isn't pushing firmware updates for
+19:03:37 <DannyWorkOrderPr> You'll get some time out of it, though, and be able to sell it to someone else when you're done, for cash towards your next piece =]
+19:08:37 <brenneke[m]> <ransome[m]1 "everything runs so unbelievably "> And for Pixel 2 XL also lol!
+19:11:58 <DannyWorkOrderPr> brenneke: Can't expect GrapheneOS to support what the phone manufacturer isn't pushing firmware updates for
+19:14:51 <brenneke[m]> <DannyWorkOrderPr "brenneke: Can't expect GrapheneO"> Hence the "lol".
+19:15:53 <DannyWorkOrderPr> =]
+19:23:29 <mezzanine[m]> Newpipe doesn't download videos, any solutions?
+19:24:05 <DannyWorkOrderPr> Never discuss a problem by sayin "it doesn't work". Say what happens instead, so it's useful information.
+19:25:12 <leohopper[m]> > whta you're going to want to do is obtain the android rules and move them to your udev rules directory by running: `wget https://raw.githubusercontent.com/M0Rf30/android-udev-rules/master/51-android.rules && sudo mv 51-android.rules /etc/udev/rules.d/51-android.rules`
+19:25:12 <leohopper[m]> hey TheJollyRoger - i read your walkthrough and could'nt figure out the cited step. on https://grapheneos.org/install this step is not mentioned. Could you explain?
+19:26:15 * mxnorvak[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/nfrQLiAxYZrWlWwLdCpkNAZF >
+19:26:53 <zxwayland> is there a way to ipmort my contacts? or do i have to in put each phone number/name on my contact list
+19:26:56 <zxwayland> ?
+19:28:52 <DannyWorkOrderPr> DavX
+19:29:08 <cx2[m]> I would recommend Installing and setting up EteSync. It's $24 /yr.
+19:29:09 <cx2[m]> Then export your contacts -o .vcf
+19:29:09 <cx2[m]> import into EteSync
+19:29:28 <zxwayland> ahhh
+19:30:40 <cx2[m]> SLIGHTLY more difficult to setup with Thunderbird as they don't have a native plugin just yet, but they are working on it. In the mean time, their workaround is pretty good.
+19:30:48 <zxwayland> i have my contacts saved as .csv
+19:31:01 <zxwayland> not sure if any apps would accept it
+19:31:38 <DannyWorkOrderPr> <zxwayland "i have my contacts saved as .csv"> Look into Davx^5 (stupid name, great app), and DecSync
+19:31:53 * brenneke[m] sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/IpvnXgoYraHZqLeXFpiSdIaS >
+19:32:02 * DannyWorkOrderPr sent a long message:  < https://matrix.org/_matrix/media/r0/download/matrix.org/iLQRBWHDSlkCmymmXfAIlxRd >
+19:32:48 <sea2clowns> i have davx5 on my other android device, works great.  no contacts on graphene
+19:33:27 <cx2[m]> <DannyWorkOrderPr "> <@cx2:matrix.org> I would reco"> It's the exact opposite. It's an E2EE Fork of DavX^5
+19:35:44 <DannyWorkOrderPr> DavX is E2E, as well. At least, as E as the spec allows (which I believe relies on SSL)
+19:37:10 <DannyWorkOrderPr> Ete is a cool offering, but, I always wonder how focused they are on upstream, compared to their revenue
+19:37:19 <DannyWorkOrderPr> Haven't compared their commits with DavX, though
+19:38:34 <nickcalyx[m]> Davx may allow.transport encryption but not encrypting the databases so the host can't access them.  Eteaync.client.side encrypts the contact and.calendars
+19:39:09 <DannyWorkOrderPr> On the server?
+19:39:32 <DannyWorkOrderPr>  * Wait, how's that work, if there are apps reading your contacts & calendars?
+19:40:01 <DannyWorkOrderPr> I didn't know they have self-hosting option. Is it free/kept patched like their own server, anyone know?
+19:40:36 <nickcalyx[m]> it encrypts it before syncing to the server I mean
+19:41:16 <nickcalyx[m]> they have a business model, but they are pretty cool.. I talked to the lead dev about a PR for it to work on calyx servers when on a calyxOS phone and they were fine with it because they support privacy in the big picture
+19:41:42 <nickcalyx[m]> yeah the server side is free
+19:43:03 <nickcalyx[m]> if a bit klunky
+19:43:43 <bseeinu[m]> First background update ever for me
+19:43:45 <bseeinu[m]> Worked great
+19:44:02 <strcat> DannyWorkOrderPr: transport encryption to a server and end-to-end encryption are different things
+19:44:27 <strcat> end-to-end encryption means the server doesn't ever have unencrypted data because it's encrypted from client-to-client end-to-end
+19:46:03 <DannyWorkOrderPr> strcat: I do understand that distinction =] I was more wondering how EteSync actively decrypts the dbs for use by apps/when that happens.
+19:46:36 <DannyWorkOrderPr> Is it only encrypted before sending to server, and decrypted after retrieving from server?
+19:46:56 <DannyWorkOrderPr> Or is it encrypted at rest until one of the Contacts/Calendar apps attempts to read, and then Ete decrypts at that time?
+19:46:58 <DannyWorkOrderPr> nickcalyx
+19:48:02 <nickcalyx[m]> AFAIK it's only encrypted before sending to the server.. on the phone it's not encrypted
+19:48:20 <nickcalyx[m]> unless you count the normal android disk encryption
+19:49:24 <nickcalyx[m]> I am not 100% sure but it probably communicates with the server with transport encryption also
+19:49:37 <DannyWorkOrderPr> <nickcalyx[m] "unless you count the normal andr"> Not in this context =] Thanks, great explanation. Thanks for bringing it up, cx2!
+19:50:21 <cam> mxnorvak[m]: sry, i missed the preceding conversation re spotify. what sucks?
+19:50:45 <DannyWorkOrderPr> <nickcalyx[m] "I am not 100% sure but it probab"> I think I've yet to see a modern CalDav implementation that doesn't use SSL
+19:50:58 <DannyWorkOrderPr> <cam "mxnorvak: sry, i missed the prec"> FB etc trackers
+19:51:42 <DannyWorkOrderPr> <nickcalyx[m] "if a bit klunky"> Do you run it? What have you had to fuck with?
+19:52:10 <bseeinu[m]> Well, consider this: I can target ads based on mood and activity, based on what you listen
+19:52:17 <bseeinu[m]> In a specific Zip code
+19:52:24 <cam> DannyWorkOrderPr: fb trackers? anyone have a link to more info? all i found was this (https://lifehacker.com/how-to-stop-spotify-from-posting-every-song-you-listen-5843847), which is pretty old
+19:52:55 <bseeinu[m]> So if you're working out based on the playlist and that recurrent time of the day and you're in a certain geo area
+19:53:18 <bseeinu[m]> You hear my ad about that useless piece of crap for working out gear
+19:53:26 <DannyWorkOrderPr> cam: If a website, or app, has a Facebook button on it, there's FB tracking code.
+19:53:47 <bseeinu[m]> Worse: it could be about private health plans. Based on behavioral analysis and your playlists.
+19:53:58 <DannyWorkOrderPr> Bare minimum, metadata of when/where that button's being loaded
+19:54:07 <zxwayland> i don't get it. I downloaded Davx5 via f-droid store. the davx5 doesn't let me upload any .cvs file onto my contacts phonebook
+19:54:34 <bseeinu[m]> You don't even need FB to worry about trackers. Spotify is the tracker and ad service.
+19:54:34 <DannyWorkOrderPr> <zxwayland "i don't get it. I downloaded Dav"> What server were you previously syncing your other phone with?
+19:54:35 <zxwayland> Don't use facebook? delete it
+19:55:08 <zxwayland> I exported my google contacts as downloadded .csv file
+19:55:20 <cam> damn
+19:55:39 <DannyWorkOrderPr> cam: beautiful fuckin world, innit?
+19:55:46 <bseeinu[m]> Lolol. You don't need to have Fb to be targeted just like you don't need to be on a google property to be in a remarketing list from Google Analytics and Tag Manager
+19:55:52 <DannyWorkOrderPr> zxwayland: Use DavX to one-time download your contacts from Google server.
+19:56:20 <zxwayland> ah, is that a good idea?
+19:56:21 <cam> i wish there was a free or reasonably-priced privacy-friendly alternative to spotify
+19:56:46 <bseeinu[m]> Arguably Apple Music, MAYBE
+19:56:48 <DannyWorkOrderPr> zxwayland: Then change it to sync with another server, or delete it and use Ete with their server/another server you put up with their software. Or, use DecSync to do it file-based, which you seem to prefer.
+19:57:09 <bseeinu[m]> To be honest, just get your music.
+19:57:14 <bseeinu[m]> And get your movies.
+19:57:22 <bseeinu[m]> And don't stream shit.
+19:57:30 <bseeinu[m]> And use NextDNS.
+19:57:45 <DannyWorkOrderPr> zxwayland I don't think it's valid to be worried about the CalDav connection, one time
+19:57:55 <cam> bseeinu[m]: for various reasons, i'm starting to think that's the best way in the long run
+19:58:07 <DannyWorkOrderPr> I'd be against repeatedly syncing with Google's severs, but one download can't be any worse than what you were doing before.
+19:58:19 <DannyWorkOrderPr> <bseeinu[m] "And use NextDNS."> =1
+19:58:25 <cam> it's just that privacy aside, spotify's functionality is so legitimately great
+19:58:31 <DannyWorkOrderPr> > <@bseeinu:matrix.org> And use NextDNS.
+19:58:31 <DannyWorkOrderPr>  * +1
+19:59:33 <bseeinu[m]> It is. That's why you pay with the ability to be influenced based on ads you listen on a specific device, in a specific geographic area, on your algorithmic mood decoding
+20:01:08 * cx2[m] uploaded an image: classy spot.jpeg (157KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/SBdAjqjJLTZXDkcGnrCvQaLs >
+20:01:24 <cam> yikes
+20:01:24 <bseeinu[m]> Look up "Custom Intent Audiences" to see what you are "in-market" for. Google Ads, Taboola, Amazon Ads, Hulu, Facebook Ads: they can all import remarketing and users lists to retarget after months, based on intention and behavior
+20:02:25 <bseeinu[m]> Oh it's a fantastic system. Very easy to sell shit with it.
+20:03:08 <bseeinu[m]> You think you choose to buy something, but did you?
+20:03:22 <cam> preaching to the choir
+20:03:51 <bseeinu[m]> One could create "ad sequences" on YouTube to show you a sequence of ads to push you "down the funnel" within X days
+20:04:37 <bseeinu[m]> And register your "conversion" to a customer. Google Ads will then optimize audiences to show the ad to people similar to you, in behavior
+20:05:05 <bseeinu[m]> It's an infinite echo chamber of commerce and behavior  influencing.
+20:05:53 <bseeinu[m]> So, please, use Spotify :D
+20:06:07 <cam> yep. marketing and advertising are a plague on society
+20:07:16 <cam> you've inspired me to dump my streaming services
+20:07:36 <cam> including the "free" ones
+20:08:49 <bseeinu[m]> Plex, and a good local music player on the go
+20:09:05 <DannyWorkOrderPr> <cam "including the "free" ones"> If you're not paying for the product: biiiiitch, you are the product!
+20:09:14 <bseeinu[m]> :)
+20:09:27 <cam> DannyWorkOrderPr: facts :)
+20:10:05 <demonMachina> speaking of NewPipe, aren't there additional steps to it make it more private?
+20:10:08 <sea2clowns> love plex!  so many Pi's around here with rasplex on them, lol
+20:11:23 <DannyWorkOrderPr> Kodi+Plex+Kore+NewPipe(with "Chromecast" button enabled)
+20:11:39 <yekip[m]> <DannyWorkOrderPr "Look into Davx^5 (stupid name, g"> davx looks interesting. does it only sync between android devices or could it sync with a desktop like MacOS? I checked their site briefly and see no offerings on download page other than android/google play, so assuming not?
+20:12:28 <DannyWorkOrderPr> You can use other implementations of CalDav (the "standard", quotes because there's multiple implementations of it) to do the syncing on other platforms besides Android.
+20:12:45 <DannyWorkOrderPr> Thunderbird, Outlook, Google's bullshit, iCloud's bullshit, etc
+20:24:53 <cx2[m]> <DannyWorkOrderPr "Kodi+Plex+Kore+NewPipe(with "Chr"> * begins searching...
+20:34:01 <Cyrinux[m]> <DannyWorkOrderPr "Kodi+Plex+Kore+NewPipe(with "Chr"> Chromecast doesn't work in plex with grapheneos. We 'miss' Google home.
+20:35:04 <Cyrinux[m]> Bubleupnp cast don't help for plex :(
+20:41:38 <mrxx_0[m]> Just got the May patch update on my 3a XL. Thank you Daniel
+20:43:03 <cyborgninjaneer[> Got mine earlier today as well. Thanks, Daniel! @strcat:matrix.org
+20:54:02 <yekip[m]> <DannyWorkOrderPr "Thunderbird, Outlook, Google's b"> hehe. thanks. not sure it's for me, although if i did i would try someything like syncthing since i was recommended that the other day and had a look today, neat stuff
+20:54:05 <yekip[m]> thanks
+20:55:11 <mxnorvak[m]> I've never used pocket for saving pages so that i can read em later,is it really that much better than just bookmarking the page and just read it later?
+20:56:16 <mxnorvak[m]> I've got tons and tons of bookmarks tho and i was looking for a solution to organize em
+20:56:46 <mxnorvak[m]> Downloading pages as a pdf apparently isn't available anymore
+20:57:45 <Cyrinux[m]> I use my own wallabag instance for this
+20:58:31 <Cyrinux[m]> Better than bookmarking. This archive the page on your server. As pocket but selfhosted.
+20:59:11 <mxnorvak[m]> I have to set up my own server :/ ?
+21:01:56 <demonMachina> xbrowsersync is your friend here ...https://www.xbrowsersync.org/
+21:07:46 <mxnorvak[m]> Tnx I'll check it out
+21:10:46 <miniblue[m]> Is it recommended to use a launcher with Graphene? If so, are there any good ones?
+21:12:15 <strcat> miniblue[m]: the one that comes with the OS
+21:14:40 <overheadscallop[> <mxnorvak[m] "I have to set up my own server :"> the wallabag developers have an official pay-for-service version https://wallabag.it/
+21:29:59 <mxnorvak[m]> My question stands, do these apps make that much of difference?
+21:30:37 <dazinism> xbrowsersync looks nice, unfortunately the Fdroid build crashes on start currently, but hopefully will be fixed soon.
+21:31:13 <bseeinu[m]> Can't even start it on graphene
+21:31:23 <bseeinu[m]> Favorite native RSS apps?
+21:31:46 <dazinism> Theres a few hosting crews on https://libreho.st who host instances too.
+21:33:26 <dazinism> If you want secret RSS reader, the blog function in briar provides RSS feeds over tor
+21:34:07 <bseeinu[m]> I'm okay with local feeds
+21:34:18 <bseeinu[m]> And importing an OPML
+21:34:34 <cx2[m]> It's absolutely working on my phone
+21:34:41 * cx2[m] uploaded an image: xBrowser.png (559KB) < https://matrix.org/_matrix/media/r0/download/matrix.org/AACZELMtJNKxdGSQkzwDhsst >
+21:35:31 <mxnorvak[m]> Crashes on mine
+21:35:45 <overheadscallop[> <mxnorvak[m] "My question stands, do these app"> If the article is scraped correctly, then you have a full-text search archive (with images if enabled in the wallabag server config) plus you can add your own tags and annotations. Plus the URL you bookmarked may not be on any public archive (archive.org, archive.is, etc)
+21:36:08 <dazinism> Feeder is pretty respectable for feed reader
+21:36:11 <dazinism> https://f-droid.org/app/com.nononsenseapps.feeder
+21:36:12 <dazinism> Briar have there own Fdroid repo
+21:36:13 <cx2[m]> pretty sure i snagged it from github, not fdroid
+21:37:29 <cx2[m]> <dazinism "Feeder is pretty respectable for"> how do you feel about Handy News Reader? Ive been using it for a bit..... If I remember I liked it better than Feeder
+21:39:08 <dazinism> https://briarproject.org/installing-briar-via-f-droid/
+21:39:32 <mxnorvak[m]> <dazinism "https://briarproject.org/install"> isn't this the p2p messaging app?
+21:41:02 <dazinism> Yeah its nice. One of the main devs recently did a load of nice work on seedvault (backup app used by GrapheneOS)
+21:42:00 <dazinism> Uses quite a bit of battery, but theres an option to only have it connect when the phone is charging.
+21:43:41 <dazinism> Actually come to think, pretty sure they are in this room.
+21:43:43 <bseeinu[m]> Handy News Reader is the one I use on my eink Android reader too
+21:44:07 <mxnorvak[m]> How good of a massaging app do u find it to be, compared to signal, in terms of security and privacy?
+21:44:28 <bseeinu[m]> Trying to figure out how to use filters to reject all the COVID CORONAVIRUS COVID19 compulsory articles
+21:45:38 <dazinism> I did try handy, was something about it that didnt quite work for me. But I think I was trying to use it for something a bit weird (getting notifications for forum posts)
+21:48:31 <dazinism> I know a bit about a few of the people involved in developing the app. One of them a friend of some folks I knocked about with a bit.
+21:48:34 <dazinism> Briar this is.
+21:48:36 <dazinism> It was carefully considered and built for very good privacy.
+21:48:42 <dazinism> Everything goes over tor
+21:49:16 <cx2[m]> Everything goes over TOR without Orbot?
+21:49:28 <dazinism> Unlike signal, there is no central server, you connect directly to people you know.
+21:49:50 <dazinism> No not with orbot, its got its own for process built in.
+21:50:21 <mxnorvak[m]> And there's no need for a number to sign up
+21:51:25 <cx2[m]> dazinism: Just downloaded.... tried adding one of my normal feeds. Didn't work. Will it only load ceratain feeds?
+21:52:26 <miniblue[m]> strcat: Oh okay. Only reason I asked was because I wanted to modify the icons/names of some app icons that I like the features of but hate the look of but I guess to do that I would actually have to create my own builds of said apps or just suck it up and deal with it.
+21:52:33 <Cyrinux[m]> <dazinism "I know a bit about a few of the "> There is a public directory with some ressource to try?
+21:52:36 <dazinism> If you are in a forum with lots of folks who all know each other, whenever 2 or more people are 'online' they pass all the messages they have to the others. Relaying on messages who may not be online.
+21:53:03 <dazinism> cx2: if the feed provider blocks tor then you cant get the feed
+21:53:14 <cx2[m]> dazinism: nevermind.... it didn't like that I wasn't using https..... weird, because I copy and pasted it from Handy News Reader....
+21:53:50 <dazinism> (Eg if they are behind cloudflare and havent changed the default tor DDOS protection rules)
+21:54:22 <miniblue[m]> I know it's a very vain and useless idea but UI is kind of a big factor as far as experience goes yet is something I'm willing to sacrifice. I think misunderstood launcher functionality as well.
+21:54:57 <dazinism> Cyrinux: directory of what?
+21:59:47 <dazinism> If anyone wants to try briar I am briar://ab4eitvv2ty6ifgc4i2sblbusecqrcjoxp3kjgnn2xz2nyws7jjwa
+22:02:19 <dazinism> You need to hit the + down the bottom of contacts > add contact at distance > paste your link here...
+22:03:42 <dazinism> If the internet goes down, or you dont want to use it, you can also pass messages via Bluetooth or to other devices on the same WiFi network.
+22:05:28 <dazinism> miniblue: I found you can hide app icons, but still keep them handy, by having a few apps grouped together on the home screen
+22:06:09 <DannyWorkOrderPr> <mxnorvak[m] "Downloading pages as a pdf appar"> Why wouldn't it be? Printing as PDF is always an option, too.
+22:06:36 <Cyrinux[m]> But for this concept working we need to get lot of user
+22:07:03 <Cyrinux[m]> I would love a privacy forum in briar
+22:08:06 <Cyrinux[m]> dazinism: briar://adenu7kzmmxtniokj2axwegk5l6ecxuvwbkyl6zyywh7rxnwsxyv6
+22:09:18 <mxnorvak[m]> <DannyWorkOrderPr "Why wouldn't it be? Printing as "> How can i do it with bromite?
+22:10:56 <Cyrinux[m]> dazinism: if you got some cool resources to share then in Briar feel free
+22:12:56 <DannyWorkOrderPr> <mxnorvak[m] "How can i do it with bromite?"> Share menu
+22:13:04 <DannyWorkOrderPr> No native functionality I'm aware of.
+22:13:21 <DannyWorkOrderPr> The only app I have on my device that can do it is Syncthing, but, it's a thing =]
+22:14:13 <mxnorvak[m]> So i should install Syncthing?
+22:17:04 <DannyWorkOrderPr> ...I mean, if you have a need for it. But that's definitely not what I'm saying, lol
+22:17:26 <DannyWorkOrderPr> Install an app that downloads/saves websites when you pass a link to them.
+22:18:53 <DannyWorkOrderPr> After spending 17 seconds searching on F-Droid, I found Web2PDF, as well as Save for Offline
+22:19:22 <DannyWorkOrderPr> I am not recommending either of these, but, figure out something you trust. Just telling you, conceptually, how to accomplish what you're trying to do.
+22:21:33 <mxnorvak[m]> Tnx, yeah I'll find something
+22:28:52 <chris42> Otherwise if using Firefox you can setup your own firefox sync server
+22:41:23 <demonMachina> I would just like everyone to know that I have somehowfigured out how to install extensions on chromium-browser-privacy Fedora.... prettty f-ing stoked about that.
+22:41:47 <demonMachina> 1. Turns out, the "easy" way doesn't work so hot with KDE Plasma
+22:44:06 <demonMachina> 2. Fun Fact, I foundthat if you have regular chromium installed on macOS, go ahead and install all of the extensions that you would normally install there, **THEN** install Ungoogled Chromium (pretty sure you have to rename it on macOS though). The extensions automagically populated in Ungoogled.... Tried this method in Fedora, and of course it didn't work.
+23:25:46 <magicos[m]> Is there a possibility an FakeStore could be implemented, so we could run apps that look after 'com.android.vending'?
+23:35:53 <fading_epilogue> demonMachina: you mean ungoogled chromium packaged in rpmfusion? doesn't the wiki say to install Chromium web store to install/update extensions?
+23:35:55 <fading_epilogue> https://github.com/NeverDecaf/chromium-web-store
+23:55:45 <strcat[m]> really annoyed @ powershell 5 having a legacy curl alias
+23:55:48 <strcat[m]> on windows
+23:55:57 <strcat[m]> so people have to remove it or type curl.exe
+23:55:58 <strcat[m]> sigh
+23:56:05 <strcat[m]> they aliased it to an incompatible thing
